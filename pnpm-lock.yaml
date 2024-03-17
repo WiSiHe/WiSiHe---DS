@@ -20,9 +20,9 @@ importers:
 
   apps/docs:
     dependencies:
-      '@acme/ui':
+      '@wisihe/ui-react':
         specifier: workspace:*
-        version: link:../../packages/ui
+        version: link:../../packages/ui-react
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -30,12 +30,6 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@storybook/addon-actions':
         specifier: ^7.6.7
         version: 7.6.7
@@ -57,6 +51,12 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.2.1
         version: 4.2.1(vite@5.0.10)
+      '@wisihe/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@wisihe/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -93,26 +93,56 @@ importers:
 
   packages/typescript-config: {}
 
-  packages/ui:
+  packages/ui-react:
     devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.46
       '@types/react-dom':
         specifier: ^18.2.18
         version: 18.2.18
+      '@wisihe/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@wisihe/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@wisihe/utils':
+        specifier: workspace:*
+        version: link:../utils
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
+      framer-motion:
+        specifier: ^11.0.14
+        version: 11.0.14(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(typescript@5.3.3)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/utils:
+    devDependencies:
+      '@wisihe/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@wisihe/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      clsx:
+        specifier: ^2.1.0
+        version: 2.1.0
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      tailwind-merge:
+        specifier: ^2.2.2
+        version: 2.2.2
       tsup:
         specifier: ^8.0.1
         version: 8.0.1(typescript@5.3.3)
@@ -1395,6 +1425,13 @@ packages:
 
   /@babel/runtime@7.23.7:
     resolution: {integrity: sha512-w06OXVOFso7LcbzMiDGt+3X7Rh7Ho8MmgPoWU3rarH+8upf+wSU/grlGbWzQyr3DkdN6ZeuMFjpdwW0Q+HxobA==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: true
+
+  /@babel/runtime@7.24.0:
+    resolution: {integrity: sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -5105,6 +5142,11 @@ packages:
     engines: {node: '>=0.8'}
     dev: true
 
+  /clsx@2.1.0:
+    resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
+    engines: {node: '>=6'}
+    dev: true
+
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
     dependencies:
@@ -6546,6 +6588,24 @@ packages:
   /forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
+    dev: true
+
+  /framer-motion@11.0.14(react@18.2.0):
+    resolution: {integrity: sha512-RFjo2hB1MTW0EWsHQaXgVn0AEUDGxAs0ZL2vVjTTJJu3N7wFiLkmqTn5ysLjL+qKZ9jvfpKXDb9waN9AyLqk8g==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      tslib: 2.6.2
     dev: true
 
   /fresh@0.5.2:
@@ -10152,6 +10212,12 @@ packages:
     dependencies:
       '@pkgr/core': 0.1.0
       tslib: 2.6.2
+    dev: true
+
+  /tailwind-merge@2.2.2:
+    resolution: {integrity: sha512-tWANXsnmJzgw6mQ07nE3aCDkCK4QdT3ThPMCzawoYA2Pws7vSTCvz3Vrjg61jVUGfFZPJzxEP+NimbcW+EdaDw==}
+    dependencies:
+      '@babel/runtime': 7.24.0
     dev: true
 
   /tapable@2.2.1:
