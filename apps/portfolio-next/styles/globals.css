@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Declarations outside layers are never purged */
+*:not(.a11y-focus-within\:focus-ring *, .a11y-focus\:focus-ring) {
+    @apply focus-visible:outline-primary focus-visible:outline-4;
+}
+
+@layer base {
+    * {
+        @apply scrollbar-hidden;
+    }
+
+    /*
+  html {
+    @apply cursor-auto;
+    @apply text-base;
+    @apply font-roboto;
+    font-family: 'Inter', sans-serif;
+  }
+  */
+
+    body {
+        @apply bg-tertiary;
+        @apply font-inter;
+    }
+
+    h1 {
+        @apply text-3xl xl:text-6xl;
+    }
+    h2 {
+        @apply text-2xl xl:text-5xl;
+    }
+    h3 {
+        @apply text-xl xl:text-4xl;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-oswald;
+    }
+
+    /*
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+    font-family: "Playfair Display", serif;
+  }
+
+  */
+    /*
+  body {
+    @apply font-sans;
+    font-family: "Roboto", sans-serif;
+  }
+  */
+}
+
+/* input[type='range'] {
+  &::-webkit-slider-runnable-track {
+    @apply bg-gray-300;
+  }
+  &::-webkit-slider-thumb {
+    @apply bg-blue-500;
+  }
+  &::-moz-range-progress {
+    @apply bg-blue-500;
+  }
+  &::-moz-range-track {
+    @apply bg-gray-300;
+  }
+} */
+
+@layer utilities {
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hidden {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .focus-ring {
+        @apply ring ring-highlight;
+    }
+    .animation-delay-1000 {
+        animation-delay: 1s;
+    }
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+    .animation-delay-3000 {
+        animation-delay: 3s;
+    }
+    .animation-delay-4000 {
+        animation-delay: 4s;
+    }
+}
