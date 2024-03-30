@@ -7,4 +7,4 @@ module.exports = {
     project: 'tsconfig.json',
   },
   ignorePatterns: ['dist', 'node_modules', 'public', 'vite.config.ts'],
-};
+}
