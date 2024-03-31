@@ -1,9 +1,9 @@
 module.exports = {
-  root: true,
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: 'tsconfig.json'
-  },
+  // root: true,
+  // parserOptions: {
+  //   tsconfigRootDir: __dirname,
+  //   project: 'tsconfig.json'
+  // },
   env: {
     browser: true,
     commonjs: true,
