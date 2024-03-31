@@ -6,7 +6,6 @@ import { Viewport } from 'next'
 import dynamic from 'next/dynamic'
 import { Inter, Oswald } from 'next/font/google'
 import { draftMode } from 'next/headers'
-// import VisualEditing from "@/sanity/loader/VisualEditing"
 import { Suspense } from 'react'
 
 import SkipToMainContentLink from '@/components/atoms/SkipToMainContentLink'
