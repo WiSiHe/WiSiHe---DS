@@ -1,6 +1,12 @@
 import type { PortableTextBlock } from '@portabletext/types'
 import { createClient } from '@sanity/client'
-import type { ImageAsset, Slug } from '@sanity/types'
+import type {
+  Image,
+  ImageAsset,
+  ImageCrop,
+  ImageHotspot,
+  Slug
+} from '@sanity/types'
 import groq from 'groq'
 
 import {
@@ -40,9 +46,30 @@ export async function getPaintings(): Promise<any[]> {
   )
 }
 
-export async function getPainting(slug: string): Promise<any> {
+export async function getPainting(slug: string): Promise<iSanityPainting> {
   return await client.fetch(
-    groq`*[_type == "painting" && slug.current == $slug][0]`,
+    groq`*[_type == "painting" && slug.current == $slug][0]{
+      _id,
+      title,
+      'slug': slug.current,
+      description,
+      seoDescription,
+      format,
+      likes,
+      paintedAt,
+      artstationUrl,
+      redbubbleUrl,
+      society6Url,
+      inPrintUrl,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip
+      },
+      altText,
+      images,
+      tagsV2[]->{name},
+      video
+    }`,
     {
       slug
     }
@@ -99,4 +126,48 @@ export interface Post {
   excerpt?: string
   mainImage?: ImageAsset
   body: PortableTextBlock[]
+}
+
+type iPaintingFormat = 'square' | 'landscape' | 'portrait'
+
+export interface iSanityTag {
+  _id?: string
+  name: string
+  description?: string | null
+}
+
+export interface iSanityImageAsset {
+  _ref: string
+  _type: string
+}
+
+export interface iSanityImage {
+  _type: string
+  _key?: string
+  asset: iSanityImageAsset
+  crop?: ImageCrop
+  hotspot?: ImageHotspot
+  lqip?: string
+}
+
+export interface iSanityPainting {
+  _id: string
+  format: iPaintingFormat
+  image: Image
+  images?: Image[]
+  imagesCount: number | null
+  redbubbleUrl?: string | null
+  society6Url?: string | null
+  artstationUrl?: string | null
+  inPrintUrl?: string | null
+  description?: string
+  seoDescription?: string
+  likes?: number
+  paintedAt: string
+  slug: string
+  tagsV2: iSanityTag[]
+  tagCount?: number | null
+  title: string
+  video?: string | null
+  altText?: string
 }

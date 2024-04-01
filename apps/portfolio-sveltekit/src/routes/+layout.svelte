@@ -4,14 +4,14 @@
 </script>
 
 <div class="app">
-  <Header />
+  <Header isAbsolute />
 
-  <main class="">
+  <main>
     <slot />
   </main>
 
-  <footer>
-    <!-- <p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p> -->
+  <footer class="p-10 text-white bg-dark">
+    <p>© 2021 Henrik Wilhelm Sissener</p>
   </footer>
 </div>
 
@@ -27,22 +27,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-
     margin: 0 auto;
     box-sizing: border-box;
-  }
-
-  footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 12px;
-  }
-
-  @media (min-width: 480px) {
-    footer {
-      padding: 12px 0;
-    }
   }
 </style>
