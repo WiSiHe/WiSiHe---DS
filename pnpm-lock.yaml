@@ -397,6 +397,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^7.1.0
         version: 7.4.0(eslint@8.57.0)(typescript@5.4.3)
+      '@wisihe/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       autoprefixer:
         specifier: ^10.4.18
         version: 10.4.19(postcss@8.4.38)
