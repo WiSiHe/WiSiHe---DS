@@ -1,52 +1,43 @@
-import dynamic from "next/dynamic"
-import { TypedObject } from "sanity"
+import dynamic from 'next/dynamic'
+import { TypedObject } from 'sanity'
 
-import HeroImageSection from "@/components/templates/HeroImageSection"
-import { iSanityPainting } from "@/lib/models/objects/sanityPainting"
-import { ShowcaseProject } from "@/types"
+import HeroImageSection from '@/components/templates/HeroImageSection'
+import { iSanityPainting } from '@/lib/models/objects/sanityPainting'
+import { ShowcaseProject } from '@/types'
 
-const PaintingSection = dynamic(
-    () => import("components/templates/PantingSection"),
-)
+const PaintingSection = dynamic(() => import('components/templates/PantingSection'))
 
-const ProjectsSection = dynamic(
-    () => import("components/templates/ProjectsSection"),
-)
+const ProjectsSection = dynamic(() => import('components/templates/ProjectsSection'))
 
-const NotFoundSection = dynamic(
-    () => import("components/templates/NotFoundSection"),
-)
+const NotFoundSection = dynamic(() => import('components/templates/NotFoundSection'))
 
 interface AboutPageProps {
-    paintings?: iSanityPainting[]
-    projects?: ShowcaseProject[]
-    paintingsDescription?: TypedObject[]
-    projectsDescription?: TypedObject[]
-    paintingsCount?: number
+  paintings?: iSanityPainting[]
+  projects?: ShowcaseProject[]
+  paintingsDescription?: TypedObject[]
+  projectsDescription?: TypedObject[]
+  paintingsCount?: number
 }
 
 const AboutPage = ({
-    paintings = [],
-    projects = [],
-    paintingsDescription,
-    projectsDescription,
-    paintingsCount,
-}: AboutPageProps) => {
-    return (
-        <>
-            <HeroImageSection paintings={paintings} />
-            <PaintingSection
-                paintings={paintings}
-                description={paintingsDescription}
-                paintingsCount={paintingsCount}
-            />
-            <ProjectsSection
-                projects={projects}
-                description={projectsDescription}
-            />
-            <NotFoundSection />
-        </>
-    )
+  paintings = [],
+  projects = [],
+  paintingsDescription,
+  projectsDescription,
+  paintingsCount
+}: AboutPageProps): JSX.Element => {
+  return (
+    <>
+      <HeroImageSection paintings={paintings} />
+      <PaintingSection
+        paintings={paintings}
+        description={paintingsDescription}
+        paintingsCount={paintingsCount}
+      />
+      <ProjectsSection projects={projects} description={projectsDescription} />
+      <NotFoundSection />
+    </>
+  )
 }
 
 export default AboutPage
