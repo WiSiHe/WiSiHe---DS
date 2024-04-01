@@ -1,0 +1,13 @@
+{
+    "name": "@wisihe/tokens",
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "build": "node ./config/build.js",
+      "clean": "rm -rf build",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "devDependencies": {
+      "style-dictionary": "3.9.1"
+    }
+  }

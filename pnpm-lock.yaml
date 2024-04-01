@@ -183,12 +183,6 @@ importers:
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.4.3)
-      '@types/react-dom':
-        specifier: ^18.2.23
-        version: 18.2.23
-      '@types/styled-components':
-        specifier: ^5.1.34
-        version: 5.1.34
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2(next@14.1.4)(react@18.2.0)
@@ -198,6 +192,12 @@ importers:
       '@vercel/stega':
         specifier: ^0.1.0
         version: 0.1.0
+      '@wisihe/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
+      '@wisihe/ui-react':
+        specifier: workspace:*
+        version: link:../../packages/ui-react
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
@@ -222,9 +222,6 @@ importers:
       plaiceholder:
         specifier: ^3.0.0
         version: 3.0.0(sharp@0.33.3)
-      prop-types:
-        specifier: ^15.8.1
-        version: 15.8.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -298,9 +295,15 @@ importers:
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.73
+      '@types/react-dom':
+        specifier: ^18.2.23
+        version: 18.2.23
       '@types/react-lazy-load-image-component':
         specifier: ^1.6.3
         version: 1.6.3
+      '@types/styled-components':
+        specifier: ^5.1.34
+        version: 5.1.34
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.4.0
         version: 7.4.0(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3)
@@ -343,6 +346,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.5.13
         version: 0.5.13(prettier@3.2.5)
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
       react-lazy-load-image-component:
         specifier: ^1.6.0
         version: 1.6.0(react-dom@18.2.0)(react@18.2.0)
@@ -378,7 +384,17 @@ importers:
         version: 0.6.15(eslint@8.57.0)(typescript@5.4.3)
 
   packages/tailwind-config:
+    dependencies:
+      '@tailwindcss/container-queries':
+        specifier: ^0.1.1
+        version: 0.1.1(tailwindcss@3.4.1)
     devDependencies:
+      '@tailwindcss/forms':
+        specifier: ^0.5.7
+        version: 0.5.7(tailwindcss@3.4.1)
+      '@tailwindcss/typography':
+        specifier: ^0.5.12
+        version: 0.5.12(tailwindcss@3.4.1)
       autoprefixer:
         specifier: ^10.4.18
         version: 10.4.19(postcss@8.4.38)
@@ -7383,6 +7399,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
+    dependencies:
+      tailwindcss: 3.4.1
+    dev: false
+
   /@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.3):
     resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
     peerDependencies:
@@ -7390,6 +7414,27 @@ packages:
     dependencies:
       tailwindcss: 3.4.3(ts-node@10.9.2)
     dev: false
+
+  /@tailwindcss/forms@0.5.7(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-QE7X69iQI+ZXwldE+rzasvbJiyV/ju1FGHH0Qn2W3FKbuYtqp8LKcy6iSw79fVUT5/Vvf+0XgLCeYVG+UV6hOw==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
+    dependencies:
+      mini-svg-data-uri: 1.4.4
+      tailwindcss: 3.4.1
+    dev: true
+
+  /@tailwindcss/typography@0.5.12(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-CNwpBpconcP7ppxmuq3qvaCxiRWnbhANpY/ruH4L5qs2GCiVDJXde/pjj2HWPV1+Q4G9+V/etrwUYopdcjAlyg==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || insiders'
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      postcss-selector-parser: 6.0.10
+      tailwindcss: 3.4.1
+    dev: true
 
   /@tanstack/react-virtual@3.0.0-beta.54(react@18.2.0):
     resolution: {integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==}
@@ -7671,7 +7716,7 @@ packages:
     dependencies:
       '@types/react': 18.2.73
       hoist-non-react-statics: 3.3.2
-    dev: false
+    dev: true
 
   /@types/http-errors@2.0.4:
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
@@ -7816,7 +7861,7 @@ packages:
     resolution: {integrity: sha512-ZQ71wgGOTmDYpnav2knkjr3qXdAFu0vsk8Ci5w3pGAIdj7/kKAyn+VsQDhXsmzzzepAiI9leWMmubXz690AI/A==}
     dependencies:
       '@types/react': 18.2.73
-    dev: false
+    dev: true
 
   /@types/react-is@18.2.4:
     resolution: {integrity: sha512-wBc7HgmbCcrvw0fZjxbgz/xrrlZKzEqmABBMeSvpTvdm25u6KI6xdIi9pRE2G0C1Lw5ETFdcn4UbYZ4/rpqUYw==}
@@ -7890,7 +7935,7 @@ packages:
       '@types/hoist-non-react-statics': 3.3.5
       '@types/react': 18.2.73
       csstype: 3.1.3
-    dev: false
+    dev: true
 
   /@types/stylis@4.2.0:
     resolution: {integrity: sha512-n4sx2bqL0mW1tvDf/loQ+aMX7GQD3lc3fkCMC55VFNDu/vBOabO+LTIeXKM14xK0ppk5TUGcWRjiSpIlUpghKw==}
@@ -12692,7 +12737,6 @@ packages:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
-    dev: true
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
@@ -12980,7 +13024,7 @@ packages:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
       react-is: 16.13.1
-    dev: false
+    dev: true
 
   /hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -14098,6 +14142,10 @@ packages:
       p-locate: 6.0.0
     dev: true
 
+  /lodash.castarray@4.4.0:
+    resolution: {integrity: sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==}
+    dev: true
+
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
@@ -14108,6 +14156,10 @@ packages:
   /lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
     dev: false
+
+  /lodash.isplainobject@4.0.6:
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
+    dev: true
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -14791,6 +14843,11 @@ packages:
   /min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
+    dev: true
+
+  /mini-svg-data-uri@1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
     dev: true
 
   /minimatch@3.1.2:
@@ -15829,6 +15886,14 @@ packages:
     dependencies:
       postcss: 8.4.38
       postcss-selector-parser: 6.0.16
+
+  /postcss-selector-parser@6.0.10:
+    resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
+    engines: {node: '>=4'}
+    dependencies:
+      cssesc: 3.0.0
+      util-deprecate: 1.0.2
+    dev: true
 
   /postcss-selector-parser@6.0.16:
     resolution: {integrity: sha512-A0RVJrX+IUkVZbW3ClroRWurercFhieevHB38sr2+l9eUClMqome3LmEmnhlNy+5Mr2EYN6B2Kaw9wYdd+VHiw==}
@@ -17988,7 +18053,6 @@ packages:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
-    dev: true
 
   /sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
@@ -18233,7 +18297,6 @@ packages:
       sucrase: 3.34.0
     transitivePeerDependencies:
       - ts-node
-    dev: true
 
   /tailwindcss@3.4.3(ts-node@10.9.2):
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
