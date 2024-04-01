@@ -6,7 +6,7 @@
 
   const currentPath = $page.url.pathname
 
-  const isAbsolute = false
+  export let isAbsolute = false
 
   const navItems = [
     {
@@ -33,7 +33,7 @@
   <nav
     aria-label="Main Navigation"
     class={clsx(
-      'z-20 flex bg-black/20 items-center justify-between py-2 mx-auto px-4 max-w-screen-3xl',
+      'z-20 flex bg-dark text-white items-center justify-between py-2 mx-auto px-4 max-w-screen-3xl',
       isAbsolute ? 'absolute top-0 left-0 right-0' : 'relative'
     )}
   >
@@ -50,6 +50,7 @@
           viewBox="0 0 542 544"
           role="img"
           aria-label="QR Code Logo"
+          class="fill-white"
         >
           <path d="M7 79v62h124V17H7v62zm106 0v44H25V35h88v44z" />
           <path d="M43 79v26h52V53H43v26z" />
@@ -73,10 +74,10 @@
           <a
             href={item.href}
             class={clsx(
-              'transition-all mix-blend-difference text-dark px-4 py-2 rounded-lg hover:bg-primary hover:text-white   active:bg-primary',
+              'transition-all mix-blend-difference px-4 py-2 rounded-lg hover:bg-primary hover:text-white active:bg-primary',
               url === item.href
                 ? 'underline decoration-primary text-white decoration-2 bg-primary'
-                : ' text-dark'
+                : ''
             )}
             >{item.label}
           </a>

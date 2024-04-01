@@ -8,29 +8,30 @@
   const { paintings = [] } = data
 </script>
 
-<section>
-  <h1 class="text-blue-800">Paintings</h1>
-  <h2>All paintings here</h2>
+<section class="p-4 pt-16">
+  <div class="pb-4">
+    <h1 class="text-4xl text-blue-800">My paintings</h1>
+  </div>
   <section class="grid grid-cols-12 gap-4">
     {#each paintings as painting (painting.slug)}
-      <article
+      <a
+        href={`/paintings/${painting.slug}`}
         class="relative col-span-12 rounded overflow-clip sm:col-span-6 md:col-span-4 lg:col-span-3"
-        in:fly={{ y: 200, duration: 2000 }}
-        out:fade
+        data-sveltekit-noscroll
       >
-        <a href={`/paintings/${painting.slug}`}>
+        <article in:fly={{ y: 200, duration: 2000 }} out:fade>
           <div
-            class="absolute bottom-0 left-0 right-0 z-10 p-2 text-white bg-dark/40"
+            class="absolute bottom-0 left-0 right-0 z-10 p-2 text-white bg-dark"
           >
             <p>{painting.title}</p>
           </div>
           <img
             src={urlFor(painting.image).width(400).height(400).url()}
             alt={painting.title}
-            class="w-full rounded"
+            class="w-full"
           />
-        </a>
-      </article>
+        </article>
+      </a>
     {/each}
   </section>
 </section>
