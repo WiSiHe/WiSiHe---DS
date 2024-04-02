@@ -84,7 +84,6 @@
       on:input={searchPaintings}
       class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
     />
-    <p>Results:</p>
     <strong>Filters:</strong>
     {#if filter.length === 0}
       <p>No filters applied</p>
@@ -97,10 +96,10 @@
             out:fly={{ duration: 200, x: -20 }}
           >
             <button
-              class="px-2 py-1 text-xs text-white rounded-full bg-primary"
+              class="px-2 py-1 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
-              {tag} X
+              {tag}
             </button>
           </li>
         {/each}
@@ -110,7 +109,7 @@
       {#each filteredTags as tag}
         <li in:fly={{ duration: 200, x: -50 }} out:fade={{ duration: 200 }}>
           <button
-            class="px-2 py-1 text-xs text-white transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
+            class="px-2 py-1 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
             on:click={() => handleAddTag(tag)}
           >
             {tag.name}({tag.paintingsCount})
