@@ -40,7 +40,7 @@ export async function getPost(slug: string): Promise<Post> {
   )
 }
 
-export async function getPaintings(): Promise<any[]> {
+export async function getPaintings(): Promise<iSanityPainting[]> {
   return await client.fetch(
     groq`*[_type == "painting" && defined(slug.current)]{..., "slug":slug.current} | order(_createdAt desc)`
   )
