@@ -51,8 +51,9 @@
   }
 
   function removeTag(tag: string) {
-    const newFilter = filter.filter(f => f !== slugify(tag))
-
+    console.log(slugify(tag))
+    const newFilter = filter.filter(f => slugify(f) !== slugify(tag))
+    console.log(filter, newFilter)
     const newParams = newFilter.map(f => `filter=${f}`).join('&')
     const newRouteWithFilters = `/paintings/?${newParams}`
     goto(newRouteWithFilters)
@@ -72,8 +73,8 @@
   <meta name="description" content="Portfolio of paintings by artist, WiSiHe" />
 </svelte:head>
 
-<div class="grid items-start grid-cols-12 gap-4 p-4">
-  <section class="sticky col-span-3 p-4 bg-white top-20 drop-shadow">
+<div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
+  <section class="sticky col-span-3 p-4 top-20">
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
@@ -84,7 +85,10 @@
       on:input={searchPaintings}
       class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
     />
-    <strong>Filters:</strong>
+    <div>
+      Results: {filteredPaintings.length} paintings
+    </div>
+    <strong>Active filters:</strong>
     {#if filter.length === 0}
       <p>No filters applied</p>
     {/if}
@@ -92,11 +96,11 @@
       <ul class="flex flex-wrap gap-1" in:fade out:fade>
         {#each filter as tag}
           <li
-            in:fly={{ duration: 200, x: 20 }}
-            out:fly={{ duration: 200, x: -20 }}
+            in:fly={{ duration: 1000, x: 50, delay: 1000 }}
+            out:fly={{ duration: 1000, x: -50 }}
           >
             <button
-              class="px-2 py-1 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
+              class="px-3 py-2 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
               {tag}
@@ -105,11 +109,15 @@
         {/each}
       </ul>
     {/if}
+    <hr class="py-2" />
     <ul class="flex flex-wrap gap-1 pt-4">
       {#each filteredTags as tag}
-        <li in:fly={{ duration: 200, x: -50 }} out:fade={{ duration: 200 }}>
+        <li
+          in:fly={{ duration: 1000, x: 50, delay: 1000 }}
+          out:fly={{ duration: 1000, x: -50 }}
+        >
           <button
-            class="px-2 py-1 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
+            class="px-3 py-2 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
             on:click={() => handleAddTag(tag)}
           >
             {tag.name}({tag.paintingsCount})
@@ -118,36 +126,34 @@
       {/each}
     </ul>
   </section>
-  <section class="col-span-9 pt-16">
+  <section class="col-span-9">
     <section class="grid grid-cols-12 gap-4">
       {#each filteredPaintings as painting (painting.slug)}
         <a
           href={`/paintings/${painting.slug}`}
-          class="relative col-span-12 rounded overflow-clip aspect-portrait sm:col-span-6 md:col-span-4 lg:col-span-3"
+          class="relative col-span-12 transition-transform duration-200 ease-in-out rounded sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
           data-sveltekit-noscroll
-          in:fade
-          out:fade
+          in:fly={{ duration: 1000, y: 80 }}
+          out:fade={{ duration: 1000 }}
         >
-          <article class="w-full h-full">
-            <div
-              class="absolute bottom-0 left-0 right-0 z-10 p-2 text-white bg-dark"
-            >
-              <p>{painting.title}</p>
-            </div>
-            <ul class="absolute flex flex-wrap gap-1 p-2 top-2 left-2">
-              {#each painting.tagsV2 as tag}
-                <li
-                  class="px-2 py-1 text-xs text-white rounded-full bg-primary"
-                >
-                  {tag.name}
-                </li>
-              {/each}
-            </ul>
+          <article class="w-full h-full p-4">
             <img
               src={urlFor(painting.image).width(400).height(600).url()}
               alt={painting.title}
-              class="object-cover w-full h-full bg-dark"
+              class="object-cover w-full rounded bg-dark aspect-portrait"
             />
+            <div class="relative">
+              <p>{painting.title}</p>
+              <ul class="flex flex-wrap gap-1 pt-2">
+                {#each painting.tagsV2 as tag}
+                  <li
+                    class="px-2 py-1 text-xs text-white rounded-full bg-primary"
+                  >
+                    {tag.name}
+                  </li>
+                {/each}
+              </ul>
+            </div>
           </article>
         </a>
       {/each}
