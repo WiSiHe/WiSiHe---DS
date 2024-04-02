@@ -1,7 +1,7 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
   import type { iSanityTag, iSanityPaintingsTag } from '$lib/utils/sanity.js'
-  import { fade } from 'svelte/transition'
+  import { fade, fly } from 'svelte/transition'
 
   import { goto } from '$app/navigation'
 
@@ -74,8 +74,10 @@
 
 <div class="grid items-start grid-cols-12 gap-4 p-4">
   <section class="sticky col-span-3 p-4 bg-white top-20 drop-shadow">
-    <h1>Gallery</h1>
-    <p>A gallery of some of my paintings.</p>
+    <div class="prose">
+      <h1>Gallery</h1>
+      <p>A gallery of some of my paintings.</p>
+    </div>
     <input
       type="text"
       placeholder="Search paintings"
@@ -84,21 +86,29 @@
     />
     <p>Results:</p>
     <strong>Filters:</strong>
-    <ul class="flex gap-1">
-      {#each filter as tag}
-        <li>
-          <button
-            class="px-2 py-1 text-xs text-white rounded-full bg-primary"
-            on:click={() => removeTag(tag)}
+    {#if filter.length === 0}
+      <p>No filters applied</p>
+    {/if}
+    {#if filter.length > 0}
+      <ul class="flex flex-wrap gap-1" in:fade out:fade>
+        {#each filter as tag}
+          <li
+            in:fly={{ duration: 200, x: 20 }}
+            out:fly={{ duration: 200, x: -20 }}
           >
-            {tag} X
-          </button>
-        </li>
-      {/each}
-    </ul>
+            <button
+              class="px-2 py-1 text-xs text-white rounded-full bg-primary"
+              on:click={() => removeTag(tag)}
+            >
+              {tag} X
+            </button>
+          </li>
+        {/each}
+      </ul>
+    {/if}
     <ul class="flex flex-wrap gap-1 pt-4">
       {#each filteredTags as tag}
-        <li>
+        <li in:fly={{ duration: 200, x: -50 }} out:fade={{ duration: 200 }}>
           <button
             class="px-2 py-1 text-xs text-white transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
             on:click={() => handleAddTag(tag)}

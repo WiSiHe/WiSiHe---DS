@@ -1,6 +1,5 @@
 <script>
   import { urlFor } from '$lib/utils/image'
-  //   import type { PageData } from '../$types'
 
   export let data
   const { title, image, description, tagsV2 } = data
