@@ -25,24 +25,21 @@ export const client = createClient({
   apiVersion: '2023-03-20' // date of setup
 })
 
-export async function getPosts(): Promise<Post[]> {
-  return await client.fetch(
-    groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc)`
-  )
-}
-
-export async function getPost(slug: string): Promise<Post> {
-  return await client.fetch(
-    groq`*[_type == "post" && slug.current == $slug][0]`,
-    {
-      slug
-    }
-  )
-}
-
 export async function getPaintings(): Promise<iSanityPainting[]> {
   return await client.fetch(
     groq`*[_type == "painting" && defined(slug.current)]{..., "slug":slug.current} | order(_createdAt desc)`
+  )
+}
+
+export async function getAllPaintingsAndTags(): Promise<{
+  paintings: iSanityPainting[]
+  tags: iSanityPaintingsTag[]
+}> {
+  return await client.fetch(
+    groq`{
+      "paintings": *[_type == "painting" && defined(slug.current)]{..., "slug":slug.current, tagsV2[]->{name}} | order(_createdAt desc),
+      "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}
+    }`
   )
 }
 
@@ -170,4 +167,14 @@ export interface iSanityPainting {
   title: string
   video?: string | null
   altText?: string
+}
+
+export interface iSanityTag {
+  _id?: string
+  name: string
+  description?: string | null
+}
+
+export interface iSanityPaintingsTag extends iSanityTag {
+  paintingsCount: number
 }

@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@wisihe/tailwind-config": "workspace:*",
+    "@wisihe/utils": "workspace:*",
     "@sanity/client": "^6.15.1",
     "@sanity/image-url": "^1.0.2",
     "clsx": "^2.1.0",
