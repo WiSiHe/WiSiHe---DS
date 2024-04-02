@@ -125,7 +125,7 @@
             >
               <p>{painting.title}</p>
             </div>
-            <ul class="absolute flex gap-1 top-2 left-2">
+            <ul class="absolute flex flex-wrap gap-1 p-2 top-2 left-2">
               {#each painting.tagsV2 as tag}
                 <li
                   class="px-2 py-1 text-xs text-white rounded-full bg-primary"
