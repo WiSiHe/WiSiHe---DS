@@ -1,0 +1,20 @@
+{
+    "name": "@wisihe/constants",
+    "version": "1.0.0",
+    "description": "A project that uses constant variables",
+    "type": "module",
+    "main": "index.js",
+    "private": true,
+    "files": [
+      "index.js"
+    ],
+    "exports": {
+      ".": "./index.js"
+    },
+    "scripts": {
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "dotenv": "^10.0.0"
+    }
+  }

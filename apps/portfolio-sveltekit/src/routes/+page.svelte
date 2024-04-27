@@ -1,9 +1,11 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
   import { fade, fly } from 'svelte/transition'
+  import { aboutMeBulletPoints } from '@wisihe/constants'
 
   export let data
   const { showcasePaintings = [], title } = data
+
   // Randomly select a painting to showcase
   let selectedIndex = Math.floor(Math.random() * showcasePaintings.length)
 
@@ -27,7 +29,7 @@
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>Home | WiSiHe</title>
   <meta name="description" content="Portfolio of paintings by artist, WiSiHe" />
 </svelte:head>
 
@@ -46,10 +48,16 @@
       <div
         class="relative flex flex-col justify-center h-full gap-4 p-4 lg:p-10 rounded-xl backdrop-blur-sm bg-white/40 overflow-clip drop-shadow-xl"
       >
-        <h1 class="text-4xl">Henrik Wilhelm Sissener</h1>
-        <span>Senior Front-end developer</span>
-        <span>Digital artist</span>
-        <span>Game developer</span>
+        <h1 class="text-4xl">
+          <strong>Henrik Wilhelm Sissener</strong>
+        </h1>
+        <ul class="flex flex-col gap-4">
+          {#each aboutMeBulletPoints as bullet}
+            <li>
+              <span>{bullet}</span>
+            </li>
+          {/each}
+        </ul>
       </div>
     </section>
     <section class="relative z-10 w-full col-span-full xl:col-span-8">
