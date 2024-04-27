@@ -13,6 +13,7 @@
 <section class="grid items-start grid-cols-12 gap-4 p-4 pt-16 bg-stone-50">
   <a
     href="/paintings"
+    on:click|preventDefault={() => window.history.back()}
     class="fixed z-10 px-4 py-2 text-white rounded left-2 top-20 bg-primary"
     data-sveltekit-noscroll
   >
@@ -39,6 +40,6 @@
   >
     <h1 class="text-blue-800">{title}</h1>
 
-    <p class="">{description}</p>
+    <p>{description}</p>
   </div>
 </section>

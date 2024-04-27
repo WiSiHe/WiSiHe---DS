@@ -74,7 +74,7 @@
 </svelte:head>
 
 <div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
-  <section class="sticky col-span-3 p-4 top-20">
+  <section class="p-4 col-span-full xl:sticky xl:col-span-3 xl:top-20">
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
@@ -126,37 +126,36 @@
       {/each}
     </ul>
   </section>
-  <section class="col-span-9">
-    <section class="grid grid-cols-12 gap-4">
-      {#each filteredPaintings as painting (painting.slug)}
-        <a
-          href={`/paintings/${painting.slug}`}
-          class="relative col-span-12 transition-transform duration-200 ease-in-out rounded sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
-          data-sveltekit-noscroll
-          in:fly={{ duration: 1000, y: 80 }}
-          out:fade={{ duration: 1000 }}
-        >
-          <article class="w-full h-full p-4">
-            <img
-              src={urlFor(painting.image).width(400).height(600).url()}
-              alt={painting.title}
-              class="object-cover w-full rounded bg-dark aspect-portrait"
-            />
-            <div class="relative">
-              <p>{painting.title}</p>
-              <ul class="flex flex-wrap gap-1 pt-2">
-                {#each painting.tagsV2 as tag}
-                  <li
-                    class="px-2 py-1 text-xs text-white rounded-full bg-primary"
-                  >
-                    {tag.name}
-                  </li>
-                {/each}
-              </ul>
-            </div>
-          </article>
-        </a>
-      {/each}
-    </section>
+
+  <section class="grid grid-cols-12 gap-4 col-span-full xl:col-span-9">
+    {#each filteredPaintings as painting (painting.slug)}
+      <a
+        href={`/paintings/${painting.slug}`}
+        class="relative col-span-12 transition-transform duration-200 ease-in-out rounded sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
+        data-sveltekit-noscroll
+        in:fly={{ duration: 1000, y: 80 }}
+        out:fade={{ duration: 1000 }}
+      >
+        <article class="w-full h-full p-4">
+          <img
+            src={urlFor(painting.image).width(400).height(600).url()}
+            alt={painting.title}
+            class="object-cover w-full rounded bg-dark aspect-portrait"
+          />
+          <div class="relative">
+            <p>{painting.title}</p>
+            <ul class="flex flex-wrap gap-1 pt-2">
+              {#each painting.tagsV2 as tag}
+                <li
+                  class="px-2 py-1 text-xs text-white rounded-full bg-primary"
+                >
+                  {tag.name}
+                </li>
+              {/each}
+            </ul>
+          </div>
+        </article>
+      </a>
+    {/each}
   </section>
 </div>
