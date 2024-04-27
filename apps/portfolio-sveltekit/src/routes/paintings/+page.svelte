@@ -74,13 +74,19 @@
 </svelte:head>
 
 <div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
-  <section class="p-4 col-span-full xl:sticky xl:col-span-3 xl:top-20">
+  <section
+    class="p-4 rounded shadow col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
+  >
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
     </div>
+    <label for="search" class="">
+      <strong> Search paintings </strong>
+    </label>
     <input
       type="text"
+      id="search"
       placeholder="Search paintings"
       on:input={searchPaintings}
       class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
@@ -100,10 +106,15 @@
             out:fly={{ duration: 1000, x: -50 }}
           >
             <button
-              class="px-3 py-2 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
+              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out rounded-full overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
               {tag}
+              <div
+                class="w-0 transition-all duration-500 ease-in-out delay-100 scale-0 translate-x-10 group-hover:w-auto group-hover:scale-100 group-hover:translate-x-0"
+              >
+                x
+              </div>
             </button>
           </li>
         {/each}
@@ -117,7 +128,7 @@
           out:fly={{ duration: 1000, x: -50 }}
         >
           <button
-            class="px-3 py-2 text-xs text-white capitalize transition-colors rounded-full bg-primary hover:bg-highlight hover:text-dark"
+            class="px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out rounded-full hover:shadow hover:scale-150 dura bg-primary hover:bg-highlight hover:text-dark"
             on:click={() => handleAddTag(tag)}
           >
             {tag.name}({tag.paintingsCount})
@@ -127,7 +138,7 @@
     </ul>
   </section>
 
-  <section class="grid grid-cols-12 gap-4 col-span-full xl:col-span-9">
+  <section class="grid grid-cols-12 gap-2 xl:gap-4 col-span-full xl:col-span-9">
     {#each filteredPaintings as painting (painting.slug)}
       <a
         href={`/paintings/${painting.slug}`}
@@ -144,6 +155,7 @@
           />
           <div class="relative">
             <p>{painting.title}</p>
+            <p>{painting.decription}</p>
             <ul class="flex flex-wrap gap-1 pt-2">
               {#each painting.tagsV2 as tag}
                 <li
