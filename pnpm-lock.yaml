@@ -192,6 +192,9 @@ importers:
       '@vercel/stega':
         specifier: ^0.1.0
         version: 0.1.0
+      '@wisihe/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@wisihe/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
@@ -397,6 +400,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^7.1.0
         version: 7.4.0(eslint@8.57.0)(typescript@5.4.3)
+      '@wisihe/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@wisihe/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
@@ -448,6 +454,12 @@ importers:
       vite:
         specifier: ^5.1.4
         version: 5.2.6
+
+  packages/constants:
+    dependencies:
+      dotenv:
+        specifier: ^10.0.0
+        version: 10.0.0
 
   packages/eslint-config:
     devDependencies:
@@ -10842,6 +10854,11 @@ packages:
     resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
     engines: {node: '>=12'}
     dev: true
+
+  /dotenv@10.0.0:
+    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
+    engines: {node: '>=10'}
+    dev: false
 
   /dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}

@@ -4,20 +4,11 @@
   import { navigating, page } from '$app/stores'
   import { onMount } from 'svelte'
 
+  import { navigationItems } from '@wisihe/constants'
+
   const currentPath = $page.url.pathname
 
   export let isAbsolute = false
-
-  const navItems = [
-    {
-      label: 'Paintings',
-      href: '/paintings'
-    },
-    {
-      label: 'Projects',
-      href: '/projects'
-    }
-  ]
 
   let url: string | null
   $: if ($navigating) {
@@ -69,7 +60,7 @@
     </div>
 
     <ul class="flex items-center gap-1 xl:gap-4">
-      {#each navItems as item}
+      {#each navigationItems as item}
         <li>
           <a
             href={item.href}

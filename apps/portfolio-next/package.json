@@ -13,6 +13,7 @@
     "dependencies": {
         "@wisihe/ui-react": "workspace:*",
         "@wisihe/tailwind-config": "workspace:*",
+        "@wisihe/constants": "workspace:*",
         "@headlessui/react": "^1.7.18",
         "@next/env": "^14.1.4",
         "@portabletext/react": "^3.0.15",
