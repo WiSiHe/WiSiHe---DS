@@ -37,15 +37,6 @@
   ></script>
 </svelte:head>
 
-<div
-  class="relative inset-0 z-10 w-full h-full scale-125 aspect-video mix-blend-overlay"
->
-  <spline-viewer
-    loading-anim-type="spinner-small-dark"
-    url="https://prod.spline.design/F7nwiIJF9M6XqQ8D/scene.splinecode"
-  ></spline-viewer>
-</div>
-
 <section
   class="relative w-full min-h-[600px] bg-dark flex flex-col justify-center px-4 py-10 h-fit xl:min-h-screen overflow-clip"
 >
@@ -54,6 +45,12 @@
     alt={showcasePaintings.title}
     class="absolute inset-0 object-cover w-full h-full scale-105 blur-xl"
   />
+  <div class="absolute inset-0 scale-150">
+    <spline-viewer
+      loading-anim-type="spinner-big-light"
+      url="https://prod.spline.design/NJPbTHKSakGvCHjI/scene.splinecode"
+    ></spline-viewer>
+  </div>
   <div
     class="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center"
   >
@@ -78,7 +75,7 @@
         class="relative w-full h-full aspect-video drop-shadow-lg rounded-2xl bg-dark/20 overflow-clip"
       >
         <img
-          src={urlFor(currentPainting.image).width(400).height(400).url()}
+          src={urlFor(currentPainting.image).width(800).height(400).url()}
           alt={showcasePaintings.title}
           class="object-cover w-full h-full"
         />
@@ -100,7 +97,7 @@
         <button
           aria-label="Next painting"
           on:click={handleNext}
-          class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+          class="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-blue-700"
           >Next</button
         >
       </div>
