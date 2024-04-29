@@ -59,7 +59,8 @@
       </a>
     </div>
 
-    <ul class="flex items-center gap-1 xl:gap-4">
+    <button class="visible lg:hidden"> </button>
+    <ul class="flex items-center hidden gap-1 xl:gap-4 lg:visible">
       {#each navigationItems as item}
         <li>
           <a

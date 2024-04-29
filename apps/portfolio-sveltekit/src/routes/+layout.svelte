@@ -3,12 +3,17 @@
   import { socialMediaLinks } from '@wisihe/constants'
   import './app.css'
   import SocialLinks from '../components/SocialLinks.svelte'
+  import Spash from '../components/Spash.svelte'
+  import { fade } from 'svelte/transition'
 </script>
 
 <div class="app">
   <Header isAbsolute />
 
   <main>
+    <div in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
+      <Spash />
+    </div>
     <slot />
   </main>
 
