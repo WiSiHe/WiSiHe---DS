@@ -142,21 +142,17 @@
     {#each filteredPaintings as painting (painting.slug)}
       <a
         href={`/paintings/${painting.slug}`}
-        class="relative col-span-12 transition-transform duration-200 ease-in-out rounded sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
+        class="relative z-0 col-span-12 transition-transform duration-500 ease-in-out scale-100 bg-white rounded hover:z-20 hover:scale-105 sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
         data-sveltekit-noscroll
-        in:fly={{ duration: 1000, y: 80 }}
-        out:fade={{ duration: 1000 }}
       >
         <article class="w-full h-full p-4">
-          <img
-            src={urlFor(painting.image).width(400).height(600).url()}
-            alt={painting.title}
-            class="object-cover w-full rounded bg-dark aspect-portrait"
-          />
-          <div class="relative">
-            <p>{painting.title}</p>
-            <p>{painting.decription}</p>
-            <ul class="flex flex-wrap gap-1 pt-2">
+          <div class="relative aspect-square">
+            <img
+              src={urlFor(painting.image).width(400).height(600).url()}
+              alt={painting.title}
+              class="object-cover w-full rounded"
+            />
+            <ul class="absolute flex flex-wrap gap-1 pt-2 bottom-2 left-2">
               {#each painting.tagsV2 as tag}
                 <li
                   class="px-2 py-1 text-xs text-white rounded-full bg-primary"
@@ -165,6 +161,11 @@
                 </li>
               {/each}
             </ul>
+          </div>
+
+          <div class="relative">
+            <strong>{painting.title}</strong>
+            <p class="text-xs line-clamp-2">{painting.description}</p>
           </div>
         </article>
       </a>

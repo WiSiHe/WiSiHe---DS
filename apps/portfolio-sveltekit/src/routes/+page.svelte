@@ -31,7 +31,20 @@
 <svelte:head>
   <title>Home | WiSiHe</title>
   <meta name="description" content="Portfolio of paintings by artist, WiSiHe" />
+  <script
+    type="module"
+    src="https://unpkg.com/@splinetool/viewer@1.1.9/build/spline-viewer.js"
+  ></script>
 </svelte:head>
+
+<div
+  class="relative inset-0 z-10 w-full h-full scale-125 aspect-video mix-blend-overlay"
+>
+  <spline-viewer
+    loading-anim-type="spinner-small-dark"
+    url="https://prod.spline.design/F7nwiIJF9M6XqQ8D/scene.splinecode"
+  ></spline-viewer>
+</div>
 
 <section
   class="relative w-full min-h-[600px] bg-dark flex flex-col justify-center px-4 py-10 h-fit xl:min-h-screen overflow-clip"
@@ -48,7 +61,7 @@
       <div
         class="relative flex flex-col justify-center h-full gap-4 p-4 lg:p-10 rounded-xl backdrop-blur-sm bg-white/40 overflow-clip drop-shadow-xl"
       >
-        <h1 class="text-4xl">
+        <h1 class="text-4xl" in:fade>
           <strong>Henrik Wilhelm Sissener</strong>
         </h1>
         <ul class="flex flex-col gap-4">
