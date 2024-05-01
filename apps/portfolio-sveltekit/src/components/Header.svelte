@@ -60,7 +60,7 @@
     </div>
 
     <button class="visible lg:hidden"> </button>
-    <ul class="flex items-center hidden gap-1 xl:gap-4 lg:visible">
+    <ul class="items-center hidden gap-1 xl:gap-4 lg:flex">
       {#each navigationItems as item}
         <li>
           <a

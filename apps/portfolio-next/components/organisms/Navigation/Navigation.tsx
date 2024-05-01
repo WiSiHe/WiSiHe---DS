@@ -36,7 +36,7 @@ const listItem = {
 interface iNavigationProps {
   isAbsolute?: boolean
 }
-const Navigation = ({ isAbsolute = true }: iNavigationProps) => {
+const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname()
 
   const [isOpen, setIsOpen] = useState(false)

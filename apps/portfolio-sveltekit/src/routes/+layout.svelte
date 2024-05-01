@@ -1,19 +1,15 @@
 <script>
   import Header from '../components/Header.svelte'
-  import { socialMediaLinks } from '@wisihe/constants'
   import './app.css'
   import SocialLinks from '../components/SocialLinks.svelte'
-  import Spash from '../components/Spash.svelte'
-  import { fade } from 'svelte/transition'
+  import Splash from '../components/Splash.svelte'
 </script>
 
 <div class="app">
   <Header isAbsolute />
+  <Splash />
 
   <main>
-    <div in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
-      <Spash />
-    </div>
     <slot />
   </main>
 
