@@ -442,6 +442,9 @@ importers:
       svelte-check:
         specifier: ^3.6.6
         version: 3.6.8(postcss@8.4.38)(svelte@4.2.12)
+      svelte-typewriter:
+        specifier: ^3.2.3
+        version: 3.2.3(svelte@4.2.12)
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.3(ts-node@10.9.2)
@@ -555,7 +558,7 @@ importers:
         version: 4.2.12
       svelte-check:
         specifier: ^3.6.7
-        version: 3.6.8(postcss@8.4.38)(svelte@4.2.12)
+        version: 3.6.8(@babel/core@7.24.3)(svelte@4.2.12)
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
@@ -2955,7 +2958,6 @@ packages:
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
       tslib: 2.6.2
-    dev: false
 
   /@formatjs/fast-memoize@2.2.0:
     resolution: {integrity: sha512-hnk/nY8FyrL5YxwP9e4r9dqeM6cAbo8PeU9UjyXojZMNvVad2Z06FAVHyR3Ecw6fza+0GH7vdJgiKIVXTMbSBA==}
@@ -2982,7 +2984,14 @@ packages:
     resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
     dependencies:
       tslib: 2.6.2
-    dev: false
+
+  /@formatjs/intl-segmenter@11.5.5:
+    resolution: {integrity: sha512-mMbJKFGzwYJBcwfL9EfqFje75Ce5WPar5rSi7wWvFtBPFY2Zi1cWIss7FSm2MNNM9l1BycBAsBQuXFt+Hd+0tQ==}
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.18.2
+      '@formatjs/intl-localematcher': 0.5.4
+      tslib: 2.6.2
+    dev: true
 
   /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-4i5DOrzwN4qSgNsL4Si61VMkUcWbcSKueUV7sFhpHzQcSShdlHENE5+QBntMSRvHt8NyoFO2AGG8si9lq+w4zQ==}
@@ -18584,6 +18593,15 @@ packages:
       strip-indent: 3.0.0
       svelte: 4.2.12
       typescript: 5.3.3
+    dev: true
+
+  /svelte-typewriter@3.2.3(svelte@4.2.12):
+    resolution: {integrity: sha512-762k01kIU+IyXfe5f2MEYQ1yIfJZfueAEmJNbO36cxJG56/vciHiWacPQLnSECK/4cvlH/Ll1Mv6B45InMJ1zg==}
+    peerDependencies:
+      svelte: '>=3.47.x'
+    dependencies:
+      '@formatjs/intl-segmenter': 11.5.5
+      svelte: 4.2.12
     dev: true
 
   /svelte@4.2.12:
