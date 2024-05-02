@@ -150,7 +150,8 @@
           />
           <div class="absolute inset-0 bg-opacity-50 bg-dark"></div>
           <div
-            class="absolute inset-0 w-full h-full scale-[3] ring fill-white mix-blend-color animate-pulse"
+            class="absolute inset-0 w-full h-full scale-[3] ring fill-white mix-blend-color spinpulse"
+            style={i % 2 === 1 ? 'animation-delay: 0.5s;' : ''}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -232,6 +233,22 @@
 
     @media screen and (max-width: 768px) {
       font-size: 1.5rem;
+    }
+  }
+
+  .spinpulse {
+    animation: spin 20s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg) scale(2.5);
+    }
+    50% {
+      transform: rotate(180deg) scale(3);
+    }
+    100% {
+      transform: rotate(360deg) scale(2.5);
     }
   }
 </style>
