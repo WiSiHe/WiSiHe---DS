@@ -376,6 +376,9 @@ importers:
       '@fontsource-variable/oswald':
         specifier: ^5.0.20
         version: 5.0.20
+      '@vercel/analytics':
+        specifier: ^1.2.2
+        version: 1.2.2(next@14.1.4)(react@18.2.0)
     devDependencies:
       '@portabletext/svelte':
         specifier: ^2.1.5
