@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.18",
-    "@fontsource-variable/oswald": "^5.0.20"
+    "@fontsource-variable/oswald": "^5.0.20",
+    "@vercel/analytics": "^1.2.2"
   }
 }
