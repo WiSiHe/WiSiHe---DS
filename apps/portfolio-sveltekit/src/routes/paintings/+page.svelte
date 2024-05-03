@@ -78,11 +78,15 @@
 <svelte:head>
   <title>Paintings</title>
   <meta name="description" content="Portfolio of paintings by artist, WiSiHe" />
+  <meta
+    name="keywords"
+    content="paintings, art, artist, portfolio, gallery, WiSiHe"
+  />
 </svelte:head>
 
-<div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
+<div class="grid items-start grid-cols-12 gap-4 pt-14">
   <section
-    class="p-4 rounded shadow col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
+    class="p-4 shadow col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
   >
     <div class="prose">
       <h1>Gallery</h1>
@@ -113,7 +117,7 @@
             out:fly={{ duration: 1000, x: -50 }}
           >
             <button
-              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out rounded-full overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
+              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
               {tag}
@@ -135,7 +139,7 @@
           out:fly={{ duration: 1000, x: -50 }}
         >
           <button
-            class="px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out rounded-full hover:shadow hover:scale-150 dura bg-primary hover:bg-highlight hover:text-dark"
+            class="px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out hover:shadow hover:scale-150 dura bg-primary hover:bg-highlight hover:text-dark"
             on:click={() => handleAddTag(tag)}
           >
             {tag.name}({tag.paintingsCount})
@@ -145,39 +149,39 @@
     </ul>
   </section>
 
-  <section
-    class="gap-0 columns-2 xl:columns-3 col-span-full xl:col-span-9 break-inside-avoid-column"
-  >
+  <section class="grid grid-cols-12 col-span-full xl:col-span-9">
     {#each filteredPaintings as painting (painting.slug)}
       <a
         href={`/paintings/${painting.slug}`}
-        class="relative z-0 transition-transform duration-500 ease-in-out scale-100 rounded hover:z-20 hover:scale-105 group"
+        class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
         data-sveltekit-noscroll
         in:fly={{ duration: 1000, y: 100, delay: 1000 }}
         out:fly={{ duration: 1000, y: -100 }}
       >
-        <article class="w-full h-full p-4 break-inside-avoid">
+        <article class="w-full h-full break-inside-avoid overflow-clip">
           <div class="relative">
-            <img
-              src={urlFor(painting.image).width(400).height(600).url()}
-              alt={painting.title}
-              class={cn(
-                paintingFormatStyle[painting.format],
-                'object-cover w-full rounded'
-              )}
-            />
-            <div class="absolute bottom-2 left-2">
-              <strong class="text-white">{painting.title}</strong>
-              <!-- <p class="text-xs line-clamp-2">{painting.description}</p> -->
-              <ul class="flex flex-wrap gap-1 pt-2 bottom-2 left-2">
-                {#each painting.tagsV2 as tag}
-                  <li
-                    class="px-2 py-1 text-xs text-white rounded-full bg-primary"
-                  >
+            <ul
+              class="absolute flex flex-wrap gap-1 pt-2 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+            >
+              {#each painting.tagsV2 as tag}
+                <li
+                  class="px-2 py-1 text-xs text-white transition-all shrink-0 bg-primary"
+                >
+                  <div>
                     {tag.name}
-                  </li>
-                {/each}
-              </ul>
+                  </div>
+                </li>
+              {/each}
+            </ul>
+            <img
+              src={urlFor(painting.image).width(400).height(400).url()}
+              alt={painting.title}
+              class={cn('object-cover w-full')}
+            />
+            <div
+              class="absolute transition-all duration-500 ease-in-out -bottom-32 bg-dark left-2 group-hover:bottom-2"
+            >
+              <strong class="text-xl text-white">{painting.title}</strong>
             </div>
           </div>
         </article>
