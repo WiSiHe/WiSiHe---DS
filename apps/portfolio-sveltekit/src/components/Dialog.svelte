@@ -4,7 +4,7 @@
 
 <dialog bind:this={dialog} on:close>
   <button
-    class="text-white bg-primary hover:bg-primary/95"
+    class="text-white transition-all bg-primary hover:bg-highlight hover:text-dark hover:scale-105"
     type="button"
     on:click={() => dialog.close()}>Close</button
   >
