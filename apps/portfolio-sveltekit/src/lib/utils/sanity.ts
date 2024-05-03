@@ -73,7 +73,7 @@ export async function getPainting(slug: string): Promise<iSanityPainting> {
   )
 }
 
-export async function getHomePage(): Promise<any> {
+export async function getHomePage(): Promise<iSanityHomePage> {
   return await client.fetch(homePageQuery)
 }
 
@@ -177,4 +177,27 @@ export interface iSanityTag {
 
 export interface iSanityPaintingsTag extends iSanityTag {
   paintingsCount: number
+}
+
+export interface iSanityProject {
+  _id: string
+  content: PortableTextBlock[]
+  description: string
+  image: Image
+  name: string
+  projectEnd: string
+  projectStart: string
+  slug: string
+  status: string
+  title: string
+}
+
+export interface iSanityHomePage {
+  _id: string
+  title: string
+  paintingsCount: number
+  paintingsDescription: string
+  showcasePaintings: iSanityPainting[]
+  projectsDescription: string
+  showcaseProjects: iSanityProject[]
 }
