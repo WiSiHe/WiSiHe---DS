@@ -102,7 +102,7 @@
   <a
     href="/paintings"
     on:click|preventDefault={() => window.history.back()}
-    class="fixed z-10 px-4 py-2 text-white left-2 top-20 bg-primary"
+    class="fixed z-10 px-4 py-2 text-white transition-all left-2 top-20 bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
     data-sveltekit-noscroll
   >
     Back
@@ -149,7 +149,7 @@
     {#if tagsV2}
       <ul class="flex flex-wrap gap-2 pt-3">
         {#each tagsV2 as tag}
-          <li class="">
+          <li class="text-xs">
             <div class="px-2 py-1 text-white bg-primary">
               {tag.name}
             </div>
