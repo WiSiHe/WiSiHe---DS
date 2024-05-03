@@ -5,6 +5,7 @@
   import { onMount } from 'svelte'
 
   import { navigationItems } from '@wisihe/constants'
+  import { cn } from '@wisihe/utils'
 
   const currentPath = $page.url.pathname
 
@@ -23,9 +24,9 @@
 <header>
   <nav
     aria-label="Main Navigation"
-    class={clsx(
-      'z-20 flex bg-dark text-white items-center justify-between py-2 mx-auto px-4 max-w-screen-3xl',
-      isAbsolute ? 'absolute top-0 left-0 right-0' : 'relative'
+    class={cn(
+      'z-30 flex items-center justify-between py-2 px-4 bg-dark text-white',
+      isAbsolute ? 'fixed top-0 left-0 right-0' : 'relative'
     )}
   >
     <div class="flex items-center gap-2">
@@ -58,8 +59,6 @@
         </svg>
       </a>
     </div>
-
-    <button class="visible lg:hidden"> </button>
     <ul class="items-center hidden gap-1 xl:gap-4 lg:flex">
       {#each navigationItems as item}
         <li>

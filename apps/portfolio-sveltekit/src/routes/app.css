@@ -6,15 +6,8 @@
 font-family: 'Oswald Variable', sans-serif; */
 
 @layer base {
-  html {
-    @apply cursor-auto;
-    @apply text-base;
-    @apply font-inter;
-  }
-
   body {
     @apply bg-tertiary;
-    @apply font-inter;
   }
 
   h1 {
