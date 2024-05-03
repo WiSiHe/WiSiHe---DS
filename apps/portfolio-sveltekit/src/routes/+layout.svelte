@@ -3,6 +3,9 @@
   import './app.css'
   import SocialLinks from '../components/SocialLinks.svelte'
   import Splash from '../components/Splash.svelte'
+
+  import '@fontsource-variable/oswald'
+  import '@fontsource-variable/inter'
 </script>
 
 <div class="app">
@@ -22,6 +25,10 @@
 </div>
 
 <style>
+  :global(body) {
+    font-family: 'Inter Variable', sans-serif;
+    font-family: 'Oswald Variable', sans-serif;
+  }
   .app {
     display: flex;
     flex-direction: column;

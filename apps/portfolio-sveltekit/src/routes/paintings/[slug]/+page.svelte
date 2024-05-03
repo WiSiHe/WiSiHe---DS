@@ -1,12 +1,22 @@
-<script>
+<script lang="ts">
   import { urlFor } from '$lib/utils/image'
+  import { cn } from '@wisihe/utils'
+  import Dialog from '../../../components/Dialog.svelte'
 
   export let data
-  const { title, image, description, tagsV2 } = data
+  const { title, image, description, tagsV2, format } = data
+
+  const imageFormatStyle = {
+    portrait: 'aspect-portrait',
+    landscape: 'aspect-video',
+    square: 'aspect-square'
+  }[format]
+
+  let dialog: HTMLDialogElement
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{title} | WiSiHe - Digital Portfolio</title>
   <meta name="description" content="Portfolio of paintings by artist, WiSiHe" />
 </svelte:head>
 
@@ -20,11 +30,13 @@
     Back to Paintings
   </a>
   <div class="relative col-span-full xl:col-span-8">
-    <img
-      src={urlFor(image).width(1200).height(1200).url()}
-      alt={title}
-      class="w-full rounded"
-    />
+    <button on:click={() => dialog.showModal()}>
+      <img
+        src={urlFor(image).width(1200).height(1200).url()}
+        alt={title}
+        class={cn('w-full rounded object-cover', imageFormatStyle)}
+      />
+    </button>
     {#if tagsV2}
       <ul class="absolute z-10 flex flex-col justify-end gap-1 top-2 right-2">
         {#each tagsV2 as tag}
@@ -42,4 +54,11 @@
 
     <p>{description}</p>
   </div>
+  <Dialog bind:dialog on:close={() => console.log('closed')}>
+    <img
+      src={urlFor(image).width(1200).height(1200).url()}
+      alt={title}
+      class="object-cover w-full h-full"
+    />
+  </Dialog>
 </section>

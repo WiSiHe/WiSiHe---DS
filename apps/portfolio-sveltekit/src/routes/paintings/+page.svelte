@@ -1,7 +1,7 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
   import type { iSanityTag, iSanityPaintingsTag } from '$lib/utils/sanity.js'
-  import { fade, fly } from 'svelte/transition'
+  import { fade, fly, scale } from 'svelte/transition'
 
   import { goto } from '$app/navigation'
 
@@ -12,6 +12,7 @@
   $: searchString = ''
 
   import { page } from '$app/stores'
+  import { cn } from '@wisihe/utils'
 
   let filter: string[] = []
 
@@ -65,6 +66,12 @@
     const newRouteWithFilters = `/paintings/?${newParams}`
 
     goto(newRouteWithFilters)
+  }
+
+  const paintingFormatStyle = {
+    portrait: 'aspect-square',
+    landscape: 'aspect-video',
+    square: 'aspect-square'
   }
 </script>
 
@@ -138,34 +145,40 @@
     </ul>
   </section>
 
-  <section class="grid grid-cols-12 gap-2 xl:gap-4 col-span-full xl:col-span-9">
+  <section
+    class="gap-0 columns-2 xl:columns-3 col-span-full xl:col-span-9 break-inside-avoid-column"
+  >
     {#each filteredPaintings as painting (painting.slug)}
       <a
         href={`/paintings/${painting.slug}`}
-        class="relative z-0 col-span-12 transition-transform duration-500 ease-in-out scale-100 bg-white rounded hover:z-20 hover:scale-105 sm:col-span-6 md:col-span-4 lg:col-span-3 group hover:shadow-lg"
+        class="relative z-0 transition-transform duration-500 ease-in-out scale-100 rounded hover:z-20 hover:scale-105 group"
         data-sveltekit-noscroll
+        in:fly={{ duration: 1000, y: 100, delay: 1000 }}
+        out:fly={{ duration: 1000, y: -100 }}
       >
-        <article class="w-full h-full p-4">
-          <div class="relative aspect-square">
+        <article class="w-full h-full p-4 break-inside-avoid">
+          <div class="relative">
             <img
               src={urlFor(painting.image).width(400).height(600).url()}
               alt={painting.title}
-              class="object-cover w-full rounded"
+              class={cn(
+                paintingFormatStyle[painting.format],
+                'object-cover w-full rounded'
+              )}
             />
-            <ul class="absolute flex flex-wrap gap-1 pt-2 bottom-2 left-2">
-              {#each painting.tagsV2 as tag}
-                <li
-                  class="px-2 py-1 text-xs text-white rounded-full bg-primary"
-                >
-                  {tag.name}
-                </li>
-              {/each}
-            </ul>
-          </div>
-
-          <div class="relative">
-            <strong>{painting.title}</strong>
-            <p class="text-xs line-clamp-2">{painting.description}</p>
+            <div class="absolute bottom-2 left-2">
+              <strong class="text-white">{painting.title}</strong>
+              <!-- <p class="text-xs line-clamp-2">{painting.description}</p> -->
+              <ul class="flex flex-wrap gap-1 pt-2 bottom-2 left-2">
+                {#each painting.tagsV2 as tag}
+                  <li
+                    class="px-2 py-1 text-xs text-white rounded-full bg-primary"
+                  >
+                    {tag.name}
+                  </li>
+                {/each}
+              </ul>
+            </div>
           </div>
         </article>
       </a>
