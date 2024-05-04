@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { urlFor } from '$lib/utils/image'
-  import type { iSanityTag, iSanityPaintingsTag } from '$lib/utils/sanity.js'
-  import { fade, fly, scale } from 'svelte/transition'
+  import type { iSanityPaintingsTag, iSanityTag } from '$lib/utils/sanity.js'
+  import { fade, fly } from 'svelte/transition'
 
   import { goto } from '$app/navigation'
 
@@ -12,7 +11,7 @@
   $: searchString = ''
 
   import { page } from '$app/stores'
-  import { cn } from '@wisihe/utils'
+  import PaintingCard from '../../components/PaintingCard.svelte'
 
   let filter: string[] = []
 
@@ -84,14 +83,15 @@
   />
 </svelte:head>
 
-<div class="grid items-start grid-cols-12 gap-4 pt-14">
+<div class="grid items-start grid-cols-12 pt-14">
   <section
-    class="p-4 shadow col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
+    class="p-4 col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
   >
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
     </div>
+
     <label for="search" class="">
       <strong> Search paintings </strong>
     </label>
@@ -100,7 +100,7 @@
       id="search"
       placeholder="Search paintings"
       on:input={searchPaintings}
-      class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
+      class="w-full p-2 mt-4 border border-gray-300 focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
     />
     <div>
       Results: {filteredPaintings.length} paintings
@@ -151,41 +151,7 @@
 
   <section class="grid grid-cols-12 col-span-full xl:col-span-9">
     {#each filteredPaintings as painting (painting.slug)}
-      <a
-        href={`/paintings/${painting.slug}`}
-        class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
-        data-sveltekit-noscroll
-        in:fly={{ duration: 1000, y: 100, delay: 1000 }}
-        out:fly={{ duration: 1000, y: -100 }}
-      >
-        <article class="w-full h-full break-inside-avoid overflow-clip">
-          <div class="relative">
-            <ul
-              class="absolute flex flex-wrap gap-1 pt-2 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
-            >
-              {#each painting.tagsV2 as tag}
-                <li
-                  class="px-2 py-1 text-xs text-white transition-all shrink-0 bg-primary"
-                >
-                  <div>
-                    {tag.name}
-                  </div>
-                </li>
-              {/each}
-            </ul>
-            <img
-              src={urlFor(painting.image).width(400).height(400).url()}
-              alt={painting.title}
-              class={cn('object-cover w-full')}
-            />
-            <div
-              class="absolute transition-all duration-500 ease-in-out -bottom-32 bg-dark left-2 group-hover:bottom-2"
-            >
-              <strong class="text-xl text-white">{painting.title}</strong>
-            </div>
-          </div>
-        </article>
-      </a>
+      <PaintingCard {painting} />
     {/each}
   </section>
 </div>
