@@ -78,6 +78,14 @@
 <svelte:head>
   <title>{title} | WiSiHe - Digital Portfolio</title>
   <meta name="description" content={seoDescription} />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="no_NO" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="kewords"
+    content="WiSiHe, Henrik Wilhelm Sissener, Portfolio, Paintings, Art, Artist"
+  />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={seoDescription} />
   <meta
