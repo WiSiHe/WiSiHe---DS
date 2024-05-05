@@ -13,6 +13,8 @@
   import { page } from '$app/stores'
   import PaintingCard from '../../components/PaintingCard.svelte'
 
+  import { IconX } from '@tabler/icons-svelte'
+
   let filter: string[] = []
 
   let filteredTags: iSanityPaintingsTag[] = []
@@ -51,9 +53,7 @@
   }
 
   function removeTag(tag: string) {
-    console.log(slugify(tag))
     const newFilter = filter.filter(f => slugify(f) !== slugify(tag))
-    console.log(filter, newFilter)
     const newParams = newFilter.map(f => `filter=${f}`).join('&')
     const newRouteWithFilters = `/paintings/?${newParams}`
     goto(newRouteWithFilters)
@@ -63,14 +63,7 @@
     const newFilter = [...filter, slugify(tag.name)]
     const newParams = newFilter.map(f => `filter=${f}`).join('&')
     const newRouteWithFilters = `/paintings/?${newParams}`
-
     goto(newRouteWithFilters)
-  }
-
-  const paintingFormatStyle = {
-    portrait: 'aspect-square',
-    landscape: 'aspect-video',
-    square: 'aspect-square'
   }
 </script>
 
@@ -112,41 +105,33 @@
     {#if filter.length > 0}
       <ul class="flex flex-wrap gap-1" in:fade out:fade>
         {#each filter as tag}
-          <li
-            in:fly={{ duration: 1000, x: 50, delay: 1000 }}
-            out:fly={{ duration: 1000, x: -50 }}
-          >
+          <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
             <button
-              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
+              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all ease-in-out overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
               {tag}
-              <div
-                class="w-0 transition-all duration-500 ease-in-out delay-100 scale-0 translate-x-10 group-hover:w-auto group-hover:scale-100 group-hover:translate-x-0"
-              >
-                x
-              </div>
+              <IconX class="stroke-white" />
             </button>
           </li>
         {/each}
       </ul>
     {/if}
-    <hr class="py-2" />
-    <ul class="flex flex-wrap gap-1 pt-4">
-      {#each filteredTags as tag}
-        <li
-          in:fly={{ duration: 1000, x: 50, delay: 1000 }}
-          out:fly={{ duration: 1000, x: -50 }}
-        >
-          <button
-            class="px-3 py-2 text-xs text-white capitalize transition-all duration-500 ease-in-out hover:shadow hover:scale-150 dura bg-primary hover:bg-highlight hover:text-dark"
-            on:click={() => handleAddTag(tag)}
-          >
-            {tag.name}({tag.paintingsCount})
-          </button>
-        </li>
-      {/each}
-    </ul>
+    <div class="pt-2">
+      <strong>Tags:</strong>
+      <ul class="flex flex-wrap gap-1 pt-4">
+        {#each filteredTags as tag}
+          <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
+            <button
+              class="px-3 py-2 text-xs text-white capitalize transition-all ease-in-out hover:shadow hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
+              on:click={() => handleAddTag(tag)}
+            >
+              {tag.name}({tag.paintingsCount})
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
   </section>
 
   <section class="grid grid-cols-12 col-span-full xl:col-span-9">
