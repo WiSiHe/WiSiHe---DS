@@ -1,5 +1,5 @@
 <script>
-  import Header from '../components/Header.svelte'
+  import Header from '../components/header/Header.svelte'
   import './app.css'
   import SocialLinks from '../components/SocialLinks.svelte'
   import Splash from '../components/Splash.svelte'

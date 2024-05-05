@@ -1,31 +1,62 @@
 <script lang="ts">
-  export let painting
+  export let painting: iSanityPainting
   import { urlFor } from '$lib/utils/image'
   import { cn, isNotEmptyArray } from '@wisihe/utils'
   import { fly, scale } from 'svelte/transition'
+  import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
 
-  const { title, tagsV2, slug, redBubbleUrl, images = [] } = painting
+  const { title, tagsV2, slug, redbubbleUrl, images = [] } = painting
 
-  const hasSalesLink = !!redBubbleUrl
+  function isValidUrl(url: string | undefined | null) {
+    if (!url) return false
+    try {
+      new URL(url)
+      return true
+    } catch (e) {
+      return false
+    }
+  }
+
+  const hasSalesLink = isValidUrl(redbubbleUrl)
+
   const hasMultipleImages = isNotEmptyArray(images)
 
-  import { IconBoxMultiple, IconHeart } from '@tabler/icons-svelte'
+  import type { iSanityPainting } from '$lib/utils/sanity'
+
+  import { page } from '$app/stores'
+
+  let filter: string[] = []
+  let filterContainsNSFW: boolean = false
+
+  $: {
+    filter = $page.url.searchParams.getAll('filter') || ['']
+    filterContainsNSFW = filter.includes('nsfw')
+  }
+
+  console.log(filter)
+
+  let hasNSFWTag = tagsV2.some((tag: { name: string }) =>
+    tag.name.toLowerCase().includes('nsfw')
+  )
 </script>
 
 <a
   href={`/paintings/${slug}`}
   class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
   data-sveltekit-noscroll
-  in:fly={{ duration: 1000, y: 100, delay: 1000 }}
-  out:fly={{ duration: 1000, y: -100 }}
+  transition:scale
 >
   <article class="w-full h-full overflow-clip">
     <div class="relative">
+      {#if hasNSFWTag && !filterContainsNSFW}
+        <div
+          class="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur-xl"
+        >
+          <p class="text-white">NSFW</p>
+        </div>
+      {/if}
       <div
-        class="absolute inset-0 transition-opacity duration-500 bg-opacity-50 pointer-events-none bg-primary group-hover:bg-opacity-5"
-      />
-      <div
-        class="absolute flex justify-between gap-1 pt-2 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+        class="absolute flex items-start justify-between gap-1 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
       >
         <ul class="flex flex-wrap gap-1">
           {#each tagsV2 as tag}
@@ -38,14 +69,18 @@
             </li>
           {/each}
         </ul>
-        {#if hasMultipleImages}
-          <div
-            class="hidden group-hover:visible"
-            in:scale={{ duration: 500, delay: 500 }}
-          >
-            <IconBoxMultiple class="stroke-white" />
-          </div>
-        {/if}
+        <ul class="flex flex-col gap-2">
+          {#if hasMultipleImages}
+            <li class="bg-tertiary">
+              <IconBoxMultiple class="stroke-dark" />
+            </li>
+          {/if}
+          {#if hasSalesLink}
+            <li class="bg-highlight">
+              <IconShoppingCart class="stroke-dark" />
+            </li>
+          {/if}
+        </ul>
       </div>
 
       <img

@@ -7,19 +7,11 @@
 
   import { navigationItems } from '@wisihe/constants'
   import { cn } from '@wisihe/utils'
+  import NavItem from './NavItem.svelte'
 
   const currentPath = $page.url.pathname
 
   export let isAbsolute = false
-
-  let url: string | null
-  $: if ($navigating) {
-    url = $page.route.id
-  }
-
-  onMount(() => {
-    url = $page.route.id
-  })
 </script>
 
 <header>
@@ -63,18 +55,7 @@
     <ul class="items-center hidden gap-1 xl:gap-4 lg:flex">
       {#each navigationItems as item}
         <li>
-          <a
-            href={item.href}
-            class={clsx(
-              'transition-all  flex gap-2 px-4 py-2 rounded-lg hover:bg-primary hover:text-white active:bg-primary',
-              url === item.href
-                ? 'underline decoration-primary text-white decoration-2 bg-primary'
-                : ''
-            )}
-          >
-            <IconHeart />
-            {item.label}
-          </a>
+          <NavItem {item} />
         </li>
       {/each}
     </ul>
