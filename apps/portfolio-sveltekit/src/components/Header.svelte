@@ -1,5 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx'
+  import { IconHeart } from '@tabler/icons-svelte'
 
   import { navigating, page } from '$app/stores'
   import { onMount } from 'svelte'
@@ -65,12 +66,14 @@
           <a
             href={item.href}
             class={clsx(
-              'transition-all mix-blend-difference px-4 py-2 rounded-lg hover:bg-primary hover:text-white active:bg-primary',
+              'transition-all  flex gap-2 px-4 py-2 rounded-lg hover:bg-primary hover:text-white active:bg-primary',
               url === item.href
                 ? 'underline decoration-primary text-white decoration-2 bg-primary'
                 : ''
             )}
-            >{item.label}
+          >
+            <IconHeart />
+            {item.label}
           </a>
         </li>
       {/each}

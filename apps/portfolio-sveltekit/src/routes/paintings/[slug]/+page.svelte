@@ -15,7 +15,7 @@
     paintedAt,
     images = []
   } = data
-
+  console.log({ data })
   const imageFormatStyle = {
     portrait: 'aspect-portrait',
     landscape: 'aspect-video',
@@ -129,7 +129,7 @@
         )}
       />
     </button>
-    {#if images?.length > 1}
+    {#if allImages.length > 1}
       <div class="flex items-center justify-center gap-4 pt-4">
         <button on:click={() => handleSelectImage(image)}>
           <img
