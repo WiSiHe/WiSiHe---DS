@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit'
 import type { PageLoad } from '../../$types'
 import { getPainting } from '$lib/utils/sanity'
 
-export const ssr = false
+// export const ssr = false
 
 export const load = (async ({ params }) => {
   const { slug = '' } = params as { slug: string }

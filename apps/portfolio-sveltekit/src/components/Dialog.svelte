@@ -1,12 +1,16 @@
 <script lang="ts">
   export let dialog: HTMLDialogElement
+
+  function handleClose() {
+    dialog.close()
+  }
 </script>
 
 <dialog bind:this={dialog} on:close>
   <button
     class="text-white transition-all bg-primary hover:bg-highlight hover:text-dark hover:scale-105"
     type="button"
-    on:click={() => dialog.close()}>Close</button
+    on:click={handleClose}>Close</button
   >
   <slot />
 </dialog>

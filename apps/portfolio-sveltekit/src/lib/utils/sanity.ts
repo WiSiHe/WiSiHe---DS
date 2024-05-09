@@ -115,6 +115,35 @@ export const homePageQuery = groq`
   }
 `
 
+export async function getProjects(): Promise<iSanityProject[]> {
+  return await client.fetch(
+    groq`*[_type == "project" && defined(slug.current)]{..., "slug":slug.current} | order(_createdAt desc)`
+  )
+}
+
+export async function getProject(slug: string): Promise<iSanityProject> {
+  return await client.fetch(
+    groq`*[_type == "project" && slug.current == $slug][0]{
+      _id,
+      title,
+      description,
+      projectStart,
+      projectEnd,
+      status,
+      content,
+      name,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip
+      },
+      "slug": slug.current
+    }`,
+    {
+      slug
+    }
+  )
+}
+
 export interface Post {
   _type: 'post'
   _createdAt: string
