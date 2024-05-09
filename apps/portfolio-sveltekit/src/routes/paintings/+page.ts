@@ -2,7 +2,7 @@ import { getAllPaintingsAndTags, getPaintings } from '$lib/utils/sanity'
 import { error } from '@sveltejs/kit'
 import type { PageLoad } from '../$types'
 
-export const ssr = false
+// export const ssr = false
 
 export const load = (async () => {
   const data = await getAllPaintingsAndTags()

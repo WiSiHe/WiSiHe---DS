@@ -14,7 +14,7 @@
     href: string
   }
 
-  const { label = '' } = item
+  const { label = '', href } = item
 
   let url: string | null
   $: if ($navigating) {
@@ -31,12 +31,17 @@
     Videos: IconVideo,
     Contact: IconMail
   }[label]
+
+  $: pathName = $page.url.pathname
+  $: isActive = pathName?.includes(item.href)
 </script>
 
 <a
   href={item.href}
   class={cn(
     'transition-all  flex gap-2 px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
+    isActive &&
+      'underline decoration-primary text-white decoration-2 bg-primary',
     url === item.href
       ? 'underline decoration-primary text-white decoration-2 bg-primary'
       : ''
