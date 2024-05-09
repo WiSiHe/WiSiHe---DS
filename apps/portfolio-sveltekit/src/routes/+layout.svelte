@@ -14,7 +14,7 @@
 
 <div class="app">
   <Header isAbsolute />
-  <Splash />
+  <!-- <Splash /> -->
 
   <main>
     <slot />

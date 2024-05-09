@@ -144,6 +144,45 @@ export async function getProject(slug: string): Promise<iSanityProject> {
   )
 }
 
+export async function getVideos(): Promise<Video[]> {
+  return await client.fetch(
+    groq`*[_type == "video" && defined(slug.current)]{..., "slug":slug.current} | order(_createdAt desc)`
+  )
+}
+
+export async function getVideo(slug: string): Promise<Video> {
+  return await client.fetch(
+    groq`*[_type == "video" && slug.current == $slug][0]{
+      _id,
+      title,
+      url,
+      description,
+      slug,
+      mainImage{
+        ...,
+        "lqip": asset->metadata.lqip
+      },
+      thumbnail{
+        ...,
+        "lqip": asset->metadata.lqip
+      }
+    }`,
+    {
+      slug
+    }
+  )
+}
+
+export interface Video {
+  _type: 'video'
+  _id: string
+  title: string
+  url: string
+  description: string
+  slug: Slug
+  mainImage: ImageAsset
+  thumbnail: ImageAsset
+}
 export interface Post {
   _type: 'post'
   _createdAt: string

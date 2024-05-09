@@ -14,6 +14,7 @@
   import PaintingCard from '../../components/PaintingCard.svelte'
 
   import { IconX } from '@tabler/icons-svelte'
+  import SideBar from '../../components/SideBar.svelte'
 
   let filter: string[] = []
 
@@ -77,9 +78,7 @@
 </svelte:head>
 
 <div class="grid items-start grid-cols-12 pt-14">
-  <section
-    class="p-4 col-span-full xl:sticky xl:col-span-3 xl:top-20 bg-tertiary"
-  >
+  <SideBar>
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
@@ -131,8 +130,8 @@
           </li>
         {/each}
       </ul>
-    </div>
-  </section>
+    </div>  
+  </SideBar>
 
   <section class="grid grid-cols-12 col-span-full xl:col-span-9">
     {#each filteredPaintings as painting (painting.slug)}

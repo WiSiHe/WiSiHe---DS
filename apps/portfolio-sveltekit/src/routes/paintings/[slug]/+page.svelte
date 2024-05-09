@@ -2,6 +2,7 @@
   import { urlFor } from '$lib/utils/image'
   import { cn } from '@wisihe/utils'
   import Dialog from '../../../components/Dialog.svelte'
+  import SideBar from '../../../components/SideBar.svelte'
   import { onMount } from 'svelte'
 
   export let data
@@ -106,16 +107,17 @@
   />
 </svelte:head>
 
+<a
+  href="/paintings"
+  on:click|preventDefault={() => window.history.back()}
+  class="fixed z-10 px-4 py-2 text-white transition-all left-2 top-20 bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
+  data-sveltekit-noscroll
+>
+  Back
+</a>
+
 <section class="grid items-start grid-cols-12 gap-4 p-4 pt-16 bg-stone-50">
-  <a
-    href="/paintings"
-    on:click|preventDefault={() => window.history.back()}
-    class="fixed z-10 px-4 py-2 text-white transition-all left-2 top-20 bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
-    data-sveltekit-noscroll
-  >
-    Back
-  </a>
-  <div class="relative col-span-full xl:col-span-8">
+  <div class="relative col-span-full xl:col-span-9">
     <button
       on:click={() => dialog.showModal()}
       class={cn('relative w-full h-full rounded-none ', imageFormatStyle)}
@@ -150,9 +152,8 @@
       </div>
     {/if}
   </div>
-  <div
-    class="xl:p-8 xl:bg-white xl:sticky col-span-full xl:col-span-4 xl:top-10 xl:shadow-lg"
-  >
+
+  <SideBar>
     <h1>{title}</h1>
     {#if tagsV2}
       <ul class="flex flex-wrap gap-2 pt-3">
@@ -171,7 +172,7 @@
     <div class="prose">
       <p class="">{description}</p>
     </div>
-  </div>
+  </SideBar>
 </section>
 
 <Dialog bind:dialog on:close>
