@@ -15,6 +15,7 @@
 
   import { cn } from '@wisihe/utils'
   import { onMount } from 'svelte'
+  import SideBar from '../../components/SideBar.svelte'
 
   let paintings = [
     {
@@ -94,8 +95,8 @@
   })
 </script>
 
-<section class="px-4 py-16">
-  <div class="flex flex-col gap-8 p-4 prose col-span-full lg:col-span-3">
+<section class="grid items-start grid-cols-12 p-4 pt-16">
+  <SideBar>
     <h1>Contact</h1>
     <p class="pt-2">
       I&#39;m always happy to hear from you. If you have any questions or
@@ -119,8 +120,8 @@
       latest work and projects.
     </p>
     <SocialLinks />
-  </div>
-  <section class="columns-3">
+  </SideBar>
+  <section class="col-span-9 columns-3">
     {#each paintings as painting}
       <div
         class={cn(

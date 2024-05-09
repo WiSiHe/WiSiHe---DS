@@ -1,17 +1,30 @@
 <script lang="ts">
   export let data
   import { urlFor } from '$lib/utils/image'
+  import SideBar from '../../components/SideBar.svelte'
 
   const { projects = [] } = data
 </script>
 
-<section class="grid items-start grid-cols-12 p-4 pt-16">
-  <div class="col-span-2">
-    <h1 class="text-blue-800">Projects</h1>
-    <h2>Projects</h2>
-    <p>Painting details here</p>
-  </div>
-  <ul class="grid w-full grid-cols-12 col-span-10 gap-4">
+<svelte:head>
+  <title>Projects</title>
+  <meta
+    name="description"
+    content="Find my diverse projects: painting time-lapses, game dev, and hand-drawn animations. A chance to learn new skills and experiment creatively."
+  />
+</svelte:head>
+
+<section class="grid items-start grid-cols-12 pt-16">
+  <SideBar>
+    <div class="prose">
+      <h1 class="text-blue-800">Projects</h1>
+      <p>
+        Discover a collection of my ongoing and completed projects, each with
+        unique learning experiences.
+      </p>
+    </div>
+  </SideBar>
+  <ul class="grid w-full grid-cols-12 col-span-9 gap-4 p-4">
     {#each projects as project}
       <li class="col-span-4">
         <a href={`projects/${project.slug}`} class="">
