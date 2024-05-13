@@ -1,6 +1,5 @@
 <script lang="ts">
   import clsx from 'clsx'
-  import { IconHeart } from '@tabler/icons-svelte'
 
   import { navigating, page } from '$app/stores'
   import { onMount } from 'svelte'
