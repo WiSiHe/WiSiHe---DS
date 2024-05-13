@@ -5,6 +5,9 @@
   import SideBar from '../../../components/SideBar.svelte'
   import { onMount } from 'svelte'
 
+  import { IconClock } from '@tabler/icons-svelte'
+  import Youtube from '../../../components/Youtube.svelte'
+
   export let data
   const {
     title,
@@ -14,9 +17,18 @@
     tagsV2,
     format,
     paintedAt,
-    images = []
+    images = [],
+    redbubbleUrl,
+    video
   } = data
-  console.log({ data })
+  console.log(data)
+
+  let formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+
   const imageFormatStyle = {
     portrait: 'aspect-portrait',
     landscape: 'aspect-video',
@@ -151,10 +163,19 @@
         {/each}
       </div>
     {/if}
+    {#if video}
+      Videos:
+      <Youtube href={video} />
+    {/if}
   </div>
 
   <SideBar>
-    <h1>{title}</h1>
+    <div
+      class="flex items-center gap-1 px-2 py-1 mt-2 text-xs bg-secondary/10 w-fit"
+    >
+      <IconClock class="w-4 h-4" />
+      {formatedPaintedAt}
+    </div>
     {#if tagsV2}
       <ul class="flex flex-wrap gap-2 pt-3">
         {#each tagsV2 as tag}
@@ -166,11 +187,9 @@
         {/each}
       </ul>
     {/if}
-    {#if paintedAt}
-      <p class="">{paintedAt}</p>
-    {/if}
     <div class="prose">
-      <p class="">{description}</p>
+      <h1>{title}</h1>
+      <p>{description}</p>
     </div>
   </SideBar>
 </section>
