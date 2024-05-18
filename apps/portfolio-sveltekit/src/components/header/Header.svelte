@@ -1,14 +1,7 @@
 <script lang="ts">
-  import clsx from 'clsx'
-
-  import { navigating, page } from '$app/stores'
-  import { onMount } from 'svelte'
-
   import { navigationItems } from '@wisihe/constants'
   import { cn } from '@wisihe/utils'
   import NavItem from './NavItem.svelte'
-
-  const currentPath = $page.url.pathname
 
   export let isAbsolute = false
 </script>
@@ -60,3 +53,10 @@
     </ul>
   </nav>
 </header>
+
+<style>
+  header {
+    z-index: 20;
+    /* view-transition-name: header; */
+  }
+</style>

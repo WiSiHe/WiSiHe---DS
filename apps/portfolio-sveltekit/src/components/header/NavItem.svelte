@@ -4,7 +4,8 @@
     IconBrush,
     IconPackages,
     IconVideo,
-    IconMail
+    IconMail,
+    IconBox
   } from '@tabler/icons-svelte'
   import { navigating, page } from '$app/stores'
   import { onMount } from 'svelte'
@@ -14,7 +15,7 @@
     href: string
   }
 
-  const { label = '', href } = item
+  const { label = '' } = item
 
   let url: string | null
   $: if ($navigating) {
@@ -29,7 +30,8 @@
     Paintings: IconBrush,
     Projects: IconPackages,
     Videos: IconVideo,
-    Contact: IconMail
+    Contact: IconMail,
+    '3D': IconBox
   }[label]
 
   $: pathName = $page.url.pathname

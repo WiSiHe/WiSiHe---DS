@@ -1,15 +1,28 @@
 <script>
-  import Header from '../components/header/Header.svelte'
-  import './app.css'
   import SocialLinks from '../components/SocialLinks.svelte'
-  import Splash from '../components/Splash.svelte'
+  import Header from '../components/header/Header.svelte'
 
-  import '@fontsource-variable/oswald'
+  import './app.css'
+
   import '@fontsource-variable/inter'
+  import '@fontsource-variable/oswald'
 
   import { dev } from '$app/environment'
   import { inject } from '@vercel/analytics'
   inject({ mode: dev ? 'development' : 'production' })
+
+  import { onNavigate } from '$app/navigation'
+
+  onNavigate(navigation => {
+    if (!document.startViewTransition) return
+
+    return new Promise(resolve => {
+      document.startViewTransition(async () => {
+        resolve()
+        await navigation.complete
+      })
+    })
+  })
 </script>
 
 <div class="app">
