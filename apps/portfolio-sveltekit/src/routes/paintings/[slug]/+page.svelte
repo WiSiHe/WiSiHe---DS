@@ -1,12 +1,14 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
   import { cn } from '@wisihe/utils'
+  import { onMount } from 'svelte'
+  import { fade, fly } from 'svelte/transition'
+  import BackButton from '../../../components/BackButton.svelte'
   import Dialog from '../../../components/Dialog.svelte'
   import SideBar from '../../../components/SideBar.svelte'
-  import { onMount } from 'svelte'
+  import Youtube from '../../../components/Youtube.svelte'
 
   import { IconClock } from '@tabler/icons-svelte'
-  import Youtube from '../../../components/Youtube.svelte'
 
   export let data
   const {
@@ -119,14 +121,7 @@
   />
 </svelte:head>
 
-<a
-  href="/paintings"
-  on:click|preventDefault={() => window.history.back()}
-  class="fixed z-10 px-4 py-2 text-white transition-all left-2 top-20 bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
-  data-sveltekit-noscroll
->
-  Back
-</a>
+<BackButton />
 
 <section class="grid items-start grid-cols-12 gap-4 p-4 pt-16 bg-stone-50">
   <div class="relative col-span-full xl:col-span-9">
@@ -141,6 +136,7 @@
           'w-full absolute h-full inset-0 object-cover',
           imageFormatStyle
         )}
+        style={`view-transition-name: image-${data.slug}`}
       />
     </button>
     {#if allImages.length > 1}
@@ -169,27 +165,33 @@
     {/if}
   </div>
 
-  <SideBar>
+  <SideBar className="p-0">
     <div
-      class="flex items-center gap-1 px-2 py-1 mt-2 text-xs bg-secondary/10 w-fit"
+      in:fly={{ y: 50, opacity: 0, duration: 400 }}
+      out:fade
+      class="sticky p-4 shadow top-16"
     >
-      <IconClock class="w-4 h-4" />
-      {formatedPaintedAt}
-    </div>
-    {#if tagsV2}
-      <ul class="flex flex-wrap gap-2 pt-3">
-        {#each tagsV2 as tag}
-          <li class="text-xs">
-            <div class="px-2 py-1 text-white bg-primary">
-              {tag.name}
-            </div>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-    <div class="prose">
-      <h1>{title}</h1>
-      <p>{description}</p>
+      <div
+        class="flex items-center gap-1 px-2 py-1 mt-2 text-xs bg-secondary/10 w-fit"
+      >
+        <IconClock class="w-4 h-4" />
+        {formatedPaintedAt}
+      </div>
+      {#if tagsV2}
+        <ul class="flex flex-wrap gap-2 pt-3">
+          {#each tagsV2 as tag}
+            <li class="text-xs">
+              <div class="px-2 py-1 text-white bg-primary">
+                {tag.name}
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+      <div class="prose">
+        <h1 style={`view-transition-name: title-${data.slug}`}>{title}</h1>
+        <p>{description}</p>
+      </div>
     </div>
   </SideBar>
 </section>

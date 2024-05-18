@@ -1,9 +1,8 @@
 <script lang="ts">
   export let painting: iSanityPainting
   import { urlFor } from '$lib/utils/image'
-  import { cn, isNotEmptyArray } from '@wisihe/utils'
-  import { fly, scale } from 'svelte/transition'
   import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
+  import { cn, isNotEmptyArray } from '@wisihe/utils'
 
   const { title, tagsV2, slug, redbubbleUrl, images = [] } = painting
 
@@ -24,6 +23,7 @@
   import type { iSanityPainting } from '$lib/utils/sanity'
 
   import { page } from '$app/stores'
+  import { fade } from 'svelte/transition'
 
   let filter: string[] = []
   let filterContainsNSFW: boolean = false
@@ -33,8 +33,6 @@
     filterContainsNSFW = filter.includes('nsfw')
   }
 
-  console.log(filter)
-
   let hasNSFWTag = tagsV2.some((tag: { name: string }) =>
     tag.name.toLowerCase().includes('nsfw')
   )
@@ -42,15 +40,15 @@
 
 <a
   href={`/paintings/${slug}`}
-  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
-  data-sveltekit-noscroll
-  transition:scale
+  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 outline-none focus-within:ring test xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
+  in:fade
+  out:fade
 >
-  <article class="w-full h-full overflow-clip">
+  <article class="z-0 w-full h-full overflow-clip">
     <div class="relative">
       {#if hasNSFWTag && !filterContainsNSFW}
         <div
-          class="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur-xl"
+          class="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur-xl"
         >
           <p class="text-white">NSFW</p>
         </div>
@@ -96,3 +94,27 @@
     </div>
   </article>
 </a>
+
+<style>
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes appear {
+        from {
+          opacity: 0;
+          transform: translateX(100%) scale(0.7);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+      }
+
+      .test {
+        z-index: 1;
+        animation: appear ease-in-out;
+        animation-timeline: view();
+        animation-range: entry 10% cover 20%;
+      }
+    }
+  }
+</style>

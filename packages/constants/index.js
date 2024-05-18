@@ -15,6 +15,11 @@ export const navigationItems = [
     href: "/contact",
     description: "Contact",
   },
+  {
+    label: "3D",
+    href: "/test",
+    description: "3D",
+  },
 ]
 
 export const socialMediaLinks = [
