@@ -26,6 +26,8 @@
 
   let timeoutId: number
 
+  let sortOrder: 'newest' | 'oldest' | 'random' = 'random'
+
   let visibleFilters = false
 
   export const slugify = (str: string) => {
@@ -55,6 +57,21 @@
         painting.tagsV2.some(tag => filter.includes(slugify(tag.name))) ||
         filter.length === 0
     )
+
+    // Sort filteredPaintings based on sortOrder
+    if (sortOrder === 'newest') {
+      filteredPaintings.sort(
+        (a, b) =>
+          new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
+      )
+    } else if (sortOrder === 'oldest') {
+      filteredPaintings.sort(
+        (a, b) =>
+          new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
+      )
+    } else if (sortOrder === 'random') {
+      filteredPaintings = [...filteredPaintings].sort(() => Math.random() - 0.5)
+    }
   }
 
   function removeTag(tag: string) {
@@ -81,8 +98,8 @@
   />
 </svelte:head>
 
-<div class="grid items-start grid-cols-12 pt-14">
-  <SideBar className="sticky top-16">
+<div class="grid items-start grid-cols-12 p-4 pt-14">
+  <SideBar className="sticky top-16 shadow h-fit transition-all ease-in-out">
     <div class="prose">
       <h1>Gallery</h1>
       <p>A gallery of some of my paintings.</p>
@@ -101,6 +118,7 @@
     <div>
       Results: {filteredPaintings.length} paintings
     </div>
+
     <strong>Active filters:</strong>
     {#if filter.length === 0}
       <p>No filters applied</p>
@@ -110,11 +128,11 @@
         {#each filter as tag}
           <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
             <button
-              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all ease-in-out overflow-clip group hover:scale-150 bg-primary hover:bg-highlight hover:text-dark"
+              class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all ease-in-out overflow-clip group hover:scale-125 bg-primary hover:bg-highlight hover:text-dark"
               on:click={() => removeTag(tag)}
             >
               {tag}
-              <IconX class="stroke-white" />
+              <IconX />
             </button>
           </li>
         {/each}
@@ -122,7 +140,6 @@
     {/if}
     <div class="pt-2">
       <div class="flex justify-between">
-        <strong>Filters:</strong>
         <button
           on:click={() => (visibleFilters = !visibleFilters)}
           class="flex items-center px-3 py-2 text-xs text-white capitalize transition-all ease-in-out hover:shadow bg-primary hover:bg-highlight hover:text-dark"
@@ -146,9 +163,17 @@
         </ul>
       {/if}
     </div>
+    <select
+      class="w-full p-2 mt-4 border border-gray-300 focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
+      bind:value={sortOrder}
+    >
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+      <option value="random">Random</option>
+    </select>
   </SideBar>
 
-  <section class="grid grid-cols-12 gap-4 pt-4 col-span-full xl:col-span-9">
+  <section class="grid grid-cols-12 gap-4 p-4 col-span-full xl:col-span-9">
     {#each filteredPaintings as painting (painting.slug)}
       <PaintingCard {painting} />
     {/each}

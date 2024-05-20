@@ -40,21 +40,14 @@
 
 <a
   href={`/paintings/${slug}`}
-  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 outline-none focus-within:ring test xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
+  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 outline-none test focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
   in:fade
   out:fade
 >
   <article class="z-0 w-full h-full overflow-clip">
     <div class="relative">
-      {#if hasNSFWTag && !filterContainsNSFW}
-        <div
-          class="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur-xl"
-        >
-          <p class="text-white">NSFW</p>
-        </div>
-      {/if}
       <div
-        class="absolute flex items-start justify-between gap-1 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+        class="absolute z-10 flex items-start justify-between gap-1 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
       >
         <ul class="flex flex-wrap gap-1">
           {#each tagsV2 as tag}
@@ -80,7 +73,13 @@
           {/if}
         </ul>
       </div>
-
+      {#if hasNSFWTag && !filterContainsNSFW}
+        <div
+          class="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur"
+        >
+          <p class="font-semibold text-white">NSFW</p>
+        </div>
+      {/if}
       <img
         src={urlFor(painting.image).width(400).height(400).url()}
         alt={painting.title}
@@ -100,20 +99,20 @@
     @media (prefers-reduced-motion: no-preference) {
       @keyframes appear {
         from {
-          opacity: 0;
-          transform: translateX(100%) scale(0.7);
+          opacity: 0.9%;
+          transform: translateY(100px) scale(0.4);
         }
         to {
           opacity: 1;
-          transform: translateX(0) scale(1);
+          transform: translateY(0) scale(1);
         }
       }
 
       .test {
         z-index: 1;
-        animation: appear ease-in-out;
+        animation: appear linear;
         animation-timeline: view();
-        animation-range: entry 10% cover 20%;
+        animation-range: entry -40% contain 5%;
       }
     }
   }
