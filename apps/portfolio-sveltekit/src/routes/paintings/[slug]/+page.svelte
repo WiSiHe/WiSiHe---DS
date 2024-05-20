@@ -127,7 +127,9 @@
 
 <BackButton />
 
-<section class="grid items-start grid-cols-12 gap-4 p-4 pt-16 bg-stone-50">
+<section
+  class="grid items-start min-h-screen grid-cols-12 gap-4 p-4 pt-16 bg-stone-50"
+>
   <div class="relative col-span-full xl:col-span-9">
     <button
       on:click={() => dialog.showModal()}
@@ -181,11 +183,11 @@
     {/if}
   </div>
 
-  <SideBar className="p-0">
+  <SideBar className="p-4 xl:p-0">
     <div
       in:fly={{ y: 100, opacity: 0, duration: 1000 }}
       out:fade
-      class="sticky p-4 shadow top-16"
+      class="xl:p-4 xl:pt-4 xl:bg-white xl:shadow-xl xl:sticky xl:top-16"
     >
       <div
         class="flex items-center gap-1 px-2 py-1 mt-2 text-xs bg-secondary/10 w-fit"
