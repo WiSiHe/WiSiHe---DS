@@ -88,6 +88,10 @@
       window.removeEventListener('keydown', handleKeyRight)
     }
   })
+
+  // style={`view-transition-name: image-${data.slug}`}
+  // <!-- on:click|preventDefault={() => window.history.back()} -->
+  // data-sveltekit-noscroll
 </script>
 
 <svelte:head>
@@ -127,7 +131,10 @@
   <div class="relative col-span-full xl:col-span-9">
     <button
       on:click={() => dialog.showModal()}
-      class={cn('relative w-full h-full rounded-none ', imageFormatStyle)}
+      class={cn(
+        'relative w-full h-full rounded-none outline-none',
+        imageFormatStyle
+      )}
     >
       <img
         src={urlFor(selectedImage).width(1200).height(1200).url()}
@@ -136,7 +143,6 @@
           'w-full absolute h-full inset-0 object-cover',
           imageFormatStyle
         )}
-        style={`view-transition-name: image-${data.slug}`}
       />
     </button>
     {#if allImages.length > 1}
@@ -167,7 +173,7 @@
 
   <SideBar className="p-0">
     <div
-      in:fly={{ y: 50, opacity: 0, duration: 400 }}
+      in:fly={{ y: 100, opacity: 0, duration: 1000 }}
       out:fade
       class="sticky p-4 shadow top-16"
     >
