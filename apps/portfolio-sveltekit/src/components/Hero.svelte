@@ -3,6 +3,7 @@
   import { fade } from 'svelte/transition'
   import { aboutMeBulletPoints } from '@wisihe/constants'
   import type { iSanityPainting } from '$lib/utils/sanity'
+  import { IconArrowLeft, IconArrowRight } from '@tabler/icons-svelte'
 
   export let paintings: iSanityPainting[] = []
 
@@ -65,32 +66,48 @@
       <div
         class="relative w-full h-full aspect-video drop-shadow-lg rounded-2xl bg-dark/20 overflow-clip"
       >
-        <img
-          src={urlFor(currentPainting.image).width(800).height(400).url()}
-          alt={currentPainting.title}
-          class="object-cover w-full h-full"
-        />
+        <picture>
+          <source
+            srcset={urlFor(currentPainting.image).width(1200).height(600).url()}
+            media="(min-width: 800px)"
+          />
+          <source
+            srcset={urlFor(currentPainting.image).width(800).height(400).url()}
+            media="(max-width: 799px)"
+          />
+          <img
+            src={urlFor(currentPainting.image).width(1200).height(600).url()}
+            alt={currentPainting.title}
+            class="object-cover w-full h-full"
+          />
+        </picture>
+        <div
+          class="absolute flex items-center justify-center text-2xl font-bold text-white bottom-4 right-4 left-4"
+        >
+          {currentPainting.title}
+        </div>
       </div>
       <div class="flex items-center justify-center gap-4 pt-4">
         <button
           aria-label="Previous painting"
           on:click={handlePrevious}
-          class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+          class="px-4 py-2 font-bold rounded text-dark bg-highlight"
         >
-          Previous
+          <IconArrowLeft class="w-6 h-6" />
         </button>
         <a
           href="/paintings"
-          class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+          class="px-4 py-2 font-bold text-white rounded bg-primary"
         >
-          painting gallery
+          Painting gallery
         </a>
         <button
           aria-label="Next painting"
           on:click={handleNext}
-          class="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-blue-700"
-          >Next</button
+          class="px-4 py-2 font-bold rounded text-dark bg-highlight"
         >
+          <IconArrowRight class="w-6 h-6" />
+        </button>
       </div>
     </section>
   </div>
