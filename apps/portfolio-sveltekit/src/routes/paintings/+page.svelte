@@ -135,7 +135,7 @@
       <option value="random">Random</option>
     </select>
 
-    <div class="pt-2">
+    <div class="flex flex-col gap-4 pt-2">
       <div class="flex justify-between">
         <button
           on:click={() => (visibleFilters = !visibleFilters)}
@@ -163,7 +163,7 @@
       {/if}
 
       {#if visibleFilters}
-        <hr class="my-4" in:fade out:fade />
+        <hr in:fade out:fade />
         <ul class="flex flex-wrap gap-1" in:fade out:fade>
           {#each filteredTags as tag}
             <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
@@ -178,7 +178,7 @@
         </ul>
       {/if}
     </div>
-    <div class="p-4 mt-4 bg-tertiary">
+    <div class="flex items-center justify-center p-4 mt-4 bg-tertiary">
       Results: <strong>{filteredPaintings.length}</strong>
     </div>
   </SideBar>
