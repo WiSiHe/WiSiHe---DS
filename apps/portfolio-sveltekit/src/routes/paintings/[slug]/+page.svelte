@@ -136,14 +136,24 @@
         imageFormatStyle
       )}
     >
-      <img
-        src={urlFor(selectedImage).width(1200).height(1200).url()}
-        alt={title}
-        class={cn(
-          'w-full absolute h-full inset-0 object-cover',
-          imageFormatStyle
-        )}
-      />
+      <picture>
+        <source
+          srcset={urlFor(selectedImage).width(1200).height(1200).url()}
+          media="(min-width: 800px)"
+        />
+        <source
+          srcset={urlFor(selectedImage).width(600).height(600).url()}
+          media="(max-width: 799px)"
+        />
+        <img
+          src={urlFor(selectedImage).width(1200).height(1200).url()}
+          alt={title}
+          class={cn(
+            'w-full absolute h-full inset-0 object-cover',
+            imageFormatStyle
+          )}
+        />
+      </picture>
     </button>
     {#if allImages.length > 1}
       <div class="flex items-center justify-center gap-4 pt-4">

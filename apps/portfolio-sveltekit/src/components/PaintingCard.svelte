@@ -80,11 +80,21 @@
           <p class="font-semibold text-white">NSFW</p>
         </div>
       {/if}
-      <img
-        src={urlFor(painting.image).width(400).height(400).url()}
-        alt={painting.title}
-        class={cn('object-cover w-full')}
-      />
+      <picture>
+        <source
+          srcset={urlFor(painting.image).width(800).height(800).url()}
+          media="(min-width: 600px)"
+        />
+        <source
+          srcset={urlFor(painting.image).width(400).height(400).url()}
+          media="(max-width: 599px)"
+        />
+        <img
+          src={urlFor(painting.image).width(800).height(800).url()}
+          alt={painting.title}
+          class={cn('object-cover w-full')}
+        />
+      </picture>
       <div
         class="absolute transition-all duration-500 ease-in-out -bottom-32 bg-dark left-2 group-hover:bottom-2"
       >
