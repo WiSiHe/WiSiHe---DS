@@ -41,7 +41,7 @@
 <a
   href={item.href}
   class={cn(
-    'transition-all  flex gap-2 px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
+    'transition-all rounded flex gap-2 px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
     isActive &&
       'underline decoration-primary text-white decoration-2 bg-primary',
     url === item.href

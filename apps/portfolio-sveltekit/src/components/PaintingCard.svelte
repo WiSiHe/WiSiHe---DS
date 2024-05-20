@@ -24,6 +24,7 @@
 
   import { page } from '$app/stores'
   import { fade } from 'svelte/transition'
+  import Chip from './Chip.svelte'
 
   let filter: string[] = []
   let filterContainsNSFW: boolean = false
@@ -40,35 +41,37 @@
 
 <a
   href={`/paintings/${slug}`}
-  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 outline-none test focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-highlight"
+  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none test focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-primary"
   in:fade
   out:fade
 >
-  <article class="z-0 w-full h-full overflow-clip">
+  <article class="z-0 w-full h-full rounded overflow-clip">
     <div class="relative">
       <div
         class="absolute z-10 flex items-start justify-between gap-1 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
       >
         <ul class="flex flex-wrap gap-1">
           {#each tagsV2 as tag}
-            <li
-              class="px-2 py-1 text-xs text-white transition-all shrink-0 bg-primary"
-            >
-              <div>
+            <li>
+              <Chip color="primary" size="xs">
                 {tag.name}
-              </div>
+              </Chip>
             </li>
           {/each}
         </ul>
         <ul class="flex flex-col gap-2">
           {#if hasMultipleImages}
             <li class="bg-tertiary">
-              <IconBoxMultiple class="stroke-dark" />
+              <Chip color="tertiary" size="xs">
+                <IconBoxMultiple class="stroke-dark" />
+              </Chip>
             </li>
           {/if}
           {#if hasSalesLink}
             <li class="bg-highlight">
-              <IconShoppingCart class="stroke-dark" />
+              <Chip color="highlight" size="xs">
+                <IconShoppingCart />
+              </Chip>
             </li>
           {/if}
         </ul>
@@ -96,9 +99,11 @@
         />
       </picture>
       <div
-        class="absolute transition-all duration-500 ease-in-out -bottom-32 bg-dark left-2 group-hover:bottom-2"
+        class="absolute transition-all duration-500 ease-in-out -bottom-32 left-2 group-hover:bottom-2"
       >
-        <strong class="text-xl text-white">{title}</strong>
+        <strong class="text-xl text-white">
+          <Chip>{title}</Chip>
+        </strong>
       </div>
     </div>
   </article>
