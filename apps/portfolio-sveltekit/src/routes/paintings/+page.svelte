@@ -17,6 +17,7 @@
 
   import { IconX } from '@tabler/icons-svelte'
   import SideBar from '../../components/SideBar.svelte'
+  import Chip from '../../components/Chip.svelte'
 
   let filter: string[] = []
 
@@ -99,87 +100,85 @@
 </svelte:head>
 
 <div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
-  <SideBar
-    className="sticky top-16 shadow-xl h-fit transition-all ease-in-out bg-white"
-  >
-    <div class="prose">
-      <h1>Gallery</h1>
-      <p>A gallery of some of my paintings.</p>
-    </div>
-
-    <search>
-      <label for="search" class="">
-        <strong> Search paintings </strong>
-      </label>
-      <button popovertarget="test">
-        <IconInfoCircle />
-      </button>
-      <div id="test" popover="auto">
-        <p>Search for paintings by title</p>
-      </div>
-      <input
-        type="search"
-        id="search"
-        placeholder="Search paintings"
-        on:input={searchPaintings}
-        class="w-full p-2 mt-4 border border-gray-300 focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
-      />
-    </search>
-
-    <select
-      class="w-full p-2 mt-4 border border-gray-300 focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
-      bind:value={sortOrder}
+  <SideBar className="p-0 xl:sticky xl:top-16">
+    <div
+      class="p-4 transition-all ease-in-out rounded xl:shadow-xl h-fit xl:bg-white"
     >
-      <option value="newest">Newest</option>
-      <option value="oldest">Oldest</option>
-      <option value="random">Random</option>
-    </select>
-
-    <div class="flex flex-col gap-4 pt-2">
-      <div class="flex justify-between">
-        <button
-          on:click={() => (visibleFilters = !visibleFilters)}
-          class="flex items-center px-3 py-2 text-xs text-white capitalize transition-all ease-in-out anchor hover:shadow bg-primary hover:bg-highlight hover:text-dark"
-        >
-          <IconFilter class="w-6 h-6" />
-          Filters
-        </button>
+      <div class="prose">
+        <h1>Gallery</h1>
+        <p>A gallery of some of my paintings.</p>
       </div>
 
-      {#if filter.length > 0}
-        <ul class="flex flex-wrap gap-1" in:fade out:fade>
-          {#each filter as tag}
-            <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
-              <button
-                class="flex items-center gap-1 px-3 py-2 text-xs text-white capitalize transition-all ease-in-out overflow-clip group bg-primary hover:bg-highlight hover:text-dark"
-                on:click={() => removeTag(tag)}
-              >
-                {tag}
-                <IconX />
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {/if}
+      <search>
+        <label for="search" class="">
+          <strong> Search paintings </strong>
+        </label>
+        <button popovertarget="test">
+          <IconInfoCircle />
+        </button>
+        <div id="test" popover="auto">
+          <p>Search for paintings by title</p>
+        </div>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search paintings"
+          on:input={searchPaintings}
+          class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
+        />
+      </search>
 
-      {#if visibleFilters}
-        <hr in:fade out:fade />
-        <ul class="flex flex-wrap gap-1" in:fade out:fade>
-          {#each filteredTags as tag}
-            <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
-              <button
-                class="px-3 py-2 text-xs text-white capitalize transition-all ease-in-out hover:shadow bg-primary hover:bg-highlight hover:text-dark"
-                on:click={() => handleAddTag(tag)}
-              >
-                {tag.name}({tag.paintingsCount})
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    </div>
-    <div class="flex items-center justify-center p-4 mt-4 bg-tertiary">
-      Results: <strong>{filteredPaintings.length}</strong>
+      <select
+        class="w-full p-2 mt-4 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
+        bind:value={sortOrder}
+      >
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="random">Random</option>
+      </select>
+
+      <div class="flex flex-col gap-4 pt-2">
+        <div class="flex justify-between">
+          <button
+            on:click={() => (visibleFilters = !visibleFilters)}
+            class="flex items-center px-3 py-2 text-xs text-white capitalize transition-all ease-in-out rounded anchor hover:shadow bg-primary hover:bg-highlight hover:text-dark"
+          >
+            <IconFilter class="w-6 h-6" />
+            Filters
+          </button>
+        </div>
+
+        {#if filter.length > 0}
+          <ul class="flex flex-wrap gap-1" in:fade out:fade>
+            {#each filter as tag}
+              <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
+                <Chip color="primary" onClick={() => removeTag(tag)}>
+                  {tag}
+                  <IconX />
+                </Chip>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+
+        {#if visibleFilters}
+          <hr in:fade out:fade />
+          <ul class="flex flex-wrap gap-1" in:fade out:fade>
+            {#each filteredTags as tag}
+              <li in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
+                <Chip color="primary" onClick={() => handleAddTag(tag)}>
+                  {tag.name}({tag.paintingsCount})
+                </Chip>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+      <div
+        class="flex items-center justify-center p-4 mt-4 rounded bg-tertiary"
+      >
+        Results: <strong>{filteredPaintings.length}</strong>
+      </div>
     </div>
   </SideBar>
 

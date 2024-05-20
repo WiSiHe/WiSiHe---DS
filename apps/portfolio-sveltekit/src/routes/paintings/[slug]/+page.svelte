@@ -9,6 +9,7 @@
   import Youtube from '../../../components/Youtube.svelte'
 
   import { IconClock } from '@tabler/icons-svelte'
+  import Chip from '../../../components/Chip.svelte'
 
   export let data
   const {
@@ -128,9 +129,9 @@
 <BackButton />
 
 <section
-  class="grid items-start min-h-screen grid-cols-12 gap-4 p-4 pt-16 bg-stone-50"
+  class="relative grid min-h-screen grid-cols-12 gap-4 p-4 pt-16 bg-stone-50"
 >
-  <div class="relative col-span-full xl:col-span-9">
+  <div class="relative col-span-full xl:col-span-9 h-fit">
     <button
       on:click={() => dialog.showModal()}
       class={cn(
@@ -151,14 +152,14 @@
           src={urlFor(selectedImage).width(1200).height(1200).url()}
           alt={title}
           class={cn(
-            'w-full absolute h-full inset-0 object-cover',
+            'w-full absolute h-full rounded inset-0 object-cover',
             imageFormatStyle
           )}
         />
       </picture>
     </button>
     {#if allImages.length > 1}
-      <div class="flex items-center justify-center gap-4 pt-4">
+      <div class="relative flex items-center justify-center gap-4 pt-4">
         <button on:click={() => handleSelectImage(image)}>
           <img
             src={urlFor(image).width(100).height(100).url()}
@@ -177,38 +178,30 @@
         {/each}
       </div>
     {/if}
-    {#if video}
-      Videos:
-      <Youtube href={video} />
-    {/if}
   </div>
 
-  <SideBar className="p-4 xl:p-0">
+  <SideBar className="xl:p-0">
     <div
-      in:fly={{ y: 100, opacity: 0, duration: 1000 }}
-      out:fade
-      class="xl:p-4 xl:pt-4 xl:bg-white xl:shadow-xl xl:sticky xl:top-16"
+      in:fly={{ y: 100, opacity: 0 }}
+      out:fly={{ x: 100, opacity: 0 }}
+      class="rounded xl:p-8 xl:pt-4 xl:bg-white xl:shadow-xl xl:sticky xl:top-16"
     >
-      <div
-        class="flex items-center gap-1 px-2 py-1 mt-2 text-xs bg-secondary/10 w-fit"
-      >
+      <Chip color="tertiary" size="sm">
         <IconClock class="w-4 h-4" />
         {formatedPaintedAt}
-      </div>
+      </Chip>
       {#if tagsV2}
         <ul class="flex flex-wrap gap-2 pt-3">
           {#each tagsV2 as tag}
-            <li class="text-xs">
-              <div class="px-2 py-1 text-white bg-primary">
-                {tag.name}
-              </div>
-            </li>
+            <Chip color="primary" onClick={() => {}}>
+              {tag.name}
+            </Chip>
           {/each}
         </ul>
       {/if}
-      <div class="prose">
-        <h1 style={`view-transition-name: title-${data.slug}`}>{title}</h1>
-        <p>{description}</p>
+      <div class="pt-2 prose">
+        <h1 class="text-balance">{title}</h1>
+        <p class="text-balance">{description}</p>
       </div>
     </div>
   </SideBar>
