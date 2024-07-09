@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "@wisihe/ds",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -15,6 +16,5 @@
     "prettier": "^3.3.2",
     "turbo": "^2.0.6"
   },
-  "packageManager": "pnpm@9.2.0",
-  "name": "@wisihe/ds"
+  "packageManager": "pnpm@9.2.0"
 }
