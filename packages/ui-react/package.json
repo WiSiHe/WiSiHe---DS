@@ -6,7 +6,9 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "license": "MIT",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "exports": {
     ".": "./src/index.tsx"
   },
@@ -17,16 +19,16 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
-    "@types/react": "^18.2.46",
-    "@types/react-dom": "^18.2.18",
-    "eslint": "^8.56.0",
-    "react": "^18.2.0",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3",
-    "framer-motion": "^11.0.14"
+    "eslint": "^8.57.0",
+    "framer-motion": "^11.2.14",
+    "react": "^18.3.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3"
   },
   "publishConfig": {
     "access": "public"

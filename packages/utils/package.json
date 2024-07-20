@@ -6,7 +6,9 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "license": "MIT",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "exports": {
     ".": "./src/index.ts"
   },
@@ -19,13 +21,16 @@
   "devDependencies": {
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
-    "clsx": "^2.1.0",
-    "eslint": "^8.56.0",
-    "tailwind-merge": "^2.2.2",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "clsx": "^2.1.1",
+    "eslint": "^8.57.0",
+    "tailwind-merge": "^2.4.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

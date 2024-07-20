@@ -1,8 +1,5 @@
 {
   "extends": "@wisihe/typescript-config/react-library.json",
   "include": ["."],
-  "compilerOptions": {
-    "resolveJsonModule": true
-  },
   "exclude": ["dist", "build", "node_modules"]
 }
