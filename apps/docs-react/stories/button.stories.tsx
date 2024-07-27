@@ -18,8 +18,53 @@ const SVGComponent = () => (
   </svg>
 );
 
+const ChevronLeft = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-6 h-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 19l-7-7 7-7"
+    />
+  </svg>
+);
+
+const ChevronRight = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-6 h-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 5l7 7-7 7"
+    />
+  </svg>
+);
+
+const IconList = {
+  None: null,
+  IconLeft: ChevronLeft,
+  IconRight: ChevronRight,
+};
+
+const iconList = ['None', 'IconLeft', 'IconRight'];
+
 const meta: Meta<typeof Button> = {
   component: Button,
+  args: {
+    Icon: ChevronLeft,
+  },
   argTypes: {
     type: {
       control: { type: 'radio' },
@@ -33,7 +78,30 @@ const meta: Meta<typeof Button> = {
       control: { type: 'radio' },
       options: ['small', 'medium', 'large', 'icon'],
     },
+    isDisabled: {
+      control: { type: 'boolean' },
+    },
+    isLoading: {
+      control: { type: 'boolean' },
+    },
+    Icon: {
+      control: { type: 'select' },
+      options: iconList,
+    },
   },
+  // render: function Render({ ...args }) {
+  //   const renderIcon = {
+  //     None: null,
+  //     IconLeft: <ChevronLeft />,
+  //     IconRight: <ChevronRight />,
+  //   }[args.Icon as keyof typeof IconList];
+  //   console.log(args.Icon);
+  //   return (
+  //     <Button {...args} Icon={IconList['IconLeft']}>
+  //       {args.children}
+  //     </Button>
+  //   );
+  // },
 };
 
 export default meta;
@@ -97,7 +165,7 @@ export const All: Story = {
           <Button
             {...args}
             variant="primary"
-            Icon={SVGComponent}
+            Icon={ChevronLeft}
             iconPosition="left"
           >
             Left Icon
@@ -112,7 +180,7 @@ export const All: Story = {
           <Button
             {...args}
             variant="primary"
-            Icon={SVGComponent}
+            Icon={ChevronRight}
             iconPosition="right"
           >
             Right Icon
