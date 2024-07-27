@@ -88,7 +88,7 @@ const button = cva('button', {
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof button> {
-  Icon?: React.ElementType;
+  Icon?: React.ElementType | null;
   iconPosition?: 'left' | 'right';
   isLoading?: boolean;
   isDisabled?: boolean;
