@@ -77,7 +77,9 @@ const grid = cva('grid', {
 
 export interface GridProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof grid> {}
+    VariantProps<typeof grid> {
+  children?: React.ReactNode;
+}
 
 export function Grid({
   className,

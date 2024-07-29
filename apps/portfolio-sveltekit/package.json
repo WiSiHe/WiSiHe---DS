@@ -14,14 +14,14 @@
   "devDependencies": {
     "@portabletext/svelte": "^2.1.11",
     "@portabletext/types": "^2.0.13",
-    "@sanity/client": "^6.18.2",
+    "@sanity/client": "^6.21.1",
     "@sanity/image-url": "^1.0.2",
-    "@sanity/types": "^3.42.1",
-    "@sveltejs/adapter-auto": "^3.2.0",
-    "@sveltejs/kit": "^2.5.9",
-    "@sveltejs/vite-plugin-svelte": "^3.1.0",
-    "@typescript-eslint/eslint-plugin": "^7.10.0",
-    "@typescript-eslint/parser": "^7.10.0",
+    "@sanity/types": "^3.52.2",
+    "@sveltejs/adapter-auto": "^3.2.2",
+    "@sveltejs/kit": "^2.5.18",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
     "@wisihe/constants": "workspace:*",
     "@wisihe/tailwind-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
@@ -30,17 +30,17 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte3": "^4.0.0",
-    "groq": "^3.42.1",
-    "postcss": "^8.4.38",
-    "prettier": "^3.2.5",
-    "prettier-plugin-svelte": "^3.2.3",
-    "svelte": "^4.2.17",
-    "svelte-check": "^3.7.1",
+    "groq": "^3.52.2",
+    "postcss": "^8.4.40",
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.6",
+    "svelte": "^4.2.18",
+    "svelte-check": "^3.8.4",
     "svelte-typewriter": "^3.2.3",
-    "tailwindcss": "^3.4.3",
-    "tslib": "^2.6.2",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "tailwindcss": "^3.4.7",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
   },
   "prettier": {
     "semi": false,
@@ -54,9 +54,10 @@
     "node": ">= 14.18"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "^5.0.18",
+    "@fontsource-variable/inter": "^5.0.19",
     "@fontsource-variable/oswald": "^5.0.20",
-    "@tabler/icons-svelte": "^3.4.0",
-    "@vercel/analytics": "^1.2.2"
+    "@tabler/icons-svelte": "^3.11.0",
+    "@vercel/analytics": "^1.3.1",
+    "svelte-icons-pack": "^3.1.3"
   }
 }
