@@ -4,6 +4,16 @@
   import NavItem from './NavItem.svelte'
 
   export let isAbsolute = false
+
+  let dialog: HTMLDialogElement
+
+  function openDialog() {
+    dialog.showModal()
+  }
+
+  function closeDialog() {
+    dialog.close()
+  }
 </script>
 
 <header>
@@ -18,7 +28,7 @@
       <a
         href="/"
         aria-label="Navigate to the homepage"
-        class="flex items-center justify-center p-1 text-sm drop-shadow decoration-4"
+        class="flex items-center justify-center p-1 text-sm transition-transform duration-300 transform hover:scale-110"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +37,7 @@
           viewBox="0 0 542 544"
           role="img"
           aria-label="QR Code Logo"
-          class="fill-white"
+          class="transition-transform duration-300 transform fill-white hover:rotate-12"
         >
           <path d="M7 79v62h124V17H7v62zm106 0v44H25V35h88v44z" />
           <path d="M43 79v26h52V53H43v26z" />
@@ -44,6 +54,7 @@
         </svg>
       </a>
     </div>
+
     <ul class="items-center hidden gap-1 xl:gap-4 lg:flex">
       {#each navigationItems as item}
         <li>
@@ -51,12 +62,106 @@
         </li>
       {/each}
     </ul>
+
+    <!-- Mobile toggle button -->
+    <button
+      on:click={openDialog}
+      class="p-2 text-white bg-gray-800 rounded-md lg:hidden focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
+    </button>
   </nav>
+
+  <!-- Mobile Drawer -->
+  <dialog
+    bind:this={dialog}
+    class="w-full max-w-xs p-6 bg-white rounded-lg shadow-lg"
+  >
+    <button
+      on:click={closeDialog}
+      class="absolute text-gray-600 top-2 right-2 hover:text-gray-800 focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+    <ul class="space-y-4">
+      {#each navigationItems as item}
+        <li>
+          <NavItem {item} />
+        </li>
+      {/each}
+    </ul>
+  </dialog>
 </header>
 
 <style>
   header {
     z-index: 20;
-    /* view-transition-name: header; */
+  }
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  dialog {
+    border: none;
+    outline: none;
+  }
+  button:focus {
+    outline: none;
+  }
+
+  /* Link styling */
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    text-decoration: none;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 4px;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* Hover effect for the link */
+  a:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* SVG styling */
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  /* Hover effect for the SVG */
+  svg:hover {
+    transform: rotate(12deg);
   }
 </style>
