@@ -19,7 +19,7 @@
 
 <button
   on:click={handleGoBack}
-  class="fixed z-20 flex px-4 py-2 text-white transition-all rounded shadow left-2 top-20 group hover:shadow-2xl bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
+  class="fixed z-20 flex px-4 py-2 text-white transition-all rounded shadow left-2 top-24 group hover:shadow-2xl bg-primary hover:scale-105 hover:bg-highlight hover:text-dark"
   data-sveltekit-noscroll
   in:fly={{ x: -50 }}
   out:fly={{ x: -50 }}

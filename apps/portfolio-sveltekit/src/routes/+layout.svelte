@@ -12,6 +12,7 @@
   inject({ mode: dev ? 'development' : 'production' })
 
   import { onNavigate } from '$app/navigation'
+  import Splash from '../components/Splash.svelte'
 
   onNavigate(navigation => {
     if (!document.startViewTransition) return
@@ -27,7 +28,7 @@
 
 <div class="app">
   <Header isAbsolute />
-  <!-- <Splash /> -->
+  <Splash />
 
   <main>
     <slot />
@@ -63,5 +64,9 @@
     width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
+  }
+
+  main:has(dialog[open]) {
+    overflow: hidden;
   }
 </style>

@@ -5,6 +5,9 @@
   import type { iSanityPainting } from '$lib/utils/sanity'
   import { IconArrowLeft, IconArrowRight } from '@tabler/icons-svelte'
 
+  import { Icon } from 'svelte-icons-pack'
+  import { AiOutlineNodeExpand } from 'svelte-icons-pack/ai'
+
   export let paintings: iSanityPainting[] = []
 
   // Randomly select a painting to showcase
@@ -48,7 +51,7 @@
   >
     <section class="z-10 w-full pt-24 col-span-full xl:col-span-4 xl:pt-0">
       <div
-        class="relative flex flex-col justify-center h-full gap-4 p-4 lg:p-10 rounded-xl backdrop-blur-sm bg-white/40 overflow-clip drop-shadow-xl"
+        class="relative flex flex-col justify-center h-full gap-4 p-4 bg-white/90 lg:p-10 rounded-xl backdrop-blur-sm overflow-clip drop-shadow-xl"
       >
         <h1 class="" in:fade>
           <strong>Henrik Wilhelm Sissener</strong>
@@ -56,6 +59,7 @@
         <ul class="flex flex-col gap-4">
           {#each aboutMeBulletPoints as bullet}
             <li>
+              <!-- <Icon component={AiOutlineNodeExpand} class="w-6 h-6" /> -->
               <span>{bullet}</span>
             </li>
           {/each}
@@ -91,20 +95,20 @@
         <button
           aria-label="Previous painting"
           on:click={handlePrevious}
-          class="px-4 py-2 font-bold rounded text-dark bg-highlight"
+          class="p-3 font-bold text-white transition-colors duration-200 ease-in-out rounded bg-primary hover:bg-highlight hover:text-dark"
         >
           <IconArrowLeft class="w-6 h-6" />
         </button>
         <a
           href="/paintings"
-          class="px-4 py-2 font-bold text-white rounded bg-primary"
+          class="px-4 py-3 font-bold text-white uppercase transition-colors duration-200 ease-in-out rounded hover:text-dark hover:bg-highlight bg-primary"
         >
           Painting gallery
         </a>
         <button
           aria-label="Next painting"
           on:click={handleNext}
-          class="px-4 py-2 font-bold rounded text-dark bg-highlight"
+          class="p-3 font-bold text-white transition-colors duration-200 ease-in-out rounded bg-primary hover:bg-highlight hover:text-dark"
         >
           <IconArrowRight class="w-6 h-6" />
         </button>

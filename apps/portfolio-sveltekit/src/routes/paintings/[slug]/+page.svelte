@@ -129,7 +129,7 @@
 <BackButton />
 
 <section
-  class="relative grid min-h-screen grid-cols-12 gap-4 p-4 pt-16 bg-stone-50"
+  class="relative grid min-h-screen grid-cols-12 gap-4 p-4 pt-20 bg-stone-50"
 >
   <div class="relative col-span-full xl:col-span-9 h-fit">
     <button
@@ -180,28 +180,29 @@
     {/if}
   </div>
 
-  <SideBar className="xl:p-0">
+  <SideBar className="p-0 pb-10">
     <div
       in:fly={{ y: 100, opacity: 0 }}
       out:fly={{ x: 100, opacity: 0 }}
       class="rounded xl:p-8 xl:pt-4 xl:bg-white xl:shadow-xl xl:sticky xl:top-16"
     >
-      <Chip color="tertiary" size="sm">
-        <IconClock class="w-4 h-4" />
-        {formatedPaintedAt}
-      </Chip>
-      {#if tagsV2}
-        <ul class="flex flex-wrap gap-2 pt-3">
-          {#each tagsV2 as tag}
-            <Chip color="primary" onClick={() => {}}>
-              {tag.name}
-            </Chip>
-          {/each}
-        </ul>
-      {/if}
-      <div class="pt-2 prose">
+      <div class="pt-2">
         <h1 class="text-balance">{title}</h1>
-        <p class="text-balance">{description}</p>
+
+        {#if tagsV2}
+          <ul class="flex flex-wrap gap-2 pt-3">
+            <Chip color="tertiary" size="sm">
+              <IconClock class="w-4 h-4" />
+              {formatedPaintedAt}
+            </Chip>
+            {#each tagsV2 as tag}
+              <Chip color="primary" onClick={() => {}}>
+                {tag.name}
+              </Chip>
+            {/each}
+          </ul>
+        {/if}
+        <p class="prose text-balance">{description}</p>
       </div>
     </div>
   </SideBar>
@@ -214,3 +215,9 @@
     alt={title}
   />
 </Dialog>
+
+<style>
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+</style>
