@@ -17,7 +17,7 @@
   />
 </svelte:head>
 
-<section class="grid items-start grid-cols-12 pt-16">
+<section class="grid items-start grid-cols-12 p-4 pt-20">
   <SideBar>
     <div class="prose">
       <h1 class="text-blue-800">Videos</h1>
@@ -27,7 +27,7 @@
       </p>
     </div>
   </SideBar>
-  <ul class="grid w-full grid-cols-12 col-span-9 gap-4">
+  <ul class="grid w-full grid-cols-12 col-span-8 gap-4">
     {#each videos as video}
       <li class="col-span-4">
         <a href={`videos/${video.slug}`} class="">

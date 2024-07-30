@@ -66,7 +66,7 @@
     box-sizing: border-box;
   }
 
-  main:has(dialog[open]) {
+  body:has(dialog[open]) {
     overflow: hidden;
   }
 </style>

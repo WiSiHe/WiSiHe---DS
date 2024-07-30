@@ -95,7 +95,7 @@
   })
 </script>
 
-<section class="grid items-start grid-cols-12 p-4 pt-16">
+<section class="grid items-start grid-cols-12 p-4 pt-20">
   <SideBar>
     <h1>Contact</h1>
     <p class="pt-2">
@@ -121,7 +121,7 @@
     </p>
     <SocialLinks />
   </SideBar>
-  <section class="col-span-9 columns-3">
+  <section class="col-span-8 columns-3">
     {#each paintings as painting}
       <div
         class={cn(
