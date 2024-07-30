@@ -28,7 +28,7 @@
       <a
         href="/"
         aria-label="Navigate to the homepage"
-        class="flex items-center justify-center p-1 text-sm transition-transform duration-300 transform hover:scale-110"
+        class="flex items-center justify-center p-1 text-sm transition-transform duration-300 transform focus-visible:ring hover:scale-110"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@
     <!-- Mobile toggle button -->
     <button
       on:click={openDialog}
-      class="p-2 text-white bg-gray-800 rounded-md lg:hidden focus:outline-none"
+      class="p-2 text-white rounded-md lg:hidden focus-visible:ring"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@
   <!-- Mobile Drawer -->
   <dialog
     bind:this={dialog}
-    class="w-full max-w-xs p-6 bg-white rounded-lg shadow-lg"
+    class="z-10 w-full h-full max-w-xs p-8 bg-white max-h-max"
   >
     <button
       on:click={closeDialog}
@@ -129,6 +129,8 @@
   dialog {
     border: none;
     outline: none;
+    margin: 0px;
+    max-height: none;
   }
   button:focus {
     outline: none;

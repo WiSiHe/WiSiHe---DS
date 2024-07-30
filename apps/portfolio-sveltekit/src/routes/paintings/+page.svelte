@@ -99,10 +99,10 @@
   />
 </svelte:head>
 
-<div class="grid items-start grid-cols-12 gap-4 p-4 pt-16">
+<div class="grid items-start grid-cols-12 gap-4 p-4 pt-20">
   <SideBar className="p-0 xl:sticky xl:top-16">
     <div
-      class="p-4 transition-all ease-in-out rounded xl:shadow-xl h-fit xl:bg-white"
+      class="transition-all ease-in-out rounded xl:p-4 xl:shadow-xl h-fit xl:bg-white"
     >
       <div class="prose">
         <h1>Gallery</h1>
