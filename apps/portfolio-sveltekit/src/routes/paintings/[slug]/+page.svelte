@@ -129,9 +129,11 @@
 <BackButton />
 
 <section
-  class="relative grid min-h-screen grid-cols-12 gap-4 p-4 pt-20 bg-stone-50"
+  class={cn(
+    'relative grid test min-h-screen max-w-screen-xl grid-cols-12 gap-8 p-4 pt-20 mx-auto'
+  )}
 >
-  <div class="relative col-span-full xl:col-span-9 h-fit">
+  <div class="relative col-span-full xl:col-span-8 h-fit">
     <button
       on:click={() => dialog.showModal()}
       class={cn(
@@ -184,7 +186,7 @@
     <div
       in:fly={{ y: 100, opacity: 0 }}
       out:fly={{ x: 100, opacity: 0 }}
-      class="rounded xl:p-8 xl:pt-4 xl:bg-white xl:shadow-xl xl:sticky xl:top-16"
+      class="xl:sticky xl:top-16"
     >
       <div class="pt-2">
         <h1 class="text-balance">{title}</h1>
@@ -206,18 +208,24 @@
       </div>
     </div>
   </SideBar>
+  <Dialog bind:dialog on:close>
+    <img
+      class="object-cover min-w-full min-h-full"
+      src={urlFor(selectedImage).width(1200).height(1200).url()}
+      alt={title}
+    />
+    <div class="flex justify-center w-full pt-4">
+      <button
+        class="px-4 py-3 text-white bg-primary"
+        on:click={() => dialog.close()}>Close</button
+      >
+    </div>
+  </Dialog>
 </section>
 
-<Dialog bind:dialog on:close>
-  <img
-    class="object-cover min-w-full min-h-full"
-    src={urlFor(selectedImage).width(1200).height(1200).url()}
-    alt={title}
-  />
-</Dialog>
-
 <style>
-  body:has(dialog[open]) {
+  .test:has(dialog[open]) {
     overflow: hidden;
+    height: 100dvh;
   }
 </style>

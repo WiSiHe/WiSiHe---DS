@@ -24,7 +24,7 @@
       </p>
     </div>
   </SideBar>
-  <ul class="grid w-full grid-cols-12 col-span-9 gap-4 p-4">
+  <ul class="grid w-full grid-cols-12 col-span-8 gap-4 p-4">
     {#each projects as project}
       <li class="col-span-4">
         <a href={`projects/${project.slug}`} class="">

@@ -34,7 +34,7 @@
   }
 
   button {
-    position: fixed;
+    position: absolute;
     top: 1rem;
     right: 1rem;
     padding: 0.5rem 1rem;

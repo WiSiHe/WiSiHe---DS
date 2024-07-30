@@ -7,7 +7,7 @@
 </script>
 
 <section class="grid items-start grid-cols-12 gap-4 pt-16">
-  <div class="col-span-9">
+  <div class="xl:col-span-8 col-span-full">
     <img
       src={urlFor(project.image).width(400).height(400).url()}
       alt={project.title}
