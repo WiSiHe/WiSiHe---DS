@@ -95,7 +95,9 @@
   })
 </script>
 
-<section class="grid items-start grid-cols-12 p-4 pt-20">
+<section
+  class="grid items-start max-w-screen-xl grid-cols-12 p-4 pt-20 mx-auto"
+>
   <SideBar>
     <h1>Contact</h1>
     <p class="pt-2">
