@@ -1,4 +1,3 @@
-import { title } from './../../../portfolio-next/lib/demo.data'
 import { getHomePage } from '$lib/utils/sanity'
 
 import { error } from '@sveltejs/kit'

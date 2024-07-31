@@ -4,8 +4,6 @@
 
   export let data
 
-  console.log(data)
-
   const { videos } = data
 </script>
 
