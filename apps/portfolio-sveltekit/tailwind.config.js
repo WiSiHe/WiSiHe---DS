@@ -6,7 +6,8 @@ export default {
     extend: {
       fontFamily: {
         inter: 'var(--font-inter)',
-        oswald: 'var(--font-oswald)'
+        oswald: 'var(--font-oswald)',
+        lemonMilk: ['LemonMilk']
       }
     }
   }

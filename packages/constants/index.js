@@ -42,7 +42,7 @@ export const socialMediaLinks = [
 ];
 
 export const aboutMeBulletPoints = [
-  'Senior Front-end developer',
+  'Frontend developer',
   'Digital artist',
   'Game developer',
 ];

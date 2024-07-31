@@ -1,6 +1,7 @@
 <script lang="ts">
   import Hero from '../components/Hero.svelte'
   import PaintingsSection from '../components/PaintingsSection.svelte'
+  // import Marquee from '../components/Marquee.svelte'
 
   export let data
   const { showcasePaintings = [], title } = data
@@ -18,3 +19,6 @@
 
 <Hero paintings={showcasePaintings} />
 <PaintingsSection paintings={showcasePaintings} />
+<!-- <div class="h-full aspect-square ring">
+  <Marquee {items} />
+</div> -->

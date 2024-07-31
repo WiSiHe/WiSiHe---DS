@@ -2,6 +2,7 @@
   import SocialLinks from '../components/SocialLinks.svelte'
   import Header from '../components/header/Header.svelte'
 
+  import './fonts.css'
   import './app.css'
 
   import '@fontsource-variable/inter'
@@ -28,7 +29,7 @@
 
 <div class="app">
   <Header isAbsolute />
-  <Splash />
+  <!-- <Splash /> -->
 
   <main>
     <slot />
@@ -51,6 +52,7 @@
   :global(h1, h2, h3, h4, h5, h6) {
     font-family: 'Oswald Variable', sans-serif;
   }
+
   .app {
     display: flex;
     flex-direction: column;
@@ -66,7 +68,7 @@
     box-sizing: border-box;
   }
 
-  body:has(dialog[open]) {
+  /* body:has(dialog[open]) {
     overflow: hidden;
-  }
+  } */
 </style>

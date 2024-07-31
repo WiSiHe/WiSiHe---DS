@@ -20,7 +20,7 @@
   <nav
     aria-label="Main Navigation"
     class={cn(
-      'z-30 flex items-center justify-between py-2 px-4 bg-dark text-white',
+      'z-30 flex items-center justify-between py-2 px-4 bg-dark/10 backdrop-blur text-white ',
       isAbsolute ? 'fixed top-0 left-0 right-0' : 'relative'
     )}
   >
