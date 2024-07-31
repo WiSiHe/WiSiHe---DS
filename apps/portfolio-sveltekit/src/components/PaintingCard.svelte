@@ -1,30 +1,29 @@
 <script lang="ts">
-  export let painting: iSanityPainting
   import { urlFor } from '$lib/utils/image'
   import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
   import { cn, isNotEmptyArray } from '@wisihe/utils'
+  import { page } from '$app/stores'
+  import { fade } from 'svelte/transition'
+  import Chip from './Chip.svelte'
+
+  import type { iSanityPainting } from '$lib/utils/sanity'
+
+  export let painting: iSanityPainting
 
   const { title, tagsV2, slug, redbubbleUrl, images = [] } = painting
 
-  function isValidUrl(url: string | undefined | null) {
+  function isValidUrl(url: string | undefined | null): boolean {
     if (!url) return false
     try {
       new URL(url)
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   }
 
   const hasSalesLink = isValidUrl(redbubbleUrl)
-
   const hasMultipleImages = isNotEmptyArray(images)
-
-  import type { iSanityPainting } from '$lib/utils/sanity'
-
-  import { page } from '$app/stores'
-  import { fade } from 'svelte/transition'
-  import Chip from './Chip.svelte'
 
   let filter: string[] = []
   let filterContainsNSFW: boolean = false
@@ -34,14 +33,12 @@
     filterContainsNSFW = filter.includes('nsfw')
   }
 
-  let hasNSFWTag = tagsV2.some((tag: { name: string }) =>
-    tag.name.toLowerCase().includes('nsfw')
-  )
+  const hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
 </script>
 
 <a
   href={`/paintings/${slug}`}
-  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none test focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-primary"
+  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-primary focus-within"
   in:fade
   out:fade
 >
@@ -85,17 +82,31 @@
       {/if}
       <picture>
         <source
-          srcset={urlFor(painting.image).width(800).height(800).url()}
+          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
+                   {urlFor(painting.image).width(400).height(500).url()} 400w,
+                   {urlFor(painting.image).width(600).height(600).url()} 600w"
+          sizes="(min-width: 1200px) 200px,
+                 (min-width: 600px) 200px,
+                 100vw"
           media="(min-width: 600px)"
         />
         <source
-          srcset={urlFor(painting.image).width(400).height(400).url()}
+          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
+                   {urlFor(painting.image).width(400).height(500).url()} 400w,
+                   {urlFor(painting.image).width(600).height(700).url()} 600w"
+          sizes="(max-width: 599px) 100vw,
+                 200px"
           media="(max-width: 599px)"
         />
         <img
-          src={urlFor(painting.image).width(800).height(800).url()}
-          alt={painting.title}
+          src={urlFor(painting.image).width(400).height(500).url()}
+          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
+                   {urlFor(painting.image).width(400).height(500).url()} 400w,
+                   {urlFor(painting.image).width(600).height(700).url()} 600w"
+          sizes="100vw"
+          alt={title}
           class={cn('object-cover w-full')}
+          loading="lazy"
         />
       </picture>
       <div
@@ -123,7 +134,7 @@
         }
       }
 
-      .test {
+      .focus-within {
         z-index: 1;
         animation: appear linear;
         animation-timeline: view();

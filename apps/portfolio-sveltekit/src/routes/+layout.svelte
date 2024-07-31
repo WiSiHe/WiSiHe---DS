@@ -13,7 +13,7 @@
   inject({ mode: dev ? 'development' : 'production' })
 
   import { onNavigate } from '$app/navigation'
-  import Splash from '../components/Splash.svelte'
+  // import Splash from '../components/Splash.svelte'
 
   onNavigate(navigation => {
     if (!document.startViewTransition) return
@@ -31,7 +31,7 @@
   <Header isAbsolute />
   <!-- <Splash /> -->
 
-  <main>
+  <main class=" bg-tertiary">
     <slot />
   </main>
 

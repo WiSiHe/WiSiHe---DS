@@ -27,7 +27,7 @@
 
   let timeoutId: number
 
-  let sortOrder: 'newest' | 'oldest' | 'random' = 'random'
+  let sortOrder: 'newest' | 'oldest' | 'random' = 'newest'
 
   let visibleFilters = false
 
