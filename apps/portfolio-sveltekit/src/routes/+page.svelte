@@ -1,6 +1,7 @@
 <script lang="ts">
   import Hero from '../components/Hero.svelte'
   import PaintingsSection from '../components/PaintingsSection.svelte'
+  import Accordion from '../components/Accordion.svelte'
   // import Marquee from '../components/Marquee.svelte'
 
   export let data
@@ -19,6 +20,7 @@
 
 <Hero paintings={showcasePaintings} />
 <PaintingsSection paintings={showcasePaintings} />
+<Accordion />
 <!-- <div class="h-full aspect-square ring">
   <Marquee {items} />
 </div> -->
