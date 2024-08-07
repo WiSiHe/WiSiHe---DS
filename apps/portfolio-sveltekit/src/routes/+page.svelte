@@ -20,7 +20,3 @@
 
 <Hero paintings={showcasePaintings} />
 <PaintingsSection paintings={showcasePaintings} />
-<Accordion />
-<!-- <div class="h-full aspect-square ring">
-  <Marquee {items} />
-</div> -->
