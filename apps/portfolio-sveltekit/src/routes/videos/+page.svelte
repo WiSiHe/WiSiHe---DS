@@ -15,9 +15,7 @@
   />
 </svelte:head>
 
-<section
-  class="grid items-start max-w-screen-xl grid-cols-12 p-4 pt-20 mx-auto"
->
+<section class="grid items-start grid-cols-12 p-4">
   <SideBar>
     <div class="prose">
       <h1 class="text-blue-800">Videos</h1>

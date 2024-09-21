@@ -137,10 +137,32 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'views',
+      title: 'Views',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'viewerId',
+              title: 'Viewer ID',
+              type: 'string', // You might want to consider a more robust ID system if necessary
+            },
+            {
+              name: 'timestamp',
+              title: 'Timestamp',
+              type: 'datetime',
+            },
+            // Add any additional data you'd like to capture about each view
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: 'likes',
       title: 'Likes',
       type: 'number',
-      // readOnly:true,
     }),
     defineField({
       name: 'redbubbleUrl',

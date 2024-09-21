@@ -13,6 +13,7 @@
   inject({ mode: dev ? 'development' : 'production' })
 
   import { onNavigate } from '$app/navigation'
+  // import SplashV2 from '../components/SplashV2.svelte'
   // import Splash from '../components/Splash.svelte'
 
   onNavigate(navigation => {
@@ -28,10 +29,11 @@
 </script>
 
 <div class="app">
-  <Header isAbsolute />
+  <Header />
+  <!-- <SplashV2 /> -->
   <!-- <Splash /> -->
 
-  <main class=" bg-tertiary">
+  <main class="bg-tertiary">
     <slot />
   </main>
 

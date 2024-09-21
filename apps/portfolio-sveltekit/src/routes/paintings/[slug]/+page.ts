@@ -8,11 +8,11 @@ export const load = (async ({ params }) => {
   const { slug = '' } = params as { slug: string }
   if (!slug) throw error(404, 'Not found')
 
-  // const post = await getPost(slug);
   const painting = await getPainting(slug)
+
   if (painting) {
-    return painting
+    return { painting } // Return as an object
   }
 
-  throw error(404, 'Not found')
+  throw error(404, 'Painting not found') // More specific error message
 }) satisfies PageLoad

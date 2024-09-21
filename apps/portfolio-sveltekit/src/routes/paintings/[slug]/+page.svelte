@@ -2,16 +2,33 @@
   import { urlFor } from '$lib/utils/image'
   import { cn } from '@wisihe/utils'
   import { onMount } from 'svelte'
-  import { fade, fly } from 'svelte/transition'
+  import { fly } from 'svelte/transition'
   import BackButton from '../../../components/BackButton.svelte'
   import Dialog from '../../../components/Dialog.svelte'
   import SideBar from '../../../components/SideBar.svelte'
-  import Youtube from '../../../components/Youtube.svelte'
-
+  import { patchPaintingViews } from '$lib/utils/sanity'
   import { IconClock } from '@tabler/icons-svelte'
   import Chip from '../../../components/Chip.svelte'
 
-  export let data
+  // Typing for the painting data
+  interface Painting {
+    title: string
+    seoDescription: string
+    image: any
+    description: string
+    tagsV2: Array<{ name: string }>
+    format: 'portrait' | 'landscape' | 'square'
+    paintedAt: string
+    images?: any[]
+    redbubbleUrl?: string
+    video?: string
+    views: Array<{ viewerId: string }>
+  }
+
+  export let data: { painting: Painting }
+
+  const { painting } = data
+
   const {
     title,
     seoDescription,
@@ -22,9 +39,9 @@
     paintedAt,
     images = [],
     redbubbleUrl,
-    video
-  } = data
-  console.log(data)
+    video,
+    views = []
+  } = painting
 
   let formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -50,20 +67,12 @@
   }
 
   function handleNext() {
-    if (selectedIndex < allImages.length - 1) {
-      selectedIndex++
-    } else {
-      selectedIndex = 0
-    }
+    selectedIndex = (selectedIndex + 1) % allImages.length
     selectedImage = allImages[selectedIndex]
   }
 
   function handlePrevious() {
-    if (selectedIndex > 0) {
-      selectedIndex--
-    } else {
-      selectedIndex = allImages.length - 1
-    }
+    selectedIndex = (selectedIndex - 1 + allImages.length) % allImages.length
     selectedImage = allImages[selectedIndex]
   }
 
@@ -82,17 +91,33 @@
   $: selectedImage = allImages[selectedIndex]
 
   onMount(() => {
+    handleAddView()
     window.addEventListener('keydown', handleKeyLeft)
     window.addEventListener('keydown', handleKeyRight)
+
     return () => {
       window.removeEventListener('keydown', handleKeyLeft)
       window.removeEventListener('keydown', handleKeyRight)
     }
   })
 
-  // style={`view-transition-name: image-${data.slug}`}
-  // <!-- on:click|preventDefault={() => window.history.back()} -->
-  // data-sveltekit-noscroll
+  function getViewerId(): string {
+    let viewerId = localStorage.getItem('viewerId')
+    if (!viewerId) {
+      viewerId = crypto.randomUUID() // Generate a new UUID for the viewer
+      localStorage.setItem('viewerId', viewerId)
+    }
+    return viewerId
+  }
+
+  function handleAddView() {
+    const viewerId = getViewerId()
+    console.log({ viewerId })
+
+    if (!views.find(view => view.viewerId === viewerId)) {
+      patchPaintingViews(painting._id, viewerId)
+    }
+  }
 </script>
 
 <svelte:head>
@@ -103,7 +128,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
-    name="kewords"
+    name="keywords"
     content="WiSiHe, Henrik Wilhelm Sissener, Portfolio, Paintings, Art, Artist"
   />
   <meta property="og:title" content={title} />
@@ -115,7 +140,6 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:type" content="article" />
-  <meta property="og:url" content={window.location.href} />
   <meta property="og:site_name" content="WiSiHe - Digital Portfolio" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@wisihe" />
@@ -130,7 +154,7 @@
 
 <section
   class={cn(
-    'relative grid test min-h-screen max-w-screen-xl grid-cols-12 gap-8 p-4 pt-20 mx-auto'
+    'relative grid test min-h-screen max-w-screen-xl mx-auto grid-cols-12 gap-8 p-4'
   )}
 >
   <div class="relative col-span-full xl:col-span-8 h-fit">
@@ -160,6 +184,7 @@
         />
       </picture>
     </button>
+
     {#if allImages.length > 1}
       <div class="relative flex items-center justify-center gap-4 pt-4">
         <button on:click={() => handleSelectImage(image)}>
@@ -169,7 +194,7 @@
             class="object-cover w-16 h-16 rounded-lg"
           />
         </button>
-        {#each images as img}
+        {#each images as img, index (img._id + '-' + index)}
           <button on:click={() => handleSelectImage(img)}>
             <img
               src={urlFor(img).width(100).height(100).url()}
@@ -190,7 +215,7 @@
     >
       <div class="pt-2">
         <h1 class="text-balance">{title}</h1>
-
+        <p>Views: {views.length}</p>
         {#if tagsV2}
           <ul class="flex flex-wrap gap-2 pt-3">
             <Chip color="tertiary" size="sm">
@@ -208,6 +233,7 @@
       </div>
     </div>
   </SideBar>
+
   <Dialog bind:dialog on:close>
     <img
       class="object-cover min-w-full min-h-full"
@@ -224,7 +250,7 @@
 </section>
 
 <style>
-  .test:has(dialog[open]) {
+  .dialog-open:has(dialog[open]) {
     overflow: hidden;
     height: 100dvh;
   }

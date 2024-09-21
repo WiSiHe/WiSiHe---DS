@@ -11,7 +11,8 @@ import groq from 'groq'
 
 import {
   PUBLIC_SANITY_DATASET,
-  PUBLIC_SANITY_PROJECT_ID
+  PUBLIC_SANITY_PROJECT_ID,
+  PUBLIC_SANITY_API_READ_WRITE_TOKEN
 } from '$env/static/public'
 
 if (!PUBLIC_SANITY_PROJECT_ID || !PUBLIC_SANITY_DATASET) {
@@ -22,12 +23,13 @@ export const client = createClient({
   projectId: PUBLIC_SANITY_PROJECT_ID,
   dataset: PUBLIC_SANITY_DATASET,
   useCdn: false, // `false` if you want to ensure fresh data
-  apiVersion: '2023-03-20' // date of setup
+  apiVersion: '2023-03-20', // date of setup
+  token: PUBLIC_SANITY_API_READ_WRITE_TOKEN
 })
 
 export async function getPaintings(): Promise<iSanityPainting[]> {
   return await client.fetch(
-    groq`*[_type == "painting" && defined(slug.current)]{..., "slug":slug.current} | order(_createdAt desc)`
+    groq`*[_type == "painting" && defined(slug.current) && published == true]{..., "slug":slug.current} | order(_createdAt desc)`
   )
 }
 
@@ -37,7 +39,16 @@ export async function getAllPaintingsAndTags(): Promise<{
 }> {
   return await client.fetch(
     groq`{
-      "paintings": *[_type == "painting" && defined(slug.current)]{..., "slug":slug.current, tagsV2[]->{name}} | order(_createdAt desc),
+      "paintings": *[_type == "painting" && defined(slug.current)]{
+      ...,
+      "slug":slug.current,
+      tagsV2[]->{name},
+      image{
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      }
+      } | order(_createdAt desc),
       "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}
     }`
   )
@@ -53,6 +64,8 @@ export async function getPainting(slug: string): Promise<iSanityPainting> {
       seoDescription,
       format,
       likes,
+      "views": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views
+      "viewsCount": count(views),
       paintedAt,
       artstationUrl,
       redbubbleUrl,
@@ -60,17 +73,33 @@ export async function getPainting(slug: string): Promise<iSanityPainting> {
       inPrintUrl,
       image{
         ...,
-        "lqip": asset->metadata.lqip
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
       },
       altText,
       images,
       tagsV2[]->{name},
       video
     }`,
-    {
-      slug
-    }
+    { slug }
   )
+}
+
+export async function patchPaintingLikes(paintingId: string): Promise<void> {
+  await client.patch(paintingId).inc({ likes: 1 }).commit()
+}
+
+export async function patchPaintingViews(
+  paintingId: string,
+  viewerId: string
+): Promise<void> {
+  await client
+    .patch(paintingId)
+    .setIfMissing({ views: [] })
+    .append('views', [
+      { _key: viewerId, viewerId, timestamp: new Date().toISOString() }
+    ])
+    .commit()
 }
 
 export async function getHomePage(): Promise<iSanityHomePage> {
@@ -92,7 +121,8 @@ export const homePageQuery = groq`
       format,
       image{
         ...,
-        "lqip": asset->metadata.lqip
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
       }
     },
     projectsDescription,
@@ -218,7 +248,7 @@ export interface iSanityImage {
 export interface iSanityPainting {
   _id: string
   format: iPaintingFormat
-  image: Image
+  image: Image & { lqip?: string; aspectRatio: number }
   images?: Image[]
   imagesCount: number | null
   redbubbleUrl?: string | null
@@ -227,7 +257,7 @@ export interface iSanityPainting {
   inPrintUrl?: string | null
   description?: string
   seoDescription?: string
-  likes?: number
+  likes: number
   paintedAt: string
   slug: string
   tagsV2: iSanityTag[]
@@ -235,6 +265,10 @@ export interface iSanityPainting {
   title: string
   video?: string | null
   altText?: string
+  views: {
+    viewerId: string
+    timestamp: string
+  }[]
 }
 
 export interface iSanityTag {
