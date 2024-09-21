@@ -7,9 +7,7 @@
   console.log(video)
 </script>
 
-<section
-  class="grid items-start max-w-screen-xl grid-cols-12 gap-4 pt-20 mx-auto"
->
+<section class="grid items-start grid-cols-12 gap-4">
   <div class="col-span-8">
     <img
       src={urlFor(video.thumbnail).width(400).height(400).url()}

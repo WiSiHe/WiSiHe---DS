@@ -1,0 +1,69 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="hey">
+    <main>
+        <!-- <div>
+		  <image src="https://picsum.photos/400/300" alt="Random image"  transition:name="hero-image"/>
+		</div> -->
+        <h1 transition:name="title">Welcome to <span class="text-gradient">Astroooooo</span></h1>
+    		<p class="instructions">
+    			To get started, open the directory <code>src/pages</code> in your project.<br />
+    			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
+    		</p>
+		  <a href="/" class="button">Go to the homepage</a>
+		  <aside transition:name="hero">
+		      <p>
+                <strong>What is Astro?</strong> Astro is a new kind of static site builder that delivers lightning-fast performance with a modern developer experience. It's the best of both worlds.
+              </p>
+            <img src="https://picsum.photos/400/200" alt="Random image" transition:name="hero-image" />
+          </aside>
+		</main>
+</Layout>
+```
+<style>
+    .text-gradient {
+        background: linear-gradient(90deg, #ff00ff, #ff0000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    aside {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .instructions {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    code {
+        background: #f9f9f9;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+
+    </style>

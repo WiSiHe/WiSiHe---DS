@@ -4,7 +4,6 @@
   import { cn, isNotEmptyArray } from '@wisihe/utils'
   import { page } from '$app/stores'
   import { fade } from 'svelte/transition'
-  import Chip from './Chip.svelte'
 
   import type { iSanityPainting } from '$lib/utils/sanity'
 
@@ -36,89 +35,61 @@
   const hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
 </script>
 
-<a
-  href={`/paintings/${slug}`}
-  class="relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none focus-within:ring xl:col-span-4 group hover:ring-4 hover:z-10 ring-primary focus-within"
-  in:fade
-  out:fade
+<article
+  class="w-full h-full aspect-portrait overflow-clip relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none focus-within:ring xl:col-span-3 2xl:col-span-3 group hover:ring-4 hover:z-10 ring-primary within"
 >
-  <article class="z-0 w-full h-full rounded overflow-clip">
-    <div class="relative">
-      <div
-        class="absolute z-10 flex items-start justify-between gap-1 transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
-      >
-        <ul class="flex flex-wrap gap-1">
-          {#each tagsV2 as tag}
-            <li>
-              <Chip color="primary" size="xs">
-                {tag.name}
-              </Chip>
-            </li>
-          {/each}
-        </ul>
-        <ul class="flex flex-col gap-2">
-          {#if hasMultipleImages}
-            <li class="bg-tertiary">
-              <Chip color="tertiary" size="xs">
-                <IconBoxMultiple class="stroke-dark" />
-              </Chip>
-            </li>
-          {/if}
-          {#if hasSalesLink}
-            <li class="bg-highlight">
-              <Chip color="highlight" size="xs">
-                <IconShoppingCart />
-              </Chip>
-            </li>
-          {/if}
-        </ul>
-      </div>
-      {#if hasNSFWTag && !filterContainsNSFW}
-        <div
-          class="absolute inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 backdrop-blur"
-        >
-          <p class="font-semibold text-white">NSFW</p>
-        </div>
+  <div
+    class="absolute z-10 flex pr-16 items-start justify-between gap-1 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+  >
+    <ul class="flex flex-wrap gap-1">
+      {#each tagsV2 as tag}
+        <li class="text-white text-base bg-primary capitalize">
+          {tag.name}
+        </li>
+      {/each}
+    </ul>
+  </div>
+  <div
+    class="absolute z-10 flex flex-col group-hover:right-2 gap-1 text-xs top-2 transition-all duration-200 ease-in-out -right-32"
+  >
+    <ul class="flex flex-col gap-2">
+      {#if hasMultipleImages}
+        <li class="p-1 bg-primary text-white">
+          <IconBoxMultiple />
+        </li>
       {/if}
-      <picture>
-        <source
-          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
-                   {urlFor(painting.image).width(400).height(500).url()} 400w,
-                   {urlFor(painting.image).width(600).height(600).url()} 600w"
-          sizes="(min-width: 1200px) 200px,
-                 (min-width: 600px) 200px,
-                 100vw"
-          media="(min-width: 600px)"
-        />
-        <source
-          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
-                   {urlFor(painting.image).width(400).height(500).url()} 400w,
-                   {urlFor(painting.image).width(600).height(700).url()} 600w"
-          sizes="(max-width: 599px) 100vw,
-                 200px"
-          media="(max-width: 599px)"
-        />
-        <img
-          src={urlFor(painting.image).width(400).height(500).url()}
-          srcset="{urlFor(painting.image).width(200).height(300).url()} 200w,
-                   {urlFor(painting.image).width(400).height(500).url()} 400w,
-                   {urlFor(painting.image).width(600).height(700).url()} 600w"
-          sizes="100vw"
-          alt={title}
-          class={cn('object-cover w-full')}
-          loading="lazy"
-        />
-      </picture>
-      <div
-        class="absolute transition-all duration-500 ease-in-out -bottom-32 left-2 group-hover:bottom-2"
-      >
-        <strong class="text-xl text-white">
-          <Chip>{title}</Chip>
-        </strong>
-      </div>
+      {#if hasSalesLink}
+        <li class="bg-highlight p-1">
+          <IconShoppingCart />
+        </li>
+      {/if}
+    </ul>
+  </div>
+  {#if hasNSFWTag && !filterContainsNSFW}
+    <div
+      class="absolute inset-0 flex items-center justify-center w-full h-full bg-primary/40 backdrop-blur-xl"
+    >
+      <p class="font-semibold text-white">NSFW</p>
     </div>
-  </article>
-</a>
+  {/if}
+  <img
+    src={urlFor(painting.image).width(200).height(400).url()}
+    alt={title}
+    class="object-cover w-full h-full"
+    loading="lazy"
+  />
+  <a href={`/paintings/${slug}`}>
+    <div
+      class="absolute transition-all duration-500 ease-in-out bg-primary px-4 py-2 left-0 right-0 bottom-0"
+    >
+      <h2 class="text-2xl capitalize">
+        <strong class="text-white text-balance">
+          {title}
+        </strong>
+      </h2>
+    </div>
+  </a>
+</article>
 
 <style>
   @supports (animation-timeline: view()) {
@@ -126,7 +97,7 @@
       @keyframes appear {
         from {
           opacity: 0.9%;
-          transform: translateY(100px) scale(0.4);
+          transform: translateY(100px) scale(0.9);
         }
         to {
           opacity: 1;
@@ -134,12 +105,17 @@
         }
       }
 
-      .focus-within {
-        z-index: 1;
+      .within {
         animation: appear linear;
         animation-timeline: view();
-        animation-range: entry -40% contain 5%;
+        animation-range: entry 0% cover 25%;
       }
     }
+  }
+
+  a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 </style>

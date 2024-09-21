@@ -5,15 +5,24 @@
 
   function handleGoBack() {
     // Extract existing query parameters
-    const url = new URL(window.location.href)
-    const queryParams = url.searchParams
+    let sortOption = sessionStorage.getItem('sortOption') || 'random'
+    let selectedTags = JSON.parse(
+      sessionStorage.getItem('selectedTags') || '[]'
+    )
 
-    // Construct the /paintings URL with preserved filters
-    const paintingsUrl = '/paintings?' + queryParams.toString()
+    // Set default values if not available
+    if (!sortOption) {
+      sortOption = 'defaultSortOption' // Replace with your default sort option
+    }
 
-    // Navigate back, preserving the query parameters
-    // goto(paintingsUrl, { noScroll: true })
-    window.history.back()
+    // Construct the new SLUG
+    const slug =
+      selectedTags.length > 0
+        ? `/paintings?filter=${selectedTags.join(',')}&sort=${sortOption}`
+        : `/paintings?sort=${sortOption}`
+
+    // Navigate to the new SLUG
+    goto(slug, { replaceState: true })
   }
 </script>
 
