@@ -15,16 +15,15 @@
 </svelte:head>
 
 <section class="grid items-start grid-cols-12 mx-auto">
-  <SideBar>
-    <div class="prose">
-      <h1 class="text-blue-800">Projects</h1>
-      <p>
-        Discover a collection of my ongoing and completed projects, each with
-        unique learning experiences.
-      </p>
-    </div>
-  </SideBar>
-  <ul class="grid w-full grid-cols-12 col-span-8 gap-4 p-4">
+  <div class="prose col-span-full p-4">
+    <h1 class="text-blue-800">Projects</h1>
+    <p>
+      Discover a collection of my ongoing and completed projects, each with
+      unique learning experiences.
+    </p>
+  </div>
+
+  <ul class="grid w-full grid-cols-12 col-span-full gap-4 p-4">
     {#each projects as project}
       <li class="col-span-4">
         <a href={`projects/${project.slug}`} class="">
