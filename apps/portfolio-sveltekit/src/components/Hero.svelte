@@ -38,9 +38,9 @@
   import { onMount } from 'svelte'
   import Chip from './Chip.svelte'
 
-  let scale = spring(0.8, {
-    stiffness: 0.1,
-    damping: 0.25
+  let scale = spring(0.4, {
+    // stiffness: 0.1,
+    // damping: 0.25
   })
 
   let translateY = spring(1000, { stiffness: 0.1, damping: 0.25 })
@@ -95,16 +95,9 @@
         style="transform: translatex({$translateX}px);"
       >
         <div class="xl:h-10 overflow-clip">
-          <Typewriter
-            mode="scramble"
-            scrambleSlowdown
-            delay={1000}
-            scrambleDuration={500}
-          >
-            <h1 class="text-4xl" in:fade>
-              <strong>Henrik Wilhelm Sissener</strong>
-            </h1>
-          </Typewriter>
+          <h1 class="text-4xl" in:fade>
+            <strong>Henrik Wilhelm Sissener</strong>
+          </h1>
         </div>
         <ul class="flex flex-col gap-4 text-lg text-balanced">
           <li>Frontend developer</li>
@@ -117,7 +110,7 @@
       class="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2"
     >
       <div
-        class="relative w-full h-full aspect-portrait xl:aspect-video drop-shadow-lg rounded-2xl bg-dark/20"
+        class="relative w-full h-full aspect-video drop-shadow-lg rounded-2xl bg-dark/20"
         style="transform: scale({$scale});"
       >
         <picture class="">

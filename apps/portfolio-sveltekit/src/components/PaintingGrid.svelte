@@ -8,6 +8,7 @@
   import Select from './Select.svelte'
   import Dialog from './Dialog.svelte'
   import { IconFilter } from '@tabler/icons-svelte'
+  import { cn } from '@wisihe/utils'
 
   let dialog: HTMLDialogElement
 
@@ -16,8 +17,8 @@
 
   let filteredPaintings: iSanityPainting[] = []
   let selectedTags: string[] = []
+
   let sortOption = 'random'
-  let allTags: string[] = []
 
   function updateSessionStorage() {
     if (browser) {
@@ -60,6 +61,10 @@
       filteredPaintings = [...filteredPaintings].sort(
         (a, b) => b.likes - a.likes
       )
+    } else if (sortOption === 'mostViewed') {
+      filteredPaintings = [...filteredPaintings].sort(
+        (a, b) => b.views - a.views
+      )
     }
 
     // Update session storage and URL params
@@ -94,34 +99,40 @@
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag]
   }
+  console.log({ selectedTags })
 </script>
 
 <div class="min-h-screen">
-  <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">
-    Art Gallery
-  </h1>
+  <div class="p-4 prose">
+    <h1>Art Gallery</h1>
+    <p class="">
+      Welcome to the art gallery! Here you can view all the paintings I've
+      created. Use the filters below to find paintings that match your
+      interests.
+    </p>
+  </div>
   <div
     style="margin-bottom: 20px;"
     class="sticky top-0 z-20 bg-tertiary shadow-xl p-4"
   >
-    <h2 style="font-size: 18px; margin-bottom: 10px;">Filter by Tags</h2>
-    <button
-      on:click={() => dialog.showModal()}
-      class="bg-primary text-white p-3 rounded-lg flex items-center gap-2"
-    >
-      <IconFilter />
-    </button>
-
-    <div>
+    <div class="flex gap-2 items-end">
       <Select
+        label="Sort by"
         bind:value={sortOption}
         options={[
           { value: 'random', label: 'Random' },
           { value: 'newest', label: 'Newest' },
           { value: 'oldest', label: 'Oldest' },
-          { value: 'mostLiked', label: 'Most Liked' }
+          { value: 'mostLiked', label: 'Most Liked' },
+          { value: 'mostViewed', label: 'Most Viewed' }
         ]}
       />
+      <button
+        on:click={() => dialog.showModal()}
+        class="bg-primary text-white p-2 rounded-lg flex items-center gap-2"
+      >
+        <IconFilter />Filters ({selectedTags.length})
+      </button>
     </div>
   </div>
 
@@ -133,18 +144,54 @@
 </div>
 
 <Dialog bind:dialog on:close>
-  {#each tags as tag}
-    <button
-      on:click={() => toggleTag(tag.name)}
-      style="margin-right: 10px; margin-bottom: 10px; padding: 5px 10px; border-radius: 15px; border: none; background-color: {selectedTags.includes(
-        tag.name
-      )
-        ? '#007bff'
-        : '#e9ecef'}; color: {selectedTags.includes(tag.name)
-        ? 'white'
-        : 'black'};"
+  <section class="bg-tertiary rounded p-4">
+    <div class="pb-4">
+      <h2>Filter by Tags</h2>
+      <p>
+        Select tags to filter paintings. Click on a tag to toggle it on or off.
+      </p>
+    </div>
+    <ul
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 flex-col"
     >
-      {tag.name} ({tag.paintingsCount})
-    </button>
-  {/each}
+      {#each tags as tag}
+        <li>
+          <button
+            on:click={() => toggleTag(tag.name)}
+            class={cn(
+              'rounded-lg',
+              'p-2',
+              'w-full',
+              'border-none',
+              'bg-white',
+              'text-black',
+              'hover:bg-primary',
+              'hover:text-white',
+              'transition-colors',
+              'duration-200',
+              'ease-in-out',
+              selectedTags.includes(tag.name) && 'bg-primary text-white'
+            )}
+          >
+            {tag.name} ({tag.paintingsCount})</button
+          >
+        </li>
+      {/each}
+    </ul>
+    <div class="flex justify-end pt-4">
+      <button
+        on:click={() => dialog.close()}
+        class="bg-primary
+        text-white
+        p-2
+        rounded-lg
+        hover:bg-secondary
+        transition-colors
+        duration-200
+        ease-in-out"
+      >
+        Close
+      </button>
+    </div>
+  </section>
 </Dialog>

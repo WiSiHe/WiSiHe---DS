@@ -55,7 +55,7 @@
 </script>
 
 <div class="relative" bind:this={dropdownRef}>
-  <label for={id} class="block text-sm font-medium text-gray-700 mb-1">
+  <label for={id} class="block mb-1 text-sm font-medium">
     {label}
   </label>
   <button
@@ -65,14 +65,14 @@
     on:keydown={handleKeydown}
     aria-haspopup="listbox"
     aria-expanded={isOpen}
-    class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    class="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-primary sm:text-sm"
   >
     <span class="block truncate">{selectedLabel}</span>
     <span
       class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
     >
       <svg
-        class="h-5 w-5 text-gray-400"
+        class="w-5 h-5 text-gray-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
@@ -89,27 +89,25 @@
 
   {#if isOpen}
     <ul
-      class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+      class="absolute z-10 w-full mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
       tabindex="-1"
       role="listbox"
       aria-labelledby={id}
     >
       {#each options as option (option.value)}
         <li
-          class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white"
+          class="relative py-2 pl-3 cursor-default select-none pr-9 hover:bg-primary hover:text-white hover:fill-white"
           role="option"
           aria-selected={value === option.value}
           on:click={() => selectOption(option)}
         >
-          <span class="block truncate font-normal">
+          <span class="block font-normal truncate">
             {option.label}
           </span>
           {#if value === option.value}
-            <span
-              class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600"
-            >
+            <span class="absolute inset-y-0 right-0 flex items-center pr-4">
               <svg
-                class="h-5 w-5"
+                class="w-5 h-5"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"

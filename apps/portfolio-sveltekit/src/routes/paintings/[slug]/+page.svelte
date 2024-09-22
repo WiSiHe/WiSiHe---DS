@@ -7,7 +7,7 @@
   import Dialog from '../../../components/Dialog.svelte'
   import SideBar from '../../../components/SideBar.svelte'
   import { patchPaintingViews } from '$lib/utils/sanity'
-  import { IconClock } from '@tabler/icons-svelte'
+  import { IconClock, IconEye } from '@tabler/icons-svelte'
   import Chip from '../../../components/Chip.svelte'
 
   // Typing for the painting data
@@ -28,7 +28,6 @@
   export let data: { painting: Painting }
 
   const { painting } = data
-
   const {
     title,
     seoDescription,
@@ -56,7 +55,6 @@
   }[format]
 
   let dialog: HTMLDialogElement
-
   let allImages = [image, ...(images || [])]
   let selectedIndex = 0
   let selectedImage = allImages[selectedIndex]
@@ -110,12 +108,20 @@
     return viewerId
   }
 
-  function handleAddView() {
+  async function handleAddView() {
     const viewerId = getViewerId()
-    console.log({ viewerId })
 
     if (!views.find(view => view.viewerId === viewerId)) {
-      patchPaintingViews(painting._id, viewerId)
+      await patchPaintingViews(painting._id, viewerId)
+    }
+  }
+
+  // Debouncing event handlers for better performance
+  function debounce(fn: Function, delay: number) {
+    let timeoutId: ReturnType<typeof setTimeout>
+    return (...args: any) => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => fn(...args), delay)
     }
   }
 </script>
@@ -154,10 +160,10 @@
 
 <section
   class={cn(
-    'relative grid test min-h-screen max-w-screen-xl mx-auto grid-cols-12 gap-8 p-4'
+    'relative flex flex-col xl:grid test min-h-screen max-w-screen-xl items-start mx-auto grid-cols-12 gap-8 p-4'
   )}
 >
-  <div class="relative col-span-full xl:col-span-8 h-fit">
+  <div class="relative col-span-full w-full xl:col-span-8 h-fit">
     <button
       on:click={() => dialog.showModal()}
       class={cn(
@@ -175,6 +181,7 @@
           media="(max-width: 799px)"
         />
         <img
+          loading="lazy"
           src={urlFor(selectedImage).width(1200).height(1200).url()}
           alt={title}
           class={cn(
@@ -189,6 +196,7 @@
       <div class="relative flex items-center justify-center gap-4 pt-4">
         <button on:click={() => handleSelectImage(image)}>
           <img
+            loading="lazy"
             src={urlFor(image).width(100).height(100).url()}
             alt={title}
             class="object-cover w-16 h-16 rounded-lg"
@@ -197,6 +205,7 @@
         {#each images as img, index (img._id + '-' + index)}
           <button on:click={() => handleSelectImage(img)}>
             <img
+              loading="lazy"
               src={urlFor(img).width(100).height(100).url()}
               alt={title}
               class="object-cover w-16 h-16 rounded-lg"
@@ -207,20 +216,20 @@
     {/if}
   </div>
 
-  <SideBar className="p-0 pb-10">
-    <div
-      in:fly={{ y: 100, opacity: 0 }}
-      out:fly={{ x: 100, opacity: 0 }}
-      class="xl:sticky xl:top-16"
-    >
+  <SideBar className="p-0 xl:p-4 pb-10 xl:bg-white xl:sticky xl:top-16">
+    <div in:fly={{ y: 100, opacity: 0 }} out:fly={{ x: 100, opacity: 0 }}>
       <div class="pt-2">
         <h1 class="text-balance">{title}</h1>
-        <p>Views: {views.length}</p>
+
         {#if tagsV2}
           <ul class="flex flex-wrap gap-2 pt-3">
-            <Chip color="tertiary" size="sm">
+            <Chip color="highlight" size="sm">
               <IconClock class="w-4 h-4" />
               {formatedPaintedAt}
+            </Chip>
+            <Chip>
+              <IconEye />
+              {views.length}
             </Chip>
             {#each tagsV2 as tag}
               <Chip color="primary" onClick={() => {}}>
@@ -229,7 +238,9 @@
             {/each}
           </ul>
         {/if}
-        <p class="prose text-balance">{description}</p>
+        <div class="prose pt-2">
+          <p>{description}</p>
+        </div>
       </div>
     </div>
   </SideBar>
