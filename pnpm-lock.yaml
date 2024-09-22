@@ -110,10 +110,10 @@ importers:
         version: 1.0.2
       '@sanity/overlays':
         specifier: ^2.3.30
-        version: 2.3.59(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
+        version: 2.3.59(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
       '@sanity/preview-url-secret':
         specifier: ^1.6.5
-        version: 1.6.21(@sanity/client@6.21.3)
+        version: 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
       '@sanity/react-loader':
         specifier: ^1.9.5
         version: 1.10.7(@sanity/client@6.21.3)(react@18.3.1)
@@ -125,19 +125,19 @@ importers:
         version: 3.57.4(@babel/runtime@7.25.6)(@codemirror/lint@6.8.1)(@codemirror/theme-one-dark@6.1.2)(@lezer/common@1.2.1)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sanity/visual-editing':
         specifier: ^1.8.4
-        version: 1.8.22(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
+        version: 1.8.22(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
       '@sanity/webhook':
         specifier: ^4.0.3
         version: 4.0.4
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)))
+        version: 0.1.1(tailwindcss@3.4.12(ts-node@10.9.2))
       '@vercel/analytics':
         specifier: ^1.2.2
-        version: 1.3.1(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 1.3.1(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@vercel/speed-insights':
         specifier: ^1.0.10
-        version: 1.0.12(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
+        version: 1.0.12(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
       '@vercel/stega':
         specifier: ^0.1.0
         version: 0.1.2
@@ -161,7 +161,7 @@ importers:
         version: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-sanity:
         specifier: ^8.5.0
-        version: 8.5.5(@sanity/client@6.21.3)(@sanity/icons@2.11.8(react@18.3.1))(@sanity/types@3.57.4)(@sanity/ui@2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(sanity@3.57.4(@types/node@22.5.5)(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.33.0))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
+        version: 8.5.5(@sanity/client@6.21.3)(@sanity/icons@2.11.8(react@18.3.1))(@sanity/types@3.57.4)(@sanity/ui@2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(sanity@3.57.4(@types/node@22.5.5)(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.33.0))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
       next-sitemap:
         specifier: ^4.2.3
         version: 4.2.3(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -224,7 +224,7 @@ importers:
         version: 2.5.2
       webpack:
         specifier: ^5.91.0
-        version: 5.94.0
+        version: 5.94.0(esbuild@0.21.5)
       zustand:
         specifier: ^4.5.2
         version: 4.5.5(@types/react@18.3.8)(immer@10.1.1)(react@18.3.1)
@@ -270,7 +270,7 @@ importers:
         version: 2.0.2(playwright@1.47.2)
       babel-loader:
         specifier: ^9.1.3
-        version: 9.2.1(@babel/core@7.25.2)(webpack@5.94.0)
+        version: 9.2.1(@babel/core@7.25.2)(webpack@5.94.0(esbuild@0.21.5))
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -306,7 +306,7 @@ importers:
         version: 1.6.2(react@18.3.1)
       tailwindcss:
         specifier: ^3.4.3
-        version: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
+        version: 3.4.12(ts-node@10.9.2)
       tailwindcss-themer:
         specifier: ^4.0.0
         version: 4.0.0(tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)))
@@ -320,10 +320,10 @@ importers:
   apps/portfolio-sveltekit:
     dependencies:
       '@fontsource-variable/inter':
-        specifier: ^5.0.21
+        specifier: ^5.1.0
         version: 5.1.0
       '@fontsource-variable/oswald':
-        specifier: ^5.0.22
+        specifier: ^5.1.0
         version: 5.1.0
       '@sanity/client':
         specifier: ^6.21.3
@@ -338,13 +338,13 @@ importers:
         specifier: ^2.1.10
         version: 2.1.10(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
       '@tabler/icons-svelte':
-        specifier: ^3.16.0
+        specifier: ^3.17.0
         version: 3.17.0(svelte@4.2.19)
       '@vercel/analytics':
         specifier: ^1.3.1
-        version: 1.3.1(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 1.3.1(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       groq:
-        specifier: ^3.57.2
+        specifier: ^3.57.4
         version: 3.57.4
       gsap:
         specifier: ^3.12.5
@@ -363,13 +363,13 @@ importers:
         specifier: ^2.0.13
         version: 2.0.13
       '@sanity/types':
-        specifier: ^3.57.2
+        specifier: ^3.57.4
         version: 3.57.4(debug@4.3.7)
       '@sveltejs/adapter-auto':
-        specifier: ^3.2.4
+        specifier: ^3.2.5
         version: 3.2.5(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))
       '@sveltejs/kit':
-        specifier: ^2.5.26
+        specifier: ^2.5.28
         version: 2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
@@ -396,7 +396,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       eslint:
-        specifier: ^8.57.0
+        specifier: ^8.57.1
         version: 8.57.1
       eslint-config-prettier:
         specifier: ^9.1.0
@@ -405,7 +405,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(eslint@8.57.1)(svelte@4.2.19)
       postcss:
-        specifier: ^8.4.45
+        specifier: ^8.4.47
         version: 8.4.47
       prettier:
         specifier: ^3.3.3
@@ -423,7 +423,7 @@ importers:
         specifier: ^3.2.3
         version: 3.2.3(svelte@4.2.19)
       tailwindcss:
-        specifier: ^3.4.11
+        specifier: ^3.4.12
         version: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.6.2))
       tslib:
         specifier: ^2.7.0
@@ -432,7 +432,7 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
       vite:
-        specifier: ^5.4.4
+        specifier: ^5.4.7
         version: 5.4.7(@types/node@22.5.5)(terser@5.33.0)
 
   apps/sanity-studio:
@@ -509,7 +509,7 @@ importers:
     dependencies:
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)))
+        version: 0.1.1(tailwindcss@3.4.12(ts-node@10.9.2))
     devDependencies:
       '@tailwindcss/forms':
         specifier: ^0.5.7
@@ -525,7 +525,7 @@ importers:
         version: 8.4.47
       tailwindcss:
         specifier: ^3.4.1
-        version: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
+        version: 3.4.12(ts-node@10.9.2)
 
   packages/typescript-config: {}
 
@@ -12066,9 +12066,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@sanity/overlays@2.3.59(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
+  '@sanity/overlays@2.3.59(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
     dependencies:
-      '@sanity/visual-editing': 2.1.10(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
+      '@sanity/visual-editing': 2.1.10(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)
     transitivePeerDependencies:
       - '@remix-run/react'
       - '@sanity/client'
@@ -12082,7 +12082,7 @@ snapshots:
     dependencies:
       '@sanity/client': 6.21.3(debug@4.3.7)
       '@sanity/icons': 3.4.0(react@18.3.1)
-      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3)
+      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
       '@sanity/ui': 2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sanity/uuid': 3.0.2
       '@types/lodash.isequal': 4.5.8
@@ -12118,7 +12118,7 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@sanity/preview-url-secret@1.6.21(@sanity/client@6.21.3)':
+  '@sanity/preview-url-secret@1.6.21(@sanity/client@6.21.3(debug@4.3.7))':
     dependencies:
       '@sanity/client': 6.21.3(debug@4.3.7)
       '@sanity/uuid': 3.0.2
@@ -12244,9 +12244,9 @@ snapshots:
       - react-dom
       - react-is
 
-  '@sanity/visual-editing@1.8.22(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)':
+  '@sanity/visual-editing@1.8.22(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)':
     dependencies:
-      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3)
+      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
       '@vercel/stega': 0.1.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12254,13 +12254,13 @@ snapshots:
       valibot: 0.30.0
     optionalDependencies:
       '@sanity/client': 6.21.3(debug@4.3.7)
-      '@sveltejs/kit': 2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
+      '@sveltejs/kit': 2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0))
       next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       svelte: 4.2.19
 
-  '@sanity/visual-editing@1.8.7(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)':
+  '@sanity/visual-editing@1.8.7(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)':
     dependencies:
-      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3)
+      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
       '@vercel/stega': 0.1.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12269,13 +12269,13 @@ snapshots:
       valibot: 0.30.0
     optionalDependencies:
       '@sanity/client': 6.21.3(debug@4.3.7)
-      '@sveltejs/kit': 2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
+      '@sveltejs/kit': 2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0))
       next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       svelte: 4.2.19
 
   '@sanity/visual-editing@2.1.10(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
     dependencies:
-      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3)
+      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
       '@vercel/stega': 0.1.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12284,6 +12284,20 @@ snapshots:
     optionalDependencies:
       '@sanity/client': 6.21.3(debug@4.3.7)
       '@sveltejs/kit': 2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
+      next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      svelte: 4.2.19
+
+  '@sanity/visual-editing@2.1.10(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
+    dependencies:
+      '@sanity/preview-url-secret': 1.6.21(@sanity/client@6.21.3(debug@4.3.7))
+      '@vercel/stega': 0.1.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      scroll-into-view-if-needed: 3.1.0
+      valibot: 0.31.1
+    optionalDependencies:
+      '@sanity/client': 6.21.3(debug@4.3.7)
+      '@sveltejs/kit': 2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0))
       next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       svelte: 4.2.19
 
@@ -12624,6 +12638,24 @@ snapshots:
       tiny-glob: 0.2.9
       vite: 5.4.7(@types/node@22.5.5)(terser@5.33.0)
 
+  '@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0))':
+    dependencies:
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      devalue: 5.0.0
+      esm-env: 1.0.0
+      import-meta-resolve: 4.1.0
+      kleur: 4.1.5
+      magic-string: 0.30.11
+      mrmime: 2.0.0
+      sade: 1.8.1
+      set-cookie-parser: 2.7.0
+      sirv: 2.0.4
+      svelte: 4.2.19
+      tiny-glob: 0.2.9
+      vite: 4.5.5(@types/node@22.5.5)(terser@5.33.0)
+    optional: true
+
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
@@ -12665,14 +12697,14 @@ snapshots:
 
   '@tabler/icons@3.17.0': {}
 
-  '@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)))':
+  '@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.12(ts-node@10.9.2))':
     dependencies:
-      tailwindcss: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
+      tailwindcss: 3.4.12(ts-node@10.9.2)
 
   '@tailwindcss/forms@0.5.9(tailwindcss@3.4.12(ts-node@10.9.2))':
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
+      tailwindcss: 3.4.12(ts-node@10.9.2)
 
   '@tailwindcss/typography@0.5.15(tailwindcss@3.4.12(ts-node@10.9.2))':
     dependencies:
@@ -12680,7 +12712,7 @@ snapshots:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
+      tailwindcss: 3.4.12(ts-node@10.9.2)
 
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -13272,16 +13304,16 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vercel/analytics@1.3.1(next@14.2.13(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@vercel/analytics@1.3.1(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       server-only: 0.0.1
     optionalDependencies:
       next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  '@vercel/speed-insights@1.0.12(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
+  '@vercel/speed-insights@1.0.12(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(svelte@4.2.19)':
     optionalDependencies:
-      '@sveltejs/kit': 2.5.28(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0)))(svelte@4.2.19)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
+      '@sveltejs/kit': 2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0))
       next: 14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       svelte: 4.2.19
@@ -13702,12 +13734,12 @@ snapshots:
 
   b4a@1.6.6: {}
 
-  babel-loader@9.2.1(@babel/core@7.25.2)(webpack@5.94.0):
+  babel-loader@9.2.1(@babel/core@7.25.2)(webpack@5.94.0(esbuild@0.21.5)):
     dependencies:
       '@babel/core': 7.25.2
       find-cache-dir: 4.0.0
       schema-utils: 4.2.0
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.21.5)
 
   babel-plugin-polyfill-corejs2@0.4.11(@babel/core@7.25.2):
     dependencies:
@@ -16780,7 +16812,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-sanity@8.5.5(@sanity/client@6.21.3)(@sanity/icons@2.11.8(react@18.3.1))(@sanity/types@3.57.4)(@sanity/ui@2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(sanity@3.57.4(@types/node@22.5.5)(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.33.0))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19):
+  next-sanity@8.5.5(@sanity/client@6.21.3)(@sanity/icons@2.11.8(react@18.3.1))(@sanity/types@3.57.4)(@sanity/ui@2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(sanity@3.57.4(@types/node@22.5.5)(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.33.0))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19):
     dependencies:
       '@portabletext/react': 3.1.0(react@18.3.1)
       '@sanity/client': 6.21.3(debug@4.3.7)
@@ -16788,7 +16820,7 @@ snapshots:
       '@sanity/preview-kit': 5.0.41(@sanity/client@6.21.3)(react@18.3.1)
       '@sanity/types': 3.57.4(debug@4.3.7)
       '@sanity/ui': 2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@sanity/visual-editing': 1.8.7(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
+      '@sanity/visual-editing': 1.8.7(@sanity/client@6.21.3)(@sveltejs/kit@2.5.28(svelte@4.2.19)(vite@4.5.5(@types/node@22.5.5)(terser@5.33.0)))(next@14.2.13(@babel/core@7.25.2)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.19)
       '@sanity/webhook': 4.0.2-bc
       groq: 3.57.4
       history: 5.3.0
@@ -17230,14 +17262,6 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.47
 
-  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)):
-    dependencies:
-      lilconfig: 3.1.2
-      yaml: 2.5.1
-    optionalDependencies:
-      postcss: 8.4.47
-      ts-node: 10.9.2(@types/node@22.5.5)(typescript@5.4.3)
-
   postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.6.2)):
     dependencies:
       lilconfig: 3.1.2
@@ -17245,6 +17269,14 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.47
       ts-node: 10.9.2(@types/node@22.5.5)(typescript@5.6.2)
+
+  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2):
+    dependencies:
+      lilconfig: 3.1.2
+      yaml: 2.5.1
+    optionalDependencies:
+      postcss: 8.4.47
+      ts-node: 10.9.2(@types/node@22.5.5)(typescript@5.4.3)
 
   postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.47)(yaml@2.5.1):
     dependencies:
@@ -18773,34 +18805,7 @@ snapshots:
       just-unique: 4.2.0
       lodash.merge: 4.6.2
       lodash.mergewith: 4.6.2
-      tailwindcss: 3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
-
-  tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3)):
-    dependencies:
-      '@alloc/quick-lru': 5.2.0
-      arg: 5.0.2
-      chokidar: 3.6.0
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.3.2
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      jiti: 1.21.6
-      lilconfig: 2.1.0
-      micromatch: 4.0.8
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.1.0
-      postcss: 8.4.47
-      postcss-import: 15.1.0(postcss@8.4.47)
-      postcss-js: 4.0.1(postcss@8.4.47)
-      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.4.3))
-      postcss-nested: 6.2.0(postcss@8.4.47)
-      postcss-selector-parser: 6.1.2
-      resolve: 1.22.8
-      sucrase: 3.35.0
-    transitivePeerDependencies:
-      - ts-node
+      tailwindcss: 3.4.12(ts-node@10.9.2)
 
   tailwindcss@3.4.12(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.6.2)):
     dependencies:
@@ -18822,6 +18827,33 @@ snapshots:
       postcss-import: 15.1.0(postcss@8.4.47)
       postcss-js: 4.0.1(postcss@8.4.47)
       postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.5.5)(typescript@5.6.2))
+      postcss-nested: 6.2.0(postcss@8.4.47)
+      postcss-selector-parser: 6.1.2
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.12(ts-node@10.9.2):
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.6.0
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.6
+      lilconfig: 2.1.0
+      micromatch: 4.0.8
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.1.0
+      postcss: 8.4.47
+      postcss-import: 15.1.0(postcss@8.4.47)
+      postcss-js: 4.0.1(postcss@8.4.47)
+      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2)
       postcss-nested: 6.2.0(postcss@8.4.47)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8
@@ -18877,14 +18909,16 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.3.10(webpack@5.94.0):
+  terser-webpack-plugin@5.3.10(esbuild@0.21.5)(webpack@5.94.0(esbuild@0.21.5)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.33.0
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.21.5)
+    optionalDependencies:
+      esbuild: 0.21.5
 
   terser@5.33.0:
     dependencies:
@@ -19548,7 +19582,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.94.0:
+  webpack@5.94.0(esbuild@0.21.5):
     dependencies:
       '@types/estree': 1.0.6
       '@webassemblyjs/ast': 1.12.1
@@ -19570,7 +19604,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(webpack@5.94.0)
+      terser-webpack-plugin: 5.3.10(esbuild@0.21.5)(webpack@5.94.0(esbuild@0.21.5))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
