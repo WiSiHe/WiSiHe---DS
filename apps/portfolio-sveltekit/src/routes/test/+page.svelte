@@ -1,8 +1,3 @@
-<script>
-  import FallingLettersInput from '../../components/Silly/FallingLettersInput.svelte'
-  import SlipperyCheckbox from '../../components/Silly/SlipperyCheckbox.svelte'
-</script>
-
 <svelte:head>
   <title>3D</title>
   <meta name="description" content="3D page" />
@@ -18,11 +13,6 @@
 </svelte:head>
 
 <section class="grid items-start grid-cols-12">
-  <section>
-    <FallingLettersInput />
-    <SlipperyCheckbox />
-  </section>
-
   <section class="relative w-full h-screen col-span-full overscroll-y-contain">
     <!-- this -->
     <spline-viewer
