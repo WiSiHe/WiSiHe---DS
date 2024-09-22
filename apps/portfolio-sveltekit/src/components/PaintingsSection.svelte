@@ -18,7 +18,7 @@
 </script>
 
 <section class="bg-dark">
-  <div class="relative w-full py-14 xl:py-24 lg:px-10">
+  <div class="relative w-full py-14 px-4 xl:py-24 lg:px-10">
     <div class="prose">
       <h2 class="text-4xl text-white col-span-full">Paintings</h2>
       <p class="text-white">
@@ -30,7 +30,7 @@
         >
       </p>
     </div>
-    <section class="relative">
+    <section class="relative p">
       <div
         class="h-full from-transparent via-transparent pointer-events-none to-dark bg-gradient-to-r z-10 absolute right-0 top-0 bottom-0 w-1/3"
       />

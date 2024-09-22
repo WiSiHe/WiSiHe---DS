@@ -29,7 +29,7 @@
 
   $: {
     filter = $page.url.searchParams.getAll('filter') || ['']
-    filterContainsNSFW = filter.includes('nsfw')
+    filterContainsNSFW = filter.includes('NSFW')
   }
 
   const hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
@@ -43,7 +43,7 @@
   >
     <ul class="flex flex-wrap gap-1">
       {#each tagsV2 as tag}
-        <li class="text-white text-base bg-primary capitalize">
+        <li class="text-white text-xs bg-primary px-1 rounded capitalize">
           {tag.name}
         </li>
       {/each}
@@ -54,13 +54,13 @@
   >
     <ul class="flex flex-col gap-2">
       {#if hasMultipleImages}
-        <li class="p-1 bg-primary text-white">
+        <li class="p-2 bg-primary text-xs text-white rounded-full">
           <IconBoxMultiple />
         </li>
       {/if}
       {#if hasSalesLink}
-        <li class="bg-highlight p-1">
-          <IconShoppingCart />
+        <li class="bg-highlight p-2 text-xs rounded-full">
+          <IconShoppingCart width={8} height={8} />
         </li>
       {/if}
     </ul>
@@ -80,9 +80,9 @@
   />
   <a href={`/paintings/${slug}`}>
     <div
-      class="absolute transition-all duration-500 ease-in-out bg-primary px-4 py-2 left-0 right-0 bottom-0"
+      class="absolute transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg px-4 py-2 left-0 right-0 bottom-0"
     >
-      <h2 class="text-2xl capitalize">
+      <h2 class="text-lg xl:text-2xl capitalize">
         <strong class="text-white text-balance">
           {title}
         </strong>
