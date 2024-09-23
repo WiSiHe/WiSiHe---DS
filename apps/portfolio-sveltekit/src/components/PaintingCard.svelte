@@ -44,7 +44,11 @@
 </script>
 
 <article
-  class="relative z-0 w-full h-full col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none aspect-portrait overflow-clip focus-within:ring xl:col-span-3 2xl:col-span-3 group hover:ring-4 hover:z-10 ring-primary within"
+  class={cn(
+    'relative z-0 w-full h-full duration-500 ease-in-out scale-100 rounded outline-none overflow-clip focus-within:ring  group hover:ring-4 hover:z-10 ring-primary within',
+    'transition-transform',
+    'col-span-full sm:col-span-6 md:col-span-4 xl:col-span-3 2xl:col-span-3'
+  )}
 >
   <div
     class="absolute z-10 flex items-start justify-between gap-1 pr-16 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
@@ -81,14 +85,14 @@
     </div>
   {/if}
   <div
-    class="relative w-full h-full bg-dark"
+    class="relative w-full h-full bg-dark aspect-portrait"
     style:background-image="url({lqip})"
     style:background-size="cover"
     style:background-position="center"
   >
     <picture>
       <source
-        srcset={urlFor(image).width(100).height(200).url()}
+        srcset={urlFor(image).width(300).height(400).url()}
         media="(max-width: 640px)"
         type="image/webp"
       />
