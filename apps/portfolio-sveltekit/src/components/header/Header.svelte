@@ -67,6 +67,7 @@
     <button
       on:click={openDialog}
       class="p-2 text-white rounded-md lg:hidden focus-visible:ring"
+      aria-label="Toggle navigation"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +94,7 @@
     <button
       on:click={closeDialog}
       class="absolute text-gray-600 top-2 right-2 hover:text-gray-800 focus:outline-none"
+      aria-label="Close navigation"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
