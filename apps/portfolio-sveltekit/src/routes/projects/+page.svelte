@@ -14,7 +14,7 @@
   />
 </svelte:head>
 
-<section class="grid items-start grid-cols-12 mx-auto">
+<section class="grid items-start grid-cols-12 mx-auto max-w-screen-xl">
   <div class="prose col-span-full p-4">
     <h1 class="text-blue-800">Projects</h1>
     <p>

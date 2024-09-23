@@ -174,10 +174,8 @@
   <div class="relative col-span-full w-full xl:col-span-8 h-fit">
     <button
       on:click={() => dialog.showModal()}
-      class={cn(
-        'relative w-full h-full rounded-none outline-none',
-        imageFormatStyle
-      )}
+      class={cn('relative w-full h-full rounded-none outline-none')}
+      style:aspect-ratio={aspectRatio}
     >
       <div
         class="relative w-full bg-gray-200"

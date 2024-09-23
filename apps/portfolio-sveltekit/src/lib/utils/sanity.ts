@@ -43,6 +43,8 @@ export async function getAllPaintingsAndTags(): Promise<{
       ...,
       "slug":slug.current,
       tagsV2[]->{name},
+      "views": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views
+      "viewsCount": count(views),
       image{
         ...,
         "lqip": asset->metadata.lqip,
@@ -269,6 +271,7 @@ export interface iSanityPainting {
     viewerId: string
     timestamp: string
   }[]
+  viewsCount: number
 }
 
 export interface iSanityTag {

@@ -9,7 +9,9 @@
 
   export let painting: iSanityPainting
 
-  const { title, tagsV2, slug, redbubbleUrl, images = [] } = painting
+  const { title, tagsV2, slug, redbubbleUrl, image, images = [] } = painting
+
+  const { lqip } = image
 
   function isValidUrl(url: string | undefined | null): boolean {
     if (!url) return false
@@ -33,33 +35,39 @@
   }
 
   const hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
+
+  let imgLoaded = false
+
+  function handleImageLoad() {
+    imgLoaded = true
+  }
 </script>
 
 <article
-  class="w-full h-full aspect-portrait overflow-clip relative z-0 col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none focus-within:ring xl:col-span-3 2xl:col-span-3 group hover:ring-4 hover:z-10 ring-primary within"
+  class="relative z-0 w-full h-full col-span-6 transition-transform duration-500 ease-in-out scale-100 rounded outline-none aspect-portrait overflow-clip focus-within:ring xl:col-span-3 2xl:col-span-3 group hover:ring-4 hover:z-10 ring-primary within"
 >
   <div
-    class="absolute z-10 flex pr-16 items-start justify-between gap-1 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+    class="absolute z-10 flex items-start justify-between gap-1 pr-16 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
   >
     <ul class="flex flex-wrap gap-1">
       {#each tagsV2 as tag}
-        <li class="text-white text-xs bg-primary px-1 rounded capitalize">
+        <li class="px-1 text-xs text-white capitalize rounded bg-primary">
           {tag.name}
         </li>
       {/each}
     </ul>
   </div>
   <div
-    class="absolute z-10 flex flex-col group-hover:right-2 gap-1 text-xs top-2 transition-all duration-200 ease-in-out -right-32"
+    class="absolute z-10 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out group-hover:right-2 top-2 -right-32"
   >
     <ul class="flex flex-col gap-2">
       {#if hasMultipleImages}
-        <li class="p-2 bg-primary text-xs text-white rounded-full">
+        <li class="p-2 text-xs text-white rounded-full bg-primary">
           <IconBoxMultiple />
         </li>
       {/if}
       {#if hasSalesLink}
-        <li class="bg-highlight p-2 text-xs rounded-full">
+        <li class="p-2 text-xs rounded-full bg-highlight">
           <IconShoppingCart width={8} height={8} />
         </li>
       {/if}
@@ -72,17 +80,46 @@
       <p class="font-semibold text-white">NSFW</p>
     </div>
   {/if}
-  <img
-    src={urlFor(painting.image).width(200).height(400).url()}
-    alt={title}
-    class="object-cover w-full h-full"
-    loading="lazy"
-  />
+  <div
+    class="relative w-full h-full bg-dark"
+    style:background-image="url({lqip})"
+    style:background-size="cover"
+    style:background-position="center"
+  >
+    <picture>
+      <source
+        srcset={urlFor(image).width(100).height(200).url()}
+        media="(max-width: 640px)"
+        type="image/webp"
+      />
+      <source
+        srcset={urlFor(image).width(200).height(400).url()}
+        media="(max-width: 1024px)"
+        type="image/webp"
+      />
+      <source
+        srcset={urlFor(image).width(300).height(600).url()}
+        media="(max-width: 1280px)"
+        type="image/webp"
+      />
+      <img
+        src={urlFor(image).width(200).height(400).url()}
+        alt={title}
+        class={cn(
+          'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
+          imgLoaded ? 'opacity-100' : 'opacity-0'
+        )}
+        loading="lazy"
+        decoding="async"
+        on:load={handleImageLoad}
+      />
+    </picture>
+  </div>
   <a href={`/paintings/${slug}`}>
     <div
-      class="absolute transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg px-4 py-2 left-0 right-0 bottom-0"
+      class="absolute bottom-0 left-0 right-0 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg"
     >
-      <h2 class="text-lg xl:text-2xl capitalize">
+      <h2 class="text-lg capitalize xl:text-2xl">
         <strong class="text-white text-balance">
           {title}
         </strong>
