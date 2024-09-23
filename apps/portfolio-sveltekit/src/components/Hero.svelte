@@ -72,18 +72,11 @@
 <section
   class="relative flex flex-col justify-start w-full min-h-[600px] xl:min-h-screen px-4 py-10 bg-dark h-fit overflow-clip"
 >
-  <!-- <div class="absolute inset-0 scale-150">
-    <spline-viewer
-      loading-anim-type="spinner-big-light"
-      url="https://prod.spline.design/NJPbTHKSakGvCHjI/scene.splinecode"
-    />
-  </div> -->
   <img
     src={urlFor(currentPainting.image).width(25).height(25).url()}
     alt=""
     class="absolute inset-0 object-cover w-full h-full scale-105 opacity-50 blur-xl"
   />
-  <!-- <div class="absolute inset-0 bg-dark/20" /> -->
   <div
     class="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center"
   >
@@ -92,8 +85,8 @@
     >
       <div
         class="relative flex flex-col justify-center h-full gap-4 p-8 text-white bg-dark/40 backdrop-blur-2xl rounded-xl lg:p-10 drop-shadow-2xl"
-        style="transform: translatex({$translateX}px);"
       >
+        <!-- style="transform: translatex({$translateX}px);" -->
         <div class="xl:h-10 overflow-clip">
           <h1 class="text-4xl" in:fade>
             <strong>Henrik Wilhelm Sissener</strong>
@@ -111,11 +104,11 @@
     >
       <div
         class="relative w-full h-full aspect-video drop-shadow-lg rounded-2xl bg-dark/20"
-        style="transform: scale({$scale});"
       >
+        <!-- style="transform: scale({$scale});" -->
         <picture class="">
           <source
-            srcset={urlFor(currentPainting.image).width(1200).height(600).url()}
+            srcset={urlFor(currentPainting.image).width(1200).height(720).url()}
             media="(min-width: 800px)"
           />
           <source

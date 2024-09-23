@@ -15,7 +15,7 @@
   />
 </svelte:head>
 
-<section class="grid items-start grid-cols-12 p-4">
+<section class="grid items-start grid-cols-12 p-4 mx-auto max-w-screen-xl">
   <div class="prose col-span-full">
     <h1 class="text-blue-800">Videos</h1>
     <p>

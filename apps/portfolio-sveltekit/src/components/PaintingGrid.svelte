@@ -63,7 +63,7 @@
       )
     } else if (sortOption === 'mostViewed') {
       filteredPaintings = [...filteredPaintings].sort(
-        (a, b) => b.views - a.views
+        (a, b) => b.viewsCount - a.viewsCount
       )
     }
 
@@ -136,7 +136,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-12 gap-4 p-4">
+  <div class="grid grid-cols-12 gap-4 p-4 mx-auto max-w-screen-xl">
     {#each filteredPaintings as painting (painting.slug)}
       <PaintingCard {painting} />
     {/each}
