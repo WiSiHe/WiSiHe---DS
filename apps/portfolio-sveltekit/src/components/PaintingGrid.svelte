@@ -13,6 +13,7 @@
   let dialog: HTMLDialogElement
 
   export let paintings: iSanityPainting[] = []
+  console.log({ paintings })
   export let tags: iSanityPaintingsTag[] = []
 
   let filteredPaintings: iSanityPainting[] = []
@@ -102,20 +103,22 @@
   console.log({ selectedTags })
 </script>
 
-<div class="min-h-screen">
-  <div class="p-4 prose max-w-screen-xl mx-auto">
-    <h1>Art Gallery</h1>
-    <p class="">
-      Welcome to the art gallery! Here you can view all the paintings I've
-      created. Use the filters below to find paintings that match your
-      interests.
-    </p>
+<div class="min-h-screen bg-dark">
+  <div class=" bg-tertiary">
+    <div class="max-w-screen-xl p-4 mx-auto prose">
+      <h1>Art Gallery</h1>
+      <p class="">
+        Welcome to the art gallery! Here you can view all the paintings I've
+        created. Use the filters below to find paintings that match your
+        interests.
+      </p>
+    </div>
   </div>
   <div
     style="margin-bottom: 20px;"
-    class="sticky top-0 z-20 bg-tertiary shadow-xl"
+    class="sticky top-0 z-20 shadow-xl bg-tertiary"
   >
-    <div class="flex gap-2 items-end max-w-screen-xl mx-auto p-4">
+    <div class="flex flex-wrap items-end max-w-screen-xl gap-2 p-4 mx-auto">
       <Select
         label="Sort by"
         bind:value={sortOption}
@@ -129,14 +132,14 @@
       />
       <button
         on:click={() => dialog.showModal()}
-        class="bg-primary text-white p-2 rounded-lg flex items-center gap-2"
+        class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
       >
         <IconFilter />Filters ({selectedTags.length})
       </button>
       {#each selectedTags as tag (tag)}
         <button
           on:click={() => toggleTag(tag)}
-          class="bg-primary text-white p-2 rounded-lg flex items-center gap-1"
+          class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
         >
           {tag}
           <IconX />
@@ -145,7 +148,7 @@
       {#if selectedTags.length > 0}
         <button
           on:click={() => (selectedTags = [])}
-          class="bg-primary text-white p-2 rounded-lg"
+          class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
         >
           Clear All
         </button>
@@ -153,15 +156,15 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-12 gap-4 p-4 mx-auto max-w-screen-xl">
-    {#each filteredPaintings as painting (painting.slug)}
-      <PaintingCard {painting} />
+  <div class="grid max-w-screen-xl grid-cols-12 gap-4 p-4 mx-auto">
+    {#each filteredPaintings as painting, index (painting.slug)}
+      <PaintingCard {painting} {index} />
     {/each}
   </div>
 </div>
 
 <Dialog bind:dialog on:close>
-  <section class="bg-tertiary rounded p-4">
+  <section class="p-4 rounded bg-tertiary">
     <div class="pb-4">
       <h2>Filter by Tags</h2>
       <p>
@@ -169,7 +172,7 @@
       </p>
     </div>
     <ul
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2 flex-col"
+      class="grid flex-col grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8"
     >
       {#each tags as tag}
         <li>
@@ -198,14 +201,7 @@
     <div class="flex justify-end pt-4">
       <button
         on:click={() => dialog.close()}
-        class="bg-primary
-        text-white
-        p-2
-        rounded-lg
-        hover:bg-secondary
-        transition-colors
-        duration-200
-        ease-in-out"
+        class="p-2 text-white transition-colors duration-200 ease-in-out rounded-lg bg-primary hover:bg-secondary"
       >
         Close
       </button>

@@ -3,11 +3,11 @@
   import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
   import { cn, isNotEmptyArray } from '@wisihe/utils'
   import { page } from '$app/stores'
-  import { fade } from 'svelte/transition'
 
   import type { iSanityPainting } from '$lib/utils/sanity'
 
   export let painting: iSanityPainting
+  export let index: number
 
   const { title, tagsV2, slug, redbubbleUrl, image, images = [] } = painting
 
@@ -47,7 +47,7 @@
   class={cn(
     'relative z-0 w-full h-full duration-500 ease-in-out scale-100 rounded outline-none overflow-clip focus-within:ring  group hover:ring-4 hover:z-10 ring-primary within',
     'transition-transform',
-    'col-span-full sm:col-span-6 md:col-span-4 xl:col-span-3 2xl:col-span-3'
+    'col-span-full sm:col-span-6 md:col-span-4 xl:col-span-3'
   )}
 >
   <div
@@ -56,23 +56,34 @@
     <ul class="flex flex-wrap gap-1">
       {#each tagsV2 as tag}
         <li class="px-1 text-xs text-white capitalize rounded bg-primary">
-          {tag.name}
+          <strong>
+            {tag.name}
+          </strong>
         </li>
       {/each}
     </ul>
   </div>
   <div
-    class="absolute z-10 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out group-hover:right-2 top-2 -right-32"
+    class="absolute z-10 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out right-2 top-2"
   >
     <ul class="flex flex-col gap-2">
-      {#if hasMultipleImages}
-        <li class="p-2 text-xs text-white rounded-full bg-primary">
-          <IconBoxMultiple />
+      {#if hasSalesLink}
+        <li
+          class="relative flex items-center justify-center text-xs rounded-full w-fit h-fit"
+        >
+          <div
+            class="absolute inset-0 w-full h-full rounded-full shrink-0 animate-ping bg-highlight"
+          />
+          <div class="z-10 p-2 rounded-full shrink-0 bg-highlight">
+            <IconShoppingCart />
+          </div>
         </li>
       {/if}
-      {#if hasSalesLink}
-        <li class="p-2 text-xs rounded-full bg-highlight">
-          <IconShoppingCart width={8} height={8} />
+      {#if hasMultipleImages}
+        <li
+          class="p-2 text-xs text-white transition-all duration-500 ease-in-out rounded-full bg-primary translate-x-52 group-hover:translate-x-0"
+        >
+          <IconBoxMultiple />
         </li>
       {/if}
     </ul>
@@ -113,8 +124,8 @@
           'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
           imgLoaded ? 'opacity-100' : 'opacity-0'
         )}
-        loading="lazy"
-        decoding="async"
+        loading={index < 10 ? 'eager' : 'lazy'}
+        decoding={index < 10 ? 'auto' : 'async'}
         on:load={handleImageLoad}
       />
     </picture>
