@@ -15,10 +15,16 @@
 
   // randomize the order of paintings
   paintings = paintings.sort(() => Math.random() - 0.5)
+
+  let imgLoaded = false
+
+  function handleImageLoad() {
+    imgLoaded = true
+  }
 </script>
 
 <section class="bg-dark">
-  <div class="relative w-full py-14 px-4 xl:py-24 lg:px-10">
+  <div class="relative w-full px-4 py-14 xl:py-24 lg:px-10">
     <div class="prose">
       <h2 class="text-4xl text-white col-span-full">Paintings</h2>
       <p class="text-white">
@@ -32,7 +38,7 @@
     </div>
     <section class="relative p">
       <div
-        class="h-full from-transparent via-transparent pointer-events-none to-dark bg-gradient-to-r z-10 absolute right-0 top-0 bottom-0 w-1/3"
+        class="absolute top-0 bottom-0 right-0 z-10 w-1/3 h-full pointer-events-none from-transparent via-transparent to-dark bg-gradient-to-r"
       />
       <ul
         in:fly={{ y: 200, duration: 2000 }}
@@ -47,9 +53,9 @@
             )}
           >
             <a href={`/paintings/${painting.slug}`}>
-              <article class="w-full h-full relative overflow-clip rounded">
+              <article class="relative w-full h-full rounded overflow-clip">
                 <div
-                  class="absolute left-4 bottom-4 flex justify-center w-full z-10"
+                  class="absolute z-10 flex justify-center w-full left-4 bottom-4"
                 >
                   <Chip>{painting.title}</Chip>
                 </div>
@@ -60,9 +66,16 @@
                     .height(
                       getAspectRatioImageHeight(painting.image.aspectRatio)
                     )
+                    .quality(50)
                     .url()}
                   alt={painting.title}
-                  class="w-full h-full absolute inset-0 transition-all duration-500 scale-105 object-fit object-cover ease-in-out group-hover:scale-110"
+                  class={cn(
+                    'absolute inset-0 object-cover w-full h-full transition-all duration-500 ease-in-out scale-105 object-fit group-hover:scale-110',
+                    imgLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                  on:load={handleImageLoad}
+                  decoding="async"
+                  loading="lazy"
                 />
               </article>
             </a>

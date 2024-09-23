@@ -37,19 +37,24 @@
   import { spring } from 'svelte/motion'
   import { onMount } from 'svelte'
   import Chip from './Chip.svelte'
+  import { cn } from '@wisihe/utils'
 
-  let scale = spring(0.4, {
+  let scale = spring(0.95, {
     // stiffness: 0.1,
     // damping: 0.25
   })
 
-  let translateY = spring(1000, { stiffness: 0.1, damping: 0.25 })
+  let translateY = spring(0, {
+    // stiffness: 0.1, damping: 0.25
+  })
 
-  let translateX = spring(-1000, { stiffness: 0.1, damping: 0.25 })
+  let translateX = spring(-200, {
+    // stiffness: 0.1, damping: 0.25
+  })
 
   const animateSwitch = (updateIndex: { (): void; (): void; (): void }) => {
     // Animate down and scale
-    translateY.set(500)
+    translateY.set(0)
     scale.set(0.9)
 
     setTimeout(() => {
@@ -67,13 +72,19 @@
     scale.set(1)
     translateX.set(0)
   })
+
+  let imgLoaded = false
+
+  function handleImageLoad() {
+    imgLoaded = true
+  }
 </script>
 
 <section
-  class="relative flex flex-col justify-start w-full min-h-[600px] xl:min-h-screen px-4 py-10 bg-dark h-fit overflow-clip"
+  class="relative flex flex-col justify-start w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip"
 >
   <img
-    src={urlFor(currentPainting.image).width(25).height(25).url()}
+    src={currentPainting.image.lqip}
     alt=""
     class="absolute inset-0 object-cover w-full h-full scale-105 opacity-50 blur-xl"
   />
@@ -81,12 +92,12 @@
     class="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center"
   >
     <section
-      class="z-20 w-full pt-16 xl:absolute col-span-full xl:col-span-4 xl:col-start-1 xl:pt-0"
+      class="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
     >
       <div
-        class="relative flex flex-col justify-center h-full gap-4 p-8 text-white bg-dark/40 backdrop-blur-2xl rounded-xl lg:p-10 drop-shadow-2xl"
+        class="relative flex flex-col justify-center h-full gap-4 p-8 text-dark bg-white/40 backdrop-blur-2xl rounded-xl lg:p-10 drop-shadow-2xl"
+        style="transform: translatex({$translateX}px);"
       >
-        <!-- style="transform: translatex({$translateX}px);" -->
         <div class="xl:h-10 overflow-clip">
           <h1 class="text-4xl" in:fade>
             <strong>Henrik Wilhelm Sissener</strong>
@@ -104,21 +115,56 @@
     >
       <div
         class="relative w-full h-full aspect-video drop-shadow-lg rounded-2xl bg-dark/20"
+        style="transform: scale({$scale}) translateY({$translateY}px);"
+        style:background-image="url({currentPainting.image.lqip})"
+        style:background-size="cover"
+        style:background-position="center"
       >
-        <!-- style="transform: scale({$scale});" -->
-        <picture class="">
+        <picture>
           <source
-            srcset={urlFor(currentPainting.image).width(1200).height(720).url()}
+            srcset={urlFor(currentPainting.image)
+              .width(1200)
+              .height(720)
+              .format('webp')
+              .url()}
             media="(min-width: 800px)"
+            type="image/webp"
           />
           <source
-            srcset={urlFor(currentPainting.image).width(800).height(400).url()}
+            srcset={urlFor(currentPainting.image)
+              .width(800)
+              .height(400)
+              .format('webp')
+              .url()}
+            media="(max-width: 799px)"
+          />
+          <source
+            srcset={urlFor(currentPainting.image)
+              .width(1200)
+              .height(720)
+              .format('jpg')
+              .url()}
+            media="(min-width: 800px)"
+            type="image/jpeg"
+          />
+          <source
+            srcset={urlFor(currentPainting.image)
+              .width(800)
+              .height(400)
+              .format('jpg')
+              .url()}
             media="(max-width: 799px)"
           />
           <img
-            src={urlFor(currentPainting.image).width(1200).height(600).url()}
+            src={urlFor(currentPainting.image).width(1000).height(520).url()}
             alt={currentPainting.title}
-            class="object-cover w-full h-full rounded-2xl"
+            class={cn(
+              'object-cover w-full h-full rounded-2xl',
+              imgLoaded ? 'opacity-100' : 'opacity-0'
+            )}
+            on:load={handleImageLoad}
+            decoding="async"
+            loading="lazy"
           />
         </picture>
         <div
@@ -129,7 +175,7 @@
           </Chip>
         </div>
       </div>
-      <div class="flex items-center justify-between gap-4 pt-4 xl:justify-end">
+      <div class="flex items-center justify-between gap-4 pt-8 xl:justify-end">
         <button
           aria-label="Previous painting"
           on:click={handlePrevious}

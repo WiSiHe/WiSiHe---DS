@@ -7,7 +7,7 @@
   import PaintingCard from './PaintingCard.svelte'
   import Select from './Select.svelte'
   import Dialog from './Dialog.svelte'
-  import { IconFilter } from '@tabler/icons-svelte'
+  import { IconFilter, IconX } from '@tabler/icons-svelte'
   import { cn } from '@wisihe/utils'
 
   let dialog: HTMLDialogElement
@@ -103,7 +103,7 @@
 </script>
 
 <div class="min-h-screen">
-  <div class="p-4 prose">
+  <div class="p-4 prose max-w-screen-xl mx-auto">
     <h1>Art Gallery</h1>
     <p class="">
       Welcome to the art gallery! Here you can view all the paintings I've
@@ -113,9 +113,9 @@
   </div>
   <div
     style="margin-bottom: 20px;"
-    class="sticky top-0 z-20 bg-tertiary shadow-xl p-4"
+    class="sticky top-0 z-20 bg-tertiary shadow-xl"
   >
-    <div class="flex gap-2 items-end">
+    <div class="flex gap-2 items-end max-w-screen-xl mx-auto p-4">
       <Select
         label="Sort by"
         bind:value={sortOption}
@@ -133,6 +133,23 @@
       >
         <IconFilter />Filters ({selectedTags.length})
       </button>
+      {#each selectedTags as tag (tag)}
+        <button
+          on:click={() => toggleTag(tag)}
+          class="bg-primary text-white p-2 rounded-lg flex items-center gap-1"
+        >
+          {tag}
+          <IconX />
+        </button>
+      {/each}
+      {#if selectedTags.length > 0}
+        <button
+          on:click={() => (selectedTags = [])}
+          class="bg-primary text-white p-2 rounded-lg"
+        >
+          Clear All
+        </button>
+      {/if}
     </div>
   </div>
 
