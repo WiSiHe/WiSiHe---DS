@@ -88,6 +88,8 @@
 
   $: selectedImage = allImages[selectedIndex]
 
+  const { lqip, aspectRatio } = selectedImage
+
   onMount(() => {
     handleAddView()
     window.addEventListener('keydown', handleKeyLeft)
@@ -123,6 +125,12 @@
       clearTimeout(timeoutId)
       timeoutId = setTimeout(() => fn(...args), delay)
     }
+  }
+
+  let imgLoaded = false
+
+  function handleImageLoad() {
+    imgLoaded = true
   }
 </script>
 
@@ -171,25 +179,46 @@
         imageFormatStyle
       )}
     >
-      <picture>
-        <source
-          srcset={urlFor(selectedImage).width(1200).height(1200).url()}
-          media="(min-width: 800px)"
-        />
-        <source
-          srcset={urlFor(selectedImage).width(600).height(600).url()}
-          media="(max-width: 799px)"
-        />
-        <img
-          loading="lazy"
-          src={urlFor(selectedImage).width(1200).height(1200).url()}
-          alt={title}
-          class={cn(
-            'w-full absolute h-full rounded inset-0 object-cover',
-            imageFormatStyle
-          )}
-        />
-      </picture>
+      <div
+        class="relative w-full bg-gray-200"
+        style:aspect-ratio={aspectRatio}
+        style:background-image="url({lqip})"
+        style:background-size="cover"
+        style:background-position="center"
+      >
+        <picture>
+          <source
+            srcset={urlFor(selectedImage).width(1200).format('webp').url()}
+            media="(min-width: 800px)"
+            type="image/webp"
+          />
+          <source
+            srcset={urlFor(selectedImage).width(600).format('webp').url()}
+            media="(max-width: 799px)"
+            type="image/webp"
+          />
+          <source
+            srcset={urlFor(selectedImage).width(1200).url()}
+            media="(min-width: 800px)"
+          />
+          <source
+            srcset={urlFor(selectedImage).width(600).url()}
+            media="(max-width: 799px)"
+          />
+          <img
+            src={urlFor(selectedImage).width(1200).url()}
+            alt={title}
+            class={cn(
+              'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
+              imageFormatStyle,
+              imgLoaded ? 'opacity-100' : 'opacity-0'
+            )}
+            loading="lazy"
+            decoding="async"
+            on:load={handleImageLoad}
+          />
+        </picture>
+      </div>
     </button>
 
     {#if allImages.length > 1}
