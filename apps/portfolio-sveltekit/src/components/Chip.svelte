@@ -1,7 +1,6 @@
 <script lang="ts">
   import { cn } from '@wisihe/utils'
 
-  export let onClick = () => {}
   export let color: 'primary' | 'secondary' | 'tertiary' | 'highlight' =
     'primary'
 
@@ -30,14 +29,13 @@
   }[color]
 </script>
 
-<button
+<div
   class={cn(
     'flex gap-2 transition-all items-center capitalize rounded ',
     sizes,
     !outline && colors,
     outline && outlineStyles
   )}
-  on:click={onClick}
 >
   <slot />
-</button>
+</div>

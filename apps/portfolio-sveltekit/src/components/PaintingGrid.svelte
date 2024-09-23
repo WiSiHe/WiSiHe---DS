@@ -46,7 +46,7 @@
     )
 
     if (sortOption === 'random') {
-      filteredPaintings = [...filteredPaintings].sort(() => Math.random() - 0.5)
+      filteredPaintings = paintings
     } else if (sortOption === 'newest') {
       filteredPaintings = [...filteredPaintings].sort(
         (a, b) =>

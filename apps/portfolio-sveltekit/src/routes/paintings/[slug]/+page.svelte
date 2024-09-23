@@ -171,7 +171,7 @@
     'relative flex flex-col xl:grid test min-h-screen max-w-screen-xl items-start mx-auto grid-cols-12 gap-8 p-4'
   )}
 >
-  <div class="relative col-span-full w-full xl:col-span-8 h-fit">
+  <div class="relative w-full col-span-full xl:col-span-8 h-fit">
     <button
       on:click={() => dialog.showModal()}
       class={cn('relative w-full h-full rounded-none outline-none')}
@@ -249,7 +249,7 @@
         <h1 class="text-balance">{title}</h1>
 
         {#if tagsV2}
-          <ul class="flex flex-wrap gap-2 pt-3">
+          <div class="flex flex-wrap gap-2 pt-3">
             <Chip color="highlight" size="sm">
               <IconClock class="w-4 h-4" />
               {formatedPaintedAt}
@@ -259,13 +259,13 @@
               {views.length}
             </Chip>
             {#each tagsV2 as tag}
-              <Chip color="primary" onClick={() => {}}>
+              <Chip color="primary">
                 {tag.name}
               </Chip>
             {/each}
-          </ul>
+          </div>
         {/if}
-        <div class="prose pt-2">
+        <div class="pt-2 prose">
           <p>{description}</p>
         </div>
       </div>
