@@ -1,7 +1,7 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
   import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
-  import { cn, isNotEmptyArray } from '@wisihe/utils'
+  import { cn } from '@wisihe/utils'
   import { page } from '$app/stores'
 
   import type { iSanityPainting } from '$lib/utils/sanity'
@@ -9,22 +9,9 @@
   export let painting: iSanityPainting
   export let index: number
 
-  const { title, tagsV2, slug, redbubbleUrl, image, images = [] } = painting
+  const { title, tagsV2, slug, image, isForSale, imagesCount = 0 } = painting
 
   const { lqip } = image
-
-  function isValidUrl(url: string | undefined | null): boolean {
-    if (!url) return false
-    try {
-      new URL(url)
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  const hasSalesLink = isValidUrl(redbubbleUrl)
-  const hasMultipleImages = isNotEmptyArray(images)
 
   let filter: string[] = []
   let filterContainsNSFW: boolean = false
@@ -67,7 +54,7 @@
     class="absolute z-10 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out right-2 top-2"
   >
     <ul class="flex flex-col gap-2">
-      {#if hasSalesLink}
+      {#if isForSale}
         <li
           class="relative flex items-center justify-center text-xs rounded-full w-fit h-fit"
         >
@@ -79,7 +66,7 @@
           </div>
         </li>
       {/if}
-      {#if hasMultipleImages}
+      {#if imagesCount >= 1}
         <li
           class="p-2 text-xs text-white transition-all duration-500 ease-in-out rounded-full bg-primary translate-x-52 group-hover:translate-x-0"
         >
@@ -132,7 +119,7 @@
   </div>
   <a href={`/paintings/${slug}`}>
     <div
-      class="absolute bottom-0 left-0 right-0 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg"
+      class="absolute bottom-0 left-0 right-0 px-4 py-2 transition-all duration-500 ease-in-out bg-dark/60 backdrop-blur-lg"
     >
       <h2 class="text-lg capitalize xl:text-2xl">
         <strong class="text-white text-balance">

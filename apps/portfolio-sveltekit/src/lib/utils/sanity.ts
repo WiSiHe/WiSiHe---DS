@@ -40,11 +40,15 @@ export async function getAllPaintingsAndTags(): Promise<{
   return await client.fetch(
     groq`{
       "paintings": *[_type == "painting" && defined(slug.current)]{
-      ...,
+      _id,
       "slug":slug.current,
+      title,
       tagsV2[]->{name},
-      "views": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views
       "viewsCount": count(views),
+      paintedAt,
+      video,
+      "imagesCount": coalesce(count(images), 0),
+      "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
       image{
         ...,
         "lqip": asset->metadata.lqip,
@@ -252,7 +256,7 @@ export interface iSanityPainting {
   format: iPaintingFormat
   image: Image & { lqip?: string; aspectRatio: number }
   images?: Image[]
-  imagesCount: number | null
+  imagesCount?: number
   redbubbleUrl?: string | null
   society6Url?: string | null
   artstationUrl?: string | null
@@ -267,6 +271,7 @@ export interface iSanityPainting {
   title: string
   video?: string | null
   altText?: string
+  isForSale?: boolean
   views: {
     viewerId: string
     timestamp: string

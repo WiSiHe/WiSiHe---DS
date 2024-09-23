@@ -156,7 +156,7 @@
     </div>
   </div>
 
-  <div class="grid max-w-screen-xl grid-cols-12 gap-4 p-4 mx-auto">
+  <div class="grid max-w-screen-xl grid-cols-12 gap-5 p-4 mx-auto">
     {#each filteredPaintings as painting, index (painting.slug)}
       <PaintingCard {painting} {index} />
     {/each}
