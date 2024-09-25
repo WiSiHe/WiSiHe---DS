@@ -65,14 +65,14 @@
     on:keydown={handleKeydown}
     aria-haspopup="listbox"
     aria-expanded={isOpen}
-    class="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-primary sm:text-sm"
+    class="relative w-full py-3 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default min-w-36 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
   >
     <span class="block truncate">{selectedLabel}</span>
     <span
       class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
     >
       <svg
-        class="w-5 h-5 text-gray-400"
+        class="w-5 h-5 text-dark"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
