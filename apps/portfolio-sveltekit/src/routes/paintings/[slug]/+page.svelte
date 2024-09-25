@@ -7,10 +7,13 @@
   import Dialog from '$lib/components/Dialog.svelte'
   import SideBar from '$lib/components/SideBar.svelte'
   import { patchPaintingViews, type iSanityPainting } from '$lib/utils/sanity'
-  import { IconClock, IconEye } from '@tabler/icons-svelte'
+  import {
+    IconClock,
+    IconEye,
+    IconChevronLeft,
+    IconChevronRight
+  } from '@tabler/icons-svelte'
   import Chip from '$lib/components/Chip.svelte'
-
-  // Typing for the painting data
 
   export let data: { painting: iSanityPainting }
 
@@ -27,6 +30,7 @@
     video,
     views = []
   } = painting
+  console.log('painting', painting)
 
   let formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -60,38 +64,33 @@
     selectedImage = allImages[selectedIndex]
   }
 
-  function handleKeyLeft(event: KeyboardEvent) {
+  function handleKeyNavigation(event: KeyboardEvent) {
     if (event.key === 'ArrowLeft') {
       handlePrevious()
-    }
-  }
-
-  function handleKeyRight(event: KeyboardEvent) {
-    if (event.key === 'ArrowRight') {
+    } else if (event.key === 'ArrowRight') {
       handleNext()
+    } else if (event.key === 'Escape') {
+      dialog.close()
     }
   }
 
   $: selectedImage = allImages[selectedIndex]
 
-  const { lqip, aspectRatio } = selectedImage
-  console.log(selectedImage)
+  const { lqip } = selectedImage
 
   onMount(() => {
     handleAddView()
-    window.addEventListener('keydown', handleKeyLeft)
-    window.addEventListener('keydown', handleKeyRight)
+    window.addEventListener('keydown', handleKeyNavigation)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyLeft)
-      window.removeEventListener('keydown', handleKeyRight)
+      window.removeEventListener('keydown', handleKeyNavigation)
     }
   })
 
   function getViewerId(): string {
     let viewerId = localStorage.getItem('viewerId')
     if (!viewerId) {
-      viewerId = crypto.randomUUID() // Generate a new UUID for the viewer
+      viewerId = crypto.randomUUID()
       localStorage.setItem('viewerId', viewerId)
     }
     return viewerId
@@ -105,19 +104,25 @@
     }
   }
 
-  // Debouncing event handlers for better performance
-  // function debounce(fn: Function, delay: number) {
-  //   let timeoutId: ReturnType<typeof setTimeout>
-  //   return (...args: any) => {
-  //     clearTimeout(timeoutId)
-  //     timeoutId = setTimeout(() => fn(...args), delay)
-  //   }
-  // }
-
   let imgLoaded = false
 
   function handleImageLoad() {
     imgLoaded = true
+  }
+
+  // Structured data for SEO
+  const structuredData = {
+    '@context': 'https://schema.org/',
+    '@type': 'VisualArtwork',
+    name: title,
+    description: seoDescription,
+    image: urlFor(image).width(1200).height(630).url(),
+    creator: {
+      '@type': 'Person',
+      name: 'Henrik Wilhelm Sissener'
+    },
+    dateCreated: paintedAt,
+    artMedium: format
   }
 </script>
 
@@ -149,49 +154,51 @@
     name="twitter:image"
     content={urlFor(image).width(1200).height(630).url()}
   />
+  <script type="application/ld+json">
+    {JSON.stringify(structuredData)}
+  </script>
 </svelte:head>
 
 <BackButton />
 
 <section
   class={cn(
-    'relative flex flex-col xl:grid test min-h-screen max-w-screen-xl items-start mx-auto grid-cols-12 gap-8 p-4'
+    'relative flex flex-col xl:grid test min-h-screen max-w-screen-2xl items-start mx-auto grid-cols-12 gap-4 2xl:gap-10 2xl:py-8 '
   )}
 >
-  <div class="relative w-full col-span-full xl:col-span-8 h-fit">
+  <div class="relative w-full col-span-full xl:col-span-9 2xl:col-span-9 h-fit">
     <button
       on:click={() => dialog.showModal()}
-      class={cn('relative w-full h-full rounded-none outline-none')}
-      style:aspect-ratio={aspectRatio}
+      class={cn(
+        'relative w-full h-full rounded-none outline-none',
+        imageFormatStyle
+      )}
+      aria-label="Open full-size image"
     >
       <div
-        class="relative w-full bg-gray-200"
-        style:aspect-ratio={aspectRatio}
+        class="relative w-full h-full"
         style:background-image="url({lqip})"
         style:background-size="cover"
         style:background-position="center"
       >
+        <img
+          src={lqip}
+          alt={title}
+          class="object-cover w-full h-full scale-105 blur-3xl"
+        />
         <picture>
           <source
-            srcset={urlFor(selectedImage).width(1200).format('webp').url()}
+            srcset={urlFor(selectedImage).format('webp').quality(60).url()}
             media="(min-width: 800px)"
             type="image/webp"
           />
           <source
-            srcset={urlFor(selectedImage).width(600).format('webp').url()}
+            srcset={urlFor(selectedImage).format('webp').quality(60).url()}
             media="(max-width: 799px)"
             type="image/webp"
-          />
-          <source
-            srcset={urlFor(selectedImage).width(1200).url()}
-            media="(min-width: 800px)"
-          />
-          <source
-            srcset={urlFor(selectedImage).width(600).url()}
-            media="(max-width: 799px)"
           />
           <img
-            src={urlFor(selectedImage).width(1200).url()}
+            src={urlFor(selectedImage).quality(60).url()}
             alt={title}
             class={cn(
               'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
@@ -207,21 +214,22 @@
     </button>
 
     {#if allImages.length > 1}
-      <div class="relative flex items-center justify-center gap-4 pt-4">
-        <button on:click={() => handleSelectImage(image)}>
-          <img
-            loading="lazy"
-            src={urlFor(image).width(100).height(100).url()}
-            alt={title}
-            class="object-cover w-16 h-16 rounded-lg"
-          />
-        </button>
-        {#each images as img, index (img._id + '-' + index)}
-          <button on:click={() => handleSelectImage(img)}>
+      <div
+        class="relative flex items-center justify-center gap-4 py-2 overflow-x-auto"
+      >
+        {#each allImages as img, index (img._id + '-' + index)}
+          <button
+            on:click={() => handleSelectImage(img)}
+            class={cn(
+              'flex-shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary',
+              index === selectedIndex ? 'ring' : ''
+            )}
+            aria-label={`Select image ${index + 1}`}
+          >
             <img
               loading="lazy"
               src={urlFor(img).width(100).height(100).url()}
-              alt={title}
+              alt={`Thumbnail ${index + 1} for ${title}`}
               class="object-cover w-16 h-16 rounded-lg"
             />
           </button>
@@ -230,9 +238,12 @@
     {/if}
   </div>
 
-  <SideBar className="p-0 xl:p-4 pb-10 xl:bg-white xl:sticky xl:top-16">
-    <div in:fly={{ y: 100, opacity: 0 }} out:fly={{ x: 100, opacity: 0 }}>
-      <div class="pt-2">
+  <section class="p-4 pb-10 xl:p-0 xl:sticky col-span-full top-4 xl:col-span-3">
+    <div
+      in:fly={{ y: 100, opacity: 0, duration: 300 }}
+      out:fly={{ x: 100, opacity: 0, duration: 300 }}
+    >
+      <div class="">
         <h1 class="text-balance">{title}</h1>
 
         {#if tagsV2}
@@ -257,19 +268,43 @@
         </div>
       </div>
     </div>
-  </SideBar>
+  </section>
 
   <Dialog bind:dialog on:close>
-    <img
-      class="object-cover min-w-full min-h-full"
-      src={urlFor(selectedImage).width(1200).height(1200).url()}
-      alt={title}
-    />
-    <div class="flex justify-center w-full pt-4">
+    <div class={cn('relative bg-white', imageFormatStyle)}>
+      <img
+        class={cn('w-full object-cover -z-10 h-full')}
+        src={urlFor(selectedImage).quality(80).url()}
+        alt={title}
+      />
+    </div>
+    <div class="flex justify-center w-full gap-4 pt-4">
+      {#if allImages.length > 1}
+        <button
+          class="flex items-center gap-1 px-4 py-2 text-white rounded bg-primary"
+          on:click={handlePrevious}
+          aria-label="Previous image"
+        >
+          <IconChevronLeft />Previous
+        </button>
+      {/if}
+
       <button
-        class="px-4 py-3 text-white bg-primary"
-        on:click={() => dialog.close()}>Close</button
+        class="px-4 py-3 text-white rounded bg-primary"
+        on:click={() => dialog.close()}
+        aria-label="Close fullscreen view"
       >
+        Close
+      </button>
+      {#if allImages.length > 1}
+        <button
+          class="flex items-center gap-1 px-4 py-2 text-white rounded bg-primary"
+          on:click={handleNext}
+          aria-label="Next image"
+        >
+          Next <IconChevronRight />
+        </button>
+      {/if}
     </div>
   </Dialog>
 </section>
@@ -278,5 +313,14 @@
   .dialog-open:has(dialog[open]) {
     overflow: hidden;
     height: 100dvh;
+  }
+
+  /* Add smooth transitions */
+  img {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  button {
+    transition: transform 0.2s ease-in-out;
   }
 </style>
