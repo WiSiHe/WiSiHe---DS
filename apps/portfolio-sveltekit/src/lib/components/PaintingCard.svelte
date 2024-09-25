@@ -43,12 +43,11 @@
 <article
   class={cn(
     'relative z-0 w-full h-full duration-500 ease-in-out scale-100 rounded outline-none overflow-clip focus-within:ring group hover:ring-4 hover:z-10 ring-primary within',
-    'transition-transform',
-    'col-span-full sm:col-span-6 md:col-span-4 xl:col-span-3'
+    'transition-transform'
   )}
 >
   <div
-    class="absolute z-10 flex items-start justify-between gap-1 pr-16 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
+    class="absolute z-20 flex items-start justify-between gap-1 pr-16 text-xs transition-all duration-500 ease-in-out group-hover:top-2 -top-32 left-2 right-2"
   >
     <ul class="flex flex-wrap gap-1">
       {#each tagsV2 as tag}
@@ -61,7 +60,7 @@
     </ul>
   </div>
   <div
-    class="absolute z-10 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out right-2 top-2"
+    class="absolute z-20 flex flex-col gap-1 text-xs transition-all duration-200 ease-in-out right-2 top-2"
   >
     <ul class="flex flex-col gap-2">
       {#if isForSale}
@@ -87,7 +86,7 @@
   </div>
   {#if hasNSFWTag && !filterContainsNSFW}
     <div
-      class="absolute inset-0 flex items-center justify-center w-full h-full bg-primary/40 backdrop-blur-xl"
+      class="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-primary/20 backdrop-blur-lg"
     >
       <p class="font-semibold text-white">NSFW</p>
     </div>
@@ -146,7 +145,7 @@
       @keyframes appear {
         from {
           opacity: 0.9;
-          transform: translateY(100px) scale(0.9);
+          transform: translateY(200px) scale(0.85);
         }
         to {
           opacity: 1;

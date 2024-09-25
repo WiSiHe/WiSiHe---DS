@@ -32,7 +32,6 @@
     }
   }
 
-  const debouncedUpdateSessionStorage = debounce(updateSessionStorage, 200)
   const debouncedUpdateFilteredPaintings = debounce(
     updateFilteredPaintings,
     200
@@ -46,35 +45,46 @@
     }
   }
 
-  function updateFilteredPaintings() {
-    filteredPaintings = paintings.filter(painting => {
-      let matchesTags =
+  function filterPaintings() {
+    return paintings.filter(painting => {
+      const matchesTags =
         selectedTags.length === 0 ||
         selectedTags.every(tag => painting.tagsV2.some(t => t.name === tag))
 
-      let matchesSearch =
+      const matchesSearch =
         searchQuery === '' ||
         painting.title.toLowerCase().includes(searchQuery.toLowerCase())
 
       return matchesTags && matchesSearch
     })
+  }
 
-    if (sortOption === 'newest') {
-      filteredPaintings.sort(
-        (a, b) =>
-          new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
-      )
-    } else if (sortOption === 'oldest') {
-      filteredPaintings.sort(
-        (a, b) =>
-          new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
-      )
-    } else if (sortOption === 'mostLiked') {
-      filteredPaintings.sort((a, b) => b.likes - a.likes)
-    } else if (sortOption === 'mostViewed') {
-      filteredPaintings.sort((a, b) => b.viewsCount - a.viewsCount)
+  function sortPaintings(paintings: iSanityPainting[]) {
+    switch (sortOption) {
+      case 'newest':
+        return paintings.sort(
+          (a, b) =>
+            new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
+        )
+      case 'oldest':
+        return paintings.sort(
+          (a, b) =>
+            new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
+        )
+      case 'mostLiked':
+        return paintings.sort((a, b) => b.likes - a.likes)
+      case 'mostViewed':
+        return paintings.sort((a, b) => b.viewsCount - a.viewsCount)
+      case 'random':
+        return paintings.sort(() => Math.random() - 0.5)
+      default:
+        return paintings
     }
+  }
 
+  function updateFilteredPaintings() {
+    const filtered = filterPaintings()
+    filteredPaintings = sortPaintings(filtered)
     updateSessionStorage()
   }
 
@@ -83,22 +93,20 @@
   }
 
   onMount(() => {
-    if (browser) {
-      const urlParams = new URLSearchParams(window.location.search)
-      selectedTags = urlParams.getAll('filter')
-      sortOption =
-        urlParams.get('sort') ||
-        sessionStorage.getItem('sortOption') ||
-        'random'
-      searchQuery = sessionStorage.getItem('searchQuery') || ''
+    const urlParams = new URLSearchParams(window.location.search)
+    selectedTags = urlParams.getAll('filter')
+    sortOption =
+      urlParams.get('sort') ||
+      (browser && sessionStorage.getItem('sortOption')) ||
+      'random'
+    searchQuery = (browser && sessionStorage.getItem('searchQuery')) || ''
 
-      if (selectedTags.length === 0) {
-        const storedTags = sessionStorage.getItem('selectedTags')
-        if (storedTags) selectedTags = JSON.parse(storedTags)
-      }
-
-      debouncedUpdateFilteredPaintings()
+    if (selectedTags.length === 0 && browser) {
+      const storedTags = sessionStorage.getItem('selectedTags')
+      if (storedTags) selectedTags = JSON.parse(storedTags)
     }
+
+    updateFilteredPaintings()
   })
 
   function toggleTag(tag: string) {
@@ -106,11 +114,34 @@
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag]
 
+    updateFilteredPaintings()
+    updateURLParameters()
+  }
+
+  function updateURLParameters() {
+    const params = new URLSearchParams()
+    selectedTags.forEach(tag => params.append('filter', tag))
+    if (sortOption !== 'random') params.set('sort', sortOption)
+    const queryString = params.toString()
+    goto(`?${queryString}`, {
+      replaceState: true,
+      keepFocus: true,
+      noScroll: true
+    })
+  }
+
+  $: if (browser) {
+    updateSessionStorage()
+  }
+
+  // Ensure this reactive statement doesn't cause errors during SSR
+  $: if (browser) {
     debouncedUpdateFilteredPaintings()
   }
 </script>
 
 <div class="min-h-screen bg-dark">
+  <!-- Header Section -->
   <div class="bg-tertiary">
     <div class="max-w-screen-xl p-4 mx-auto prose">
       <h1>Art Gallery</h1>
@@ -122,11 +153,13 @@
     </div>
   </div>
 
+  <!-- Sticky Filter Bar -->
   <div
     style="margin-bottom: 20px;"
     class="sticky top-0 z-20 shadow-xl bg-tertiary"
   >
     <div class="flex flex-wrap items-end max-w-screen-xl gap-2 p-4 mx-auto">
+      <!-- Search Input -->
       <div class="flex flex-col">
         <label for="search" class="mb-1 text-sm font-medium">
           Search paintings
@@ -138,10 +171,12 @@
           name="search"
           id="search"
           class="p-2 py-3 text-sm border rounded"
-          on:input={debouncedUpdateFilteredPaintings}
+          on:input={() => debouncedUpdateFilteredPaintings()}
+          aria-label="Search paintings"
         />
       </div>
 
+      <!-- Sort Select -->
       <Select
         label="Sort by"
         bind:value={sortOption}
@@ -152,28 +187,38 @@
           { value: 'mostLiked', label: 'Most Liked' },
           { value: 'mostViewed', label: 'Most Viewed' }
         ]}
-        on:change={debouncedUpdateFilteredPaintings}
+        on:change={() => updateFilteredPaintings()}
       />
+
+      <!-- Filter Button -->
       <button
         on:click={() => dialog.showModal()}
         class="flex items-center p-2 py-3 m-0 text-sm text-white rounded-lg bg-primary hover:bg-primary/40"
+        aria-label="Filter paintings"
       >
         <IconFilter /> Filters ({selectedTags.length})
       </button>
 
+      <!-- Selected Tags -->
       {#each selectedTags as tag (tag)}
         <button
           on:click={() => toggleTag(tag)}
           class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
+          aria-pressed="true"
         >
           {tag}
           <IconX />
         </button>
       {/each}
 
+      <!-- Clear All Button -->
       {#if selectedTags.length > 0}
         <button
-          on:click={() => (selectedTags = [])}
+          on:click={() => {
+            selectedTags = []
+            updateFilteredPaintings()
+            updateURLParameters()
+          }}
           class="flex items-center p-2 rounded-lg text-dark bg-tertiary ring ring-dark hover:bg-dark/40 hover:text-white"
         >
           Clear All
@@ -182,7 +227,7 @@
     </div>
   </div>
 
-  <!-- Paintings count display -->
+  <!-- Paintings Count Display -->
   <div class="max-w-screen-xl px-4 pb-2 mx-auto text-center text-tertiary">
     <p>
       Showing {Math.min(visiblePaintingsCount, filteredPaintings.length)} of
@@ -190,12 +235,24 @@
       paintings
     </p>
   </div>
-  <div class="grid max-w-screen-xl grid-cols-12 gap-5 p-4 mx-auto">
-    {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (painting.slug)}
-      <PaintingCard {painting} {index} />
-    {/each}
-  </div>
 
+  <!-- Paintings Grid -->
+  {#if filteredPaintings.length > 0}
+    <div
+      class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (painting.slug)}
+        <PaintingCard {painting} {index} />
+      {/each}
+    </div>
+  {:else}
+    <!-- Empty State Message -->
+    <div class="text-center text-white">
+      <p>No paintings match your filters. Try adjusting them.</p>
+    </div>
+  {/if}
+
+  <!-- Load More Button -->
   {#if filteredPaintings.length > visiblePaintingsCount}
     <div class="p-4 text-center">
       <button
@@ -208,6 +265,7 @@
   {/if}
 </div>
 
+<!-- Filter Dialog -->
 <Dialog bind:dialog on:close>
   <section class="p-4 rounded bg-tertiary">
     <div class="pb-4">
@@ -225,19 +283,12 @@
           <button
             on:click={() => toggleTag(tag.name)}
             class={cn(
-              'rounded-lg',
-              'p-2',
-              'w-full',
-              'border-none',
-              'bg-white',
-              'text-black',
-              'hover:bg-primary',
-              'hover:text-white',
-              'transition-colors',
-              'duration-200',
-              'ease-in-out',
-              selectedTags.includes(tag.name) && 'bg-primary text-white'
+              'rounded-lg p-2 w-full transition-colors duration-200 ease-in-out',
+              selectedTags.includes(tag.name)
+                ? 'bg-primary text-white'
+                : 'bg-white text-black hover:bg-primary hover:text-white'
             )}
+            aria-pressed={selectedTags.includes(tag.name)}
           >
             {tag.name} ({tag.paintingsCount})
           </button>
