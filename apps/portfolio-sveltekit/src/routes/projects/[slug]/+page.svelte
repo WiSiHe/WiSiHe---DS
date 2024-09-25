@@ -1,8 +1,6 @@
 <script lang="ts">
   export let data
   import { urlFor } from '$lib/utils/image'
-  import SideBar from '../../../components/SideBar.svelte'
-
   const { project } = data
 </script>
 

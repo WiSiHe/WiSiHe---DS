@@ -242,20 +242,16 @@ export interface iSanityImageAsset {
   _type: string
 }
 
-export interface iSanityImage {
-  _type: string
-  _key?: string
-  asset: iSanityImageAsset
-  crop?: ImageCrop
-  hotspot?: ImageHotspot
-  lqip?: string
+interface paintingImageExtended extends Image {
+  lqip: string
+  aspectRatio: number
 }
 
 export interface iSanityPainting {
   _id: string
   format: iPaintingFormat
-  image: Image & { lqip?: string; aspectRatio: number }
-  images?: Image[]
+  image: paintingImageExtended
+  images?: paintingImageExtended[]
   imagesCount?: number
   redbubbleUrl?: string | null
   society6Url?: string | null

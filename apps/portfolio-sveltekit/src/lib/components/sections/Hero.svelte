@@ -4,7 +4,10 @@
   import type { iSanityPainting } from '$lib/utils/sanity'
   import { IconArrowLeft, IconArrowRight } from '@tabler/icons-svelte'
 
-  import Typewriter from 'svelte-typewriter'
+  import { spring } from 'svelte/motion'
+  import { onMount } from 'svelte'
+  import Chip from '../Chip.svelte'
+  import { cn } from '@wisihe/utils'
 
   export let paintings: iSanityPainting[] = []
 
@@ -33,11 +36,6 @@
       }
     })
   }
-
-  import { spring } from 'svelte/motion'
-  import { onMount } from 'svelte'
-  import Chip from './Chip.svelte'
-  import { cn } from '@wisihe/utils'
 
   let scale = spring(0.95, {
     // stiffness: 0.1,

@@ -1,6 +1,6 @@
 <script>
-  import SocialLinks from '../components/SocialLinks.svelte'
-  import Header from '../components/header/Header.svelte'
+  import SocialLinks from '$lib/components/SocialLinks.svelte'
+  import Header from '$lib/components/header/Header.svelte'
 
   import './fonts.css'
   import './app.css'

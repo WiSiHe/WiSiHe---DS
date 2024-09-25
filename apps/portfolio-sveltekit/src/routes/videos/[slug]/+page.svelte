@@ -1,7 +1,7 @@
 <script lang="ts">
   export let data
   import { urlFor } from '$lib/utils/image'
-  import SideBar from '../../../components/SideBar.svelte'
+  import SideBar from '../../../lib/components/SideBar.svelte'
 
   const { video } = data
 </script>

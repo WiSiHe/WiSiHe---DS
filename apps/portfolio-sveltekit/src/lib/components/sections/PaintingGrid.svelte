@@ -1,97 +1,103 @@
 <script lang="ts">
   import type { iSanityPainting, iSanityPaintingsTag } from '$lib/utils/sanity'
   import { onMount } from 'svelte'
-  import { page } from '$app/stores'
   import { goto } from '$app/navigation'
   import { browser } from '$app/environment'
-  import PaintingCard from './PaintingCard.svelte'
-  import Select from './Select.svelte'
-  import Dialog from './Dialog.svelte'
+  import PaintingCard from '../PaintingCard.svelte'
+  import Select from '../Select.svelte'
+  import Dialog from '../Dialog.svelte'
   import { IconFilter, IconX } from '@tabler/icons-svelte'
   import { cn } from '@wisihe/utils'
 
   let dialog: HTMLDialogElement
 
   export let paintings: iSanityPainting[] = []
-  console.log({ paintings })
   export let tags: iSanityPaintingsTag[] = []
 
   let filteredPaintings: iSanityPainting[] = []
   let selectedTags: string[] = []
+  let searchQuery = ''
+  let visiblePaintingsCount = 20 // Limit to 20 paintings initially
 
   let sortOption = 'random'
+
+  function debounce(fn: (...args: any[]) => void, delay: number) {
+    let timeout: ReturnType<typeof setTimeout>
+
+    return function (...args: any[]) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        fn(...args)
+      }, delay)
+    }
+  }
+
+  const debouncedUpdateSessionStorage = debounce(updateSessionStorage, 200)
+  const debouncedUpdateFilteredPaintings = debounce(
+    updateFilteredPaintings,
+    200
+  )
 
   function updateSessionStorage() {
     if (browser) {
       sessionStorage.setItem('selectedTags', JSON.stringify(selectedTags))
       sessionStorage.setItem('sortOption', sortOption)
+      sessionStorage.setItem('searchQuery', searchQuery)
     }
   }
 
-  function updateURLParams() {
-    if (browser) {
-      const url = new URL(window.location.href)
-      url.searchParams.delete('filter')
-      selectedTags.forEach(tag => url.searchParams.append('filter', tag))
-      url.searchParams.set('sort', sortOption)
-      goto(url.toString(), { replaceState: true, noScroll: true })
-    }
-  }
-
-  $: {
-    // Filter and sort paintings
-    filteredPaintings = paintings.filter(
-      painting =>
+  function updateFilteredPaintings() {
+    filteredPaintings = paintings.filter(painting => {
+      let matchesTags =
         selectedTags.length === 0 ||
         selectedTags.every(tag => painting.tagsV2.some(t => t.name === tag))
-    )
 
-    if (sortOption === 'random') {
-      filteredPaintings = paintings
-    } else if (sortOption === 'newest') {
-      filteredPaintings = [...filteredPaintings].sort(
+      let matchesSearch =
+        searchQuery === '' ||
+        painting.title.toLowerCase().includes(searchQuery.toLowerCase())
+
+      return matchesTags && matchesSearch
+    })
+
+    if (sortOption === 'newest') {
+      filteredPaintings.sort(
         (a, b) =>
           new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
       )
     } else if (sortOption === 'oldest') {
-      filteredPaintings = [...filteredPaintings].sort(
+      filteredPaintings.sort(
         (a, b) =>
           new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
       )
     } else if (sortOption === 'mostLiked') {
-      filteredPaintings = [...filteredPaintings].sort(
-        (a, b) => b.likes - a.likes
-      )
+      filteredPaintings.sort((a, b) => b.likes - a.likes)
     } else if (sortOption === 'mostViewed') {
-      filteredPaintings = [...filteredPaintings].sort(
-        (a, b) => b.viewsCount - a.viewsCount
-      )
+      filteredPaintings.sort((a, b) => b.viewsCount - a.viewsCount)
     }
 
-    // Update session storage and URL params
     updateSessionStorage()
-    updateURLParams()
+  }
+
+  function loadMorePaintings() {
+    visiblePaintingsCount += 20 // Load 20 more paintings on button click
   }
 
   onMount(() => {
     if (browser) {
-      // Initialize filters and sort option from URL parameters or session storage
-      const urlParams = new URLSearchParams($page.url.searchParams)
+      const urlParams = new URLSearchParams(window.location.search)
       selectedTags = urlParams.getAll('filter')
       sortOption =
         urlParams.get('sort') ||
         sessionStorage.getItem('sortOption') ||
         'random'
+      searchQuery = sessionStorage.getItem('searchQuery') || ''
 
       if (selectedTags.length === 0) {
         const storedTags = sessionStorage.getItem('selectedTags')
-        if (storedTags) {
-          selectedTags = JSON.parse(storedTags)
-        }
+        if (storedTags) selectedTags = JSON.parse(storedTags)
       }
 
-      // Update URL params to reflect initial state
-      updateURLParams()
+      debouncedUpdateFilteredPaintings()
     }
   })
 
@@ -99,26 +105,36 @@
     selectedTags = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag]
+
+    debouncedUpdateFilteredPaintings()
   }
-  console.log({ selectedTags })
 </script>
 
 <div class="min-h-screen bg-dark">
-  <div class=" bg-tertiary">
+  <div class="bg-tertiary">
     <div class="max-w-screen-xl p-4 mx-auto prose">
       <h1>Art Gallery</h1>
-      <p class="">
+      <p>
         Welcome to the art gallery! Here you can view all the paintings I've
         created. Use the filters below to find paintings that match your
         interests.
       </p>
     </div>
   </div>
+
   <div
     style="margin-bottom: 20px;"
     class="sticky top-0 z-20 shadow-xl bg-tertiary"
   >
     <div class="flex flex-wrap items-end max-w-screen-xl gap-2 p-4 mx-auto">
+      <input
+        type="text"
+        placeholder="Search paintings"
+        bind:value={searchQuery}
+        class="p-2 border rounded"
+        on:input={debouncedUpdateFilteredPaintings}
+      />
+
       <Select
         label="Sort by"
         bind:value={sortOption}
@@ -129,13 +145,15 @@
           { value: 'mostLiked', label: 'Most Liked' },
           { value: 'mostViewed', label: 'Most Viewed' }
         ]}
+        on:change={debouncedUpdateFilteredPaintings}
       />
       <button
         on:click={() => dialog.showModal()}
         class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
       >
-        <IconFilter />Filters ({selectedTags.length})
+        <IconFilter /> Filters ({selectedTags.length})
       </button>
+
       {#each selectedTags as tag (tag)}
         <button
           on:click={() => toggleTag(tag)}
@@ -145,6 +163,7 @@
           <IconX />
         </button>
       {/each}
+
       {#if selectedTags.length > 0}
         <button
           on:click={() => (selectedTags = [])}
@@ -156,11 +175,30 @@
     </div>
   </div>
 
+  <!-- Paintings count display -->
+  <div class="p-4 text-center">
+    <p>
+      Showing {Math.min(visiblePaintingsCount, filteredPaintings.length)} of {filteredPaintings.length}
+      paintings
+    </p>
+  </div>
+
   <div class="grid max-w-screen-xl grid-cols-12 gap-5 p-4 mx-auto">
-    {#each filteredPaintings as painting, index (painting.slug)}
+    {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (painting.slug)}
       <PaintingCard {painting} {index} />
     {/each}
   </div>
+
+  {#if filteredPaintings.length > visiblePaintingsCount}
+    <div class="p-4 text-center">
+      <button
+        on:click={loadMorePaintings}
+        class="px-4 py-2 text-white rounded bg-primary hover:bg-primary/70"
+      >
+        Load More
+      </button>
+    </div>
+  {/if}
 </div>
 
 <Dialog bind:dialog on:close>
@@ -171,6 +209,7 @@
         Select tags to filter paintings. Click on a tag to toggle it on or off.
       </p>
     </div>
+
     <ul
       class="grid flex-col grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8"
     >
@@ -193,11 +232,12 @@
               selectedTags.includes(tag.name) && 'bg-primary text-white'
             )}
           >
-            {tag.name} ({tag.paintingsCount})</button
-          >
+            {tag.name} ({tag.paintingsCount})
+          </button>
         </li>
       {/each}
     </ul>
+
     <div class="flex justify-end pt-4">
       <button
         on:click={() => dialog.close()}
