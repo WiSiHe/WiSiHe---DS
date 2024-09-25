@@ -11,22 +11,18 @@
   export let index: number
 
   const { title, tagsV2, slug, image, isForSale, imagesCount = 0 } = painting
-
   const { lqip } = image
 
   $: filter = $page.url.searchParams.getAll('filter') || ['']
   $: filterContainsNSFW = filter.includes('NSFW')
-
   $: hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
 
   let imgLoaded = false
   let imgRef: HTMLImageElement
-
-  const sizes = [
-    { width: 300, height: 400, media: '(max-width: 640px)' },
-    { width: 200, height: 400, media: '(max-width: 1024px)' },
-    { width: 300, height: 600, media: '(max-width: 1280px)' },
-    { width: 400, height: 800, media: '(min-width: 1281px)' }
+  const imageSizes = [
+    { width: 200, height: 400, media: '(max-width: 640px)' },
+    { width: 300, height: 600, media: '(max-width: 1024px)' },
+    { width: 400, height: 800, media: '(min-width: 1025px)' }
   ]
 
   function handleImageLoad() {
@@ -93,12 +89,10 @@
   {/if}
   <div
     class="relative w-full h-full bg-dark aspect-portrait"
-    style:background-image="url({lqip})"
-    style:background-size="cover"
-    style:background-position="center"
+    style="background-image: url({lqip}); background-size: cover; background-position: center;"
   >
     <picture>
-      {#each sizes as { width, height, media }}
+      {#each imageSizes as { width, height, media }}
         <source
           srcset={urlFor(image)
             .width(width)
@@ -165,5 +159,6 @@
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 20;
   }
 </style>

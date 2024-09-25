@@ -40,6 +40,7 @@
     padding: 0.5rem 1rem;
     border: none;
     cursor: pointer;
+    z-index: 11;
     @media screen and (min-width: 768px) {
       top: 3rem;
       right: 3rem;
