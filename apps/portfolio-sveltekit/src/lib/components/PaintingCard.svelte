@@ -3,6 +3,7 @@
   import { IconBoxMultiple, IconShoppingCart } from '@tabler/icons-svelte'
   import { cn } from '@wisihe/utils'
   import { page } from '$app/stores'
+  import { onMount } from 'svelte'
 
   import type { iSanityPainting } from '$lib/utils/sanity'
 
@@ -13,26 +14,35 @@
 
   const { lqip } = image
 
-  let filter: string[] = []
-  let filterContainsNSFW: boolean = false
+  $: filter = $page.url.searchParams.getAll('filter') || ['']
+  $: filterContainsNSFW = filter.includes('NSFW')
 
-  $: {
-    filter = $page.url.searchParams.getAll('filter') || ['']
-    filterContainsNSFW = filter.includes('NSFW')
-  }
-
-  const hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
+  $: hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
 
   let imgLoaded = false
+  let imgRef: HTMLImageElement
+
+  const sizes = [
+    { width: 300, height: 400, media: '(max-width: 640px)' },
+    { width: 200, height: 400, media: '(max-width: 1024px)' },
+    { width: 300, height: 600, media: '(max-width: 1280px)' },
+    { width: 400, height: 800, media: '(min-width: 1281px)' }
+  ]
 
   function handleImageLoad() {
     imgLoaded = true
   }
+
+  onMount(() => {
+    if (imgRef && imgRef.complete) {
+      handleImageLoad()
+    }
+  })
 </script>
 
 <article
   class={cn(
-    'relative z-0 w-full h-full duration-500 ease-in-out scale-100 rounded outline-none overflow-clip focus-within:ring  group hover:ring-4 hover:z-10 ring-primary within',
+    'relative z-0 w-full h-full duration-500 ease-in-out scale-100 rounded outline-none overflow-clip focus-within:ring group hover:ring-4 hover:z-10 ring-primary within',
     'transition-transform',
     'col-span-full sm:col-span-6 md:col-span-4 xl:col-span-3'
   )}
@@ -62,7 +72,7 @@
             class="absolute inset-0 w-full h-full rounded-full shrink-0 animate-ping bg-highlight"
           />
           <div class="z-10 p-2 rounded-full shrink-0 bg-highlight">
-            <IconShoppingCart />
+            <IconShoppingCart aria-label="Available for sale" />
           </div>
         </li>
       {/if}
@@ -70,7 +80,7 @@
         <li
           class="p-2 text-xs text-white transition-all duration-500 ease-in-out rounded-full bg-primary translate-x-52 group-hover:translate-x-0"
         >
-          <IconBoxMultiple />
+          <IconBoxMultiple aria-label={`${imagesCount} images available`} />
         </li>
       {/if}
     </ul>
@@ -89,23 +99,20 @@
     style:background-position="center"
   >
     <picture>
-      <source
-        srcset={urlFor(image).width(300).height(400).url()}
-        media="(max-width: 640px)"
-        type="image/webp"
-      />
-      <source
-        srcset={urlFor(image).width(200).height(400).url()}
-        media="(max-width: 1024px)"
-        type="image/webp"
-      />
-      <source
-        srcset={urlFor(image).width(300).height(600).url()}
-        media="(max-width: 1280px)"
-        type="image/webp"
-      />
+      {#each sizes as { width, height, media }}
+        <source
+          srcset={urlFor(image)
+            .width(width)
+            .height(height)
+            .format('webp')
+            .url()}
+          {media}
+          type="image/webp"
+        />
+      {/each}
       <img
-        src={urlFor(image).width(200).height(400).url()}
+        bind:this={imgRef}
+        src={urlFor(image).width(400).height(800).url()}
         alt={title}
         class={cn(
           'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
@@ -117,7 +124,10 @@
       />
     </picture>
   </div>
-  <a href={`/paintings/${slug}`}>
+  <a
+    href={`/paintings/${slug}`}
+    aria-label={`View details of painting: ${title}`}
+  >
     <div
       class="absolute bottom-0 left-0 right-0 px-4 py-2 transition-all duration-500 ease-in-out bg-dark/60 backdrop-blur-lg"
     >
@@ -135,7 +145,7 @@
     @media (prefers-reduced-motion: no-preference) {
       @keyframes appear {
         from {
-          opacity: 0.9%;
+          opacity: 0.9;
           transform: translateY(100px) scale(0.9);
         }
         to {

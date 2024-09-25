@@ -127,13 +127,20 @@
     class="sticky top-0 z-20 shadow-xl bg-tertiary"
   >
     <div class="flex flex-wrap items-end max-w-screen-xl gap-2 p-4 mx-auto">
-      <input
-        type="text"
-        placeholder="Search paintings"
-        bind:value={searchQuery}
-        class="p-2 border rounded"
-        on:input={debouncedUpdateFilteredPaintings}
-      />
+      <div class="flex flex-col">
+        <label for="search" class="mb-1 text-sm font-medium">
+          Search paintings
+        </label>
+        <input
+          type="text"
+          placeholder="Search paintings"
+          bind:value={searchQuery}
+          name="search"
+          id="search"
+          class="p-2 py-3 text-sm border rounded"
+          on:input={debouncedUpdateFilteredPaintings}
+        />
+      </div>
 
       <Select
         label="Sort by"
@@ -149,7 +156,7 @@
       />
       <button
         on:click={() => dialog.showModal()}
-        class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
+        class="flex items-center p-2 py-3 m-0 text-sm text-white rounded-lg bg-primary hover:bg-primary/40"
       >
         <IconFilter /> Filters ({selectedTags.length})
       </button>
@@ -167,7 +174,7 @@
       {#if selectedTags.length > 0}
         <button
           on:click={() => (selectedTags = [])}
-          class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
+          class="flex items-center p-2 rounded-lg text-dark bg-tertiary ring ring-dark hover:bg-dark/40 hover:text-white"
         >
           Clear All
         </button>
@@ -176,13 +183,13 @@
   </div>
 
   <!-- Paintings count display -->
-  <div class="p-4 text-center">
+  <div class="max-w-screen-xl px-4 pb-2 mx-auto text-center text-tertiary">
     <p>
-      Showing {Math.min(visiblePaintingsCount, filteredPaintings.length)} of {filteredPaintings.length}
+      Showing {Math.min(visiblePaintingsCount, filteredPaintings.length)} of
+      {filteredPaintings.length}
       paintings
     </p>
   </div>
-
   <div class="grid max-w-screen-xl grid-cols-12 gap-5 p-4 mx-auto">
     {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (painting.slug)}
       <PaintingCard {painting} {index} />
