@@ -1,7 +1,7 @@
 <script lang="ts">
   export let data
   import { urlFor } from '$lib/utils/image'
-  import SideBar from '../../components/SideBar.svelte'
+  import SideBar from '../../lib/components/SideBar.svelte'
 
   const { projects = [] } = data
 </script>
@@ -14,8 +14,8 @@
   />
 </svelte:head>
 
-<section class="grid items-start grid-cols-12 mx-auto max-w-screen-xl">
-  <div class="prose col-span-full p-4">
+<section class="grid items-start max-w-screen-xl grid-cols-12 mx-auto">
+  <div class="p-4 prose col-span-full">
     <h1 class="text-blue-800">Projects</h1>
     <p>
       Discover a collection of my ongoing and completed projects, each with
@@ -23,7 +23,7 @@
     </p>
   </div>
 
-  <ul class="grid w-full grid-cols-12 col-span-full gap-4 p-4">
+  <ul class="grid w-full grid-cols-12 gap-4 p-4 col-span-full">
     {#each projects as project}
       <li class="col-span-4">
         <a href={`projects/${project.slug}`} class="">

@@ -3,29 +3,16 @@
   import { cn } from '@wisihe/utils'
   import { onMount } from 'svelte'
   import { fly } from 'svelte/transition'
-  import BackButton from '../../../components/BackButton.svelte'
-  import Dialog from '../../../components/Dialog.svelte'
-  import SideBar from '../../../components/SideBar.svelte'
-  import { patchPaintingViews } from '$lib/utils/sanity'
+  import BackButton from '$lib/components/BackButton.svelte'
+  import Dialog from '$lib/components/Dialog.svelte'
+  import SideBar from '$lib/components/SideBar.svelte'
+  import { patchPaintingViews, type iSanityPainting } from '$lib/utils/sanity'
   import { IconClock, IconEye } from '@tabler/icons-svelte'
-  import Chip from '../../../components/Chip.svelte'
+  import Chip from '$lib/components/Chip.svelte'
 
   // Typing for the painting data
-  interface Painting {
-    title: string
-    seoDescription: string
-    image: any
-    description: string
-    tagsV2: Array<{ name: string }>
-    format: 'portrait' | 'landscape' | 'square'
-    paintedAt: string
-    images?: any[]
-    redbubbleUrl?: string
-    video?: string
-    views: Array<{ viewerId: string }>
-  }
 
-  export let data: { painting: Painting }
+  export let data: { painting: iSanityPainting }
 
   const { painting } = data
   const {
@@ -37,7 +24,6 @@
     format,
     paintedAt,
     images = [],
-    redbubbleUrl,
     video,
     views = []
   } = painting
@@ -89,6 +75,7 @@
   $: selectedImage = allImages[selectedIndex]
 
   const { lqip, aspectRatio } = selectedImage
+  console.log(selectedImage)
 
   onMount(() => {
     handleAddView()
@@ -119,13 +106,13 @@
   }
 
   // Debouncing event handlers for better performance
-  function debounce(fn: Function, delay: number) {
-    let timeoutId: ReturnType<typeof setTimeout>
-    return (...args: any) => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => fn(...args), delay)
-    }
-  }
+  // function debounce(fn: Function, delay: number) {
+  //   let timeoutId: ReturnType<typeof setTimeout>
+  //   return (...args: any) => {
+  //     clearTimeout(timeoutId)
+  //     timeoutId = setTimeout(() => fn(...args), delay)
+  //   }
+  // }
 
   let imgLoaded = false
 

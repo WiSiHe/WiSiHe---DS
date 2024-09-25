@@ -1,6 +1,6 @@
 <script lang="ts">
   import { urlFor } from '$lib/utils/image'
-  import SideBar from '../../components/SideBar.svelte'
+  import SideBar from '../../lib/components/SideBar.svelte'
 
   export let data
 
@@ -15,7 +15,7 @@
   />
 </svelte:head>
 
-<section class="grid items-start grid-cols-12 p-4 mx-auto max-w-screen-xl">
+<section class="grid items-start max-w-screen-xl grid-cols-12 p-4 mx-auto">
   <div class="prose col-span-full">
     <h1 class="text-blue-800">Videos</h1>
     <p>
@@ -24,7 +24,7 @@
     </p>
   </div>
 
-  <ul class="grid w-full grid-cols-12 col-span-full gap-4">
+  <ul class="grid w-full grid-cols-12 gap-4 col-span-full">
     {#each videos as video}
       <li class="col-span-4">
         <a href={`videos/${video.slug}`} class="">

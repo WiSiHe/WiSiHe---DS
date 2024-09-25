@@ -1,5 +1,5 @@
 <script>
-  import PaintingGrid from '../../components/PaintingGrid.svelte'
+  import PaintingGrid from '$lib/components/sections/PaintingGrid.svelte'
 
   export let data
 

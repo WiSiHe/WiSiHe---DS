@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Hero from '../components/Hero.svelte'
-  import PaintingsSection from '../components/PaintingsSection.svelte'
+  import Hero from '$lib/components/sections/Hero.svelte'
+  import PaintingsSection from '$lib/components/PaintingsSection.svelte'
 
   export let data
   const { showcasePaintings = [], title } = data
