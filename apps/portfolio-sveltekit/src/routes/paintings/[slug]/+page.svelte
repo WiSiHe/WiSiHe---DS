@@ -14,6 +14,7 @@
     IconChevronRight
   } from '@tabler/icons-svelte'
   import Chip from '$lib/components/Chip.svelte'
+  import { serializeSchema } from '$lib/utils/seo'
 
   export let data: { painting: iSanityPainting }
 
@@ -111,7 +112,7 @@
   }
 
   // Structured data for SEO
-  const structuredData = {
+  const jsonObj = {
     '@context': 'https://schema.org/',
     '@type': 'VisualArtwork',
     name: title,
@@ -124,6 +125,18 @@
     dateCreated: paintedAt,
     artMedium: format
   }
+  // const jsonObj = {
+  // 	"@context": "http://schema.org",
+  // 	"@type": "WebPage",
+  // 	headline: fullTitle,
+  // 	url: fullUrl,
+  // 	name: title,
+  // 	author: {
+  // 		"@type": "Person",
+  // 		name: "Noa Ignite",
+  // 	},
+  // 	description,
+  // };
 </script>
 
 <svelte:head>
@@ -154,9 +167,8 @@
     name="twitter:image"
     content={urlFor(image).width(1200).height(630).url()}
   />
-  {@html `<script type="application/ld+json">
-  ${JSON.stringify(structuredData)}
-  </script> `}
+
+  {@html serializeSchema(jsonObj)}
 </svelte:head>
 
 <BackButton />
