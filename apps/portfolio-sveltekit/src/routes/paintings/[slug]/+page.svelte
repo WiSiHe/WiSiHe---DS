@@ -154,9 +154,9 @@
     name="twitter:image"
     content={urlFor(image).width(1200).height(630).url()}
   />
-  <script type="application/ld+json">
-    {JSON.stringify(structuredData)}
-  </script>
+  {@html `<script type="application/ld+json">
+  ${JSON.stringify(structuredData)}
+  </script> `}
 </svelte:head>
 
 <BackButton />
