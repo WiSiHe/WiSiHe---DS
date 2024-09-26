@@ -1,4 +1,4 @@
-import { getAllPaintingsAndTags, getPaintings } from '$lib/utils/sanity'
+import { getAllPaintingsAndTags } from '$lib/utils/sanity'
 import { error } from '@sveltejs/kit'
 import type { PageLoad } from '../$types'
 
