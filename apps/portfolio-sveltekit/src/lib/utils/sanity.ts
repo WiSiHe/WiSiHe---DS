@@ -242,7 +242,7 @@ export interface iSanityImageAsset {
   _type: string
 }
 
-interface paintingImageExtended extends Image {
+export interface PaintingImageExtended extends Image {
   lqip: string
   aspectRatio: number
 }
@@ -250,8 +250,8 @@ interface paintingImageExtended extends Image {
 export interface iSanityPainting {
   _id: string
   format: iPaintingFormat
-  image: paintingImageExtended
-  images?: paintingImageExtended[]
+  image: PaintingImageExtended
+  images?: PaintingImageExtended[]
   imagesCount?: number
   redbubbleUrl?: string | null
   society6Url?: string | null
