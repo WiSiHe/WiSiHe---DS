@@ -302,26 +302,28 @@
       </p>
     </div>
 
-    <ul
-      class="grid flex-col grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8"
-    >
-      {#each tags as tag}
-        <li>
-          <button
-            on:click={() => toggleTag(tag.name)}
-            class={cn(
-              'rounded-lg p-2 w-full transition-colors duration-200 ease-in-out',
-              selectedTags.includes(tag.name)
-                ? 'bg-primary text-white'
-                : 'bg-white text-black hover:bg-primary hover:text-white'
-            )}
-            aria-pressed={selectedTags.includes(tag.name)}
-          >
-            {tag.name} ({tag.paintingsCount})
-          </button>
-        </li>
-      {/each}
-    </ul>
+    {#if tags}
+      <ul
+        class="grid flex-col grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8"
+      >
+        {#each tags as tag}
+          <li>
+            <button
+              on:click={() => toggleTag(tag.name)}
+              class={cn(
+                'rounded-lg p-2 w-full transition-colors duration-200 ease-in-out',
+                selectedTags.includes(tag.name)
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-black hover:bg-primary hover:text-white'
+              )}
+              aria-pressed={selectedTags.includes(tag.name)}
+            >
+              {tag.name} ({tag.paintingsCount})
+            </button>
+          </li>
+        {/each}
+      </ul>
+    {/if}
 
     <div class="flex justify-end pt-4">
       <button
