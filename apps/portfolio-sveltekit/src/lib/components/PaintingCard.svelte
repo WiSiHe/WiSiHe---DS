@@ -108,7 +108,7 @@
         src={urlFor(image).width(400).height(800).url()}
         alt={title}
         class={cn(
-          'absolute inset-0 w-full h-full object-cover rounded transition-opacity duration-300',
+          'absolute inset-0 w-full bg-dark h-full object-cover rounded transition-opacity duration-300',
           imgLoaded ? 'opacity-100' : 'opacity-0'
         )}
         loading={index < 10 ? 'eager' : 'lazy'}
