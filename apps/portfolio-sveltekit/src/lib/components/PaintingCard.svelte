@@ -98,6 +98,7 @@
             .width(width)
             .height(height)
             .format('webp')
+            .quality(59)
             .url()}
           {media}
           type="image/webp"
@@ -105,7 +106,12 @@
       {/each}
       <img
         bind:this={imgRef}
-        src={urlFor(image).width(400).height(800).url()}
+        src={urlFor(image)
+          .width(400)
+          .height(800)
+          .quality(69)
+          .format('webp')
+          .url()}
         alt={title}
         class={cn(
           'absolute inset-0 w-full bg-dark h-full object-cover rounded transition-opacity duration-300',

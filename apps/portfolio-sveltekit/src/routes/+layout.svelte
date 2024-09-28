@@ -107,4 +107,8 @@
     margin: 0 auto;
     box-sizing: border-box;
   }
+
+  @view-transition {
+    navigation: auto;
+  }
 </style>
