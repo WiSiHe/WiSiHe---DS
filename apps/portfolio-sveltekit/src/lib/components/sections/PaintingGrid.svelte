@@ -11,13 +11,14 @@
 
   let dialog: HTMLDialogElement
 
-  export let paintings: iSanityPainting[] = []
-  export let tags: iSanityPaintingsTag[] = []
+  export let paintings: iSanityPainting[] | undefined
+  export let tags: iSanityPaintingsTag[] | undefined
 
   let filteredPaintings: iSanityPainting[] = []
   let selectedTags: string[] = []
   let searchQuery = ''
   let visiblePaintingsCount = 20 // Limit to 20 paintings initially
+  let loading = true
 
   let sortOption = 'random'
 
@@ -46,17 +47,19 @@
   }
 
   function filterPaintings() {
-    return paintings.filter(painting => {
-      const matchesTags =
-        selectedTags.length === 0 ||
-        selectedTags.every(tag => painting.tagsV2.some(t => t.name === tag))
+    return (
+      paintings?.filter(painting => {
+        const matchesTags =
+          selectedTags.length === 0 ||
+          selectedTags.every(tag => painting.tagsV2.some(t => t.name === tag))
 
-      const matchesSearch =
-        searchQuery === '' ||
-        painting.title.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesSearch =
+          searchQuery === '' ||
+          painting.title.toLowerCase().includes(searchQuery.toLowerCase())
 
-      return matchesTags && matchesSearch
-    })
+        return matchesTags && matchesSearch
+      }) || []
+    )
   }
 
   function sortPaintings(paintings: iSanityPainting[]) {
@@ -83,9 +86,11 @@
   }
 
   function updateFilteredPaintings() {
-    const filtered = filterPaintings()
-    filteredPaintings = sortPaintings(filtered)
-    updateSessionStorage()
+    if (paintings) {
+      const filtered = filterPaintings()
+      filteredPaintings = sortPaintings(filtered)
+      updateSessionStorage()
+    }
   }
 
   function loadMorePaintings() {
@@ -133,6 +138,9 @@
   $: if (browser) {
     updateSessionStorage()
   }
+
+  // Update loading state when paintings and tags are loaded
+  $: loading = !paintings || !tags
 
   // Ensure this reactive statement doesn't cause errors during SSR
   $: if (browser) {
@@ -237,7 +245,17 @@
   </div>
 
   <!-- Paintings Grid -->
-  {#if filteredPaintings.length > 0}
+  {#if loading}
+    <!-- Loading State -->
+    <div
+      class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto ring sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      {#each Array(20) as _, index}
+        <div class="rounded animate-pulse aspect-portrait bg-tertiary"></div>
+      {/each}
+    </div>
+  {:else if filteredPaintings.length > 0}
+    <!-- Paintings Grid -->
     <div
       class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
@@ -245,10 +263,19 @@
         <PaintingCard {painting} {index} />
       {/each}
     </div>
-  {:else}
-    <!-- Empty State Message -->
+  {:else if selectedTags.length > 0 || searchQuery !== ''}
+    <!-- No Paintings Match Filters -->
     <div class="text-center text-white">
       <p>No paintings match your filters. Try adjusting them.</p>
+    </div>
+  {:else}
+    <!-- No Paintings Available -->
+    <div
+      class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      {#each Array(20) as _, index}
+        <div class="rounded animate-pulse aspect-portrait bg-tertiary"></div>
+      {/each}
     </div>
   {/if}
 
