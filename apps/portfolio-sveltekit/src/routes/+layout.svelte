@@ -13,8 +13,6 @@
   inject({ mode: dev ? 'development' : 'production' })
 
   import { onNavigate } from '$app/navigation'
-  // import SplashV2 from '../components/SplashV2.svelte'
-  // import Splash from '../components/Splash.svelte'
 
   onNavigate(navigation => {
     if (!document.startViewTransition) return
@@ -34,9 +32,6 @@
 
 <div class="app">
   <Header />
-  <!-- <SplashV2 /> -->
-  <!-- <Splash /> -->
-
   <main class="bg-tertiary">
     <slot />
   </main>
@@ -44,14 +39,12 @@
   <footer class="p-10 text-white bg-dark">
     <div class="container flex flex-col items-center mx-auto">
       <SocialLinks />
-
       <p class="mt-4">&copy; 2024 Henrik Wilhelm Sissener</p>
       <p class="mt-2">Powered by SvelteKit</p>
-
       <div class="flex mt-4 space-x-4">
         <a
           href="https://twitter.com/yourhandle"
-          aria-label="Twitter"
+          aria-label="Follow Henrik Wilhelm Sissener on Twitter"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -68,7 +61,7 @@
         </a>
         <a
           href="https://github.com/yourhandle"
-          aria-label="GitHub"
+          aria-label="Follow Henrik Wilhelm Sissener on GitHub"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -96,7 +89,8 @@
   }
 
   :global(h1, h2, h3, h4, h5, h6) {
-    font-family: 'Oswald Variable', sans-serif;
+    /* font-family: 'Oswald Variable', sans-serif; */
+    font-family: 'LemonMilk', sans-serif;
   }
 
   .app {
@@ -113,8 +107,4 @@
     margin: 0 auto;
     box-sizing: border-box;
   }
-
-  /* body:has(dialog[open]) {
-    overflow: hidden;
-  } */
 </style>
