@@ -2,7 +2,13 @@
   import { urlFor } from '$lib/utils/image'
   import { fade } from 'svelte/transition'
   import type { iSanityPainting } from '$lib/utils/sanity'
-  import { IconArrowLeft, IconArrowRight } from '@tabler/icons-svelte'
+  import {
+    IconArrowLeft,
+    IconArrowRight,
+    IconBrush,
+    IconDeviceGamepad2,
+    IconDeviceLaptop
+  } from '@tabler/icons-svelte'
 
   import { spring } from 'svelte/motion'
   import { onMount } from 'svelte'
@@ -96,15 +102,22 @@
         class="relative flex flex-col justify-center h-full gap-4 p-8 text-dark bg-white/40 backdrop-blur-2xl rounded-xl lg:p-10 drop-shadow-2xl"
         style="transform: translatex({$translateX}px);"
       >
-        <div class="xl:h-10 overflow-clip">
-          <h1 class="text-4xl" in:fade>
-            <strong>Henrik Wilhelm Sissener</strong>
-          </h1>
-        </div>
+        <h1 class="text-4xl" in:fade>
+          <strong>Henrik Wilhelm Sissener</strong>
+        </h1>
         <ul class="flex flex-col gap-4 text-lg text-balanced">
-          <li>Frontend developer</li>
-          <li>Digital artist</li>
-          <li>Game developer</li>
+          <li class="flex">
+            <IconDeviceLaptop />
+            Frontend developer
+          </li>
+          <li class="flex">
+            <IconBrush />
+            Digital artist
+          </li>
+          <li class="flex">
+            <IconDeviceGamepad2 />
+            Game developer
+          </li>
         </ul>
       </div>
     </section>

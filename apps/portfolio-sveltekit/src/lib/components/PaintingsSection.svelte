@@ -87,25 +87,7 @@
 </section>
 
 <style>
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      @keyframes appear {
-        from {
-          opacity: 0.9%;
-          transform: translateY(100px) scale(0.9);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      .within {
-        z-index: 1;
-        animation: appear linear;
-        animation-timeline: view();
-        animation-range: entry -40% contain 5%;
-      }
-    }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 </style>

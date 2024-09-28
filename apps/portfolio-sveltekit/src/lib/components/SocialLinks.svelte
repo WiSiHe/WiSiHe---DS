@@ -10,7 +10,7 @@
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-primary"
+          class="underline text-tertiary underline-offset-2 hover:text-primary hover:no-underline"
         >
           {label}
         </a>
