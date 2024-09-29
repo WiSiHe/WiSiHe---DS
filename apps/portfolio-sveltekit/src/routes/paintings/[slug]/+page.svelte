@@ -18,6 +18,7 @@
   } from '@tabler/icons-svelte'
   import Chip from '$lib/components/Chip.svelte'
   import { serializeSchema } from '$lib/utils/seo'
+  import VideoPlayer from '$lib/components/VideoPlayer.svelte'
 
   export let data: { painting: iSanityPainting }
 
@@ -34,7 +35,6 @@
     video,
     views = []
   } = painting
-  console.log('painting', painting)
 
   let formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -190,9 +190,9 @@
 
 <BackButton />
 
-<section class={cn('relative min-h-screen overflow-clip ')}>
+<section class={cn('relative min-h-screen overflow-clip bg-dark text-white')}>
   <div
-    class="flex flex-col items-start grid-cols-12 gap-4 mx-auto max-w-screen-2xl xl:grid 2xl:gap-10 2xl:py-4"
+    class="flex flex-col items-start grid-cols-12 gap-4 mx-auto max-w-screen-2xl xl:grid 2xl:gap-10 2xl:pt-4 2xl:pb-40"
   >
     <div
       class="relative w-full col-span-full xl:col-span-9 2xl:col-span-9 h-fit"
@@ -214,49 +214,19 @@
             alt={title}
             class="absolute inset-0 object-cover w-full h-full scale-105 rounded blur-3xl"
           />
-          <picture>
-            <source
-              srcset="
-            {urlFor(selectedImage)
-                .format('webp')
-                // .width(smallImageWidth)
-                // .height(smallImageHeight)
-                .quality(60)
-                .url()} 400w,
-            {urlFor(selectedImage)
-                .format('webp')
-                // .width(mediumImageWidth)
-                // .height(mediumImageHeight)
-                .quality(60)
-                .url()} 800w,
-            {urlFor(selectedImage)
-                .format('webp')
-                // .width(mediumImageWidth)
-                // .height(mediumImageHeight)
-                .quality(60)
-                .url()} 1200w
-          "
-              sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
-              type="image/webp"
-            />
-            <img
-              src={urlFor(selectedImage)
-                // .width(smallImageWidth)
-                // .height(smallImageHeight)
-                .format('webp')
-                .quality(10)
-                .url()}
-              alt={title}
-              class={cn(
-                'absolute overflow-clip inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
-                imageFormatStyle,
-                imgLoaded ? 'opacity-100' : 'opacity-0'
-              )}
-              loading="lazy"
-              decoding="async"
-              on:load={handleImageLoad}
-            />
-          </picture>
+
+          <img
+            src={urlFor(selectedImage).format('webp').quality(30).url()}
+            alt={title}
+            class={cn(
+              'absolute overflow-clip inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
+              imageFormatStyle,
+              imgLoaded ? 'opacity-100' : 'opacity-0'
+            )}
+            loading="lazy"
+            decoding="async"
+            on:load={handleImageLoad}
+          />
         </div>
       </button>
 
@@ -311,7 +281,7 @@
               {/each}
             </div>
           {/if}
-          <div class="pt-2 prose">
+          <div class="pt-2 prose text-white">
             <p>{description}</p>
           </div>
         </div>
@@ -319,6 +289,18 @@
     </section>
   </div>
 </section>
+
+{#if video}
+  <section
+    class="grid w-full h-full grid-cols-12 px-4 py-20 mx-auto bg-dark/90"
+  >
+    <div
+      class="w-full h-full mx-auto col-span-full aspect-video max-w-screen-2xl"
+    >
+      <VideoPlayer videoUrl={video} {title} />
+    </div>
+  </section>
+{/if}
 
 <Dialog bind:dialog on:close>
   <h2 id="dialog-title" class="sr-only">{title}</h2>
