@@ -124,23 +124,22 @@
       />
     </picture>
   </div>
-  <div class="z-10">
-    <a
-      href={`/paintings/${slug}`}
-      aria-label={`View details of painting: ${title}`}
-      class="z-10"
+
+  <a
+    href={`/paintings/${slug}`}
+    aria-label={`View details of painting: ${title}`}
+    class="z-10"
+  >
+    <div
+      class="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg"
     >
-      <div
-        class="absolute bottom-0 left-0 right-0 px-4 py-2 transition-all duration-500 ease-in-out bg-dark/60 backdrop-blur-lg"
-      >
-        <h2 class="text-lg capitalize xl:text-2xl">
-          <strong class="text-white text-balance">
-            {title}
-          </strong>
-        </h2>
-      </div>
-    </a>
-  </div>
+      <h2 class="text-lg capitalize xl:text-xl">
+        <strong class="text-white text-balance">
+          {title}
+        </strong>
+      </h2>
+    </div>
+  </a>
 </article>
 
 <style>

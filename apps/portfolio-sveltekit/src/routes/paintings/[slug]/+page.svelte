@@ -116,6 +116,30 @@
     imgLoaded = true
   }
 
+  let smallImageWidth = {
+    portrait: 400,
+    landscape: 800,
+    square: 400
+  }[format]
+
+  let smallImageHeight = {
+    portrait: 800,
+    landscape: 400,
+    square: 400
+  }[format]
+
+  let mediumImageWidth = {
+    portrait: 800,
+    landscape: 800,
+    square: 800
+  }[format]
+
+  let mediumImageHeight = {
+    portrait: 1600,
+    landscape: 800,
+    square: 800
+  }[format]
+
   // Structured data for SEO
   const jsonObj = {
     '@context': 'https://schema.org/',
@@ -188,44 +212,43 @@
           <img
             src={lqip}
             alt={title}
-            class="absolute inset-0 object-cover w-full h-full scale-105 blur-3xl"
+            class="absolute inset-0 object-cover w-full h-full scale-105 rounded blur-3xl"
           />
           <picture>
             <source
               srcset="
             {urlFor(selectedImage)
                 .format('webp')
-                .width(400)
+                .width(smallImageWidth)
+                .height(smallImageHeight)
                 .quality(60)
                 .url()} 400w,
             {urlFor(selectedImage)
                 .format('webp')
-                .width(800)
+                .width(mediumImageWidth)
+                .height(mediumImageHeight)
                 .quality(60)
                 .url()} 800w,
             {urlFor(selectedImage)
                 .format('webp')
-                .width(1200)
+                .width(mediumImageWidth)
+                .height(mediumImageHeight)
                 .quality(60)
                 .url()} 1200w
           "
               sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
               type="image/webp"
             />
-            <source
-              srcset="
-            {urlFor(selectedImage).width(400).quality(60).url()} 400w,
-            {urlFor(selectedImage).width(800).quality(60).url()} 800w,
-            {urlFor(selectedImage).width(1200).quality(60).url()} 1200w
-          "
-              sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px"
-              type="image/jpeg"
-            />
             <img
-              src={urlFor(selectedImage).quality(60).url()}
+              src={urlFor(selectedImage)
+                .width(smallImageWidth)
+                .height(smallImageHeight)
+                .format('webp')
+                .quality(10)
+                .url()}
               alt={title}
               class={cn(
-                'absolute inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
+                'absolute overflow-clip inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
                 imageFormatStyle,
                 imgLoaded ? 'opacity-100' : 'opacity-0'
               )}
