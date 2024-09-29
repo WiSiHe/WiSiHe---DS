@@ -219,20 +219,20 @@
               srcset="
             {urlFor(selectedImage)
                 .format('webp')
-                .width(smallImageWidth)
-                .height(smallImageHeight)
+                // .width(smallImageWidth)
+                // .height(smallImageHeight)
                 .quality(60)
                 .url()} 400w,
             {urlFor(selectedImage)
                 .format('webp')
-                .width(mediumImageWidth)
-                .height(mediumImageHeight)
+                // .width(mediumImageWidth)
+                // .height(mediumImageHeight)
                 .quality(60)
                 .url()} 800w,
             {urlFor(selectedImage)
                 .format('webp')
-                .width(mediumImageWidth)
-                .height(mediumImageHeight)
+                // .width(mediumImageWidth)
+                // .height(mediumImageHeight)
                 .quality(60)
                 .url()} 1200w
           "
@@ -241,8 +241,8 @@
             />
             <img
               src={urlFor(selectedImage)
-                .width(smallImageWidth)
-                .height(smallImageHeight)
+                // .width(smallImageWidth)
+                // .height(smallImageHeight)
                 .format('webp')
                 .quality(10)
                 .url()}
