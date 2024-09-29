@@ -352,18 +352,12 @@ importers:
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
-      plyr:
-        specifier: ^3.7.8
-        version: 3.7.8
       svelte-icons-pack:
         specifier: ^3.1.3
         version: 3.1.3(svelte@5.0.0-next.260)
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
-      vidstack:
-        specifier: ^1.12.11
-        version: 1.12.11(webpack-sources@3.2.3)
     devDependencies:
       '@portabletext/svelte':
         specifier: ^2.1.11
@@ -3751,9 +3745,6 @@ packages:
   '@types/tar-stream@3.1.3':
     resolution: {integrity: sha1-9hQnIpaR7aG31XGfNKzcT8ilWM4=}
 
-  '@types/trusted-types@2.0.7':
-    resolution: {integrity: sha1-usywepcLkXB986PoumiWxX6tLRE=}
-
   '@types/unist@2.0.11':
     resolution: {integrity: sha1-Ea9XsSfjJId3SEH3pOVOqxZtA8Q=}
 
@@ -4775,9 +4766,6 @@ packages:
   core-js-compat@3.38.1:
     resolution: {integrity: sha1-K8eimHRspae8ucFkvLEg8uvAmgk=}
 
-  core-js@3.38.1:
-    resolution: {integrity: sha1-qjdbeaKGpnA4iho2M2PVNnfAOD4=}
-
   core-util-is@1.0.3:
     resolution: {integrity: sha1-pgQtNjTCsn6TKPg3uWX6yDgI24U=}
 
@@ -4845,9 +4833,6 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha1-2A/ylNEU+w5qxQD7+FtgE31+/4E=}
-
-  custom-event-polyfill@1.0.7:
-    resolution: {integrity: sha1-m8mT3dqTfBowzNM1YUxsWMT4eu4=}
 
   cyclist@1.0.2:
     resolution: {integrity: sha1-ZztfIzvzTY5gK5SUKfgXHZEhvqM=}
@@ -6569,9 +6554,6 @@ packages:
     resolution: {integrity: sha1-0AMYhVkF0mYNjAgi4/WkcVhV/EI=}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  lit-html@2.8.0:
-    resolution: {integrity: sha1-lkVqS7TucXuafS+UVioWUJ05v/o=}
-
   load-plugin@5.1.0:
     resolution: {integrity: sha1-FWAPUZHHQrFuBYz8kIwifBPbAQQ=}
 
@@ -6585,9 +6567,6 @@ packages:
   loader-runner@4.3.0:
     resolution: {integrity: sha1-wbShY7mfYUgwNTsWdV5xSawjFOE=}
     engines: {node: '>=6.11.5'}
-
-  loadjs@4.3.0:
-    resolution: {integrity: sha1-OMV4y7LgiDWqRAe9SsZQfdH37RA=}
 
   locate-character@3.0.0:
     resolution: {integrity: sha1-AwXFuHRPYQKO9dAfREAJ4Ad5+XQ=}
@@ -6747,10 +6726,6 @@ packages:
 
   mdn-data@2.0.30:
     resolution: {integrity: sha1-zk32+Ar2z74hjs1cVSuhPE36CMw=}
-
-  media-captions@1.0.4:
-    resolution: {integrity: sha1-qqy2pVT3VJ/HMItrfPdmaGz0L60=}
-    engines: {node: '>=16'}
 
   media-typer@0.3.0:
     resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
@@ -7453,9 +7428,6 @@ packages:
     resolution: {integrity: sha1-Gm+hajjRKhkB4DIPoBcFHFOc47E=}
     engines: {node: '>=4'}
 
-  plyr@3.7.8:
-    resolution: {integrity: sha1-t5vMwjaHcFtdmig7KojBJL90ce0=}
-
   polished@4.3.1:
     resolution: {integrity: sha1-WgCuMnFWCfg9ifbzHQ8CYcYXBUg=}
     engines: {node: '>=10'}
@@ -7703,9 +7675,6 @@ packages:
   range-parser@1.2.1:
     resolution: {integrity: sha1-PPNwI9GZ4cJNGlW4SADC8+ZGgDE=}
     engines: {node: '>= 0.6'}
-
-  rangetouch@2.0.1:
-    resolution: {integrity: sha1-wBEFEQ/Tr8oq3LGlgGkoN9iDy3A=}
 
   raw-body@2.5.2:
     resolution: {integrity: sha1-mf69g7kOCJdQh+jx+UGaFJNmtoo=}
@@ -8959,9 +8928,6 @@ packages:
   url-parse@1.5.10:
     resolution: {integrity: sha1-nTwvc2wddd070r5QfcwRHx4uqcE=}
 
-  url-polyfill@1.1.12:
-    resolution: {integrity: sha1-bNqhf2sCKEGzrsC/jb2HrAzTMzE=}
-
   use-callback-ref@1.3.2:
     resolution: {integrity: sha1-YTTH9v924r4LVsgJsXplDJQrFpM=}
     engines: {node: '>=10'}
@@ -9067,10 +9033,6 @@ packages:
 
   vfile@5.3.7:
     resolution: {integrity: sha1-3gZ35mg+M4D6/EZUTP5gMRiCarc=}
-
-  vidstack@1.12.11:
-    resolution: {integrity: sha1-/RG3dFqA7gIqc0fs7nWj8v5BGuw=}
-    engines: {node: '>=18'}
 
   vite@4.5.5:
     resolution: {integrity: sha1-Y5uf7KXAo7/jxgy2MO8ovyGddC4=}
@@ -13367,8 +13329,6 @@ snapshots:
     dependencies:
       '@types/node': 18.19.54
 
-  '@types/trusted-types@2.0.7': {}
-
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
@@ -14738,8 +14698,6 @@ snapshots:
     dependencies:
       browserslist: 4.24.0
 
-  core-js@3.38.1: {}
-
   core-util-is@1.0.3: {}
 
   crc-32@1.2.2: {}
@@ -14806,8 +14764,6 @@ snapshots:
       rrweb-cssom: 0.7.1
 
   csstype@3.1.3: {}
-
-  custom-event-polyfill@1.0.7: {}
 
   cyclist@1.0.2: {}
 
@@ -16960,10 +16916,6 @@ snapshots:
 
   lines-and-columns@2.0.4: {}
 
-  lit-html@2.8.0:
-    dependencies:
-      '@types/trusted-types': 2.0.7
-
   load-plugin@5.1.0:
     dependencies:
       '@npmcli/config': 6.4.1
@@ -16974,8 +16926,6 @@ snapshots:
   load-tsconfig@0.2.5: {}
 
   loader-runner@4.3.0: {}
-
-  loadjs@4.3.0: {}
 
   locate-character@3.0.0: {}
 
@@ -17182,8 +17132,6 @@ snapshots:
       '@types/mdast': 3.0.15
 
   mdn-data@2.0.30: {}
-
-  media-captions@1.0.4: {}
 
   media-typer@0.3.0: {}
 
@@ -17983,14 +17931,6 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  plyr@3.7.8:
-    dependencies:
-      core-js: 3.38.1
-      custom-event-polyfill: 1.0.7
-      loadjs: 4.3.0
-      rangetouch: 2.0.1
-      url-polyfill: 1.1.12
-
   polished@4.3.1:
     dependencies:
       '@babel/runtime': 7.25.6
@@ -18179,8 +18119,6 @@ snapshots:
   range-parser@1.2.0: {}
 
   range-parser@1.2.1: {}
-
-  rangetouch@2.0.1: {}
 
   raw-body@2.5.2:
     dependencies:
@@ -20161,8 +20099,6 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  url-polyfill@1.1.12: {}
-
   use-callback-ref@1.3.2(@types/react@18.3.10)(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -20272,15 +20208,6 @@ snapshots:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
-
-  vidstack@1.12.11(webpack-sources@3.2.3):
-    dependencies:
-      '@floating-ui/dom': 1.6.11
-      lit-html: 2.8.0
-      media-captions: 1.0.4
-      unplugin: 1.14.1(webpack-sources@3.2.3)
-    transitivePeerDependencies:
-      - webpack-sources
 
   vite@4.5.5(@types/node@18.19.54)(terser@5.34.1):
     dependencies:
