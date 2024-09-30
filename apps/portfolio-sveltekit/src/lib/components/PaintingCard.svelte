@@ -20,9 +20,9 @@
   let imgLoaded = false
   let imgRef: HTMLImageElement
   const imageSizes = [
-    { width: 200, height: 400, media: '(max-width: 640px)' },
-    { width: 300, height: 600, media: '(max-width: 1024px)' },
-    { width: 400, height: 800, media: '(min-width: 1025px)' }
+    { width: 200, height: 356, media: '(max-width: 640px)' },
+    { width: 300, height: 533, media: '(max-width: 1024px)' },
+    { width: 300, height: 533, media: '(min-width: 1025px)' }
   ]
 
   function handleImageLoad() {
@@ -65,7 +65,7 @@
         >
           <div
             class="absolute inset-0 w-full h-full rounded-full shrink-0 animate-ping bg-highlight"
-          />
+          ></div>
           <div class="z-10 p-2 rounded-full shrink-0 bg-highlight">
             <IconShoppingCart aria-label="Available for sale" />
           </div>
@@ -99,7 +99,7 @@
             .width(width)
             .height(height)
             .format('webp')
-            .quality(59)
+            .quality(49)
             .url()}
           {media}
           type="image/webp"
@@ -108,9 +108,9 @@
       <img
         bind:this={imgRef}
         src={urlFor(image)
-          .width(400)
-          .height(800)
-          .quality(69)
+          .width(300)
+          .height(533)
+          .quality(49)
           .format('webp')
           .url()}
         alt={title}
@@ -118,8 +118,8 @@
           'absolute inset-0 w-full bg-dark h-full object-cover rounded transition-opacity duration-300',
           imgLoaded ? 'opacity-100' : 'opacity-0'
         )}
-        loading={index < 10 ? 'eager' : 'lazy'}
-        decoding={index < 10 ? 'auto' : 'async'}
+        loading={index < 6 ? 'eager' : 'lazy'}
+        decoding={index < 6 ? 'auto' : 'async'}
         on:load={handleImageLoad}
       />
     </picture>

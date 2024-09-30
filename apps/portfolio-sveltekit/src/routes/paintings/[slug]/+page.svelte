@@ -214,19 +214,34 @@
             alt={title}
             class="absolute inset-0 object-cover w-full h-full scale-105 rounded blur-3xl"
           />
-
-          <img
-            src={urlFor(selectedImage).format('webp').quality(30).url()}
-            alt={title}
-            class={cn(
-              'absolute overflow-clip inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
-              imageFormatStyle,
-              imgLoaded ? 'opacity-100' : 'opacity-0'
-            )}
-            loading="lazy"
-            decoding="async"
-            on:load={handleImageLoad}
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset={`
+                ${urlFor(selectedImage).format('webp').width(400).fit('max').url()} 400w,
+                ${urlFor(selectedImage).format('webp').width(800).fit('max').url()} 800w,
+                ${urlFor(selectedImage).format('webp').width(1200).fit('max').url()} 1200w
+              `}
+              sizes="(max-width: 800px) 100vw, 800px"
+            />
+            <img
+              src={urlFor(selectedImage)
+                .format('webp')
+                .width(800)
+                .fit('max')
+                .quality(60)
+                .url()}
+              alt={title}
+              class={cn(
+                'absolute overflow-clip inset-0 w-full h-full object-cover rounded bg-tertiary transition-opacity duration-300',
+                imageFormatStyle,
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              )}
+              loading="lazy"
+              decoding="async"
+              on:load={handleImageLoad}
+            />
+          </picture>
         </div>
       </button>
 
@@ -305,13 +320,28 @@
 <Dialog bind:dialog on:close>
   <h2 id="dialog-title" class="sr-only">{title}</h2>
   <p id="dialog-description" class="sr-only">Full-size image of {title}</p>
+
   <div class={cn('relative bg-white', imageFormatStyle)}>
-    <img
-      class={cn('w-full object-cover -z-10 h-full')}
-      src={urlFor(selectedImage).quality(80).url()}
-      alt={title}
-    />
+    <picture>
+      <source
+        type="image/webp"
+        srcset={`
+        ${urlFor(selectedImage).format('webp').width(400).fit('max').url()} 400w,
+        ${urlFor(selectedImage).format('webp').width(800).fit('max').url()} 800w,
+        ${urlFor(selectedImage).format('webp').width(1200).fit('max').url()} 1200w
+      `}
+        sizes="(max-width: 800px) 100vw, 800px"
+      />
+      <img
+        class={cn('w-full object-cover -z-10 h-full')}
+        src={urlFor(selectedImage).fit('max').quality(80).width(400).url()}
+        alt={title}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
   </div>
+
   <div class="flex justify-center w-full gap-4 pt-4">
     {#if allImages.length > 1}
       <button
