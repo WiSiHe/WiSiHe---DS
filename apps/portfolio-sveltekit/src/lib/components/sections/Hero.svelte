@@ -100,7 +100,6 @@
     >
       <div
         class="relative flex flex-col justify-center h-full gap-4 p-8 text-dark bg-white/40 backdrop-blur-2xl rounded-xl lg:p-10 drop-shadow-2xl"
-        style="transform: translatex({$translateX}px);"
       >
         <h1 class="text-4xl" in:fade>
           <strong>Henrik Wilhelm Sissener</strong>
@@ -135,8 +134,10 @@
           <source
             srcset={urlFor(currentPainting.image)
               .width(1200)
-              .height(720)
+              // .height(720)
               .format('webp')
+              .fit('max')
+              .quality(59)
               .url()}
             media="(min-width: 800px)"
             type="image/webp"
@@ -144,30 +145,20 @@
           <source
             srcset={urlFor(currentPainting.image)
               .width(800)
-              .height(400)
+              // .height(400)
+              .quality(59)
+              .fit('max')
               .format('webp')
               .url()}
             media="(max-width: 799px)"
           />
-          <source
-            srcset={urlFor(currentPainting.image)
-              .width(1200)
-              .height(720)
-              .format('jpg')
-              .url()}
-            media="(min-width: 800px)"
-            type="image/jpeg"
-          />
-          <source
-            srcset={urlFor(currentPainting.image)
-              .width(800)
-              .height(400)
-              .format('jpg')
-              .url()}
-            media="(max-width: 799px)"
-          />
           <img
-            src={urlFor(currentPainting.image).width(1000).height(520).url()}
+            src={urlFor(currentPainting.image)
+              .width(1000)
+              // .height(520)
+              .fit('max')
+              .quality(49)
+              .url()}
             alt={currentPainting.title}
             class={cn(
               'object-cover w-full h-full rounded-2xl',

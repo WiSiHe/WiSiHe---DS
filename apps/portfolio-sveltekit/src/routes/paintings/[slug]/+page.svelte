@@ -334,7 +334,7 @@
       />
       <img
         class={cn('w-full object-cover -z-10 h-full')}
-        src={urlFor(selectedImage).fit('max').quality(80).width(400).url()}
+        src={urlFor(selectedImage).fit('max').quality(70).width(400).url()}
         alt={title}
         loading="lazy"
         decoding="async"
