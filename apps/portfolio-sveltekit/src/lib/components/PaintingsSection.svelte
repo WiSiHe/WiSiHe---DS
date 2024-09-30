@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    getAspectRatioClass,
-    getAspectRatioImageHeight,
-    getAspectRatioImageWidth,
-    urlFor
-  } from '$lib/utils/image'
+  import { urlFor } from '$lib/utils/image'
   import type { iSanityPainting } from '$lib/utils/sanity'
   import { cn } from '$lib/utils/string'
 
@@ -49,7 +44,7 @@
           <li
             class={cn(
               'relative flex-shrink-0 h-full bg-white rounded-lg group within hover:shadow-lg transition-all duration-500 ease-in-out',
-              getAspectRatioClass(painting.image.aspectRatio)
+              'aspect-square'
             )}
           >
             <a href={`/paintings/${painting.slug}`}>
@@ -59,13 +54,10 @@
                 >
                   <Chip>{painting.title}</Chip>
                 </div>
-
                 <img
                   src={urlFor(painting.image)
-                    .width(getAspectRatioImageWidth(painting.image.aspectRatio))
-                    .height(
-                      getAspectRatioImageHeight(painting.image.aspectRatio)
-                    )
+                    .width(400)
+                    .fit('max')
                     .quality(50)
                     .url()}
                   alt={painting.title}
