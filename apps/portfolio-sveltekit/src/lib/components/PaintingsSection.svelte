@@ -39,7 +39,7 @@
     <section class="relative p">
       <div
         class="absolute top-0 bottom-0 right-0 z-10 w-1/3 h-full pointer-events-none from-transparent via-transparent to-dark bg-gradient-to-r"
-      />
+      ></div>
       <ul
         in:fly={{ y: 200, duration: 2000 }}
         out:fade
