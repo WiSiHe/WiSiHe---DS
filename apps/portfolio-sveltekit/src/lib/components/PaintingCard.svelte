@@ -47,10 +47,8 @@
   >
     <ul class="flex flex-wrap gap-1">
       {#each tagsV2 as tag}
-        <li class="px-1 text-xs text-white capitalize rounded bg-primary">
-          <strong>
-            {tag.name}
-          </strong>
+        <li class="px-1 text-xs text-white uppercase rounded bg-dark">
+          {tag.name}
         </li>
       {/each}
     </ul>
@@ -63,11 +61,11 @@
         <li
           class="relative flex items-center justify-center text-xs rounded-full w-fit h-fit"
         >
-          <div
+          <!-- <div
             class="absolute inset-0 w-full h-full rounded-full shrink-0 animate-ping bg-highlight"
-          ></div>
+          ></div> -->
           <div class="z-10 p-2 rounded-full shrink-0 bg-highlight">
-            <IconShoppingCart aria-label="Available for sale" />
+            <IconShoppingCart aria-label="Available for sale" class="size-4" />
           </div>
         </li>
       {/if}
@@ -75,7 +73,10 @@
         <li
           class="p-2 text-xs text-white transition-all duration-500 ease-in-out rounded-full bg-primary translate-x-52 group-hover:translate-x-0"
         >
-          <IconBoxMultiple aria-label={`${imagesCount} images available`} />
+          <IconBoxMultiple
+            class="size-4"
+            aria-label={`${imagesCount} images available`}
+          />
         </li>
       {/if}
     </ul>

@@ -178,7 +178,7 @@
           bind:value={searchQuery}
           name="search"
           id="search"
-          class="p-2 py-3 text-sm border rounded"
+          class="px-4 py-3 text-sm border border-none rounded-lg outline-none ring ring-dark focus:ring-primary focus:outline-none focus-within:ring"
           on:input={() => debouncedUpdateFilteredPaintings()}
           aria-label="Search paintings"
         />
@@ -201,23 +201,11 @@
       <!-- Filter Button -->
       <button
         on:click={() => dialog.showModal()}
-        class="flex items-center p-2 py-3 m-0 text-sm text-white rounded-lg bg-primary hover:bg-primary/40"
+        class="flex items-center gap-1 px-4 py-3 m-0 text-sm rounded-lg text-dark ring focus-visible:outline-none focus-visible:ring-primary ring-dark hover:bg-primary/10 hover:ring-primary"
         aria-label="Filter paintings"
       >
-        <IconFilter /> Filters ({selectedTags.length})
+        <IconFilter class="size-4" /> Filters
       </button>
-
-      <!-- Selected Tags -->
-      {#each selectedTags as tag (tag)}
-        <button
-          on:click={() => toggleTag(tag)}
-          class="flex items-center p-2 text-white rounded-lg bg-primary hover:bg-primary/40"
-          aria-pressed="true"
-        >
-          {tag}
-          <IconX />
-        </button>
-      {/each}
 
       <!-- Clear All Button -->
       {#if selectedTags.length > 0}
@@ -227,11 +215,28 @@
             updateFilteredPaintings()
             updateURLParameters()
           }}
-          class="flex items-center p-2 rounded-lg text-dark bg-tertiary ring ring-dark hover:bg-dark/40 hover:text-white"
+          class="flex items-center gap-1 px-4 py-3 m-0 text-sm rounded-lg text-dark ring focus-visible:outline-none focus-visible:ring-primary ring-dark hover:bg-primary/10 hover:ring-primary"
         >
           Clear All
         </button>
       {/if}
+
+      <!-- Selected Tags -->
+      {#each selectedTags as tag (tag)}
+        <button
+          on:click={() => toggleTag(tag)}
+          class="flex items-center gap-1 px-4 py-3 text-sm text-white transition-all duration-200 ease-in-out rounded-lg outline-none focus-visible:text-dark focus-visible:bg-primary/10 focus-visible:ring-dark group hover:text-dark ring ring-primary bg-primary hover:bg-primary/10"
+        >
+          <span
+            class="transition-transform duration-300 ease-in-out translate-x-3 group-hover:translate-x-0 group-focus-visible:translate-x-0"
+          >
+            {tag}
+          </span>
+          <IconX
+            class="transition-opacity duration-300 ease-in-out opacity-0 size-4 group-hover:opacity-100 group-focus-visible:opacity-100"
+          />
+        </button>
+      {/each}
     </div>
   </div>
 

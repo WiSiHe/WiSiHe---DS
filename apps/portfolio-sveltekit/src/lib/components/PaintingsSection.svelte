@@ -31,7 +31,7 @@
         >
       </p>
     </div>
-    <section class="relative p">
+    <section class="relative">
       <div
         class="absolute top-0 bottom-0 right-0 z-10 w-1/3 h-full pointer-events-none from-transparent via-transparent to-dark bg-gradient-to-r"
       ></div>
@@ -43,9 +43,11 @@
         {#each paintings as painting (painting.slug)}
           <li
             class={cn(
-              'relative flex-shrink-0 h-full bg-white rounded-lg group within hover:shadow-lg transition-all duration-500 ease-in-out',
+              'relative flex-shrink-0 h-full rounded-lg group within hover:shadow-lg transition-all duration-500 ease-in-out',
               'aspect-square'
             )}
+            style="background-image: url({painting.image
+              .lqip}); background-size: cover; background-position: center;"
           >
             <a href={`/paintings/${painting.slug}`}>
               <article class="relative w-full h-full rounded overflow-clip">
@@ -54,6 +56,7 @@
                 >
                   <Chip>{painting.title}</Chip>
                 </div>
+
                 <img
                   src={urlFor(painting.image)
                     .width(400)

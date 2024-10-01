@@ -6,7 +6,6 @@
   import './app.css'
 
   import '@fontsource-variable/inter'
-  import '@fontsource-variable/oswald'
 
   import { dev } from '$app/environment'
   import { inject } from '@vercel/analytics'
@@ -85,11 +84,9 @@
 <style>
   :global(body) {
     font-family: 'Inter Variable', sans-serif;
-    /* font-family: 'Oswald Variable', sans-serif; */
   }
 
   :global(h1, h2, h3, h4, h5, h6) {
-    /* font-family: 'Oswald Variable', sans-serif; */
     font-family: 'LemonMilk', sans-serif;
   }
 
@@ -108,7 +105,7 @@
     box-sizing: border-box;
   }
 
-  @view-transition {
+  /* @view-transition {
     navigation: auto;
-  }
+  } */
 </style>
