@@ -91,10 +91,11 @@
   class="fixed inset-0 z-40 w-screen h-screen p-0 m-0 bg-transparent"
 >
   <!-- Backdrop -->
-  <div
+  <button
     class="absolute inset-0 bg-black opacity-50"
     on:click={closeDialog}
-  ></div>
+    aria-label="Close navigation"
+  ></button>
 
   <!-- Drawer Content -->
   <div class="absolute top-0 right-0 w-64 h-full bg-white shadow-lg">

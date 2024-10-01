@@ -290,9 +290,11 @@
                 {views.length}
               </Chip>
               {#each tagsV2 as tag}
-                <Chip color="primary">
-                  {tag.name}
-                </Chip>
+                <a href={`/paintings?filter=${tag.name}`}>
+                  <Chip color="primary">
+                    {tag.name}
+                  </Chip>
+                </a>
               {/each}
             </div>
           {/if}

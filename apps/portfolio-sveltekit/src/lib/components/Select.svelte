@@ -65,7 +65,7 @@
     on:keydown={handleKeydown}
     aria-haspopup="listbox"
     aria-expanded={isOpen}
-    class="relative w-full py-3 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-default min-w-36 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
+    class="relative w-full py-3 pl-3 pr-10 m-0 text-left bg-white border-none rounded-lg shadow-sm cursor-default ring ring-dark min-w-40 focus:outline-none focus:ring-primary sm:text-sm"
   >
     <span class="block truncate">{selectedLabel}</span>
     <span
@@ -89,7 +89,7 @@
 
   {#if isOpen}
     <ul
-      class="absolute z-10 w-full mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+      class="absolute z-10 w-full mt-2 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
       tabindex="-1"
       role="listbox"
       aria-labelledby={id}
