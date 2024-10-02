@@ -6,6 +6,7 @@ import {ImageIcon} from '@sanity/icons'
 import {FaWeibo} from 'react-icons/fa'
 
 import {defineField, defineType} from 'sanity'
+import SEODescriptionGenerator from '../components/SEODescriptionGenerator'
 
 export default defineType({
   name: 'painting',
@@ -101,9 +102,9 @@ export default defineType({
       type: 'text',
       group: ['seo', 'AI'],
       description: 'This description will be used in the meta description for SEO purposes',
-      //   components: {
-      //     input: SEODescriptionGenerator,
-      //   },
+      components: {
+        input: SEODescriptionGenerator,
+      },
     }),
 
     defineField({
@@ -140,6 +141,7 @@ export default defineType({
       name: 'views',
       title: 'Views',
       type: 'array',
+      group: 'social',
       of: [
         {
           type: 'object',

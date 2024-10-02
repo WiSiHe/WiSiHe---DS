@@ -194,6 +194,7 @@ export async function getVideo(slug: string): Promise<Video> {
       url,
       description,
       slug,
+      videoUrl,
       mainImage{
         ...,
         "lqip": asset->metadata.lqip
@@ -215,6 +216,7 @@ export interface Video {
   title: string
   url: string
   description: string
+  videoUrl: string
   slug: Slug
   mainImage: ImageAsset
   thumbnail: ImageAsset

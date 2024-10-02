@@ -352,6 +352,9 @@ importers:
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
+      openai:
+        specifier: ^4.31.0
+        version: 4.65.0(zod@3.23.8)
       svelte-icons-pack:
         specifier: ^3.1.3
         version: 3.1.3(svelte@5.0.0-next.260)
@@ -443,9 +446,18 @@ importers:
       '@sanity/icons':
         specifier: ^2.11.8
         version: 2.11.8(react@18.3.1)
+      '@sanity/studio-secrets':
+        specifier: ^3.0.0
+        version: 3.0.0(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(sanity@3.58.0(@types/node@18.19.54)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.34.1))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@sanity/ui':
+        specifier: ^2.8.9
+        version: 2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sanity/vision':
-        specifier: ^3.52.2
+        specifier: ^3.58.0
         version: 3.58.0(@babel/runtime@7.25.6)(@codemirror/lint@6.8.2)(@codemirror/theme-one-dark@6.1.2)(@lezer/common@1.2.1)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      openai:
+        specifier: ^4.31.0
+        version: 4.65.0(zod@3.23.8)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -453,35 +465,35 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-icons:
-        specifier: ^5.2.1
+        specifier: ^5.3.0
         version: 5.3.0(react@18.3.1)
       react-is:
         specifier: ^18.3.1
         version: 18.3.1
       sanity:
-        specifier: ^3.52.2
+        specifier: ^3.58.0
         version: 3.58.0(@types/node@18.19.54)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.34.1)
       styled-components:
-        specifier: ^6.1.12
+        specifier: ^6.1.13
         version: 6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@sanity/eslint-config-studio':
         specifier: ^3.0.1
         version: 3.0.1(eslint@8.57.1)(typescript@5.6.2)
       '@types/node':
-        specifier: ^18.19.42
+        specifier: ^18.19.54
         version: 18.19.54
       '@types/react':
-        specifier: ^18.3.3
+        specifier: ^18.3.10
         version: 18.3.10
       eslint:
-        specifier: ^8.57.0
+        specifier: ^8.57.1
         version: 8.57.1
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.2
         version: 5.6.2
 
   packages/constants:
@@ -3128,6 +3140,14 @@ packages:
   '@sanity/schema@3.58.0':
     resolution: {integrity: sha1-yXsY0A3geiAf05A3CTSUo7r0z34=}
 
+  '@sanity/studio-secrets@3.0.0':
+    resolution: {integrity: sha1-BPgXCCpxXSf5askApY8Vi7MPVaI=}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: ^18.2.0
+      sanity: ^3.36.4
+      styled-components: ^6.1
+
   '@sanity/svelte-loader@1.11.37':
     resolution: {integrity: sha1-Tedj9RJBp8JX+PJNDsaSvVaI8D8=}
     engines: {node: '>=18'}
@@ -5348,6 +5368,12 @@ packages:
 
   eslint-plugin-react@7.37.0:
     resolution: {integrity: sha1-wh9koy/DTfHq7KVx7I9wvcQN0go=}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-react@7.37.1:
+    resolution: {integrity: sha1-Vkk9fWkXTQ2Ci8g6/v/paQP9rb0=}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
@@ -12269,7 +12295,7 @@ snapshots:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.1)(typescript@5.6.2)
       confusing-browser-globals: 1.0.11
       eslint-plugin-jsx-a11y: 6.10.0(eslint@8.57.1)
-      eslint-plugin-react: 7.37.0(eslint@8.57.1)
+      eslint-plugin-react: 7.37.1(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
     transitivePeerDependencies:
       - eslint
@@ -12486,6 +12512,17 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  '@sanity/studio-secrets@3.0.0(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(sanity@3.58.0(@types/node@18.19.54)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.34.1))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@sanity/incompatible-plugin': 1.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@sanity/ui': 2.8.9(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      react: 18.3.1
+      sanity: 3.58.0(@types/node@18.19.54)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.34.1)
+      styled-components: 6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    transitivePeerDependencies:
+      - react-dom
+      - react-is
 
   '@sanity/svelte-loader@1.11.37(@sanity/client@6.22.0)(@sveltejs/kit@2.6.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.0.0-next.260)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1)))(svelte@5.0.0-next.260)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1)))(svelte@5.0.0-next.260)':
     dependencies:
@@ -15568,7 +15605,7 @@ snapshots:
       string.prototype.matchall: 4.0.11
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-react@7.37.0(eslint@8.57.1):
+  eslint-plugin-react@7.37.0(eslint@9.11.1(jiti@2.0.0)):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlast: 1.2.5
@@ -15576,7 +15613,7 @@ snapshots:
       array.prototype.tosorted: 1.1.4
       doctrine: 2.1.0
       es-iterator-helpers: 1.0.19
-      eslint: 8.57.1
+      eslint: 9.11.1(jiti@2.0.0)
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
@@ -15590,7 +15627,7 @@ snapshots:
       string.prototype.matchall: 4.0.11
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-react@7.37.0(eslint@9.11.1(jiti@2.0.0)):
+  eslint-plugin-react@7.37.1(eslint@8.57.1):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlast: 1.2.5
@@ -15598,7 +15635,7 @@ snapshots:
       array.prototype.tosorted: 1.1.4
       doctrine: 2.1.0
       es-iterator-helpers: 1.0.19
-      eslint: 9.11.1(jiti@2.0.0)
+      eslint: 8.57.1
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
