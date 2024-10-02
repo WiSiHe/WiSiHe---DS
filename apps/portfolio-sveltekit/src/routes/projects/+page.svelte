@@ -28,13 +28,13 @@
       <li class="col-span-4">
         <a href={`projects/${project.slug}`} class="">
           <div
-            class="flex items-center justify-center text-white aspect-square bg-dark"
+            class="relative flex items-center justify-center text-white aspect-square bg-dark"
           >
             <img
               src={urlFor(project.image).width(400).height(400).url()}
               alt={project.title}
             />
-            <div class="absolute p-2 bg-black bg-opacity-50">
+            <div class="absolute bottom-0 left-0 right-0 p-2 bg-dark">
               {project.title}
             </div>
           </div></a
