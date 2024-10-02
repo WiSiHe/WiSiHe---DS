@@ -26,62 +26,66 @@
 >
   <nav
     aria-label="Main Navigation"
-    class="flex items-center justify-between px-4 py-2 text-white bg-dark"
+    class="flex items-center justify-between py-2 text-white bg-dark"
   >
-    <!-- Logo -->
-    <a
-      href="/"
-      aria-label="Navigate to the homepage"
-      class="flex items-center p-1 text-sm transition-transform duration-300 transform focus-visible:ring hover:scale-110"
+    <div
+      class="flex items-center justify-between w-full max-w-screen-xl px-4 mx-auto"
     >
-      <!-- Simplified SVG Logo -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        role="img"
-        aria-label="QR Code Logo"
-        class="transition-transform duration-300 transform fill-white hover:rotate-12"
+      <!-- Logo -->
+      <a
+        href="/"
+        aria-label="Navigate to the homepage"
+        class="flex items-center p-1 text-sm transition-transform duration-300 transform focus-visible:ring hover:scale-110"
       >
-        <!-- Simplified path -->
-        <path
-          d="M3 3h6v6H3V3zm0 12h6v6H3v-6zm12-12h6v6h-6V3zm-6 6h6v6h-6V9zm6 6h6v6h-6v-6z"
-        />
-      </svg>
-    </a>
+        <!-- Simplified SVG Logo -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          role="img"
+          aria-label="QR Code Logo"
+          class="transition-transform duration-300 transform fill-white hover:rotate-12"
+        >
+          <!-- Simplified path -->
+          <path
+            d="M3 3h6v6H3V3zm0 12h6v6H3v-6zm12-12h6v6h-6V3zm-6 6h6v6h-6V9zm6 6h6v6h-6v-6z"
+          />
+        </svg>
+      </a>
 
-    <!-- Desktop Navigation -->
-    <ul class="items-center hidden gap-4 lg:flex">
-      {#each navigationItems as item}
-        <li>
-          <NavItem {item} />
-        </li>
-      {/each}
-    </ul>
+      <!-- Desktop Navigation -->
+      <ul class="items-center hidden gap-4 lg:flex">
+        {#each navigationItems as item}
+          <li>
+            <NavItem {item} />
+          </li>
+        {/each}
+      </ul>
 
-    <!-- Mobile Toggle Button -->
-    <button
-      on:click={openDialog}
-      class="p-2 text-white rounded-md lg:hidden focus-visible:ring"
-      aria-label="Toggle navigation"
-    >
-      <!-- Hamburger Icon -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+      <!-- Mobile Toggle Button -->
+      <button
+        on:click={openDialog}
+        class="p-2 text-white rounded-md lg:hidden focus-visible:ring"
+        aria-label="Toggle navigation"
       >
-        <path
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-    </button>
+        <!-- Hamburger Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
   </nav>
 </header>
 

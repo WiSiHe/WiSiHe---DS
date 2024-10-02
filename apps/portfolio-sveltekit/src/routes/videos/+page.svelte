@@ -26,17 +26,16 @@
 
   <ul class="grid w-full grid-cols-12 gap-4 col-span-full">
     {#each videos as video}
-      <li class="col-span-4">
+      <li class="col-span-6 xl:col-span-4">
         <a href={`videos/${video.slug}`} class="">
           <div
-            class="flex items-center justify-center text-white aspect-square bg-dark"
+            class="relative flex items-center justify-center text-white rounded-lg overflow-clip aspect-square bg-dark"
           >
             <img
               src={urlFor(video.thumbnail).width(400).height(400).url()}
               alt={video.title}
             />
-
-            <div class="absolute p-2 bg-black bg-opacity-50">
+            <div class="absolute bottom-0 left-0 right-0 p-2 bg-dark">
               {video.title}
             </div>
           </div>

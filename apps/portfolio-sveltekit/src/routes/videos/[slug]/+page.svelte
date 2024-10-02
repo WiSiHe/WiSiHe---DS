@@ -1,23 +1,23 @@
 <script lang="ts">
+  import VideoPlayer from '$lib/components/VideoPlayer.svelte'
   export let data
-  import { urlFor } from '$lib/utils/image'
-  import SideBar from '../../../lib/components/SideBar.svelte'
 
   const { video } = data
+  const { videoUrl } = video
 </script>
 
-<section class="grid items-start grid-cols-12 gap-4 p-4">
-  <div class="col-span-full">
-    <h1 class="text-blue-800">
+<section class="grid items-start min-h-screen grid-cols-12 gap-4 p-4 bg-dark">
+  <div
+    class="w-full h-full max-w-screen-xl px-4 pt-10 mx-auto col-span-full aspect-video"
+  >
+    <VideoPlayer {videoUrl} />
+  </div>
+  <div class="max-w-screen-xl px-4 mx-auto prose col-span-full">
+    <h1 class="text-white">
       {video.title}
     </h1>
-    <p>
+    <p class="text-white">
       {video.description}
     </p>
-    <img
-      src={urlFor(video.thumbnail).width(400).height(400).url()}
-      alt={video.title}
-      class="w-full"
-    />
   </div>
 </section>
