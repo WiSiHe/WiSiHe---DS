@@ -2,20 +2,28 @@
   export let data
   import { urlFor } from '$lib/utils/image'
   const { project } = data
+  console.log(project)
+
+  const { projectStart, projectEnd, status } = project
 </script>
 
 <section class="grid items-start grid-cols-12 gap-4 p-4">
-  <div class="xl:col-span-8 col-span-full">
-    <h1 class="text-blue-800">
-      {project.title}
-    </h1>
-    <p>
-      {project.description}
-    </p>
+  <div class="w-full max-w-screen-xl px-4 mx-auto col-span-full">
     <img
       src={urlFor(project.image).width(400).height(400).url()}
       alt={project.title}
-      class="w-full"
+      class="object-cover w-full aspect-video"
     />
+    <p>
+      {projectStart} - {projectEnd} ({status})
+    </p>
+    <div class="prose">
+      <h1 class="">
+        {project.title}
+      </h1>
+      <p>
+        {project.description}
+      </p>
+    </div>
   </div>
 </section>
