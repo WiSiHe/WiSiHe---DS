@@ -14,6 +14,8 @@
   export let paintings: iSanityPainting[] | undefined
   export let tags: iSanityPaintingsTag[] | undefined
 
+  const initialPaintings = paintings
+
   let filteredPaintings: iSanityPainting[] = []
   let selectedTags: string[] = []
   let searchQuery = ''
@@ -79,7 +81,7 @@
       case 'mostViewed':
         return paintings.sort((a, b) => b.viewsCount - a.viewsCount)
       case 'random':
-        return paintings.sort(() => Math.random() - 0.5)
+        return paintings
       default:
         return paintings
     }

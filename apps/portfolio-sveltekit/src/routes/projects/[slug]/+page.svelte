@@ -18,7 +18,7 @@
       {projectStart} - {projectEnd} ({status})
     </p>
     <div class="prose">
-      <h1 class="">
+      <h1>
         {project.title}
       </h1>
       <p>
