@@ -9,9 +9,6 @@
     title: string
   }
   const { showcasePaintings, title } = data
-
-  const firstPainting = showcasePaintings[0]
-  const firstPaintingUrl = urlFor(firstPainting.image).url()
 </script>
 
 <svelte:head>
@@ -33,7 +30,7 @@
     content="Explore the stunning artwork collection of {title}, featuring unique paintings."
   />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content={firstPaintingUrl} />
+
   <!-- Add an image to make the page more attractive on social media -->
   <meta property="og:url" content="https://wisihe.no" />
 </svelte:head>
