@@ -1,12 +1,6 @@
 import type { PortableTextBlock } from '@portabletext/types'
 import { createClient } from '@sanity/client'
-import type {
-  Image,
-  ImageAsset,
-  ImageCrop,
-  ImageHotspot,
-  Slug
-} from '@sanity/types'
+import type { Image, ImageAsset, Slug } from '@sanity/types'
 import groq from 'groq'
 
 import {
@@ -150,6 +144,25 @@ export const homePageQuery = groq`
     },
   }
 `
+
+// (
+//   groq`*[_type == $type && defined(slug.current)]{"slug": slug.current}`,
+//   { type },
+//   {
+//       next: {
+//           tags: [type],
+//       },
+//   },
+// )
+
+type Slugs = { slug: string }[]
+
+export async function getStaticSlugs(type: string): Promise<Slugs> {
+  return await client.fetch(
+    groq`*[_type == $type && defined(slug.current)]{"slug": slug.current}`,
+    { type }
+  )
+}
 
 export async function getProjects(): Promise<iSanityProject[]> {
   return await client.fetch(
