@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types'
 
 // Uncomment these if the page can be statically generated
 // export const ssr = true; // Enable SSR
-export const prerender = true // Enable prerendering for static pages
+// export const prerender = true // Enable prerendering for static pages
 
 // Caching utility (example using an in-memory cache)
 const cache = new Map<string, any>()
