@@ -28,7 +28,7 @@
 
   injectSpeedInsights()
 
-  const image = '$lib/images/paintings/cloud.jpg'
+  // const image = '$lib/images/paintings/cloud.jpg'
 </script>
 
 <svelte:head>
@@ -38,7 +38,7 @@
   />
   <meta property="og:title" content="Portfolio of Henrik Wilhelm Sissener" />
   <meta property="og:description" content="Explore unique artwork by WiSiHe." />
-  <meta property="og:image" content={image} />
+  <!-- <meta property="og:image" content={image} /> -->
   <meta property="og:url" content={'https://wisihe.no'} />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -47,7 +47,7 @@
     name="twitter:description"
     content="Explore a curated selection of paintings and artwork by WiSiHe."
   />
-  <meta name="twitter:image" content="/path/to/default/portfolio-image.jpg" />
+  <!-- <meta name="twitter:image" content={image} /> -->
 </svelte:head>
 
 <div class="app">

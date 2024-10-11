@@ -1,11 +1,17 @@
 <script lang="ts">
   import Hero from '$lib/components/sections/Hero.svelte'
   import PaintingsSection from '$lib/components/PaintingsSection.svelte'
+  import type { iSanityPainting } from '$lib/utils/sanity.js'
+  import { urlFor } from '$lib/sanity/image.js'
 
-  export let data
-  const { showcasePaintings = [], title } = data
+  export let data: {
+    showcasePaintings: iSanityPainting[]
+    title: string
+  }
+  const { showcasePaintings, title } = data
 
-  const painting = '$lib/images/paintings/cloud.jpg'
+  const firstPainting = showcasePaintings[0]
+  const firstPaintingUrl = urlFor(firstPainting.image).url()
 </script>
 
 <svelte:head>
@@ -27,7 +33,7 @@
     content="Explore the stunning artwork collection of {title}, featuring unique paintings."
   />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content={painting} />
+  <meta property="og:image" content={firstPaintingUrl} />
   <!-- Add an image to make the page more attractive on social media -->
   <meta property="og:url" content="https://wisihe.no" />
 </svelte:head>
