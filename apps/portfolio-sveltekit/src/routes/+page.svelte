@@ -2,7 +2,6 @@
   import Hero from '$lib/components/sections/Hero.svelte'
   import PaintingsSection from '$lib/components/PaintingsSection.svelte'
   import type { iSanityPainting } from '$lib/utils/sanity.js'
-  import { urlFor } from '$lib/sanity/image.js'
 
   export let data: {
     showcasePaintings: iSanityPainting[]

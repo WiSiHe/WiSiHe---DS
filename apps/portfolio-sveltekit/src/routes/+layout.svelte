@@ -31,14 +31,14 @@
   // const image = '$lib/images/paintings/cloud.jpg'
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
   <meta
     name="description"
     content="The portfolio of Henrik Wilhelm Sissener, showcasing paintings and art by WiSiHe."
   />
   <meta property="og:title" content="Portfolio of Henrik Wilhelm Sissener" />
   <meta property="og:description" content="Explore unique artwork by WiSiHe." />
-  <!-- <meta property="og:image" content={image} /> -->
+  <meta property="og:image" content={image} />
   <meta property="og:url" content={'https://wisihe.no'} />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -47,8 +47,8 @@
     name="twitter:description"
     content="Explore a curated selection of paintings and artwork by WiSiHe."
   />
-  <!-- <meta name="twitter:image" content={image} /> -->
-</svelte:head>
+  <meta name="twitter:image" content={image} />
+</svelte:head> -->
 
 <div class="app">
   <Header />
