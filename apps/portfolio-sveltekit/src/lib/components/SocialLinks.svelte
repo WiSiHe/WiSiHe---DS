@@ -10,7 +10,8 @@
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          class="underline text-tertiary underline-offset-2 hover:text-primary hover:no-underline"
+          class="underline text-tertiary underline-offset-2 hover:text-primary hover:no-underline focus-visible:ring-2 focus-visible:ring-primary"
+          aria-label="Follow Henrik Wilhelm Sissener on {label}"
         >
           {label}
         </a>

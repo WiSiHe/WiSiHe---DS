@@ -27,11 +27,32 @@
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
 
   injectSpeedInsights()
+
+  const image = '$lib/images/paintings/cloud.jpg'
 </script>
+
+<svelte:head>
+  <meta
+    name="description"
+    content="The portfolio of Henrik Wilhelm Sissener, showcasing paintings and art by WiSiHe."
+  />
+  <meta property="og:title" content="Portfolio of Henrik Wilhelm Sissener" />
+  <meta property="og:description" content="Explore unique artwork by WiSiHe." />
+  <meta property="og:image" content={image} />
+  <meta property="og:url" content={'https://wisihe.no'} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Henrik Wilhelm Sissener - Portfolio" />
+  <meta
+    name="twitter:description"
+    content="Explore a curated selection of paintings and artwork by WiSiHe."
+  />
+  <meta name="twitter:image" content="/path/to/default/portfolio-image.jpg" />
+</svelte:head>
 
 <div class="app">
   <Header />
-  <main class="bg-tertiary">
+  <main class="bg-tertiary" aria-label="Main content area">
     <slot />
   </main>
 
@@ -84,6 +105,7 @@
 <style>
   :global(body) {
     font-family: 'Inter Variable', sans-serif;
+    font-display: swap;
   }
 
   :global(h1, h2, h3, h4, h5, h6) {
@@ -93,6 +115,7 @@
   .app {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     min-height: 100dvh;
   }
 

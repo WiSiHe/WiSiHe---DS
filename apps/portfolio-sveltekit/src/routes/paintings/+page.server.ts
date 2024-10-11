@@ -1,11 +1,10 @@
 import { getAllPaintingsAndTags } from '$lib/utils/sanity'
 import { error } from '@sveltejs/kit'
-import type { PageLoad } from '../$types'
 
 // export const ssr = false
-// export const prerender = true
+export const prerender = true
 
-export const load = (async () => {
+export const load = async () => {
   const data = await getAllPaintingsAndTags()
 
   if (data) {
@@ -32,4 +31,4 @@ export const load = (async () => {
   }
 
   throw error(404, 'Not found')
-}) satisfies PageLoad
+}
