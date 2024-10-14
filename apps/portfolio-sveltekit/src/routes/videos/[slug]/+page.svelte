@@ -1,5 +1,4 @@
 <script lang="ts">
-  import BackButton from '$lib/components/BackButton.svelte'
   import VideoPlayer from '$lib/components/VideoPlayer.svelte'
   import { IconArrowLeft } from '@tabler/icons-svelte'
   import { fly } from 'svelte/transition'
@@ -39,12 +38,13 @@
 </section>
 
 <style>
-  h1,
+  /* h1,
   h2,
   h3,
   h4,
   h5,
-  h6 {
+  h6, */
+  h1 {
     text-wrap: balance;
   }
   p {
@@ -52,11 +52,11 @@
     text-wrap: pretty;
   }
 
-  header,
+  /* header,
   footer,
   main,
-  section,
-  article {
+  article,  */
+  section {
     container-type: inline-size;
   }
 </style>
