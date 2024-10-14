@@ -62,6 +62,7 @@
                     .width(400)
                     .fit('max')
                     .quality(50)
+                    .format('webp')
                     .url()}
                   alt={painting.title}
                   class={cn(
