@@ -134,7 +134,6 @@
           <source
             srcset={urlFor(currentPainting.image)
               .width(1200)
-              // .height(720)
               .format('webp')
               .fit('max')
               .quality(59)
@@ -145,7 +144,6 @@
           <source
             srcset={urlFor(currentPainting.image)
               .width(800)
-              // .height(400)
               .quality(59)
               .fit('max')
               .format('webp')
@@ -155,9 +153,9 @@
           <img
             src={urlFor(currentPainting.image)
               .width(1000)
-              // .height(520)
               .fit('max')
               .quality(49)
+              .format('webp')
               .url()}
             alt={currentPainting.title}
             class={cn(
@@ -166,7 +164,6 @@
             )}
             on:load={handleImageLoad}
             decoding="async"
-            loading="lazy"
           />
         </picture>
         <div
