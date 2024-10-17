@@ -7,7 +7,8 @@
     IconArrowRight,
     IconBrush,
     IconDeviceGamepad2,
-    IconDeviceLaptop
+    IconDeviceLaptop,
+    IconArrowDown
   } from '@tabler/icons-svelte'
 
   import { spring } from 'svelte/motion'
@@ -85,7 +86,7 @@
 </script>
 
 <section
-  class="relative flex flex-col justify-start w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip"
+  class="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip"
 >
   <img
     src={currentPainting.image.lqip}
@@ -198,4 +199,9 @@
       </div>
     </section>
   </div>
+  <!-- <div class="absolute bottom-0 left-0 right-0 z-10 flex justify-center">
+    <a href="#about" class="text-white">
+      <IconArrowDown class="w-8 h-8 text-white animate-bounce" />
+    </a>
+  </div> -->
 </section>

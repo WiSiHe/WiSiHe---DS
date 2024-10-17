@@ -18,7 +18,7 @@
   }
 </script>
 
-<section class="bg-dark">
+<section class="bg-dark" id="about">
   <div class="relative w-full px-4 py-14 xl:py-24 lg:px-10">
     <div class="prose">
       <h2 class="text-4xl text-white col-span-full">Paintings</h2>
