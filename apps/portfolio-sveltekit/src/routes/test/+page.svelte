@@ -1,7 +1,10 @@
 <script lang="ts">
-  import PaintingCard from '$lib/components/PaintingCard.svelte'
   import { urlFor } from '$lib/sanity/image'
-  import { getAllPaintingsFilterAndTags } from '$lib/utils/sanity'
+  import {
+    getAllPaintingsFilterAndTags,
+    type iSanityPainting,
+    type iSanityPaintingsTag
+  } from '$lib/utils/sanity'
   import { onMount } from 'svelte'
 
   // Search term, filter (tag _id), pagination page number, and results limit
@@ -11,9 +14,9 @@
   export let limit: number = 12
 
   // Arrays to store fetched paintings and tags
-  let paintings = []
+  let paintings: iSanityPainting[] = []
   let tags = []
-  let sortedTags = []
+  let sortedTags: iSanityPaintingsTag[] = []
 
   // Function to fetch paintings and tags based on search, filter, and pagination
   const fetchPaintingsAndTags = async () => {

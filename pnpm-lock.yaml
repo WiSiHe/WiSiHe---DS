@@ -446,6 +446,9 @@ importers:
       '@sanity/icons':
         specifier: ^2.11.8
         version: 2.11.8(react@18.3.1)
+      '@sanity/image-url':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@sanity/studio-secrets':
         specifier: ^3.0.0
         version: 3.0.0(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(sanity@3.60.0(@types/node@18.19.55)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(terser@5.34.1))(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
