@@ -7,6 +7,7 @@ import {FaWeibo} from 'react-icons/fa'
 
 import {defineField, defineType} from 'sanity'
 import SEODescriptionGenerator from '../components/SEODescriptionGenerator'
+import ImageAltGenerator from '../components/ImageAltGenerator'
 
 export default defineType({
   name: 'painting',
@@ -68,6 +69,17 @@ export default defineType({
       type: 'image',
       group: ['media', 'AI'],
       description: 'The main image of the painting',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+          group: ['AI', 'seo'],
+          components: {
+            input: ImageAltGenerator,
+          },
+        },
+      ],
       options: {
         hotspot: true,
         metadata: ['lqip'],
@@ -80,10 +92,12 @@ export default defineType({
       type: 'string',
       group: ['AI'],
       description: 'Alt text for the primary image',
-      //   components: {
-      //     input: ImageAltTextGenerator,
-      //   },
-      validation: (rule) => rule.required(),
+      deprecated: {
+        reason: 'Use the alt field on the image instead',
+      },
+      components: {
+        input: ImageAltGenerator,
+      },
     }),
     defineField({
       name: 'description',
@@ -112,7 +126,24 @@ export default defineType({
       title: 'Images',
       type: 'array',
       group: 'media',
-      of: [{type: 'image', options: {hotspot: true}}],
+      of: [
+        {
+          type: 'image',
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              description: 'Alt text for the image',
+              validation: (Rule) => Rule.required(),
+              group: ['AI', 'seo'],
+              components: {
+                input: ImageAltGenerator,
+              },
+            },
+          ],
+          options: {hotspot: true},
+        },
+      ],
       description: 'Additional images of the painting',
       //   validation: (rule) => rule.required(),
     }),
