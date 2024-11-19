@@ -11,11 +11,12 @@
   export let index: number
 
   const { title, tagsV2, slug, image, isForSale, imagesCount = 0 } = painting
-  const { lqip } = image
+  const lqip = image?.lqip || '' // Use optional chaining and fallback
 
   $: filter = $page.url.searchParams.getAll('filter') || ['']
   $: filterContainsNSFW = filter.includes('NSFW')
-  $: hasNSFWTag = tagsV2.some(tag => tag.name.toLowerCase().includes('nsfw'))
+  $: hasNSFWTag =
+    tagsV2?.some(tag => tag.name.toLowerCase().includes('nsfw')) || false // Add null check
 
   let imgLoaded = false
   let imgRef: HTMLImageElement
@@ -86,44 +87,46 @@
     class="relative w-full h-full bg-dark aspect-portrait"
     style="background-image: url({lqip}); background-size: cover; background-position: center;"
   >
-    {#if hasNSFWTag && !filterContainsNSFW}
+    {#if !image}
       <div
-        class="absolute inset-0 z-10 flex items-center justify-center w-full h-full bg-primary/20 backdrop-blur-lg"
+        class="absolute inset-0 flex items-center justify-center text-white bg-gray-700"
       >
-        <p class="font-semibold text-white">NSFW</p>
+        <p>No Image Available</p>
       </div>
     {/if}
-    <picture>
-      {#each imageSizes as { width, height, media }}
-        <source
-          srcset={urlFor(image)
-            .width(width)
-            .height(height)
-            .format('webp')
+    {#if image}
+      <picture>
+        {#each imageSizes as { width, height, media }}
+          <source
+            srcset={urlFor(image)
+              .width(width)
+              .height(height)
+              .format('webp')
+              .quality(49)
+              .url()}
+            {media}
+            type="image/webp"
+          />
+        {/each}
+        <img
+          bind:this={imgRef}
+          src={urlFor(image)
+            .width(300)
+            .height(533)
             .quality(49)
+            .format('webp')
             .url()}
-          {media}
-          type="image/webp"
+          alt={title || 'Painting'}
+          class={cn(
+            'absolute inset-0 w-full bg-dark h-full object-cover rounded transition-opacity duration-300',
+            imgLoaded ? 'opacity-100' : 'opacity-0'
+          )}
+          loading={index < 6 ? 'eager' : 'lazy'}
+          decoding={index < 6 ? 'auto' : 'async'}
+          on:load={handleImageLoad}
         />
-      {/each}
-      <img
-        bind:this={imgRef}
-        src={urlFor(image)
-          .width(300)
-          .height(533)
-          .quality(49)
-          .format('webp')
-          .url()}
-        alt={title}
-        class={cn(
-          'absolute inset-0 w-full bg-dark h-full object-cover rounded transition-opacity duration-300',
-          imgLoaded ? 'opacity-100' : 'opacity-0'
-        )}
-        loading={index < 6 ? 'eager' : 'lazy'}
-        decoding={index < 6 ? 'auto' : 'async'}
-        on:load={handleImageLoad}
-      />
-    </picture>
+      </picture>
+    {/if}
   </div>
 
   <a

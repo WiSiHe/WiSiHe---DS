@@ -1,6 +1,9 @@
 <script>
   import SocialLinks from '$lib/components/SocialLinks.svelte'
   import Header from '$lib/components/header/Header.svelte'
+  import LiveMode from '$lib/components/LiveMode.svelte'
+  import { page } from '$app/stores'
+  import { isPreviewing, VisualEditing } from '@sanity/visual-editing/svelte'
 
   import './fonts.css'
   import './app.css'
@@ -25,30 +28,36 @@
   })
 
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+  import { onMount } from 'svelte'
+  import { enableVisualEditing } from '@sanity/visual-editing'
+  import { useLiveMode } from '@sanity/svelte-loader'
+  import { client } from '$lib/utils/sanity'
 
   injectSpeedInsights()
 
-  // const image = '$lib/images/paintings/cloud.jpg'
+  onMount(() => enableVisualEditing())
+
+  onMount(() =>
+    useLiveMode({
+      // If `stega.studioUrl` was not provided to the client instance in `sanity.ts`, a studioUrl should be provided here
+      // studioUrl: 'http://localhost:3333',
+      // ...or alternatively provide the stega client directly
+      // client: client.withConfig({
+      //   stega: true
+      // })
+    })
+  )
 </script>
 
-<!-- <svelte:head>
-  <meta
-    name="description"
-    content="The portfolio of Henrik Wilhelm Sissener, showcasing paintings and art by WiSiHe."
-  />
-  <meta property="og:title" content="Portfolio of Henrik Wilhelm Sissener" />
-  <meta property="og:description" content="Explore unique artwork by WiSiHe." />
-  <meta property="og:image" content={image} />
-  <meta property="og:url" content={'https://wisihe.no'} />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Henrik Wilhelm Sissener - Portfolio" />
-  <meta
-    name="twitter:description"
-    content="Explore a curated selection of paintings and artwork by WiSiHe."
-  />
-  <meta name="twitter:image" content={image} />
-</svelte:head> -->
+{#if $isPreviewing}
+  <a
+    href={`/preview/disable?redirect=${$page.url.pathname}`}
+    class="preview-toggle"
+  >
+    <span>Preview Enabled</span>
+    <span>Disable Preview</span>
+  </a>
+{/if}
 
 <div class="app">
   <Header />
@@ -102,6 +111,11 @@
   </footer>
 </div>
 
+{#if $isPreviewing}
+  <VisualEditing />
+  <LiveMode />
+{/if}
+
 <style>
   :global(body) {
     font-family: 'Inter Variable', sans-serif;
@@ -132,4 +146,46 @@
   /* @view-transition {
     navigation: auto;
   } */
+
+  .preview-toggle {
+    backdrop-filter: blur(12px);
+    border-radius: 0.25rem;
+    bottom: 1rem;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    color: #1f2937;
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.5rem;
+    position: fixed;
+    right: 1rem;
+    text-align: center;
+    text-decoration: none;
+    z-index: 50;
+  }
+
+  .preview-toggle:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+
+  .preview-toggle span:first-child {
+    display: block;
+  }
+  .preview-toggle:hover span:first-child {
+    display: none;
+  }
+
+  .preview-toggle span:last-child {
+    display: none;
+  }
+  .preview-toggle:hover span:last-child {
+    display: block;
+  }
 </style>

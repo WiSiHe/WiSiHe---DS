@@ -58,51 +58,49 @@ export async function getAllPaintingsFilterAndTags({
   searchTerm = '',
   filter = '',
   pageNumber = 1,
-  limit = 10
+  limit = 10,
+  sortOrder = 'desc' // Default to 'desc' (newest first)
 }: {
   searchTerm?: string
   filter?: string
   pageNumber?: number
   limit?: number
+  sortOrder?: 'asc' | 'desc' // Only 'asc' or 'desc' allowed now
 }): Promise<{
   paintings: iSanityPainting[]
   tags: iSanityPaintingsTag[]
 }> {
   return await client.fetch(
     groq`{
-      "paintings": *[_type == "painting" 
-        && defined(slug.current) 
-        && (!defined($searchTerm) || title match $searchTerm) 
-        && (!defined($filter) || $filter == "" || references($filter))
-      ]{
-        _id,
-        "slug":slug.current,
-        title,
-        tagsV2[]->{name},
-        "viewsCount": count(views),
-        paintedAt,
-        video,
-        "imagesCount": coalesce(count(images), 0),
-        "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
-        image{
-          ...,
-          "lqip": asset->metadata.lqip,
-          "aspectRatio": asset->metadata.dimensions.aspectRatio
-        }
-      } 
-      | order(_createdAt desc)
-      [($pageNumber - 1) * $limit...$pageNumber * $limit],
-      "tags": *[_type == "tag"] | order(name asc) { 
-        _id, 
-        name, 
-        "paintingsCount": count(*[_type == "painting" && references(^._id)].title)
-      }
-    }`,
+  "paintings": *[_type == "painting" 
+    && (!length($searchTerm) || $searchTerm == "" || title match $searchTerm)
+    && (!length($filter) || $filter == "" || references($filter))
+  ]{
+    _id,
+    title,
+    paintedAt,
+    "slug": slug.current,
+    tagsV2[]->{name},
+    "paintedAtFallback": coalesce(paintedAt, _createdAt),
+    "mainImage": image{
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    }
+  } | order(paintedAtFallback ${sortOrder})
+  [($pageNumber - 1) * $limit...$pageNumber * $limit],
+  "tags": *[_type == "tag"] | order(name asc) {
+    _id,
+    name,
+    "paintingsCount": count(*[_type == "painting" && references(^._id)].title)
+  }
+}`,
     {
-      searchTerm: searchTerm !== undefined ? `${searchTerm}*` : '', // Ensure searchTerm is always a string
-      filter: filter !== undefined ? filter : '', // Ensure filter is always a string
+      searchTerm: searchTerm ? `${searchTerm}*` : '',
+      filter: filter || '',
       pageNumber,
-      limit
+      limit,
+      sortOrder
     }
   )
 }

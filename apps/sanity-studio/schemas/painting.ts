@@ -8,6 +8,7 @@ import {FaWeibo} from 'react-icons/fa'
 import {defineField, defineType} from 'sanity'
 import SEODescriptionGenerator from '../components/SEODescriptionGenerator'
 import ImageAltGenerator from '../components/ImageAltGenerator'
+import ImageDescriptionGenerator from '../components/ImageDescriptionGenerator'
 
 export default defineType({
   name: 'painting',
@@ -86,27 +87,27 @@ export default defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: 'altText',
-      title: 'Alt Text',
-      type: 'string',
-      group: ['AI'],
-      description: 'Alt text for the primary image',
-      deprecated: {
-        reason: 'Use the alt field on the image instead',
-      },
-      components: {
-        input: ImageAltGenerator,
-      },
-    }),
+    // defineField({
+    //   name: 'altText',
+    //   title: 'Alt Text',
+    //   type: 'string',
+    //   group: ['AI'],
+    //   description: 'Alt text for the primary image',
+    //   deprecated: {
+    //     reason: 'Use the alt field on the image instead',
+    //   },
+    //   components: {
+    //     input: ImageAltGenerator,
+    //   },
+    // }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       group: ['AI'],
-      //   components: {
-      //     input: ImageDescriptionGenerator,
-      //   },
+      components: {
+        input: ImageDescriptionGenerator,
+      },
       description: 'Description of the painting',
       validation: (rule) => rule.required(),
     }),
@@ -130,6 +131,12 @@ export default defineType({
         {
           type: 'image',
           fields: [
+            {
+              name: 'title',
+              type: 'string',
+              description: 'Title of the image',
+              validation: (Rule) => Rule.required(),
+            },
             {
               name: 'alt',
               type: 'string',

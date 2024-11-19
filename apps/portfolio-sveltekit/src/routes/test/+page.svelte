@@ -78,14 +78,14 @@
     <ul
       class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
-      {#each paintings as painting, index}
+      {#each paintings as painting, index (`${painting.slug}-${index}`)}
         <li>
           <strong>
             {painting.title}
           </strong>
 
           <img
-            src={urlFor(painting.image)
+            src={urlFor(painting.mainImage)
               .width(300)
               .height(300)
               .quality(49)

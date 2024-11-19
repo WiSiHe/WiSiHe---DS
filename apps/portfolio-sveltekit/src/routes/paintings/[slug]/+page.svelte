@@ -19,10 +19,17 @@
   import Chip from '$lib/components/Chip.svelte'
   import { serializeSchema } from '$lib/utils/seo'
   import VideoPlayer from '$lib/components/VideoPlayer.svelte'
+  import { useQuery } from '@sanity/svelte-loader'
 
-  export let data: { painting: iSanityPainting }
+  import type { PageData } from './$types'
+  import { paintingQuery } from '$lib/sanity/queries'
 
-  const { painting } = data
+  export let data: PageData
+
+  const { initial, params } = data
+
+  const q = useQuery<iSanityPainting>(paintingQuery, params, { initial })
+
   const {
     title,
     seoDescription,
@@ -34,7 +41,7 @@
     images = [],
     video,
     views = []
-  } = painting
+  } = initial
 
   let formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -51,7 +58,7 @@
   let dialog: HTMLDialogElement
   let allImages = [image, ...(images || [])]
   let selectedIndex = 0
-  console.log('selectedIndex', selectedIndex)
+
   let selectedImage = allImages[selectedIndex]
 
   function handleSelectImage(img: PaintingImageExtended) {
