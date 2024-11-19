@@ -23,6 +23,22 @@ const linkFields = /* groq */ `
       }
 `;
 
+const showCasePaintingFields = /* groq */ `
+    showcasePaintings[]->{
+      _type,
+      _id,
+      altText,
+      "slug": slug.current,
+      title,
+      format,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      }
+    },
+`;
+
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{
     _id,
@@ -93,3 +109,11 @@ export const pagesSlugs = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
 `);
+
+export const homePageQuery = defineQuery(`
+    *[_type == "home"][0]{
+        _id,
+        title,
+        ${showCasePaintingFields}
+    }
+    `);

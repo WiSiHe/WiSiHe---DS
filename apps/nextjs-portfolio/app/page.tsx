@@ -1,17 +1,41 @@
+import { sanityFetch } from '@/sanity/lib/live';
+import { homePageQuery } from '@/sanity/lib/queries';
+import { urlForImage } from '@/sanity/lib/utils';
+import { stegaClean } from 'next-sanity';
 import Image from 'next/image';
 
-export default function Home() {
+export default async function Home() {
+  const [{ data: homepage }] = await Promise.all([
+    sanityFetch({ query: homePageQuery }),
+  ]);
+
+  if (!homepage) {
+    return null;
+  }
+
+  const { showcasePaintings, title } = homepage;
+
+  const firstPainting = showcasePaintings[0];
+  console.log('firstPainting', firstPainting);
   return (
-    <main>
-      <h1>Home</h1>
+    <div>
+      <h1>{title}</h1>
       <Image
-        src="/images/paintings/cloud.jpg"
-        alt="Paintings | WiSiHe"
-        width={720}
-        height={430}
+        className="object-cover -z-10"
+        fill={true}
+        alt={stegaClean(firstPainting.painting?.alt) || ''}
+        src={
+          urlForImage(firstPainting.image)
+            ?.height(720)
+            .width(1280)
+            .auto('format')
+            .url() as string
+        }
+        sizes="100vw"
+        priority
       />
 
       <p>A gallery of some of my paintings</p>
-    </main>
+    </div>
   );
 }
