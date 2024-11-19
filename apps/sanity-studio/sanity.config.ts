@@ -4,6 +4,7 @@ import {structureTool} from 'sanity/structure'
 import {presentationTool} from 'sanity/presentation'
 
 import {schemaTypes} from './schemas'
+import {assist} from '@sanity/assist'
 
 export const projectId = process.env.SANITY_STUDIO_PROJECT_ID!
 export const dataset = process.env.SANITY_STUDIO_DATASET!
@@ -14,6 +15,7 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
+    assist(),
     structureTool(),
     presentationTool({
       previewUrl: {

@@ -53,7 +53,11 @@
       paintings?.filter(painting => {
         const matchesTags =
           selectedTags.length === 0 ||
-          selectedTags.every(tag => painting.tagsV2.some(t => t.name === tag))
+          selectedTags.every(
+            tag =>
+              Array.isArray(painting.tagsV2) &&
+              painting.tagsV2.some(t => t.name === tag)
+          )
 
         const matchesSearch =
           searchQuery === '' ||
@@ -65,32 +69,33 @@
   }
 
   function sortPaintings(paintings: iSanityPainting[]) {
+    const sortedPaintings = [...paintings] // Create a new array to avoid mutating the original
     switch (sortOption) {
       case 'newest':
-        return paintings.sort(
+        return sortedPaintings.sort(
           (a, b) =>
             new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
         )
       case 'oldest':
-        return paintings.sort(
+        return sortedPaintings.sort(
           (a, b) =>
             new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
         )
       case 'mostLiked':
-        return paintings.sort((a, b) => b.likes - a.likes)
+        return sortedPaintings.sort((a, b) => b.likes - a.likes)
       case 'mostViewed':
-        return paintings.sort((a, b) => b.viewsCount - a.viewsCount)
+        return sortedPaintings.sort((a, b) => b.viewsCount - a.viewsCount)
       case 'random':
-        return paintings
+        return sortedPaintings // No sorting needed
       default:
-        return paintings
+        return sortedPaintings
     }
   }
 
   function updateFilteredPaintings() {
     if (paintings) {
       const filtered = filterPaintings()
-      filteredPaintings = sortPaintings(filtered)
+      filteredPaintings = sortPaintings(filtered) // Assign a new array to trigger reactivity
       updateSessionStorage()
     }
   }
@@ -197,7 +202,9 @@
           { value: 'mostLiked', label: 'Most Liked' },
           { value: 'mostViewed', label: 'Most Viewed' }
         ]}
-        on:change={() => updateFilteredPaintings()}
+        on:change={() => {
+          updateFilteredPaintings()
+        }}
       />
 
       <!-- Filter Button -->
@@ -266,7 +273,7 @@
     <div
       class="grid max-w-screen-xl grid-cols-1 gap-5 p-4 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
-      {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (painting.slug)}
+      {#each filteredPaintings.slice(0, visiblePaintingsCount) as painting, index (`${painting.slug}-${index}`)}
         <PaintingCard {painting} {index} />
       {/each}
     </div>
