@@ -12,14 +12,15 @@
         @apply scrollbar-hidden;
     }
 
-    /*
-  html {
-    @apply cursor-auto;
-    @apply text-base;
-    @apply font-roboto;
-    font-family: 'Inter', sans-serif;
-  }
-  */
+
+    h1, h2, h3, h4, h5, h6 {
+      @apply text-balance
+    }
+
+    p {
+      @apply max-w-[65ch];
+      @apply text-pretty;
+    }
 
     body {
         @apply bg-tertiary;
@@ -42,37 +43,7 @@
         @apply font-oswald;
     }
 
-    /*
-  h1,
-  h2,
-  h3 {
-    @apply font-serif;
-    font-family: "Playfair Display", serif;
-  }
-
-  */
-    /*
-  body {
-    @apply font-sans;
-    font-family: "Roboto", sans-serif;
-  }
-  */
 }
-
-/* input[type='range'] {
-  &::-webkit-slider-runnable-track {
-    @apply bg-gray-300;
-  }
-  &::-webkit-slider-thumb {
-    @apply bg-blue-500;
-  }
-  &::-moz-range-progress {
-    @apply bg-blue-500;
-  }
-  &::-moz-range-track {
-    @apply bg-gray-300;
-  }
-} */
 
 @layer utilities {
     .scrollbar-hidden::-webkit-scrollbar {

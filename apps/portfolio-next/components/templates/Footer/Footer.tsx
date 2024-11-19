@@ -24,9 +24,6 @@ const Footer = () => {
         Design system
       </Link>
       <Link href="/contact">Contact</Link>
-      <Link href="/style">Styleguide</Link>
-      <Link href="/test">Test Pages</Link>
-      <p>Powred by Next.js</p>
     </motion.footer>
   )
 }
