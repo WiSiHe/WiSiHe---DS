@@ -3,7 +3,7 @@ import Button from 'components/atoms/Button'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRef, useState } from 'react'
+import { useRef, useState, type JSX } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { isEmptyArray } from 'utils/array'
 

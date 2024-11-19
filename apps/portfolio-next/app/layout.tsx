@@ -6,7 +6,7 @@ import { Viewport } from 'next'
 import dynamic from 'next/dynamic'
 import { Inter, Oswald } from 'next/font/google'
 import { draftMode } from 'next/headers'
-import { Suspense } from 'react'
+import { Suspense, type JSX } from 'react';
 
 import SkipToMainContentLink from '@/components/atoms/SkipToMainContentLink'
 import ThemeProvider from '@/components/atoms/ThemeProvider'
@@ -100,9 +100,9 @@ const jsonLdSite = {
   ]
 }
 
-export default function RootLayout({ children }: RootProps): JSX.Element {
+export default async function RootLayout({ children }: RootProps): Promise<JSX.Element> {
   return (
-    <html lang="en" className="scroll-smooth">
+    (<html lang="en" className="scroll-smooth">
       <head>
         <link rel="icon" href="/icons/wisihe.svg" sizes="any" />
         <meta name="theme-color" content="#DE0D92" />
@@ -138,9 +138,9 @@ export default function RootLayout({ children }: RootProps): JSX.Element {
           </Suspense>
           <Analytics />
           <SpeedInsights />
-          {draftMode().isEnabled && <LiveVisualEditing />}
+          {(await draftMode()).isEnabled && <LiveVisualEditing />}
         </ThemeProvider>
       </body>
-    </html>
-  )
+    </html>)
+  );
 }

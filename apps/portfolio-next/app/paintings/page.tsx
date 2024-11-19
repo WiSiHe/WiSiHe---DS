@@ -3,6 +3,8 @@ import GalleryPage from 'components/pages/GalleryPage'
 import { getAllTagsAndPaintingsLight } from 'lib/api'
 import { notFound } from 'next/navigation'
 
+import type { JSX } from 'react'
+
 export const metadata = {
   title: 'Paintings | WiSiHe',
   description: 'A gallery of some of my paintings',
@@ -17,7 +19,7 @@ export const metadata = {
   url: 'https://wisihe.no/paintings'
 }
 
-export const revalidate = 60 * 60 * 24 // 24 hours
+// export const revalidate = 60 * 60 * 24 // 24 hours
 
 async function getAllPaintings() {
   const { paintings = [], tags = [] } = await getAllTagsAndPaintingsLight()

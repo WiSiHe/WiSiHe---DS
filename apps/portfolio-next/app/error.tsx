@@ -1,5 +1,7 @@
-'use client'
+'use client';
 import Main from '@/components/atoms/Main/Main'
+
+import type { JSX } from "react";
 
 type Error = {
   message: string

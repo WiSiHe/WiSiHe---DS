@@ -6,7 +6,7 @@ import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type JSX } from 'react';
 import { FaHamburger } from 'react-icons/fa'
 import { cn } from 'utils/utility'
 

@@ -11,7 +11,8 @@ export function generateStaticParams() {
     return generateStaticSlugs("project")
 }
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata(props: { params: Promise<Params> }) {
+    const params = await props.params;
     const painting = await getData(params.slug)
 
     if (!painting) return null
@@ -39,7 +40,8 @@ interface Params {
     slug: string
 }
 
-export default async function LandingPage({ params }: { params: Params }) {
+export default async function LandingPage(props: { params: Promise<Params> }) {
+    const params = await props.params;
     const project = await getData(params.slug)
 
     if (!project) {

@@ -7,6 +7,8 @@ const AboutPagePreview = dynamic(() => import('@/components/pages/AboutPage/Abou
 
 import { loadHomePage } from '@/sanity/loader/loadQuery'
 
+import type { JSX } from "react";
+
 export const metadata = {
   title: 'Home | WiSiHe',
   description: 'A gallery of some of my paintings',
@@ -18,7 +20,7 @@ export default async function Home(): Promise<JSX.Element> {
   // const initial = await getAllPaintings()
   const initial = await loadHomePage()
 
-  if (draftMode().isEnabled) {
+  if ((await draftMode()).isEnabled) {
     return (
       <Main
         noTopPadding

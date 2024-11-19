@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { iSanityPaintingTag } from 'lib/models/objects/SanityTag'
 import { useCombinedStore } from 'lib/store'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Fragment } from 'react'
+import { Fragment, type JSX } from 'react';
 import { IoClose } from 'react-icons/io5'
 import { isEmptyArray } from 'utils/array'
 import { slugify } from 'utils/string'

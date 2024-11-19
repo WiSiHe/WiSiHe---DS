@@ -5,6 +5,8 @@ import LinkButton from '@/components/atoms/LinkButton/LinkButton'
 import CustomPortableText from '@/components/molecules/CustomPortableText'
 import { iSanityPainting } from '@/lib/models/objects/sanityPainting'
 
+import type { JSX } from "react";
+
 const CarouselStatic = dynamic(() => import('@/components/molecules/CarouselStatic'))
 
 type PaintingSection = {
