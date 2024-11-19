@@ -1,6 +1,8 @@
 import Main from 'components/atoms/Main/Main'
 import ContactPage from 'components/pages/ContactPage'
 
+import type { JSX } from "react";
+
 export const metadata = {
   title: 'Contact | WiSiHe',
   description: 'Contact me',

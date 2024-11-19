@@ -3,6 +3,8 @@ import { BiGame } from 'react-icons/bi'
 import { BsFillBrushFill } from 'react-icons/bs'
 import { HiOutlineDesktopComputer } from 'react-icons/hi'
 
+import type { JSX } from "react";
+
 const gameIconVariant = {
   hover: {
     scale: 1.2,

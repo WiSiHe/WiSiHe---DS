@@ -1,6 +1,6 @@
 import "server-only"
 
-import { draftMode } from "next/headers"
+import { draftMode, type UnsafeUnwrappedDraftMode } from "next/headers";
 import {
     HomePagePayload,
     PagePayload,
@@ -42,7 +42,7 @@ const usingCdn = serverClient.config().useCdn
 // Automatically handle draft mode
 export const loadQuery = ((query, params = {}, options = {}) => {
     const {
-        perspective = draftMode().isEnabled ? "previewDrafts" : "published",
+        perspective = (draftMode() as unknown as UnsafeUnwrappedDraftMode).isEnabled ? "previewDrafts" : "published",
     } = options
     // Don't cache by default
     let revalidate: NextFetchRequestConfig["revalidate"] = 0
@@ -60,8 +60,8 @@ export const loadQuery = ((query, params = {}, options = {}) => {
         },
         perspective,
         // Enable stega if in Draft Mode, to enable overlays when outside Sanity Studio
-        stega: draftMode().isEnabled,
-    })
+        stega: (draftMode() as unknown as UnsafeUnwrappedDraftMode).isEnabled,
+    });
 }) satisfies typeof queryStore.loadQuery
 
 /**

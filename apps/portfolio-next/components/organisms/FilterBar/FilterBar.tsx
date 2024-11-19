@@ -1,10 +1,12 @@
-'use client'
+'use client';
 import ScrollToTopButton from 'components/atoms/ScrollToTopButton/ScrollToTopButton'
 import FilterSortButton from 'components/molecules/FilterSortButton/FilterSortButton'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCombinedStore } from 'lib/store'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { IoFilterSharp } from 'react-icons/io5'
+
+import type { JSX } from "react";
 
 const FilterBar = (): JSX.Element => {
   const router = useRouter()

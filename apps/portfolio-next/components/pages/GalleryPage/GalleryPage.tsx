@@ -11,7 +11,7 @@ import { iSanityPainting } from 'lib/models/objects/sanityPainting'
 import { iSanityPaintingTag } from 'lib/models/objects/SanityTag'
 import { useCombinedStore } from 'lib/store'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type JSX } from 'react';
 import { sortPaintings } from 'utils/painting'
 import { slugify } from 'utils/string'
 

@@ -5,6 +5,8 @@ import HeroImageSection from '@/components/templates/HeroImageSection'
 import { iSanityPainting } from '@/lib/models/objects/sanityPainting'
 import { ShowcaseProject } from '@/types'
 
+import type { JSX } from "react";
+
 const PaintingSection = dynamic(() => import('components/templates/PantingSection'))
 
 const ProjectsSection = dynamic(() => import('components/templates/ProjectsSection'))

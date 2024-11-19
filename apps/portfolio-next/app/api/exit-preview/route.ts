@@ -3,7 +3,7 @@ import { draftMode } from "next/headers"
 
 // export async function GET(req: Request) {
 export async function GET() {
-    draftMode().disable()
+    (await draftMode()).disable()
     // Redirect to the preview path
     // Note: Not using «redirect()» because it has a bug at the time of writing this»
 

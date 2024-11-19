@@ -20,8 +20,8 @@ export async function GET(req: Request) {
     }
 
     // This flips preview mode to true for all Next pages
-    draftMode().enable()
-    const data = draftMode()
+    (await draftMode()).enable()
+    const data = await draftMode()
 
     // redirect to the correct page to preview
     const path = resolvePath(docType, docId, docCollection, docSlug)
@@ -63,7 +63,7 @@ function getPathForId(_id: string): string {
 // Creates the path for the page
 function buildTypePath(basePath: string, id?: string, slug?: string): string {
     if (slug) {
-        return `${basePath.replace(/\/$/, "")}/${slug}`
+        return `${basePath.replace(/\/$/, "")}/${slug}`;
     }
     if (id) {
         return `${basePath}/${id}`

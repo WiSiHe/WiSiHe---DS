@@ -5,7 +5,7 @@ import LinkButton from 'components/atoms/LinkButton/LinkButton'
 import GreeterCard from 'components/molecules/GreeterCard'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, type JSX } from 'react';
 import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa'
 import { cn } from 'utils/utility'
 

@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const nextConfig = {
   reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true
-  },
   images: {
     remotePatterns: [
       {

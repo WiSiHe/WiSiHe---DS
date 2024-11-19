@@ -15,14 +15,14 @@ import { urlForOpenGraphImage } from '@/sanity/lib/utils'
 import { generateStaticSlugs } from '@/sanity/loader/generateStaticSlugs'
 import { loadPainting } from '@/sanity/loader/loadQuery'
 
+import type { JSX } from "react";
+
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const { data: painting } = await loadPainting(params.slug)
 
   if (!painting) {
@@ -54,7 +54,8 @@ export function generateStaticParams() {
   return generateStaticSlugs('painting')
 }
 
-export default async function LandingPage({ params }: Props): Promise<JSX.Element> {
+export default async function LandingPage(props: Props): Promise<JSX.Element> {
+  const params = await props.params;
   const initial = await loadPainting(params.slug)
 
   if (!initial) {
@@ -117,7 +118,7 @@ export default async function LandingPage({ params }: Props): Promise<JSX.Elemen
     }
   }
 
-  if (draftMode().isEnabled) {
+  if ((await draftMode()).isEnabled) {
     return (
       <Main className="grid min-h-screen grid-cols-12 pt-16 mx-auto lg:pt-20 lg:p-4 max-w-screen-3xl lg:gap-4 overflow-clip">
         <PaintingPagePreview params={params} initial={initial} />
