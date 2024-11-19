@@ -19,3 +19,42 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+p {
+  max-width: 65ch;
+  text-wrap: pretty;
+}
+
+@layer base {
+  body {
+    @apply bg-tertiary;
+    @apply font-inter;
+  }
+
+  h1 {
+    @apply text-3xl xl:text-6xl;
+  }
+
+  h2 {
+    @apply text-2xl xl:text-5xl;
+  }
+
+  h3 {
+    @apply text-xl xl:text-4xl;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-oswald;
+  }
+}
