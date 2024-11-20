@@ -16,7 +16,7 @@ export default async function Home() {
   const { showcasePaintings, title } = homepage;
 
   const firstPainting = showcasePaintings[0];
-  console.log('firstPainting', firstPainting);
+
   return (
     <div>
       <h1>{title}</h1>
