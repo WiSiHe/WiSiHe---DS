@@ -34,6 +34,31 @@ p {
   text-wrap: pretty;
 }
 
+.card {
+  background-color: red;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes appear {
+      from {
+        opacity: 0.9;
+        transform: translateY(200px) scale(0.85);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .within {
+      animation: appear linear;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
+
 @layer base {
   body {
     @apply bg-tertiary;
