@@ -1,0 +1,85 @@
+'use client';
+import useScrollPosition from '@/hooks/useScrollPosition';
+import { cn } from '@wisihe/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { IoArrowUpSharp } from 'react-icons/io5';
+
+interface ScrollToTopButtonProps {
+  isFixed?: boolean;
+}
+
+const SCROLL_THRESHOLD = 200;
+
+const buttonVariants = {
+  hidden: {
+    opacity: 0,
+    y: 100,
+    transition: {
+      type: 'spring',
+      bounce: 0.4,
+      duration: 1,
+    },
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      bounce: 0.4,
+      duration: 1,
+    },
+  },
+};
+
+const buttonClassNames = cn(
+  'flex items-center justify-center rounded-full p-4',
+  'transition-all duration-200 ease-in-out',
+  'bg-white shadow hover:bg-primary hover:text-white',
+  'ring-highlight focus:outline-none focus-visible:ring',
+  'focus-visible:bg-primary focus-visible:text-white',
+  'active:bg-highlight hover:ring'
+);
+
+const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
+  isFixed = true,
+}) => {
+  const scrollPosition = useScrollPosition();
+
+  const isVisible = scrollPosition > SCROLL_THRESHOLD;
+
+  const handleClick = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          variants={buttonVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          className={cn(
+            'flex-shrink-0',
+            isFixed && 'fixed bottom-8 right-8 z-10'
+          )}
+        >
+          <motion.button
+            onClick={handleClick}
+            whileHover={{ scale: 1.1 }}
+            className={buttonClassNames}
+            aria-label="Scroll to top"
+          >
+            <IoArrowUpSharp />
+          </motion.button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default ScrollToTopButton;

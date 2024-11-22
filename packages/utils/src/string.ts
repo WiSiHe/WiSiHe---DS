@@ -1,3 +1,6 @@
+import { ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 export function toUpperCase(str: string): string {
   return str.toUpperCase();
 }
@@ -13,3 +16,7 @@ export const slugify = (str: string): string => {
     .replace(/[^\w ]+/g, '')
     .replace(/ +/g, '-');
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}

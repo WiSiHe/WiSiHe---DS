@@ -117,3 +117,25 @@ export const homePageQuery = defineQuery(`
         ${showCasePaintingFields}
     }
     `);
+
+export const getAllPaintingsandTags = defineQuery(`
+    {
+      "paintings": *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {
+        _id,
+        "slug":slug.current,
+        title,
+        tagsV2[]->{name},
+        "viewsCount": count(views),
+        paintedAt,
+        video,
+        "imagesCount": coalesce(count(images), 0),
+        "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
+        image{
+          ...,
+          "lqip": asset->metadata.lqip,
+          "aspectRatio": asset->metadata.dimensions.aspectRatio
+        }
+      },
+      "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}
+    }
+    `);
