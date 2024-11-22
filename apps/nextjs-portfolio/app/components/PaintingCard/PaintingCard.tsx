@@ -11,6 +11,7 @@ import { useMemo } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import Chip from '../Chip/Chip';
 
 type PaintingCardProps = {
   paintingData: GetAllPaintingsandTagsResult['paintings'][0];
@@ -58,6 +59,11 @@ const PaintingCard = ({
         'relative aspect-portrait within overflow-hidden bg-dark text-white'
       )}
     >
+      {filteredTags.map((tag) => (
+        <div key={tag.name}>
+          <Chip label={tag.name} />
+        </div>
+      ))}
       {image ? (
         <Image
           sizes="(min-width: 1040px) 20vw, 50vw"

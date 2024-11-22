@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { Suspense } from 'react';
 
 export default async function Paintings() {
   const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
@@ -60,7 +61,9 @@ export default async function Paintings() {
                 key={painting._id}
                 className="relative col-span-3 aspect-square"
               >
-                <PaintingCard paintingData={painting} />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <PaintingCard paintingData={painting} />
+                </Suspense>
               </div>
             );
           })}

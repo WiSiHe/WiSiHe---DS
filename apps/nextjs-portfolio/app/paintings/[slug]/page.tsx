@@ -37,7 +37,7 @@ export default async function PaintingPage(props: Props) {
       <Image
         className="object-cover -z-10"
         fill={true}
-        alt={stegaClean(painting?.alt) || ''}
+        alt={stegaClean(painting?.image.alt) || ''}
         src={
           urlForImage(image)
             ?.height(720)
