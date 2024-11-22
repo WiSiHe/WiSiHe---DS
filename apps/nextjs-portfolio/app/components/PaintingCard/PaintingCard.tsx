@@ -10,30 +10,13 @@ import { useMemo } from 'react';
 
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
+import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 
-type ImageType = {
-  [key: string]: unknown;
-  lqip: string;
-};
-
-type Tag = {
-  name: string;
-};
-
-type Painting = {
-  image: ImageType;
-  title: string;
-  video: string;
-  tagsV2: (Tag | null)[];
-  imagesCount: number;
-  slug: string;
-};
-
-interface PaintingCardProps {
-  paintingData: Painting | null; // Allow null for safety
+type PaintingCardProps = {
+  paintingData: GetAllPaintingsandTagsResult['paintings'][0];
   shouldBeLazy?: boolean;
   storybook?: boolean;
-}
+};
 
 const PaintingCard = ({
   paintingData,
@@ -45,8 +28,7 @@ const PaintingCard = ({
 
   // Compute filtered tags and properties
   const { filteredTags, salesTag, nsfwTag } = useMemo(() => {
-    const tags =
-      paintingData?.tagsV2?.filter((t): t is Tag => t !== null) || [];
+    const tags = paintingData?.tagsV2?.filter((t) => t !== null) || [];
     return {
       filteredTags: tags,
       salesTag: tags.find((t) => t.name === 'Store'),
@@ -54,7 +36,6 @@ const PaintingCard = ({
     };
   }, [paintingData]);
 
-  console.log('filteredTags', filteredTags);
   const hasStoreLinks = !!salesTag;
   const isNsfw = !!nsfwTag;
   const isNsfwUrl = filters?.includes('nsfw');
@@ -74,7 +55,7 @@ const PaintingCard = ({
   return (
     <article
       className={cn(
-        'relative aspect-portrait overflow-hidden bg-dark text-white'
+        'relative aspect-portrait within overflow-hidden bg-dark text-white'
       )}
     >
       {image ? (
@@ -83,7 +64,7 @@ const PaintingCard = ({
           fill
           priority={shouldBeLazy}
           placeholder="blur"
-          blurDataURL={image?.lqip}
+          blurDataURL={image?.lqip || undefined}
           quality={60}
           unoptimized={storybook}
           alt={title || 'Painting'}
