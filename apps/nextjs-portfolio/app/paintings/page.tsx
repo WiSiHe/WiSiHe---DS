@@ -1,10 +1,7 @@
 import { sanityFetch } from '@/sanity/lib/live';
-import {
-  allPaintingsQuery,
-  getAllPaintingsandTags,
-} from '@/sanity/lib/queries';
+import { getAllPaintingsandTags } from '@/sanity/lib/queries';
 import { Metadata } from 'next';
-import { isEmptyArray } from '../../../../packages/utils/src/array';
+
 import PaintingCard from '../components/PaintingCard/PaintingCard';
 import { isEmptyObject } from '@wisihe/utils';
 import { notFound } from 'next/navigation';
@@ -16,10 +13,11 @@ export const metadata: Metadata = {
   description: 'A gallery of some of my paintings',
 };
 
+import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+
 export default async function Paintings() {
-  const [{ data }] = await Promise.all([
-    sanityFetch({ query: getAllPaintingsandTags }),
-  ]);
+  const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
+    await Promise.all([sanityFetch({ query: getAllPaintingsandTags })]);
 
   if (isEmptyObject(data)) {
     return notFound();
@@ -29,18 +27,13 @@ export default async function Paintings() {
 
   const sortedTags = tags
     .filter((tag: { paintingsCount: number }) => tag.paintingsCount > 2)
-    .sort(
-      (
-        a: { name: string; paintingsCount: number },
-        b: { name: string; paintingsCount: number }
-      ) => {
-        if (a.name === 'Store') return -1;
-        if (b.name === 'Store') return 1;
-        return (
-          b.paintingsCount - a.paintingsCount || a.name.localeCompare(b.name)
-        );
-      }
-    );
+    .sort((a, b) => {
+      if (a.name === 'Store') return -1;
+      if (b.name === 'Store') return 1;
+      return (
+        b.paintingsCount - a.paintingsCount || a.name.localeCompare(b.name)
+      );
+    });
 
   return (
     <>
@@ -61,24 +54,16 @@ export default async function Paintings() {
           )}
         </div>
         <div className="grid w-full grid-cols-12 gap-4">
-          {paintings.map(
-            (painting: {
-              _id: string;
-              slug: { current: string };
-              title: string;
-              alt: string;
-              image: unknown;
-            }) => {
-              return (
-                <div
-                  key={painting._id}
-                  className="relative col-span-3 aspect-square"
-                >
-                  <PaintingCard paintingData={painting} />
-                </div>
-              );
-            }
-          )}
+          {paintings.map((painting) => {
+            return (
+              <div
+                key={painting._id}
+                className="relative col-span-3 aspect-square"
+              >
+                <PaintingCard paintingData={painting} />
+              </div>
+            );
+          })}
         </div>
       </div>
       <ScrollToTopButton />
