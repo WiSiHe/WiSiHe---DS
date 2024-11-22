@@ -1,6 +1,7 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
+import { isEmptyArray } from '@wisihe/utils';
 import { stegaClean } from 'next-sanity';
 import Image from 'next/image';
 
@@ -15,6 +16,10 @@ export default async function Home() {
 
   const { showcasePaintings, title } = homepage;
 
+  if (isEmptyArray(showcasePaintings) || !showcasePaintings) {
+    return null;
+  }
+
   const firstPainting = showcasePaintings[0];
 
   return (
@@ -23,7 +28,7 @@ export default async function Home() {
       <Image
         className="object-cover -z-10"
         fill={true}
-        alt={stegaClean(firstPainting.painting?.alt) || ''}
+        alt={stegaClean(firstPainting.image?.alt) || ''}
         src={
           urlForImage(firstPainting.image)
             ?.height(720)
