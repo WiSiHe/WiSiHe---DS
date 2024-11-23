@@ -19,7 +19,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
 
   // Memoize the filtered and sorted paintings
   const filteredPaintings = useMemo(() => {
-    // Filtering logic (same as before)
+    // Filtering logic
     const filtered = paintings.filter((painting) => {
       if (filters.length === 0) return true;
 
@@ -29,9 +29,27 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
       return filters.every((filter) => paintingTagNames.includes(filter));
     });
 
-    // Sorting logic (same as before)
+    // Sorting logic
     if (sort) {
-      // Sorting code
+      if (sort === 'newest') {
+        // Sort by newest (using 'paintedAt' field)
+        filtered.sort(
+          (a, b) =>
+            new Date(b.paintedAt).getTime() - new Date(a.paintedAt).getTime()
+        );
+      } else if (sort === 'oldest') {
+        // Sort by oldest (using 'paintedAt' field)
+        filtered.sort(
+          (a, b) =>
+            new Date(a.paintedAt).getTime() - new Date(b.paintedAt).getTime()
+        );
+      } else if (sort === 'most-viewed') {
+        // Sort by most viewed (using 'viewsCount' field)
+        filtered.sort((a, b) => (b.viewsCount || 0) - (a.viewsCount || 0));
+      } else if (sort === 'random') {
+        // Random sort
+        filtered.sort(() => Math.random() - 0.5);
+      }
     }
 
     return filtered;
