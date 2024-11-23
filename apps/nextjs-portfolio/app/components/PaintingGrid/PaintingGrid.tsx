@@ -2,7 +2,7 @@
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 
 type PaintingGridProps = {
   paintings: GetAllPaintingsandTagsResult['paintings'];
@@ -46,10 +46,11 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
       } else if (sort === 'most-viewed') {
         // Sort by most viewed (using 'viewsCount' field)
         filtered.sort((a, b) => (b.viewsCount || 0) - (a.viewsCount || 0));
-      } else if (sort === 'random') {
-        // Random sort
-        filtered.sort(() => Math.random() - 0.5);
       }
+      //   else if (sort === 'random') {
+      //     // Random sort
+      //     filtered.sort(() => Math.random() - 0.5);
+      //   }
     }
 
     return filtered;
@@ -83,7 +84,11 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
           key={painting._id}
           className="relative col-span-full sm:col-span-6 md:col-span-3"
         >
-          <PaintingCard paintingData={painting} />
+          <Suspense
+            fallback={<div className="aspect-portrait">Loading...</div>}
+          >
+            <PaintingCard paintingData={painting} />
+          </Suspense>
         </div>
       ))}
     </div>

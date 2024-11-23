@@ -1,8 +1,6 @@
+import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
-import { urlForImage } from '@/sanity/lib/utils';
-import { stegaClean } from 'next-sanity';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -29,25 +27,5 @@ export default async function PaintingPage(props: Props) {
     return notFound();
   }
 
-  const { image, title } = painting;
-
-  return (
-    <section>
-      <h1>{title}</h1>
-      <Image
-        className="object-cover -z-10"
-        fill={true}
-        alt={stegaClean(painting?.image.alt) || ''}
-        src={
-          urlForImage(image)
-            ?.height(720)
-            .width(1280)
-            .auto('format')
-            .url() as string
-        }
-        sizes="100vw"
-        priority
-      />
-    </section>
-  );
+  return <PaintingDetail paintingData={painting} />;
 }

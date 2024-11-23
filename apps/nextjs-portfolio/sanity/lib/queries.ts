@@ -92,7 +92,39 @@ export const postQuery = defineQuery(`
 `);
 
 export const paintingQuery = defineQuery(`
-    *[_type == "painting" && slug.current == $slug] [0]
+  *[_type == "painting" && slug.current == $slug][0] {
+    _id,
+    title,
+    'slug': slug.current,
+    description,
+    seoDescription,
+    format,
+    "likesCount": count(likes),
+    "viewsCount": count(views),
+    paintedAt,
+    artstationUrl,
+    format,
+    redbubbleUrl,
+    society6Url,
+    inPrintUrl,
+    image{
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "altText": altText
+    },
+    "images": coalesce(
+      images[]{
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio,
+        "altText": altText
+      },
+      []
+    ),
+    tagsV2[]->{name},
+    video
+  }
 `);
 
 export const postPagesSlugs = defineQuery(`

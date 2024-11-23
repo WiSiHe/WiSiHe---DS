@@ -580,15 +580,21 @@ export type MorePostsQueryResult = Array<never>;
 // Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        link {      ...,      _type == "link" => {        "page": page->slug.current,        "post": post->slug.current        }      }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
 export type PostQueryResult = null;
 // Variable: paintingQuery
-// Query: *[_type == "painting" && slug.current == $slug] [0]
+// Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    format,    "likesCount": count(likes),    "viewsCount": count(views),    paintedAt,    artstationUrl,    format,    redbubbleUrl,    society6Url,    inPrintUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "altText": altText    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
 export type PaintingQueryResult = {
   _id: string;
-  _type: "painting";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
   title: string;
-  slug: Slug;
+  slug: string;
+  description: string;
+  seoDescription: string | null;
+  format: "landscape" | "portrait" | "square";
+  likesCount: null;
+  viewsCount: number | null;
+  paintedAt: string;
+  artstationUrl: string | null;
+  redbubbleUrl: string | null;
+  society6Url: string | null;
+  inPrintUrl: string | null;
   image: {
     asset?: {
       _ref: string;
@@ -600,10 +606,11 @@ export type PaintingQueryResult = {
     crop?: SanityImageCrop;
     alt: string;
     _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+    altText: null;
   };
-  description: string;
-  seoDescription?: string;
-  images?: Array<{
+  images: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -616,29 +623,14 @@ export type PaintingQueryResult = {
     alt: string;
     _type: "image";
     _key: string;
-  }>;
-  video?: string;
-  format: "landscape" | "portrait" | "square";
-  views?: Array<{
-    viewerId?: string;
-    timestamp?: string;
-    _key: string;
-  }>;
-  likes?: number;
-  redbubbleUrl?: string;
-  society6Url?: string;
-  artstationUrl?: string;
-  inPrintUrl?: string;
-  instagramUrl?: string;
-  twitterUrl?: string;
-  paintedAt: string;
+    lqip: string | null;
+    aspectRatio: number | null;
+    altText: null;
+  }> | Array<never>;
   tagsV2: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
+    name: string;
   }>;
+  video: string | null;
 } | null;
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
@@ -726,7 +718,7 @@ declare module "@sanity/client" {
     "\n    *[_type == \"painting\" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        \"date\": coalesce(date, _updatedAt),\n    }\n    ": AllPaintingsQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": MorePostsQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == \"link\" => {\n        \"page\": page->slug.current,\n        \"post\": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
-    "\n    *[_type == \"painting\" && slug.current == $slug] [0]\n": PaintingQueryResult;
+    "\n  *[_type == \"painting\" && slug.current == $slug][0] {\n    _id,\n    title,\n    'slug': slug.current,\n    description,\n    seoDescription,\n    format,\n    \"likesCount\": count(likes),\n    \"viewsCount\": count(views),\n    paintedAt,\n    artstationUrl,\n    format,\n    redbubbleUrl,\n    society6Url,\n    inPrintUrl,\n    image{\n      ...,\n      \"lqip\": asset->metadata.lqip,\n      \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n      \"altText\": altText\n    },\n    \"images\": coalesce(\n      images[]{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n        \"altText\": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n": PaintingQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"painting\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PaintingsSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;

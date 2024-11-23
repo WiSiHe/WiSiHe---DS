@@ -98,7 +98,7 @@ const PaintingCard = ({
   return (
     <motion.article
       className={cn(
-        'relative aspect-portrait group within overflow-hidden bg-dark text-white rounded-2xl'
+        'relative aspect-portrait group overflow-hidden bg-dark text-white rounded-2xl'
       )}
       whileHover="hover"
       initial="rest"
@@ -120,22 +120,26 @@ const PaintingCard = ({
         ))}
       </motion.ul>
 
-      {/* Animated Icons */}
-      <motion.ul
-        className="absolute z-20 flex flex-col gap-1 text-xs right-2 top-2"
-        variants={iconsListVariants}
-      >
-        {hasStoreLinks && (
-          <motion.li
-            className="p-2 text-xs rounded-full text-dark bg-highlight"
-            variants={iconVariants}
-          >
+      {/* Always Visible Icon */}
+      {hasStoreLinks && (
+        <div className="absolute z-20 right-2 top-2">
+          <div className="p-2 text-xs rounded-full text-dark bg-highlight">
             <FaShoppingCart
               aria-label="Available for sale"
               className="w-4 h-4"
             />
-          </motion.li>
+          </div>
+        </div>
+      )}
+
+      {/* Animated Icons */}
+      <motion.ul
+        className={cn(
+          'absolute z-20 flex flex-col gap-1 text-xs right-2',
+          hasStoreLinks ? 'top-12' : 'top-2'
         )}
+        variants={iconsListVariants}
+      >
         {imagesCount > 0 && (
           <motion.li
             className="p-2 text-xs text-white rounded-full bg-primary"
@@ -200,30 +204,16 @@ const PaintingCard = ({
         />
       )}
 
-      {/* Animated Title */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-2 p-4 text-xs border-t bg-dark/50 backdrop-blur-sm border-dark"
-        variants={{
-          rest: { opacity: 1, y: 0 },
-          hover: { opacity: 1, y: -10 },
-        }}
-        transition={{ duration: 0.3 }}
+      <Link
+        href={`/paintings/${slug}`}
+        className="before:absolute before:inset-0 before:z-0"
       >
-        {slug ? (
-          <Link
-            href={`/paintings/${slug}`}
-            className="before:absolute before:inset-0 before:z-0"
-          >
-            <h2 className="text-base text-white capitalize line-clamp-1 font-inter">
-              <strong>{title}</strong>
-            </h2>
-          </Link>
-        ) : (
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg">
           <h2 className="text-base text-white capitalize line-clamp-1 font-inter">
             <strong>{title}</strong>
           </h2>
-        )}
-      </motion.div>
+        </div>
+      </Link>
     </motion.article>
   );
 };
