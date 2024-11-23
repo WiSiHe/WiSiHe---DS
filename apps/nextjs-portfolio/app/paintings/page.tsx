@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import Filters from '../components/Filters/Filters';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
+import { Suspense } from 'react';
 
 export default async function Paintings() {
   const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
@@ -42,8 +43,13 @@ export default async function Paintings() {
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>
         </div>
-        <Filters tags={sortedTags} />
-        <PaintingGrid paintings={paintings} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Filters tags={sortedTags} />
+        </Suspense>
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <PaintingGrid paintings={paintings} />
+        </Suspense>
       </div>
       <ScrollToTopButton />
     </>

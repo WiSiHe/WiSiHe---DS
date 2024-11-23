@@ -2,10 +2,11 @@
 
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import Chip from '../Chip/Chip';
 import { Dialog, Listbox, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { FaFilter } from 'react-icons/fa';
 
 type FiltersProps = {
   tags: GetAllPaintingsandTagsResult['tags'];
@@ -56,15 +57,14 @@ const Filters = ({ tags }: FiltersProps) => {
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-4">
-      {/* Button to open the modal */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+        className="flex items-center gap-1 px-4 py-2 text-white rounded bg-primary hover:bg-primary/90"
       >
+        <FaFilter />
         Filters & Sort
       </button>
 
-      {/* Modal */}
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog
           as="div"
