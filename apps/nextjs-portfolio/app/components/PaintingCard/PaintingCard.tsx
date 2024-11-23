@@ -98,7 +98,7 @@ const PaintingCard = ({
   return (
     <motion.article
       className={cn(
-        'relative aspect-portrait group overflow-hidden bg-dark text-white rounded-2xl'
+        'relative aspect-portrait within group overflow-hidden bg-dark text-white rounded-2xl'
       )}
       whileHover="hover"
       initial="rest"

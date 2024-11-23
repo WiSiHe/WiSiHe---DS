@@ -76,7 +76,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         'relative min-h-screen pt-16 lg:px-4 overflow-hidden bg-dark text-white'
       )}
     >
-      <div className="flex flex-col items-start grid-cols-12 gap-4 mx-auto max-w-screen-2xl xl:grid 2xl:gap-10 2xl:pt-4 2xl:pb-40">
+      <div className="flex flex-col items-start grid-cols-12 gap-4 mx-auto max-w-screen-2xl xl:grid 2xl:gap-10 2xl:pt-4 2xl:pb-44">
         <div className="relative w-full h-fit col-span-full xl:col-span-9 2xl:col-span-9">
           <div
             className={cn(
@@ -87,7 +87,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             <img
               src={currentImage.lqip ?? ''}
               alt={title}
-              className="absolute inset-0 object-cover w-full h-full scale-105 rounded blur-3xl"
+              className="absolute inset-0 object-cover w-full h-full scale-105 blur-3xl"
             />
 
             <Image
@@ -95,7 +95,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               alt={title}
               priority
               fill
-              className="object-cover w-full h-full"
+              className="object-cover w-full h-full lg:rounded-xl bg-dark"
             />
           </div>
 

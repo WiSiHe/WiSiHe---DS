@@ -143,12 +143,44 @@ export const pagesSlugs = defineQuery(`
 `);
 
 export const homePageQuery = defineQuery(`
-    *[_type == "home"][0]{
-        _id,
-        title,
-        ${showCasePaintingFields}
-    }
-    `);
+  *[_type == "home"][0]{
+    _id,
+    title,
+    "paintingsCount": count(*[_type == "painting"]),
+    paintingsDescription,
+    showcasePaintings[]->{
+      _type,
+      _id,
+      altText,
+      "slug": slug.current,
+      title,
+      format,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      }
+    },
+    projectsDescription,
+    showcaseProjects[]->{
+      _type,
+      _id,
+      title,
+      description,
+      seoDescription,
+      projectStart,
+      projectEnd,
+      status,
+      content,
+      name,
+      "slug": slug.current,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip
+      },
+    },
+  }
+`);
 
 export const getAllPaintingsandTags = defineQuery(`
     {
