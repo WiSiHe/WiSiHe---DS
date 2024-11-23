@@ -3,15 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { BsYoutube } from 'react-icons/bs';
-import { FaExclamation } from 'react-icons/fa';
-import { TbBoxMultiple } from 'react-icons/tb';
 import { useMemo } from 'react';
+import { BsYoutube } from 'react-icons/bs';
+import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
+import { TbBoxMultiple } from 'react-icons/tb';
 
+import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import Chip from '../Chip/Chip';
+import { motion } from 'framer-motion';
 
 type PaintingCardProps = {
   paintingData: GetAllPaintingsandTagsResult['paintings'][0];
@@ -53,53 +53,162 @@ const PaintingCard = ({
 
   const { image, title = '', video = '', imagesCount = 0, slug } = paintingData;
 
+  // Define Framer Motion variants
+  const listVariants = {
+    rest: {
+      opacity: 0,
+      y: -20,
+    },
+    hover: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const listItemVariants = {
+    rest: {
+      opacity: 0,
+      y: -10,
+    },
+    hover: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
+  const iconsListVariants = {
+    rest: { opacity: 0, x: 50 },
+    hover: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const iconVariants = {
+    rest: { opacity: 0, x: 50 },
+    hover: { opacity: 1, x: 0 },
+  };
+
   return (
-    <article
+    <motion.article
       className={cn(
-        'relative aspect-portrait within overflow-hidden bg-dark text-white'
+        'relative aspect-portrait group within overflow-hidden bg-dark text-white rounded-2xl'
       )}
+      whileHover="hover"
+      initial="rest"
+      animate="rest"
     >
-      {filteredTags.map((tag) => (
-        <div key={tag.name}>
-          <Chip label={tag.name} />
-        </div>
-      ))}
-      {image ? (
-        <Image
-          sizes="(min-width: 1040px) 20vw, 50vw"
-          fill
-          priority={shouldBeLazy}
-          placeholder="blur"
-          blurDataURL={image?.lqip || undefined}
-          quality={60}
-          unoptimized={storybook}
-          alt={title || 'Painting'}
-          src={
-            urlForImage(image)?.width(400).height(600).quality(60).url() || ''
-          }
-          className={cn(
-            'object-cover w-full h-full transition-transform duration-500 ease-in-out',
-            !isNsfw && !isNsfwUrl && 'group-hover:scale-110'
-          )}
-        />
-      ) : (
-        <div className="w-full h-full bg-dark animate-pulse" />
-      )}
+      {/* Animated Tags */}
+      <motion.ul
+        className="absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2"
+        variants={listVariants}
+      >
+        {filteredTags.map((tag) => (
+          <motion.li
+            className="px-1 text-xs text-white uppercase rounded bg-dark"
+            key={tag.name}
+            variants={listItemVariants}
+          >
+            {tag.name}
+          </motion.li>
+        ))}
+      </motion.ul>
 
+      {/* Animated Icons */}
+      <motion.ul
+        className="absolute z-20 flex flex-col gap-1 text-xs right-2 top-2"
+        variants={iconsListVariants}
+      >
+        {hasStoreLinks && (
+          <motion.li
+            className="p-2 text-xs rounded-full text-dark bg-highlight"
+            variants={iconVariants}
+          >
+            <FaShoppingCart
+              aria-label="Available for sale"
+              className="w-4 h-4"
+            />
+          </motion.li>
+        )}
+        {imagesCount > 0 && (
+          <motion.li
+            className="p-2 text-xs text-white rounded-full bg-primary"
+            variants={iconVariants}
+          >
+            <TbBoxMultiple className="w-4 h-4" />
+          </motion.li>
+        )}
+        {video && (
+          <motion.li
+            className="p-2 text-xs text-white rounded-full bg-primary"
+            variants={iconVariants}
+          >
+            <BsYoutube className="w-4 h-4" />
+          </motion.li>
+        )}
+        {isNsfw && (
+          <motion.li
+            className="p-2 text-xs text-white rounded-full bg-primary"
+            variants={iconVariants}
+          >
+            <FaExclamation className="w-4 h-4" />
+          </motion.li>
+        )}
+      </motion.ul>
+
+      {/* Animated Image */}
+      <motion.div
+        className="relative w-full h-full"
+        variants={{
+          rest: { scale: 1 },
+          hover: isNsfw || isNsfwUrl ? { scale: 1 } : { scale: 1.1 },
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        {image ? (
+          <Image
+            sizes="(min-width: 1040px) 20vw, 50vw"
+            fill
+            priority={shouldBeLazy}
+            placeholder="blur"
+            blurDataURL={image?.lqip || undefined}
+            quality={60}
+            unoptimized={storybook}
+            alt={title || 'Painting'}
+            src={
+              urlForImage(image)?.width(400).height(600).quality(60).url() || ''
+            }
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full bg-dark animate-pulse" />
+        )}
+      </motion.div>
+
+      {/* NSFW Overlay */}
       {isNsfw && !isNsfwUrl && (
-        <div className="absolute inset-0 backdrop-blur-xl" />
+        <motion.div
+          className="absolute inset-0 backdrop-blur-xl"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+        />
       )}
 
-      {hasStoreLinks && (
-        <div className="absolute flex items-center gap-2 p-2 text-xs rounded-lg left-2 top-2 bg-highlight text-dark">
-          <div className="relative w-2 h-2 rounded-full bg-dark">
-            <span className="absolute inset-0 rounded-full opacity-100 animate-ping bg-dark"></span>
-          </div>
-          <strong>For sale</strong>
-        </div>
-      )}
-
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-2 p-4 text-xs border-t bg-dark/50 backdrop-blur-sm group-hover:bg-primary border-dark">
+      {/* Animated Title */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-2 p-4 text-xs border-t bg-dark/50 backdrop-blur-sm border-dark"
+        variants={{
+          rest: { opacity: 1, y: 0 },
+          hover: { opacity: 1, y: -10 },
+        }}
+        transition={{ duration: 0.3 }}
+      >
         {slug ? (
           <Link
             href={`/paintings/${slug}`}
@@ -114,13 +223,8 @@ const PaintingCard = ({
             <strong>{title}</strong>
           </h2>
         )}
-        <div className="flex items-center gap-4 text-lg text-white">
-          {video && <BsYoutube />}
-          {imagesCount > 0 && <TbBoxMultiple />}
-          {isNsfw && <FaExclamation />}
-        </div>
-      </div>
-    </article>
+      </motion.div>
+    </motion.article>
   );
 };
 

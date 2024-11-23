@@ -2,10 +2,8 @@ import { sanityFetch } from '@/sanity/lib/live';
 import { getAllPaintingsandTags } from '@/sanity/lib/queries';
 import { Metadata } from 'next';
 
-import PaintingCard from '../components/PaintingCard/PaintingCard';
 import { isEmptyObject } from '@wisihe/utils';
 import { notFound } from 'next/navigation';
-import Chip from '../components/Chip/Chip';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 
 export const metadata: Metadata = {
@@ -14,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import { Suspense } from 'react';
+import Filters from '../components/Filters/Filters';
+import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
 
 export default async function Paintings() {
   const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
@@ -39,35 +38,12 @@ export default async function Paintings() {
   return (
     <>
       <div className="p-4 mt-16">
-        <div className="pb-4">
+        <div className="">
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {sortedTags.map(
-            (tag: { _id: string; name: string; paintingsCount: number }) => {
-              return (
-                <Chip label={tag.name} key={tag._id}>
-                  <p>{tag.paintingsCount}</p>
-                </Chip>
-              );
-            }
-          )}
-        </div>
-        <div className="grid w-full grid-cols-12 gap-4">
-          {paintings.map((painting) => {
-            return (
-              <div
-                key={painting._id}
-                className="relative col-span-3 aspect-square"
-              >
-                <Suspense fallback={<div>Loading...</div>}>
-                  <PaintingCard paintingData={painting} />
-                </Suspense>
-              </div>
-            );
-          })}
-        </div>
+        <Filters tags={sortedTags} />
+        <PaintingGrid paintings={paintings} />
       </div>
       <ScrollToTopButton />
     </>
