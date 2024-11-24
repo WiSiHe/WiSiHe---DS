@@ -78,7 +78,16 @@ export type BlockContent = Array<{
   style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
   listItem?: "bullet";
   markDefs?: Array<{
+    linkType?: "href" | "slug" | "painting";
     href?: string;
+    slug?: string;
+    painting?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "painting";
+    };
+    openInNewTab?: boolean;
     _type: "link";
     _key: string;
   }>;
@@ -210,6 +219,121 @@ export type Video = {
   }>;
 };
 
+export type Settings = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  description: string;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  twitter?: {
+    twitterCard?: "summary" | "summary_large_image";
+    twitterUsername?: string;
+    twitterImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  keywords?: Array<string>;
+  metadataBase?: string;
+  structuredData?: {
+    type: string;
+    data?: string;
+  };
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+};
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  overview: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  paintingsTitle?: string;
+  paintingsDescription: BlockContent;
+  showcasePaintings?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "painting";
+  }>;
+  projectsDescription: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    } | {
+      reference?: string;
+      _type: "internalLink";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  projectsTitle?: string;
+  showcaseProjects?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "project";
+  }>;
+};
+
 export type Painting = {
   _id: string;
   _type: "painting";
@@ -333,93 +457,6 @@ export type Slug = {
   source?: string;
 };
 
-export type Home = {
-  _id: string;
-  _type: "home";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  overview: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  paintingsTitle?: string;
-  paintingsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    } | {
-      reference?: string;
-      _type: "internalLink";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  showcasePaintings?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
-  }>;
-  projectsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    } | {
-      reference?: string;
-      _type: "internalLink";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  projectsTitle?: string;
-  showcaseProjects?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "project";
-  }>;
-};
-
 export type SanityAssistInstructionTask = {
   _type: "sanity.assist.instructionTask";
   path?: string;
@@ -541,12 +578,59 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | BlockContent | Tag | Project | Video | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | Home | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | BlockContent | Tag | Project | Video | Settings | Home | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
-export type SettingsQueryResult = null;
+export type SettingsQueryResult = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  description: string;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  twitter?: {
+    twitterCard?: "summary_large_image" | "summary";
+    twitterUsername?: string;
+    twitterImage?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  keywords?: Array<string>;
+  metadataBase?: string;
+  structuredData?: {
+    type: string;
+    data?: string;
+  };
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+} | null;
 // Variable: getPageQuery
 // Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    name,    slug,    heading,    subheading,    "pageBuilder": pageBuilder[]{      ...,      _type == "callToAction" => {        ...,          link {      ...,      _type == "link" => {        "page": page->slug.current,        "post": post->slug.current        }      },      }    },  }
 export type GetPageQueryResult = null;
@@ -649,28 +733,7 @@ export type HomePageQueryResult = {
   _id: string;
   title: string;
   paintingsCount: number;
-  paintingsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      reference?: string;
-      _type: "internalLink";
-      _key: string;
-    } | {
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
+  paintingsDescription: BlockContent;
   showcasePaintings: Array<{
     _type: "painting";
     _id: string;

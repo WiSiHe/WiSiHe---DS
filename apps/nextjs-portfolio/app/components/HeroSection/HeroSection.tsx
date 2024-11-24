@@ -42,7 +42,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const sanityHeight = 720;
 
   return (
-    <section className="relative w-full min-h-[600px] bg-dark flex flex-col justify-center px-4 py-10 h-fit xl:min-h-screen overflow-clip">
+    <section className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip">
       {lqip && (
         <img
           src={lqip || ''}
@@ -52,17 +52,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         />
       )}
       <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
-        <section className="z-10 w-full pt-24 col-span-full xl:col-span-4 xl:pt-0">
+        <section className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44">
           <GreeterCard />
         </section>
-        <section className="relative z-10 w-full col-span-full xl:col-span-8">
+        <section className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPaintingsIndex}
               initial={{ scale: 0.9 }}
               animate={{ scale: 1.0 }}
               exit={{ scale: 0.9 }}
-              transition={{ type: 'spring', duration: 1 }}
+              transition={{ type: 'spring' }}
               className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
             >
               <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full -top-2 drop-shadow-xl">
@@ -76,6 +76,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                       ?.width(sanityWidth)
                       .height(sanityHeight)
                       .quality(60)
+                      .auto('format')
                       .url() || ''
                   }
                   alt={altText || 'Image'}
@@ -99,7 +100,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             >
               <FaChevronLeft />
             </button>
-            <Link href="/paintings" className="underline text-primary">
+            <Link
+              href="/paintings"
+              className="px-4 py-2 text-white rounded bg-primary "
+            >
               Painting Gallery
             </Link>
             <button

@@ -1,7 +1,7 @@
 'use client';
+
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import React, { createContext, useEffect, useState } from 'react';
-
 import { cn } from '@wisihe/utils';
 import { motion } from 'framer-motion';
 
@@ -23,6 +23,20 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Avoid SSR mismatches by checking window width on the client side only
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -53,8 +67,8 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   const handleCardClose = (index: number) => {
     if (carouselRef.current) {
-      const cardWidth = isMobile() ? 230 : 384; // (md:w-96)
-      const gap = isMobile() ? 4 : 8;
+      const cardWidth = isMobile ? 230 : 384; // (md:w-96)
+      const gap = isMobile ? 4 : 8;
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
         left: scrollPosition,
@@ -62,10 +76,6 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       });
       setCurrentIndex(index);
     }
-  };
-
-  const isMobile = () => {
-    return window && window.innerWidth < 768;
   };
 
   return (
@@ -80,7 +90,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         >
           <div
             className={cn(
-              'absolute right-0  z-[1000] h-auto  w-[5%] overflow-hidden bg-gradient-to-l'
+              'absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l'
             )}
           ></div>
 
@@ -103,11 +113,10 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
                     duration: 0.5,
                     delay: 0.2 * index,
                     ease: 'easeOut',
-                    once: true,
                   },
                 }}
-                key={'card' + index}
-                className="last:pr-[5%] overflow-clip  rounded-3xl"
+                key={`card-${index}`}
+                className="last:pr-[5%] overflow-clip rounded-3xl"
               >
                 {item}
               </motion.div>
