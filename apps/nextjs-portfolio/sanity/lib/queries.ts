@@ -155,6 +155,7 @@ export const homePageQuery = defineQuery(`
       "slug": slug.current,
       title,
       format,
+      tagsV2[]->{name},
       image{
         ...,
         "lqip": asset->metadata.lqip,

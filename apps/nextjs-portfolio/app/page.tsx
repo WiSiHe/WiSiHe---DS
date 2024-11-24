@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Marquee from 'react-fast-marquee';
 import Chip from './components/Chip/Chip';
 import NotFoundSection from './components/NotFound/NotFound';
+import PaintingsSection from './components/PaintingsSection/PaintingsSection';
+import HeroImageSection from './components/HeroSection/HeroSection';
 
 export default async function Home() {
   const [{ data: homepage }] = await Promise.all([
@@ -38,57 +40,22 @@ export default async function Home() {
   ];
 
   return (
-    <div className="container p-4 mx-auto">
-      {/* Header */}
-      <header className="my-12 text-center">
-        <h1 className="text-5xl font-bold">
-          {title || 'Henrik Wilhelm Sissener'}
-        </h1>
-        <p className="mt-4 text-xl">
-          I am a frontend developer who loves to draw and design things.
-        </p>
-      </header>
+    <div className="bg-dark">
+      <HeroImageSection paintings={showcasePaintings} />
+      <h2>Paintings</h2>
+      <PaintingsSection paintings={showcasePaintings} />
 
-      {/* Paintings Section */}
-      {showcasePaintings && showcasePaintings.length > 0 ? (
-        <section className="my-16">
-          <h2 className="mb-8 text-3xl font-semibold text-center">
-            Gallery of My Paintings
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-            {showcasePaintings.map((painting) => (
-              <div key={painting._id} className="painting-item">
-                <Image
-                  className="object-cover rounded-lg"
-                  src={
-                    urlForImage(painting.image)
-                      ?.height(720)
-                      .width(1280)
-                      .auto('format')
-                      .url() || ''
-                  }
-                  alt={stegaClean(painting.image?.alt) || painting.title}
-                  width={300}
-                  height={200}
-                />
-                <p className="mt-2 font-medium text-center">{painting.title}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : (
-        <p className="text-center">No paintings to display.</p>
-      )}
-
-      <Marquee autoFill gradient direction="left">
-        {skills.map((skill) => (
-          <Chip key={skill} label={skill} className="ml-2" />
-        ))}
-      </Marquee>
+      <section className="py-20">
+        <Marquee gradientColor="#2B061E" autoFill gradient direction="left">
+          {skills.map((skill) => (
+            <Chip key={skill} label={skill} className="ml-2" />
+          ))}
+        </Marquee>
+      </section>
 
       {/* Projects Section */}
       {showcaseProjects && showcaseProjects.length > 0 ? (
-        <section className="my-16">
+        <section className="my-16 bg-tertiary">
           <h2 className="mb-8 text-3xl font-semibold text-center">
             Featured Projects
           </h2>

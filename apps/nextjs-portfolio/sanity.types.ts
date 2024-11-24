@@ -644,7 +644,7 @@ export type PaintingsSlugsResult = Array<{
 // Query: *[_type == "page" && defined(slug.current)]  {"slug": slug.current}
 export type PagesSlugsResult = Array<never>;
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    title,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    showcasePaintings[]->{      _type,      _id,      altText,      "slug": slug.current,      title,      format,      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    },    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      name,      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },  }
+// Query: *[_type == "home"][0]{    _id,    title,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    showcasePaintings[]->{      _type,      _id,      altText,      "slug": slug.current,      title,      format,      tagsV2[]->{name},      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    },    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      name,      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },  }
 export type HomePageQueryResult = {
   _id: string;
   title: string;
@@ -678,6 +678,9 @@ export type HomePageQueryResult = {
     slug: string;
     title: string;
     format: "landscape" | "portrait" | "square";
+    tagsV2: Array<{
+      name: string;
+    }>;
     image: {
       asset?: {
         _ref: string;
@@ -809,7 +812,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"painting\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PaintingsSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
-    "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
+    "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
     "\n    {\n      \"paintings\": *[_type == \"painting\" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n      \"tags\": *[_type == \"tag\"] | order(name asc) { _id, name, \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)}\n    }\n    ": GetAllPaintingsandTagsResult;
   }
 }

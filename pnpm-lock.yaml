@@ -93,6 +93,9 @@ importers:
       '@sanity/image-url':
         specifier: ^1.1.0
         version: 1.1.0
+      '@tabler/icons-react':
+        specifier: ^3.22.0
+        version: 3.22.0(react@19.0.0-rc-66855b96-20241106)
       '@vercel/analytics':
         specifier: ^1.4.1
         version: 1.4.1(@sveltejs/kit@2.7.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@4.5.5(@types/node@20.17.6)(terser@5.36.0)))(svelte@4.2.19)(vite@4.5.5(@types/node@20.17.6)(terser@5.36.0)))(next@15.0.3(@babel/core@7.26.0)(@playwright/test@1.49.0)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)(svelte@4.2.19)
@@ -3967,6 +3970,11 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha1-ee+rNExYGez4OkPz+fgR/IS1Ftc=}
 
+  '@tabler/icons-react@3.22.0':
+    resolution: {integrity: sha1-T9BE6vWuMrru2Rr3vsbZy3FEPwY=}
+    peerDependencies:
+      react: '>= 16'
+
   '@tabler/icons-svelte@3.19.0':
     resolution: {integrity: sha1-EsPCW34okY5SwzkTyH1GLC5WlJY=}
     peerDependencies:
@@ -3974,6 +3982,9 @@ packages:
 
   '@tabler/icons@3.19.0':
     resolution: {integrity: sha1-WZiwVX7zRXLgA/LXWslefAT4jIE=}
+
+  '@tabler/icons@3.22.0':
+    resolution: {integrity: sha1-+TfsZdmHELiR2mNoVZ6hXLzYf5E=}
 
   '@tailwindcss/container-queries@0.1.1':
     resolution: {integrity: sha1-mnWc4suHNqTGoMuTrrdAVzpzGXQ=}
@@ -14745,12 +14756,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@tabler/icons-react@3.22.0(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@tabler/icons': 3.22.0
+      react: 19.0.0-rc-66855b96-20241106
+
   '@tabler/icons-svelte@3.19.0(svelte@5.0.0-next.260)':
     dependencies:
       '@tabler/icons': 3.19.0
       svelte: 5.0.0-next.260
 
   '@tabler/icons@3.19.0': {}
+
+  '@tabler/icons@3.22.0': {}
 
   '@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.15(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.4.3)))':
     dependencies:
