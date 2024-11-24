@@ -3,12 +3,19 @@ import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { Card } from '../Card/Card';
 import Carousel from '../Carousel/Carousel';
+import CustomPortableText from '../PortableText/PortableText';
+
+import { type PortableTextBlock } from 'next-sanity';
 
 type PaintingsSectionProps = {
-  paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'];
+  paintings: NonNullable<HomePageQueryResult>['showcasePaintings'];
+  paintingsDescription: PortableTextBlock[];
 };
 
-const PaintingsSection = ({ paintings }: PaintingsSectionProps) => {
+const PaintingsSection = ({
+  paintings,
+  paintingsDescription,
+}: PaintingsSectionProps) => {
   if (!paintings || paintings.length === 0) {
     return null;
   }
@@ -29,8 +36,19 @@ const PaintingsSection = ({ paintings }: PaintingsSectionProps) => {
     <Card key={card.src} card={card} index={index} />
   ));
   return (
-    <section className="paintings-section">
+    <section className="">
+      <div className="px-4">
+        <CustomPortableText
+          value={paintingsDescription}
+          className="prose-invert"
+        />
+      </div>
       <Carousel items={cards} />
+
+      <div className="flex justify-center text-white">
+        <p>Like what you see?</p>
+        <button className="btn btn-primary">View All</button>
+      </div>
     </section>
   );
 };

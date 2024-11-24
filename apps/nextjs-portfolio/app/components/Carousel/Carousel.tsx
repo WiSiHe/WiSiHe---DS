@@ -74,7 +74,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
     >
       <div className="relative w-full">
         <div
-          className="flex w-full overflow-x-scroll overscroll-x-auto py-10 md:py-20 scroll-smooth [scrollbar-width:none]"
+          className="flex w-full overflow-x-scroll overscroll-x-auto py-10 scroll-smooth [scrollbar-width:none]"
           ref={carouselRef}
           onScroll={checkScrollability}
         >
@@ -86,8 +86,8 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
           <div
             className={cn(
-              'flex flex-row justify-start gap-4 pl-4',
-              'max-w-7xl mx-auto' // remove max-w-4xl if you want the carousel to span the full width of its container
+              'flex flex-row justify-start gap-4 pl-4'
+              // 'max-w-7xl mx-auto' // remove max-w-4xl if you want the carousel to span the full width of its container
             )}
           >
             {items.map((item, index) => (
@@ -107,7 +107,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
                   },
                 }}
                 key={'card' + index}
-                className="last:pr-[5%] md:last:pr-[33%]  rounded-3xl"
+                className="last:pr-[5%] overflow-clip  rounded-3xl"
               >
                 {item}
               </motion.div>
