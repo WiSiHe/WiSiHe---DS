@@ -1,4 +1,4 @@
-import type { Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/react';
@@ -8,11 +8,14 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import HeaderNavigation from '@/app/components/HeaderNavigation';
 import { draftMode } from 'next/headers';
 import './globals.css';
-import { SanityLive } from '@/sanity/lib/live';
+import { sanityFetch, SanityLive } from '@/sanity/lib/live';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
 import { VisualEditing } from 'next-sanity';
 import Link from 'next/link';
+import { settingsQuery } from '@/sanity/lib/queries';
+import { resolveOpenGraphImage } from '@/sanity/lib/utils';
+import Footer from './components/Footer/Footer';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -35,79 +38,83 @@ export const viewport: Viewport = {
   themeColor: '#DE0D92',
 };
 
-export const metadata = {
-  metadataBase: new URL('/', 'https://wisihe.no'),
-  title: 'Home | WiSiHe',
-  description: 'A gallery of some of my paintings and other projects',
-  locale: 'no_NO',
-  lang: 'en',
-  type: 'website',
-  url: 'https://wisihe.no',
-  openGraph: {
-    images: [
-      {
-        url: 'https://wisihe.no/images/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'WiSiHe',
+// export const metadata = {
+//   metadataBase: new URL('/', 'https://wisihe.no'),
+//   title: 'Home | WiSiHe',
+//   description: 'A gallery of some of my paintings and other projects',
+//   locale: 'no_NO',
+//   lang: 'en',
+//   type: 'website',
+//   url: 'https://wisihe.no',
+//   openGraph: {
+//     images: [
+//       {
+//         url: 'https://wisihe.no/images/og-image.jpg',
+//         width: 1200,
+//         height: 630,
+//         alt: 'WiSiHe',
+//       },
+//     ],
+//   },
+//   keywords: [
+//     'wisihe',
+//     'art',
+//     'painting',
+//     'gallery',
+//     'projects',
+//     'portfolio',
+//     'website',
+//     'web development',
+//     'web design',
+//     'web developer',
+//     'web designer',
+//     'developer',
+//     'designer',
+//   ],
+//   author: { name: 'Henrik Wilhelm Sissener', url: 'https://wisihe.no' },
+//   applicationName: 'WiSiHe',
+// };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data: settings } = await sanityFetch({
+    query: settingsQuery,
+    // Metadata should never contain stega
+    stega: false,
+  });
+
+  if (!settings) {
+    return {
+      title: {
+        template: '%s',
+        default: 'WiSiHe',
       },
-    ],
-  },
-  keywords: [
-    'wisihe',
-    'art',
-    'painting',
-    'gallery',
-    'projects',
-    'portfolio',
-    'website',
-    'web development',
-    'web design',
-    'web developer',
-    'web designer',
-    'developer',
-    'designer',
-  ],
-  author: { name: 'Henrik Wilhelm Sissener', url: 'https://wisihe.no' },
-  applicationName: 'WiSiHe',
-};
+      description: 'A gallery of some of my paintings and other projects',
+    };
+  }
 
-// export async function generateMetadata(): Promise<Metadata> {
-//   const { data: settings } = await sanityFetch({
-//     query: settingsQuery,
-//     // Metadata should never contain stega
-//     stega: false,
-//   });
-//   const title = settings?.title || demo.title;
-//   const description = settings?.description || demo.description;
+  const { title = '', description, keywords } = settings;
 
-//   const ogImage = resolveOpenGraphImage(settings?.ogImage);
-//   let metadataBase: URL | undefined = undefined;
-//   try {
-//     metadataBase = settings?.ogImage?.metadataBase
-//       ? new URL(settings.ogImage.metadataBase)
-//       : undefined;
-//   } catch {
-//     // ignore
-//   }
-//   return {
-//     metadataBase,
-//     title: {
-//       template: `%s | ${title}`,
-//       default: title,
-//     },
-//     description: toPlainText(description),
-//     openGraph: {
-//       images: ogImage ? [ogImage] : [],
-//     },
-//   };
-// }
+  const ogImage = resolveOpenGraphImage(settings?.ogImage);
+
+  return {
+    title: {
+      template: `%s | ${title}`,
+      default: title,
+    },
+    description: description,
+    openGraph: {
+      images: ogImage ? [ogImage] : [],
+    },
+    keywords: keywords,
+  };
+}
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: metadata.title,
-  description: metadata.description,
+  name: 'WiSiHe | Portfolio',
+  description:
+    "Explore Henrik's stunning portfolio featuring paintings, creative projects, and video works.",
   url: 'https://wisihe.no',
   potentialAction: {
     '@type': 'SearchAction',
@@ -147,6 +154,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isEnabled: isDraftMode } = await draftMode();
+
+  const { data: settings } = await sanityFetch({
+    query: settingsQuery,
+    // Metadata should never contain stega
+    stega: false,
+  });
+
+  if (!settings) {
+    return <div>Settings not found</div>;
+  }
+
+  const { socialLinks } = settings;
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -166,7 +186,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
       >
         {isDraftMode && (
           <>
@@ -183,9 +203,7 @@ export default async function RootLayout({
         </Link>
         <HeaderNavigation />
         <main id="main-content">{children}</main>
-        <footer className="flex flex-col flex-wrap items-center justify-center w-full gap-4 p-10 text-white bg-dark">
-          <Link href="/contact">Contact</Link>
-        </footer>
+        <Footer socialLinks={socialLinks} />
         <Analytics />
         <SpeedInsights />
       </body>

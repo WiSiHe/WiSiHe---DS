@@ -6,6 +6,7 @@ import Carousel from '../Carousel/Carousel';
 import CustomPortableText from '../PortableText/PortableText';
 
 import { type PortableTextBlock } from 'next-sanity';
+import Link from 'next/link';
 
 type PaintingsSectionProps = {
   paintings: NonNullable<HomePageQueryResult>['showcasePaintings'];
@@ -36,7 +37,7 @@ const PaintingsSection = ({
     <Card key={card.src} card={card} index={index} />
   ));
   return (
-    <section className="">
+    <section className="pt-8 pl-4 lg:pl-8">
       <div className="px-4">
         <CustomPortableText
           value={paintingsDescription}
@@ -45,9 +46,11 @@ const PaintingsSection = ({
       </div>
       <Carousel items={cards} />
 
-      <div className="flex justify-center text-white">
+      <div className="flex flex-col items-center justify-center gap-4 text-white">
         <p>Like what you see?</p>
-        <button className="btn btn-primary">View All</button>
+        <Link href="/paintings" className="px-4 py-2 rounded bg-primary">
+          View All Paintings
+        </Link>
       </div>
     </section>
   );
