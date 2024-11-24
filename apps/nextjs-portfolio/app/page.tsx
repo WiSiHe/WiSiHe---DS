@@ -7,6 +7,7 @@ import Chip from './components/Chip/Chip';
 import HeroImageSection from './components/HeroSection/HeroSection';
 import NotFoundSection from './components/NotFound/NotFound';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
+import { PortableTextBlock } from 'next-sanity';
 
 export default async function Home() {
   const [{ data: homepage }] = await Promise.all([
@@ -29,6 +30,9 @@ export default async function Home() {
 
   const { showcasePaintings, showcaseProjects } = homepage;
 
+  const paintingsDescription =
+    homepage.paintingsDescription as PortableTextBlock[];
+
   const skills = [
     'Frontend Development',
     'UI/UX Design',
@@ -41,11 +45,25 @@ export default async function Home() {
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={showcasePaintings} />
-      <h2>Paintings</h2>
-      <PaintingsSection paintings={showcasePaintings} />
+      <PaintingsSection
+        paintings={showcasePaintings}
+        paintingsDescription={paintingsDescription}
+      />
 
-      <section className="py-20">
+      <section className="flex flex-col gap-4 py-20 text-white">
+        <h2 className="mb-8 text-3xl font-semibold text-center">Skills</h2>
         <Marquee gradientColor="#2B061E" autoFill gradient direction="left">
+          {skills.map((skill) => (
+            <Chip key={skill} label={skill} className="ml-2" />
+          ))}
+        </Marquee>
+        <Marquee
+          gradientColor="#2B061E"
+          autoFill
+          gradient
+          direction="right"
+          className=""
+        >
           {skills.map((skill) => (
             <Chip key={skill} label={skill} className="ml-2" />
           ))}

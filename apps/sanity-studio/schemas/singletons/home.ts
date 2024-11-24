@@ -69,53 +69,7 @@ export default defineType({
       name: 'paintingsDescription',
       title: 'Paintings description',
       description: 'This is the description that will appear on your paintings page.',
-      type: 'array',
-      of: [
-        // Paragraphs
-        defineArrayMember({
-          lists: [],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
-              {
-                name: 'internalLink',
-                title: 'Internal link',
-                type: 'object',
-                fields: [
-                  {
-                    name: 'reference',
-                    type: 'string',
-                    title: 'Reference',
-                  },
-                ],
-              },
-            ],
-            decorators: [
-              {
-                title: 'Italic',
-                value: 'em',
-              },
-              {
-                title: 'Strong',
-                value: 'strong',
-              },
-            ],
-          },
-          styles: [],
-          type: 'block',
-        }),
-      ],
+      type: 'blockContent',
       validation: (rule) => rule.max(155).required(),
     }),
     defineField({

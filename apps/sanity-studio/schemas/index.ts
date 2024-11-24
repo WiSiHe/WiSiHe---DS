@@ -1,5 +1,5 @@
 import home from './singletons/home'
-import blockContent from './blockContent'
+import blockContent from './documents/blockContent'
 
 import painting from './painting'
 import project from './project'
