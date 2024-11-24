@@ -1,13 +1,12 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import { stegaClean } from 'next-sanity';
 import Image from 'next/image';
 import Marquee from 'react-fast-marquee';
 import Chip from './components/Chip/Chip';
+import HeroImageSection from './components/HeroSection/HeroSection';
 import NotFoundSection from './components/NotFound/NotFound';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
-import HeroImageSection from './components/HeroSection/HeroSection';
 
 export default async function Home() {
   const [{ data: homepage }] = await Promise.all([
@@ -28,7 +27,7 @@ export default async function Home() {
     );
   }
 
-  const { showcasePaintings, showcaseProjects, title } = homepage;
+  const { showcasePaintings, showcaseProjects } = homepage;
 
   const skills = [
     'Frontend Development',

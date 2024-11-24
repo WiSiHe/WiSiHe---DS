@@ -2,14 +2,14 @@
 'use client';
 
 import { HomePageQueryResult } from '@/sanity.types';
+import { urlForImage } from '@/sanity/lib/utils';
+import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
 import Chip from '../Chip/Chip';
-import { urlForImage } from '@/sanity/lib/utils';
-import { cn } from '@wisihe/utils';
-import Link from 'next/link';
 import GreeterCard from '../GreeterCard/GreeterCard';
 
 type HeroImageSectionProps = {

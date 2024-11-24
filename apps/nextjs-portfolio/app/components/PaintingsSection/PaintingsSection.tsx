@@ -3,10 +3,6 @@ import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { Card } from '../Card/Card';
 import Carousel from '../Carousel/Carousel';
-import Chip from '../Chip/Chip';
-import Link from 'next/link';
-import { url } from 'inspector';
-import Image from 'next/image';
 
 type PaintingsSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'];

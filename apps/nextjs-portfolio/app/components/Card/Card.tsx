@@ -14,7 +14,6 @@ type Card = {
 
 export const Card = ({
   card,
-  index,
   layout = false,
 }: {
   card: Card;
