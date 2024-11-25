@@ -1,11 +1,10 @@
 'use client';
 
-import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type JSX } from 'react';
-import { FaHamburger } from 'react-icons/fa';
+import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
 
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
@@ -51,7 +50,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
         )}
       >
         <AnimatedLogo theme="light" />
-        <motion.button
+        {/* <motion.button
           initial={{ opacity: 0, scale: 0, x: 100 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{
@@ -65,14 +64,14 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           aria-label="Open Navigation"
         >
           <FaHamburger />
-        </motion.button>
+        </motion.button> */}
 
         <motion.ul
           key="nav"
           variants={container}
           initial="hidden"
           animate="show"
-          className="items-center hidden gap-1 xl:gap-4 lg:flex"
+          className="flex items-center gap-4"
         >
           {navigationItems.map((item, i) => {
             const isActive = pathName?.includes(item.href);

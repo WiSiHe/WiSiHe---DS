@@ -51,7 +51,7 @@ export default async function ProjectsPage() {
                 >
                   <h2 className="text-2xl font-bold">{project.title}</h2>
                 </Link>
-                <p className=" line-clamp-3">{project.description}</p>
+                <p className="line-clamp-3">{project.description}</p>
               </div>
             </article>
           ))}
