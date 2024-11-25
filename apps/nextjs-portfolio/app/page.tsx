@@ -34,24 +34,27 @@ export default async function Home() {
   const paintingsDescription =
     homepage.paintingsDescription as PortableTextBlock[];
 
-  const skills = [
+  const professionalSkills = [
     'Frontend Development',
     'UI/UX Design',
-    'Drawing',
-    'React',
-    'Svelte',
+    'Responsive Web Design',
+    'Accessibility (WCAG Standards)',
+    'React.js',
+    'SvelteKit',
     'Next.js',
     'Tailwind CSS',
-    'Sanity',
+    'Sanity CMS Integration',
+    'Performance Optimization',
+    'Interactive Prototyping',
   ];
 
-  const softwareSkills = [
-    'Photoshop',
-    'Figma',
-    'Unreal Engine 5',
-    'Blender',
-    'Spline',
-    'Sanity',
+  const creativeSkills = [
+    'Digital Drawing & Painting',
+    '3D Modeling (Blender)',
+    'Game Development (Unreal Engine 5)',
+    'Video Editing & Production',
+    'Interactive 3D Design (Spline)',
+    'Concept Art & Illustration',
   ];
 
   return (
@@ -74,7 +77,7 @@ export default async function Home() {
           direction="left"
           speed={20}
         >
-          {skills.map((skill) => (
+          {professionalSkills.map((skill) => (
             <Chip key={skill} label={skill} className="ml-2" />
           ))}
         </Marquee>
@@ -86,7 +89,7 @@ export default async function Home() {
           className=""
           speed={20}
         >
-          {softwareSkills.map((skill) => (
+          {creativeSkills.map((skill) => (
             <Chip key={skill} label={skill} className="ml-2" />
           ))}
         </Marquee>
@@ -94,7 +97,7 @@ export default async function Home() {
 
       {/* Projects Section */}
       {showcaseProjects && showcaseProjects.length > 0 ? (
-        <section className="px-4 py-16 ring md:px-8 bg-tertiary">
+        <section className="px-4 py-16 md:px-8 bg-tertiary/80">
           <div className="prose">
             <h2 className="">Featured Projects</h2>
             <p>
@@ -102,39 +105,43 @@ export default async function Home() {
               project to view more details.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-4 lg:gap-8 md:grid-cols-3">
+          <div className="relative grid items-start h-full grid-cols-1 gap-6 pt-4 lg:gap-8 md:grid-cols-3">
             {showcaseProjects.map((project) => (
-              <div
+              <article
                 key={project._id}
-                className="relative rounded-lg shadow-lg overflow-clip bg-tertiary"
+                className="relative flex flex-row w-full h-full rounded-lg shadow-lg md:flex-col bg-tertiary overflow-clip"
               >
-                <div className="relative aspect-video">
+                <div className="relative bg-dark aspect-square min-w-52 md:aspect-video">
                   {project.image && (
                     <Image
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                       src={
                         urlForImage(project.image)
                           ?.height(400)
-                          .width(600)
+                          .width(400)
                           .auto('format')
                           .url() || ''
                       }
-                      alt={project.title}
                       fill
+                      alt={project.title}
                     />
                   )}
                 </div>
-                <div className="p-4 rel">
-                  <h3 className="text-2xl font-bold">{project.title}</h3>
-                  <p className="">{project.description}</p>
+                <div className="relative flex flex-col justify-between w-full h-full p-4">
+                  <div>
+                    <h3 className="font-bold">{project.title}</h3>
+                    <p className="line-clamp-3">{project.description}</p>
+                  </div>
                   <div className="flex justify-end">
-                    <Link href={project.slug} className="mt-2 text-primary">
+                    <Link
+                      href={`projects/${project.slug}`}
+                      className="px-4 py-2 rounded-full text-primary bg-primary/10 hover:bg-primary/20"
+                    >
                       Visit Project &rarr;
                     </Link>
                   </div>
                 </div>
-                {/* Additional project details can be added here */}
-              </div>
+              </article>
             ))}
           </div>
         </section>
