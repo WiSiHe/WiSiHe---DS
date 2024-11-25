@@ -23,6 +23,7 @@ type PaintingDetailProps = {
 };
 
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
+  console.log('paintingData', paintingData);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   if (!paintingData) {
@@ -38,6 +39,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     format,
     image,
     images = [],
+    video,
   } = paintingData;
 
   const allImages = [image, ...images];
@@ -127,9 +129,20 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               })}
             </div>
           )}
+          {video && (
+            <div className="relative pt-4 rounded aspect-video overflow-clip">
+              <iframe
+                src={`https://www.youtube.com/embed/${new URL(video).pathname.slice(1)}`}
+                className="w-full h-full rounded"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Connected Video"
+              />
+            </div>
+          )}
         </div>
 
-        <section className="p-4 pt-0 pb-10 xl:p-0 xl:sticky col-span-full top-4 xl:col-span-3">
+        <section className="p-4 pt-0 pb-10 xl:p-0 lg:sticky col-span-full top-4 xl:col-span-3">
           <div>
             <div>
               {tagsV2.length > 0 && (
