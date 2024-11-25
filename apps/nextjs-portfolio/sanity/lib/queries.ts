@@ -23,21 +23,21 @@ const linkFields = /* groq */ `
       }
 `;
 
-const showCasePaintingFields = /* groq */ `
-    showcasePaintings[]->{
-      _type,
-      _id,
-      altText,
-      "slug": slug.current,
-      title,
-      format,
-      image{
-        ...,
-        "lqip": asset->metadata.lqip,
-        "aspectRatio": asset->metadata.dimensions.aspectRatio
-      }
-    },
-`;
+// const showCasePaintingFields = /* groq */ `
+//     showcasePaintings[]->{
+//       _type,
+//       _id,
+//       altText,
+//       "slug": slug.current,
+//       title,
+//       format,
+//       image{
+//         ...,
+//         "lqip": asset->metadata.lqip,
+//         "aspectRatio": asset->metadata.dimensions.aspectRatio
+//       }
+//     },
+// `;
 
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{
@@ -127,6 +127,33 @@ export const paintingQuery = defineQuery(`
   }
 `);
 
+export const projectQuery = defineQuery(`
+  *[_type == "project" && slug.current == $slug][0] {
+    ...,
+    "slug": slug.current,
+    tags[]->{
+      "name": coalesce(name, "")
+    },
+    "connectedPage": coalesce(connectedPage.current, ""),
+    connectedVideo->{
+      "videoUrl": videoUrl
+    },
+    "connectedPaintings": coalesce(
+      connectedPaintings[]->{
+        "title": coalesce(title, ""),
+        "slug": coalesce(slug.current, ""),
+        "format": coalesce(format, ""),
+        "image": coalesce(image, null)
+      },
+      []
+    ),
+    "image": image{
+      ...,
+      "lqip": asset->metadata.lqip
+    }
+  }
+`);
+
 export const postPagesSlugs = defineQuery(`
   *[_type == "post" && defined(slug.current)]
   {"slug": slug.current}
@@ -134,6 +161,11 @@ export const postPagesSlugs = defineQuery(`
 
 export const paintingsSlugs = defineQuery(`
   *[_type == "painting" && defined(slug.current)]
+  {"slug": slug.current}
+`);
+
+export const projectsSlugs = defineQuery(`
+  *[_type == "project" && defined(slug.current)]
   {"slug": slug.current}
 `);
 
@@ -202,5 +234,26 @@ export const getAllPaintingsandTags = defineQuery(`
         }
       },
       "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}
+    }
+    `);
+
+export const getAllProjects = defineQuery(`
+    {
+      "projects": *[_type == "project" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {
+        _id,
+        "slug":slug.current,
+        title,
+        description,
+        seoDescription,
+        projectStart,
+        projectEnd,
+        status,
+        content,
+        name,
+        image{
+          ...,
+          "lqip": asset->metadata.lqip
+        },
+      },
     }
     `);

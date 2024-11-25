@@ -38,8 +38,8 @@ export default async function Paintings() {
 
   return (
     <>
-      <div className="p-4 mt-16">
-        <div className="">
+      <div className="p-4 mt-16 bg-dark">
+        <div className="prose prose-invert">
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>
         </div>
