@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { PaintingQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
+import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
 
@@ -23,12 +23,7 @@ type PaintingDetailProps = {
 };
 
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
-  console.log('paintingData', paintingData);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  if (!paintingData) {
-    return null;
-  }
 
   const {
     title,
@@ -36,6 +31,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     tagsV2 = [],
     paintedAt,
     viewsCount,
+    views,
     format,
     image,
     images = [],
@@ -62,15 +58,40 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
   const currentImage = allImages[selectedIndex] || image;
 
-  // Ensure currentImage is defined
-  if (!currentImage) {
-    return <div>No image available</div>;
-  }
-
   // Build the image URL
   const imageUrl =
     urlForImage(currentImage)?.format('webp').width(1200).fit('max').url() ??
     '';
+
+  useEffect(() => {
+    handleAddView();
+    const handleKeyNavigation = (event) => {
+      // Add your key navigation logic here
+    };
+
+    window.addEventListener('keydown', handleKeyNavigation);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyNavigation);
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  const getViewerId = () => {
+    let viewerId = localStorage.getItem('viewerId');
+    if (!viewerId) {
+      viewerId = crypto.randomUUID();
+      localStorage.setItem('viewerId', viewerId);
+    }
+    return viewerId;
+  };
+
+  const handleAddView = async () => {
+    const viewerId = getViewerId();
+
+    if (!views.find((view) => view.viewerId === viewerId)) {
+      await patchPaintingViews(paintingData._id, viewerId);
+    }
+  };
 
   return (
     <section

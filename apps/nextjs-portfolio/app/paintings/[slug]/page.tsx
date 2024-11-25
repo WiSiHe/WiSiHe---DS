@@ -1,4 +1,5 @@
 import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
+import { PaintingQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
@@ -44,9 +45,8 @@ export async function generateMetadata(
 export default async function PaintingPage(props: Props) {
   const params = await props.params;
 
-  const [{ data: painting }] = await Promise.all([
-    sanityFetch({ query: paintingQuery, params }),
-  ]);
+  const [{ data: painting }]: [{ data: PaintingQueryResult }] =
+    await Promise.all([sanityFetch({ query: paintingQuery, params })]);
 
   if (!painting?._id) {
     return notFound();
