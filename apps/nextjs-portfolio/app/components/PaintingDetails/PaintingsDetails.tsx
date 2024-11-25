@@ -19,13 +19,14 @@ interface HandleSelectImage {
 }
 
 type PaintingDetailProps = {
-  paintingData: PaintingQueryResult;
+  paintingData: Exclude<PaintingQueryResult, null>;
 };
 
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const {
+    _id,
     title,
     description,
     tagsV2 = [],
@@ -65,15 +66,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
   useEffect(() => {
     handleAddView();
-    const handleKeyNavigation = (event) => {
-      // Add your key navigation logic here
-    };
-
-    window.addEventListener('keydown', handleKeyNavigation);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyNavigation);
-    };
   }, []); // Empty dependency array ensures this runs only once on mount
 
   const getViewerId = () => {
@@ -88,8 +80,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const handleAddView = async () => {
     const viewerId = getViewerId();
 
-    if (!views.find((view) => view.viewerId === viewerId)) {
-      await patchPaintingViews(paintingData._id, viewerId);
+    if (views && !views.find((view) => view.viewerId === viewerId)) {
+      await patchPaintingViews(_id, viewerId);
     }
   };
 
