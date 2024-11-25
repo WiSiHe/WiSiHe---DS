@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { PaintingQueryResult } from '@/sanity.types';
-import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
+import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
 
@@ -26,13 +26,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const {
-    _id,
     title,
     description,
     tagsV2 = [],
     paintedAt,
     viewsCount,
-    views,
     format,
     image,
     images = [],
@@ -64,26 +62,26 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     urlForImage(currentImage)?.format('webp').width(1200).fit('max').url() ??
     '';
 
-  useEffect(() => {
-    handleAddView();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  // useEffect(() => {
+  //   handleAddView();
+  // }, []); // Empty dependency array ensures this runs only once on mount
 
-  const getViewerId = () => {
-    let viewerId = localStorage.getItem('viewerId');
-    if (!viewerId) {
-      viewerId = crypto.randomUUID();
-      localStorage.setItem('viewerId', viewerId);
-    }
-    return viewerId;
-  };
+  // const getViewerId = () => {
+  //   let viewerId = localStorage.getItem('viewerId');
+  //   if (!viewerId) {
+  //     viewerId = crypto.randomUUID();
+  //     localStorage.setItem('viewerId', viewerId);
+  //   }
+  //   return viewerId;
+  // };
 
-  const handleAddView = async () => {
-    const viewerId = getViewerId();
+  // const handleAddView = async () => {
+  //   const viewerId = getViewerId();
 
-    if (views && !views.find((view) => view.viewerId === viewerId)) {
-      await patchPaintingViews(_id, viewerId);
-    }
-  };
+  //   if (views && !views.find((view) => view.viewerId === viewerId)) {
+  //     await patchPaintingViews(_id, viewerId);
+  //   }
+  // };
 
   return (
     <section
