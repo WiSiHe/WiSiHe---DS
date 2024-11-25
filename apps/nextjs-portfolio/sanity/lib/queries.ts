@@ -100,6 +100,7 @@ export const paintingQuery = defineQuery(`
     seoDescription,
     format,
     "likesCount": count(likes),
+    "views": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views
     "viewsCount": count(views),
     paintedAt,
     artstationUrl,

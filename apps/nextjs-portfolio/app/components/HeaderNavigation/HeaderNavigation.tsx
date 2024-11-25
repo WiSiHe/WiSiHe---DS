@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, type JSX } from 'react';
+import { type JSX } from 'react';
 import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
 
 import { navigationItems } from '@wisihe/constants';
@@ -34,11 +34,11 @@ interface iNavigationProps {
 const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
 
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathName]);
+  // useEffect(() => {
+  //   setIsOpen(false);
+  // }, [pathName]);
 
   return (
     <>

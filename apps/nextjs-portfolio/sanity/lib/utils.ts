@@ -1,5 +1,6 @@
 import createImageUrlBuilder from '@sanity/image-url';
 import { dataset, projectId } from '@/sanity/lib/api';
+import { client } from './client';
 
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
@@ -85,5 +86,22 @@ export function linkResolver(link: Link | undefined) {
       return null;
     default:
       return null;
+  }
+}
+
+export async function patchPaintingViews(
+  paintingId: string,
+  viewerId: string
+): Promise<void> {
+  try {
+    await client
+      .patch(paintingId)
+      .setIfMissing({ views: [] })
+      .append('views', [
+        { _key: viewerId, viewerId, timestamp: new Date().toISOString() },
+      ])
+      .commit();
+  } catch (error) {
+    console.error('Failed to patch painting views:', error);
   }
 }
