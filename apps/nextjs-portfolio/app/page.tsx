@@ -8,6 +8,7 @@ import HeroImageSection from './components/HeroSection/HeroSection';
 import NotFoundSection from './components/NotFound/NotFound';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import { PortableTextBlock } from 'next-sanity';
+import Link from 'next/link';
 
 export default async function Home() {
   const [{ data: homepage }] = await Promise.all([
@@ -38,8 +39,19 @@ export default async function Home() {
     'UI/UX Design',
     'Drawing',
     'React',
+    'Svelte',
     'Next.js',
     'Tailwind CSS',
+    'Sanity',
+  ];
+
+  const softwareSkills = [
+    'Photoshop',
+    'Figma',
+    'Unreal Engine 5',
+    'Blender',
+    'Spline',
+    'Sanity',
   ];
 
   return (
@@ -51,8 +63,17 @@ export default async function Home() {
       />
 
       <section className="flex flex-col gap-4 py-20 text-white">
-        <h2 className="mb-8 text-3xl font-semibold text-center">Skills</h2>
-        <Marquee gradientColor="#2B061E" autoFill gradient direction="left">
+        <div className="px-4 lg:px-10">
+          <h2 className="text-3xl font-semibold">Skills</h2>
+          <p>Here are some of the skills I have acquired over the years.</p>
+        </div>
+        <Marquee
+          gradientColor="#2B061E"
+          autoFill
+          gradient
+          direction="left"
+          speed={20}
+        >
           {skills.map((skill) => (
             <Chip key={skill} label={skill} className="ml-2" />
           ))}
@@ -63,8 +84,9 @@ export default async function Home() {
           gradient
           direction="right"
           className=""
+          speed={20}
         >
-          {skills.map((skill) => (
+          {softwareSkills.map((skill) => (
             <Chip key={skill} label={skill} className="ml-2" />
           ))}
         </Marquee>
@@ -72,33 +94,45 @@ export default async function Home() {
 
       {/* Projects Section */}
       {showcaseProjects && showcaseProjects.length > 0 ? (
-        <section className="my-16 bg-tertiary">
-          <h2 className="mb-8 text-3xl font-semibold text-center">
-            Featured Projects
-          </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <section className="px-4 py-16 ring md:px-8 bg-tertiary">
+          <div className="prose">
+            <h2 className="">Featured Projects</h2>
+            <p>
+              Here are some of the projects I have worked on. Click on the
+              project to view more details.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 lg:gap-8 md:grid-cols-3">
             {showcaseProjects.map((project) => (
               <div
                 key={project._id}
-                className="p-6 border rounded-lg shadow-lg project-item"
+                className="relative rounded-lg shadow-lg overflow-clip bg-tertiary"
               >
-                {project.image && (
-                  <Image
-                    className="object-cover rounded-lg"
-                    src={
-                      urlForImage(project.image)
-                        ?.height(400)
-                        .width(600)
-                        .auto('format')
-                        .url() || ''
-                    }
-                    alt={project.title}
-                    width={600}
-                    height={400}
-                  />
-                )}
-                <h3 className="mt-4 text-2xl font-bold">{project.title}</h3>
-                <p className="mt-2">{project.description}</p>
+                <div className="relative aspect-video">
+                  {project.image && (
+                    <Image
+                      className="object-cover"
+                      src={
+                        urlForImage(project.image)
+                          ?.height(400)
+                          .width(600)
+                          .auto('format')
+                          .url() || ''
+                      }
+                      alt={project.title}
+                      fill
+                    />
+                  )}
+                </div>
+                <div className="p-4 rel">
+                  <h3 className="text-2xl font-bold">{project.title}</h3>
+                  <p className="">{project.description}</p>
+                  <div className="flex justify-end">
+                    <Link href={project.slug} className="mt-2 text-primary">
+                      Visit Project &rarr;
+                    </Link>
+                  </div>
+                </div>
                 {/* Additional project details can be added here */}
               </div>
             ))}

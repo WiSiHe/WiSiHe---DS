@@ -43,14 +43,13 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
   return (
     <section className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip">
-      {lqip && (
-        <img
-          src={lqip || ''}
-          alt=""
-          className="absolute inset-0 object-cover w-full h-full scale-105 blur-xl"
-          sizes="100vw"
-        />
-      )}
+      <img
+        src={lqip || ''}
+        alt=""
+        className="absolute inset-0 object-cover w-full h-full scale-105 blur-xl"
+        sizes="100vw"
+      />
+
       <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
         <section className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44">
           <GreeterCard />
