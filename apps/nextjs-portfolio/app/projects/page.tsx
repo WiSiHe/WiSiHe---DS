@@ -34,7 +34,7 @@ export default async function ProjectsPage() {
           {projects.map((project) => (
             <article
               key={project._id}
-              className="relative rounded-lg bg-tertiary overflow-clip"
+              className="relative rounded-lg bg-tertiary overflow-clip text-dark"
             >
               <div className="relative aspect-video">
                 <Image
