@@ -42,7 +42,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const sanityHeight = 720;
 
   return (
-    <section className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-10 bg-dark overflow-clip">
+    <section className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-16 lg:py-10 bg-dark overflow-clip">
       <img
         src={lqip || ''}
         alt=""
