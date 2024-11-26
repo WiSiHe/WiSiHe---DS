@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { PaintingQueryResult } from '@/sanity.types';
-import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
+import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
 
@@ -26,8 +26,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const {
-    _id,
-    views,
     title,
     description,
     tagsV2 = [],
@@ -64,37 +62,37 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     urlForImage(currentImage)?.format('webp').width(1200).fit('max').url() ??
     '';
 
-  useEffect(() => {
-    const handleAddView = async () => {
-      try {
-        const viewerId = generateOrRetrieveViewerId();
+  // useEffect(() => {
+  //   const handleAddView = async () => {
+  //     try {
+  //       const viewerId = generateOrRetrieveViewerId();
 
-        if (
-          Array.isArray(views) &&
-          !views.some((view) => view.viewerId === viewerId)
-        ) {
-          await patchPaintingViews(_id, viewerId);
-        }
-      } catch (error) {
-        console.error('Failed to add view:', error);
-      }
-    };
+  //       if (
+  //         Array.isArray(views) &&
+  //         !views.some((view) => view.viewerId === viewerId)
+  //       ) {
+  //         await patchPaintingViews(_id, viewerId);
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to add view:', error);
+  //     }
+  //   };
 
-    handleAddView();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  //   handleAddView();
+  // }, []); // Empty dependency array ensures this runs only once on mount
 
-  const generateOrRetrieveViewerId = () => {
-    // Attempt to get viewer ID from localStorage
-    let viewerId = localStorage.getItem('viewerId');
+  // const generateOrRetrieveViewerId = () => {
+  //   // Attempt to get viewer ID from localStorage
+  //   let viewerId = localStorage.getItem('viewerId');
 
-    // If not present, generate a new ID and store it
-    if (!viewerId) {
-      viewerId = crypto.randomUUID();
-      localStorage.setItem('viewerId', viewerId);
-    }
+  //   // If not present, generate a new ID and store it
+  //   if (!viewerId) {
+  //     viewerId = crypto.randomUUID();
+  //     localStorage.setItem('viewerId', viewerId);
+  //   }
 
-    return viewerId;
-  };
+  //   return viewerId;
+  // };
 
   return (
     <section
