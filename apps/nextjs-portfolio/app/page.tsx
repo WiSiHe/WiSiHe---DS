@@ -109,7 +109,7 @@ export default async function Home() {
             {showcaseProjects.map((project) => (
               <article
                 key={project._id}
-                className="relative flex flex-row w-full h-full rounded-lg shadow-lg md:flex-col bg-tertiary overflow-clip"
+                className="relative flex flex-row w-full h-full bg-white rounded-lg shadow-lg md:flex-col text-dark overflow-clip"
               >
                 <div className="relative bg-dark aspect-square min-w-52 md:aspect-video">
                   {project.image && (
