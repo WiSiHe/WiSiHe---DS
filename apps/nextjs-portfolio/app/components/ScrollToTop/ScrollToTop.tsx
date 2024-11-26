@@ -32,7 +32,7 @@ const buttonVariants = {
 };
 
 const buttonClassNames = cn(
-  'flex items-center justify-center rounded-full p-4',
+  'flex items-center justify-center text-dark rounded-full p-4',
   'transition-all duration-200 ease-in-out',
   'bg-white shadow hover:bg-primary hover:text-white',
   'ring-highlight focus:outline-none focus-visible:ring',
