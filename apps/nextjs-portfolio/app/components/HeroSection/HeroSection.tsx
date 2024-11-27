@@ -7,7 +7,7 @@ import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
 import Chip from '../Chip/Chip';
 import GreeterCard from '../GreeterCard/GreeterCard';
@@ -18,7 +18,7 @@ type HeroImageSectionProps = {
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
-
+  const constraintsRef = useRef(null);
   // Fallback for when paintings is null or empty
   if (!paintings || paintings.length === 0) {
     return <div>No paintings available.</div>;
@@ -42,7 +42,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const sanityHeight = 720;
 
   return (
-    <section className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-20 lg:py-10 bg-dark overflow-clip">
+    <motion.section
+      ref={constraintsRef}
+      className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-20   lg:py-10 bg-dark overflow-clip"
+    >
       <img
         src={lqip || ''}
         alt=""
@@ -53,14 +56,31 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
         <section className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44">
           <GreeterCard />
+          {/* <motion.div
+            drag
+            whileDrag={{ scale: 1.05, rotate: 5 }}
+            // dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
+            dragConstraints={constraintsRef}
+            className="absolute z-10 w-32 -bottom-6 -right-6 aspect-square"
+          >
+            <IconLogo
+              className={cn('transition-all ease-in-out mix-blend-difference')}
+              width="100%"
+              height="100%"
+            />
+          </motion.div> */}
         </section>
         <section className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPaintingsIndex}
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1.0 }}
-              exit={{ scale: 0.9 }}
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              // whileHover={{ scale: 1.05 }}
+              // whileTap={{ scale: 0.95 }}
+              // whileDrag={{ scale: 0.95 }} // Prevent scale on
+              // drag
               transition={{ type: 'spring' }}
               className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
             >
@@ -92,13 +112,15 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           </AnimatePresence>
 
           <section className="z-10 flex items-center justify-between w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:justify-center xl:gap-6">
-            <button
+            <motion.button
+              // whileDrag={{ scale: 0.95 }} // Prevent scale on
+              // drag
               className="p-3 text-white rounded-lg bg-primary"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
               <FaChevronLeft />
-            </button>
+            </motion.button>
             <Link
               href="/paintings"
               className="px-4 py-2 text-white rounded bg-primary "
@@ -115,7 +137,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           </section>
         </section>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
