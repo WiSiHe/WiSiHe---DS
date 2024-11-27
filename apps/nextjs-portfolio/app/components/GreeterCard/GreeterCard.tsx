@@ -1,8 +1,8 @@
-import { delay, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import type { JSX } from 'react';
 import { BiGame } from 'react-icons/bi';
 import { BsFillBrushFill } from 'react-icons/bs';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
-import type { JSX } from 'react';
 
 const listVariants = {
   initial: {
