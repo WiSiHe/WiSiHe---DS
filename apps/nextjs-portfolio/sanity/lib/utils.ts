@@ -94,6 +94,7 @@ export async function patchPaintingViews(
   viewerId: string
 ): Promise<void> {
   try {
+    // Apply the patch to the draft or published document
     const patch = await client
       .patch(paintingId)
       .setIfMissing({ views: [] })
@@ -106,8 +107,21 @@ export async function patchPaintingViews(
       ])
       .commit({ autoGenerateArrayKeys: true }); // Ensure unique keys are generated
 
-    console.log('View added:', patch);
+    console.log('Patch applied:', patch);
+
+    // Retrieve the full document
+    const updatedDoc = await client.getDocument(paintingId);
+
+    if (updatedDoc) {
+      // Publish the document by replacing the published version
+      await client.createOrReplace({
+        ...updatedDoc,
+        _id: paintingId, // Ensure the ID doesn't include `drafts.`
+      });
+
+      console.log('Document published:', paintingId);
+    }
   } catch (error) {
-    console.error('Failed to patch painting views:', error);
+    console.error('Failed to patch and publish painting views:', error);
   }
 }
