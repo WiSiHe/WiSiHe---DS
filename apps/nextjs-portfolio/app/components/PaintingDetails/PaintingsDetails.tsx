@@ -5,7 +5,7 @@ import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
 
