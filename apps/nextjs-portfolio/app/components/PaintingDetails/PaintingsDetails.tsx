@@ -15,6 +15,7 @@ type PaintingDetailProps = {
 
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hasAddedView, setHasAddedView] = useState(false);
 
   const {
     title,
@@ -55,40 +56,37 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     urlForImage(currentImage)?.format('webp').width(1200).fit('max').url() ??
     '';
 
-  // Memoize viewerId to prevent re-computation
-  const viewerId = useMemo(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        let storedViewerId = localStorage.getItem('viewerId');
-        if (!storedViewerId) {
-          storedViewerId = crypto.randomUUID();
-          localStorage.setItem('viewerId', storedViewerId);
-        }
-        return storedViewerId;
-      } catch (error) {
-        console.error('Failed to access localStorage:', error);
-        return null;
-      }
-    }
-    return null;
-  }, []);
-
   useEffect(() => {
-    if (!viewerId || !views || !_id) return;
+    const addView = async () => {
+      const viewerId = generateOrRetrieveViewerId(); // Always a string
 
-    (async () => {
-      try {
-        if (
-          Array.isArray(views) &&
-          !views.some((view) => view.viewerId === viewerId)
-        ) {
-          await patchPaintingViews(_id, viewerId);
-        }
-      } catch (error) {
-        console.error('Failed to add view:', error);
+      if (
+        Array.isArray(views) &&
+        !views.some((view) => view.viewerId === viewerId) &&
+        !hasAddedView // Prevent duplicate execution
+      ) {
+        setHasAddedView(true); // Mark as added
+        await patchPaintingViews(_id, viewerId);
       }
-    })();
-  }, [views, _id, viewerId]);
+    };
+
+    addView();
+  }, [_id, views, hasAddedView]);
+
+  const generateOrRetrieveViewerId = (): string => {
+    try {
+      let viewerId = localStorage.getItem('viewerId');
+      if (!viewerId) {
+        viewerId = crypto.randomUUID();
+        localStorage.setItem('viewerId', viewerId);
+      }
+      return viewerId; // Ensure a string is always returned
+    } catch (error) {
+      console.error('Failed to access localStorage:', error);
+      // Fallback: return a randomly generated ID if localStorage fails
+      return crypto.randomUUID();
+    }
+  };
 
   return (
     <section
