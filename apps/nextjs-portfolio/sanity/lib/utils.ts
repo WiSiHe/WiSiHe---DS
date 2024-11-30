@@ -94,13 +94,19 @@ export async function patchPaintingViews(
   viewerId: string
 ): Promise<void> {
   try {
-    await client
+    const patch = await client
       .patch(paintingId)
       .setIfMissing({ views: [] })
-      .append('views', [
-        { _key: viewerId, viewerId, timestamp: new Date().toISOString() },
+      .insert('after', 'views[-1]', [
+        {
+          _key: crypto.randomUUID(), // Unique key
+          viewerId,
+          timestamp: new Date().toISOString(),
+        },
       ])
-      .commit();
+      .commit({ autoGenerateArrayKeys: true }); // Ensure unique keys are generated
+
+    console.log('View added:', patch);
   } catch (error) {
     console.error('Failed to patch painting views:', error);
   }
