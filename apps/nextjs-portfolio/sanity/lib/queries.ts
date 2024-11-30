@@ -218,7 +218,7 @@ export const homePageQuery = defineQuery(`
 
 export const getAllPaintingsandTags = defineQuery(`
     {
-      "paintings": *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {
+      "paintings": *[_type == "painting" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {
         _id,
         "slug":slug.current,
         title,
