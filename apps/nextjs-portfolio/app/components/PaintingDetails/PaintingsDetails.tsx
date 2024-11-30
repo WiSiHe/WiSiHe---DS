@@ -1,22 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { PaintingQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
+import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
-
-interface ImageData {
-  lqip: string | null;
-  [key: string]: unknown;
-}
-
-interface HandleSelectImage {
-  (img: ImageData, index: number): void;
-}
 
 type PaintingDetailProps = {
   paintingData: Exclude<PaintingQueryResult, null>;
@@ -27,6 +18,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
   const {
     title,
+    _id,
+    views,
     description,
     tagsV2 = [],
     paintedAt,
@@ -45,11 +38,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     square: 'aspect-square',
   }[format];
 
-  const handleSelectImage: HandleSelectImage = (img, index) => {
+  const handleSelectImage = (index: number) => {
     setSelectedIndex(index);
   };
 
-  const formatedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
+  const formattedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -62,37 +55,40 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     urlForImage(currentImage)?.format('webp').width(1200).fit('max').url() ??
     '';
 
-  // useEffect(() => {
-  //   const handleAddView = async () => {
-  //     try {
-  //       const viewerId = generateOrRetrieveViewerId();
+  // Memoize viewerId to prevent re-computation
+  const viewerId = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        let storedViewerId = localStorage.getItem('viewerId');
+        if (!storedViewerId) {
+          storedViewerId = crypto.randomUUID();
+          localStorage.setItem('viewerId', storedViewerId);
+        }
+        return storedViewerId;
+      } catch (error) {
+        console.error('Failed to access localStorage:', error);
+        return null;
+      }
+    }
+    return null;
+  }, []);
 
-  //       if (
-  //         Array.isArray(views) &&
-  //         !views.some((view) => view.viewerId === viewerId)
-  //       ) {
-  //         await patchPaintingViews(_id, viewerId);
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to add view:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    if (!viewerId || !views || !_id) return;
 
-  //   handleAddView();
-  // }, []); // Empty dependency array ensures this runs only once on mount
-
-  // const generateOrRetrieveViewerId = () => {
-  //   // Attempt to get viewer ID from localStorage
-  //   let viewerId = localStorage.getItem('viewerId');
-
-  //   // If not present, generate a new ID and store it
-  //   if (!viewerId) {
-  //     viewerId = crypto.randomUUID();
-  //     localStorage.setItem('viewerId', viewerId);
-  //   }
-
-  //   return viewerId;
-  // };
+    (async () => {
+      try {
+        if (
+          Array.isArray(views) &&
+          !views.some((view) => view.viewerId === viewerId)
+        ) {
+          await patchPaintingViews(_id, viewerId);
+        }
+      } catch (error) {
+        console.error('Failed to add view:', error);
+      }
+    })();
+  }, [views, _id, viewerId]);
 
   return (
     <section
@@ -131,7 +127,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 return (
                   <button
                     key={index}
-                    onClick={() => handleSelectImage(img, index)}
+                    onClick={() => handleSelectImage(index)}
                     className={cn(
                       'flex-shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary',
                       index === selectedIndex ? 'ring ring-primary' : ''
@@ -166,34 +162,32 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
         <section className="p-4 pt-0 pb-10 xl:p-0 lg:sticky col-span-full top-4 xl:col-span-3">
           <div>
-            <div>
-              {tagsV2.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-3">
-                  <Chip
-                    Icon={() => <BsClockFill className="size-4" />}
-                    label={formatedPaintedAt}
-                  />
-                  <Chip
-                    Icon={() => <BsEye className="size-4" />}
-                    label="Views:"
-                    additionalText={viewsCount?.toString() ?? '0'}
-                  />
-                  {tagsV2.map((tag) => (
-                    <Link
-                      key={tag.name}
-                      href={`/paintings?filter=${tag.name.toLocaleLowerCase()}`}
-                    >
-                      <Chip variation="primary" label={tag.name} />
-                    </Link>
-                  ))}
-                </div>
-              )}
-              <div className="pt-2 prose text-white">
-                <h1 className="text-2xl font-bold text-white text-balance">
-                  {title}
-                </h1>
-                <p>{description}</p>
+            {tagsV2.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-3">
+                <Chip
+                  Icon={() => <BsClockFill className="size-4" />}
+                  label={formattedPaintedAt}
+                />
+                <Chip
+                  Icon={() => <BsEye className="size-4" />}
+                  label="Views:"
+                  additionalText={viewsCount?.toString() ?? '0'}
+                />
+                {tagsV2.map((tag) => (
+                  <Link
+                    key={tag.name}
+                    href={`/paintings?filter=${tag.name.toLocaleLowerCase()}`}
+                  >
+                    <Chip variation="primary" label={tag.name} />
+                  </Link>
+                ))}
               </div>
+            )}
+            <div className="pt-2 prose text-white">
+              <h1 className="text-2xl font-bold text-white text-balance">
+                {title}
+              </h1>
+              <p>{description}</p>
             </div>
           </div>
         </section>
