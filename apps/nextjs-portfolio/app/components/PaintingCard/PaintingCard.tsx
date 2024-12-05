@@ -19,26 +19,72 @@ type PaintingCardProps = {
   storybook?: boolean;
 };
 
+// Define Framer Motion variants
+const listVariants = {
+  rest: {
+    opacity: 0,
+    y: -20,
+  },
+  hover: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const listItemVariants = {
+  rest: {
+    opacity: 0,
+    y: -10,
+  },
+  hover: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
+const iconsListVariants = {
+  rest: { opacity: 0, x: 50 },
+  hover: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const iconVariants = {
+  rest: { opacity: 0, x: 50 },
+  hover: { opacity: 1, x: 0 },
+};
+
 const PaintingCard = ({
   paintingData,
   shouldBeLazy = false,
   storybook = false,
 }: PaintingCardProps) => {
   const searchParams = useSearchParams();
+
+  const { tagsV2 } = paintingData;
+
   const filters = searchParams?.getAll('filter');
 
   // Compute filtered tags and properties
   const { filteredTags, salesTag, nsfwTag } = useMemo(() => {
-    const tags = paintingData?.tagsV2?.filter((t) => t !== null) || [];
+    const tags = tagsV2?.filter((t) => t !== null) || [];
     return {
       filteredTags: tags,
-      salesTag: tags.find((t) => t.name === 'Store'),
+      salesTag: tags.find((t) => t.name === 'store'),
       nsfwTag: tags.find((t) => t.name === 'NSFW'),
     };
   }, [paintingData]);
 
   const hasStoreLinks = !!salesTag;
   const isNsfw = !!nsfwTag;
+
   const isNsfwUrl = filters?.includes('nsfw');
 
   // Early return for invalid data
@@ -52,48 +98,6 @@ const PaintingCard = ({
   }
 
   const { image, title = '', video = '', imagesCount = 0, slug } = paintingData;
-
-  // Define Framer Motion variants
-  const listVariants = {
-    rest: {
-      opacity: 0,
-      y: -20,
-    },
-    hover: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const listItemVariants = {
-    rest: {
-      opacity: 0,
-      y: -10,
-    },
-    hover: {
-      opacity: 1,
-      y: 0,
-    },
-  };
-
-  const iconsListVariants = {
-    rest: { opacity: 0, x: 50 },
-    hover: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const iconVariants = {
-    rest: { opacity: 0, x: 50 },
-    hover: { opacity: 1, x: 0 },
-  };
 
   return (
     <motion.article
@@ -111,7 +115,7 @@ const PaintingCard = ({
       >
         {filteredTags.map((tag) => (
           <motion.li
-            className="px-1 text-xs text-white uppercase rounded bg-dark"
+            className="px-1 text-sm text-white uppercase rounded bg-dark"
             key={tag.name}
             variants={listItemVariants}
           >
@@ -156,7 +160,7 @@ const PaintingCard = ({
             <BsYoutube className="w-4 h-4" />
           </motion.li>
         )}
-        {isNsfw && (
+        {!isNsfw && (
           <motion.li
             className="p-2 text-xs text-white rounded-full bg-primary"
             variants={iconVariants}
@@ -197,18 +201,14 @@ const PaintingCard = ({
 
       {/* NSFW Overlay */}
       {isNsfw && !isNsfwUrl && (
-        <motion.div
-          className="absolute inset-0 backdrop-blur-xl"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-        />
+        <div className="absolute inset-0 w-full h-full backdrop-blur-2xl" />
       )}
 
       <Link
         href={`/paintings/${slug}`}
         className="before:absolute before:inset-0 before:z-0"
       >
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/60 backdrop-blur-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/80 backdrop-blur-lg">
           <h2 className="text-base text-white capitalize line-clamp-1 font-inter">
             <strong>{title}</strong>
           </h2>

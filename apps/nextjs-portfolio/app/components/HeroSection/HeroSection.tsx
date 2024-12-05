@@ -19,6 +19,7 @@ type HeroImageSectionProps = {
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
   const constraintsRef = useRef(null);
+  const innerConstraintRef = useRef(null);
   // Fallback for when paintings is null or empty
   if (!paintings || paintings.length === 0) {
     return <div>No paintings available.</div>;
@@ -44,7 +45,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <motion.section
       ref={constraintsRef}
-      className="relative flex flex-col justify-start xl:justify-center w-full min-h-[600px] xl:min-h-screen px-8 py-20   lg:py-10 bg-dark overflow-clip"
+      className="relative flex flex-col justify-start w-full min-h-screen px-10 pt-20 xl:justify-center xl:min-h-screen lg:py-10 bg-dark overflow-clip"
     >
       <img
         src={lqip || ''}
@@ -54,23 +55,21 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       />
 
       <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
-        <section className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44">
+        <motion.section
+          drag
+          whileDrag={{ scale: 1.05, rotate: 5 }}
+          dragElastic={1} // Higher the value, the more elastic the drag
+          dragTransition={{ bounceStiffness: 50, bounceDamping: 10 }}
+          dragConstraints={constraintsRef}
+          // dragMomentum={false}
+          className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
+        >
           <GreeterCard />
-          {/* <motion.div
-            drag
-            whileDrag={{ scale: 1.05, rotate: 5 }}
-            // dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
-            dragConstraints={constraintsRef}
-            className="absolute z-10 w-32 -bottom-6 -right-6 aspect-square"
-          >
-            <IconLogo
-              className={cn('transition-all ease-in-out mix-blend-difference')}
-              width="100%"
-              height="100%"
-            />
-          </motion.div> */}
-        </section>
-        <section className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2">
+        </motion.section>
+        <motion.section
+          ref={innerConstraintRef}
+          className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPaintingsIndex}
@@ -82,10 +81,16 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               // whileDrag={{ scale: 0.95 }} // Prevent scale on
               // drag
               transition={{ type: 'spring' }}
-              className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
+              className="relative w-full h-full aspect-portrait lg:aspect-video rounded-2xl bg-dark/20"
             >
               <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full -top-2 drop-shadow-xl">
-                <Chip Icon={FaStar} label="Featured" />
+                <motion.div
+                  whileDrag={{ scale: 0.95 }} // Prevent scale on
+                  drag
+                  dragConstraints={innerConstraintRef}
+                >
+                  <Chip Icon={FaStar} label="Featured" />
+                </motion.div>
               </div>
               {image && (
                 <Image
@@ -135,7 +140,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               <FaChevronRight />
             </button>
           </section>
-        </section>
+        </motion.section>
       </div>
     </motion.section>
   );
