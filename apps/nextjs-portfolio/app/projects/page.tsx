@@ -8,8 +8,36 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'A gallery of some of my paintings',
+  title: 'Projects | WiSiHe',
+  description:
+    'Explore a collection of projects showcasing various creative and technical works.',
+  alternates: {
+    canonical: 'https://wisihe.no/projects',
+  },
+  openGraph: {
+    title: 'Projects | WiSiHe',
+    description:
+      'Explore a collection of projects showcasing various creative and technical works.',
+    url: 'https://wisihe.no/projects',
+    siteName: 'WiSiHe',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: 'https://wisihe.no/images/hell.jpg', // Updated to point to your image
+        width: 1200,
+        height: 630,
+        alt: 'A preview of various projects from WiSiHe',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Projects | WiSiHe',
+    description:
+      'Explore a collection of projects showcasing various creative and technical works.',
+    images: ['https://wisihe.no/images/hell.jpg'], // Updated to point to your image
+  },
 };
 
 export default async function ProjectsPage() {

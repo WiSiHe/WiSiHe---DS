@@ -76,16 +76,12 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
-              // whileHover={{ scale: 1.05 }}
-              // whileTap={{ scale: 0.95 }}
-              // whileDrag={{ scale: 0.95 }} // Prevent scale on
-              // drag
               transition={{ type: 'spring' }}
               className="relative w-full h-full aspect-portrait lg:aspect-video rounded-2xl bg-dark/20"
             >
               <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full -top-2 drop-shadow-xl">
                 <motion.div
-                  whileDrag={{ scale: 0.95 }} // Prevent scale on
+                  whileDrag={{ scale: 0.95 }}
                   drag
                   dragConstraints={innerConstraintRef}
                 >
@@ -109,6 +105,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   quality={40}
                   fill
                   priority
+                  // Adjust these sizes as necessary for your layout
                   sizes="(min-width: 2080px) 780px, (min-width: 1280px) calc(47.44vw + 84px), calc(100vw - 32px)"
                   className={cn('object-cover w-10 rounded-2xl bg-tertiary')}
                 />

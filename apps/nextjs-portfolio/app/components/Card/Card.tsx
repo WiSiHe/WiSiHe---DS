@@ -10,7 +10,6 @@ type Card = {
   title: string;
   categories: { name: string }[];
   href: string;
-  //   content: React.ReactNode;
 };
 
 export const Card = ({
@@ -21,38 +20,6 @@ export const Card = ({
   index: number;
   layout?: boolean;
 }) => {
-  //   const [open, setOpen] = useState(false);
-  //   const containerRef = useRef<HTMLDivElement>(null);
-  //   const { onCardClose, currentIndex } = useContext(CarouselContext);
-
-  //   useEffect(() => {
-  //     function onKeyDown(event: KeyboardEvent) {
-  //       if (event.key === 'Escape') {
-  //         handleClose();
-  //       }
-  //     }
-
-  //     if (open) {
-  //       document.body.style.overflow = 'hidden';
-  //     } else {
-  //       document.body.style.overflow = 'auto';
-  //     }
-
-  //     window.addEventListener('keydown', onKeyDown);
-  //     return () => window.removeEventListener('keydown', onKeyDown);
-  //   }, [open]);
-
-  //   useOutsideClick(containerRef, () => handleClose());
-
-  //   const handleOpen = () => {
-  //     setOpen(true);
-  //   };
-
-  //   const handleClose = () => {
-  //     setOpen(false);
-  //     onCardClose(index);
-  //   };
-
   const tagsVariants = {
     rest: { opacity: 0, y: -20 },
     hover: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
@@ -65,7 +32,6 @@ export const Card = ({
 
   return (
     <motion.div
-      //   ref={containerRef}
       layoutId={layout ? `card-${card.title}` : undefined}
       whileHover="hover"
       initial="rest"
@@ -74,10 +40,7 @@ export const Card = ({
     >
       <div className="absolute inset-x-0 top-0 z-30 h-full pointer-events-none bg-gradient-to-b from-dark/50 via-transparent to-transparent" />
       <div className="relative z-40 w-full p-8">
-        <motion.h3
-          // layoutId={layout ? `title-${card.title}` : undefined}
-          className="max-w-xs font-sans text-xl font-semibold text-left text-white md:text-3xl text-balance"
-        >
+        <motion.h3 className="max-w-xs font-sans text-xl font-semibold text-left text-white md:text-3xl text-balance">
           {card.title}
         </motion.h3>
         <motion.div
@@ -108,6 +71,8 @@ export const Card = ({
         alt={card.title}
         fill
         className="absolute inset-0 z-10 object-cover"
+        // Provide responsive sizes for the image
+        sizes="(min-width:768px) 384px, 224px"
       />
     </motion.div>
   );

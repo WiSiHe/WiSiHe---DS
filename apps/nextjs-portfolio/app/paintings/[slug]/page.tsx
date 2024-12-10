@@ -24,20 +24,40 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
+
   const { data: painting } = await sanityFetch({
     query: paintingQuery,
     params,
-    // Metadata should never contain stega
     stega: false,
   });
-  const previousImages = (await parent).openGraph?.images || [];
+
+  const title = painting?.title || 'Untitled Painting';
+  const description =
+    painting?.seoDescription || painting?.description || 'View this painting.';
   const ogImage = resolveOpenGraphImage(painting?.image);
+  const previousImages = (await parent).openGraph?.images || [];
+  const url = `https://www.wisihe.no/paintings/${params.slug}`;
 
   return {
-    title: painting?.title,
-    description: painting?.seoDescription || painting?.description,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'WiSiHe',
+      locale: 'en_US',
+      type: 'article',
       images: ogImage ? [ogImage, ...previousImages] : previousImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
     },
   } satisfies Metadata;
 }
