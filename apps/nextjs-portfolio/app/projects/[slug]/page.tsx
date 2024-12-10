@@ -31,17 +31,47 @@ export async function generateMetadata(
   const { data: project } = await sanityFetch({
     query: projectQuery,
     params,
-    // Metadata should never contain stega
     stega: false,
   });
-  const previousImages = (await parent).openGraph?.images || [];
+
+  const fallbackTitle = 'Untitled Project | WiSiHe';
+  const fallbackDescription = 'Explore this project from WiSiHe.';
+  const title = project?.title || fallbackTitle;
+  const description = project?.description || fallbackDescription;
+
+  const parentMetadata = await parent;
+  const previousImages = parentMetadata.openGraph?.images || [];
   const ogImage = resolveOpenGraphImage(project?.image);
 
+  // If no project image is available, fall back to a default image
+  const defaultOgImage = 'https://wisihe.no/images/hell.jpg';
+  const ogImages = ogImage
+    ? [ogImage, ...previousImages]
+    : [{ url: defaultOgImage }, ...previousImages];
+
+  const slug = params.slug;
+  const url = `https://wisihe.no/project/${slug}`;
+
   return {
-    title: project?.title,
-    description: project?.description,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
-      images: ogImage ? [ogImage, ...previousImages] : previousImages,
+      title,
+      description,
+      url,
+      siteName: 'WiSiHe',
+      locale: 'en_US',
+      type: 'article',
+      images: ogImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage.url] : [defaultOgImage],
     },
   } satisfies Metadata;
 }
@@ -74,10 +104,9 @@ export default async function ProjectPage(props: Props) {
 
   return (
     <div className="h-full min-h-screen lg:p-4 bg-dark">
-      <section className="grid grid-cols-12 pt-16 ">
+      <section className="grid grid-cols-12 pt-16">
         <div className="relative flex flex-col gap-4 text-white col-span-full lg:col-span-8">
           <div className="relative rounded-xl aspect-video overflow-clip">
-            {/* Render the main image */}
             {image && (
               <Image
                 src={urlForImage(image)?.width(1200)?.height(800)?.url() || ''}
@@ -98,7 +127,9 @@ export default async function ProjectPage(props: Props) {
           {connectedVideo && (
             <div className="relative aspect-video">
               <iframe
-                src={`https://www.youtube.com/embed/${new URL(connectedVideo.videoUrl).pathname.slice(1)}`}
+                src={`https://www.youtube.com/embed/${new URL(
+                  connectedVideo.videoUrl
+                ).pathname.slice(1)}`}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -107,7 +138,6 @@ export default async function ProjectPage(props: Props) {
             </div>
           )}
 
-          {/* Render extra images in a grid if available */}
           {extraImages?.length > 0 && (
             <div className="grid grid-cols-2 gap-4 px-4 lg:p-0 md:grid-cols-3 lg:grid-cols-4">
               <div className="flex items-center justify-center bg-primary">
@@ -117,7 +147,7 @@ export default async function ProjectPage(props: Props) {
                 <div key={extraImage._key} className="relative aspect-video">
                   <Image
                     src={
-                      urlForImage(extraImage)?.width(600).height(400)?.url() ||
+                      urlForImage(extraImage)?.width(600)?.height(400)?.url() ||
                       ''
                     }
                     alt="Default Alt Text"
@@ -144,10 +174,10 @@ export default async function ProjectPage(props: Props) {
                     src={
                       urlForImage(painting.image)
                         ?.width(600)
-                        .height(400)
-                        .url() || ''
+                        ?.height(400)
+                        ?.url() || ''
                     }
-                    alt="Default Alt Text"
+                    alt={painting.title || 'Default Alt Text'}
                     fill
                     className="object-cover"
                   />

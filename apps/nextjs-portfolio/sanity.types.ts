@@ -996,6 +996,11 @@ export type GetAllProjectsResult = {
     } | null;
   }>;
 };
+// Variable: generateStaticSlugs
+// Query: *[_type == $type && defined(slug.current)]{"slug": slug.current}
+export type GenerateStaticSlugsResult = Array<{
+  slug: string;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -1016,5 +1021,6 @@ declare module "@sanity/client" {
     "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
     "\n    {\n      \"paintings\": *[_type == \"painting\" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n      \"tags\": *[_type == \"tag\"] | order(name asc) { _id, name, \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)}\n    }\n    ": GetAllPaintingsandTagsResult;
     "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        description,\n        seoDescription,\n        projectStart,\n        projectEnd,\n        status,\n        content,\n        name,\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip\n        },\n      },\n    }\n    ": GetAllProjectsResult;
+    "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
   }
 }

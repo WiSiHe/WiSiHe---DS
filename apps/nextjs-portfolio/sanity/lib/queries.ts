@@ -1,4 +1,5 @@
 import { defineQuery } from 'next-sanity';
+import { client } from './client';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
@@ -258,3 +259,25 @@ export const getAllProjects = defineQuery(`
       },
     }
     `);
+
+export const generateStaticSlugs = defineQuery(`
+    *[_type == $type && defined(slug.current)]{"slug": slug.current}
+  `);
+
+export async function getStaticSlugs(type: string) {
+  return client
+    .withConfig({
+      perspective: 'published',
+      useCdn: true,
+      stega: false,
+    })
+    .fetch(
+      generateStaticSlugs,
+      { type },
+      {
+        next: {
+          tags: [type],
+        },
+      }
+    );
+}
