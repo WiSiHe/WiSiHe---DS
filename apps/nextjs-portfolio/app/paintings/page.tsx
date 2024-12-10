@@ -63,14 +63,12 @@ export default async function Paintings() {
 
   return (
     <>
-      <div className="p-4 mt-16 bg-dark">
-        <div className="prose prose-invert">
+      <div className="p-4 pt-16 bg-dark">
+        <div className="mx-auto prose prose-invert max-w-screen-2xl">
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>
-        </div>
-        <Suspense fallback={<div>Loading...</div>}>
           <Filters tags={sortedTags} />
-        </Suspense>
+        </div>
 
         <Suspense fallback={<div>Loading...</div>}>
           <PaintingGrid paintings={paintings} />

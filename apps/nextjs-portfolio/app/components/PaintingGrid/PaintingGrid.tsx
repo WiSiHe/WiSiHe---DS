@@ -78,7 +78,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
   }
 
   return (
-    <div className="grid w-full grid-cols-12 gap-4">
+    <div className="grid w-full grid-cols-12 gap-4 mx-auto max-w-screen-2xl">
       {filteredPaintings.map((painting) => (
         <div
           key={painting._id}
