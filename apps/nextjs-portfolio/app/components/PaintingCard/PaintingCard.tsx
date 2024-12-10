@@ -160,7 +160,7 @@ const PaintingCard = ({
             <BsYoutube className="w-4 h-4" />
           </motion.li>
         )}
-        {!isNsfw && (
+        {isNsfw && (
           <motion.li
             className="p-2 text-xs text-white rounded-full bg-primary"
             variants={iconVariants}
