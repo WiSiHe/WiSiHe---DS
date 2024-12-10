@@ -67,7 +67,9 @@ export default async function Paintings() {
         <div className="mx-auto prose prose-invert max-w-screen-2xl">
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>
-          <Filters tags={sortedTags} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Filters tags={sortedTags} />
+          </Suspense>
         </div>
 
         <Suspense fallback={<div>Loading...</div>}>
