@@ -3,7 +3,6 @@
 
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import { IconChevronRight } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
@@ -16,10 +15,10 @@ type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
+// const containerVariants = {
+//   hidden: { opacity: 0 },
+//   visible: { opacity: 1 },
+// };
 
 // const textVariants = {
 //   hidden: { width: 0, opacity: 0 },
@@ -81,15 +80,20 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2"
         >
           <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPaintingsIndex}
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              transition={{ type: 'spring' }}
-              className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
+            <Link
+              href={`paintings/${slug}`}
+              aria-label="View painting"
+              className="focus-visible:ring-2 focus-visible:ring-primary"
             >
-              {/* <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full cursor-pointer -top-5 drop-shadow-xl">
+              <motion.div
+                key={currentPaintingsIndex}
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.95 }}
+                transition={{ type: 'spring' }}
+                className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
+              >
+                {/* <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full cursor-pointer -top-5 drop-shadow-xl">
                 <motion.div
                   whileDrag={{ scale: 0.95 }}
                   drag
@@ -98,44 +102,31 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   <Chip Icon={FaStar} label="Featured" />
                 </motion.div>
               </div> */}
-              <motion.div
-                variants={containerVariants}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute z-10 flex justify-end bottom-4 -right-4"
-              >
-                <Link
-                  href={`paintings/${slug}`}
-                  className="flex items-center gap-1 px-3 py-2 font-semibold text-white rounded-xl bg-primary hover:bg-primary/90"
-                >
-                  View
-                  <IconChevronRight />
-                </Link>
-              </motion.div>
 
-              {image && (
-                <Image
-                  key={_id + 'hero'}
-                  src={
-                    urlForImage(image)
-                      ?.width(sanityWidth)
-                      .height(sanityHeight)
-                      .quality(60)
-                      .auto('format')
-                      .url() || ''
-                  }
-                  alt={altText || 'Image'}
-                  placeholder="blur"
-                  blurDataURL={lqip || undefined}
-                  quality={40}
-                  fill
-                  priority
-                  // Adjust these sizes as necessary for your layout
-                  sizes="(min-width: 2080px) 780px, (min-width: 1280px) calc(47.44vw + 84px), calc(100vw - 32px)"
-                  className={cn('object-cover w-10 rounded-2xl bg-tertiary')}
-                />
-              )}
-            </motion.div>
+                {image && (
+                  <Image
+                    key={_id + 'hero'}
+                    src={
+                      urlForImage(image)
+                        ?.width(sanityWidth)
+                        .height(sanityHeight)
+                        .quality(60)
+                        .auto('format')
+                        .url() || ''
+                    }
+                    alt={altText || 'Image'}
+                    placeholder="blur"
+                    blurDataURL={lqip || undefined}
+                    quality={40}
+                    fill
+                    priority
+                    // Adjust these sizes as necessary for your layout
+                    sizes="(min-width: 2080px) 780px, (min-width: 1280px) calc(47.44vw + 84px), calc(100vw - 32px)"
+                    className={cn('object-cover w-10 rounded-2xl bg-tertiary')}
+                  />
+                )}
+              </motion.div>
+            </Link>
           </AnimatePresence>
 
           <section className="z-10 flex items-center justify-center w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6">
