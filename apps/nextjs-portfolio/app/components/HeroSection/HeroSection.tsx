@@ -3,15 +3,14 @@
 
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
+import { IconChevronRight } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
-import Chip from '../Chip/Chip';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import GreeterCard from '../GreeterCard/GreeterCard';
-import { IconChevronRight } from '@tabler/icons-react';
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
@@ -22,10 +21,10 @@ const containerVariants = {
   visible: { opacity: 1 },
 };
 
-const textVariants = {
-  hidden: { width: 0, opacity: 0 },
-  visible: { width: 'auto', opacity: 1 },
-};
+// const textVariants = {
+//   hidden: { width: 0, opacity: 0 },
+//   visible: { width: 'auto', opacity: 1 },
+// };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);

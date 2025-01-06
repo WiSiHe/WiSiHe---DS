@@ -6,7 +6,7 @@ import {urlFor} from '../utils/image'
 import OpenAI from 'openai'
 
 const client = new OpenAI({
-  apiKey: process.env['SANITY_STUDIO_OPENAI_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env.SANITY_STUDIO_OPENAI_API_KEY, // This is the default and can be omitted
   dangerouslyAllowBrowser: true, // This is the default and can be omitted
 })
 
