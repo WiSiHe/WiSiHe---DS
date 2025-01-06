@@ -1,14 +1,32 @@
 'use client';
 
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Chip from '../Chip/Chip';
-import { Dialog, Listbox, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
+import { cn } from '@wisihe/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Fragment, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
+import {
+  IoCheckmarkCircleOutline,
+  IoChevronDownCircleOutline,
+} from 'react-icons/io5';
+import Chip from '../Chip/Chip';
 
 type FiltersProps = {
+  /**
+   * List of tags to be used as filters
+   */
   tags: GetAllPaintingsandTagsResult['tags'];
 };
 
@@ -59,11 +77,24 @@ const Filters = ({ tags }: FiltersProps) => {
     <div className="flex flex-wrap items-center gap-2 py-4">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="flex items-center gap-1 px-4 py-2 text-white rounded bg-primary hover:bg-primary/90"
+        className="flex items-center gap-1 px-3 py-2 text-white rounded bg-primary hover:bg-primary/90"
       >
         <FaFilter />
         Filters & Sort
+        {selectedFilters.length > 0 && (
+          <div className="flex items-center justify-center flex-shrink-0 w-3 h-3 p-2 text-xs font-medium bg-white rounded-full text-dark">
+            {selectedFilters.length}
+          </div>
+        )}
       </button>
+      <div>
+        <button
+          onClick={clearFilters}
+          className="px-3 py-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
+        >
+          Clear Filters
+        </button>
+      </div>
 
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog
@@ -72,7 +103,7 @@ const Filters = ({ tags }: FiltersProps) => {
           onClose={() => setIsModalOpen(false)}
         >
           {/* The backdrop */}
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="transition-opacity ease-out duration-300"
             enterFrom="opacity-0"
@@ -82,12 +113,12 @@ const Filters = ({ tags }: FiltersProps) => {
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-          </Transition.Child>
+          </TransitionChild>
 
           {/* Full-screen container to center the panel */}
           <div className="fixed inset-0 flex items-center justify-center p-4">
             {/* Panel */}
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="transition ease-out duration-300 transform"
               enterFrom="opacity-0 scale-95"
@@ -96,123 +127,161 @@ const Filters = ({ tags }: FiltersProps) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle bg-white rounded-lg shadow-xl">
-                <Dialog.Title
+              <DialogPanel className="w-full max-w-md p-6 overflow-hidden text-left align-middle bg-white rounded-lg shadow-xl">
+                <DialogTitle
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
                   Filters & Sorting
-                </Dialog.Title>
+                </DialogTitle>
 
-                {/* Sorting Options */}
-                <div className="mt-4">
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                <div className="relative mt-4">
+                  <label className="block mb-1 text-sm font-semibold">
                     Sort By
                   </label>
-                  <Listbox
-                    value={selectedSort}
-                    onChange={(value) => {
-                      setSelectedSort(value);
-                    }}
-                  >
-                    <div className="relative mt-1">
-                      <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus:ring-2 focus:ring-opacity-75 focus:ring-blue-500 sm:text-sm">
-                        <span className="block truncate">
-                          {
-                            sortingOptions.find(
-                              (option) => option.value === selectedSort
-                            )?.label
-                          }
-                        </span>
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                          ▼
-                        </span>
-                      </Listbox.Button>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-300"
-                        enterFrom="opacity-0"
-                        enterTo="opacity-100"
-                        leave="transition ease-in duration-200"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {sortingOptions.map((option) => (
-                            <Listbox.Option
-                              key={option.value}
-                              value={option.value}
-                              className={({ active }) =>
-                                `cursor-default select-none relative py-2 pl-10 pr-4 ${
-                                  active
-                                    ? 'text-blue-900 bg-blue-100'
-                                    : 'text-gray-900'
-                                }`
-                              }
-                            >
-                              {({ selected }) => (
-                                <>
-                                  <span
-                                    className={`block truncate ${
-                                      selected ? 'font-medium' : 'font-normal'
-                                    }`}
-                                  >
-                                    {option.label}
-                                  </span>
-                                  {selected ? (
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                      ✓
-                                    </span>
-                                  ) : null}
-                                </>
+                  <Listbox value={selectedSort} onChange={setSelectedSort}>
+                    {({ open }) => (
+                      <div className="relative w-full">
+                        {/* --- Button --- */}
+                        <ListboxButton className="relative flex items-center justify-between w-full px-3 py-2 text-left transition-colors border rounded-md shadow-sm cursor-pointer border-primary bg-tertiary hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1">
+                          <span className="block truncate">
+                            {
+                              sortingOptions.find(
+                                (option) => option.value === selectedSort
+                              )?.label
+                            }
+                          </span>
+                          <div className="flex items-center pointer-events-none">
+                            <IoChevronDownCircleOutline
+                              className={cn(
+                                'w-4 h-4 text-primary transition-all',
+                                open && ' rotate-180'
                               )}
-                            </Listbox.Option>
-                          ))}
-                        </Listbox.Options>
-                      </Transition>
-                    </div>
+                              aria-hidden="true"
+                            />
+                          </div>
+                        </ListboxButton>
+
+                        <AnimatePresence>
+                          {open && (
+                            <ListboxOptions
+                              static
+                              as={motion.div}
+                              initial={{
+                                opacity: 0,
+                                // height: 0.5,
+                                scaleY: 0.5,
+                                y: -5,
+                                transition: {
+                                  // duration: 0.4,
+                                  type: 'spring',
+                                },
+                              }}
+                              animate={{
+                                opacity: 1,
+                                scaleY: 1,
+                                // height: 'auto',
+                                y: 0,
+                                transition: {
+                                  // duration: 0.4,
+                                  type: 'spring',
+                                },
+                              }}
+                              exit={{
+                                opacity: 0,
+                                scaleY: 0.5,
+                                // height: 0.5,
+                                y: -5,
+                                transition: {
+                                  // duration: 0.4,
+                                  type: 'spring',
+                                },
+                              }}
+                              // anchor="bottom"
+                              className="absolute z-10 w-full mt-1 overflow-auto origin-top bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                            >
+                              {sortingOptions.map((option) => (
+                                <ListboxOption
+                                  key={option.value}
+                                  value={option.value}
+                                  className={({ selected, focus }) =>
+                                    cn(
+                                      'relative cursor-pointer flex gap-2 select-none py-2 px-4 transition-colors',
+                                      focus && 'bg-primary/10',
+                                      selected
+                                        ? 'bg-primary/10 text-primary'
+                                        : 'text-dark'
+                                    )
+                                  }
+                                >
+                                  {({ selected }) => (
+                                    <>
+                                      {selected && (
+                                        <motion.div
+                                          initial={{ scale: 0 }}
+                                          animate={{ scale: 1 }}
+                                          exit={{ scale: 0 }}
+                                          className="flex items-center text-primary"
+                                        >
+                                          <IoCheckmarkCircleOutline
+                                            className="w-4 h-4"
+                                            aria-hidden="true"
+                                          />
+                                        </motion.div>
+                                      )}
+                                      <span>{option.label}</span>
+                                    </>
+                                  )}
+                                </ListboxOption>
+                              ))}
+                            </ListboxOptions>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )}
                   </Listbox>
                 </div>
 
                 {/* Filter Chips */}
-                <div className="mt-6">
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
-                    Filters
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map(({ _id, name, paintingsCount }) => {
-                      const filterValue = name.toLowerCase();
-                      const isActive = selectedFilters.includes(filterValue);
-
-                      return (
-                        <button
-                          key={_id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedFilters((prevFilters) => {
-                              if (isActive) {
-                                return prevFilters.filter(
-                                  (filter) => filter !== filterValue
-                                );
-                              } else {
-                                return [...prevFilters, filterValue];
-                              }
-                            });
-                          }}
-                        >
-                          <Chip
-                            label={name}
-                            additionalText={paintingsCount.toString()}
-                            selected={isActive}
-                          />
-                        </button>
-                      );
-                    })}
+                <div className="flex flex-col gap-5 pt-6">
+                  <div>
+                    <label className="block pb-2 font-semibold">Filters</label>
+                    <div className="flex flex-wrap gap-x-3 gap-y-4">
+                      {tags.map(({ _id, name, paintingsCount }) => {
+                        const filterValue = name.toLowerCase();
+                        const isActive = selectedFilters.includes(filterValue);
+                        const isStore = name === 'Store';
+                        return (
+                          <button
+                            key={_id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedFilters((prevFilters) => {
+                                if (isActive) {
+                                  return prevFilters.filter(
+                                    (filter) => filter !== filterValue
+                                  );
+                                } else {
+                                  return [...prevFilters, filterValue];
+                                }
+                              });
+                            }}
+                          >
+                            <Chip
+                              label={name}
+                              additionalText={paintingsCount.toString()}
+                              selected={isActive}
+                              variation={isStore ? 'highlight' : 'default'}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                   {/* Clear Filters Button */}
                   <button
                     onClick={clearFilters}
-                    className="mt-2 text-sm text-blue-600 hover:underline"
+                    className="px-3 py-2 mt-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
                   >
                     Clear Filters
                   </button>
@@ -222,21 +291,21 @@ const Filters = ({ tags }: FiltersProps) => {
                 <div className="flex justify-end mt-6 space-x-2">
                   <button
                     type="button"
-                    className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
+                    className="px-3 py-2 mt-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
                     onClick={() => setIsModalOpen(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+                    className="px-3 py-2 mt-2 text-sm text-white transition-colors border-2 rounded bg-primary border-primary w-fit hover:bg-primary/90 hover:text-white"
                     onClick={applyFilters}
                   >
                     Apply
                   </button>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </Dialog>
       </Transition>

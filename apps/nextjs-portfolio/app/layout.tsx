@@ -204,7 +204,9 @@ export default async function RootLayout({
         </Link>
         {/* <IntroSplash /> */}
         <HeaderNavigation />
-        <main id="main-content">{children}</main>
+        <main id="main-content" className="bg-dark">
+          {children}
+        </main>
         <Footer socialLinks={socialLinks} />
         <Analytics />
         <SpeedInsights />

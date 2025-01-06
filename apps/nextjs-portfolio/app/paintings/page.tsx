@@ -63,7 +63,7 @@ export default async function Paintings() {
 
   return (
     <>
-      <div className="p-4 pt-16 bg-dark">
+      <div className="h-full p-4 pt-16 bg-dark">
         <div className="mx-auto prose prose-invert max-w-screen-2xl">
           <h1>Paintings</h1>
           <p>A gallery of some of my paintings</p>

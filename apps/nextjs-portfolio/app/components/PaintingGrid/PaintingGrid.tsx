@@ -65,7 +65,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
 
   if (filteredPaintings.length === 0) {
     return (
-      <div className="w-full py-4">
+      <div className="w-full py-4 mx-auto text-tertiary max-w-screen-2xl">
         <p className="no-results-message">
           No paintings match your filters.
           <br />
@@ -78,20 +78,28 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
   }
 
   return (
-    <div className="grid w-full grid-cols-12 gap-4 mx-auto max-w-screen-2xl">
-      {filteredPaintings.map((painting) => (
-        <div
-          key={painting._id}
-          className="relative col-span-full sm:col-span-6 md:col-span-3"
-        >
-          <Suspense
-            fallback={<div className="aspect-portrait">Loading...</div>}
+    <>
+      <div className="w-full py-4 mx-auto text-white max-w-screen-2xl">
+        <p className="no-results-message">
+          {filteredPaintings.length} paintings found.
+          <br />
+        </p>
+      </div>
+      <div className="grid w-full h-full grid-cols-12 gap-4 mx-auto max-w-screen-2xl">
+        {filteredPaintings.map((painting) => (
+          <div
+            key={painting._id}
+            className="relative col-span-full sm:col-span-6 md:col-span-3"
           >
-            <PaintingCard paintingData={painting} />
-          </Suspense>
-        </div>
-      ))}
-    </div>
+            <Suspense
+              fallback={<div className="aspect-portrait">Loading...</div>}
+            >
+              <PaintingCard paintingData={painting} />
+            </Suspense>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
