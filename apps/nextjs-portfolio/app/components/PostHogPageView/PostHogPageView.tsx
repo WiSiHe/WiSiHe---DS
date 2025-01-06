@@ -1,3 +1,4 @@
+// app/PostHogPageView.tsx
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -13,7 +14,6 @@ function PostHogPageView(): null {
   useEffect(() => {
     if (pathname && posthog) {
       let url = window.origin + pathname;
-
       if (searchParams.toString()) {
         url = url + `?${searchParams.toString()}`;
       }
