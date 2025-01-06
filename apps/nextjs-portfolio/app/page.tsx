@@ -60,41 +60,6 @@ export default async function Home() {
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={showcasePaintings} />
-      <PaintingsSection
-        paintings={showcasePaintings}
-        paintingsDescription={paintingsDescription}
-      />
-
-      <section className="flex flex-col gap-4 py-20 text-white">
-        <div className="px-4 lg:px-10">
-          <h2 className="text-3xl font-semibold">Skills</h2>
-          <p>Here are some of the skills I have acquired over the years.</p>
-        </div>
-        <Marquee
-          gradientColor="#2B061E"
-          autoFill
-          gradient
-          direction="left"
-          speed={20}
-        >
-          {professionalSkills.map((skill) => (
-            <Chip key={skill} label={skill} className="ml-2" />
-          ))}
-        </Marquee>
-        <Marquee
-          gradientColor="#2B061E"
-          autoFill
-          gradient
-          direction="right"
-          className=""
-          speed={20}
-        >
-          {creativeSkills.map((skill) => (
-            <Chip key={skill} label={skill} className="ml-2" />
-          ))}
-        </Marquee>
-      </section>
-
       {/* Projects Section */}
       {showcaseProjects && showcaseProjects.length > 0 ? (
         <section className="px-4 py-16 md:px-8 bg-tertiary/80">
@@ -149,6 +114,41 @@ export default async function Home() {
       ) : (
         <p className="text-center">No projects to display.</p>
       )}
+      <PaintingsSection
+        paintings={showcasePaintings}
+        paintingsDescription={paintingsDescription}
+      />
+
+      <section className="flex flex-col gap-4 py-20 text-white">
+        <div className="px-4 lg:px-10">
+          <h2 className="text-3xl font-semibold">Skills</h2>
+          <p>Here are some of the skills I have acquired over the years.</p>
+        </div>
+        <Marquee
+          gradientColor="#2B061E"
+          autoFill
+          gradient
+          direction="left"
+          speed={20}
+        >
+          {professionalSkills.map((skill) => (
+            <Chip key={skill} label={skill} className="ml-2" />
+          ))}
+        </Marquee>
+        <Marquee
+          gradientColor="#2B061E"
+          autoFill
+          gradient
+          direction="right"
+          className=""
+          speed={20}
+        >
+          {creativeSkills.map((skill) => (
+            <Chip key={skill} label={skill} className="ml-2" />
+          ))}
+        </Marquee>
+      </section>
+
       <NotFoundSection />
     </div>
   );

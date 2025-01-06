@@ -16,6 +16,7 @@ import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
 import './globals.css';
+import { CSPostHogProvider } from './providers';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -186,31 +187,33 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
-      >
-        {isDraftMode && (
-          <>
-            <DraftModeToast />
-            <VisualEditing />
-          </>
-        )}
-        <SanityLive onError={handleError} />
-        <Link
-          href="#main-content"
-          className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded shadow opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
+      <CSPostHogProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
         >
-          Skip to main content
-        </Link>
-        {/* <IntroSplash /> */}
-        <HeaderNavigation />
-        <main id="main-content" className="bg-dark">
-          {children}
-        </main>
-        <Footer socialLinks={socialLinks} />
-        <Analytics />
-        <SpeedInsights />
-      </body>
+          {isDraftMode && (
+            <>
+              <DraftModeToast />
+              <VisualEditing />
+            </>
+          )}
+          <SanityLive onError={handleError} />
+          <Link
+            href="#main-content"
+            className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded shadow opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
+          >
+            Skip to main content
+          </Link>
+          {/* <IntroSplash /> */}
+          <HeaderNavigation />
+          <main id="main-content" className="bg-dark">
+            {children}
+          </main>
+          <Footer socialLinks={socialLinks} />
+          <Analytics />
+          <SpeedInsights />
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
