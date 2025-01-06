@@ -187,10 +187,10 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <PostHogProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
-        >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
+      >
+        <PostHogProvider>
           {isDraftMode && (
             <>
               <DraftModeToast />
@@ -212,8 +212,8 @@ export default async function RootLayout({
           <Footer socialLinks={socialLinks} />
           <Analytics />
           <SpeedInsights />
-        </body>
-      </PostHogProvider>
+        </PostHogProvider>
+      </body>
     </html>
   );
 }
