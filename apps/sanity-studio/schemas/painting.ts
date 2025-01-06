@@ -9,6 +9,7 @@ import {defineField, defineType} from 'sanity'
 import SEODescriptionGenerator from '../components/SEODescriptionGenerator'
 import ImageAltGenerator from '../components/ImageAltGenerator'
 import ImageDescriptionGenerator from '../components/ImageDescriptionGenerator'
+import ViewsArray from '../components/ViewsArray'
 
 export default defineType({
   name: 'painting',
@@ -128,6 +129,9 @@ export default defineType({
       title: 'Images',
       type: 'array',
       group: 'media',
+      options: {
+        layout: 'grid',
+      },
       of: [
         {
           type: 'image',
@@ -181,6 +185,12 @@ export default defineType({
       title: 'Views',
       type: 'array',
       group: 'social',
+      options: {
+        layout: 'list',
+      },
+      components: {
+        input: ViewsArray,
+      },
       of: [
         {
           type: 'object',
@@ -189,14 +199,33 @@ export default defineType({
               name: 'viewerId',
               title: 'Viewer ID',
               type: 'string', // You might want to consider a more robust ID system if necessary
+              description: 'ID of the viewer',
             },
             {
               name: 'timestamp',
               title: 'Timestamp',
               type: 'datetime',
+              description: 'Time when the view was recorded',
             },
-            // Add any additional data you'd like to capture about each view
+            {
+              name: 'location',
+              title: 'Location',
+              type: 'string',
+              description: 'Location of the viewer',
+            },
           ],
+          preview: {
+            select: {
+              viewerId: 'viewerId',
+              timestamp: 'timestamp',
+            },
+            prepare({viewerId, timestamp}) {
+              return {
+                title: viewerId,
+                subtitle: new Date(timestamp).toLocaleString(),
+              }
+            },
+          },
         },
       ],
     }),
@@ -255,6 +284,9 @@ export default defineType({
       type: 'array',
       of: [{type: 'reference', to: {type: 'tag'}}],
       description: 'Tags for the painting',
+      options: {
+        layout: 'list',
+      },
       validation: (rule) => rule.required(),
     }),
   ],

@@ -133,10 +133,10 @@ export default async function Home() {
                     <h3 className="font-bold">{project.title}</h3>
                     <p className="line-clamp-3">{project.description}</p>
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end pt-4">
                     <Link
                       href={`projects/${project.slug}`}
-                      className="px-4 py-2 rounded-full text-primary bg-primary/10 hover:bg-primary/20"
+                      className="px-4 py-2 text-white rounded-full bg-primary hover:bg-primary/90"
                     >
                       Visit Project &rarr;
                     </Link>
