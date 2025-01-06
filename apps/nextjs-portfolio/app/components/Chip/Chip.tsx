@@ -3,19 +3,22 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@wisihe/utils';
 
 const chipStyles = cva(
-  'inline-flex items-center rounded-full gap-2 font-medium font-inter',
+  'inline-flex items-center transition-all ease-in-out rounded-full gap-2 font-medium font-inter',
   {
     variants: {
       variation: {
+        default: 'bg-stone-100 text-dark',
         primary: 'bg-primary text-white',
         secondary: 'bg-secondary text-white',
+        tertiary: 'bg-tertiary text-white',
+        highlight: 'bg-highlight text-dark',
       },
       outlined: {
         true: 'border border-current',
         false: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-highlight',
+        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-white',
         false: '',
       },
       iconPosition: {
@@ -44,7 +47,7 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
     selected?: boolean;
     Icon?: React.FC<React.SVGProps<SVGSVGElement>>;
     iconPosition?: 'left' | 'right';
-    variation?: 'primary' | 'secondary';
+    variation?: 'primary' | 'secondary' | 'tertiary' | 'highlight' | 'default';
     outlined?: boolean;
     size?: 'small' | 'medium' | 'large';
     additionalText?: string;
@@ -56,7 +59,7 @@ const Chip: React.FC<ChipProps> = ({
   selected = false,
   Icon,
   iconPosition = 'left',
-  variation = 'primary',
+  variation = 'default',
   outlined = false,
   size = 'medium',
   additionalText,
