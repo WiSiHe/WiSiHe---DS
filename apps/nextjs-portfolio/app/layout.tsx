@@ -1,21 +1,21 @@
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Analytics } from '@vercel/analytics/react';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import HeaderNavigation from '@/app/components/HeaderNavigation';
-import { draftMode } from 'next/headers';
-import './globals.css';
 import { sanityFetch, SanityLive } from '@/sanity/lib/live';
-import { handleError } from './client-utils';
-import DraftModeToast from './components/DraftModeToast';
-import { VisualEditing } from 'next-sanity';
-import Link from 'next/link';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
+import { VisualEditing } from 'next-sanity';
+import { draftMode } from 'next/headers';
+import Link from 'next/link';
+import { handleError } from './client-utils';
+import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
+import './globals.css';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -202,6 +202,7 @@ export default async function RootLayout({
         >
           Skip to main content
         </Link>
+        {/* <IntroSplash /> */}
         <HeaderNavigation />
         <main id="main-content">{children}</main>
         <Footer socialLinks={socialLinks} />

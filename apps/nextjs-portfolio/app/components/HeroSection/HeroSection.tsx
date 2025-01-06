@@ -11,9 +11,20 @@ import { useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
 import Chip from '../Chip/Chip';
 import GreeterCard from '../GreeterCard/GreeterCard';
+import { IconChevronRight } from '@tabler/icons-react';
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const textVariants = {
+  hidden: { width: 0, opacity: 0 },
+  visible: { width: 'auto', opacity: 1 },
 };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
@@ -36,7 +47,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   };
 
   const currentBackground = paintings[currentPaintingsIndex];
-  const { image, altText = '', _id } = currentBackground || {};
+  const { image, altText = '', _id, slug } = currentBackground || {};
   const { lqip } = image || {};
 
   const sanityWidth = 1280;
@@ -45,7 +56,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <motion.section
       ref={constraintsRef}
-      className="relative flex flex-col justify-start w-full min-h-screen px-10 pt-20 xl:justify-center xl:min-h-screen lg:py-10 bg-dark overflow-clip"
+      className="relative flex flex-col justify-start w-full px-10 pt-20 h-fit lg:min-h-screen xl:justify-center xl:min-h-screen lg:py-10 bg-dark overflow-clip"
     >
       <img
         src={lqip || ''}
@@ -62,7 +73,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           dragTransition={{ bounceStiffness: 50, bounceDamping: 10 }}
           dragConstraints={constraintsRef}
           // dragMomentum={false}
-          className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
+          className="z-20 w-full cursor-pointer xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
         >
           <GreeterCard />
         </motion.section>
@@ -77,9 +88,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               transition={{ type: 'spring' }}
-              className="relative w-full h-full aspect-portrait lg:aspect-video rounded-2xl bg-dark/20"
+              className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
             >
-              <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full -top-2 drop-shadow-xl">
+              {/* <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full cursor-pointer -top-5 drop-shadow-xl">
                 <motion.div
                   whileDrag={{ scale: 0.95 }}
                   drag
@@ -87,7 +98,22 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 >
                   <Chip Icon={FaStar} label="Featured" />
                 </motion.div>
-              </div>
+              </div> */}
+              <motion.div
+                variants={containerVariants}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute z-10 flex justify-end bottom-4 -right-4"
+              >
+                <Link
+                  href={`paintings/${slug}`}
+                  className="flex items-center gap-1 px-3 py-2 font-semibold text-white rounded-xl bg-primary hover:bg-primary/90"
+                >
+                  View
+                  <IconChevronRight />
+                </Link>
+              </motion.div>
+
               {image && (
                 <Image
                   key={_id + 'hero'}
@@ -113,11 +139,11 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             </motion.div>
           </AnimatePresence>
 
-          <section className="z-10 flex items-center justify-between w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:justify-center xl:gap-6">
+          <section className="z-10 flex items-center justify-center w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6">
             <motion.button
               // whileDrag={{ scale: 0.95 }} // Prevent scale on
               // drag
-              className="p-3 text-white rounded-lg bg-primary"
+              className="p-3 bg-white rounded-lg text-dark"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
@@ -130,7 +156,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               Painting Gallery
             </Link>
             <button
-              className="p-3 text-white rounded-lg bg-primary"
+              className="p-3 bg-white rounded-lg text-dark"
               onClick={handleNextBackground}
               aria-label="Next painting"
             >

@@ -3,6 +3,13 @@ import {useEffect, useState} from 'react'
 import {set, StringInputProps, unset, useFormValue} from 'sanity'
 import {urlFor} from '../utils/image'
 
+import OpenAI from 'openai'
+
+const client = new OpenAI({
+  apiKey: process.env['SANITY_STUDIO_OPENAI_API_KEY'], // This is the default and can be omitted
+  dangerouslyAllowBrowser: true, // This is the default and can be omitted
+})
+
 const BASE_PROMPT =
   'You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.'
 
@@ -52,21 +59,33 @@ const ImageDescriptionGenerator = (props: StringInputProps) => {
     ]
 
     try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: newChatLogs,
-        }),
-      }).then((res) => res.json())
-
-      if (response?.response) {
-        onChange(set(response.response))
-      } else {
-        setError('Failed to generate description text')
+      const params: OpenAI.Chat.ChatCompletionCreateParams = {
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: BASE_PROMPT,
+              },
+              {
+                type: 'image_url',
+                image_url: {url: imageUrl},
+              },
+            ],
+          },
+        ],
       }
+
+      const chatCompletion: OpenAI.Chat.ChatCompletion =
+        await client.chat.completions.create(params)
+
+      const response = chatCompletion.choices[0].message.content?.trim() || ''
+
+      const description = response.replace(/"/g, '')
+
+      onChange(set(description))
     } catch (err) {
       console.error('Error generating description text:', err)
       setError('Error occurred while generating description text')

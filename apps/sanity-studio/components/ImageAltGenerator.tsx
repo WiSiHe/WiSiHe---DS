@@ -2,6 +2,12 @@ import {Button, Card, Text, TextArea} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 import {set, StringInputProps, unset, useFormValue} from 'sanity'
 import {urlFor} from '../utils/image'
+import OpenAI from 'openai'
+
+const client = new OpenAI({
+  apiKey: process.env['SANITY_STUDIO_OPENAI_API_KEY'], // This is the default and can be omitted
+  dangerouslyAllowBrowser: true, // This is the default and can be omitted
+})
 
 const BASE_PROMPT =
   'You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less.'
@@ -13,7 +19,6 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
   const {value, onChange} = props
 
   const image = useFormValue(['image']) as string
-  console.log('image', image)
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -34,8 +39,6 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
       return
     }
 
-    const apiEndpoint = process.env.NEXT_PUBLIC_OPENAI_API_URL || 'http://localhost:5173/api/openai'
-
     const newChatLogs = [
       {
         role: 'user',
@@ -53,21 +56,30 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
     ]
 
     try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: newChatLogs,
-        }),
-      }).then((res) => res.json())
-
-      if (response?.response) {
-        onChange(set(response.response))
-      } else {
-        setError('Failed to generate alt text')
+      const params: OpenAI.Chat.ChatCompletionCreateParams = {
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: BASE_PROMPT,
+              },
+              {
+                type: 'image_url',
+                image_url: {url: imageUrl},
+              },
+            ],
+          },
+        ],
       }
+
+      const chatCompletion: OpenAI.Chat.ChatCompletion =
+        await client.chat.completions.create(params)
+      const feedback = chatCompletion.choices[0].message.content?.trim() || ''
+      const altText = feedback.replace(/"/g, '')
+      onChange(set(altText))
     } catch (err) {
       console.error('Error generating alt text:', err)
       setError('Error occurred while generating alt text')
@@ -78,13 +90,11 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
 
   useEffect(() => {
     if (!image) {
-      console.log('image is missing')
       setError('Image URL is missing')
       setIsLoading(false)
       return
     }
     const sanityUrl = urlFor(image).width(IMAGE_WIDTH).height(IMAGE_HEIGHT).url()
-    console.log('sanityUrl', sanityUrl)
     setImageUrl(sanityUrl)
   }, [image])
 

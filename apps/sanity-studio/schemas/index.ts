@@ -4,7 +4,7 @@ import blockContent from './documents/blockContent'
 
 import painting from './painting'
 import project from './project'
-import tag from './tag'
+import tag from './tag.tsx'
 import video from './video'
 
 export const schemaTypes = [home, settings, painting, project, video, tag, blockContent]
