@@ -16,7 +16,7 @@ import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
 import './globals.css';
-import { CSPostHogProvider } from './providers';
+import { PostHogProvider } from './providers';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -187,7 +187,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <CSPostHogProvider>
+      <PostHogProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
         >
@@ -213,7 +213,7 @@ export default async function RootLayout({
           <Analytics />
           <SpeedInsights />
         </body>
-      </CSPostHogProvider>
+      </PostHogProvider>
     </html>
   );
 }
