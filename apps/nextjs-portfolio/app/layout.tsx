@@ -190,29 +190,29 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
       >
+        {isDraftMode && (
+          <>
+            <DraftModeToast />
+            <VisualEditing />
+          </>
+        )}
+        <SanityLive onError={handleError} />
+        <Link
+          href="#main-content"
+          className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded shadow opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
+        >
+          Skip to main content
+        </Link>
+        {/* <IntroSplash /> */}
+        <HeaderNavigation />
         <PostHogProvider>
-          {isDraftMode && (
-            <>
-              <DraftModeToast />
-              <VisualEditing />
-            </>
-          )}
-          <SanityLive onError={handleError} />
-          <Link
-            href="#main-content"
-            className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded shadow opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
-          >
-            Skip to main content
-          </Link>
-          {/* <IntroSplash /> */}
-          <HeaderNavigation />
           <main id="main-content" className="bg-dark">
             {children}
           </main>
-          <Footer socialLinks={socialLinks} />
-          <Analytics />
-          <SpeedInsights />
         </PostHogProvider>
+        <Footer socialLinks={socialLinks} />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
