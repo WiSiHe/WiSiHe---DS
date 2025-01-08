@@ -44,7 +44,7 @@ const ProjectCategories = ({ projects }: ProjectCategoriesProps) => {
 
   return (
     <>
-      {!flagEnabled ? (
+      {flagEnabled ? (
         <section className="flex flex-col w-full gap-5">
           {groupedProjects.map((category) => {
             return (
