@@ -2,7 +2,7 @@
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import { useEffect } from 'react';
-import SuspendedPostHogPageView from './components/PostHogPageView/PostHogPageView';
+import PostHogPageView from './components/PostHogPageView/PostHogPageView';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -13,7 +13,8 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       posthog.init(posthogKey, {
         api_host: posthogHost,
         capture_pageview: false,
-        // capture_pageleave: true, // Enable pageleave capture
+        capture_pageleave: true, // Enable pageleave capture
+        person_profiles: 'identified_only',
       });
     } else {
       console.error('PostHog key or host is not defined');
@@ -22,7 +23,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <SuspendedPostHogPageView />
+      <PostHogPageView />
       {children}
     </PHProvider>
   );
