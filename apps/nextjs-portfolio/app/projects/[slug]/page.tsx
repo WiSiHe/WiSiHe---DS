@@ -1,11 +1,10 @@
-import Chip from '@/app/components/Chip/Chip';
-import CustomPortableText from '@/app/components/PortableText/PortableText';
+import ProjectImage from '@/app/components/Project/ProjectImage';
+import ProjectInformation from '@/app/components/Project/ProjectInformation';
 import { ProjectQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage, urlForImage } from '@/sanity/lib/utils';
 import { Metadata, ResolvingMetadata } from 'next';
-import { PortableTextBlock } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -87,42 +86,13 @@ export default async function ProjectPage(props: Props) {
     return notFound();
   }
 
-  const {
-    title,
-    image,
-    tags,
-    status,
-    projectEnd,
-    projectStart,
-    connectedVideo,
-    connectedPaintings = [],
-    extraImages = [],
-    connectedPage,
-  } = project;
-
-  const projectContent = project.content as PortableTextBlock[];
+  const { connectedVideo, connectedPaintings = [], extraImages = [] } = project;
 
   return (
-    <div className="h-full min-h-screen lg:p-4 bg-dark">
+    <div className="h-full min-h-screen p-4 bg-dark ">
       <section className="grid grid-cols-12 pt-16">
         <div className="relative flex flex-col gap-4 text-white col-span-full lg:col-span-8">
-          <div className="relative rounded-xl aspect-video overflow-clip">
-            {image && (
-              <Image
-                src={urlForImage(image)?.width(1200)?.height(800)?.url() || ''}
-                alt={title || 'Default Alt Text'}
-                fill
-                className="object-cover"
-              />
-            )}
-
-            {connectedPage && (
-              <iframe
-                src={connectedPage}
-                className="absolute inset-0 w-full h-full"
-              />
-            )}
-          </div>
+          <ProjectImage project={project} />
 
           {connectedVideo && (
             <div className="relative aspect-video">
@@ -188,22 +158,7 @@ export default async function ProjectPage(props: Props) {
         </div>
 
         <div className="p-4 prose col-span-full lg:col-span-4 prose-invert">
-          <h1>{title}</h1>
-
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Chip key={tag.name} label={tag.name} />
-            ))}
-            <Chip label={`Status: ${status}`} />
-            <Chip label={`Started: ${projectStart}`} />
-            <Chip label={`Ended: ${projectEnd}`} />
-          </div>
-          {projectContent && (
-            <CustomPortableText
-              value={projectContent}
-              className="prose-invert"
-            />
-          )}
+          <ProjectInformation project={project} />
         </div>
       </section>
     </div>

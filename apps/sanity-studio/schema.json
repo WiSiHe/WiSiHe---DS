@@ -605,6 +605,13 @@
           "type": "string"
         },
         "optional": false
+      },
+      "color": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },
@@ -650,21 +657,6 @@
         },
         "optional": false
       },
-      "title": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": false
-      },
-      "slug": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "slug"
-        },
-        "optional": false
-      },
       "status": {
         "type": "objectAttribute",
         "value": {
@@ -706,10 +698,40 @@
         },
         "optional": true
       },
-      "description": {
+      "projectType": {
         "type": "objectAttribute",
         "value": {
-          "type": "string"
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "art"
+            },
+            {
+              "type": "string",
+              "value": "design"
+            },
+            {
+              "type": "string",
+              "value": "development"
+            },
+            {
+              "type": "string",
+              "value": "gameDevelopment"
+            },
+            {
+              "type": "string",
+              "value": "other"
+            }
+          ]
+        },
+        "optional": false
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
         },
         "optional": false
       },
@@ -968,50 +990,6 @@
         },
         "optional": true
       },
-      "connectedPaintings": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "array",
-          "of": {
-            "type": "object",
-            "attributes": {
-              "_ref": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string"
-                }
-              },
-              "_type": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string",
-                  "value": "reference"
-                }
-              },
-              "_weak": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "boolean"
-                },
-                "optional": true
-              }
-            },
-            "dereferencesTo": "painting",
-            "rest": {
-              "type": "object",
-              "attributes": {
-                "_key": {
-                  "type": "objectAttribute",
-                  "value": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "optional": true
-      },
       "extraImages": {
         "type": "objectAttribute",
         "value": {
@@ -1088,6 +1066,50 @@
         },
         "optional": true
       },
+      "connectedPaintings": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "painting",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      },
       "connectedVideo": {
         "type": "objectAttribute",
         "value": {
@@ -1121,8 +1143,7 @@
       "connectedPage": {
         "type": "objectAttribute",
         "value": {
-          "type": "inline",
-          "name": "slug"
+          "type": "string"
         },
         "optional": true
       },
@@ -1167,6 +1188,20 @@
               }
             }
           }
+        },
+        "optional": false
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "description": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": false
       }
@@ -2412,6 +2447,13 @@
                 "optional": true
               },
               "timestamp": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "location": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"

@@ -104,6 +104,7 @@ export type Tag = {
   _rev: string;
   name: string;
   description: string;
+  color?: string;
 };
 
 export type Project = {
@@ -113,10 +114,9 @@ export type Project = {
   _updatedAt: string;
   _rev: string;
   name: string;
-  title: string;
-  slug: Slug;
   status?: "inProgress" | "completed" | "onHold" | "cancelled" | "abandoned" | "unknown" | "notStarted" | "planned";
-  description: string;
+  projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+  slug: Slug;
   projectStart?: string;
   projectEnd?: string;
   content?: Array<{
@@ -148,13 +148,6 @@ export type Project = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  connectedPaintings?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
-  }>;
   extraImages?: Array<{
     asset?: {
       _ref: string;
@@ -167,13 +160,20 @@ export type Project = {
     _type: "image";
     _key: string;
   }>;
+  connectedPaintings?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "painting";
+  }>;
   connectedVideo?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "video";
   };
-  connectedPage?: Slug;
+  connectedPage?: string;
   tags: Array<{
     _ref: string;
     _type: "reference";
@@ -181,6 +181,8 @@ export type Project = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "tag";
   }>;
+  title: string;
+  description: string;
 };
 
 export type Video = {
@@ -375,6 +377,7 @@ export type Painting = {
   views?: Array<{
     viewerId?: string;
     timestamp?: string;
+    location?: string;
     _key: string;
   }>;
   likes?: number;
@@ -721,7 +724,7 @@ export type PaintingQueryResult = {
   video: string | null;
 } | null;
 // Variable: projectQuery
-// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage.current, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    }  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    }  }
 export type ProjectQueryResult = {
   _id: string;
   _type: "project";
@@ -729,10 +732,9 @@ export type ProjectQueryResult = {
   _updatedAt: string;
   _rev: string;
   name: string;
-  title: string;
-  slug: string;
   status?: "abandoned" | "cancelled" | "completed" | "inProgress" | "notStarted" | "onHold" | "planned" | "unknown";
-  description: string;
+  projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+  slug: string;
   projectStart?: string;
   projectEnd?: string;
   content?: Array<{
@@ -765,6 +767,18 @@ export type ProjectQueryResult = {
     _type: "image";
     lqip: string | null;
   } | null;
+  extraImages?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
   connectedPaintings: Array<{
     title: string | "";
     slug: string | "";
@@ -782,18 +796,6 @@ export type ProjectQueryResult = {
       _type: "image";
     } | null;
   }> | Array<never>;
-  extraImages?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
   connectedVideo: {
     videoUrl: string;
   } | null;
@@ -801,6 +803,9 @@ export type ProjectQueryResult = {
   tags: Array<{
     name: string | "";
   }>;
+  title: string;
+  description: string;
+  type: "" | "art" | "design" | "development" | "gameDevelopment" | "other";
 } | null;
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
@@ -952,7 +957,7 @@ export type GetAllPaintingsandTagsResult = {
   }>;
 };
 // Variable: getAllProjects
-// Query: {      "projects": *[_type == "project" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {        _id,        "slug":slug.current,        title,        description,        seoDescription,        projectStart,        projectEnd,        status,        content,        name,        image{          ...,          "lqip": asset->metadata.lqip        },      },    }
+// Query: {      "projects": *[_type == "project" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {        _id,        "slug":slug.current,        title,        description,        seoDescription,        projectType,        projectStart,        projectEnd,        status,        content,        name,        image{          ...,          "lqip": asset->metadata.lqip        },      },    }
 export type GetAllProjectsResult = {
   projects: Array<{
     _id: string;
@@ -960,6 +965,7 @@ export type GetAllProjectsResult = {
     title: string;
     description: string;
     seoDescription: null;
+    projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
     projectStart: string | null;
     projectEnd: string | null;
     status: "abandoned" | "cancelled" | "completed" | "inProgress" | "notStarted" | "onHold" | "planned" | "unknown" | null;
@@ -1013,14 +1019,14 @@ declare module "@sanity/client" {
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": MorePostsQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == \"link\" => {\n        \"page\": page->slug.current,\n        \"post\": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"painting\" && slug.current == $slug][0] {\n    _id,\n    title,\n    'slug': slug.current,\n    description,\n    seoDescription,\n    format,\n    \"likesCount\": count(likes),\n    \"views\": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views\n    \"viewsCount\": count(views),\n    paintedAt,\n    artstationUrl,\n    format,\n    redbubbleUrl,\n    society6Url,\n    inPrintUrl,\n    image{\n      ...,\n      \"lqip\": asset->metadata.lqip,\n      \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n      \"altText\": altText\n    },\n    \"images\": coalesce(\n      images[]{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n        \"altText\": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n": PaintingQueryResult;
-    "\n  *[_type == \"project\" && slug.current == $slug][0] {\n    ...,\n    \"slug\": slug.current,\n    tags[]->{\n      \"name\": coalesce(name, \"\")\n    },\n    \"connectedPage\": coalesce(connectedPage.current, \"\"),\n    connectedVideo->{\n      \"videoUrl\": videoUrl\n    },\n    \"connectedPaintings\": coalesce(\n      connectedPaintings[]->{\n        \"title\": coalesce(title, \"\"),\n        \"slug\": coalesce(slug.current, \"\"),\n        \"format\": coalesce(format, \"\"),\n        \"image\": coalesce(image, null)\n      },\n      []\n    ),\n    \"image\": image{\n      ...,\n      \"lqip\": asset->metadata.lqip\n    }\n  }\n": ProjectQueryResult;
+    "\n  *[_type == \"project\" && slug.current == $slug][0] {\n    ...,\n    \"slug\": slug.current,\n    tags[]->{\n      \"name\": coalesce(name, \"\")\n    },\n    \"connectedPage\": coalesce(connectedPage, \"\"),\n    \"type\": coalesce(projectType, \"\"),\n    connectedVideo->{\n      \"videoUrl\": videoUrl\n    },\n    \"connectedPaintings\": coalesce(\n      connectedPaintings[]->{\n        \"title\": coalesce(title, \"\"),\n        \"slug\": coalesce(slug.current, \"\"),\n        \"format\": coalesce(format, \"\"),\n        \"image\": coalesce(image, null)\n      },\n      []\n    ),\n    \"image\": image{\n      ...,\n      \"lqip\": asset->metadata.lqip\n    }\n  }\n": ProjectQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"painting\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PaintingsSlugsResult;
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
     "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
     "\n    {\n      \"paintings\": *[_type == \"painting\" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n      \"tags\": *[_type == \"tag\"] | order(name asc) { _id, name, \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)}\n    }\n    ": GetAllPaintingsandTagsResult;
-    "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        description,\n        seoDescription,\n        projectStart,\n        projectEnd,\n        status,\n        content,\n        name,\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip\n        },\n      },\n    }\n    ": GetAllProjectsResult;
+    "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        description,\n        seoDescription,\n        projectType,\n        projectStart,\n        projectEnd,\n        status,\n        content,\n        name,\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip\n        },\n      },\n    }\n    ": GetAllProjectsResult;
     "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
   }
 }

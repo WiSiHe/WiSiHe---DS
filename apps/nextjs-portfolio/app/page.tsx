@@ -114,11 +114,6 @@ export default async function Home() {
       ) : (
         <p className="text-center">No projects to display.</p>
       )}
-      <PaintingsSection
-        paintings={showcasePaintings}
-        paintingsDescription={paintingsDescription}
-      />
-
       <section className="flex flex-col gap-4 py-20 text-white">
         <div className="px-4 lg:px-10">
           <h2 className="text-3xl font-semibold">Skills</h2>
@@ -148,6 +143,10 @@ export default async function Home() {
           ))}
         </Marquee>
       </section>
+      <PaintingsSection
+        paintings={showcasePaintings}
+        paintingsDescription={paintingsDescription}
+      />
 
       <NotFoundSection />
     </div>

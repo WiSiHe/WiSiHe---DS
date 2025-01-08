@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BsClockFill, BsEye } from 'react-icons/bs';
 import Chip from '../Chip/Chip';
+import { motion } from 'framer-motion';
 
 type PaintingDetailProps = {
   paintingData: Exclude<PaintingQueryResult, null>;
@@ -96,7 +97,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     >
       <div className="flex flex-col items-start grid-cols-12 gap-4 mx-auto max-w-screen-2xl xl:grid 2xl:gap-10 2xl:pt-4 2xl:pb-44">
         <div className="relative w-full h-fit col-span-full xl:col-span-9 2xl:col-span-9">
-          <div
+          <motion.div
+            layoutId={`image-${title}`}
             className={cn(
               'relative w-full h-full rounded-none outline-none',
               imageFormatStyle
@@ -115,7 +117,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               fill
               className="object-cover w-full h-full lg:rounded-xl bg-dark"
             />
-          </div>
+          </motion.div>
 
           {allImages.length > 1 && (
             <div className="relative flex items-center justify-center gap-4 py-4 overflow-x-auto">
@@ -182,9 +184,12 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               </div>
             )}
             <div className="pt-2 prose text-white">
-              <h1 className="text-2xl font-bold text-white text-balance">
+              <motion.h1
+                layoutId={`title-${title}`}
+                className="text-2xl font-bold text-white text-balance"
+              >
                 {title}
-              </h1>
+              </motion.h1>
               <p>{description}</p>
             </div>
           </div>

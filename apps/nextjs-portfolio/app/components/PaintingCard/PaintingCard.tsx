@@ -173,6 +173,7 @@ const PaintingCard = ({
       {/* Animated Image */}
       <motion.div
         className="relative w-full h-full"
+        layoutId={`image-${title}`}
         variants={{
           rest: { scale: 1 },
           hover: isNsfw || isNsfwUrl ? { scale: 1 } : { scale: 1.1 },
@@ -209,9 +210,12 @@ const PaintingCard = ({
         className="before:absolute before:inset-0 before:z-0"
       >
         <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/80 backdrop-blur-lg">
-          <h2 className="text-base text-white capitalize lg:text-lg line-clamp-1 font-inter">
+          <motion.h2
+            layoutId={`title-${title}`}
+            className="text-base text-white capitalize lg:text-lg line-clamp-1 font-inter"
+          >
             <strong>{title}</strong>
-          </h2>
+          </motion.h2>
         </div>
       </Link>
     </motion.article>

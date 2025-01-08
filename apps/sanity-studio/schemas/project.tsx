@@ -63,7 +63,23 @@ export default defineType({
         ],
       },
     }),
-
+    defineField({
+      name: 'projectType',
+      title: 'Project Type',
+      type: 'string',
+      group: 'main',
+      description: 'Type of project',
+      options: {
+        list: [
+          {title: 'Art', value: 'art'},
+          {title: 'Design', value: 'design'},
+          {title: 'Development', value: 'development'},
+          {title: 'Game Development', value: 'gameDevelopment'},
+          {title: 'Other', value: 'other'},
+        ],
+      },
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: 'slug',
       title: 'Slug',
