@@ -13,7 +13,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       posthog.init(posthogKey, {
         api_host: posthogHost,
         capture_pageview: false,
-        capture_pageleave: true, // Enable pageleave capture
+        // capture_pageleave: true, // Enable pageleave capture
       });
     } else {
       console.error('PostHog key or host is not defined');
