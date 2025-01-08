@@ -136,7 +136,8 @@ export const projectQuery = defineQuery(`
     tags[]->{
       "name": coalesce(name, "")
     },
-    "connectedPage": coalesce(connectedPage.current, ""),
+    "connectedPage": coalesce(connectedPage, ""),
+    "type": coalesce(projectType, ""),
     connectedVideo->{
       "videoUrl": videoUrl
     },
@@ -247,6 +248,7 @@ export const getAllProjects = defineQuery(`
         title,
         description,
         seoDescription,
+        projectType,
         projectStart,
         projectEnd,
         status,

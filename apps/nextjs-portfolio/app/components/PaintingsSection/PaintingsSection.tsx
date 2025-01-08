@@ -37,7 +37,7 @@ const PaintingsSection = ({
     <Card key={card.src} card={card} index={index} />
   ));
   return (
-    <section className="pt-8 pl-4 lg:pl-8">
+    <section className="py-8 pl-4 lg:pl-8">
       <div className="px-4">
         <CustomPortableText
           value={paintingsDescription}
