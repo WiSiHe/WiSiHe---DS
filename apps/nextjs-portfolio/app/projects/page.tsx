@@ -47,18 +47,18 @@ export default async function ProjectsPage() {
     return notFound();
   }
 
-  const { projects } = data;
+  const { projects, tags } = data;
 
   return (
     <div className="min-h-screen p-4 pt-20 bg-tertiary text-dark overflow-x-clip">
       <section className="mx-auto max-w-screen-2xl">
-        <div className="pb-4 ">
+        <div className="pb-4">
           <h1>
             <strong>Projects</strong>
           </h1>
           <p>A gallery of some of my projects, both creative and technical.</p>
         </div>
-        <ProjectCategories projects={projects} />
+        <ProjectCategories projects={projects} tags={tags} />
       </section>
     </div>
   );

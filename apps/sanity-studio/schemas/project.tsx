@@ -2,6 +2,7 @@ import {PackageIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 import {FaWeibo} from 'react-icons/fa'
 import tagType from './tag'
+import ImageAltTextGenerator from '../components/ImageAltGenerator'
 
 export default defineType({
   name: 'project',
@@ -151,8 +152,23 @@ export default defineType({
       type: 'image',
       group: 'main',
       description: 'Main image of the project',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+          group: ['AI', 'seo'],
+          options: {
+            isHighlighted: true,
+          },
+          components: {
+            input: ImageAltTextGenerator,
+          },
+        },
+      ],
       options: {
         hotspot: true,
+        metadata: ['lqip'],
       },
     }),
 

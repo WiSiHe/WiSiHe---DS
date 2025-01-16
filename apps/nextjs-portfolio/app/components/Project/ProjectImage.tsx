@@ -13,17 +13,19 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
     return null;
   }
 
-  const { title, image, connectedPage } = project;
+  const { title, name, image, connectedPage } = project;
+
+  const projectTitle = title ?? name;
   return (
     <>
       <motion.div
-        layoutId={`image-${title}`}
+        layoutId={`image-${projectTitle}`}
         className="relative rounded-xl aspect-square lg:aspect-video overflow-clip"
       >
         {image && (
           <Image
-            src={urlForImage(image)?.width(1200)?.height(800)?.url() || ''}
-            alt={title || 'Default Alt Text'}
+            src={urlForImage(image)?.width(1200).fit('max').url() || ''}
+            alt={projectTitle || 'Default Alt Text'}
             fill
             className="object-cover"
           />

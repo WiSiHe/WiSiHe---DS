@@ -146,6 +146,7 @@ export type Project = {
     };
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt: string;
     _type: "image";
   };
   extraImages?: Array<{
@@ -764,6 +765,7 @@ export type ProjectQueryResult = {
     };
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt: string;
     _type: "image";
     lqip: string | null;
   } | null;
@@ -915,13 +917,14 @@ export type HomePageQueryResult = {
       };
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
+      alt: string;
       _type: "image";
       lqip: string | null;
     } | null;
   }> | null;
 } | null;
 // Variable: getAllPaintingsandTags
-// Query: {      "paintings": *[_type == "painting" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {        _id,        "slug":slug.current,        title,        tagsV2[]->{name},        "viewsCount": count(views),        paintedAt,        video,        "imagesCount": coalesce(count(images), 0),        "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),        image{          ...,          "lqip": asset->metadata.lqip,          "aspectRatio": asset->metadata.dimensions.aspectRatio        }      },      "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}    }
+// Query: {    "paintings": *[_type == "painting" && defined(slug.current)]      | order(paintedAt desc, _updatedAt desc) {        _id,        "slug": slug.current,        title,        tagsV2[]->{name},        "viewsCount": count(views),        paintedAt,        video,        "imagesCount": coalesce(count(images), 0),        "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),        image {          ...,          "lqip": asset->metadata.lqip,          "aspectRatio": asset->metadata.dimensions.aspectRatio        }      },    "tags": *[      _type == "tag" &&      count(*[_type == "painting" && references(^._id)]) > 0    ]    | order(name asc) {      _id,      name,      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)    }  }
 export type GetAllPaintingsandTagsResult = {
   paintings: Array<{
     _id: string;
@@ -957,7 +960,7 @@ export type GetAllPaintingsandTagsResult = {
   }>;
 };
 // Variable: getAllProjects
-// Query: {      "projects": *[_type == "project" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {        _id,        "slug":slug.current,        title,        description,        seoDescription,        projectType,        projectStart,        projectEnd,        status,        content,        name,        image{          ...,          "lqip": asset->metadata.lqip        },      },    }
+// Query: {      "projects": *[_type == "project" && defined(slug.current)]        | order(projectStart desc) {          _id,          "slug": slug.current,          title,          description,          seoDescription,          projectType,          projectStart,          projectEnd,          status,          content,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "tags": *[        _type == "tag" &&        count(*[_type == "project" && references(^._id)]) > 0      ]      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {        _id,        name,        "count": count(*[_type == "project" && references(^._id)]),        "projectsCount": count(*[_type == "project" && references(^._id)])      }    }
 export type GetAllProjectsResult = {
   projects: Array<{
     _id: string;
@@ -988,6 +991,9 @@ export type GetAllProjectsResult = {
       _key: string;
     }> | null;
     name: string;
+    tags: Array<{
+      name: string;
+    }>;
     image: {
       asset?: {
         _ref: string;
@@ -997,9 +1003,16 @@ export type GetAllProjectsResult = {
       };
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
+      alt: string;
       _type: "image";
       lqip: string | null;
     } | null;
+  }>;
+  tags: Array<{
+    _id: string;
+    name: string;
+    count: number;
+    projectsCount: number;
   }>;
 };
 // Variable: generateStaticSlugs
@@ -1025,8 +1038,8 @@ declare module "@sanity/client" {
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
     "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
-    "\n    {\n      \"paintings\": *[_type == \"painting\" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n      \"tags\": *[_type == \"tag\"] | order(name asc) { _id, name, \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)}\n    }\n    ": GetAllPaintingsandTagsResult;
-    "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {\n        _id,\n        \"slug\":slug.current,\n        title,\n        description,\n        seoDescription,\n        projectType,\n        projectStart,\n        projectEnd,\n        status,\n        content,\n        name,\n        image{\n          ...,\n          \"lqip\": asset->metadata.lqip\n        },\n      },\n    }\n    ": GetAllProjectsResult;
+    "\n  {\n    \"paintings\": *[_type == \"painting\" && defined(slug.current)]\n      | order(paintedAt desc, _updatedAt desc) {\n        _id,\n        \"slug\": slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image {\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    \"tags\": *[\n      _type == \"tag\" &&\n      count(*[_type == \"painting\" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)\n    }\n  }\n  ": GetAllPaintingsandTagsResult;
+    "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)]\n        | order(projectStart desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          \"tags\": tags[]->{name},\n          image {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        },\n      \"tags\": *[\n        _type == \"tag\" &&\n        count(*[_type == \"project\" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == \"project\" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        \"count\": count(*[_type == \"project\" && references(^._id)]),\n        \"projectsCount\": count(*[_type == \"project\" && references(^._id)])\n      }\n    }\n    ": GetAllProjectsResult;
     "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
   }
 }

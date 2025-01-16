@@ -219,10 +219,11 @@ export const homePageQuery = defineQuery(`
 `);
 
 export const getAllPaintingsandTags = defineQuery(`
-    {
-      "paintings": *[_type == "painting" && defined(slug.current)] | order(paintedAt desc, _updatedAt desc) {
+  {
+    "paintings": *[_type == "painting" && defined(slug.current)]
+      | order(paintedAt desc, _updatedAt desc) {
         _id,
-        "slug":slug.current,
+        "slug": slug.current,
         title,
         tagsV2[]->{name},
         "viewsCount": count(views),
@@ -230,35 +231,55 @@ export const getAllPaintingsandTags = defineQuery(`
         video,
         "imagesCount": coalesce(count(images), 0),
         "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
-        image{
+        image {
           ...,
           "lqip": asset->metadata.lqip,
           "aspectRatio": asset->metadata.dimensions.aspectRatio
         }
       },
-      "tags": *[_type == "tag"] | order(name asc) { _id, name, "paintingsCount": count(*[_type == "painting" && references(^._id)].title)}
+    "tags": *[
+      _type == "tag" &&
+      count(*[_type == "painting" && references(^._id)]) > 0
+    ]
+    | order(name asc) {
+      _id,
+      name,
+      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)
     }
-    `);
+  }
+  `);
 
 export const getAllProjects = defineQuery(`
     {
-      "projects": *[_type == "project" && defined(slug.current)] | order(projectStart desc, _updatedAt desc) {
-        _id,
-        "slug":slug.current,
-        title,
-        description,
-        seoDescription,
-        projectType,
-        projectStart,
-        projectEnd,
-        status,
-        content,
-        name,
-        image{
-          ...,
-          "lqip": asset->metadata.lqip
+      "projects": *[_type == "project" && defined(slug.current)]
+        | order(projectStart desc) {
+          _id,
+          "slug": slug.current,
+          title,
+          description,
+          seoDescription,
+          projectType,
+          projectStart,
+          projectEnd,
+          status,
+          content,
+          name,
+          "tags": tags[]->{name},
+          image {
+            ...,
+            "lqip": asset->metadata.lqip
+          }
         },
-      },
+      "tags": *[
+        _type == "tag" &&
+        count(*[_type == "project" && references(^._id)]) > 0
+      ]
+      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {
+        _id,
+        name,
+        "count": count(*[_type == "project" && references(^._id)]),
+        "projectsCount": count(*[_type == "project" && references(^._id)])
+      }
     }
     `);
 
