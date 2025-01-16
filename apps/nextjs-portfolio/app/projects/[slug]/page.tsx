@@ -144,7 +144,7 @@ export default async function ProjectPage(props: Props) {
                     src={
                       urlForImage(painting.image)
                         ?.width(600)
-                        ?.height(400)
+                        .fit('max')
                         ?.url() || ''
                     }
                     alt={painting.title || 'Default Alt Text'}

@@ -1,0 +1,23 @@
+{
+  "button": {
+    "border-radius": {
+      "value": "{border-radius.full}"
+    },
+    "regular": {
+      "padding-x": {
+        "value": "{spacing.6}"
+      },
+      "padding-y": {
+        "value": "{spacing.3}"
+      }
+    },
+    "compact": {
+      "padding-x": {
+        "value": "{spacing.2}"
+      },
+      "padding-y": {
+        "value": "{spacing.2}"
+      }
+    }
+  }
+}

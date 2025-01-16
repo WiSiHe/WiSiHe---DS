@@ -1,0 +1,309 @@
+{
+  "color": {
+    "earth-red": {
+      "400": {
+        "comment": "",
+        "type": "color",
+        "value": "#e86f4f"
+      },
+      "600": {
+        "comment": "",
+        "type": "color",
+        "value": "#e91c24"
+      },
+      "900": {
+        "comment": "",
+        "type": "color",
+        "value": "#721120"
+      }
+    },
+    "eco-green": {
+      "100": {
+        "comment": "",
+        "type": "color",
+        "value": "#ecf5d9"
+      },
+      "600": {
+        "comment": "",
+        "type": "color",
+        "value": "#448d51"
+      },
+      "1000": {
+        "comment": "",
+        "type": "color",
+        "value": "#00411e"
+      }
+    },
+    "future-blue": {
+      "400": {
+        "comment": "",
+        "type": "color",
+        "value": "#96d5d6"
+      },
+      "500": {
+        "comment": "",
+        "type": "color",
+        "value": "#8ab8e8"
+      },
+      "700": {
+        "comment": "",
+        "type": "color",
+        "value": "#32658c"
+      }
+    },
+    "pure-sand": {
+      "50": {
+        "comment": "",
+        "type": "color",
+        "value": "#f8ecd580"
+      },
+      "100": {
+        "comment": "",
+        "type": "color",
+        "value": "#faf0e2"
+      },
+      "200": {
+        "comment": "",
+        "type": "color",
+        "value": "#f8ecd5"
+      },
+      "600": {
+        "comment": "",
+        "type": "color",
+        "value": "#fbbc50"
+      }
+    },
+    "background": {
+      "default": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.pure-sand.200}"
+      },
+      "default-inverted": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.eco-green.1000}"
+      },
+      "subtle": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.pure-sand.50}"
+      }
+    },
+    "button": {
+      "danger": {
+        "bg": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.error.700}"
+        },
+        "bg-hover": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.error.800}"
+        }
+      },
+      "disabled": {
+        "bg": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.base.100}"
+        }
+      },
+      "primary": {
+        "bg": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.eco-green.1000}"
+        },
+        "bg-hover": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.eco-green.600}"
+        },
+        "text": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.pure-sand.200}"
+        }
+      },
+      "secondary": {
+        "bg": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.base.transparent}"
+        },
+        "bg-hover": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.pure-sand.200}"
+        },
+        "border": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.eco-green.1000}"
+        },
+        "text": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.eco-green.1000}"
+        }
+      },
+      "tertiary": {
+        "bg": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.base.transparent}"
+        },
+        "bg-hover": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.pure-sand.200}"
+        },
+        "text": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.eco-green.1000}"
+        }
+      }
+    },
+    "ink": {
+      "border": {
+        "default": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.pure-sand.200}"
+        },
+        "subtle": {
+          "comment": "",
+          "type": "color",
+          "value": "{color.pure-sand.50}"
+        }
+      },
+      "brand-default": {
+        "comment": "Ink Default er den mørkeste tekstfargen og brukes på tekst som skal være mest synlig. Denne fargen bør brukes på mesteparten av teksten på en side.",
+        "type": "color",
+        "value": "{color.eco-green.1000}"
+      },
+      "brand-inverted": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.pure-sand.200}"
+      },
+      "brand-subtle": {
+        "comment": "Ink Subtle er den lyseste tekstfargen og brukes på tekst som skal være litt mindre synlig eller for å skape variasjon i typografien.",
+        "type": "color",
+        "value": "{color.eco-green.600}"
+      },
+      "disabled": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.base.500}"
+      },
+      "error": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.error.600}"
+      },
+      "focus": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.information.600}"
+      },
+      "focus-inverted": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.information.100}"
+      },
+      "information": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.information.600}"
+      },
+      "success": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.success.600}"
+      },
+      "warning": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.warning.600}"
+      }
+    },
+    "link": {
+      "default": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.eco-green.1000}"
+      },
+      "default-hover": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.eco-green.600}"
+      },
+      "default-inverted": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.base.0}"
+      },
+      "default-inverted-hover": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.base.0}"
+      },
+      "disabled": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.base.500}"
+      }
+    },
+    "surface": {
+      "action": {
+        "comment": "Surface Action brukes på interaktive elementer som ligger oppå bakgrunnsfargene i en active state.",
+        "type": "color",
+        "value": "{color.eco-green.1000}"
+      },
+      "default": {
+        "comment": "Surface Default brukes på flater som ligger oppå bakgrunnsfargene i en nøytral state. Fargen brukes i Card komponenten.",
+        "type": "color",
+        "value": "{color.base.0}"
+      },
+      "default-hover": {
+        "comment": "Surface Hover brukes på interaktive elementer som ligger oppå bakgrunnsfargene i en hover state.",
+        "type": "color",
+        "value": "{color.pure-sand.50}"
+      },
+      "default-inverted": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.eco-green.1000}"
+      },
+      "error": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.error.100}"
+      },
+      "information": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.information.100}"
+      },
+      "success": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.success.100}"
+      },
+      "tip": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.violet.100}"
+      },
+      "warning": {
+        "comment": "",
+        "type": "color",
+        "value": "{color.warning.100}"
+      }
+    }
+  }
+}
