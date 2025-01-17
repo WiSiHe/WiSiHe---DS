@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { BsYoutube } from 'react-icons/bs';
 import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
 import { TbBoxMultiple } from 'react-icons/tb';
@@ -72,17 +71,12 @@ const PaintingCard = ({
 
   const filters = searchParams?.getAll('filter');
 
-  // Compute filtered tags and properties
-  const { filteredTags, salesTag, nsfwTag } = useMemo(() => {
-    const tags = tagsV2?.filter((t) => t !== null) || [];
-    return {
-      filteredTags: tags,
-      salesTag: tags.find((t) => t.name === 'store'),
-      nsfwTag: tags.find((t) => t.name === 'NSFW'),
-    };
-  }, [paintingData]);
+  const filteredTags = tagsV2?.filter(Boolean) ?? [];
+  const salesTag = filteredTags.find((t) => t.name === 'Store');
+  const nsfwTag = filteredTags.find((t) => t.name === 'NSFW');
 
   const hasStoreLinks = !!salesTag;
+
   const isNsfw = !!nsfwTag;
 
   const isNsfwUrl = filters?.includes('nsfw');
@@ -107,6 +101,7 @@ const PaintingCard = ({
       whileHover="hover"
       initial="rest"
       animate="rest"
+      layout
     >
       {/* Animated Tags */}
       <motion.ul

@@ -1,5 +1,4 @@
 import { SettingsQueryResult } from '@/sanity.types';
-import Link from 'next/link';
 import { BiLogoRedbubble } from 'react-icons/bi';
 import { BsTwitterX } from 'react-icons/bs';
 import {
@@ -27,23 +26,28 @@ const Footer = ({ socialLinks }: FooterProps) => {
   };
   return (
     <footer className="flex flex-wrap items-center justify-center w-full gap-4 p-10 text-white bg-dark">
-      {socialLinks.map((link) => {
-        const { platform } = link;
-        const Icon = iconPlatform[platform as keyof typeof iconPlatform];
-        return (
-          <a
-            key={link._key}
-            href={link.url}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-4 p-1 text-2xl text-white transition-colors duration-500 rounded-md bg-dark/60 hover:bg-primary"
-            aria-label={`Follow me on ${platform}`}
-          >
-            {Icon}
-          </a>
-        );
-      })}
-      <Link href="/contact">Contact</Link>
+      <nav>
+        <ul className="flex items-center gap-4">
+          {socialLinks.map((link) => {
+            const { platform } = link;
+            const Icon = iconPlatform[platform as keyof typeof iconPlatform];
+            return (
+              <li key={link._key}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-4 p-1 text-2xl text-white transition-colors duration-500 rounded-md bg-dark/60 hover:bg-primary"
+                  aria-label={`Follow me on ${platform}`}
+                >
+                  {Icon}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        {/* <Link href="/contact">Contact</Link> */}
+      </nav>
     </footer>
   );
 };

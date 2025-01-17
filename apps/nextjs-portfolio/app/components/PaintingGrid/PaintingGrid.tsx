@@ -89,7 +89,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
         {filteredPaintings.map((painting) => (
           <div
             key={painting._id}
-            className="relative col-span-full sm:col-span-6 md:col-span-3"
+            className="relative col-span-6 sm:col-span-6 md:col-span-3"
           >
             <Suspense
               fallback={<div className="aspect-portrait">Loading...</div>}

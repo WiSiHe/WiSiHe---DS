@@ -20,6 +20,7 @@ import { FaFilter } from 'react-icons/fa';
 import {
   IoCheckmarkCircleOutline,
   IoChevronDownCircleOutline,
+  IoClose,
 } from 'react-icons/io5';
 import Chip from '../Chip/Chip';
 
@@ -69,32 +70,38 @@ const Filters = ({ tags }: FiltersProps) => {
     setIsModalOpen(false);
   };
 
-  const clearFilters = () => {
+  async function clearFilters() {
     setSelectedFilters([]);
-  };
+    const currentSearchParams = new URLSearchParams(searchParams.toString());
+
+    currentSearchParams.delete('filter');
+    router.push(`${pathname}?${currentSearchParams.toString()}`);
+  }
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-4">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="flex items-center gap-1 px-3 py-2 text-white rounded bg-primary hover:bg-primary/90"
+        className="flex items-center gap-1 px-3 py-3 text-white border rounded ring-primary bg-primary hover:bg-primary/90"
       >
         <FaFilter />
         Filters & Sort
-        {selectedFilters.length > 0 && (
-          <div className="flex items-center justify-center flex-shrink-0 w-3 h-3 p-2 text-xs font-medium bg-white rounded-full text-dark">
+        {/* {selectedFilters.length > 0 && (
+          <div className="flex items-center justify-center flex-shrink-0 w-2 h-2 p-2 text-xs font-medium bg-white rounded-full text-dark">
             {selectedFilters.length}
           </div>
-        )}
+        )} */}
       </button>
-      <div>
+
+      {selectedFilters.length > 0 && (
         <button
           onClick={clearFilters}
-          className="px-3 py-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
+          className="flex items-center gap-1 px-3 py-3 text-white border rounded ring-primary hover:bg-primary/90"
         >
+          <IoClose />
           Clear Filters
         </button>
-      </div>
+      )}
 
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog
@@ -127,7 +134,7 @@ const Filters = ({ tags }: FiltersProps) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-full max-w-md p-6 overflow-hidden text-left align-middle bg-white rounded-lg shadow-xl">
+              <DialogPanel className="w-full p-6 overflow-hidden text-left align-middle bg-white rounded-lg shadow-xl md:max-w-md">
                 <DialogTitle
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
@@ -281,24 +288,25 @@ const Filters = ({ tags }: FiltersProps) => {
                   {/* Clear Filters Button */}
                   <button
                     onClick={clearFilters}
-                    className="px-3 py-2 mt-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
+                    className="px-3 py-2 mt-2 transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
                   >
                     Clear Filters
                   </button>
                 </div>
 
+                <hr className="my-4" />
                 {/* Action Buttons */}
-                <div className="flex justify-end mt-6 space-x-2">
+                <div className="flex justify-end gap-2 pt-4">
                   <button
                     type="button"
-                    className="px-3 py-2 mt-2 text-sm transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
+                    className="px-4 py-3 transition-colors border-2 rounded border-primary w-fit hover:bg-primary hover:text-white"
                     onClick={() => setIsModalOpen(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    className="px-3 py-2 mt-2 text-sm text-white transition-colors border-2 rounded bg-primary border-primary w-fit hover:bg-primary/90 hover:text-white"
+                    className="px-4 py-3 text-white transition-colors border-2 rounded bg-primary border-primary w-fit hover:bg-primary/90 hover:text-white"
                     onClick={applyFilters}
                   >
                     Apply
