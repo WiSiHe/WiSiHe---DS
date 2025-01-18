@@ -147,6 +147,9 @@ importers:
       sonner:
         specifier: ^1.7.0
         version: 1.7.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      zustand:
+        specifier: ^4.5.5
+        version: 4.5.5(@types/react@18.3.12)(immer@10.1.1)(react@19.0.0-rc-66855b96-20241106)
     devDependencies:
       '@types/node':
         specifier: ^22.9.4
@@ -22030,6 +22033,14 @@ snapshots:
       readable-stream: 4.5.2
 
   zod@3.23.8: {}
+
+  zustand@4.5.5(@types/react@18.3.12)(immer@10.1.1)(react@19.0.0-rc-66855b96-20241106):
+    dependencies:
+      use-sync-external-store: 1.2.2(react@19.0.0-rc-66855b96-20241106)
+    optionalDependencies:
+      '@types/react': 18.3.12
+      immer: 10.1.1
+      react: 19.0.0-rc-66855b96-20241106
 
   zustand@4.5.5(immer@10.1.1)(react@19.0.0-rc-66855b96-20241106)(types-react@19.0.0-rc.1):
     dependencies:

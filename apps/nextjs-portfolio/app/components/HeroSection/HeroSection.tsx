@@ -65,13 +65,13 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
       <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
         <motion.section
-          drag
+          drag={false}
           whileDrag={{ scale: 1.05, rotate: 5 }}
           dragElastic={1} // Higher the value, the more elastic the drag
           dragTransition={{ bounceStiffness: 50, bounceDamping: 10 }}
           dragConstraints={constraintsRef}
           // dragMomentum={false}
-          className="z-20 w-full cursor-pointer xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
+          className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44"
         >
           <GreeterCard />
         </motion.section>
