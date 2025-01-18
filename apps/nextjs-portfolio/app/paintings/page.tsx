@@ -62,7 +62,7 @@ export default async function Paintings() {
       );
     });
 
-  const randomPaintings = paintings.sort(() => Math.random() - 0.5);
+  // const randomPaintings = paintings.sort(() => Math.random() - 0.5);
 
   return (
     <>
@@ -74,7 +74,7 @@ export default async function Paintings() {
             <Filters />
           </div>
           <Suspense fallback={null}>
-            <PaintingGrid paintings={randomPaintings} />
+            <PaintingGrid paintings={paintings} />
           </Suspense>
         </div>
         <Suspense fallback={null}>
