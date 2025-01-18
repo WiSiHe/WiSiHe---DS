@@ -7,8 +7,9 @@ import { notFound } from 'next/navigation';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import Filters from '../components/Filters/Filters';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
+import { Filters } from '../components/Filters/Filters';
+import { FilterSideBar } from '../components/Filters/FilterSideBar';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
@@ -52,7 +53,7 @@ export default async function Paintings() {
   const { paintings, tags } = data;
 
   const sortedTags = tags
-    .filter((tag: { paintingsCount: number }) => tag.paintingsCount > 2)
+    .filter((tag: { paintingsCount: number }) => tag.paintingsCount > 7)
     .sort((a, b) => {
       if (a.name === 'Store') return -1;
       if (b.name === 'Store') return 1;
@@ -63,17 +64,19 @@ export default async function Paintings() {
 
   return (
     <>
-      <div className="h-full p-4 pt-16 bg-dark">
-        <div className="mx-auto prose prose-invert max-w-screen-2xl">
-          <h1>Paintings</h1>
-          <p>A gallery of some of my paintings</p>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Filters tags={sortedTags} />
+      <div className="flex items-start justify-start w-full h-full pt-20 bg-dark">
+        <div className="w-full p-4">
+          <div className="text-white">
+            <h1 className="font-semibold">Paintings</h1>
+            <p>A gallery of some of my paintings</p>
+            <Filters />
+          </div>
+          <Suspense fallback={null}>
+            <PaintingGrid paintings={paintings} />
           </Suspense>
         </div>
-
-        <Suspense fallback={<div>Loading...</div>}>
-          <PaintingGrid paintings={paintings} />
+        <Suspense fallback={null}>
+          <FilterSideBar tags={sortedTags} />
         </Suspense>
       </div>
       <ScrollToTopButton />

@@ -79,13 +79,13 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
 
   return (
     <>
-      <div className="w-full py-4 mx-auto text-white max-w-screen-2xl">
+      <div className="w-full py-4 text-white">
         <p className="no-results-message">
           {filteredPaintings.length} paintings found.
           <br />
         </p>
       </div>
-      <div className="grid w-full h-full grid-cols-12 gap-4 mx-auto max-w-screen-2xl">
+      <div className="grid w-full h-full grid-cols-12 gap-4">
         {filteredPaintings.map((painting) => (
           <div
             key={painting._id}

@@ -197,7 +197,7 @@ const PaintingCard = ({
 
       {/* NSFW Overlay */}
       {isNsfw && !isNsfwUrl && (
-        <div className="absolute inset-0 w-full h-full backdrop-blur-2xl" />
+        <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />
       )}
 
       <Link
