@@ -62,6 +62,8 @@ export default async function Paintings() {
       );
     });
 
+  const randomPaintings = paintings.sort(() => Math.random() - 0.5);
+
   return (
     <>
       <div className="flex items-start justify-start w-full h-full pt-20 bg-dark">
@@ -72,7 +74,7 @@ export default async function Paintings() {
             <Filters />
           </div>
           <Suspense fallback={null}>
-            <PaintingGrid paintings={paintings} />
+            <PaintingGrid paintings={randomPaintings} />
           </Suspense>
         </div>
         <Suspense fallback={null}>

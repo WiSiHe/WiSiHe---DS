@@ -47,10 +47,10 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
         // Sort by most viewed (using 'viewsCount' field)
         filtered.sort((a, b) => (b.viewsCount || 0) - (a.viewsCount || 0));
       }
-      //   else if (sort === 'random') {
-      //     // Random sort
-      //     filtered.sort(() => Math.random() - 0.5);
-      //   }
+      //  else if (sort === 'random') {
+      //   // Random sort
+      //   filtered.sort(() => Math.random() - 0.5);
+      // }
     }
 
     return filtered;
