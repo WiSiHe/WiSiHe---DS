@@ -19,8 +19,10 @@ export const TokyoLandingPage = () => {
           />
         </motion.div>
         <div className="flex flex-col items-center justify-center gap-4 text-center pt-7 ">
-          <motion.h1 className="text-5xl font-bold">Lost in Tokyo</motion.h1>
-          <p className="text-balance">
+          <motion.h1 className="text-5xl font-bold text-dark">
+            Lost in Tokyo
+          </motion.h1>
+          <p className="text-balance text-dark">
             Cras mattis consentetur purus sit amet fermentum. Maecenas sed diam
             eget rius varius blandit sit amet non magna.
           </p>
