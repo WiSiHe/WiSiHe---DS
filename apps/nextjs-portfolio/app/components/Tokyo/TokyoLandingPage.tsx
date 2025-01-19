@@ -9,7 +9,7 @@ export const TokyoLandingPage = () => {
       <motion.article layout className="">
         <motion.div
           layoutId="tokyo-image"
-          className="relative w-full rounded-lg aspect-square overflow-clip"
+          className="relative w-full rounded-lg text-dark aspect-square overflow-clip"
         >
           <Image
             src="https://w.wallhaven.cc/full/yj/wallhaven-yjmmvx.jpg"
