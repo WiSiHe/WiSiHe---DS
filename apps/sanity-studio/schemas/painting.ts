@@ -85,7 +85,7 @@ export default defineType({
       ],
       options: {
         hotspot: true,
-        metadata: ['lqip'],
+        metadata: ['lqip', 'palette'],
       },
       validation: (rule) => rule.required(),
     }),

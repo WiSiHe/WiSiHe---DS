@@ -5,6 +5,7 @@ import {DocumentLocation, presentationTool} from 'sanity/presentation'
 
 import {schemaTypes} from './schemas'
 import {assist} from '@sanity/assist'
+import {media} from 'sanity-plugin-media'
 
 export const projectId = process.env.SANITY_STUDIO_PROJECT_ID!
 export const dataset = process.env.SANITY_STUDIO_DATASET!
@@ -91,6 +92,7 @@ export default defineConfig({
     assist(),
     structureTool(),
     visionTool(),
+    media(),
   ],
   schema: {
     types: schemaTypes,

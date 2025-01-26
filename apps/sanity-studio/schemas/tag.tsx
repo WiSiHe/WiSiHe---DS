@@ -16,7 +16,7 @@ function ColorSwatch(color?: string) {
   )
 }
 
-export default defineType({
+export const tag = defineType({
   name: 'tag',
   title: 'Tag',
   icon: TagIcon,

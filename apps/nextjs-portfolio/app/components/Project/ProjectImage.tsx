@@ -13,9 +13,9 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
     return null;
   }
 
-  const { title, name, image, connectedPage } = project;
+  const { name, image, connectedPage } = project;
 
-  const projectTitle = title ?? name;
+  const projectTitle = name;
   return (
     <>
       <motion.div

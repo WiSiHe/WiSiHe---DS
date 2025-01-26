@@ -35,6 +35,11 @@ const imageBuilder = createImageUrlBuilder({
   dataset: dataset || '',
 });
 
+interface SanityImageSource {
+  asset: {
+    _ref: string;
+  };
+}
 export const urlForImage = (source: any) => {
   // Ensure that source image contains a valid reference
   if (!source?.asset?._ref) {

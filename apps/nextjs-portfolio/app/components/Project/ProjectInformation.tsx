@@ -24,16 +24,9 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     return null;
   }
 
-  const {
-    title,
-    name,
-    tags,
-    status = 'unknown',
-    projectStart,
-    projectEnd,
-  } = project;
+  const { name, tags, status = 'unknown', projectStart, projectEnd } = project;
 
-  const projectTitle = title ?? name;
+  const projectTitle = name;
   const projectContent = project.content as PortableTextBlock[];
 
   const STATUS_MAP = {

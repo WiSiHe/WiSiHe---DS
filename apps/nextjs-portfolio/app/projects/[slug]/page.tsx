@@ -3,8 +3,9 @@ import ProjectInformation from '@/app/components/Project/ProjectInformation';
 import { ProjectQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
-import { resolveOpenGraphImage, urlForImage } from '@/sanity/lib/utils';
-import { Metadata, ResolvingMetadata } from 'next';
+import { urlForImage } from '@/sanity/lib/utils';
+import { isNotEmptyObject } from '@wisihe/utils';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -23,8 +24,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: Props,
-  parent: ResolvingMetadata
+  props: Props
+  // parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
   const { data: project } = await sanityFetch({
@@ -33,46 +34,85 @@ export async function generateMetadata(
     stega: false,
   });
 
-  const fallbackTitle = 'Untitled Project | WiSiHe';
-  const fallbackDescription = 'Explore this project from WiSiHe.';
-  const title = project?.title || fallbackTitle;
-  const description = project?.description || fallbackDescription;
+  if (!project) {
+    return {};
+  }
 
-  const parentMetadata = await parent;
-  const previousImages = parentMetadata.openGraph?.images || [];
-  const ogImage = resolveOpenGraphImage(project?.image);
+  // const fallbackDescription = 'Explore this project from WiSiHe.';
+  // const title = project.seo.title;
+  // const description = project?.description || fallbackDescription;
 
-  // If no project image is available, fall back to a default image
-  const defaultOgImage = 'https://wisihe.no/images/hell.jpg';
-  const ogImages = ogImage
-    ? [ogImage, ...previousImages]
-    : [{ url: defaultOgImage }, ...previousImages];
+  // const parentMetadata = await parent;
+  // const previousImages = parentMetadata.openGraph?.images || [];
+  // const ogImage = resolveOpenGraphImage(project?.image);
 
-  const slug = params.slug;
-  const url = `https://wisihe.no/project/${slug}`;
+  // // If no project image is available, fall back to a default image
+  // const defaultOgImage = 'https://wisihe.no/images/hell.jpg';
+  // const ogImages = ogImage
+  //   ? [ogImage, ...previousImages]
+  //   : [{ url: defaultOgImage }, ...previousImages];
 
-  return {
-    title,
-    description,
+  // const slug = params.slug;
+  // const url = `https://wisihe.no/project/${slug}`;
+
+  // return {
+  //   title,
+  //   description,
+  //   alternates: {
+  //     canonical: url,
+  //   },
+  //   openGraph: {
+  //     title,
+  //     description,
+  //     url,
+  //     siteName: 'WiSiHe',
+  //     locale: 'en_US',
+  //     type: 'article',
+  //     images: ogImages,
+  //   },
+  //   twitter: {
+  //     card: 'summary_large_image',
+  //     title,
+  //     description,
+  //     images: ogImage ? [ogImage.url] : [defaultOgImage],
+  //   },
+  // } satisfies Metadata;
+
+  const { seo, _id } = project;
+
+  const { image } = seo;
+
+  const metadata: Metadata = {
+    title: project.seo.title,
+    description: project.seo.description,
     alternates: {
-      canonical: url,
+      canonical: `https://wisihe.no/projects/${project.slug}`,
     },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'WiSiHe',
-      locale: 'en_US',
+  };
+
+  if (image && isNotEmptyObject(image)) {
+    const imageUrl = urlForImage(image)?.width(1200).height(630).url() || '';
+    metadata.openGraph = {
+      images: [
+        {
+          url: image ? imageUrl : `/api/og?id=${_id}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+      title: project.seo.title || '',
+      description: project.seo.description,
       type: 'article',
-      images: ogImages,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ogImage ? [ogImage.url] : [defaultOgImage],
-    },
-  } satisfies Metadata;
+      locale: 'no_NO',
+      siteName: 'WiSiHe',
+    };
+  }
+
+  if (project.seo.noIndex) {
+    metadata.robots = 'noindex';
+  }
+
+  return metadata;
 }
 
 export default async function ProjectPage(props: Props) {
@@ -113,19 +153,25 @@ export default async function ProjectPage(props: Props) {
               <div className="flex items-center justify-center bg-primary">
                 <h2 className="text-lg">Extra Images</h2>
               </div>
-              {extraImages.map((extraImage) => (
-                <div key={extraImage._key} className="relative aspect-video">
-                  <Image
-                    src={
-                      urlForImage(extraImage)?.width(600)?.height(400)?.url() ||
-                      ''
-                    }
-                    alt="Default Alt Text"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))}
+              {extraImages.map((extraImage) => {
+                if (!extraImage) {
+                  return null;
+                }
+
+                const imageUrl = urlForImage(extraImage)
+                  ?.width(600)
+                  .height(400);
+                return (
+                  <div key={extraImage._key} className="relative aspect-video">
+                    <Image
+                      src={imageUrl?.url() || ''}
+                      alt="Default Alt Text"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -134,25 +180,28 @@ export default async function ProjectPage(props: Props) {
               <div className="flex items-center justify-center bg-primary">
                 <h2 className="text-lg">Connected Paintings</h2>
               </div>
-              {connectedPaintings.map((painting) => (
-                <Link
-                  href={`/paintings/${painting.slug}`}
-                  key={painting.title}
-                  className="relative aspect-video"
-                >
-                  <Image
-                    src={
-                      urlForImage(painting.image)
-                        ?.width(600)
-                        .fit('max')
-                        ?.url() || ''
-                    }
-                    alt={painting.title || 'Default Alt Text'}
-                    fill
-                    className="object-cover"
-                  />
-                </Link>
-              ))}
+              {connectedPaintings.map((painting) => {
+                const { image, slug, title } = painting;
+                if (!image) {
+                  return null;
+                }
+                return (
+                  <Link
+                    href={`/paintings/${slug}`}
+                    key={title}
+                    className="relative aspect-video"
+                  >
+                    <Image
+                      src={
+                        urlForImage(image)?.width(600).fit('max')?.url() || ''
+                      }
+                      alt={painting.title || 'Default Alt Text'}
+                      fill
+                      className="object-cover"
+                    />
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

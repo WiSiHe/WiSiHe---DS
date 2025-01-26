@@ -68,6 +68,36 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Redirect = {
+  _id: string;
+  _type: "redirect";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  source?: string;
+  destination?: string;
+  permanent?: boolean;
+  isEnabled?: boolean;
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  noIndex?: boolean;
+};
+
 export type BlockContent = Array<{
   children?: Array<{
     marks?: Array<string>;
@@ -182,8 +212,28 @@ export type Project = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "tag";
   }>;
-  title: string;
-  description: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    noIndex?: boolean;
+  };
+  redirect?: {
+    source?: string;
+    destination?: string;
+    permanent?: boolean;
+    isEnabled?: boolean;
+  };
 };
 
 export type Video = {
@@ -582,7 +632,7 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | BlockContent | Tag | Project | Video | Settings | Home | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Redirect | Seo | BlockContent | Tag | Project | Video | Settings | Home | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -725,7 +775,7 @@ export type PaintingQueryResult = {
   video: string | null;
 } | null;
 // Variable: projectQuery
-// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    }  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
 export type ProjectQueryResult = {
   _id: string;
   _type: "project";
@@ -805,8 +855,28 @@ export type ProjectQueryResult = {
   tags: Array<{
     name: string | "";
   }>;
-  title: string;
-  description: string;
+  seo: {
+    title: string | null | "";
+    description: string | "";
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    noIndex: boolean | false;
+  };
+  redirect?: {
+    source?: string;
+    destination?: string;
+    permanent?: boolean;
+    isEnabled?: boolean;
+  };
   type: "" | "art" | "design" | "development" | "gameDevelopment" | "other";
 } | null;
 // Variable: postPagesSlugs
@@ -882,8 +952,8 @@ export type HomePageQueryResult = {
   showcaseProjects: Array<{
     _type: "project";
     _id: string;
-    title: string;
-    description: string;
+    title: null;
+    description: null;
     seoDescription: null;
     projectStart: string | null;
     projectEnd: string | null;
@@ -965,8 +1035,8 @@ export type GetAllProjectsResult = {
   projects: Array<{
     _id: string;
     slug: string;
-    title: string;
-    description: string;
+    title: null;
+    description: null;
     seoDescription: null;
     projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
     projectStart: string | null;
@@ -1020,6 +1090,58 @@ export type GetAllProjectsResult = {
 export type GenerateStaticSlugsResult = Array<{
   slug: string;
 }>;
+// Variable: REDIRECTS_QUERY
+// Query: *[_type == "redirect" && isEnabled == true] {      source,      destination,      permanent  }
+export type REDIRECTS_QUERYResult = Array<{
+  source: string | null;
+  destination: string | null;
+  permanent: boolean | null;
+}>;
+// Variable: OG_IMAGE_QUERY
+// Query: *[_id == $id][0]{    title,    image {      ...,      "palette": asset->metadata.palette,    },  }
+export type OG_IMAGE_QUERYResult = {
+  title: null;
+  image: null;
+} | {
+  title: string;
+  image: null;
+} | {
+  title: string | null;
+  image: null;
+} | {
+  title: string;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    palette: SanityImagePalette | null;
+  };
+} | {
+  title: null;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    palette: SanityImagePalette | null;
+  } | null;
+} | null;
+// Variable: SITEMAP_QUERY
+// Query: *[_type in ["page", "post"] && defined(slug.current)] {      "href": select(        _type == "page" => "/" + slug.current,        _type == "post" => "/posts/" + slug.current,        slug.current      ),      _updatedAt  }
+export type SITEMAP_QUERYResult = Array<never>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -1032,7 +1154,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": MorePostsQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == \"link\" => {\n        \"page\": page->slug.current,\n        \"post\": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"painting\" && slug.current == $slug][0] {\n    _id,\n    title,\n    'slug': slug.current,\n    description,\n    seoDescription,\n    format,\n    \"likesCount\": count(likes),\n    \"views\": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views\n    \"viewsCount\": count(views),\n    paintedAt,\n    artstationUrl,\n    format,\n    redbubbleUrl,\n    society6Url,\n    inPrintUrl,\n    image{\n      ...,\n      \"lqip\": asset->metadata.lqip,\n      \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n      \"altText\": altText\n    },\n    \"images\": coalesce(\n      images[]{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio,\n        \"altText\": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n": PaintingQueryResult;
-    "\n  *[_type == \"project\" && slug.current == $slug][0] {\n    ...,\n    \"slug\": slug.current,\n    tags[]->{\n      \"name\": coalesce(name, \"\")\n    },\n    \"connectedPage\": coalesce(connectedPage, \"\"),\n    \"type\": coalesce(projectType, \"\"),\n    connectedVideo->{\n      \"videoUrl\": videoUrl\n    },\n    \"connectedPaintings\": coalesce(\n      connectedPaintings[]->{\n        \"title\": coalesce(title, \"\"),\n        \"slug\": coalesce(slug.current, \"\"),\n        \"format\": coalesce(format, \"\"),\n        \"image\": coalesce(image, null)\n      },\n      []\n    ),\n    \"image\": image{\n      ...,\n      \"lqip\": asset->metadata.lqip\n    }\n  }\n": ProjectQueryResult;
+    "\n  *[_type == \"project\" && slug.current == $slug][0] {\n    ...,\n    \"slug\": slug.current,\n    tags[]->{\n      \"name\": coalesce(name, \"\")\n    },\n    \"connectedPage\": coalesce(connectedPage, \"\"),\n    \"type\": coalesce(projectType, \"\"),\n    connectedVideo->{\n      \"videoUrl\": videoUrl\n    },\n    \"connectedPaintings\": coalesce(\n      connectedPaintings[]->{\n        \"title\": coalesce(title, \"\"),\n        \"slug\": coalesce(slug.current, \"\"),\n        \"format\": coalesce(format, \"\"),\n        \"image\": coalesce(image, null)\n      },\n      []\n    ),\n    \"image\": image{\n      ...,\n      \"lqip\": asset->metadata.lqip\n    },\n    \"seo\": {\n      \"title\": coalesce(seo.title, title, \"\"),\n      \"description\": coalesce(seo.description,  \"\"),\n      \"image\": seo.image,\n      \"noIndex\": seo.noIndex == true\n    },\n  }\n": ProjectQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"painting\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PaintingsSlugsResult;
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
@@ -1041,5 +1163,8 @@ declare module "@sanity/client" {
     "\n  {\n    \"paintings\": *[_type == \"painting\" && defined(slug.current)]\n      {\n        _id,\n        \"slug\": slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image {\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    \"tags\": *[\n      _type == \"tag\" &&\n      count(*[_type == \"painting\" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)\n    }\n  }\n  ": GetAllPaintingsandTagsResult;
     "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)]\n        | order(projectStart desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          \"tags\": tags[]->{name},\n          image {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        },\n      \"tags\": *[\n        _type == \"tag\" &&\n        count(*[_type == \"project\" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == \"project\" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        \"count\": count(*[_type == \"project\" && references(^._id)]),\n        \"projectsCount\": count(*[_type == \"project\" && references(^._id)])\n      }\n    }\n    ": GetAllProjectsResult;
     "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
+    "\n  *[_type == \"redirect\" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n": REDIRECTS_QUERYResult;
+    "\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      \"palette\": asset->metadata.palette,\n    },\n  }\n": OG_IMAGE_QUERYResult;
+    "\n  *[_type in [\"page\", \"post\"] && defined(slug.current)] {\n      \"href\": select(\n        _type == \"page\" => \"/\" + slug.current,\n        _type == \"post\" => \"/posts/\" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ": SITEMAP_QUERYResult;
   }
 }

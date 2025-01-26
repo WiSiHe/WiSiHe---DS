@@ -1,26 +1,36 @@
 import {PackageIcon} from '@sanity/icons'
+import {FaArrowRight, FaInfoCircle, FaWeibo} from 'react-icons/fa'
 import {defineField, defineType} from 'sanity'
-import {FaWeibo} from 'react-icons/fa'
-import tagType from './tag'
 import ImageAltTextGenerator from '../components/ImageAltGenerator'
+import {redirectType} from './redirectType'
+import {seoType} from './seoType'
+import {tag} from './tag'
+import {socialType} from './socialType'
 
 export default defineType({
   name: 'project',
   title: 'Project',
   icon: PackageIcon,
   type: 'document',
-
-  /* 1. Define groups for organization */
   groups: [
     {
       name: 'main',
       title: 'Main Info',
-      default: true,
-      icon: PackageIcon,
+      icon: FaInfoCircle,
     },
     {
       name: 'seo',
       title: 'SEO',
+      icon: FaWeibo,
+    },
+    {
+      name: 'redirect',
+      title: 'Redirect',
+      icon: FaArrowRight,
+    },
+    {
+      name: 'social',
+      title: 'Social',
       icon: FaWeibo,
     },
   ],
@@ -157,9 +167,10 @@ export default defineType({
           name: 'alt',
           type: 'string',
           validation: (Rule) => Rule.required(),
-          group: ['AI', 'seo'],
+          // group: ['AI', 'seo'],
           options: {
             isHighlighted: true,
+            
           },
           components: {
             input: ImageAltTextGenerator,
@@ -220,37 +231,17 @@ export default defineType({
       title: 'Tags',
       type: 'array',
       group: 'main',
-      of: [{type: 'reference', to: {type: tagType.name}}],
+
+      of: [{type: 'reference', to: {type: tag.name}}],
       description: 'Tags for this project',
+      options: {
+        layout: 'tags', // or 'grid' if you prefer
+      },
       validation: (rule) => rule.required(),
     }),
-
-    /* -------------------------
-     * GROUP: seo
-     * ------------------------- */
-    defineField({
-      name: 'title',
-      title: 'SEO Title',
-      type: 'string',
-      group: 'seo',
-      description: 'Short title for SEO (5–50 chars)',
-      validation: (rule) =>
-        rule.required().min(5).max(50).warning('SEO title should be between 5 and 50 characters'),
-    }),
-
-    defineField({
-      name: 'description',
-      title: 'SEO Description',
-      type: 'text',
-      group: 'seo',
-      description: 'Short meta description (10–200 chars)',
-      validation: (rule) =>
-        rule
-          .required()
-          .min(10)
-          .max(200)
-          .warning('SEO description should be between 10 and 200 characters'),
-    }),
+    defineField(seoType),
+    defineField(redirectType),
+    defineField(socialType),
   ],
 
   /* -----------------------------------
