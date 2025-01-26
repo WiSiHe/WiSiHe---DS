@@ -153,7 +153,13 @@ export const projectQuery = defineQuery(`
     "image": image{
       ...,
       "lqip": asset->metadata.lqip
-    }
+    },
+    "seo": {
+      "title": coalesce(seo.title, title, ""),
+      "description": coalesce(seo.description,  ""),
+      "image": seo.image,
+      "noIndex": seo.noIndex == true
+    },
   }
 `);
 
@@ -304,3 +310,32 @@ export async function getStaticSlugs(type: string) {
       }
     );
 }
+
+export const REDIRECTS_QUERY = defineQuery(`
+  *[_type == "redirect" && isEnabled == true] {
+      source,
+      destination,
+      permanent
+  }
+`);
+
+export const OG_IMAGE_QUERY = defineQuery(`
+  *[_id == $id][0]{
+    title,
+    image {
+      ...,
+      "palette": asset->metadata.palette,
+    },
+  }
+`);
+
+export const SITEMAP_QUERY = defineQuery(`
+  *[_type in ["page", "post"] && defined(slug.current)] {
+      "href": select(
+        _type == "page" => "/" + slug.current,
+        _type == "post" => "/posts/" + slug.current,
+        slug.current
+      ),
+      _updatedAt
+  }
+  `);

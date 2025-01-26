@@ -16,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch dynamic slugs for paintings and projects from Sanity
   const allPaintings = await getStaticSlugs('painting');
-  console.log('allPaintings', allPaintings);
   const allProjects = await getStaticSlugs('project');
 
   // Construct the sitemap array
