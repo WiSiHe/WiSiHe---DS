@@ -38,7 +38,7 @@ export const Card = ({
       animate="rest"
       className="rounded-3xl bg-gray-100 dark:bg-neutral-900 group h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10"
     >
-      <div className="absolute inset-x-0 top-0 z-30 h-full pointer-events-none bg-gradient-to-b from-dark/50 via-transparent to-transparent" />
+      <div className="absolute inset-x-0 top-0 z-30 h-full pointer-events-none bg-linear-to-b from-dark/50 via-transparent to-transparent" />
       <div className="relative z-40 w-full p-8">
         <motion.h3 className="max-w-xs font-sans text-xl font-semibold text-left text-white md:text-3xl text-balance">
           {card.title}

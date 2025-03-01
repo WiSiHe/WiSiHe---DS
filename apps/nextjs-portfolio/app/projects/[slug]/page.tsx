@@ -4,7 +4,7 @@ import { ProjectQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import { isNotEmptyObject } from '@wisihe/utils';
+import { isNotEmptyArray, isNotEmptyObject } from '@wisihe/utils';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -35,78 +35,49 @@ export async function generateMetadata(
   });
 
   if (!project) {
-    return {};
+    notFound();
   }
 
-  // const fallbackDescription = 'Explore this project from WiSiHe.';
-  // const title = project.seo.title;
-  // const description = project?.description || fallbackDescription;
-
-  // const parentMetadata = await parent;
-  // const previousImages = parentMetadata.openGraph?.images || [];
-  // const ogImage = resolveOpenGraphImage(project?.image);
-
-  // // If no project image is available, fall back to a default image
-  // const defaultOgImage = 'https://wisihe.no/images/hell.jpg';
-  // const ogImages = ogImage
-  //   ? [ogImage, ...previousImages]
-  //   : [{ url: defaultOgImage }, ...previousImages];
-
-  // const slug = params.slug;
-  // const url = `https://wisihe.no/project/${slug}`;
-
-  // return {
-  //   title,
-  //   description,
-  //   alternates: {
-  //     canonical: url,
-  //   },
-  //   openGraph: {
-  //     title,
-  //     description,
-  //     url,
-  //     siteName: 'WiSiHe',
-  //     locale: 'en_US',
-  //     type: 'article',
-  //     images: ogImages,
-  //   },
-  //   twitter: {
-  //     card: 'summary_large_image',
-  //     title,
-  //     description,
-  //     images: ogImage ? [ogImage.url] : [defaultOgImage],
-  //   },
-  // } satisfies Metadata;
-
   const { seo, _id } = project;
+  const { image } = seo ?? {};
 
-  const { image } = seo;
+  const defaultOgImage = `/api/og?id=${_id}`;
+  const imageUrl =
+    image && isNotEmptyObject(image)
+      ? urlForImage(image)?.width(1200).height(630).url()
+      : defaultOgImage;
+
+  const url = `https://wisihe.no/projects/${project.slug}`;
 
   const metadata: Metadata = {
     title: project.seo.title,
     description: project.seo.description,
     alternates: {
-      canonical: `https://wisihe.no/projects/${project.slug}`,
+      canonical: url,
     },
-  };
-
-  if (image && isNotEmptyObject(image)) {
-    const imageUrl = urlForImage(image)?.width(1200).height(630).url() || '';
-    metadata.openGraph = {
-      images: [
-        {
-          url: image ? imageUrl : `/api/og?id=${_id}`,
-          width: 1200,
-          height: 630,
-        },
-      ],
+    openGraph: {
       title: project.seo.title || '',
       description: project.seo.description,
+      url,
       type: 'article',
       locale: 'no_NO',
       siteName: 'WiSiHe',
-    };
-  }
+      images: [
+        {
+          url: imageUrl || defaultOgImage,
+          width: 1200,
+          height: 630,
+          alt: project.seo.title || 'Project Image',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.seo.title || '',
+      description: project.seo.description,
+      images: [imageUrl || defaultOgImage],
+    },
+  };
 
   if (project.seo.noIndex) {
     metadata.robots = 'noindex';
@@ -129,56 +100,19 @@ export default async function ProjectPage(props: Props) {
   const { connectedVideo, connectedPaintings = [], extraImages = [] } = project;
 
   return (
-    <div className="h-full min-h-screen p-4 bg-dark ">
-      <section className="grid grid-cols-12 pt-16">
-        <div className="relative flex flex-col gap-4 text-white col-span-full lg:col-span-8">
+    <>
+      <div className="grid items-start h-full min-h-screen grid-cols-12 mx-auto max-w-(--breakpoint-2xl)  gap-8 p-4 py-20 text-white bg-dark">
+        <section className="relative flex flex-col gap-6 text-white col-span-full">
           <ProjectImage project={project} />
-
-          {connectedVideo && (
-            <div className="relative aspect-video">
-              <iframe
-                src={`https://www.youtube.com/embed/${new URL(
-                  connectedVideo.videoUrl
-                ).pathname.slice(1)}`}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="Connected Video"
-              />
-            </div>
-          )}
-
-          {extraImages?.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 px-4 lg:p-0 md:grid-cols-3 lg:grid-cols-4">
-              <div className="flex items-center justify-center bg-primary">
-                <h2 className="text-lg">Extra Images</h2>
-              </div>
-              {extraImages.map((extraImage) => {
-                if (!extraImage) {
-                  return null;
-                }
-
-                const imageUrl = urlForImage(extraImage)
-                  ?.width(600)
-                  .height(400);
-                return (
-                  <div key={extraImage._key} className="relative aspect-video">
-                    <Image
-                      src={imageUrl?.url() || ''}
-                      alt="Default Alt Text"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {connectedPaintings?.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 px-4 lg:p-0 md:grid-cols-3 lg:grid-cols-4">
-              <div className="flex items-center justify-center bg-primary">
-                <h2 className="text-lg">Connected Paintings</h2>
+        </section>
+        <section className="col-span-full lg:col-span-6 max-w-prose">
+          <ProjectInformation project={project} />
+        </section>
+        <section className="flex flex-col gap-6 col-span-full lg:col-span-6">
+          {isNotEmptyArray(connectedPaintings) && (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+              <div className="col-span-full ">
+                <h2 className="text-2xl font-bold">Connected Paintings</h2>
               </div>
               {connectedPaintings.map((painting) => {
                 const { image, slug, title } = painting;
@@ -189,27 +123,68 @@ export default async function ProjectPage(props: Props) {
                   <Link
                     href={`/paintings/${slug}`}
                     key={title}
-                    className="relative aspect-video"
+                    className="relative aspect-square"
                   >
                     <Image
                       src={
-                        urlForImage(image)?.width(600).fit('max')?.url() || ''
+                        urlForImage(image)?.width(400).fit('max')?.url() || ''
                       }
                       alt={painting.title || 'Default Alt Text'}
                       fill
-                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      className="object-cover rounded-xl"
                     />
                   </Link>
                 );
               })}
             </div>
           )}
-        </div>
+          {isNotEmptyArray(extraImages) && (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+              <div className="col-span-full">
+                <h2 className="text-2xl font-bold">Extra Images</h2>
+              </div>
+              {extraImages.map((extraImage) => {
+                if (!extraImage) {
+                  return null;
+                }
 
-        <div className="p-4 prose col-span-full lg:col-span-4 prose-invert">
-          <ProjectInformation project={project} />
-        </div>
-      </section>
-    </div>
+                return (
+                  <div
+                    key={extraImage._key}
+                    className="relative rounded-xl aspect-square"
+                  >
+                    <Image
+                      src={
+                        urlForImage(extraImage)?.width(400).fit('max')?.url() ||
+                        ''
+                      }
+                      alt="Default Alt Text"
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+      {connectedVideo && (
+        <section className="relative py-8 lg:py-20 bg-[#111] ring ">
+          <div className="max-w-screen-lg mx-auto aspect-video">
+            <iframe
+              src={`https://www.youtube.com/embed/${new URL(
+                connectedVideo.videoUrl
+              ).pathname.slice(1)}`}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Connected Video"
+            />
+          </div>
+        </section>
+      )}
+    </>
   );
 }

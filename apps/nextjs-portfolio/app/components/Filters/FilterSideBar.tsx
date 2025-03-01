@@ -116,7 +116,7 @@ export const FilterSideBar = ({ tags }: FilterSideBarProps) => {
               <div className="flex justify-between">
                 <button
                   onClick={() => clearFilters(pathname, router)}
-                  className="px-3 py-2 rounded-lg ring text-dark ring-dark"
+                  className="px-3 py-2 rounded-lg ring-3 text-dark ring-dark"
                 >
                   Clear Filters
                 </button>

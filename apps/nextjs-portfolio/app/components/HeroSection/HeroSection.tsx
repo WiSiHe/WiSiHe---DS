@@ -63,7 +63,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         sizes="100vw"
       />
 
-      <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
+      <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
         <motion.section
           drag={false}
           whileDrag={{ scale: 1.05, rotate: 5 }}
@@ -93,16 +93,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 transition={{ type: 'spring' }}
                 className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
               >
-                {/* <div className="absolute left-0 right-0 z-10 flex items-center justify-center rounded-full cursor-pointer -top-5 drop-shadow-xl">
-                <motion.div
-                  whileDrag={{ scale: 0.95 }}
-                  drag
-                  dragConstraints={innerConstraintRef}
-                >
-                  <Chip Icon={FaStar} label="Featured" />
-                </motion.div>
-              </div> */}
-
                 {image && (
                   <Image
                     key={_id + 'hero'}
@@ -131,27 +121,38 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
           <section className="z-10 flex items-center justify-center w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6">
             <motion.button
-              // whileDrag={{ scale: 0.95 }} // Prevent scale on
-              // drag
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring' }}
               className="p-3 bg-white rounded-lg text-dark"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
               <FaChevronLeft />
             </motion.button>
-            <Link
-              href="/paintings"
-              className="px-4 py-2 text-white rounded bg-primary "
-            >
-              Painting Gallery
+            <Link href="/paintings">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: 'spring' }}
+                className="px-4 py-2 text-white rounded-sm bg-primary"
+              >
+                Painting Gallery
+              </motion.div>
             </Link>
-            <button
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring' }}
               className="p-3 bg-white rounded-lg text-dark"
               onClick={handleNextBackground}
               aria-label="Next painting"
             >
               <FaChevronRight />
-            </button>
+            </motion.button>
           </section>
         </motion.section>
       </div>

@@ -96,7 +96,7 @@ const PaintingCard = ({
   return (
     <motion.article
       className={cn(
-        'relative aspect-portrait within group overflow-hidden bg-primary/20 text-white rounded-2xl'
+        'relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-white rounded-2xl focus-within:ring-3 focus-within:ring-primary'
       )}
       whileHover="hover"
       initial="rest"
@@ -110,7 +110,7 @@ const PaintingCard = ({
       >
         {filteredTags.map((tag) => (
           <motion.li
-            className="px-1 text-sm text-white uppercase rounded bg-dark"
+            className="px-1 text-sm text-white uppercase rounded-sm bg-dark"
             key={tag.name}
             variants={listItemVariants}
           >
@@ -180,13 +180,14 @@ const PaintingCard = ({
             sizes="(min-width: 1040px) 20vw, 50vw"
             fill
             priority={shouldBeLazy}
+            // placeholder="blur-sm"
             placeholder="blur"
             blurDataURL={image?.lqip || undefined}
             quality={60}
             unoptimized={storybook}
             alt={title || 'Painting'}
             src={
-              urlForImage(image)?.width(400).height(600).quality(60).url() || ''
+              urlForImage(image)?.width(400).height(500).quality(60).url() || ''
             }
             className="object-cover w-full h-full"
           />

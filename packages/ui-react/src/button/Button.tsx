@@ -114,7 +114,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'flex items-center gap-1 rounded',
+        'flex items-center gap-1 rounded-sm',
         button({
           variant,
           size,

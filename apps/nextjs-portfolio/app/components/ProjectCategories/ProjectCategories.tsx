@@ -60,14 +60,14 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
             <motion.li
               key={project._id}
               layout
-              className="relative z-10 flex flex-col items-start justify-start flex-shrink-0 w-full overflow-hidden bg-white shadow col-span-full md:col-span-6 lg:col-span-3 rounded-xl group"
+              className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-white shadow-sm shrink-0 text-dark col-span-full md:col-span-6 lg:col-span-3 rounded-xl group"
             >
               <motion.article className="w-full">
                 <motion.div
                   layoutId={`image-${projectTitle}`}
-                  className="relative aspect-square overflow-clip"
+                  className="relative pointer-events-none aspect-square overflow-clip"
                 >
-                  <div className="absolute z-10 flex flex-wrap gap-1 p-2">
+                  <div className="absolute z-10 flex flex-wrap gap-2 p-2">
                     {tags.map((tag) => (
                       <Chip
                         variation="primary"
@@ -77,7 +77,13 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
                     ))}
                   </div>
                   <Image
-                    src={urlForImage(image)?.url() || ''}
+                    src={
+                      urlForImage(image)
+                        ?.width(400)
+                        .height(500)
+                        .quality(60)
+                        .url() || ''
+                    }
                     alt={image?.alt || projectTitle}
                     priority={index < 4}
                     fill

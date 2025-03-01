@@ -200,7 +200,7 @@ export default async function RootLayout({
           <SanityLive onError={handleError} />
           <Link
             href="#main-content"
-            className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded shadow opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
+            className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded-sm shadow-sm opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
           >
             Skip to main content
           </Link>
