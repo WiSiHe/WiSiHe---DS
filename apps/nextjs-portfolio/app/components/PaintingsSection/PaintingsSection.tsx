@@ -48,7 +48,7 @@ const PaintingsSection = ({
 
       <div className="flex flex-col items-center justify-center gap-4 text-white">
         <p>Like what you see?</p>
-        <Link href="/paintings" className="px-4 py-2 rounded bg-primary">
+        <Link href="/paintings" className="px-4 py-2 rounded-sm bg-primary">
           View All Paintings
         </Link>
       </div>

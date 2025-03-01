@@ -66,7 +66,7 @@ export default async function Paintings() {
 
   return (
     <>
-      <div className="flex items-start justify-start w-full h-full pt-20 bg-dark">
+      <div className="flex items-start justify-start w-full h-full min-h-screen pt-20 mx-auto max-w-(--breakpoint-2xl)">
         <div className="w-full p-4">
           <div className="text-white">
             <h1 className="font-semibold">Paintings</h1>

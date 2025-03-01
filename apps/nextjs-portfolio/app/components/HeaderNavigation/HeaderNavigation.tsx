@@ -95,7 +95,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                   )}
                 >
                   {navIcon}
-                  <strong className="drop-shadow">{label}</strong>
+                  <strong className="drop-shadow-sm">{label}</strong>
                 </Link>
               </motion.li>
             );

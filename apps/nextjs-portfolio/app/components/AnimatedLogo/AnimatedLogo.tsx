@@ -29,7 +29,7 @@ const AnimatedLogo = ({ theme }: AnimatedLogo) => {
       <Link
         href="/"
         aria-label="Navigate to the homepage"
-        className="flex items-center justify-center p-1 text-sm drop-shadow decoration-4"
+        className="flex items-center justify-center p-1 text-sm drop-shadow-sm decoration-4"
       >
         <IconLogo
           className={(cn('transition-all ease-in-out'), colorTheme[theme])}

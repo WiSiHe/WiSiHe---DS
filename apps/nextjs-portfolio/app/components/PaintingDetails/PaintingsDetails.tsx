@@ -99,7 +99,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       className="pt-20 min-h-[calc(100vh_-_5rem)] overflow-clip"
       ref={constraintsRef}
     >
-      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-white lg:gap-10 max-w-screen-2xl">
+      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-white lg:gap-10 max-w-(--breakpoint-2xl)">
         <section className="relative flex flex-col items-center justify-center w-full p-4 col-span-full">
           <motion.div
             layoutId={`image-${title}`}
@@ -135,8 +135,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                     key={index}
                     onClick={() => handleSelectImage(index)}
                     className={cn(
-                      'flex-shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary',
-                      index === selectedIndex ? 'ring ring-primary' : ''
+                      'shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary',
+                      index === selectedIndex ? 'ring-3 ring-primary' : ''
                     )}
                     aria-label={`Select image ${index + 1}`}
                   >
@@ -213,7 +213,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               </p>
               {/* <div className="flex justify-end">
                 <button
-                  className="px-3 py-1 font-semibold text-white rounded w-fit ring-primary ring hover:bg-primary/10"
+                  className="px-3 py-1 font-semibold text-white rounded-sm w-fit ring-primary ring-3 hover:bg-primary/10"
                   onClick={() => setShowAllDescription(!showAllDescription)}
                 >
                   {showAllDescription ? 'Show less' : 'Show more'}
@@ -255,11 +255,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
       {/* Optional video below the image */}
       {video && (
-        <div className="grid items-start max-w-screen-lg grid-cols-12 gap-10 mx-auto text-white">
-          <div className="relative rounded col-span-full aspect-video overflow-clip">
+        <div className="grid items-start max-w-(--breakpoint-lg) grid-cols-12 gap-10 mx-auto text-white">
+          <div className="relative rounded-sm col-span-full aspect-video overflow-clip">
             <iframe
               src={`https://www.youtube.com/embed/${new URL(video).pathname.slice(1)}`}
-              className="w-full h-full rounded"
+              className="w-full h-full rounded-sm"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               title="Connected Video"

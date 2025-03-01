@@ -34,10 +34,10 @@ const buttonVariants = {
 const buttonClassNames = cn(
   'flex items-center justify-center text-dark rounded-full p-4',
   'transition-all duration-200 ease-in-out',
-  'bg-white shadow hover:bg-primary hover:text-white',
-  'ring-highlight focus:outline-none focus-visible:ring',
+  'bg-white shadow-sm hover:bg-primary hover:text-white',
+  'ring-highlight focus:outline-hidden focus-visible:ring-3',
   'focus-visible:bg-primary focus-visible:text-white',
-  'active:bg-highlight hover:ring'
+  'active:bg-highlight hover:ring-3'
 );
 
 const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
@@ -64,7 +64,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
           animate="visible"
           exit="hidden"
           className={cn(
-            'flex-shrink-0',
+            'shrink-0',
             isFixed && 'fixed bottom-8 right-8 z-10'
           )}
         >

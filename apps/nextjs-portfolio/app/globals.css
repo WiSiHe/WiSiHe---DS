@@ -1,91 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* @config '../tailwind.config.ts'; */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
 
-main {
-  height: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  text-wrap: balance;
-}
-
-p {
-  max-width: 65ch;
-  text-wrap: pretty;
-}
-
-@keyframes glitch {
-  0% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(-2px, 2px);
-  }
-  40% {
-    transform: translate(2px, -2px);
-  }
-  60% {
-    transform: translate(-1px, 1px);
-  }
-  80% {
-    transform: translate(1px, -1px);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes appear {
-      from {
-        opacity: 0.9;
-        transform: translateY(200px) scale(0.85);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .within {
-      animation: appear linear;
-      animation-timeline: view();
-      animation-range: entry 0% cover 25%;
-    }
-  }
+@theme {
+  --color-primary: oklch(59.61% 0.244 350.38);
+  --color-secondary: oklch(38.13% 0.0371 160.3);
+  --color-tertiary: oklch(96.12% 0 0);
+  --color-dark: oklch(20.38% 0.0692 344.84);
+  --color-highlight: oklch(90.43% 0.1877 101.53);
+  --font-inter: 'Inter', sans-serif;
+  --font-oswald: 'Oswald', sans-serif;
+  --aspect-portrait: 9 / 16;
+  --breakpoint-2xl: 96rem; /* 1536px */
 }
 
 @layer base {
-  body {
-    @apply bg-tertiary;
-    @apply font-inter;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 
   h1 {
@@ -99,10 +43,66 @@ p {
   h3 {
     @apply text-xl xl:text-4xl;
   }
+}
+
+@layer utilities {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0a;
+      --foreground: #ededed;
+    }
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+
+  main {
+    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 
   h1,
   h2,
-  h3 {
-    @apply font-oswald;
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+    font-family: Oswald, Arial, Helvetica, sans-serif;
+  }
+
+  p {
+    max-width: 65ch;
+    text-wrap: pretty;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes appear {
+        from {
+          opacity: 0.9;
+          transform: translateY(200px) scale(0.85);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .within {
+        animation: appear linear;
+        animation-timeline: view();
+        animation-range: entry 0% cover 25%;
+      }
+    }
   }
 }

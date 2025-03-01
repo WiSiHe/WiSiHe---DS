@@ -65,7 +65,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
 
   if (filteredPaintings.length === 0) {
     return (
-      <div className="w-full py-4 mx-auto text-tertiary max-w-screen-2xl">
+      <div className="w-full py-4 mx-auto text-tertiary max-w-(--breakpoint-2xl)">
         <p className="no-results-message">
           No paintings match your filters.
           <br />

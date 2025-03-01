@@ -15,7 +15,7 @@ export const BlurImage = ({
     <Image
       className={cn(
         'transition duration-300',
-        isLoading ? 'blur-sm' : 'blur-0',
+        isLoading ? 'blur-xs' : 'blur-0',
         className
       )}
       onLoad={() => setLoading(false)}
