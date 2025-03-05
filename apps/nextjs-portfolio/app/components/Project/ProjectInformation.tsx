@@ -1,6 +1,6 @@
 'use client';
 import { ProjectQueryResult } from '@/sanity.types';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { PortableTextBlock } from 'next-sanity';
 import CustomPortableText from '../PortableText/PortableText';
 

@@ -3,7 +3,7 @@
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import React, { createContext, useEffect, useState } from 'react';
 import { cn } from '@wisihe/utils';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 interface CarouselProps {
   items: JSX.Element[];

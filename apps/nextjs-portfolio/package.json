@@ -23,7 +23,7 @@
     "@wisihe/ui-react": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "framer-motion": "12.0.0-alpha.1",
+    "motion": "^12.4.10",
     "next": "15.2.1",
     "next-sanity": "^9.8.61",
     "posthog-js": "^1.227.0",

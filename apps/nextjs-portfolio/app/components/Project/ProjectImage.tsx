@@ -1,7 +1,7 @@
 'use client';
 import { ProjectQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import Chip from '../Chip/Chip';
 
@@ -68,14 +68,14 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
         />
       )}
       <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-transparent to-dark/50" />
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-start justify-center p-4 pointer-events-none drop-shadow-2xl">
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-start justify-center p-4 drop-shadow-2xl">
         <motion.h1
-          className="pb-4 text-4xl font-black lg:text-8xl"
+          className="pb-4 text-4xl font-black pointer-events-auto lg:text-8xl"
           layoutId={`title-${projectTitle}`}
         >
           {projectTitle}
         </motion.h1>
-        <div className="flex flex-wrap gap-2 max-w-prose">
+        <div className="flex flex-wrap gap-2 pointer-events-auto max-w-prose">
           {status && <Chip label={`Status: ${status}`} Icon={STATUS_MAP} />}
           {status && (
             <div className="inline-flex flex-row items-center gap-2 px-3 py-1 text-base font-medium transition-all ease-in-out rounded-full font-inter bg-stone-100 text-dark">{`Status: ${status}`}</div>

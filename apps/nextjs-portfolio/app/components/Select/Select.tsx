@@ -7,7 +7,7 @@ import {
   ListboxOptions,
 } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   IoCheckmarkCircleOutline,
   IoChevronDownCircleOutline,

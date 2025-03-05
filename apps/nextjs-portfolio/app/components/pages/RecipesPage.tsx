@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@wisihe/ui-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 const RecipesPage = () => {
   return (
     <div>

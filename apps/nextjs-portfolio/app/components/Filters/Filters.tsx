@@ -1,7 +1,7 @@
 'use client';
 
 import useFilterSidebarStore from '@/store/useFilterModalStore';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { FaFilter } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
@@ -23,7 +23,7 @@ export const Filters = () => {
         <FaFilter />
         Filters & Sort
         {selectedFilters.length > 0 && (
-          <div className="flex items-center justify-center shrink-0 w-2 h-2 p-2 text-xs font-medium bg-white rounded-full text-dark">
+          <div className="flex items-center justify-center w-2 h-2 p-2 text-xs font-medium bg-white rounded-full shrink-0 text-dark">
             {selectedFilters.length}
           </div>
         )}
@@ -37,8 +37,8 @@ export const Filters = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40, transition: { delay: 0.5 } }}
-            // transition={{ type: 'spring' }}
-            onClick={clearFilters}
+            transition={{ type: 'spring' }}
+            onClick={() => clearFilters(pathname, router)}
             className="flex items-center gap-1 px-3 py-3 text-white border rounded-sm ring-primary hover:bg-primary/90"
           >
             <IoClose />
