@@ -709,7 +709,7 @@ export type AllPaintingsQueryResult = Array<{
     alt: string;
     _type: "image";
   };
-  date: null | string;
+  date: string;
 }>;
 // Variable: morePostsQuery
 // Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
@@ -832,9 +832,9 @@ export type ProjectQueryResult = {
     _key: string;
   }>;
   connectedPaintings: Array<{
-    title: string | "";
-    slug: string | "";
-    format: "" | "landscape" | "portrait" | "square";
+    title: string;
+    slug: string;
+    format: "landscape" | "portrait" | "square";
     image: {
       asset?: {
         _ref: string;
@@ -846,17 +846,17 @@ export type ProjectQueryResult = {
       crop?: SanityImageCrop;
       alt: string;
       _type: "image";
-    } | null;
+    };
   }> | Array<never>;
   connectedVideo: {
     videoUrl: string;
   } | null;
   connectedPage: string | "";
   tags: Array<{
-    name: string | "";
+    name: string;
   }>;
   seo: {
-    title: string | null | "";
+    title: string | "";
     description: string | "";
     image: {
       asset?: {
@@ -877,7 +877,7 @@ export type ProjectQueryResult = {
     permanent?: boolean;
     isEnabled?: boolean;
   };
-  type: "" | "art" | "design" | "development" | "gameDevelopment" | "other";
+  type: "art" | "design" | "development" | "gameDevelopment" | "other";
 } | null;
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}

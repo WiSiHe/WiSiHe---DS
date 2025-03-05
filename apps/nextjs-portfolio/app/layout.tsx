@@ -11,7 +11,6 @@ import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import { VisualEditing } from 'next-sanity';
 import { draftMode } from 'next/headers';
-import Link from 'next/link';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
@@ -198,13 +197,6 @@ export default async function RootLayout({
             </>
           )}
           <SanityLive onError={handleError} />
-          <Link
-            href="#main-content"
-            className="fixed z-10 px-4 py-2 text-sm font-bold text-white transition-opacity duration-300 rounded-sm shadow-sm opacity-0 bg-primary bottom-4 left-20 focus:opacity-100"
-          >
-            Skip to main content
-          </Link>
-          {/* <IntroSplash /> */}
           <HeaderNavigation />
           <main id="main-content" className="bg-dark">
             {children}
