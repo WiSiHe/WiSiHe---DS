@@ -50,22 +50,6 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
         )}
       >
         <AnimatedLogo theme="light" />
-        {/* <motion.button
-          initial={{ opacity: 0, scale: 0, x: 100 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{
-            type: 'spring',
-            bounce: 0.05,
-            duration: 1,
-          }}
-          onClick={() => setIsOpen((prev) => !prev)}
-          className="p-4 transition-all duration-500 lg:hidden hover:bg-primary active:text-white hover:text-white active:bg-primary"
-          aria-expanded={isOpen}
-          aria-label="Open Navigation"
-        >
-          <FaHamburger />
-        </motion.button> */}
-
         <motion.ul
           key="nav"
           variants={container}
@@ -83,6 +67,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
               Videos: <FaTv />,
               Contact: <FaMailBulk />,
             }[label];
+
             return (
               <motion.li key={i} variants={listItem}>
                 <Link
