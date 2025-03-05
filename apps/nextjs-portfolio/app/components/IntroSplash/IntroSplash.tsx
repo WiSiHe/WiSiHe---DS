@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 
 const slides = [
   {
@@ -109,7 +109,7 @@ export default function IntroSplash() {
                 initial={currentSlide.animation.initial}
                 animate={currentSlide.animation.animate}
                 exit={currentSlide.animation.exit}
-                trasition={{ type: 'spring', duration: 1.5 }}
+                transition={{ type: 'spring', duration: 1.5 }}
               >
                 <div className="fixed inset-0 flex items-center justify-center p-4">
                   {/* <div className="relative flex items-center justify-center p-6 bg-black rounded-lg shadow-lg bg-opacity-70"> */}

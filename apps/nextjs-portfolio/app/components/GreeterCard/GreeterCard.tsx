@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import type { JSX } from 'react';
 import { BiGame } from 'react-icons/bi';
 import { BsFillBrushFill } from 'react-icons/bs';

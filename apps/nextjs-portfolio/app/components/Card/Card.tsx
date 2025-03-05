@@ -1,6 +1,6 @@
 'use client';
 import { IconArrowRight } from '@tabler/icons-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import { BlurImage } from '../BlurImage/BlurImage';
 import Chip from '../Chip/Chip';

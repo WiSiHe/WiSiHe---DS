@@ -5,7 +5,7 @@ import useIsMobile from '@/hooks/useIsMobile';
 import { PaintingQueryResult } from '@/sanity.types';
 import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -100,7 +100,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       ref={constraintsRef}
     >
       <section className="grid items-start grid-cols-12 gap-4 mx-auto text-white lg:gap-10 max-w-(--breakpoint-2xl)">
-        <section className="relative flex flex-col items-center justify-center w-full p-4 col-span-full">
+        <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full">
           <motion.div
             layoutId={`image-${title}`}
             className="relative w-full aspect-square lg:aspect-auto h-full min-h-[50vh] lg:min-h-[90vh]" // ensure there's enough space for <Image fill />
@@ -109,26 +109,29 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             <motion.img
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
               transition={{ type: 'spring' }}
               src={currentImage.lqip ?? ''}
               alt={title}
-              className="absolute inset-0 object-contain w-full h-full scale-110 blur-3xl"
+              className="absolute inset-0 object-contain w-full h-full scale-110 pointer-events-none blur-3xl"
               aria-hidden="true"
             />
-            <Image
-              src={imageUrl}
-              alt={title}
-              priority
-              fill
-              className="object-cover lg:object-contain"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
-            />
+            <div className="w-full h-full overflow-clip rounded-3xl">
+              <Image
+                src={imageUrl}
+                alt={title}
+                priority
+                fill
+                className="object-cover lg:object-contain rounded-2xl"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
+              />
+            </div>
           </motion.div>
           {allImages.length > 1 && (
-            <div className="flex items-center justify-center w-full gap-4 pt-4">
+            <div className="z-10 flex items-center justify-center w-full gap-4 pt-4">
               {allImages.map((img, index) => {
                 const thumbUrl =
-                  urlForImage(img)?.width(100).height(100).quality(50).url() ??
+                  urlForImage(img)?.width(100).height(100).quality(30).url() ??
                   '';
                 return (
                   <motion.button
@@ -156,7 +159,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         </section>
         <motion.aside
           layout
-          className="z-10 flex flex-col items-center justify-center gap-5 pointer-events-none col-span-full lg:left-14 lg:bottom-4 lg:top-32 lg:fixed"
+          className="z-10 flex flex-col items-center justify-center gap-5 pointer-events-none col-span-full lg:right-14 lg:bottom-4 lg:top-32 lg:fixed"
         >
           <motion.div
             initial={{ scale: 0.8, x: -20 }}
@@ -191,21 +194,50 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                     Icon={() => <BsEye className="size-4" />}
                     label="Views:"
                     additionalText={viewsCount?.toString() ?? '0'}
-                    size="small"
+                    // size="small"
                   />
                   {tagsV2.map((tag) => (
                     <Link
                       key={tag.name}
                       href={`/paintings?filter=${tag.name.toLocaleLowerCase()}`}
                     >
-                      <Chip variation="primary" label={tag.name} size="small" />
+                      <Chip variation="primary" label={tag.name} />
                     </Link>
                   ))}
                 </div>
               )}
+              {redbubbleUrl && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: 'spring', delay: 0.4 }}
+                >
+                  <hr className="my-4 opacity-15" />
+
+                  <div className="flex flex-col">
+                    <h2 className="text-2xl font-semibold">
+                      Want to own this piece?
+                    </h2>
+                    <p>
+                      This painting is available for purchase on my Redbubble
+                      store.
+                    </p>
+                    <a
+                      href={redbubbleUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-2 mt-2 flex rounded-lg bg-[#e31421] hover:bg-[#e31421]/80 font-semibold text-white justify-center items-center gap-2 w-fit"
+                    >
+                      <BiLogoRedbubble className="inline" /> Go to store{' '}
+                      <BiRightArrow />
+                    </a>
+                  </div>
+                </motion.div>
+              )}
+              <h2 className="text-2xl font-bold">Description</h2>
               <p
                 className={cn(
-                  'prose-invert line-clamp-6'
+                  'prose-invert'
                   // showAllDescription ? 'line-clamp-none' : 'line-clamp-6'
                 )}
               >
@@ -220,42 +252,13 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 </button>
               </div> */}
             </div>
-
-            {redbubbleUrl && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', delay: 0.4 }}
-              >
-                <hr className="my-4 opacity-15" />
-
-                <div className="flex flex-col">
-                  <h2 className="text-2xl font-semibold">
-                    Want to own this piece?
-                  </h2>
-                  <p>
-                    This painting is available for purchase on my Redbubble
-                    store.
-                  </p>
-                  <a
-                    href={redbubbleUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-2 mt-2 flex rounded-lg bg-[#e31421] hover:bg-[#e31421]/80 font-semibold text-white justify-center items-center gap-2 w-fit"
-                  >
-                    <BiLogoRedbubble className="inline" /> Go to store{' '}
-                    <BiRightArrow />
-                  </a>
-                </div>
-              </motion.div>
-            )}
           </motion.div>
         </motion.aside>
       </section>
 
       {/* Optional video below the image */}
       {video && (
-        <div className="grid items-start max-w-(--breakpoint-lg) grid-cols-12 gap-10 mx-auto text-white">
+        <div className="grid items-start max-w-(--breakpoint-lg) grid-cols-12 gap-10 py-20 mx-auto text-white">
           <div className="relative rounded-sm col-span-full aspect-video overflow-clip">
             <iframe
               src={`https://www.youtube.com/embed/${new URL(video).pathname.slice(1)}`}

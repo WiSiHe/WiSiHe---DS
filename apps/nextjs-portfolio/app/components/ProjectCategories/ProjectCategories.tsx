@@ -4,7 +4,7 @@ import { GetAllProjectsResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Chip from '../Chip/Chip';
 import { useState } from 'react';
 

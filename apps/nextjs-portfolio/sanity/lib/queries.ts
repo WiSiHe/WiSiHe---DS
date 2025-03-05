@@ -289,6 +289,27 @@ export const getAllProjects = defineQuery(`
     }
     `);
 
+export const getAllVideos = defineQuery(`
+      {
+        "videos": *[_type == "video" && defined(slug.current)]
+        | order(date desc, _updatedAt desc) {
+          _id,
+          "slug": slug.current,
+          title,
+          description,
+          thumbnail {
+            ...,
+            "lqip": asset->metadata.lqip
+          },
+          "date": coalesce(date, _updatedAt),
+          "viewsCount": count(views),
+          "likesCount": count(likes),
+          "commentsCount": count(comments),
+          "sharesCount": count(shares),
+        }
+      }
+    `);
+
 export const generateStaticSlugs = defineQuery(`
     *[_type == $type && defined(slug.current)]{"slug": slug.current}
   `);

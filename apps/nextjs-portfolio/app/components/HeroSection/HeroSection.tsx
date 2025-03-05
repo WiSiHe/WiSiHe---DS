@@ -4,7 +4,7 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
@@ -48,8 +48,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const { image, altText = '', _id, slug } = currentBackground || {};
   const { lqip } = image || {};
 
-  const sanityWidth = 1280;
-  const sanityHeight = 720;
+  const sanityWidth = 1920;
+  const sanityHeight = 1080;
 
   return (
     <motion.section
@@ -100,19 +100,16 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                       urlForImage(image)
                         ?.width(sanityWidth)
                         .height(sanityHeight)
-                        .quality(60)
                         .auto('format')
                         .url() || ''
                     }
                     alt={altText || 'Image'}
                     placeholder="blur"
                     blurDataURL={lqip || undefined}
-                    quality={40}
                     fill
                     priority
-                    // Adjust these sizes as necessary for your layout
                     sizes="(min-width: 2080px) 780px, (min-width: 1280px) calc(47.44vw + 84px), calc(100vw - 32px)"
-                    className={cn('object-cover w-10 rounded-2xl bg-tertiary')}
+                    className={cn('object-cover w-10 rounded-xl bg-tertiary')}
                   />
                 )}
               </motion.div>

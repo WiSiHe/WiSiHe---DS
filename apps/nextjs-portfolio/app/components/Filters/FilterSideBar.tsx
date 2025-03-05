@@ -3,7 +3,7 @@
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { IoClose } from 'react-icons/io5';
 import Chip from '../Chip/Chip';
 import useFilterSidebarStore from '@/store/useFilterModalStore';

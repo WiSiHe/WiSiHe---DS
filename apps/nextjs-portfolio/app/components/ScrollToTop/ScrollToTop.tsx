@@ -1,7 +1,7 @@
 'use client';
 import useScrollPosition from '@/hooks/useScrollPosition';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { IoArrowUpSharp } from 'react-icons/io5';
 
 interface ScrollToTopButtonProps {
@@ -63,10 +63,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
-          className={cn(
-            'shrink-0',
-            isFixed && 'fixed bottom-8 right-8 z-10'
-          )}
+          className={cn('shrink-0', isFixed && 'fixed bottom-8 right-8 z-10')}
         >
           <motion.button
             onClick={handleClick}

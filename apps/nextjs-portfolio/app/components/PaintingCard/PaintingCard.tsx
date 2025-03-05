@@ -10,7 +10,7 @@ import { TbBoxMultiple } from 'react-icons/tb';
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 type PaintingCardProps = {
   paintingData: GetAllPaintingsandTagsResult['paintings'][0];
