@@ -68,14 +68,20 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Social = {
+  _type: "social";
+  linkedIn?: string;
+  x?: string;
+};
+
 export type Redirect = {
   _id: string;
   _type: "redirect";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  source?: string;
-  destination?: string;
+  source: string;
+  destination: string;
   permanent?: boolean;
   isEnabled?: boolean;
 };
@@ -229,10 +235,14 @@ export type Project = {
     noIndex?: boolean;
   };
   redirect?: {
-    source?: string;
-    destination?: string;
+    source: string;
+    destination: string;
     permanent?: boolean;
     isEnabled?: boolean;
+  };
+  social?: {
+    linkedIn?: string;
+    x?: string;
   };
 };
 
@@ -246,6 +256,7 @@ export type Video = {
   slug: Slug;
   description: string;
   videoUrl: string;
+  featured?: boolean;
   thumbnail: {
     asset?: {
       _ref: string;
@@ -255,6 +266,7 @@ export type Video = {
     };
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt: string;
     _type: "image";
   };
   linkedPainting?: {
@@ -505,6 +517,15 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
+export type MediaTag = {
+  _id: string;
+  _type: "media.tag";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: Slug;
+};
+
 export type Slug = {
   _type: "slug";
   current: string;
@@ -632,7 +653,7 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Redirect | Seo | BlockContent | Tag | Project | Video | Settings | Home | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Social | Redirect | Seo | BlockContent | Tag | Project | Video | Settings | Home | Painting | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | MediaTag | Slug | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -872,10 +893,14 @@ export type ProjectQueryResult = {
     noIndex: boolean | false;
   };
   redirect?: {
-    source?: string;
-    destination?: string;
+    source: string;
+    destination: string;
     permanent?: boolean;
     isEnabled?: boolean;
+  };
+  social?: {
+    linkedIn?: string;
+    x?: string;
   };
   type: "art" | "design" | "development" | "gameDevelopment" | "other";
 } | null;
@@ -1085,6 +1110,52 @@ export type GetAllProjectsResult = {
     projectsCount: number;
   }>;
 };
+// Variable: getAllVideos
+// Query: {        "videos": *[_type == "video" && defined(slug.current)]        | order(date desc, _updatedAt desc) {          _id,          "slug": slug.current,          title,          "featured": featured == true,          description,          videoUrl,          "linkedPainting": coalesce(linkedPainting->{            _id,            "slug": slug.current,            title,            image{              ...,              "lqip": asset->metadata.lqip            }          }, null),          tags[]->{name},          thumbnail {            ...,            "lqip": asset->metadata.lqip          }        }      }
+export type GetAllVideosResult = {
+  videos: Array<{
+    _id: string;
+    slug: string;
+    title: string;
+    featured: boolean | false;
+    description: string;
+    videoUrl: string;
+    linkedPainting: {
+      _id: string;
+      slug: string;
+      title: string;
+      image: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string;
+        _type: "image";
+        lqip: string | null;
+      };
+    } | null;
+    tags: Array<{
+      name: string;
+    }>;
+    thumbnail: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      _type: "image";
+      lqip: string | null;
+    };
+  }>;
+};
 // Variable: generateStaticSlugs
 // Query: *[_type == $type && defined(slug.current)]{"slug": slug.current}
 export type GenerateStaticSlugsResult = Array<{
@@ -1093,8 +1164,8 @@ export type GenerateStaticSlugsResult = Array<{
 // Variable: REDIRECTS_QUERY
 // Query: *[_type == "redirect" && isEnabled == true] {      source,      destination,      permanent  }
 export type REDIRECTS_QUERYResult = Array<{
-  source: string | null;
-  destination: string | null;
+  source: string;
+  destination: string;
   permanent: boolean | null;
 }>;
 // Variable: OG_IMAGE_QUERY
@@ -1162,6 +1233,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
     "\n  {\n    \"paintings\": *[_type == \"painting\" && defined(slug.current)]\n      {\n        _id,\n        \"slug\": slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image {\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    \"tags\": *[\n      _type == \"tag\" &&\n      count(*[_type == \"painting\" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)\n    }\n  }\n  ": GetAllPaintingsandTagsResult;
     "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)]\n        | order(projectStart desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          \"tags\": tags[]->{name},\n          image {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        },\n      \"tags\": *[\n        _type == \"tag\" &&\n        count(*[_type == \"project\" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == \"project\" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        \"count\": count(*[_type == \"project\" && references(^._id)]),\n        \"projectsCount\": count(*[_type == \"project\" && references(^._id)])\n      }\n    }\n    ": GetAllProjectsResult;
+    "\n      {\n        \"videos\": *[_type == \"video\" && defined(slug.current)]\n        | order(date desc, _updatedAt desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          \"featured\": featured == true,\n          description,\n          videoUrl,\n          \"linkedPainting\": coalesce(linkedPainting->{\n            _id,\n            \"slug\": slug.current,\n            title,\n            image{\n              ...,\n              \"lqip\": asset->metadata.lqip\n            }\n          }, null),\n          tags[]->{name},\n          thumbnail {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        }\n      }\n    ": GetAllVideosResult;
     "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
     "\n  *[_type == \"redirect\" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n": REDIRECTS_QUERYResult;
     "\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      \"palette\": asset->metadata.palette,\n    },\n  }\n": OG_IMAGE_QUERYResult;

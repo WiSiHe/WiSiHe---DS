@@ -10,6 +10,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+function getYouTubeVideoId(url: string): string {
+  try {
+    const videoUrl = new URL(url);
+    // Handle youtu.be format
+    if (videoUrl.hostname === 'youtu.be') {
+      return videoUrl.pathname.slice(1);
+    }
+    // Handle youtube.com formats including shorts
+    if (videoUrl.hostname.includes('youtube.com')) {
+      if (videoUrl.pathname.includes('/shorts/')) {
+        return videoUrl.pathname.split('/shorts/')[1];
+      }
+      const videoId = videoUrl.searchParams.get('v');
+      if (videoId) return videoId;
+    }
+    // Fallback to original behavior
+    return videoUrl.pathname.slice(1);
+  } catch (error) {
+    return error as string;
+  }
+}
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -174,9 +196,7 @@ export default async function ProjectPage(props: Props) {
         <section className="relative py-8 lg:py-20 bg-[#111] ring ">
           <div className="max-w-screen-lg mx-auto aspect-video">
             <iframe
-              src={`https://www.youtube.com/embed/${new URL(
-                connectedVideo.videoUrl
-              ).pathname.slice(1)}`}
+              src={`https://www.youtube.com/embed/${getYouTubeVideoId(connectedVideo.videoUrl)}`}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

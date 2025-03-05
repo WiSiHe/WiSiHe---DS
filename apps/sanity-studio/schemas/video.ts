@@ -57,10 +57,27 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Whether the video is featured',
+    }),
+    defineField({
       name: 'thumbnail',
       title: 'Thumbnail',
       type: 'image',
       description: 'The thumbnail of the video',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+      options: {
+        hotspot: true,
+        metadata: ['lqip', 'palette'],
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({

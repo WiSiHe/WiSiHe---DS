@@ -55,7 +55,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           variants={container}
           initial="hidden"
           animate="show"
-          className="flex items-center gap-4"
+          className="flex items-center gap-2"
         >
           {navigationItems.map((item, i) => {
             const isActive = pathName?.includes(item.href);
@@ -73,9 +73,9 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                 <Link
                   href={href}
                   className={cn(
-                    'transition-all gap-2 flex items-center text-white px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
+                    'transition-all gap-1 md:gap-2 flex items-center text-xs md:text-base rounded-md text-white px-2 md:px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
                     isActive
-                      ? 'underline decoration-primary text-white decoration-2 bg-primary'
+                      ? 'decoration-primary text-white bg-primary '
                       : ' text-white'
                   )}
                 >
