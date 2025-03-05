@@ -296,16 +296,23 @@ export const getAllVideos = defineQuery(`
           _id,
           "slug": slug.current,
           title,
+          "featured": featured == true,
           description,
+          videoUrl,
+          "linkedPainting": coalesce(linkedPainting->{
+            _id,
+            "slug": slug.current,
+            title,
+            image{
+              ...,
+              "lqip": asset->metadata.lqip
+            }
+          }, null),
+          tags[]->{name},
           thumbnail {
             ...,
             "lqip": asset->metadata.lqip
-          },
-          "date": coalesce(date, _updatedAt),
-          "viewsCount": count(views),
-          "likesCount": count(likes),
-          "commentsCount": count(comments),
-          "sharesCount": count(shares),
+          }
         }
       }
     `);

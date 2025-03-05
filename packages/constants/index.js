@@ -9,7 +9,7 @@ export const navigationItems = [
     href: '/projects',
     description: 'Projects',
   },
-  // { label: "Videos", href: "/videos", description: "Videos" },
+  { label: 'Videos', href: '/videos', description: 'Videos' },
 ];
 
 export const socialMediaLinks = [
