@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 
-import { cache, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Filters } from '../components/Filters/Filters';
 import { FilterSideBar } from '../components/Filters/FilterSideBar';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
