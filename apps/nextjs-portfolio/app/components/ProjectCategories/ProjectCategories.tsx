@@ -33,21 +33,24 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
   });
   return (
     <section className="flex flex-col w-full gap-5">
-      <ul className="flex flex-wrap gap-2">
-        {tags.map((tag) => {
-          const { name, _id, count } = tag;
-          const isActive = activeFilters.includes(name);
+      <div className="relative">
+        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-dark to-transparent" />
+        <ul className="flex w-full gap-2 pb-2 overflow-x-auto pr-26">
+          {tags.map((tag) => {
+            const { name, _id, count } = tag;
+            const isActive = activeFilters.includes(name);
 
-          const newName = `${name} (${count})`;
-          return (
-            <li key={_id}>
-              <button onClick={() => handleToggleFilter(name)}>
-                <Chip outlined selected={isActive} label={newName} />
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+            const newName = `${name} (${count})`;
+            return (
+              <li key={_id} className="shrink-0">
+                <button onClick={() => handleToggleFilter(name)}>
+                  <Chip outlined selected={isActive} label={newName} />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
       <h3>Displaying {filteredProjects.length} projects</h3>
       <ul className="grid w-full grid-cols-12 gap-4">
