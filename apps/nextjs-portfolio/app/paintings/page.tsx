@@ -10,7 +10,7 @@ import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
 import { Filters } from '../components/Filters/Filters';
 import { FilterSideBar } from '../components/Filters/FilterSideBar';
-import { Suspense } from 'react';
+import { cache, Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Paintings | WiSiHe',
@@ -42,15 +42,27 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 86400;
+
+const getPaintingsData = cache(async () => {
+  const data = await sanityFetch({
+    query: getAllPaintingsandTags,
+    tags: ['painting', 'tag'],
+  });
+  return data;
+});
+
 export default async function Paintings() {
-  const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
-    await Promise.all([sanityFetch({ query: getAllPaintingsandTags })]);
+  const paintingsData = await getPaintingsData();
+  const {
+    data: { paintings, tags },
+  } = paintingsData;
 
-  if (isEmptyObject(data)) {
-    return notFound();
+  // More robust check: ensure data exists and has the expected arrays
+  if (!paintings || !tags) {
+    console.warn('Paintings data not found or invalid:', paintingsData);
+    notFound();
   }
-
-  const { paintings, tags } = data;
 
   const sortedTags = tags
     .filter((tag: { paintingsCount: number }) => tag.paintingsCount > 7)
@@ -62,7 +74,7 @@ export default async function Paintings() {
       );
     });
 
-  // const randomPaintings = paintings.sort(() => Math.random() - 0.5);
+  const randomPaintings = paintings.sort(() => Math.random() - 0.5);
 
   return (
     <>
@@ -74,7 +86,7 @@ export default async function Paintings() {
             <Filters />
           </div>
           <Suspense fallback={null}>
-            <PaintingGrid paintings={paintings} />
+            <PaintingGrid paintings={randomPaintings} />
           </Suspense>
         </div>
         <Suspense fallback={null}>
