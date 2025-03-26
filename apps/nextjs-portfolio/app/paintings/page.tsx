@@ -2,15 +2,13 @@ import { sanityFetch } from '@/sanity/lib/live';
 import { getAllPaintingsandTags } from '@/sanity/lib/queries';
 import { Metadata } from 'next';
 
-import { isEmptyObject } from '@wisihe/utils';
 import { notFound } from 'next/navigation';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
+import { cache, Suspense } from 'react';
 import { Filters } from '../components/Filters/Filters';
 import { FilterSideBar } from '../components/Filters/FilterSideBar';
-import { cache, Suspense } from 'react';
+import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
 
 export const metadata: Metadata = {
   title: 'Paintings | WiSiHe',
@@ -44,13 +42,13 @@ export const metadata: Metadata = {
 
 export const revalidate = 86400;
 
-const getPaintingsData = cache(async () => {
+const getPaintingsData = async () => {
   const data = await sanityFetch({
     query: getAllPaintingsandTags,
     tags: ['painting', 'tag'],
   });
   return data;
-});
+};
 
 export default async function Paintings() {
   const paintingsData = await getPaintingsData();
@@ -58,7 +56,6 @@ export default async function Paintings() {
     data: { paintings, tags },
   } = paintingsData;
 
-  // More robust check: ensure data exists and has the expected arrays
   if (!paintings || !tags) {
     console.warn('Paintings data not found or invalid:', paintingsData);
     notFound();
