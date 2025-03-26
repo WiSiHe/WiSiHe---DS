@@ -3,7 +3,7 @@ import {LinkIcon} from '@sanity/icons'
 
 function isValidInternalPath(value: string | undefined) {
   if (!value) {
-    return 'Value is required'
+    return true // Allow empty values since it's not required
   } else if (!value.startsWith('/')) {
     return 'Internal paths must start with /'
   } else if (/[^a-zA-Z0-9\-_/:]/.test(value)) {
@@ -17,8 +17,11 @@ function isValidInternalPath(value: string | undefined) {
 }
 
 function isValidUrl(value: string | undefined) {
+  if (!value) {
+    return true // Allow empty values since it's not required
+  }
   try {
-    new URL(value || '')
+    new URL(value)
     return true
   } catch {
     return 'Invalid URL'
@@ -34,7 +37,7 @@ export const redirectType = defineType({
   group: 'redirect',
   validation: (Rule) =>
     Rule.custom((doc: SanityDocumentLike | undefined) => {
-      if (doc && doc.source === doc.destination) {
+      if (doc && doc.source && doc.destination && doc.source === doc.destination) {
         return ['source', 'destination'].map((field) => ({
           message: 'Source and destination cannot be the same',
           path: [field],
@@ -47,13 +50,13 @@ export const redirectType = defineType({
     defineField({
       name: 'source',
       type: 'string',
-      validation: (Rule) => Rule.required().custom(isValidInternalPath),
+      validation: (Rule) => Rule.custom(isValidInternalPath),
     }),
     defineField({
       name: 'destination',
       type: 'string',
       validation: (Rule) =>
-        Rule.required().custom((value: string | undefined) => {
+        Rule.custom((value: string | undefined) => {
           const urlValidation = isValidUrl(value)
           const pathValidation = isValidInternalPath(value)
 
@@ -67,13 +70,13 @@ export const redirectType = defineType({
       name: 'permanent',
       description: 'Should the redirect be permanent (301) or temporary (302)',
       type: 'boolean',
-      initialValue: true,
+      initialValue: false,
     }),
     defineField({
       name: 'isEnabled',
       description: 'Toggle this redirect on or off',
       type: 'boolean',
-      initialValue: true,
+      initialValue: false,
     }),
   ],
 })
