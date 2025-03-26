@@ -45,7 +45,7 @@ export const revalidate = 86400;
 const getPaintingsData = async () => {
   const data = await sanityFetch({
     query: getAllPaintingsandTags,
-    tags: ['painting', 'tag'],
+    // tags: ['painting', 'tag'],
   });
   return data;
 };
@@ -71,7 +71,7 @@ export default async function Paintings() {
       );
     });
 
-  const randomPaintings = paintings.sort(() => Math.random() - 0.5);
+  // const randomPaintings = paintings.sort(() => Math.random() - 0.5);
 
   return (
     <>
@@ -82,13 +82,9 @@ export default async function Paintings() {
             <p>A gallery of some of my paintings</p>
             <Filters />
           </div>
-          <Suspense fallback={null}>
-            <PaintingGrid paintings={randomPaintings} />
-          </Suspense>
+          <PaintingGrid paintings={paintings} />
         </div>
-        <Suspense fallback={null}>
-          <FilterSideBar tags={sortedTags} />
-        </Suspense>
+        <FilterSideBar tags={sortedTags} />
       </div>
       <ScrollToTopButton />
     </>
