@@ -13,7 +13,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { selectedFilters, selectedSort } = useFilterSidebarStore();
+  const { selectedSort } = useFilterSidebarStore();
 
   const sort = searchParams.get('sort') || selectedSort;
   const filters = searchParams
