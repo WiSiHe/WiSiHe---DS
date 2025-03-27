@@ -10,6 +10,7 @@ import { FilterSideBar } from '../components/Filters/FilterSideBar';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
 import { isEmptyObject } from '@wisihe/utils';
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Paintings | WiSiHe',
@@ -77,9 +78,13 @@ export default async function Paintings() {
           <div className="text-white">
             <h1 className="font-semibold">Paintings</h1>
             <p>A gallery of some of my paintings</p>
-            <Filters />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Filters />
+            </Suspense>
           </div>
-          <PaintingGrid paintings={paintings} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <PaintingGrid paintings={paintings} />
+          </Suspense>
         </div>
         <FilterSideBar tags={sortedTags} />
       </div>
