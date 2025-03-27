@@ -3,6 +3,7 @@ import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense, useMemo } from 'react';
+import useFilterSidebarStore from '@/store/useFilterModalStore';
 
 type PaintingGridProps = {
   paintings: GetAllPaintingsandTagsResult['paintings'];
@@ -12,7 +13,9 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const sort = searchParams.get('sort');
+  const { selectedFilters, selectedSort } = useFilterSidebarStore();
+
+  const sort = searchParams.get('sort') || selectedSort;
   const filters = searchParams
     .getAll('filter')
     .map((filter) => filter.toLowerCase());

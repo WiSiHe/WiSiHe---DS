@@ -38,7 +38,7 @@ const PaintingsSection = ({
   ));
   return (
     <section className="py-8 pl-4 lg:pl-8">
-      <div className="px-4">
+      <div className="px-4 text-white">
         <CustomPortableText
           value={paintingsDescription}
           className="prose-invert"

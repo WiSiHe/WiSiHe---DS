@@ -22,12 +22,14 @@ type SelectProps = {
 export const Select = ({ label, options, value, onChange }: SelectProps) => {
   return (
     <div className="relative mt-4">
-      <label className="block mb-1 text-sm font-semibold">{label}</label>
+      <label className="block mb-1 text-sm font-semibold text-dark">
+        {label}
+      </label>
       <Listbox value={value} onChange={onChange}>
         {({ open }) => (
           <div className="relative w-full">
             {/* --- Button --- */}
-            <ListboxButton className="relative flex items-center justify-between w-full px-3 py-2 text-left transition-colors border rounded-md shadow-xs cursor-pointer border-primary bg-tertiary hover:bg-primary/5 focus:outline-hidden focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1">
+            <ListboxButton className="relative flex items-center justify-between w-full px-3 py-2 text-left transition-colors border rounded-md shadow-xs cursor-pointer border-primary bg-tertiary hover:bg-primary/5 focus:outline-hidden focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1 text-dark">
               <span className="block truncate">
                 {options.find((option) => option.value === value)?.label}
               </span>
@@ -78,7 +80,7 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                     },
                   }}
                   // anchor="bottom"
-                  className="absolute z-10 w-full mt-1 overflow-auto origin-top bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-hidden sm:text-sm"
+                  className="absolute z-10 w-full mt-1 overflow-auto origin-top rounded-md shadow-lg bg-tertiary max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-hidden sm:text-sm"
                 >
                   {options.map((option) => (
                     <ListboxOption

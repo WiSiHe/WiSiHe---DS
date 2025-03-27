@@ -7,18 +7,18 @@ const chipStyles = cva(
   {
     variants: {
       variation: {
-        default: 'bg-stone-100 text-dark',
-        primary: 'bg-primary text-white',
-        secondary: 'bg-secondary text-white',
-        tertiary: 'bg-tertiary text-white',
-        highlight: 'bg-highlight text-dark',
+        default: 'bg-stone-100 text-dark hover:bg-stone-200',
+        primary: 'bg-primary text-white hover:bg-primary/40',
+        secondary: 'bg-secondary text-white hover:bg-secondary/40',
+        tertiary: 'bg-tertiary text-white hover:bg-tertiary/40',
+        highlight: 'bg-highlight text-dark hover:bg-highlight/40',
       },
       outlined: {
-        true: 'border border-current',
+        true: 'border border-current hover:bg-stone-50',
         false: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-white',
+        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-white hover:bg-primary/90',
         false: '',
       },
       iconPosition: {
