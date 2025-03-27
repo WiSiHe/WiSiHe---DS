@@ -8,6 +8,8 @@ import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 import { Filters } from '../components/Filters/Filters';
 import { FilterSideBar } from '../components/Filters/FilterSideBar';
 import PaintingGrid from '../components/PaintingGrid/PaintingGrid';
+import { isEmptyObject } from '@wisihe/utils';
+import { GetAllPaintingsandTagsResult } from '@/sanity.types';
 
 export const metadata: Metadata = {
   title: 'Paintings | WiSiHe',
@@ -41,22 +43,18 @@ export const metadata: Metadata = {
 
 export const revalidate = 86400;
 
-const getPaintingsData = async () => {
-  const data = await sanityFetch({
-    query: getAllPaintingsandTags,
-    // tags: ['painting', 'tag'],
-  });
-  return data;
-};
-
 export default async function Paintings() {
-  const paintingsData = await getPaintingsData();
-  const {
-    data: { paintings, tags },
-  } = paintingsData;
+  const [{ data }]: [{ data: GetAllPaintingsandTagsResult }] =
+    await Promise.all([sanityFetch({ query: getAllPaintingsandTags })]);
+
+  if (isEmptyObject(data)) {
+    return notFound();
+  }
+
+  const { paintings, tags } = data;
 
   if (!paintings || !tags) {
-    console.warn('Paintings data not found or invalid:', paintingsData);
+    console.warn('Paintings data not found or invalid:', data);
     notFound();
   }
 
