@@ -60,11 +60,10 @@ export default async function Home() {
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={showcasePaintings} />
-      {/* Projects Section */}
       {showcaseProjects && showcaseProjects.length > 0 ? (
         <section className="px-4 py-16 md:px-8 bg-tertiary/80">
-          <div className="prose">
-            <h2 className="">Featured Projects</h2>
+          <div className="text-dark max-w-prose">
+            <h2 className="pb-1">Featured Projects</h2>
             <p>
               Here are some of the projects I have worked on. Click on the
               project to view more details.

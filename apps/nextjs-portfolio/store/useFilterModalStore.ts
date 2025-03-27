@@ -14,7 +14,7 @@ interface FilterState {
 const useFilterSidebarStore = create<FilterState>((set) => ({
   isOpen: false,
   selectedFilters: [],
-  selectedSort: 'random',
+  selectedSort: 'newest',
   openSidebar: () => set({ isOpen: true }),
   closeSidebar: () => set({ isOpen: false }),
   toggleFilter: (filter, pathname, router) => {

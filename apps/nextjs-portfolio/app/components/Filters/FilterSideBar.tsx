@@ -61,7 +61,7 @@ export const FilterSideBar = ({ tags }: FilterSideBarProps) => {
               exit={{ x: '100%', transition: { duration: 0.2 } }}
               className="w-full h-full max-w-sm p-6 bg-white shadow-lg"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 text-dark">
                 <DialogTitle className="text-lg font-semibold">
                   Filter Paintings
                 </DialogTitle>
@@ -96,6 +96,7 @@ export const FilterSideBar = ({ tags }: FilterSideBarProps) => {
                       <button
                         key={_id}
                         type="button"
+                        className="cursor-pointer text-dark"
                         onClick={() =>
                           toggleFilter(filterValue, pathname, router)
                         }
@@ -116,7 +117,7 @@ export const FilterSideBar = ({ tags }: FilterSideBarProps) => {
               <div className="flex justify-between">
                 <button
                   onClick={() => clearFilters(pathname, router)}
-                  className="px-3 py-2 rounded-lg ring-3 text-dark ring-dark"
+                  className="px-3 py-2 rounded-lg cursor-pointer ring-3 text-dark ring-dark hover:bg-stone-100"
                 >
                   Clear Filters
                 </button>
