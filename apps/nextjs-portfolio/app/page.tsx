@@ -10,10 +10,11 @@ import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import { PortableTextBlock } from 'next-sanity';
 import Link from 'next/link';
 
+import { HomePageQueryResult } from '@/sanity.types';
+
 export default async function Home() {
-  const [{ data: homepage }] = await Promise.all([
-    sanityFetch({ query: homePageQuery }),
-  ]);
+  const [{ data: homepage }]: [{ data: HomePageQueryResult }] =
+    await Promise.all([sanityFetch({ query: homePageQuery })]);
 
   if (!homepage) {
     return (
