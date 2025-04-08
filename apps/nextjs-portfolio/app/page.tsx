@@ -63,7 +63,7 @@ export default async function Home() {
       {showcaseProjects && showcaseProjects.length > 0 ? (
         <section className="px-4 py-16 md:px-8 bg-tertiary/80">
           <div className="text-dark max-w-prose">
-            <h2 className="pb-1">Featured Projects</h2>
+            <h2 className="pb-1 font-bold">Featured Projects</h2>
             <p>
               Here are some of the projects I have worked on. Click on the
               project to view more details.
@@ -94,8 +94,8 @@ export default async function Home() {
                 </div>
                 <div className="relative flex flex-col justify-between w-full h-full p-4">
                   <div>
-                    <h3 className="font-bold">{project.title}</h3>
-                    <p className="line-clamp-3">{project.description}</p>
+                    <h3 className="font-bold">{project.seo.title}</h3>
+                    <p className="line-clamp-3">{project.seo.description}</p>
                   </div>
                   <div className="flex justify-end pt-4">
                     <Link
@@ -115,7 +115,7 @@ export default async function Home() {
       )}
       <section className="flex flex-col gap-4 py-20 text-white">
         <div className="px-4 lg:px-10">
-          <h2 className="text-3xl font-semibold">Skills</h2>
+          <h2 className="text-4xl font-bold">Skills</h2>
           <p>Here are some of the skills I have acquired over the years.</p>
         </div>
         <Marquee

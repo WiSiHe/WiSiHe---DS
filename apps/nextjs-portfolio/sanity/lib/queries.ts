@@ -214,6 +214,12 @@ export const homePageQuery = defineQuery(`
       projectEnd,
       status,
       content,
+      "seo": {
+        "title": coalesce(seo.title, title, ""),
+        "description": coalesce(seo.description,  ""),
+        "image": seo.image,
+        "noIndex": seo.noIndex == true
+      },
       name,
       "slug": slug.current,
       image{
@@ -318,8 +324,11 @@ export const getAllVideos = defineQuery(`
     `);
 
 export const generateStaticSlugs = defineQuery(`
-    *[_type == $type && defined(slug.current)]{"slug": slug.current}
-  `);
+  *[_type == $type && defined(slug.current)]{
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
 
 export async function getStaticSlugs(type: string) {
   return client
