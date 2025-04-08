@@ -921,7 +921,7 @@ export type ProjectsSlugsResult = Array<{
 // Query: *[_type == "page" && defined(slug.current)]  {"slug": slug.current}
 export type PagesSlugsResult = Array<never>;
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    title,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    showcasePaintings[]->{      _type,      _id,      altText,      "slug": slug.current,      title,      format,      tagsV2[]->{name},      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    },    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      name,      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },  }
+// Query: *[_type == "home"][0]{    _id,    title,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    showcasePaintings[]->{      _type,      _id,      altText,      "slug": slug.current,      title,      format,      tagsV2[]->{name},      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    },    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      "seo": {        "title": coalesce(seo.title, title, ""),        "description": coalesce(seo.description,  ""),        "image": seo.image,        "noIndex": seo.noIndex == true      },      name,      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },  }
 export type HomePageQueryResult = {
   _id: string;
   title: string;
@@ -1001,6 +1001,22 @@ export type HomePageQueryResult = {
       _type: "block";
       _key: string;
     }> | null;
+    seo: {
+      title: string | "";
+      description: string | "";
+      image: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      noIndex: boolean | false;
+    };
     name: string;
     slug: string;
     image: {
@@ -1157,9 +1173,10 @@ export type GetAllVideosResult = {
   }>;
 };
 // Variable: generateStaticSlugs
-// Query: *[_type == $type && defined(slug.current)]{"slug": slug.current}
+// Query: *[_type == $type && defined(slug.current)]{    "slug": slug.current,    _updatedAt  }
 export type GenerateStaticSlugsResult = Array<{
   slug: string;
+  _updatedAt: string;
 }>;
 // Variable: REDIRECTS_QUERY
 // Query: *[_type == "redirect" && isEnabled == true] {      source,      destination,      permanent  }
@@ -1230,11 +1247,11 @@ declare module "@sanity/client" {
     "\n  *[_type == \"painting\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PaintingsSlugsResult;
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
-    "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
+    "\n  *[_type == \"home\"][0]{\n    _id,\n    title,\n    \"paintingsCount\": count(*[_type == \"painting\"]),\n    paintingsDescription,\n    showcasePaintings[]->{\n      _type,\n      _id,\n      altText,\n      \"slug\": slug.current,\n      title,\n      format,\n      tagsV2[]->{name},\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip,\n        \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n      }\n    },\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      \"seo\": {\n        \"title\": coalesce(seo.title, title, \"\"),\n        \"description\": coalesce(seo.description,  \"\"),\n        \"image\": seo.image,\n        \"noIndex\": seo.noIndex == true\n      },\n      name,\n      \"slug\": slug.current,\n      image{\n        ...,\n        \"lqip\": asset->metadata.lqip\n      },\n    },\n  }\n": HomePageQueryResult;
     "\n  {\n    \"paintings\": *[_type == \"painting\" && defined(slug.current)]\n      {\n        _id,\n        \"slug\": slug.current,\n        title,\n        tagsV2[]->{name},\n        \"viewsCount\": count(views),\n        paintedAt,\n        video,\n        \"imagesCount\": coalesce(count(images), 0),\n        \"isForSale\": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),\n        image {\n          ...,\n          \"lqip\": asset->metadata.lqip,\n          \"aspectRatio\": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    \"tags\": *[\n      _type == \"tag\" &&\n      count(*[_type == \"painting\" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      \"paintingsCount\": count(*[_type == \"painting\" && references(^._id)].title)\n    }\n  }\n  ": GetAllPaintingsandTagsResult;
     "\n    {\n      \"projects\": *[_type == \"project\" && defined(slug.current)]\n        | order(projectStart desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          \"tags\": tags[]->{name},\n          image {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        },\n      \"tags\": *[\n        _type == \"tag\" &&\n        count(*[_type == \"project\" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == \"project\" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        \"count\": count(*[_type == \"project\" && references(^._id)]),\n        \"projectsCount\": count(*[_type == \"project\" && references(^._id)])\n      }\n    }\n    ": GetAllProjectsResult;
     "\n      {\n        \"videos\": *[_type == \"video\" && defined(slug.current)]\n        | order(date desc, _updatedAt desc) {\n          _id,\n          \"slug\": slug.current,\n          title,\n          \"featured\": featured == true,\n          description,\n          videoUrl,\n          \"linkedPainting\": coalesce(linkedPainting->{\n            _id,\n            \"slug\": slug.current,\n            title,\n            image{\n              ...,\n              \"lqip\": asset->metadata.lqip\n            }\n          }, null),\n          tags[]->{name},\n          thumbnail {\n            ...,\n            \"lqip\": asset->metadata.lqip\n          }\n        }\n      }\n    ": GetAllVideosResult;
-    "\n    *[_type == $type && defined(slug.current)]{\"slug\": slug.current}\n  ": GenerateStaticSlugsResult;
+    "\n  *[_type == $type && defined(slug.current)]{\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": GenerateStaticSlugsResult;
     "\n  *[_type == \"redirect\" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n": REDIRECTS_QUERYResult;
     "\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      \"palette\": asset->metadata.palette,\n    },\n  }\n": OG_IMAGE_QUERYResult;
     "\n  *[_type in [\"page\", \"post\"] && defined(slug.current)] {\n      \"href\": select(\n        _type == \"page\" => \"/\" + slug.current,\n        _type == \"post\" => \"/posts/\" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ": SITEMAP_QUERYResult;
