@@ -50,22 +50,20 @@ export const SocialListItem = ({ item }: { item: SocialLink }) => {
     >
       <span className="shrink-0">{Icon}</span>
       <AnimatePresence>
-        {isHovered && (
-          <motion.span
-            key={platform}
-            initial={{ x: -40, opacity: 0, scale: 0 }}
-            animate={{ x: 0, opacity: 1, scale: 1 }}
-            exit={{
-              x: -40,
-              opacity: 0,
-              scale: 0,
-            }}
-            transition={{ type: 'spring' }}
-            className="text-xl font-semibold"
-          >
-            {platform}
-          </motion.span>
-        )}
+        <motion.span
+          key={platform}
+          initial={{ x: -40, opacity: 0, scale: 0 }}
+          animate={{ x: 0, opacity: 1, scale: 1 }}
+          exit={{
+            x: -40,
+            opacity: 0,
+            scale: 0,
+          }}
+          transition={{ type: 'spring' }}
+          className="text-xl font-semibold"
+        >
+          {platform}
+        </motion.span>
       </AnimatePresence>
     </motion.a>
   );

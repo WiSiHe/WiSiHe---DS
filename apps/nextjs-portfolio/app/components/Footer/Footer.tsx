@@ -13,7 +13,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
   }
 
   return (
-    <footer className="relative w-full overflow-hidden bg-dark">
+    <footer className="relative w-full overflow-hidden border-t-2 bg-dark border-primary">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark/50" />
       <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-white sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">

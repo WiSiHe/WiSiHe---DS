@@ -7,10 +7,11 @@ import CustomPortableText from '../PortableText/PortableText';
 
 import { type PortableTextBlock } from 'next-sanity';
 import Link from 'next/link';
+import { motion } from 'motion/react';
 
 type PaintingsSectionProps = {
-  paintings: NonNullable<HomePageQueryResult>['showcasePaintings'];
-  paintingsDescription: PortableTextBlock[];
+  paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+  paintingsDescription?: PortableTextBlock[];
 };
 
 const PaintingsSection = ({
@@ -20,6 +21,30 @@ const PaintingsSection = ({
   if (!paintings || paintings.length === 0) {
     return null;
   }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  };
 
   const data = paintings.map((painting) => ({
     categories: painting.tagsV2 || ['Art'],
@@ -36,26 +61,41 @@ const PaintingsSection = ({
   const cards = data.map((card, index) => (
     <Card key={card.src} card={card} index={index} />
   ));
-  return (
-    <section className="z-10 py-8 pl-4 pointer-events-none lg:pl-8">
-      <div className="px-4 text-white">
-        <CustomPortableText
-          value={paintingsDescription}
-          className="prose-invert"
-        />
-      </div>
-      <Carousel items={cards} />
 
-      <div className="flex flex-col items-center justify-center gap-4 text-white">
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-100px' }}
+      variants={containerVariants}
+      className=""
+    >
+      <motion.div variants={itemVariants} className="px-4 text-dark">
+        {paintingsDescription && (
+          <CustomPortableText
+            value={paintingsDescription}
+            className="prose-invert"
+          />
+        )}
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <Carousel items={cards} />
+      </motion.div>
+
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col items-center justify-center gap-4 text-dark"
+      >
         <p>Like what you see?</p>
         <Link
           href="/paintings"
-          className="px-4 py-2 rounded-sm pointer-events-auto bg-primary"
+          className="px-4 py-2 text-white transition-all duration-300 rounded-sm bg-primary hover:bg-primary/90"
         >
-          View All Paintings
+          Explore all paintings
         </Link>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 
