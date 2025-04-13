@@ -5,7 +5,6 @@ import { FaFacebook } from 'react-icons/fa';
 import { BiLogoRedbubble } from 'react-icons/bi';
 import { FaArtstation, FaLinkedin } from 'react-icons/fa';
 import { BsTwitterX } from 'react-icons/bs';
-import { useState } from 'react';
 
 const iconPlatform = {
   Instagram: <FaInstagram />,
@@ -23,20 +22,16 @@ interface SocialLink {
 }
 
 export const SocialListItem = ({ item }: { item: SocialLink }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const { platform, url } = item;
   const Icon = iconPlatform[platform as keyof typeof iconPlatform];
 
   return (
     <motion.a
-      //   layoutId={`link-${platform}`}
       href={url}
       target="_blank"
       rel="noreferrer"
       className="flex items-center h-10 gap-4 px-4 py-3 text-2xl text-white transition-colors duration-500 rounded-md overflow-clip"
       aria-label={`Follow me on ${platform}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       whileHover={{
         backgroundColor: 'var(--color-primary)',
       }}
