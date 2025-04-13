@@ -27,8 +27,8 @@ const PaintingsSection = ({
     href: `/paintings/${painting.slug}`,
     src:
       urlForImage(painting.image)
-        ?.height(720)
-        .width(1280)
+        ?.height(1280)
+        .width(720)
         .auto('format')
         .url() || '',
   }));
@@ -37,7 +37,7 @@ const PaintingsSection = ({
     <Card key={card.src} card={card} index={index} />
   ));
   return (
-    <section className="py-8 pl-4 lg:pl-8">
+    <section className="z-10 py-8 pl-4 pointer-events-none lg:pl-8">
       <div className="px-4 text-white">
         <CustomPortableText
           value={paintingsDescription}
@@ -48,7 +48,10 @@ const PaintingsSection = ({
 
       <div className="flex flex-col items-center justify-center gap-4 text-white">
         <p>Like what you see?</p>
-        <Link href="/paintings" className="px-4 py-2 rounded-sm bg-primary">
+        <Link
+          href="/paintings"
+          className="px-4 py-2 rounded-sm pointer-events-auto bg-primary"
+        >
           View All Paintings
         </Link>
       </div>

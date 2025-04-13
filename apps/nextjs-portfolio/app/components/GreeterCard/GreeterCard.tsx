@@ -55,21 +55,23 @@ const GreeterCard = (): JSX.Element => {
     <motion.div
       initial="initial"
       animate="animate"
-      className="relative flex flex-col justify-center h-full gap-4 p-4 lg:p-10 rounded-xl backdrop-blur-sm bg-white/40 overflow-clip drop-shadow-xl"
+      className="relative flex flex-col justify-center h-full gap-6 p-6 lg:p-12 rounded-xl backdrop-blur-sm bg-white/40 overflow-clip drop-shadow-xl"
     >
-      <div className="z-10 flex flex-col items-start h-full text-dark lg:justify-center lg:p-4">
-        <h1 className="text-2xl xl:text-5xl">Henrik Wilhelm Sissener</h1>
+      <div className="z-10 flex flex-col items-start h-full text-dark lg:justify-center lg:p-6">
+        <h1 className="text-3xl font-black tracking-tight xl:text-6xl">
+          Henrik Wilhelm Sissener
+        </h1>
         <motion.ul
           variants={listVariants}
           initial="initial"
           animate="animate"
-          className="flex flex-col gap-2 mt-4 text-base xl:text-2xl"
+          className="flex flex-col w-full gap-3 mt-6 text-lg xl:text-2xl"
         >
           {roles.map(({ icon: Icon, label }, index) => (
             <motion.li
               key={index}
               variants={itemVariants}
-              className="flex items-center gap-2 p-1 group"
+              className="flex items-center gap-3 p-2 transition-colors rounded-lg group hover:bg-white/20"
             >
               <motion.div
                 variants={iconVariants}
@@ -78,11 +80,11 @@ const GreeterCard = (): JSX.Element => {
                   rotate: 360,
                   transition: { type: 'spring', delay: 0.2, duration: 0.5 },
                 }}
-                className="text-4xl"
+                className="text-4xl text-primary"
               >
                 <Icon />
               </motion.div>
-              <span>{label}</span>
+              <span className="font-medium">{label}</span>
             </motion.li>
           ))}
         </motion.ul>

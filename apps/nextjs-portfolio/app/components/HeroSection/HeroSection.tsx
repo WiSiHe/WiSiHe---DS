@@ -5,25 +5,15 @@ import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import Image from 'next/image';
+import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import GreeterCard from '../GreeterCard/GreeterCard';
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
 };
-
-// const containerVariants = {
-//   hidden: { opacity: 0 },
-//   visible: { opacity: 1 },
-// };
-
-// const textVariants = {
-//   hidden: { width: 0, opacity: 0 },
-//   visible: { width: 'auto', opacity: 1 },
-// };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
@@ -51,15 +41,47 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const sanityWidth = 1920;
   const sanityHeight = 1080;
 
+  const common = {
+    alt: altText || 'Painting',
+    fill: 'true',
+    className: 'object-cover',
+  };
+
+  const desktopWidth = 1920;
+  const desktopHeight = 1080;
+  const mobileWidth = 640;
+  const mobileHeight = 420;
+
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({
+    ...common,
+    quality: 80,
+    fill: true,
+    src:
+      urlForImage(image)?.width(desktopWidth).height(desktopHeight).url() || '',
+  });
+
+  const {
+    props: { srcSet: mobile },
+  } = getImageProps({
+    ...common,
+    quality: 70,
+    fill: true,
+    src:
+      urlForImage(image)?.width(mobileWidth).height(mobileHeight).url() || '',
+  });
+
   return (
     <motion.section
+      key={_id}
       ref={constraintsRef}
-      className="relative flex flex-col justify-start w-full px-10 pt-20 h-fit lg:min-h-screen xl:justify-center xl:min-h-screen lg:py-10 bg-dark overflow-clip"
+      className="relative flex flex-col items-end justify-center w-full px-4 py-24 h-fit md:px-10 lg:min-h-screen xl:justify-center xl:min-h-screen lg:py-10 bg-dark overflow-clip"
     >
       <img
         src={lqip || ''}
         alt=""
-        className="absolute inset-0 object-cover w-full h-full scale-105 blur-xl"
+        className="absolute inset-0 object-cover w-full h-full scale-105 blur-2xl"
         sizes="100vw"
       />
 
@@ -81,21 +103,30 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         >
           <AnimatePresence mode="wait">
             <Link
+              key={currentPaintingsIndex + 'painting-link'}
               href={`paintings/${slug}`}
               aria-label="View painting"
-              className="focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute z-10 flex items-center gap-2 px-4 py-3 text-white rounded-lg focus-visible:ring-2 focus-visible:ring-primary bg-primary top-4 right-4"
             >
-              <motion.div
-                key={currentPaintingsIndex}
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.95 }}
-                transition={{ type: 'spring' }}
-                className="relative w-full h-full aspect-video rounded-2xl bg-dark/20"
-              >
-                {image && (
-                  <Image
-                    key={_id + 'hero'}
+              View Painting <FaArrowRight />
+            </Link>
+            <motion.div
+              key={currentPaintingsIndex}
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              transition={{ type: 'spring' }}
+              className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
+            >
+              {image && (
+                <picture className="w-full h-full rounded-2xl overflow-clip">
+                  <source media="(min-width: 1000px)" srcSet={desktop} />
+                  <source media="(min-width: 500px)" srcSet={mobile} />
+                  <img
+                    {...common}
+                    className={cn(
+                      'object-cover w-full h-full overflow-clip rounded-2xl'
+                    )}
                     src={
                       urlForImage(image)
                         ?.width(sanityWidth)
@@ -104,16 +135,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                         .url() || ''
                     }
                     alt={altText || 'Image'}
-                    placeholder="blur"
-                    blurDataURL={lqip || undefined}
-                    fill
-                    priority
-                    sizes="(min-width: 2080px) 780px, (min-width: 1280px) calc(47.44vw + 84px), calc(100vw - 32px)"
-                    className={cn('object-cover w-10 rounded-xl bg-tertiary')}
                   />
-                )}
-              </motion.div>
-            </Link>
+                </picture>
+              )}
+            </motion.div>
           </AnimatePresence>
 
           <section className="z-10 flex items-center justify-center w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6">
@@ -132,11 +157,12 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: 'spring' }}
-                className="px-4 py-2 text-white rounded-sm bg-primary"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                className="flex items-center gap-2 px-6 py-3 text-lg font-medium text-white transition-all duration-300 rounded-lg shadow-lg bg-primary hover:bg-primary/90 hover:shadow-xl"
               >
-                Painting Gallery
+                View Gallery
               </motion.div>
             </Link>
             <motion.button
