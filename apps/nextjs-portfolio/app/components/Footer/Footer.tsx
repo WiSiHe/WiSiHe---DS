@@ -28,9 +28,9 @@ const Footer = ({ socialLinks }: FooterProps) => {
               About
             </h3>
             <p className="text-base leading-relaxed text-gray-300 sm:text-lg">
-              I'm Henrik Wilhelm Sissener, a frontend developer who loves to
-              draw and create things. Whether it's code or art, I enjoy the
-              process of making stuff that matters.
+              I&apos;m a passionate artist dedicated to creating unique and
+              meaningful work. Feel free to explore my portfolio and reach out
+              for collaborations.
             </p>
           </motion.div>
 

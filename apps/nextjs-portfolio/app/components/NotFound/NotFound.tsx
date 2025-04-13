@@ -1,6 +1,4 @@
-'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import GridDistortion from '../GridDistortion/GridDistortion';
 
 const randomImageArray = [
@@ -14,13 +12,6 @@ const randomImageArray = [
 ];
 
 const NotFoundSection = () => {
-  const [randomImage, setRandomImage] = useState<string>('');
-
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * randomImageArray.length);
-    setRandomImage(randomImageArray[randomIndex]);
-  }, []);
-
   return (
     <section className="relative grid w-full h-full grid-flow-col-dense bg-tertiary aspect-square xl:aspect-video overflow-clip">
       <GridDistortion
