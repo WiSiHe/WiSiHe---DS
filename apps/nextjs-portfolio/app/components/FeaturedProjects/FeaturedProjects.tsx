@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { HomePageQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
-import Link from 'next/link';
-import { motion } from 'motion/react';
-import TiltedCard from '../TiltedCard/TiltedCard';
+import { HomePageQueryResult } from "@/sanity.types";
+import { urlForImage } from "@/sanity/lib/utils";
+import Link from "next/link";
+import { motion } from "motion/react";
+import TiltedCard from "../TiltedCard/TiltedCard";
 
 type FeaturedProjectsProps = {
   showcaseProjects?:
-    | NonNullable<HomePageQueryResult>['showcaseProjects']
+    | NonNullable<HomePageQueryResult>["showcaseProjects"]
     | null;
 };
 
@@ -34,7 +34,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
         damping: 15,
       },
@@ -46,7 +46,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
         className="mx-auto mb-12 text-center text-dark max-w-prose"
       >
@@ -61,13 +61,13 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
         className="relative"
       >
         <motion.div
           variants={containerVariants}
-          className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 lg:grid-cols-3"
         >
           {showcaseProjects.map((project) => (
             <motion.div
@@ -92,8 +92,8 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                     urlForImage(project.image)
                       ?.height(800)
                       .width(600)
-                      .auto('format')
-                      .url() || ''
+                      .auto("format")
+                      .url() || ""
                   }
                 />
               </Link>
