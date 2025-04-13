@@ -1,5 +1,7 @@
+'use client';
 import { SettingsQueryResult } from '@/sanity.types';
 import { SocialListItem } from './SocialListItem';
+import { motion } from 'motion/react';
 
 type FooterProps = {
   socialLinks: NonNullable<SettingsQueryResult>['socialLinks'];
@@ -11,40 +13,66 @@ const Footer = ({ socialLinks }: FooterProps) => {
   }
 
   return (
-    <footer className="flex flex-wrap justify-between w-full gap-8 p-10 text-white bg-dark">
-      <div className="flex flex-col w-full gap-8 md:flex-row md:justify-between">
-        <nav className="md:w-1/3">
-          <div className="flex flex-col gap-4">
-            <h3 className="text-2xl font-bold">Follow me</h3>
-          </div>
+    <footer className="relative w-full overflow-hidden bg-dark">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark/50" />
+      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-white sm:px-6 md:px-8 lg:px-12">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
+          >
+            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl">
+              About
+            </h3>
+            <p className="text-base leading-relaxed text-gray-300 sm:text-lg">
+              I'm Henrik Wilhelm Sissener, a frontend developer who loves to
+              draw and create things. Whether it's code or art, I enjoy the
+              process of making stuff that matters.
+            </p>
+          </motion.div>
 
-          <ul className="flex flex-col justify-center">
-            {socialLinks.map((link) => (
-              <li key={link._key} className="group">
-                <SocialListItem item={link} />
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="space-y-6"
+          >
+            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl">
+              Connect
+            </h3>
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {socialLinks.map((link, index) => (
+                <motion.li
+                  key={link._key}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <SocialListItem item={link} />
+                </motion.li>
+              ))}
+            </ul>
+          </motion.nav>
+        </div>
 
-        <div className="md:w-1/3">
-          <h3 className="mb-4 text-2xl font-bold">About</h3>
-          <p className="mb-4 text-gray-300">
-            I&apos;m a passionate artist dedicated to creating unique and
-            meaningful work. Feel free to explore my portfolio and reach out for
-            collaborations.
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-8 mt-4 text-center border-t border-gray-700/50"
+        >
+          <p className="text-sm text-gray-400">
+            © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️
+            in Oslo
           </p>
-        </div>
-
-        <div className="md:w-1/3">
-          <h3 className="mb-4 text-2xl font-bold">Contact</h3>
-          <p className="text-gray-300">Email: contact@example.com</p>
-          <p className="text-gray-300">Location: New York, NY</p>
-        </div>
-      </div>
-
-      <div className="w-full pt-6 mt-8 text-center text-gray-400 border-t border-gray-700">
-        <p>© {new Date().getFullYear()} All Rights Reserved</p>
+        </motion.div>
       </div>
     </footer>
   );

@@ -1,33 +1,37 @@
 'use client';
-import { motion } from 'motion/react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import GridDistortion from '../GridDistortion/GridDistortion';
+
+const randomImageArray = [
+  '/images/bathtub.jpg',
+  '/images/celestial.jpg',
+  '/images/cloud.jpg',
+  '/images/cute.jpg',
+  '/images/space.jpg',
+  '/images/winter.jpg',
+  '/images/sunlight.jpg',
+];
 
 const NotFoundSection = () => {
+  const [randomImage, setRandomImage] = useState<string>('');
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * randomImageArray.length);
+    setRandomImage(randomImageArray[randomIndex]);
+  }, []);
+
   return (
     <section className="relative grid w-full h-full grid-flow-col-dense bg-tertiary aspect-square xl:aspect-video overflow-clip">
-      <motion.div
-        initial={{ opacity: 0, x: -200 }}
-        viewport={{ once: false, amount: 0.5 }}
-        transition={{ duration: 0.5 }}
-        whileInView={{
-          opacity: 1,
-          x: 0,
-        }}
-        className="relative"
-      >
-        <Image
-          src="/images/explorer.png"
-          alt="Female explorer"
-          className="object-cover w-full h-full"
-          fill
-          sizes="(max-width: 768px) 100vw,
-      (max-width: 1200px) 50vw,
-      33vw"
-        />
-      </motion.div>
+      <GridDistortion
+        grid={10}
+        mouse={0.1}
+        strength={0.15}
+        relaxation={0.9}
+        imageSrc={randomImageArray[5]}
+      />
 
-      <div className="absolute inset-0 flex flex-col items-center p-4 mx-auto my-auto text-center text-dark h-fit w-fit">
+      <div className="absolute inset-0 z-10 flex flex-col items-center p-4 mx-auto my-auto text-center text-white pointer-events-none h-fit w-fit">
         <div className="text-xs">
           <h2>
             <strong>Still not convinced?</strong>
@@ -35,7 +39,10 @@ const NotFoundSection = () => {
           <div className="pb-4">Come on, just a little peak, I dare you!</div>
         </div>
         <div className="flex justify-center pt-4">
-          <Link href="/paintings">
+          <Link
+            href="/paintings"
+            className="px-4 py-2 bg-white rounded-full pointer-events-auto text-dark hover:bg-white/90"
+          >
             <strong>Paintings</strong>
           </Link>
         </div>

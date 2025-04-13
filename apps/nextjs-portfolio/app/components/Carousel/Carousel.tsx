@@ -90,13 +90,13 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         >
           <div
             className={cn(
-              'absolute right-0 z-1000 h-auto w-[5%] overflow-hidden bg-linear-to-l'
+              'absolute right-0 z-10 h-auto w-[5%] overflow-hidden bg-linear-to-l'
             )}
-          ></div>
+          />
 
           <div
             className={cn(
-              'flex flex-row justify-start gap-4 pl-4'
+              'flex flex-row justify-start gap-4 pl-4 pointer-events-auto'
               // 'max-w-7xl mx-auto' // remove max-w-4xl if you want the carousel to span the full width of its container
             )}
           >
@@ -125,7 +125,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         </div>
         <div className="flex justify-end gap-2 mr-10">
           <button
-            className="relative z-40 flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full disabled:opacity-50"
+            className="relative z-40 flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full cursor-pointer pointer-events-auto disabled:opacity-50"
             onClick={scrollLeft}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
@@ -133,7 +133,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
             <IconArrowNarrowLeft className="w-6 h-6 text-gray-500" />
           </button>
           <button
-            className="relative z-40 flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full disabled:opacity-50"
+            className="relative z-40 flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full cursor-pointer pointer-events-auto disabled:opacity-50"
             onClick={scrollRight}
             disabled={!canScrollRight}
             aria-label="Scroll right"
