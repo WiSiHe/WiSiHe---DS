@@ -102,7 +102,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             Henrik
           </motion.h1>
           <p className="text-white opacity-50 mix-blend-difference">
-            I'm a design engineer, painter and a maker, here are some of my
+            I&apos;m a design engineer, painter and a maker, here are some of my
             paintings, please take a gander.
           </p>
         </motion.section>

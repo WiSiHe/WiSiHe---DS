@@ -1,7 +1,8 @@
-import { cn } from '@wisihe/utils';
-import { cva, type VariantProps } from 'class-variance-authority';
+import React from "react";
+import { cn } from "@wisihe/utils";
+import { cva, type VariantProps } from "class-variance-authority";
 
-function LoadingIcon(): JSX.Element {
+function LoadingIcon(): React.ReactElement {
   return (
     <svg
       className="animate-spin size-5"
@@ -28,110 +29,107 @@ function LoadingIcon(): JSX.Element {
   );
 }
 
-const button = cva('button', {
+const button = cva("button", {
   variants: {
     variant: {
       primary: [
-        'bg-blue-900',
-        'text-white',
-        'border-transparent',
-        'hover:bg-blue-600',
-        'stroke-white',
+        "bg-blue-900",
+        "text-white",
+        "border-transparent",
+        "hover:bg-blue-600",
+        "stroke-white",
       ],
       secondary: [
-        'bg-white',
-        'text-gray-800',
-        'border-gray-400',
-        'hover:bg-gray-100',
+        "bg-white",
+        "text-gray-800",
+        "border-gray-400",
+        "hover:bg-gray-100",
       ],
       tertiary: [
-        'bg-transparent',
-        'text-blue-900',
-        'border-transparent',
-        'hover:bg-blue-100',
+        "bg-transparent",
+        "text-blue-900",
+        "border-transparent",
+        "hover:bg-blue-100",
       ],
       destructive: [
-        'bg-red-900',
-        'text-white',
-        'border-transparent',
-        'hover:bg-red-600',
+        "bg-red-900",
+        "text-white",
+        "border-transparent",
+        "hover:bg-red-600",
       ],
       success: [
-        'bg-green-900',
-        'text-white',
-        'border-transparent',
-        'hover:bg-green-600',
+        "bg-green-900",
+        "text-white",
+        "border-transparent",
+        "hover:bg-green-600",
       ],
     },
     size: {
-      small: ['text-sm', 'py-1', 'px-2'],
-      medium: ['text-base', 'py-2', 'px-4'],
-      large: ['text-lg', 'py-3', 'px-6'],
-      icon: ['p-2'],
+      small: ["text-sm", "py-1", "px-2"],
+      medium: ["text-base", "py-2", "px-4"],
+      large: ["text-lg", "py-3", "px-6"],
+      icon: ["p-2"],
     },
     isDisabled: {
-      true: ['opacity-50', 'cursor-not-allowed'],
+      true: ["opacity-50", "cursor-not-allowed"],
     },
   },
   compoundVariants: [
     {
-      variant: 'primary',
-      size: 'medium',
-      class: 'uppercase',
+      variant: "primary",
+      size: "medium",
+      class: "uppercase",
     },
   ],
   defaultVariants: {
-    variant: 'primary',
-    size: 'medium',
+    variant: "primary",
+    size: "medium",
   },
 });
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof button> {
   Icon?: React.ElementType | null;
-  iconPosition?: 'left' | 'right';
+  iconPosition?: "left" | "right";
   isLoading?: boolean;
   isDisabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
 }
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof button> {}
 
 export function Button({
   className,
   variant,
   size,
   Icon,
-  iconPosition,
+  iconPosition = "left",
   isLoading = false,
   isDisabled = false,
   children,
-  type = 'button',
+  type = "button",
   ...props
-}: ButtonProps): JSX.Element {
+}: ButtonProps): React.ReactElement {
   return (
     <button
       className={cn(
-        'flex items-center gap-1 rounded-sm',
+        "flex items-center gap-1 rounded-sm",
         button({
           variant,
           size,
           isDisabled: isLoading || isDisabled,
           className,
-        })
+        }),
       )}
       disabled={isLoading || isDisabled}
-      type={type === 'button' ? 'button' : 'submit'}
+      type={type === "button" ? "button" : "submit"}
       {...props}
     >
-      {Icon && iconPosition === 'left' ? <Icon /> : null}
+      {Icon && iconPosition === "left" ? <Icon /> : null}
       {isLoading ? <LoadingIcon /> : null}
       {children}
-      {Icon && iconPosition === 'right' ? <Icon /> : null}
+      {Icon && iconPosition === "right" ? <Icon /> : null}
     </button>
   );
 }
 
-Button.displayName = 'Button';
+Button.displayName = "Button";
