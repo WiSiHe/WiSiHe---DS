@@ -46,6 +46,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
+        decoding="async"
       />
 
       <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
@@ -89,9 +90,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             {image && (
               <motion.div
                 key={currentPaintingsIndex}
-                initial={{ scale: 0.98 }}
+                initial={{ scale: 0.99 }}
                 animate={{ scale: 1 }}
-                exit={{ scale: 0.98 }}
+                exit={{ scale: 0.99 }}
                 transition={{ type: "spring" }}
                 className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
               >
