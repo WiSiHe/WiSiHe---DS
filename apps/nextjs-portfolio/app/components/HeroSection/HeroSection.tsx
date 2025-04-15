@@ -2,23 +2,20 @@
 
 import { HomePageQueryResult } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
-import { cn } from "@wisihe/utils";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { getImageProps } from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import GreeterCard from "../GreeterCard/GreeterCard";
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>["showcasePaintings"] | null;
 };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
-  const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
   const constraintsRef = useRef(null);
-  const innerConstraintRef = useRef(null);
-  // Fallback for when paintings is null or empty
+  const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
+
   if (!paintings || paintings.length === 0) {
     return <div>No paintings available.</div>;
   }
@@ -75,7 +72,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <motion.section
       ref={constraintsRef}
-      className="relative flex flex-col items-end justify-center w-full px-4 py-24 h-fit md:px-10 lg:min-h-[85vh] xl:justify-center xl:min-h-[85vh] lg:py-10 bg-dark overflow-clip"
+      className="relative flex ring flex-col items-end justify-center w-full px-4 py-24 h-fit md:px-10 lg:min-h-[85vh] xl:justify-center xl:min-h-[85vh] lg:py-10 bg-dark overflow-clip"
     >
       <img
         src={lqip || ""}
@@ -86,65 +83,82 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         fetchPriority="high"
       />
 
-      <div className="relative z-10 flex flex-col items-center w-full gap-8 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:gap-10 xl:items-center">
-        <motion.section className="z-20 w-full xl:absolute col-span-full xl:col-span-4 xl:col-start-1 top-44">
-          <GreeterCard />
+      <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="col-span-full xl:col-span-2"
+        >
+          <p className="text-white opacity-50 mix-blend-difference">
+            My name is
+          </p>
+          <motion.h1
+            className="text-4xl font-black text-white opacity-50 mix-blend-difference"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+          >
+            Henrik
+          </motion.h1>
+          <p className="text-white opacity-50 mix-blend-difference">
+            I'm a design engineer, painter and a maker, here are some of my
+            paintings, please take a gander.
+          </p>
         </motion.section>
         <motion.section
-          ref={innerConstraintRef}
-          className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-2"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-3"
         >
-          <AnimatePresence mode="wait">
-            <Link
-              key={currentPaintingsIndex + "painting-link"}
-              href={`paintings/${slug}`}
-              aria-label="View painting"
-              className="absolute z-10 flex items-center gap-2 px-4 py-3 text-white rounded-lg focus-visible:ring-2 focus-visible:ring-primary bg-primary top-4 right-4"
-            >
-              View Painting <FaArrowRight />
-            </Link>
-            <motion.div
-              key={currentPaintingsIndex}
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              transition={{ type: "spring" }}
-              className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
-            >
-              {image && (
-                <picture className="w-full h-full rounded-2xl overflow-clip">
-                  <img
-                    {...common}
-                    className={cn(
-                      "object-cover w-full h-full overflow-clip rounded-2xl",
-                    )}
-                    srcSet={srcSet}
-                    src={
-                      urlForImage(image)
-                        ?.width(currentSize.width)
-                        .height(currentSize.height)
-                        .auto("format")
-                        .quality(currentSize.quality)
-                        .url() || ""
-                    }
-                    alt={altText || "Image"}
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="sync"
-                    sizes="100vw"
-                  />
-                </picture>
-              )}
-            </motion.div>
-          </AnimatePresence>
+          <Link
+            key={currentPaintingsIndex + "painting-link"}
+            href={`paintings/${slug}`}
+            aria-label="View painting"
+            className="absolute z-10 flex items-center gap-2 px-2 py-1 text-sm rounded-lg text-dark focus-visible:ring-2 focus-visible:ring-primary bg-tertiary top-4 right-4 hover:bg-tertiary/80"
+          >
+            View Painting <FaArrowRight />
+          </Link>
+          <motion.div
+            key={currentPaintingsIndex}
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.95 }}
+            transition={{ type: "spring" }}
+            className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
+          >
+            {image && (
+              <picture className="w-full h-full rounded-2xl overflow-clip">
+                <img
+                  {...common}
+                  className="object-cover w-full h-full overflow-clip rounded-2xl"
+                  srcSet={srcSet}
+                  src={
+                    urlForImage(image)
+                      ?.width(currentSize.width)
+                      .height(currentSize.height)
+                      .auto("format")
+                      .quality(currentSize.quality)
+                      .url() || ""
+                  }
+                  alt={altText || "Image"}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="sync"
+                  sizes="100vw"
+                />
+              </picture>
+            )}
+          </motion.div>
 
-          <section className="z-10 flex items-center justify-center w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6">
+          <section className="z-10 flex items-center justify-between w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6 xl:justify-center">
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.1 }}
               transition={{ type: "spring" }}
-              className="p-3 bg-white rounded-lg text-dark"
+              className="p-3 text-white rounded-lg bg-primary"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
@@ -167,7 +181,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.1 }}
               transition={{ type: "spring" }}
-              className="p-3 bg-white rounded-lg text-dark"
+              className="p-3 text-white rounded-lg bg-primary"
               onClick={handleNextBackground}
               aria-label="Next painting"
             >

@@ -1,6 +1,7 @@
-'use client';
-import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
+"use client";
+import { cn } from "@wisihe/utils";
+import React, { useRef, useEffect } from "react";
+import * as THREE from "three";
 
 interface GridDistortionProps {
   grid?: number;
@@ -42,7 +43,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
   strength = 0.15,
   relaxation = 0.9,
   imageSrc,
-  className = '',
+  className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageAspectRef = useRef<number>(1);
@@ -57,7 +58,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: 'high-performance',
+      powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
@@ -76,7 +77,9 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(imageSrc, (texture) => {
       texture.minFilter = THREE.LinearFilter;
-      imageAspectRef.current = texture.image.width / texture.image.height;
+      imageAspectRef.current =
+        (texture.image as HTMLImageElement).width /
+        (texture.image as HTMLImageElement).height;
       uniforms.uTexture.value = texture;
       handleResize();
     });
@@ -95,7 +98,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
       size,
       size,
       THREE.RGBAFormat,
-      THREE.FloatType
+      THREE.FloatType,
     );
     dataTexture.needsUpdate = true;
     uniforms.uDataTexture.value = dataTexture;
@@ -162,9 +165,9 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
       });
     };
 
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('resize', handleResize);
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("resize", handleResize);
     handleResize();
 
     const animate = () => {
@@ -200,9 +203,9 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     animate();
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("resize", handleResize);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -214,7 +217,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full overflow-hidden ${className}`}
+      className={cn("w-full h-full overflow-hidden", className)}
     />
   );
 };
