@@ -1,13 +1,13 @@
-import { sanityFetch } from '@/sanity/lib/live';
-import { homePageQuery } from '@/sanity/lib/queries';
-import { PortableTextBlock } from 'next-sanity';
-import HeroImageSection from './components/HeroSection/HeroSection';
-import NotFoundSection from './components/NotFound/NotFound';
-import PaintingsSection from './components/PaintingsSection/PaintingsSection';
+import { sanityFetch } from "@/sanity/lib/live";
+import { homePageQuery } from "@/sanity/lib/queries";
+import { PortableTextBlock } from "next-sanity";
+import HeroImageSection from "./components/HeroSection/HeroSection";
+import NotFoundSection from "./components/NotFound/NotFound";
+import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
 
-import { HomePageQueryResult } from '@/sanity.types';
-import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
-import SkillsSection from './components/SkillsSection/SkillsSection';
+import { HomePageQueryResult } from "@/sanity.types";
+import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
+import SkillsSection from "./components/SkillsSection/SkillsSection";
 
 export default async function Home() {
   const [{ data: homepage }]: [{ data: HomePageQueryResult }] =
@@ -33,33 +33,33 @@ export default async function Home() {
     homepage.paintingsDescription as PortableTextBlock[];
 
   const professionalSkills = [
-    'Frontend Development',
-    'UI/UX Design',
-    'Responsive Web Design',
-    'Accessibility (WCAG Standards)',
-    'React.js',
-    'SvelteKit',
-    'Next.js',
-    'Tailwind CSS',
-    'Sanity CMS Integration',
-    'Performance Optimization',
-    'Interactive Prototyping',
+    "Frontend Development",
+    "UI/UX Design",
+    "Responsive Web Design",
+    "Accessibility (WCAG Standards)",
+    "React.js",
+    "SvelteKit",
+    "Next.js",
+    "Tailwind CSS",
+    "Sanity CMS Integration",
+    "Performance Optimization",
+    "Interactive Prototyping",
   ];
 
   const creativeSkills = [
-    'Digital Drawing & Painting',
-    '3D Modeling (Blender)',
-    'Game Development (Unreal Engine 5)',
-    'Video Editing & Production',
-    'Interactive 3D Design (Spline)',
-    'Concept Art & Illustration',
+    "Digital Drawing & Painting",
+    "3D Modeling (Blender)",
+    "Game Development (Unreal Engine 5)",
+    "Video Editing & Production",
+    "Interactive 3D Design (Spline)",
+    "Concept Art & Illustration",
   ];
 
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={showcasePaintings} />
 
-      <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/80">
+      <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
         <FeaturedProjects showcaseProjects={showcaseProjects} />
 
         <PaintingsSection

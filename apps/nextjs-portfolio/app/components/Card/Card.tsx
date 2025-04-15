@@ -1,11 +1,11 @@
-'use client';
-import { IconArrowRight } from '@tabler/icons-react';
-import { motion } from 'motion/react';
-import Link from 'next/link';
-import { BlurImage } from '../BlurImage/BlurImage';
-import Chip from '../Chip/Chip';
+"use client";
+import { IconArrowRight } from "@tabler/icons-react";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { BlurImage } from "../BlurImage/BlurImage";
+import Chip from "../Chip/Chip";
 
-type Card = {
+type CardProps = {
   src: string;
   title: string;
   categories: { name: string }[];
@@ -16,7 +16,7 @@ export const Card = ({
   card,
   layout = false,
 }: {
-  card: Card;
+  card: CardProps;
   index: number;
   layout?: boolean;
 }) => {
@@ -36,7 +36,7 @@ export const Card = ({
       whileHover="hover"
       initial="rest"
       animate="rest"
-      className="rounded-3xl group pointer-events-auto bg-gray-100 dark:bg-neutral-900 group h-96 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10"
+      className="rounded-3xl group pointer-events-auto bg-gray-100 dark:bg-neutral-900 group h-96 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative hover:z-10"
     >
       <div className="absolute inset-x-0 top-0 z-30 h-full pointer-events-none bg-linear-to-b from-dark/50 via-transparent to-transparent" />
       <div className="relative z-40 w-full p-8">
