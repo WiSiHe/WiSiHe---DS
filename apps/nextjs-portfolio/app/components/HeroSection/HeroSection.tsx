@@ -2,11 +2,11 @@
 
 import { HomePageQueryResult } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { getImageProps } from "next/image";
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>["showcasePaintings"] | null;
@@ -33,12 +33,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const currentBackground = paintings[currentPaintingsIndex];
   const { image, altText = "", slug } = currentBackground || {};
   const { lqip } = image || {};
-
-  const common = {
-    alt: altText || "Painting",
-    fill: true,
-    className: "object-cover",
-  };
 
   return (
     <motion.section
@@ -91,52 +85,30 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           >
             View Painting <FaArrowRight />
           </Link>
-          <motion.div
-            key={currentPaintingsIndex}
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.95 }}
-            transition={{ type: "spring" }}
-            className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
-          >
+          <AnimatePresence mode="wait">
             {image && (
-              <picture className="w-full h-full rounded-2xl overflow-clip">
-                {(() => {
-                  const imageUrl = urlForImage(image)
-                    ?.width(1920)
-                    .height(1080)
-                    .url();
-                  if (!imageUrl) return null;
-
-                  const {
-                    props: { srcSet, ...rest },
-                  } = getImageProps({
-                    ...common,
-                    quality: 80,
-                    src: imageUrl,
-                  });
-
-                  return (
-                    <>
-                      <source
-                        srcSet={srcSet}
-                        sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
-                      />
-                      <img
-                        {...rest}
-                        className="object-cover w-full h-full overflow-clip rounded-2xl"
-                        alt={altText || "Image"}
-                        loading="eager"
-                        fetchPriority="high"
-                        decoding="sync"
-                        sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
-                      />
-                    </>
-                  );
-                })()}
-              </picture>
+              <motion.div
+                key={currentPaintingsIndex}
+                initial={{ scale: 0.98 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.98 }}
+                transition={{ type: "spring" }}
+                className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
+              >
+                <Image
+                  src={urlForImage(image)?.width(1920).height(1080).url() || ""}
+                  alt={altText || "Image"}
+                  fill
+                  priority
+                  quality={70}
+                  placeholder="blur"
+                  blurDataURL={lqip || ""}
+                  className="object-cover rounded-2xl"
+                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
+                />
+              </motion.div>
             )}
-          </motion.div>
+          </AnimatePresence>
           <section className="absolute bottom-0 z-10 flex items-center justify-center w-full gap-4 p-4 capitalize xl:col-start-5 col-span-full xl:gap-6 xl:justify-center">
             <motion.button
               initial={{ opacity: 0, x: -20 }}
