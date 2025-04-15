@@ -1,22 +1,24 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react';
-import { motion, SpringOptions, useMotionValue, useSpring } from 'motion/react';
+import React, { useRef, useState } from "react";
+import { motion, SpringOptions, useMotionValue, useSpring } from "motion/react";
+import Image, { StaticImageData } from "next/image";
 
 interface TiltedCardProps {
-  imageSrc: React.ComponentProps<'img'>['src'];
+  imageSrc: string | StaticImageData;
   altText?: string;
   captionText?: string;
-  containerHeight?: React.CSSProperties['height'];
-  containerWidth?: React.CSSProperties['width'];
-  imageHeight?: React.CSSProperties['height'];
-  imageWidth?: React.CSSProperties['width'];
+  containerHeight?: React.CSSProperties["height"];
+  containerWidth?: React.CSSProperties["width"];
+  imageHeight?: React.CSSProperties["height"];
+  imageWidth?: React.CSSProperties["width"];
   scaleOnHover?: number;
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
   showTooltip?: boolean;
   overlayContent?: React.ReactNode;
   displayOverlayContent?: boolean;
+  blurDataURL?: string;
 }
 
 const springValues: SpringOptions = {
@@ -27,18 +29,19 @@ const springValues: SpringOptions = {
 
 export default function TiltedCard({
   imageSrc,
-  altText = 'Tilted card image',
-  captionText = '',
-  containerHeight = '300px',
-  containerWidth = '100%',
-  imageHeight = '300px',
-  imageWidth = '300px',
+  altText = "Tilted card image",
+  captionText = "",
+  containerHeight = "300px",
+  containerWidth = "100%",
+  imageHeight = "300px",
+  imageWidth = "300px",
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false,
+  blurDataURL,
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
@@ -117,15 +120,25 @@ export default function TiltedCard({
           scale,
         }}
       >
-        <motion.img
-          src={imageSrc}
-          alt={altText}
-          className="absolute top-0 left-0 object-cover rounded-[15px] will-change-transform [transform:translateZ(0)]"
+        <motion.div
+          className="absolute top-0 left-0"
           style={{
             width: imageWidth,
             height: imageHeight,
+            position: "relative",
           }}
-        />
+        >
+          <Image
+            src={imageSrc}
+            alt={altText}
+            className="object-cover rounded-[15px] will-change-transform [transform:translateZ(0)]"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={blurDataURL}
+          />
+        </motion.div>
 
         {displayOverlayContent && overlayContent && (
           <motion.div className="absolute top-0 left-0 z-[2] will-change-transform [transform:translateZ(30px)]">
