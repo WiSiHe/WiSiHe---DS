@@ -1,10 +1,12 @@
 import { HomePageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
-// import { PortableTextBlock } from 'next-sanity';
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-import HeroImageSection from "./components/HeroSection/HeroSection";
-// import PaintingsSection from './components/PaintingsSection/PaintingsSection';
+// import HeroImageSection from './components/HeroSection/HeroSection';
+import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
+import { PortableTextBlock } from "next-sanity";
+import NotFoundSection from "./components/NotFound/NotFound";
+import SkillsSection from "./components/SkillsSection/SkillsSection";
 
 type Painting = NonNullable<
   NonNullable<HomePageQueryResult>["showcasePaintings"]
@@ -43,44 +45,49 @@ export default async function Home() {
     ? shuffleArray(showcasePaintings)
     : [];
 
-  // const paintingsDescription =
-  //   homepage.paintingsDescription as PortableTextBlock[];
+  const paintingsDescription =
+    homepage.paintingsDescription as PortableTextBlock[];
 
-  // const professionalSkills = [
-  //   'Frontend Development',
-  //   'UI/UX Design',
-  //   'Responsive Web Design',
-  //   'Accessibility (WCAG Standards)',
-  //   'React.js',
-  //   'SvelteKit',
-  //   'Next.js',
-  //   'Tailwind CSS',
-  //   'Sanity CMS Integration',
-  //   'Performance Optimization',
-  //   'Interactive Prototyping',
-  // ];
+  const professionalSkills = [
+    "Frontend Development",
+    "UI/UX Design",
+    "Responsive Web Design",
+    "Accessibility (WCAG Standards)",
+    "React.js",
+    "SvelteKit",
+    "Next.js",
+    "Tailwind CSS",
+    "Sanity CMS Integration",
+    "Performance Optimization",
+    "Interactive Prototyping",
+  ];
 
-  // const creativeSkills = [
-  //   'Digital Drawing & Painting',
-  //   '3D Modeling (Blender)',
-  //   'Game Development (Unreal Engine 5)',
-  //   'Video Editing & Production',
-  //   'Interactive 3D Design (Spline)',
-  //   'Concept Art & Illustration',
-  // ];
+  const creativeSkills = [
+    "Digital Drawing & Painting",
+    "3D Modeling (Blender)",
+    "Game Development (Unreal Engine 5)",
+    "Video Editing & Production",
+    "Interactive 3D Design (Spline)",
+    "Concept Art & Illustration",
+  ];
 
   return (
     <div className="bg-dark">
-      <HeroImageSection paintings={shuffledPaintings} />
+      {/* <HeroImageSection paintings={shuffledPaintings} /> */}
 
       <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
         <FeaturedProjects showcaseProjects={showcaseProjects} />
 
-        {/* <PaintingsSection
+        <PaintingsSection
           paintings={shuffledPaintings}
           paintingsDescription={paintingsDescription}
-        /> */}
+        />
       </section>
+      <NotFoundSection />
+      <SkillsSection
+        professionalSkills={professionalSkills}
+        creativeSkills={creativeSkills}
+      />
     </div>
   );
 }
