@@ -1,10 +1,10 @@
-'use client';
-import { SettingsQueryResult } from '@/sanity.types';
-import { SocialListItem } from './SocialListItem';
-import { motion } from 'motion/react';
+"use client";
+import { SettingsQueryResult } from "@/sanity.types";
+import { SocialListItem } from "./SocialListItem";
+import { motion } from "motion/react";
 
 type FooterProps = {
-  socialLinks: NonNullable<SettingsQueryResult>['socialLinks'];
+  socialLinks: NonNullable<SettingsQueryResult>["socialLinks"];
 };
 
 const Footer = ({ socialLinks }: FooterProps) => {
@@ -24,13 +24,18 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl">
-              About
+            <h3 className="text-2xl font-bold sm:text-3xl">
+              My name is{" "}
+              <span className="text-transparent bg-gradient-to-r from-primary via-highlight to-secondary bg-clip-text animate-gradient">
+                Henrik Wilhelm Sissener
+              </span>
             </h3>
-            <p className="text-base leading-relaxed text-gray-300 sm:text-lg">
-              I&apos;m a passionate artist dedicated to creating unique and
-              meaningful work. Feel free to explore my portfolio and reach out
-              for collaborations.
+            <p className="max-w-lg text-base leading-relaxed text-gray-300 sm:text-lg">
+              I&apos;m a{" "}
+              <span className="font-medium text-primary">UX/UI designer</span>{" "}
+              and <span className="font-medium text-highlight">developer</span>{" "}
+              specializing in React and Svelte, with a passion for game
+              development and digital art.
             </p>
           </motion.div>
 

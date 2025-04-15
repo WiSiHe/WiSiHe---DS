@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* @config '../tailwind.config.ts'; */
 
@@ -17,8 +17,8 @@
   --color-tertiary: oklch(96.12% 0 0);
   --color-dark: oklch(20.38% 0.0692 344.84);
   --color-highlight: oklch(90.43% 0.1877 101.53);
-  --font-inter: 'Inter', sans-serif;
-  --font-oswald: 'Oswald', sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-oswald: "Oswald", sans-serif;
   --aspect-portrait: 9 / 16;
   --breakpoint-2xl: 96rem; /* 1536px */
 }
@@ -105,4 +105,21 @@
       }
     }
   }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
 }
