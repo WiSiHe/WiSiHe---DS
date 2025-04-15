@@ -2,7 +2,7 @@ import { HomePageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-// import HeroImageSection from './components/HeroSection/HeroSection';
+import HeroImageSection from "./components/HeroSection/HeroSection";
 import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
 import { PortableTextBlock } from "next-sanity";
 
@@ -73,8 +73,7 @@ export default async function Home() {
 
   return (
     <div className="bg-dark">
-      {/* <HeroImageSection paintings={shuffledPaintings} /> */}
-
+      <HeroImageSection paintings={shuffledPaintings} />
       <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
         <FeaturedProjects showcaseProjects={showcaseProjects} />
 
