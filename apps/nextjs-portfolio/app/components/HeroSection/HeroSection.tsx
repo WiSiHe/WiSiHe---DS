@@ -3,9 +3,9 @@
 import { HomePageQueryResult } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
+import { getImageProps } from "next/image";
 import Link from "next/link";
-import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 type HeroImageSectionProps = {
@@ -13,7 +13,6 @@ type HeroImageSectionProps = {
 };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
-  const constraintsRef = useRef(null);
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
 
   if (!paintings || paintings.length === 0) {
@@ -34,11 +33,35 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const { image, altText = "", slug } = currentBackground || {};
   const { lqip } = image || {};
 
+  // Define common props for both mobile and desktop
+  const common = {
+    alt: altText || "Image",
+    fill: true,
+    className: "object-cover rounded-2xl",
+    priority: true,
+    quality: 70,
+    placeholder: "blur" as const,
+    blurDataURL: lqip || "",
+  };
+
+  // Desktop image props
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({
+    ...common,
+    src: urlForImage(image)?.width(1920).height(1080).url() || "",
+  });
+
+  // Mobile image props
+  const {
+    props: { srcSet: mobile, ...rest },
+  } = getImageProps({
+    ...common,
+    src: urlForImage(image)?.width(800).height(800).url() || "",
+  });
+
   return (
-    <motion.section
-      ref={constraintsRef}
-      className="relative flex ring flex-col items-end justify-center w-full px-4 py-24 h-fit md:px-10 lg:min-h-[85vh] xl:justify-center xl:min-h-[85vh] lg:py-10 bg-dark overflow-clip"
-    >
+    <motion.section className="relative flex flex-col items-end justify-center w-full min-h-[85vh] px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-dark overflow-clip">
       <img
         src={lqip || ""}
         alt=""
@@ -54,20 +77,18 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="col-span-full xl:col-span-2"
+          className="left-0 z-20 xl:p-4 xl:top-32 max-w-96 xl:absolute col-span-full "
         >
-          <p className="text-white opacity-50 mix-blend-difference">
-            My name is
-          </p>
+          <p className="text-white text-shadow">My name is</p>
           <motion.h1
-            className="text-4xl font-black text-white opacity-50 mix-blend-difference"
+            className="text-4xl font-black text-white text-shadow"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
           >
             Henrik
           </motion.h1>
-          <p className="text-white opacity-50 mix-blend-difference">
+          <p className="text-white text-shadow">
             I&apos;m a design engineer, painter and a maker, here are some of my
             paintings, please take a gander.
           </p>
@@ -76,7 +97,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 w-full col-span-full xl:col-span-10 xl:col-start-3"
+          className="relative z-10 w-full col-span-full xl:col-span-full"
         >
           <Link
             key={currentPaintingsIndex + "painting-link"}
@@ -94,19 +115,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.99 }}
                 transition={{ type: "spring" }}
-                className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
+                className="relative w-full h-full aspect-square lg:aspect-video drop-shadow-2xl rounded-2xl bg-dark/20"
               >
-                <Image
-                  src={urlForImage(image)?.width(1920).height(1080).url() || ""}
-                  alt={altText || "Image"}
-                  fill
-                  // priority
-                  quality={70}
-                  placeholder="blur"
-                  blurDataURL={lqip || ""}
-                  className="object-cover rounded-2xl"
-                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
-                />
+                <picture>
+                  <source media="(min-width: 1024px)" srcSet={desktop} />
+                  <source media="(min-width: 0px)" srcSet={mobile} />
+                  <img
+                    {...rest}
+                    style={{ width: "100%", height: "100%" }}
+                    className="object-cover rounded-2xl"
+                  />
+                </picture>
               </motion.div>
             )}
           </AnimatePresence>
