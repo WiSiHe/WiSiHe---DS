@@ -9,6 +9,20 @@ import { HomePageQueryResult } from "@/sanity.types";
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import SkillsSection from "./components/SkillsSection/SkillsSection";
 
+type Painting = NonNullable<
+  NonNullable<HomePageQueryResult>["showcasePaintings"]
+>[number];
+
+// Fisher-Yates shuffle algorithm
+function shuffleArray(array: Painting[]): Painting[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default async function Home() {
   const [{ data: homepage }]: [{ data: HomePageQueryResult }] =
     await Promise.all([sanityFetch({ query: homePageQuery })]);
@@ -28,6 +42,9 @@ export default async function Home() {
   }
 
   const { showcasePaintings, showcaseProjects } = homepage;
+  const shuffledPaintings = showcasePaintings
+    ? shuffleArray(showcasePaintings)
+    : [];
 
   const paintingsDescription =
     homepage.paintingsDescription as PortableTextBlock[];
@@ -57,13 +74,13 @@ export default async function Home() {
 
   return (
     <div className="bg-dark">
-      <HeroImageSection paintings={showcasePaintings} />
+      <HeroImageSection paintings={shuffledPaintings} />
 
       <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
         <FeaturedProjects showcaseProjects={showcaseProjects} />
 
         <PaintingsSection
-          paintings={showcasePaintings}
+          paintings={shuffledPaintings}
           paintingsDescription={paintingsDescription}
         />
       </section>
