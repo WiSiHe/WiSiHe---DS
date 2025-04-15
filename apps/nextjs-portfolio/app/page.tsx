@@ -5,7 +5,7 @@ import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 // import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
 import { PortableTextBlock } from "next-sanity";
-import NotFoundSection from "./components/NotFound/NotFound";
+
 import SkillsSection from "./components/SkillsSection/SkillsSection";
 
 type Painting = NonNullable<
@@ -83,7 +83,7 @@ export default async function Home() {
           paintingsDescription={paintingsDescription}
         />
       </section>
-      <NotFoundSection />
+      {/* <NotFoundSection /> */}
       <SkillsSection
         professionalSkills={professionalSkills}
         creativeSkills={creativeSkills}
