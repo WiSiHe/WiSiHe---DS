@@ -1,10 +1,10 @@
 import { HomePageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
-import { PortableTextBlock } from "next-sanity";
+// import { PortableTextBlock } from 'next-sanity';
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import HeroImageSection from "./components/HeroSection/HeroSection";
-import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
+// import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 
 type Painting = NonNullable<
   NonNullable<HomePageQueryResult>["showcasePaintings"]
@@ -43,8 +43,8 @@ export default async function Home() {
     ? shuffleArray(showcasePaintings)
     : [];
 
-  const paintingsDescription =
-    homepage.paintingsDescription as PortableTextBlock[];
+  // const paintingsDescription =
+  //   homepage.paintingsDescription as PortableTextBlock[];
 
   // const professionalSkills = [
   //   'Frontend Development',
@@ -76,10 +76,10 @@ export default async function Home() {
       <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
         <FeaturedProjects showcaseProjects={showcaseProjects} />
 
-        <PaintingsSection
+        {/* <PaintingsSection
           paintings={shuffledPaintings}
           paintingsDescription={paintingsDescription}
-        />
+        /> */}
       </section>
     </div>
   );
