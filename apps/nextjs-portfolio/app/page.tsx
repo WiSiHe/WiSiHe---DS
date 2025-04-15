@@ -1,26 +1,10 @@
+import { HomePageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
 import { PortableTextBlock } from "next-sanity";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import HeroImageSection from "./components/HeroSection/HeroSection";
 import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
-import { HomePageQueryResult } from "@/sanity.types";
-import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-
-const NotFoundSection = dynamic(
-  () => import("./components/NotFound/NotFound"),
-  {
-    loading: () => <div className="h-[50vh]" />,
-  },
-);
-
-const SkillsSection = dynamic(
-  () => import("./components/SkillsSection/SkillsSection"),
-  {
-    loading: () => <div className="h-[50vh]" />,
-  },
-);
 
 type Painting = NonNullable<
   NonNullable<HomePageQueryResult>["showcasePaintings"]
@@ -62,28 +46,28 @@ export default async function Home() {
   const paintingsDescription =
     homepage.paintingsDescription as PortableTextBlock[];
 
-  const professionalSkills = [
-    "Frontend Development",
-    "UI/UX Design",
-    "Responsive Web Design",
-    "Accessibility (WCAG Standards)",
-    "React.js",
-    "SvelteKit",
-    "Next.js",
-    "Tailwind CSS",
-    "Sanity CMS Integration",
-    "Performance Optimization",
-    "Interactive Prototyping",
-  ];
+  // const professionalSkills = [
+  //   'Frontend Development',
+  //   'UI/UX Design',
+  //   'Responsive Web Design',
+  //   'Accessibility (WCAG Standards)',
+  //   'React.js',
+  //   'SvelteKit',
+  //   'Next.js',
+  //   'Tailwind CSS',
+  //   'Sanity CMS Integration',
+  //   'Performance Optimization',
+  //   'Interactive Prototyping',
+  // ];
 
-  const creativeSkills = [
-    "Digital Drawing & Painting",
-    "3D Modeling (Blender)",
-    "Game Development (Unreal Engine 5)",
-    "Video Editing & Production",
-    "Interactive 3D Design (Spline)",
-    "Concept Art & Illustration",
-  ];
+  // const creativeSkills = [
+  //   'Digital Drawing & Painting',
+  //   '3D Modeling (Blender)',
+  //   'Game Development (Unreal Engine 5)',
+  //   'Video Editing & Production',
+  //   'Interactive 3D Design (Spline)',
+  //   'Concept Art & Illustration',
+  // ];
 
   return (
     <div className="bg-dark">
@@ -97,16 +81,6 @@ export default async function Home() {
           paintingsDescription={paintingsDescription}
         />
       </section>
-
-      <Suspense fallback={<div className="h-[50vh]" />}>
-        <NotFoundSection />
-      </Suspense>
-      <Suspense fallback={<div className="h-[50vh]" />}>
-        <SkillsSection
-          professionalSkills={professionalSkills}
-          creativeSkills={creativeSkills}
-        />
-      </Suspense>
     </div>
   );
 }
