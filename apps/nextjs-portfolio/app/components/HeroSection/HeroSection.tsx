@@ -38,7 +38,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     alt: altText || "Image",
     fill: true,
     className: "object-cover rounded-2xl",
-    priority: true,
     quality: 70,
     placeholder: "blur" as const,
     blurDataURL: lqip || "",
@@ -49,6 +48,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     props: { srcSet: desktop },
   } = getImageProps({
     ...common,
+    priority: false,
     src: urlForImage(image)?.width(1920).height(1080).url() || "",
   });
 
@@ -57,11 +57,12 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     props: { srcSet: mobile, ...rest },
   } = getImageProps({
     ...common,
+    priority: false,
     src: urlForImage(image)?.width(800).height(800).url() || "",
   });
 
   return (
-    <motion.section className="relative flex flex-col items-end justify-center w-full min-h-[85vh] px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-dark overflow-clip">
+    <motion.section className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-dark overflow-clip">
       <img
         src={lqip || ""}
         alt=""
@@ -77,21 +78,34 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="left-0 z-20 xl:p-4 xl:top-32 max-w-96 xl:absolute col-span-full "
+          className="z-20 p-4 rounded-lg left-4 xl:p-4 xl:top-36 md:max-w-96 xl:absolute col-span-full xl:bg-white/10 xl:backdrop-blur-xl"
         >
-          <p className="text-white text-shadow">My name is</p>
+          <div className="absolute top-0 left-0 w-full h-full" />
+          <motion.p
+            className="text-white text-shadow-lg"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+          >
+            My name is
+          </motion.p>
           <motion.h1
-            className="text-4xl font-black text-white text-shadow"
+            className="text-4xl font-black text-white text-shadow-lg"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
           >
             Henrik
           </motion.h1>
-          <p className="text-white text-shadow">
+          <motion.p
+            className="text-white text-shadow-lg"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+          >
             I&apos;m a design engineer, painter and a maker, here are some of my
             paintings, please take a gander.
-          </p>
+          </motion.p>
         </motion.section>
         <motion.section
           initial={{ opacity: 0, x: 20 }}
