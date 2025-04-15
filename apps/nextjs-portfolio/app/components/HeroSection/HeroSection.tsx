@@ -3,7 +3,6 @@
 import { HomePageQueryResult } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
 import { motion } from "motion/react";
-import { getImageProps } from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -39,35 +38,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     fill: "true",
     className: "object-cover",
   };
-
-  // Optimized sizes for different viewports
-  const sizes = {
-    desktop: { width: 1920, height: 1080, quality: 80 },
-    laptop: { width: 1440, height: 810, quality: 75 },
-    tablet: { width: 1024, height: 576, quality: 70 },
-    mobile: { width: 800, height: 450, quality: 75 },
-    smallMobile: { width: 400, height: 225, quality: 70 },
-  };
-
-  // Only generate srcSets for the current viewport size
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const currentSize = isMobile ? sizes.mobile : sizes.desktop;
-
-  const {
-    props: { srcSet },
-  } = getImageProps({
-    ...common,
-    quality: currentSize.quality,
-    fill: true,
-    priority: true,
-    fetchPriority: "high",
-    src:
-      urlForImage(image)
-        ?.width(currentSize.width)
-        .height(currentSize.height)
-        .auto("format")
-        .url() || "",
-  });
 
   return (
     <motion.section
@@ -130,23 +100,32 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           >
             {image && (
               <picture className="w-full h-full rounded-2xl overflow-clip">
+                <source
+                  srcSet={`
+                    ${urlForImage(image)?.width(400).height(225).quality(60).url() || ""} 400w,
+                    ${urlForImage(image)?.width(600).height(337).quality(65).url() || ""} 600w,
+                    ${urlForImage(image)?.width(800).height(450).quality(70).url() || ""} 800w,
+                    ${urlForImage(image)?.width(1024).height(576).quality(70).url() || ""} 1024w,
+                    ${urlForImage(image)?.width(1440).height(810).quality(75).url() || ""} 1440w,
+                    ${urlForImage(image)?.width(1920).height(1080).quality(80).url() || ""} 1920w
+                  `}
+                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
+                />
                 <img
                   {...common}
                   className="object-cover w-full h-full overflow-clip rounded-2xl"
-                  srcSet={srcSet}
                   src={
                     urlForImage(image)
-                      ?.width(currentSize.width)
-                      .height(currentSize.height)
-                      .auto("format")
-                      .quality(currentSize.quality)
+                      ?.width(400)
+                      .height(225)
+                      .quality(60)
                       .url() || ""
                   }
                   alt={altText || "Image"}
                   loading="eager"
                   fetchPriority="high"
                   decoding="sync"
-                  sizes="100vw"
+                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
                 />
               </picture>
             )}
