@@ -100,7 +100,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   src={urlForImage(image)?.width(1920).height(1080).url() || ""}
                   alt={altText || "Image"}
                   fill
-                  priority
+                  // priority
                   quality={70}
                   placeholder="blur"
                   blurDataURL={lqip || ""}
