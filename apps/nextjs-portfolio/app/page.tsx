@@ -1,13 +1,26 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { homePageQuery } from "@/sanity/lib/queries";
 import { PortableTextBlock } from "next-sanity";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import HeroImageSection from "./components/HeroSection/HeroSection";
-import NotFoundSection from "./components/NotFound/NotFound";
 import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
-
 import { HomePageQueryResult } from "@/sanity.types";
 import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
-import SkillsSection from "./components/SkillsSection/SkillsSection";
+
+const NotFoundSection = dynamic(
+  () => import("./components/NotFound/NotFound"),
+  {
+    loading: () => <div className="h-[50vh]" />,
+  },
+);
+
+const SkillsSection = dynamic(
+  () => import("./components/SkillsSection/SkillsSection"),
+  {
+    loading: () => <div className="h-[50vh]" />,
+  },
+);
 
 type Painting = NonNullable<
   NonNullable<HomePageQueryResult>["showcasePaintings"]
@@ -85,11 +98,15 @@ export default async function Home() {
         />
       </section>
 
-      <NotFoundSection />
-      <SkillsSection
-        professionalSkills={professionalSkills}
-        creativeSkills={creativeSkills}
-      />
+      <Suspense fallback={<div className="h-[50vh]" />}>
+        <NotFoundSection />
+      </Suspense>
+      <Suspense fallback={<div className="h-[50vh]" />}>
+        <SkillsSection
+          professionalSkills={professionalSkills}
+          creativeSkills={creativeSkills}
+        />
+      </Suspense>
     </div>
   );
 }
