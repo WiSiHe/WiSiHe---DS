@@ -73,7 +73,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
             <motion.div
               key={project._id}
               variants={itemVariants}
-              className="w-full"
+              className="w-full hover:z-10 hover:drop-shadow-2xl"
             >
               <Link href={`projects/${project.slug}`} className="block group">
                 <TiltedCard
@@ -83,15 +83,15 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                   containerWidth="100%"
                   imageHeight="400px"
                   imageWidth="100%"
-                  rotateAmplitude={8}
-                  scaleOnHover={1.05}
+                  rotateAmplitude={10}
+                  scaleOnHover={1.1}
                   showMobileWarning={false}
                   showTooltip={true}
                   displayOverlayContent={true}
                   imageSrc={
                     urlForImage(project.image)
                       ?.height(800)
-                      .width(600)
+                      .width(800)
                       .auto("format")
                       .url() || ""
                   }

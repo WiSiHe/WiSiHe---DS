@@ -1,18 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
 
-import { HomePageQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
-import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
-import { getImageProps } from 'next/image';
-import Link from 'next/link';
-import { useRef, useState } from 'react';
-import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import GreeterCard from '../GreeterCard/GreeterCard';
+import { HomePageQueryResult } from "@/sanity.types";
+import { urlForImage } from "@/sanity/lib/utils";
+import { cn } from "@wisihe/utils";
+import { AnimatePresence, motion } from "motion/react";
+import { getImageProps } from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import GreeterCard from "../GreeterCard/GreeterCard";
 
 type HeroImageSectionProps = {
-  paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+  paintings?: NonNullable<HomePageQueryResult>["showcasePaintings"] | null;
 };
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
@@ -30,21 +29,18 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
   const handlePreviousBackground = () => {
     setCurrentPaintingsIndex((prevIndex) =>
-      prevIndex === 0 ? paintings.length - 1 : prevIndex - 1
+      prevIndex === 0 ? paintings.length - 1 : prevIndex - 1,
     );
   };
 
   const currentBackground = paintings[currentPaintingsIndex];
-  const { image, altText = '', slug } = currentBackground || {};
+  const { image, altText = "", slug } = currentBackground || {};
   const { lqip } = image || {};
 
-  const sanityWidth = 1920;
-  const sanityHeight = 1080;
-
   const common = {
-    alt: altText || 'Painting',
-    fill: 'true',
-    className: 'object-cover',
+    alt: altText || "Painting",
+    fill: "true",
+    className: "object-cover",
   };
 
   // Optimized sizes for different viewports
@@ -52,83 +48,28 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     desktop: { width: 1920, height: 1080, quality: 80 },
     laptop: { width: 1440, height: 810, quality: 75 },
     tablet: { width: 1024, height: 576, quality: 70 },
-    mobile: { width: 640, height: 360, quality: 65 },
-    smallMobile: { width: 320, height: 180, quality: 60 },
+    mobile: { width: 800, height: 450, quality: 75 },
+    smallMobile: { width: 400, height: 225, quality: 70 },
   };
 
-  const {
-    props: { srcSet: desktop },
-  } = getImageProps({
-    ...common,
-    quality: sizes.desktop.quality,
-    fill: true,
-    priority: true,
-    fetchPriority: 'high',
-    src:
-      urlForImage(image)
-        ?.width(sizes.desktop.width)
-        .height(sizes.desktop.height)
-        .url() || '',
-  });
+  // Only generate srcSets for the current viewport size
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const currentSize = isMobile ? sizes.mobile : sizes.desktop;
 
   const {
-    props: { srcSet: laptop },
+    props: { srcSet },
   } = getImageProps({
     ...common,
-    quality: sizes.laptop.quality,
+    quality: currentSize.quality,
     fill: true,
     priority: true,
-    fetchPriority: 'high',
+    fetchPriority: "high",
     src:
       urlForImage(image)
-        ?.width(sizes.laptop.width)
-        .height(sizes.laptop.height)
-        .url() || '',
-  });
-
-  const {
-    props: { srcSet: tablet },
-  } = getImageProps({
-    ...common,
-    quality: sizes.tablet.quality,
-    fill: true,
-    priority: true,
-    fetchPriority: 'high',
-    src:
-      urlForImage(image)
-        ?.width(sizes.tablet.width)
-        .height(sizes.tablet.height)
-        .url() || '',
-  });
-
-  const {
-    props: { srcSet: mobile },
-  } = getImageProps({
-    ...common,
-    quality: sizes.mobile.quality,
-    fill: true,
-    priority: true,
-    fetchPriority: 'high',
-    src:
-      urlForImage(image)
-        ?.width(sizes.mobile.width)
-        .height(sizes.mobile.height)
-        .url() || '',
-  });
-
-  const {
-    props: { srcSet: smallMobile },
-  } = getImageProps({
-    ...common,
-    quality: sizes.smallMobile.quality,
-    fill: true,
-    priority: true,
-    fetchPriority: 'high',
-    src:
-      urlForImage(image)
-        ?.width(sizes.smallMobile.width)
-        .height(sizes.smallMobile.height)
-        .url() || '',
+        ?.width(currentSize.width)
+        .height(currentSize.height)
+        .auto("format")
+        .url() || "",
   });
 
   return (
@@ -137,9 +78,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       className="relative flex flex-col items-end justify-center w-full px-4 py-24 h-fit md:px-10 lg:min-h-[85vh] xl:justify-center xl:min-h-[85vh] lg:py-10 bg-dark overflow-clip"
     >
       <img
-        src={lqip || ''}
+        src={lqip || ""}
         alt=""
-        className="absolute inset-0 object-cover w-full h-full scale-105 blur-2xl"
+        className="absolute inset-0 object-cover w-full h-full scale-105 blur-2xl md:blur-3xl"
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
@@ -155,7 +96,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         >
           <AnimatePresence mode="wait">
             <Link
-              key={currentPaintingsIndex + 'painting-link'}
+              key={currentPaintingsIndex + "painting-link"}
               href={`paintings/${slug}`}
               aria-label="View painting"
               className="absolute z-10 flex items-center gap-2 px-4 py-3 text-white rounded-lg focus-visible:ring-2 focus-visible:ring-primary bg-primary top-4 right-4"
@@ -167,34 +108,30 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
-              transition={{ type: 'spring' }}
+              transition={{ type: "spring" }}
               className="relative w-full h-full aspect-square drop-shadow-2xl lg:aspect-video rounded-2xl bg-dark/20"
             >
               {image && (
                 <picture className="w-full h-full rounded-2xl overflow-clip">
-                  <source media="(min-width: 1920px)" srcSet={desktop} />
-                  <source media="(min-width: 1440px)" srcSet={laptop} />
-                  <source media="(min-width: 1024px)" srcSet={tablet} />
-                  <source media="(min-width: 640px)" srcSet={mobile} />
-                  <source media="(min-width: 320px)" srcSet={smallMobile} />
                   <img
                     {...common}
                     className={cn(
-                      'object-cover w-full h-full overflow-clip rounded-2xl'
+                      "object-cover w-full h-full overflow-clip rounded-2xl",
                     )}
+                    srcSet={srcSet}
                     src={
                       urlForImage(image)
-                        ?.width(sanityWidth)
-                        .height(sanityHeight)
-                        .auto('format')
-                        .quality(75)
-                        .url() || ''
+                        ?.width(currentSize.width)
+                        .height(currentSize.height)
+                        .auto("format")
+                        .quality(currentSize.quality)
+                        .url() || ""
                     }
-                    alt={altText || 'Image'}
+                    alt={altText || "Image"}
                     loading="eager"
                     fetchPriority="high"
                     decoding="sync"
-                    sizes="(min-width: 1920px) 1920px, (min-width: 1440px) 1440px, (min-width: 1024px) 1024px, (min-width: 640px) 640px, 320px"
+                    sizes="100vw"
                   />
                 </picture>
               )}
@@ -206,7 +143,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.1 }}
-              transition={{ type: 'spring' }}
+              transition={{ type: "spring" }}
               className="p-3 bg-white rounded-lg text-dark"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
@@ -219,7 +156,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 300 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="flex items-center gap-2 px-6 py-3 text-lg font-medium text-white transition-all duration-300 rounded-lg shadow-lg bg-primary hover:bg-primary/90 hover:shadow-xl"
               >
                 View Gallery
@@ -229,7 +166,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.1 }}
-              transition={{ type: 'spring' }}
+              transition={{ type: "spring" }}
               className="p-3 bg-white rounded-lg text-dark"
               onClick={handleNextBackground}
               aria-label="Next painting"
