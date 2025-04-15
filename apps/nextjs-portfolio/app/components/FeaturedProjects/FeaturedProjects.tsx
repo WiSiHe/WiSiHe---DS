@@ -88,6 +88,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                   showMobileWarning={false}
                   showTooltip={true}
                   displayOverlayContent={true}
+                  blurDataURL={project.image?.lqip || ""}
                   imageSrc={
                     urlForImage(project.image)
                       ?.height(800)

@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { getImageProps } from "next/image";
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>["showcasePaintings"] | null;
@@ -35,7 +36,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
   const common = {
     alt: altText || "Painting",
-    fill: "true",
+    fill: true,
     className: "object-cover",
   };
 
@@ -100,33 +101,39 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           >
             {image && (
               <picture className="w-full h-full rounded-2xl overflow-clip">
-                <source
-                  srcSet={`
-                    ${urlForImage(image)?.width(400).height(225).quality(60).url() || ""} 400w,
-                    ${urlForImage(image)?.width(600).height(337).quality(65).url() || ""} 600w,
-                    ${urlForImage(image)?.width(800).height(450).quality(70).url() || ""} 800w,
-                    ${urlForImage(image)?.width(1024).height(576).quality(70).url() || ""} 1024w,
-                    ${urlForImage(image)?.width(1440).height(810).quality(75).url() || ""} 1440w,
-                    ${urlForImage(image)?.width(1920).height(1080).quality(80).url() || ""} 1920w
-                  `}
-                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
-                />
-                <img
-                  {...common}
-                  className="object-cover w-full h-full overflow-clip rounded-2xl"
-                  src={
-                    urlForImage(image)
-                      ?.width(400)
-                      .height(225)
-                      .quality(60)
-                      .url() || ""
-                  }
-                  alt={altText || "Image"}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="sync"
-                  sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
-                />
+                {(() => {
+                  const imageUrl = urlForImage(image)
+                    ?.width(1920)
+                    .height(1080)
+                    .url();
+                  if (!imageUrl) return null;
+
+                  const {
+                    props: { srcSet, ...rest },
+                  } = getImageProps({
+                    ...common,
+                    quality: 80,
+                    src: imageUrl,
+                  });
+
+                  return (
+                    <>
+                      <source
+                        srcSet={srcSet}
+                        sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
+                      />
+                      <img
+                        {...rest}
+                        className="object-cover w-full h-full overflow-clip rounded-2xl"
+                        alt={altText || "Image"}
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="sync"
+                        sizes="(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1024px) 1024px, (max-width: 1440px) 1440px, 1920px"
+                      />
+                    </>
+                  );
+                })()}
               </picture>
             )}
           </motion.div>
