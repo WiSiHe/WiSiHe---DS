@@ -77,7 +77,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       <img
         src={lqip || ""}
         alt=""
-        className="absolute inset-0 object-cover w-full h-full scale-105 blur-2xl md:blur-3xl"
+        className="absolute inset-0 object-cover w-full h-full scale-150 blur-2xl md:blur-3xl"
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
@@ -151,14 +151,14 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               </picture>
             )}
           </motion.div>
-
-          <section className="z-10 flex items-center justify-between w-full gap-4 pt-6 pb-10 capitalize xl:col-start-5 col-span-full xl:gap-6 xl:justify-center">
+          <section className="absolute bottom-0 z-10 flex items-center justify-center w-full gap-4 p-4 capitalize xl:col-start-5 col-span-full xl:gap-6 xl:justify-center">
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring" }}
-              className="p-3 text-white rounded-lg bg-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="flex items-center p-3 font-medium transition-all duration-300 rounded-lg shadow-lg text-dark bg-tertiary hover:bg-tertiary/90 hover:shadow-xl"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
@@ -171,7 +171,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="flex items-center gap-2 px-6 py-3 text-lg font-medium text-white transition-all duration-300 rounded-lg shadow-lg bg-primary hover:bg-primary/90 hover:shadow-xl"
+                className="flex items-center px-6 py-3 font-medium text-white transition-all duration-300 rounded-lg shadow-lg bg-primary hover:bg-primary/90 hover:shadow-xl"
               >
                 View Gallery
               </motion.div>
@@ -179,9 +179,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             <motion.button
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring" }}
-              className="p-3 text-white rounded-lg bg-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="flex items-center p-3 font-medium transition-all duration-300 rounded-lg shadow-lg text-dark bg-tertiary hover:bg-tertiary/90 hover:shadow-xl"
               onClick={handleNextBackground}
               aria-label="Next painting"
             >
