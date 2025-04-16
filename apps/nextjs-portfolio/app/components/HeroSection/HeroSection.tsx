@@ -48,7 +48,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     props: { srcSet: desktop },
   } = getImageProps({
     ...common,
-    priority: false,
+    priority: true,
     src: urlForImage(image)?.width(1920).height(1080).url() || "",
   });
 
@@ -57,8 +57,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     props: { srcSet: mobile, ...rest },
   } = getImageProps({
     ...common,
-    priority: false,
+    priority: true,
     src: urlForImage(image)?.width(800).height(800).url() || "",
+  });
+
+  // Small mobile image props
+  const {
+    props: { srcSet: smallMobile },
+  } = getImageProps({
+    ...common,
+    priority: true,
+    src: urlForImage(image)?.width(400).height(400).url() || "",
   });
 
   return (
@@ -133,7 +142,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               >
                 <picture>
                   <source media="(min-width: 1024px)" srcSet={desktop} />
-                  <source media="(min-width: 0px)" srcSet={mobile} />
+                  <source media="(min-width: 800px)" srcSet={mobile} />
+                  <source media="(min-width: 0px)" srcSet={smallMobile} />
                   <img
                     {...rest}
                     style={{ width: "100%", height: "100%" }}
