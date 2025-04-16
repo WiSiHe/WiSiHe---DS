@@ -1,18 +1,33 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import Marquee from 'react-fast-marquee';
-import Chip from '../Chip/Chip';
+import { motion } from "motion/react";
+import Marquee from "react-fast-marquee";
+import Chip from "../Chip/Chip";
 
-type SkillsSectionProps = {
-  professionalSkills: string[];
-  creativeSkills: string[];
-};
+const professionalSkills = [
+  "Frontend Development",
+  "UI/UX Design",
+  "Responsive Web Design",
+  "Accessibility (WCAG Standards)",
+  "React.js",
+  "SvelteKit",
+  "Next.js",
+  "Tailwind CSS",
+  "Sanity CMS Integration",
+  "Performance Optimization",
+  "Interactive Prototyping",
+];
 
-const SkillsSection = ({
-  professionalSkills,
-  creativeSkills,
-}: SkillsSectionProps) => {
+const creativeSkills = [
+  "Digital Drawing & Painting",
+  "3D Modeling (Blender)",
+  "Game Development (Unreal Engine 5)",
+  "Video Editing & Production",
+  "Interactive 3D Design (Spline)",
+  "Concept Art & Illustration",
+];
+
+const SkillsSection = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -30,7 +45,7 @@ const SkillsSection = ({
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
         damping: 15,
       },
@@ -41,7 +56,7 @@ const SkillsSection = ({
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-100px' }}
+      viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
       className="relative flex flex-col gap-4 py-20 text-white"
     >

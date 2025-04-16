@@ -148,7 +148,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="flex items-center p-3 font-medium transition-all duration-300 rounded-lg shadow-lg text-dark bg-tertiary hover:bg-tertiary/90 hover:shadow-xl"
               onClick={handlePreviousBackground}
@@ -161,7 +160,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 className="flex items-center px-6 py-3 font-medium text-white transition-all duration-300 rounded-lg shadow-lg bg-primary hover:bg-primary/90 hover:shadow-xl"
               >
@@ -172,7 +170,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="flex items-center p-3 font-medium transition-all duration-300 rounded-lg shadow-lg text-dark bg-tertiary hover:bg-tertiary/90 hover:shadow-xl"
               onClick={handleNextBackground}
