@@ -66,7 +66,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       <img
         src={lqip || ""}
         alt=""
-        className="absolute inset-0 object-cover w-full h-full scale-150 blur-2xl md:blur-3xl"
+        className="absolute inset-0 object-cover w-full h-full scale-150 blur-3xl"
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
@@ -78,7 +78,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="z-20 p-4 rounded-lg left-4 xl:p-4 xl:top-36 md:max-w-96 xl:absolute col-span-full xl:bg-white/10 xl:backdrop-blur-xl"
+          className="z-20 p-4 rounded-lg left-4 xl:p-4 xl:top-36 md:max-w-96 xl:absolute col-span-full xl:bg-white/10 xl:backdrop-blur-2xl"
         >
           <div className="absolute top-0 left-0 w-full h-full" />
           <motion.p
