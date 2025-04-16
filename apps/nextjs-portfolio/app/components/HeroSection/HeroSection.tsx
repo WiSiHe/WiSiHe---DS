@@ -89,7 +89,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="z-20 p-4 rounded-lg left-4 xl:p-4 xl:top-36 md:max-w-96 xl:absolute col-span-full xl:bg-white/10 xl:backdrop-blur-2xl"
         >
-          <div className="absolute top-0 left-0 w-full h-full" />
           <motion.p
             className="text-white text-shadow-lg"
             initial={{ opacity: 0, scale: 0.8 }}
