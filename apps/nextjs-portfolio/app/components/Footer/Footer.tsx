@@ -32,10 +32,16 @@ const Footer = ({ socialLinks }: FooterProps) => {
             </h3>
             <p className="max-w-lg text-base leading-relaxed text-gray-300 sm:text-lg">
               I&apos;m a{" "}
-              <span className="font-medium text-primary">UX/UI designer</span>{" "}
-              and <span className="font-medium text-highlight">developer</span>{" "}
-              specializing in React and Svelte, with a passion for game
-              development and digital art.
+              <span className="font-medium text-primary">
+                frontend developer
+              </span>{" "}
+              specializing in React and Svelte. In my free time, I enjoy{" "}
+              <span className="font-medium text-highlight">drawing</span> and
+              dabbling in{" "}
+              <span className="font-medium text-highlight">
+                game development
+              </span>
+              .
             </p>
           </motion.div>
 

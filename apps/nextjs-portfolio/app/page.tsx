@@ -48,29 +48,6 @@ export default async function Home() {
   const paintingsDescription =
     homepage.paintingsDescription as PortableTextBlock[];
 
-  const professionalSkills = [
-    "Frontend Development",
-    "UI/UX Design",
-    "Responsive Web Design",
-    "Accessibility (WCAG Standards)",
-    "React.js",
-    "SvelteKit",
-    "Next.js",
-    "Tailwind CSS",
-    "Sanity CMS Integration",
-    "Performance Optimization",
-    "Interactive Prototyping",
-  ];
-
-  const creativeSkills = [
-    "Digital Drawing & Painting",
-    "3D Modeling (Blender)",
-    "Game Development (Unreal Engine 5)",
-    "Video Editing & Production",
-    "Interactive 3D Design (Spline)",
-    "Concept Art & Illustration",
-  ];
-
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={shuffledPaintings} />
@@ -83,10 +60,7 @@ export default async function Home() {
         />
       </section>
       {/* <NotFoundSection /> */}
-      <SkillsSection
-        professionalSkills={professionalSkills}
-        creativeSkills={creativeSkills}
-      />
+      <SkillsSection />
     </div>
   );
 }
