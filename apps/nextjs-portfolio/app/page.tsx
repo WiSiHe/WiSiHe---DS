@@ -5,8 +5,47 @@ import FeaturedProjects from "./components/FeaturedProjects/FeaturedProjects";
 import HeroImageSection from "./components/HeroSection/HeroSection";
 import PaintingsSection from "./components/PaintingsSection/PaintingsSection";
 import { PortableTextBlock } from "next-sanity";
+import { Metadata } from "next";
 
 import SkillsSection from "./components/SkillsSection/SkillsSection";
+
+export const metadata: Metadata = {
+  title: "Henrik Sissener | Frontend Developer & Creative",
+  description:
+    "Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.",
+  keywords: [
+    "frontend developer",
+    "React",
+    "Svelte",
+    "portfolio",
+    "web development",
+    "game development",
+    "art",
+  ],
+  openGraph: {
+    title: "Henrik Sissener | Frontend Developer & Creative",
+    description:
+      "Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Henrik Sissener Portfolio",
+    images: [
+      {
+        url: "/images/hell.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Henrik Sissener Portfolio Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Henrik Sissener | Frontend Developer & Creative",
+    description:
+      "Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.",
+    images: ["/images/hell.jpg"],
+  },
+};
 
 type Painting = NonNullable<
   NonNullable<HomePageQueryResult>["showcasePaintings"]
