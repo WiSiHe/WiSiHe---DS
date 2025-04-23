@@ -25,11 +25,11 @@ export default function Test2Page() {
           />
           {/* <p>please give me a spline</p> */}
           {/* @ts-expect-error - Spline viewer is not supported in Next.js */}
-          <spline-viewer
+          {/* <spline-viewer
             loading-anim-type="spinner-small-dark"
             url="https://prod.spline.design/VeHLDRDrDnwErPUu/scene.splinecode"
             style={{ width: "100%", height: "100%" }}
-          />
+          /> */}
         </div>
         <div className="">
           <h1 className="">Mack isbjørn lite</h1>
