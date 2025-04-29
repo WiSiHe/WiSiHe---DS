@@ -8,6 +8,8 @@ import { PortableTextBlock } from "next-sanity";
 import { Metadata } from "next";
 
 import SkillsSection from "./components/SkillsSection/SkillsSection";
+import NotFoundSection from "./components/NotFound/NotFound";
+import { createFeatureGate } from "@/utils/flags";
 
 export const metadata: Metadata = {
   title: "Henrik Sissener | Frontend Developer & Creative",
@@ -87,6 +89,7 @@ export default async function Home() {
   const paintingsDescription =
     homepage.paintingsDescription as PortableTextBlock[];
 
+  const enabled = await createFeatureGate("my_first_gate")();
   return (
     <div className="bg-dark">
       <HeroImageSection paintings={shuffledPaintings} />
@@ -98,7 +101,7 @@ export default async function Home() {
           paintingsDescription={paintingsDescription}
         />
       </section>
-      {/* <NotFoundSection /> */}
+      {enabled && <NotFoundSection />}
       <SkillsSection />
     </div>
   );
