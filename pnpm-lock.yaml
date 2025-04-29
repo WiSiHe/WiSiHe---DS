@@ -111,6 +111,9 @@ importers:
 
   apps/nextjs-portfolio:
     dependencies:
+      '@flags-sdk/statsig':
+        specifier: ^0.2.2
+        version: 0.2.2
       '@headlessui/react':
         specifier: ^2.2.1
         version: 2.2.1(react-dom@19.0.0)(react@19.0.0)
@@ -156,6 +159,9 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
+      flags:
+        specifier: ^3.2.0
+        version: 3.2.0(next@15.2.4)(react-dom@19.0.0)(react@19.0.0)
       motion:
         specifier: ^12.6.3
         version: 12.6.3(react-dom@19.0.0)(react@19.0.0)
@@ -2181,6 +2187,11 @@ packages:
       tslib: 2.8.1
     dev: false
 
+  /@edge-runtime/cookies@5.0.2:
+    resolution: {integrity: sha512-Sd8LcWpZk/SWEeKGE8LT6gMm5MGfX/wm+GPnh1eBEtCpya3vYqn37wYknwAHw92ONoyyREl1hJwxV/Qx2DWNOg==}
+    engines: {node: '>=16'}
+    dev: false
+
   /@emnapi/core@1.4.0:
     resolution: {integrity: sha512-H+N/FqT07NmLmt6OFFtDfwe8PNygprzBikrEMyQfgqSmT0vzE515Pz7R8izwB9q/zsH/MA64AKoul3sA6/CzVg==}
     requiresBuild: true
@@ -3033,6 +3044,19 @@ packages:
 
   /@figma/rest-api-spec@0.18.0:
     resolution: {integrity: sha512-IBBZ0yenAOOAzM0ZyXQJRjWNDg3P349SNID7G/YGgkRPSKITut9ae/kOO7UMlwgkrnuefToTlMpGM4xKEIGX9w==}
+    dev: false
+
+  /@flags-sdk/statsig@0.2.2:
+    resolution: {integrity: sha512-E3QNuKvVerW7B0z8Jb/tIyiejniKP193D5HB7oWquXWGCcNDEQ7YNuODX+MpPwVf8nLkqvVSTHFyH5eEacUYFQ==}
+    dependencies:
+      '@vercel/edge-config': 1.4.0
+      '@vercel/functions': 1.6.0
+      statsig-node-lite: 0.4.3
+      statsig-node-vercel: 0.7.0(@vercel/edge-config@1.4.0)
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-provider-web-identity'
+      - '@opentelemetry/api'
+      - encoding
     dev: false
 
   /@floating-ui/core@1.6.9:
@@ -7530,6 +7554,32 @@ packages:
       react: 19.0.0
     dev: false
 
+  /@vercel/edge-config-fs@0.1.0:
+    resolution: {integrity: sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==}
+    dev: false
+
+  /@vercel/edge-config@1.4.0:
+    resolution: {integrity: sha512-69Wg5gw9DzwnyUmnjToSeLRm1nm8mCPgN0kflX8EHRHyqvzH80wPem5A8rI2LXPb2Y9tJNoqN3vXPcQhS2Wh5g==}
+    engines: {node: '>=14.6'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.7.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+    dependencies:
+      '@vercel/edge-config-fs': 0.1.0
+    dev: false
+
+  /@vercel/functions@1.6.0:
+    resolution: {integrity: sha512-R6FKQrYT5MZs5IE1SqeCJWxMuBdHawFcCZboKKw8p7s+6/mcd55Gx6tWmyKnQTyrSEA04NH73Tc9CbqpEle8RA==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-web-identity': '*'
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-web-identity':
+        optional: true
+    dev: false
+
   /@vercel/speed-insights@1.2.0(next@15.2.4)(react@19.0.0):
     resolution: {integrity: sha512-y9GVzrUJ2xmgtQlzFP2KhVRoCglwfRQgjyfY607aU0hh0Un6d0OUyrJkjuAlsV18qR4zfoFPs/BiIj9YDS6Wzw==}
     requiresBuild: true
@@ -10734,6 +10784,33 @@ packages:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
+  /flags@3.2.0(next@15.2.4)(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-rmJHXg4ijRgWNf/OdEGbd3FaqMwvKlcrtelKwTtPCzsNWuian9Tz+wXU+3XSO3ljqlpQYyzMgdwz3CBs/5DtZA==}
+    peerDependencies:
+      '@opentelemetry/api': ^1.7.0
+      '@sveltejs/kit': '*'
+      next: '*'
+      react: '*'
+      react-dom: '*'
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@edge-runtime/cookies': 5.0.2
+      jose: 5.10.0
+      next: 15.2.4(@babel/core@7.26.9)(react-dom@19.0.0)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    dev: false
+
   /flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -11995,6 +12072,10 @@ packages:
   /jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
     dev: true
+
+  /jose@5.10.0:
+    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
+    dev: false
 
   /joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
@@ -16198,6 +16279,27 @@ packages:
     resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==}
     dev: false
 
+  /statsig-node-lite@0.4.3:
+    resolution: {integrity: sha512-GjbBPH2JXHcGbXbY3U1280Rs2hAoLBqUk+RUe+i3Ib06ssQKj71qxfWzfkwp7igcrdg0L1j5dbQRKpXl3vBjLQ==}
+    dependencies:
+      node-fetch: 2.7.0
+      ua-parser-js: 1.0.40
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /statsig-node-vercel@0.7.0(@vercel/edge-config@1.4.0):
+    resolution: {integrity: sha512-TNcJm2yZep6qdPE4A6FFQgSZRDNasp50oUXH96feBTUUYVmZl6NryQ0Gy9NXWmUi5e29IYWNansD4WSVVYi7XA==}
+    peerDependencies:
+      '@vercel/edge-config': ^1.0.0
+    dependencies:
+      '@vercel/edge-config': 1.4.0
+      statsig-node-lite: 0.4.3
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /storybook@8.6.3(prettier@3.5.3):
     resolution: {integrity: sha512-Vbmd8/FXp6X0AOMak6arcg3WdkHj+2AYJTNHbCPVHsCEbnREyRZIG+Eq5/Ffmy6byiz+4OAX5HwsHGSMR6Xmow==}
     hasBin: true
@@ -17229,6 +17331,11 @@ packages:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /ua-parser-js@1.0.40:
+    resolution: {integrity: sha512-z6PJ8Lml+v3ichVojCiB8toQJBuwR42ySM4ezjXIqXK3M0HczmKQ3LF4rhU55PfD99KEEXQG6yb7iOMyvYuHew==}
+    hasBin: true
+    dev: false
 
   /unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}

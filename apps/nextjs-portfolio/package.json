@@ -12,6 +12,7 @@
     "typegen": "sanity typegen generate"
   },
   "dependencies": {
+    "@flags-sdk/statsig": "^0.2.2",
     "@headlessui/react": "^2.2.1",
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^10.0.6",
@@ -27,6 +28,7 @@
     "@wisihe/ui-react": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
+    "flags": "^3.2.0",
     "motion": "^12.6.3",
     "next": "15.2.4",
     "next-sanity": "^9.9.9",
