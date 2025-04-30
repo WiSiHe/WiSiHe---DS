@@ -13,10 +13,21 @@
     {
       "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies", "minor"]
+    },
+    {
+      "matchPackageNames": ["next"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["^@next/", "^next"],
+      "groupName": "Next.js packages",
+      "groupSlug": "nextjs"
     }
   ],
   "prHourlyLimit": 2,
   "prConcurrentLimit": 10,
   "rangeStrategy": "bump",
-  "separateMinorPatch": true
+  "separateMinorPatch": true,
+  "ignorePaths": [".next/**", "**/.next/**", "**/node_modules/**"]
 }
