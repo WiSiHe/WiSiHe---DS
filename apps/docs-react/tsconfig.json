@@ -1,6 +1,0 @@
-{
-  "extends": "@wisihe/typescript-config/react-app.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
-  // "references": [{ "path": "./tsconfig.node.json" }]
-}
