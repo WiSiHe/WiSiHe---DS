@@ -1,6 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["config:recommended"],
+  "schedule": ["before 3am on monday"],
+  "timezone": "Europe/Oslo",
+  "labels": ["dependencies"],
+  "commitMessagePrefix": "chore(deps):",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["dependencies", "minor"]
+    }
+  ],
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10,
+  "rangeStrategy": "bump",
+  "separateMinorPatch": true
 }
