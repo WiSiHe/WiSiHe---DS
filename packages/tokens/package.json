@@ -72,7 +72,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@figma/rest-api-spec": "^0.18.0",
+    "@figma/rest-api-spec": "^0.29.0",
     "dotenv": "^16.4.5",
     "tsx": "^4.19.1"
   }
