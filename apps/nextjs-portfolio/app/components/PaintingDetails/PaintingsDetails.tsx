@@ -1,17 +1,15 @@
-/* eslint-disable @next/next/no-img-element */
-'use client';
-
-import useIsMobile from '@/hooks/useIsMobile';
-import { PaintingQueryResult } from '@/sanity.types';
-import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
-import { cn } from '@wisihe/utils';
-import { motion } from 'motion/react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
-import { BsClockFill, BsEye } from 'react-icons/bs';
-import Chip from '../Chip/Chip';
+"use client";
+import useIsMobile from "@/hooks/useIsMobile";
+import { PaintingQueryResult } from "@/sanity.types";
+import { patchPaintingViews, urlForImage } from "@/sanity/lib/utils";
+import { cn } from "@wisihe/utils";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { BiLogoRedbubble, BiRightArrow } from "react-icons/bi";
+import { BsClockFill, BsEye } from "react-icons/bs";
+import Chip from "../Chip/Chip";
 
 type PaintingDetailProps = {
   paintingData: Exclude<PaintingQueryResult, null>;
@@ -46,10 +44,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     setSelectedIndex(index);
   };
 
-  const formattedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const formattedPaintedAt = new Date(paintedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   // Which image is currently selected
@@ -71,28 +69,27 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         await patchPaintingViews(_id, viewerId);
       }
     };
-
-    addView();
+    void addView();
   }, [_id, views, hasAddedView]);
 
   const generateOrRetrieveViewerId = (): string => {
     try {
-      let viewerId = localStorage.getItem('viewerId');
+      let viewerId = localStorage.getItem("viewerId");
       if (!viewerId) {
         viewerId = crypto.randomUUID();
-        localStorage.setItem('viewerId', viewerId);
+        localStorage.setItem("viewerId", viewerId);
       }
       return viewerId;
     } catch (error) {
-      console.error('Failed to access localStorage:', error);
+      console.error("Failed to access localStorage:", error);
       // Fallback if localStorage fails
       return crypto.randomUUID();
     }
   };
 
   const imageUrl =
-    urlForImage(currentImage)?.width(1600).fit('max').format('webp').url() ??
-    '';
+    urlForImage(currentImage)?.width(1600).fit("max").format("webp").url() ??
+    "";
 
   return (
     <div
@@ -110,8 +107,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ type: 'spring' }}
-              src={currentImage.lqip ?? ''}
+              transition={{ type: "spring" }}
+              src={currentImage.lqip ?? ""}
               alt={title}
               className="absolute inset-0 object-contain w-full h-full scale-110 pointer-events-none blur-3xl"
               aria-hidden="true"
@@ -132,14 +129,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               {allImages.map((img, index) => {
                 const thumbUrl =
                   urlForImage(img)?.width(100).height(100).quality(30).url() ??
-                  '';
+                  "";
                 return (
                   <motion.button
                     key={index}
                     onClick={() => handleSelectImage(index)}
                     className={cn(
-                      'shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary',
-                      index === selectedIndex ? 'ring-3 ring-primary' : ''
+                      "shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary",
+                      index === selectedIndex ? "ring-3 ring-primary" : "",
                     )}
                     aria-label={`Select image ${index + 1}`}
                   >
@@ -167,13 +164,13 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             exit={{ scale: 0.9, x: -20 }}
             drag={!isMobile}
             whileDrag={{ scale: 1.05 }}
-            transition={{ type: 'spring' }}
+            transition={{ type: "spring" }}
             dragElastic={1} // Higher the value, the more elastic the drag
             dragTransition={{ bounceStiffness: 50, bounceDamping: 10 }}
             dragConstraints={constraintsRef}
             className="w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-dark/40 backdrop-blur-3xl p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab"
           >
-            <div className={cn('pt-2 flex flex-col gap-4')}>
+            <div className={cn("pt-2 flex flex-col gap-4")}>
               <motion.h1
                 // layoutId={`title-${title}`}
                 className="text-3xl font-bold text-balance"
@@ -193,7 +190,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                     outlined
                     Icon={() => <BsEye className="size-4" />}
                     label="Views:"
-                    additionalText={viewsCount?.toString() ?? '0'}
+                    additionalText={viewsCount?.toString() ?? "0"}
                     // size="small"
                   />
                   {tagsV2.map((tag) => (
@@ -210,7 +207,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: 'spring', delay: 0.4 }}
+                  transition={{ type: "spring", delay: 0.4 }}
                 >
                   <hr className="my-4 opacity-15" />
 
@@ -228,7 +225,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                       rel="noreferrer"
                       className="px-3 py-2 mt-2 flex rounded-lg bg-[#e31421] hover:bg-[#e31421]/80 font-semibold text-white justify-center items-center gap-2 w-fit"
                     >
-                      <BiLogoRedbubble className="inline" /> Go to store{' '}
+                      <BiLogoRedbubble className="inline" /> Go to store{" "}
                       <BiRightArrow />
                     </a>
                   </div>
@@ -237,7 +234,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               <h2 className="text-2xl font-bold">Description</h2>
               <p
                 className={cn(
-                  'prose-invert'
+                  "prose-invert",
                   // showAllDescription ? 'line-clamp-none' : 'line-clamp-6'
                 )}
               >
