@@ -219,7 +219,7 @@ export default defineType({
               viewerId: 'viewerId',
               timestamp: 'timestamp',
             },
-            prepare({viewerId, timestamp}) {
+            prepare({viewerId, timestamp}: {viewerId: string; timestamp: string}) {
               return {
                 title: viewerId,
                 subtitle: new Date(timestamp).toLocaleString(),
@@ -290,27 +290,4 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
   ],
-
-  preview: {
-    select: {
-      title: 'title',
-      subtitle: 'format',
-      media: 'image',
-      tagsV2: 'tagsV2',
-      images: 'images.0',
-    },
-    prepare({title, subtitle = '', media, tagsV2 = [], images = []}) {
-      const amountofTags = tagsV2.length
-      const amountofPaintings = images.length
-
-      return {
-        title,
-        subtitle:
-          amountofPaintings > 0
-            ? `${subtitle} - ${amountofTags} tags - ${amountofPaintings} extra paintings`
-            : `${subtitle} - ${amountofTags} tags`,
-        media,
-      }
-    },
-  },
 })
