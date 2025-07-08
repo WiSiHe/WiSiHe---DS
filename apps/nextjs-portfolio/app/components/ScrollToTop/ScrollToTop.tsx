@@ -1,21 +1,21 @@
-'use client';
-import useScrollPosition from '@/hooks/useScrollPosition';
-import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
-import { IoArrowUpSharp } from 'react-icons/io5';
+"use client";
+import useScrollPosition from "@/hooks/useScrollPosition";
+import { cn } from "@wisihe/utils";
+import { AnimatePresence, motion, Variants } from "motion/react";
+import { IoArrowUpSharp } from "react-icons/io5";
 
-interface ScrollToTopButtonProps {
+type ScrollToTopButtonProps = {
   isFixed?: boolean;
-}
+};
 
 const SCROLL_THRESHOLD = 200;
 
-const buttonVariants = {
+const buttonVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 100,
     transition: {
-      type: 'spring',
+      type: "spring",
       bounce: 0.4,
       duration: 1,
     },
@@ -24,7 +24,7 @@ const buttonVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: "spring",
       bounce: 0.4,
       duration: 1,
     },
@@ -32,17 +32,15 @@ const buttonVariants = {
 };
 
 const buttonClassNames = cn(
-  'flex items-center justify-center text-dark rounded-full p-4',
-  'transition-all duration-200 ease-in-out',
-  'bg-white shadow-sm hover:bg-primary hover:text-white',
-  'ring-highlight focus:outline-hidden focus-visible:ring-3',
-  'focus-visible:bg-primary focus-visible:text-white',
-  'active:bg-highlight hover:ring-3'
+  "flex items-center justify-center text-dark rounded-full p-4",
+  "transition-all duration-200 ease-in-out",
+  "bg-white shadow-sm hover:bg-primary hover:text-white",
+  "ring-highlight focus:outline-hidden focus-visible:ring-3",
+  "focus-visible:bg-primary focus-visible:text-white",
+  "active:bg-highlight hover:ring-3",
 );
 
-const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
-  isFixed = true,
-}) => {
+const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
   const scrollPosition = useScrollPosition();
 
   const isVisible = scrollPosition > SCROLL_THRESHOLD;
@@ -51,7 +49,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
@@ -63,7 +61,7 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
-          className={cn('shrink-0', isFixed && 'fixed bottom-8 right-8 z-10')}
+          className={cn("shrink-0", isFixed && "fixed bottom-8 right-8 z-10")}
         >
           <motion.button
             onClick={handleClick}

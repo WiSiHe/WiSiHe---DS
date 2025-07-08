@@ -1,20 +1,20 @@
-'use client';
-import Link from 'next/link';
-import { motion } from 'motion/react';
-import GridDistortion from '../GridDistortion/GridDistortion';
+"use client";
+import Link from "next/link";
+import { motion, Variants } from "motion/react";
+import GridDistortion from "../GridDistortion/GridDistortion";
 
 const randomImageArray = [
-  '/images/bathtub.jpg',
-  '/images/celestial.jpg',
-  '/images/cloud.jpg',
-  '/images/cute.jpg',
-  '/images/space.jpg',
-  '/images/winter.jpg',
-  '/images/sunlight.jpg',
+  "/images/bathtub.jpg",
+  "/images/celestial.jpg",
+  "/images/cloud.jpg",
+  "/images/cute.jpg",
+  "/images/space.jpg",
+  "/images/winter.jpg",
+  "/images/sunlight.jpg",
 ];
 
 const NotFoundSection = () => {
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -25,13 +25,13 @@ const NotFoundSection = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
         damping: 15,
       },
@@ -42,7 +42,7 @@ const NotFoundSection = () => {
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-100px' }}
+      viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
       className="relative grid w-full h-full grid-flow-col-dense bg-tertiary aspect-square xl:aspect-video overflow-clip"
     >

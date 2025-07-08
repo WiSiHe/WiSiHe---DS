@@ -3,7 +3,7 @@
 import { HomePageQueryResult } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, Variants } from "motion/react";
 import TiltedCard from "../TiltedCard/TiltedCard";
 
 type FeaturedProjectsProps = {
@@ -17,7 +17,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
     return null;
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -28,7 +28,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,

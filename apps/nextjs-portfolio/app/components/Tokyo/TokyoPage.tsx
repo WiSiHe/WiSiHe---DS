@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { BiChat } from 'react-icons/bi';
-import { IoClose } from 'react-icons/io5';
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import { BiChat } from "react-icons/bi";
+import { IoClose } from "react-icons/io5";
 
 export const TokyoPage = () => {
   return (
@@ -32,7 +32,7 @@ export const TokyoPage = () => {
           <motion.h1
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            transition={{ type: 'spring' }}
+            transition={{ type: "spring" }}
             layoutId="tokyo-title"
             className="text-6xl font-bold"
           >
@@ -50,7 +50,6 @@ export const TokyoPage = () => {
         <motion.button
           initial={{ x: 100 }}
           animate={{ x: 0 }}
-          transition={{ type: 'linear' }}
           className="flex items-center gap-2 text-white rounded-full"
         >
           8 <BiChat />
