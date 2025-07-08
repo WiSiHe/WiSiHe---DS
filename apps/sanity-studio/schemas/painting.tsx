@@ -6,9 +6,7 @@ import {ImageIcon} from '@sanity/icons'
 import {FaWeibo} from 'react-icons/fa'
 
 import {defineField, defineType} from 'sanity'
-import SEODescriptionGenerator from '../components/SEODescriptionGenerator'
-import ImageAltGenerator from '../components/ImageAltGenerator'
-import ImageDescriptionGenerator from '../components/ImageDescriptionGenerator'
+import GenericAIGenerator from '../components/GenericAIGenerator'
 import ViewsArray from '../components/ViewsArray'
 
 export default defineType({
@@ -79,7 +77,16 @@ export default defineType({
           validation: (Rule) => Rule.required(),
           group: ['AI', 'seo'],
           components: {
-            input: ImageAltGenerator,
+            input: (props) => (
+              <GenericAIGenerator
+                {...props}
+                prompt="You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less."
+                imageField="image"
+                characterLimit={92}
+                buttonText="Generate Alt Text"
+                placeholder="Alt text here..."
+              />
+            ),
           },
         },
       ],
@@ -89,26 +96,29 @@ export default defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    // defineField({
-    //   name: 'altText',
-    //   title: 'Alt Text',
-    //   type: 'string',
-    //   group: ['AI'],
-    //   description: 'Alt text for the primary image',
-    //   deprecated: {
-    //     reason: 'Use the alt field on the image instead',
-    //   },
-    //   components: {
-    //     input: ImageAltGenerator,
-    //   },
-    // }),
+
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       group: ['AI'],
       components: {
-        input: ImageDescriptionGenerator,
+        input: (props) => (
+          <GenericAIGenerator
+            {...props}
+            prompt={` You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.
+
+Requirements:
+- 150-300 words maximum
+- Use present tense
+- Be objective and descriptive
+- Write in clear, flowing paragraphs
+- Focus on visual elements and artistic choices`}
+            imageField="image"
+            rows={6}
+            placeholder="Description will appear here..."
+          />
+        ),
       },
       description: 'Description of the painting',
       validation: (rule) => rule.required(),
@@ -120,7 +130,18 @@ export default defineType({
       group: ['seo', 'AI'],
       description: 'This description will be used in the meta description for SEO purposes',
       components: {
-        input: SEODescriptionGenerator,
+        input: (props) => (
+          <GenericAIGenerator
+            {...props}
+            prompt="You are an AI SEO expert writer. Re-write the following text into a good SEO description in 122 characters or less, it should never exceed 122: {description}"
+            fieldDependencies={{
+              description: 'description',
+            }}
+            characterLimit={122}
+            rows={3}
+            placeholder="Enter your description here..."
+          />
+        ),
       },
     }),
 
@@ -149,7 +170,16 @@ export default defineType({
               validation: (Rule) => Rule.required(),
               group: ['AI', 'seo'],
               components: {
-                input: ImageAltGenerator,
+                input: (props) => (
+                  <GenericAIGenerator
+                    {...props}
+                    prompt="You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less. "
+                    imageField="image"
+                    characterLimit={92}
+                    buttonText="Generate Alt Text"
+                    placeholder="Alt text here..."
+                  />
+                ),
               },
             },
           ],
