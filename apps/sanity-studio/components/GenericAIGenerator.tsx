@@ -5,6 +5,7 @@ import {set, StringInputProps, unset, useFormValue} from 'sanity'
 import {urlFor} from '../utils/image'
 import OpenAI from 'openai'
 import {OPENAI_API_KEY} from '../environment'
+import {WiStars} from 'react-icons/wi'
 import {
   ApiIcon,
   DocumentIcon,
@@ -13,7 +14,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from '@sanity/icons'
-import {PiRobotLight} from 'react-icons/pi'
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
@@ -281,7 +281,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
           loading={isLoading}
           tone="primary"
           onClick={() => void handleAIGeneration()}
-          icon={isLoading ? undefined : PiRobotLight}
+          icon={isLoading ? undefined : WiStars}
           text={isLoading ? 'Generating...' : 'Generate'}
         />
 
