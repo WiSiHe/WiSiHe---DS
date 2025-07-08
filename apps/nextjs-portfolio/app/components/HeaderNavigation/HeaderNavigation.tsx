@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { type JSX } from 'react';
-import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
+import { motion, Variants } from "motion/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { type JSX } from "react";
+import { FaBrush, FaFolder, FaMailBulk, FaTv } from "react-icons/fa";
 
-import { navigationItems } from '@wisihe/constants';
-import { cn } from '@wisihe/utils';
-import AnimatedLogo from '../AnimatedLogo/AnimatedLogo';
+import { navigationItems } from "@wisihe/constants";
+import { cn } from "@wisihe/utils";
+import AnimatedLogo from "../AnimatedLogo/AnimatedLogo";
 
-const container = {
+const container: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -18,12 +18,12 @@ const container = {
       staggerChildren: 0.2,
       delayChildren: 0.2,
       bounce: 0.05,
-      type: 'spring',
+      type: "spring",
     },
   },
 };
 
-const listItem = {
+const listItem: Variants = {
   hidden: { opacity: 0, y: -100 },
   show: { opacity: 1, y: 0 },
 };
@@ -34,19 +34,13 @@ interface iNavigationProps {
 const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
 
-  // const [isOpen, setIsOpen] = useState(false);
-
-  // useEffect(() => {
-  //   setIsOpen(false);
-  // }, [pathName]);
-
   return (
     <>
       <nav
         aria-label="Main Navigation"
         className={cn(
-          'z-20 flex items-center justify-between py-2 px-4 bg-dark/40 backdrop-blur-md text-white',
-          isAbsolute ? 'fixed top-0 left-0 right-0' : 'relative'
+          "z-20 flex items-center justify-between py-2 px-4 bg-dark/40 backdrop-blur-md text-white",
+          isAbsolute ? "fixed top-0 left-0 right-0" : "relative",
         )}
       >
         <AnimatedLogo theme="light" />
@@ -73,10 +67,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                 <Link
                   href={href}
                   className={cn(
-                    'transition-all gap-1 md:gap-2 flex items-center text-xs md:text-base rounded-md text-white px-2 md:px-4 py-2 hover:bg-primary hover:text-white active:bg-primary',
+                    "transition-all gap-1 md:gap-2 flex items-center text-xs md:text-base rounded-md text-white px-2 md:px-4 py-2 hover:bg-primary hover:text-white active:bg-primary",
                     isActive
-                      ? 'decoration-primary text-white bg-primary '
-                      : ' text-white'
+                      ? "decoration-primary text-white bg-primary "
+                      : " text-white",
                   )}
                 >
                   {navIcon}

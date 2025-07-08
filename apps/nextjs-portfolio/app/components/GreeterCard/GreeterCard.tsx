@@ -1,10 +1,10 @@
-import { motion } from 'motion/react';
-import type { JSX } from 'react';
-import { BiGame } from 'react-icons/bi';
-import { BsFillBrushFill } from 'react-icons/bs';
-import { HiOutlineDesktopComputer } from 'react-icons/hi';
+import { motion, Variants } from "motion/react";
+import type { JSX } from "react";
+import { BiGame } from "react-icons/bi";
+import { BsFillBrushFill } from "react-icons/bs";
+import { HiOutlineDesktopComputer } from "react-icons/hi";
 
-const listVariants = {
+const listVariants: Variants = {
   initial: {
     opacity: 0,
   },
@@ -16,7 +16,7 @@ const listVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   initial: {
     opacity: 0,
     y: 20,
@@ -25,30 +25,30 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: "spring",
       stiffness: 300,
       damping: 20,
     },
   },
 };
 
-const iconVariants = {
+const iconVariants: Variants = {
   initial: {
     scale: 0.8,
   },
   animate: {
     scale: 1,
     transition: {
-      type: 'spring',
+      type: "spring",
     },
   },
 };
 
 const GreeterCard = (): JSX.Element => {
   const roles = [
-    { icon: HiOutlineDesktopComputer, label: 'Senior Front-end developer' },
-    { icon: BsFillBrushFill, label: 'Digital artist' },
-    { icon: BiGame, label: 'Game developer' },
+    { icon: HiOutlineDesktopComputer, label: "Senior Front-end developer" },
+    { icon: BsFillBrushFill, label: "Digital artist" },
+    { icon: BiGame, label: "Game developer" },
   ];
 
   return (

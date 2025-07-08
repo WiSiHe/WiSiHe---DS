@@ -1,16 +1,16 @@
-'use client';
-import { HomePageQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
-import { Card } from '../Card/Card';
-import Carousel from '../Carousel/Carousel';
-import CustomPortableText from '../PortableText/PortableText';
+"use client";
+import { HomePageQueryResult } from "@/sanity.types";
+import { urlForImage } from "@/sanity/lib/utils";
+import { Card } from "../Card/Card";
+import Carousel from "../Carousel/Carousel";
+import CustomPortableText from "../PortableText/PortableText";
 
-import { type PortableTextBlock } from 'next-sanity';
-import Link from 'next/link';
-import { motion } from 'motion/react';
+import { type PortableTextBlock } from "next-sanity";
+import Link from "next/link";
+import { motion, Variants } from "motion/react";
 
 type PaintingsSectionProps = {
-  paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+  paintings?: NonNullable<HomePageQueryResult>["showcasePaintings"] | null;
   paintingsDescription?: PortableTextBlock[];
 };
 
@@ -22,7 +22,7 @@ const PaintingsSection = ({
     return null;
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -33,13 +33,13 @@ const PaintingsSection = ({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
         damping: 15,
       },
@@ -47,15 +47,15 @@ const PaintingsSection = ({
   };
 
   const data = paintings.map((painting) => ({
-    categories: painting.tagsV2 || ['Art'],
-    title: painting.title || '',
+    categories: painting.tagsV2 || ["Art"],
+    title: painting.title || "",
     href: `/paintings/${painting.slug}`,
     src:
       urlForImage(painting.image)
         ?.height(1280)
         .width(720)
-        .auto('format')
-        .url() || '',
+        .auto("format")
+        .url() || "",
   }));
 
   const cards = data.map((card, index) => (
@@ -66,7 +66,7 @@ const PaintingsSection = ({
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-100px' }}
+      viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
       className=""
     >
