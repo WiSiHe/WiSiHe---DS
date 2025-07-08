@@ -1,23 +1,17 @@
-import {visionTool} from '@sanity/vision'
+/* global process */
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import {DocumentLocation, presentationTool} from 'sanity/presentation'
+import {presentationTool} from 'sanity/presentation'
 
 import {schemaTypes} from './schemas'
 import {assist} from '@sanity/assist'
 import {media} from 'sanity-plugin-media'
 
-export const projectId = process.env.SANITY_STUDIO_PROJECT_ID!
-export const dataset = process.env.SANITY_STUDIO_DATASET!
+export const projectId = process.env.SANITY_STUDIO_PROJECT_ID
+export const dataset = process.env.SANITY_STUDIO_DATASET
 
 // URL for preview functionality, defaults to localhost:3000 if not set
 const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://wisihe.no'
-
-// Define the home location for the presentation tool
-const homeLocation = {
-  title: 'Home',
-  href: '/',
-} satisfies DocumentLocation
 
 //  Main Sanity Studio configuration
 export default defineConfig({
@@ -91,7 +85,7 @@ export default defineConfig({
     }),
     assist(),
     structureTool(),
-    visionTool(),
+    // visionTool(),
     media(),
   ],
   schema: {

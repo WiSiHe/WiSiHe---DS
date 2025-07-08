@@ -4,8 +4,6 @@ export const seoType = defineType({
   name: 'seo',
   title: 'SEO',
   type: 'object',
-  //@ts-ignore
-  group: 'seo',
   fields: [
     defineField({
       name: 'title',

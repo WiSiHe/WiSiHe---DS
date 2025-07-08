@@ -1,11 +1,13 @@
+import React from 'react'
 import {Button, Card, Text, TextArea} from '@sanity/ui'
+import OpenAI from 'openai'
 import {useEffect, useState} from 'react'
 import {set, StringInputProps, unset, useFormValue} from 'sanity'
 import {urlFor} from '../utils/image'
-import OpenAI from 'openai'
+import {OPENAI_API_KEY} from '../environment'
 
 const client = new OpenAI({
-  apiKey: process.env.SANITY_STUDIO_OPENAI_API_KEY, // This is the default and can be omitted
+  apiKey: OPENAI_API_KEY, // This is the default and can be omitted
   dangerouslyAllowBrowser: true, // This is the default and can be omitted
 })
 
@@ -38,22 +40,6 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
       setIsLoading(false)
       return
     }
-
-    const newChatLogs = [
-      {
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: BASE_PROMPT,
-          },
-          {
-            type: 'image_url',
-            image_url: {url: imageUrl},
-          },
-        ],
-      },
-    ]
 
     try {
       const params: OpenAI.Chat.ChatCompletionCreateParams = {
@@ -118,7 +104,7 @@ const ImageAltTextGenerator = (props: StringInputProps) => {
           disabled={isLoading || !imageUrl}
           loading={isLoading}
           tone="primary"
-          onClick={handleAltTextGeneration}
+          onClick={() => void handleAltTextGeneration()}
         >
           Generate Alt Text
         </Button>

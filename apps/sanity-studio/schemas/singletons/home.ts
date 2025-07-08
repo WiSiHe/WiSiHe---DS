@@ -160,10 +160,13 @@ export default defineType({
     select: {
       title: 'title',
     },
-    prepare({title}) {
+    prepare({title = ''}: {title: string}) {
+      const subtitle = 'Home'
+      const titleB = title || 'Home'
+
       return {
-        subtitle: 'Home',
-        title,
+        title: titleB,
+        subtitle,
       }
     },
   },
