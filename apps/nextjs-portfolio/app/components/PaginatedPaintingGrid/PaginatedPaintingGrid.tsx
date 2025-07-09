@@ -117,6 +117,7 @@ const PaginatedPaintingGrid = ({
                   ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
+              aria-label="First page"
             >
               <FaStepBackward />
             </button>
@@ -130,6 +131,7 @@ const PaginatedPaintingGrid = ({
                   ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
+              aria-label="Previous page"
             >
               <FaArrowLeft />
             </button>
@@ -147,6 +149,7 @@ const PaginatedPaintingGrid = ({
                   ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
+              aria-label="Next page"
             >
               <FaArrowRight />
             </button>
@@ -160,6 +163,7 @@ const PaginatedPaintingGrid = ({
                   ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
+              aria-label="Last page"
             >
               <FaStepForward />
             </button>
