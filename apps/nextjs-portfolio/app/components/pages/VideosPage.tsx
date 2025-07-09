@@ -2,12 +2,7 @@
 
 import { GetAllVideosResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from '@headlessui/react';
+import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import Image, { getImageProps } from 'next/image';
@@ -44,9 +39,7 @@ interface VideosPageProps {
 
 export const VideosPage = ({ videos }: VideosPageProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<
-    GetAllVideosResult['videos'][0] | null
-  >(null);
+  const [selectedVideo, setSelectedVideo] = useState<GetAllVideosResult['videos'][0] | null>(null);
 
   const handleVideoClick = (video: GetAllVideosResult['videos'][0]) => {
     setSelectedVideo(video);
@@ -82,8 +75,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
         {videos
           .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
           .map((video: GetAllVideosResult['videos'][0]) => {
-            const { thumbnail, _id, featured, title, description, tags } =
-              video;
+            const { thumbnail, _id, featured, title, description, tags } = video;
 
             const thumbnailUrl = urlForImage(thumbnail);
             const common = {
@@ -104,18 +96,14 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
             } = getImageProps({
               ...common,
               quality: 80,
-              src:
-                thumbnailUrl?.width(desktopWidth).height(desktopHeight).url() ||
-                '',
+              src: thumbnailUrl?.width(desktopWidth).height(desktopHeight).url() || '',
             });
             const {
               props: { srcSet: mobile, ...rest },
             } = getImageProps({
               ...common,
               quality: 70,
-              src:
-                thumbnailUrl?.width(mobileWidth).height(mobileHeight).url() ||
-                '',
+              src: thumbnailUrl?.width(mobileWidth).height(mobileHeight).url() || '',
             });
 
             return (
@@ -123,18 +111,14 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                 key={_id}
                 onClick={() => handleVideoClick(video)}
                 className={cn(
-                  'relative bg-tertiary flex roun flex-col transition-all duration-300 w-full h-full rounded-lg overflow-clip cursor-pointer group',
-                  featured
-                    ? 'col-span-full lg:col-span-6'
-                    : 'col-span-6 lg:col-span-3'
+                  'relative bg-tertiary flex roun flex-col transition-all duration-300 w-full h-full shadow-xl shadow-text-primary/20 rounded-lg overflow-clip cursor-pointer group',
+                  featured ? 'col-span-full lg:col-span-6' : 'col-span-6 lg:col-span-3',
                 )}
               >
                 <motion.div
                   className={cn(
-                    '',
-                    featured
-                      ? 'aspect-video flex relative'
-                      : 'aspect-square lg:aspect-portrait'
+                    ' w-full h-full',
+                    featured ? 'aspect-video flex relative' : 'aspect-square lg:aspect-portrait',
                   )}
                   layoutId={`video-${_id}`}
                 >
@@ -142,7 +126,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-120">
                     <FaPlay className="text-5xl text-white" />
                   </div>
-                  <picture className="">
+                  <picture className="w-full">
                     <source media="(min-width: 1000px)" srcSet={desktop} />
                     <source media="(min-width: 500px)" srcSet={mobile} />
                     <img
@@ -150,9 +134,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                       style={{ width: '100%', height: '100%' }}
                       className={cn(
                         'object-cover w-full h-full',
-                        featured
-                          ? 'aspect-video'
-                          : 'aspect-square lg:aspect-portrait'
+                        featured ? 'aspect-video' : 'aspect-square lg:aspect-portrait',
                       )}
                     />
                   </picture>
@@ -162,7 +144,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     <h3 className="text-xl font-bold">{title}</h3>
                     {tags && (
                       <div className="flex flex-wrap gap-2 py-2">
-                        {tags.map((tag) => (
+                        {tags.map(tag => (
                           <Chip key={tag.name} label={tag.name} outlined />
                         ))}
                       </div>
@@ -176,11 +158,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
       </div>
       <AnimatePresence>
         {isOpen && selectedVideo && (
-          <Dialog
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            className="relative z-50"
-          >
+          <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -248,17 +226,11 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   <DialogTitle className="pb-4 text-2xl font-bold">
                     {selectedVideo?.title}
                   </DialogTitle>
-                  <Description className="line-clamp-3">
-                    {selectedVideo?.description}
-                  </Description>
+                  <Description className="line-clamp-3">{selectedVideo?.description}</Description>
                   {selectedVideo?.linkedPainting && (
                     <div className="mt-4">
-                      <h3 className="mb-2 text-lg font-bold">
-                        The finished painting:
-                      </h3>
-                      <Link
-                        href={`/paintings/${selectedVideo?.linkedPainting?.slug}`}
-                      >
+                      <h3 className="mb-2 text-lg font-bold">The finished painting:</h3>
+                      <Link href={`/paintings/${selectedVideo?.linkedPainting?.slug}`}>
                         <Image
                           src={
                             urlForImage(selectedVideo?.linkedPainting?.image)
@@ -266,9 +238,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                               .height(100)
                               .url() || ''
                           }
-                          alt={
-                            selectedVideo?.linkedPainting?.title || 'Painting'
-                          }
+                          alt={selectedVideo?.linkedPainting?.title || 'Painting'}
                           width={100}
                           height={100}
                           className="rounded-lg"

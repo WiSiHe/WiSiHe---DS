@@ -18,25 +18,25 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
 
   const handleToggleFilter = (tag: string) => {
     if (activeFilters.includes(tag)) {
-      setActiveFilters(activeFilters.filter((filter) => filter !== tag));
+      setActiveFilters(activeFilters.filter(filter => filter !== tag));
     } else {
       setActiveFilters([...activeFilters, tag]);
     }
   };
 
-  const filteredProjects = projects.filter((project) => {
+  const filteredProjects = projects.filter(project => {
     if (activeFilters.length === 0) {
       return true;
     }
 
-    return project.tags.some((tag) => activeFilters.includes(tag.name));
+    return project.tags.some(tag => activeFilters.includes(tag.name));
   });
   return (
     <section className="flex flex-col w-full gap-5">
       <div className="relative">
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-dark to-transparent" />
+        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-surface to-transparent" />
         <ul className="flex w-full gap-2 pb-2 overflow-x-auto pr-26">
-          {tags.map((tag) => {
+          {tags.map(tag => {
             const { name, _id, count } = tag;
             const isActive = activeFilters.includes(name);
 
@@ -52,7 +52,7 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
         </ul>
       </div>
 
-      <h3>Displaying {filteredProjects.length} projects</h3>
+      <h3 className="text-text-primary">Displaying {filteredProjects.length} projects</h3>
       <ul className="grid w-full grid-cols-12 gap-4">
         {filteredProjects.map((project, index) => {
           const { title, name, description, image, slug, tags } = project;
@@ -63,7 +63,7 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
             <motion.li
               key={project._id}
               layout
-              className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-white shadow-sm shrink-0 text-dark col-span-full md:col-span-6 lg:col-span-3 rounded-xl group"
+              className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface shadow-sm shrink-0 text-text-primary col-span-full md:col-span-6 lg:col-span-3 rounded-xl group"
             >
               <motion.article className="w-full">
                 <motion.div
@@ -71,22 +71,12 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
                   className="relative pointer-events-none aspect-square overflow-clip"
                 >
                   <div className="absolute z-10 flex flex-wrap gap-2 p-2">
-                    {tags.map((tag) => (
-                      <Chip
-                        variation="primary"
-                        key={tag.name}
-                        label={tag.name}
-                      />
+                    {tags.map(tag => (
+                      <Chip variation="primary" key={tag.name} label={tag.name} />
                     ))}
                   </div>
                   <Image
-                    src={
-                      urlForImage(image)
-                        ?.width(400)
-                        .height(500)
-                        .quality(60)
-                        .url() || ''
-                    }
+                    src={urlForImage(image)?.width(400).height(500).quality(60).url() || ''}
                     alt={image?.alt || projectTitle}
                     priority={index < 4}
                     fill
@@ -99,15 +89,12 @@ const ProjectCategories = ({ projects, tags }: ProjectCategoriesProps) => {
                     href={`projects/${slug}`}
                     className="before:absolute before:inset-0 before:z-0"
                   >
-                    <motion.h2
-                      layoutId={`title-${projectTitle}`}
-                      className="text-2xl font-bold"
-                    >
+                    <motion.h2 layoutId={`title-${projectTitle}`} className="text-2xl font-bold">
                       {projectTitle}
                     </motion.h2>
                   </Link>
 
-                  <p className="line-clamp-3">{description}</p>
+                  <p className="line-clamp-3 text-text-secondary">{description}</p>
                 </div>
               </motion.article>
             </motion.li>

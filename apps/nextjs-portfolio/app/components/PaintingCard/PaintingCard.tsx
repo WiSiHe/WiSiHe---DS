@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { BsYoutube } from "react-icons/bs";
-import { FaExclamation, FaShoppingCart } from "react-icons/fa";
-import { TbBoxMultiple } from "react-icons/tb";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { BsYoutube } from 'react-icons/bs';
+import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
+import { TbBoxMultiple } from 'react-icons/tb';
 
-import { GetAllPaintingsandTagsResult } from "@/sanity.types";
-import { urlForImage } from "@/sanity/lib/utils";
-import { cn } from "@wisihe/utils";
-import { motion } from "motion/react";
+import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { urlForImage } from '@/sanity/lib/utils';
+import { cn } from '@wisihe/utils';
+import { motion } from 'motion/react';
 
 type PaintingCardProps = {
-  paintingData: GetAllPaintingsandTagsResult["paintings"][0];
+  paintingData: GetAllPaintingsandTagsResult['paintings'][0];
   shouldBeLazy?: boolean;
   storybook?: boolean;
 };
@@ -69,17 +69,17 @@ const PaintingCard = ({
 
   const { tagsV2 } = paintingData;
 
-  const filters = searchParams?.getAll("filter");
+  const filters = searchParams?.getAll('filter');
 
   const filteredTags = tagsV2?.filter(Boolean) ?? [];
-  const salesTag = filteredTags.find((t) => t.name === "Store");
-  const nsfwTag = filteredTags.find((t) => t.name === "NSFW");
+  const salesTag = filteredTags.find(t => t.name === 'Store');
+  const nsfwTag = filteredTags.find(t => t.name === 'NSFW');
 
   const hasStoreLinks = !!salesTag;
 
   const isNsfw = !!nsfwTag;
 
-  const isNsfwUrl = filters?.includes("nsfw");
+  const isNsfwUrl = filters?.includes('nsfw');
 
   // Early return for invalid data
   if (!paintingData || Object.keys(paintingData).length === 0) {
@@ -91,12 +91,12 @@ const PaintingCard = ({
     );
   }
 
-  const { image, title = "", video = "", imagesCount = 0, slug } = paintingData;
+  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData;
 
   return (
     <motion.article
       className={cn(
-        "relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-white rounded-2xl focus-within:ring-3 focus-within:ring-primary",
+        'relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-text-primary rounded-2xl focus-within:ring-3 focus-within:ring-primary',
       )}
       whileHover="hover"
       initial="rest"
@@ -108,9 +108,9 @@ const PaintingCard = ({
         className="absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2"
         variants={listVariants}
       >
-        {filteredTags.map((tag) => (
+        {filteredTags.map(tag => (
           <motion.li
-            className="px-1 text-sm text-white uppercase rounded-sm bg-dark"
+            className="px-1 text-sm text-on-primary uppercase rounded-sm bg-primary"
             key={tag.name}
             variants={listItemVariants}
           >
@@ -122,11 +122,8 @@ const PaintingCard = ({
       {/* Always Visible Icon */}
       {hasStoreLinks && (
         <div className="absolute z-20 right-2 top-2">
-          <div className="p-2 text-xs rounded-full text-dark bg-highlight">
-            <FaShoppingCart
-              aria-label="Available for sale"
-              className="w-4 h-4"
-            />
+          <div className="p-2 text-xs rounded-full text-on-primary bg-accent">
+            <FaShoppingCart aria-label="Available for sale" className="w-4 h-4" />
           </div>
         </div>
       )}
@@ -134,14 +131,14 @@ const PaintingCard = ({
       {/* Animated Icons */}
       <motion.ul
         className={cn(
-          "absolute z-20 flex flex-col gap-1 text-xs right-2",
-          hasStoreLinks ? "top-12" : "top-2",
+          'absolute z-20 flex flex-col gap-1 text-xs right-2',
+          hasStoreLinks ? 'top-12' : 'top-2',
         )}
         variants={iconsListVariants}
       >
         {imagesCount > 0 && (
           <motion.li
-            className="p-2 text-xs text-white rounded-full bg-primary"
+            className="p-2 text-xs text-on-primary rounded-full bg-primary"
             variants={iconVariants}
           >
             <TbBoxMultiple className="w-4 h-4" />
@@ -149,7 +146,7 @@ const PaintingCard = ({
         )}
         {video && (
           <motion.li
-            className="p-2 text-xs text-white rounded-full bg-primary"
+            className="p-2 text-xs text-on-primary rounded-full bg-primary"
             variants={iconVariants}
           >
             <BsYoutube className="w-4 h-4" />
@@ -157,7 +154,7 @@ const PaintingCard = ({
         )}
         {isNsfw && (
           <motion.li
-            className="p-2 text-xs text-white rounded-full bg-primary"
+            className="p-2 text-xs text-on-primary rounded-full bg-primary"
             variants={iconVariants}
           >
             <FaExclamation className="w-4 h-4" />
@@ -185,30 +182,23 @@ const PaintingCard = ({
             blurDataURL={image?.lqip || undefined}
             quality={60}
             unoptimized={storybook}
-            alt={title || "Painting"}
-            src={
-              urlForImage(image)?.width(600).height(800).quality(80).url() || ""
-            }
+            alt={title || 'Painting'}
+            src={urlForImage(image)?.width(600).height(800).quality(80).url() || ''}
             className="object-cover w-full h-full"
           />
         ) : (
-          <div className="w-full h-full bg-dark animate-pulse" />
+          <div className="w-full h-full bg-surface animate-pulse" />
         )}
       </motion.div>
 
       {/* NSFW Overlay */}
-      {isNsfw && !isNsfwUrl && (
-        <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />
-      )}
+      {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />}
 
-      <Link
-        href={`/paintings/${slug}`}
-        className="before:absolute before:inset-0 before:z-0"
-      >
+      <Link href={`/paintings/${slug}`} className="before:absolute before:inset-0 before:z-0">
         <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/80 backdrop-blur-lg">
           <motion.h2
             layoutId={`title-${title}`}
-            className="text-base text-white capitalize lg:text-lg line-clamp-1 font-inter"
+            className="text-base text-on-primary capitalize lg:text-lg line-clamp-1 font-inter"
           >
             <strong>{title}</strong>
           </motion.h2>

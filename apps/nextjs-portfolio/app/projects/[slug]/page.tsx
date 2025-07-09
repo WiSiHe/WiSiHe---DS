@@ -46,7 +46,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: Props
+  props: Props,
   // parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
@@ -111,9 +111,9 @@ export async function generateMetadata(
 export default async function ProjectPage(props: Props) {
   const params = await props.params;
 
-  const [{ data: project }]: [{ data: ProjectQueryResult }] = await Promise.all(
-    [sanityFetch({ query: projectQuery, params })]
-  );
+  const [{ data: project }]: [{ data: ProjectQueryResult }] = await Promise.all([
+    sanityFetch({ query: projectQuery, params }),
+  ]);
 
   if (!project?._id) {
     return notFound();
@@ -123,8 +123,8 @@ export default async function ProjectPage(props: Props) {
 
   return (
     <>
-      <div className="grid items-start h-full min-h-screen grid-cols-12 mx-auto max-w-(--breakpoint-2xl)  gap-8 p-4 py-20 text-white bg-dark">
-        <section className="relative flex flex-col gap-6 text-white col-span-full">
+      <div className="grid items-start h-full min-h-screen grid-cols-12 mx-auto max-w-(--breakpoint-2xl)  gap-8 p-4 py-20 text-text-primary bg-background">
+        <section className="relative flex flex-col gap-6 text-text-primary col-span-full">
           <ProjectImage project={project} />
         </section>
         <section className="col-span-full lg:col-span-6 max-w-prose">
@@ -136,21 +136,15 @@ export default async function ProjectPage(props: Props) {
               <div className="col-span-full ">
                 <h2 className="text-2xl font-bold">Connected Paintings</h2>
               </div>
-              {connectedPaintings.map((painting) => {
+              {connectedPaintings.map(painting => {
                 const { image, slug, title } = painting;
                 if (!image) {
                   return null;
                 }
                 return (
-                  <Link
-                    href={`/paintings/${slug}`}
-                    key={title}
-                    className="relative aspect-square"
-                  >
+                  <Link href={`/paintings/${slug}`} key={title} className="relative aspect-square">
                     <Image
-                      src={
-                        urlForImage(image)?.width(400).fit('max')?.url() || ''
-                      }
+                      src={urlForImage(image)?.width(400).fit('max')?.url() || ''}
                       alt={painting.title || 'Default Alt Text'}
                       fill
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -166,21 +160,15 @@ export default async function ProjectPage(props: Props) {
               <div className="col-span-full">
                 <h2 className="text-2xl font-bold">Extra Images</h2>
               </div>
-              {extraImages.map((extraImage) => {
+              {extraImages.map(extraImage => {
                 if (!extraImage) {
                   return null;
                 }
 
                 return (
-                  <div
-                    key={extraImage._key}
-                    className="relative rounded-xl aspect-square"
-                  >
+                  <div key={extraImage._key} className="relative rounded-xl aspect-square">
                     <Image
-                      src={
-                        urlForImage(extraImage)?.width(400).fit('max')?.url() ||
-                        ''
-                      }
+                      src={urlForImage(extraImage)?.width(400).fit('max')?.url() || ''}
                       alt="Default Alt Text"
                       fill
                       className="object-cover rounded-xl"
@@ -193,7 +181,7 @@ export default async function ProjectPage(props: Props) {
         </section>
       </div>
       {connectedVideo && (
-        <section className="relative py-8 lg:py-20 bg-[#111] ring ">
+        <section className="relative py-8 lg:py-20 bg-surface ring ">
           <div className="max-w-screen-lg mx-auto aspect-video">
             <iframe
               src={`https://www.youtube.com/embed/${getYouTubeVideoId(connectedVideo.videoUrl)}`}

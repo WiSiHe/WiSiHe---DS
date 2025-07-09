@@ -1,5 +1,4 @@
 'use client';
-import { motion, AnimatePresence } from 'motion/react';
 import { FaInstagram } from 'react-icons/fa';
 import { FaFacebook } from 'react-icons/fa';
 import { BiLogoRedbubble } from 'react-icons/bi';
@@ -26,40 +25,15 @@ export const SocialListItem = ({ item }: { item: SocialLink }) => {
   const Icon = iconPlatform[platform as keyof typeof iconPlatform];
 
   return (
-    <motion.a
+    <a
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center h-10 gap-4 px-4 py-3 text-2xl text-white transition-colors duration-500 rounded-md overflow-clip"
+      className="flex items-center h-10 gap-4 px-4 py-3 text-2xl text-text-primary transition-all duration-300 rounded-md bg-surface-elevated hover:bg-secondary hover:scale-105"
       aria-label={`Follow me on ${platform}`}
-      whileHover={{
-        backgroundColor: 'var(--color-primary)',
-      }}
-      whileTap={{
-        backgroundColor: 'var(--color-primary)',
-      }}
-      transition={{
-        type: 'spring',
-        duration: 0.2,
-      }}
     >
       <span className="shrink-0">{Icon}</span>
-      <AnimatePresence>
-        <motion.span
-          key={platform}
-          initial={{ x: -40, opacity: 0, scale: 0 }}
-          animate={{ x: 0, opacity: 1, scale: 1 }}
-          exit={{
-            x: -40,
-            opacity: 0,
-            scale: 0,
-          }}
-          transition={{ type: 'spring' }}
-          className="text-xl font-semibold"
-        >
-          {platform}
-        </motion.span>
-      </AnimatePresence>
-    </motion.a>
+      <span className="text-xl font-semibold">{platform}</span>
+    </a>
   );
 };

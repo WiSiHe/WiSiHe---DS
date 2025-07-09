@@ -1,41 +1,41 @@
-import { sanityFetch } from "@/sanity/lib/live";
-import { getPaginatedPaintings, getPaintingsCount } from "@/sanity/lib/queries";
-import { Metadata } from "next";
+import { sanityFetch } from '@/sanity/lib/live';
+import { getPaginatedPaintings, getPaintingsCount } from '@/sanity/lib/queries';
+import { Metadata } from 'next';
 
-import { notFound } from "next/navigation";
-import ScrollToTopButton from "../components/ScrollToTop/ScrollToTop";
+import { notFound } from 'next/navigation';
+import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 
-import PaginatedPaintingGrid from "../components/PaginatedPaintingGrid/PaginatedPaintingGrid";
+import PaginatedPaintingGrid from '../components/PaginatedPaintingGrid/PaginatedPaintingGrid';
 
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: "Paintings | WiSiHe",
-  description: "A gallery of some of my paintings",
+  title: 'Paintings | WiSiHe',
+  description: 'A gallery of some of my paintings',
   alternates: {
-    canonical: "https://www.wisihe.no/paintings", // Replace with your actual domain
+    canonical: 'https://www.wisihe.no/paintings', // Replace with your actual domain
   },
   openGraph: {
-    title: "Paintings | WiSiHe",
-    description: "A gallery of some of my paintings",
-    url: "https://www.wisihe.no/paintings", // Replace with your actual domain
-    siteName: "WiSiHe",
-    locale: "en_US",
-    type: "website",
+    title: 'Paintings | WiSiHe',
+    description: 'A gallery of some of my paintings',
+    url: 'https://www.wisihe.no/paintings', // Replace with your actual domain
+    siteName: 'WiSiHe',
+    locale: 'en_US',
+    type: 'website',
     images: [
       {
-        url: "https://www.example.com/images/hell.jpg", // Replace with a representative image
+        url: 'https://www.example.com/images/hell.jpg', // Replace with a representative image
         width: 1200,
         height: 630,
-        alt: "A preview of various paintings from WiSiHe",
+        alt: 'A preview of various paintings from WiSiHe',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Paintings | WiSiHe",
-    description: "A gallery of some of my paintings",
-    images: ["https://www.wisihe.no/images/hell.jpg"], // Same image as openGraph for consistency
+    card: 'summary_large_image',
+    title: 'Paintings | WiSiHe',
+    description: 'A gallery of some of my paintings',
+    images: ['https://www.wisihe.no/images/hell.jpg'], // Same image as openGraph for consistency
   },
 };
 
@@ -81,9 +81,9 @@ export default async function Paintings({
 
   return (
     <>
-      <div className="flex items-start justify-start w-full h-full min-h-screen pt-20 mx-auto max-w-(--breakpoint-2xl)">
+      <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-(--breakpoint-2xl)">
         <div className="w-full p-4">
-          <div className="text-white">
+          <div className="pb-4">
             <h1 className="font-semibold">Paintings</h1>
             <p>A gallery of some of my paintings</p>
           </div>

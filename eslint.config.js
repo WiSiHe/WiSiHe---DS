@@ -1,18 +1,18 @@
 // eslint.config.js
-import globals from "globals"; // Provides global variables (browser, node, etc.)
-import js from "@eslint/js"; // ESLint's recommended built-in rules
-import tsParser from "@typescript-eslint/parser"; // TypeScript parser
-import tsPlugin from "@typescript-eslint/eslint-plugin"; // TypeScript plugin
-import eslintConfigPrettier from "eslint-config-prettier"; // Prettier compatibility
+import globals from 'globals'; // Provides global variables (browser, node, etc.)
+import js from '@eslint/js'; // ESLint's recommended built-in rules
+import tsParser from '@typescript-eslint/parser'; // TypeScript parser
+import tsPlugin from '@typescript-eslint/eslint-plugin'; // TypeScript plugin
+import eslintConfigPrettier from 'eslint-config-prettier'; // Prettier compatibility
 
 export default [
   // 1. Global ignores (optional, but good practice)
   {
     ignores: [
-      "**/node_modules/",
-      "**/.turbo/",
-      "**/dist/", // Add other build/output directories
-      "**/sanity.types.ts", // Auto-generated Sanity TypeGen file
+      '**/node_modules/',
+      '**/.turbo/',
+      '**/dist/', // Add other build/output directories
+      '**/sanity.types.ts', // Auto-generated Sanity TypeGen file
       // Add other files/dirs to ignore globally
     ],
   },
@@ -22,7 +22,7 @@ export default [
 
   // 3. TypeScript configuration
   {
-    files: ["**/*.{ts,tsx,mts,cts}"], // Target TypeScript/TSX files
+    files: ['**/*.{ts,tsx,mts,cts}'], // Target TypeScript/TSX files
     languageOptions: {
       parser: tsParser, // Use the TS parser
       parserOptions: {
@@ -35,11 +35,11 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": tsPlugin, // Enable the TS plugin
+      '@typescript-eslint': tsPlugin, // Enable the TS plugin
     },
     rules: {
       // Apply recommended rules from the TS plugin
-      ...tsPlugin.configs["recommended-type-checked"].rules, // Or 'recommended' if not using type-aware linting
+      ...tsPlugin.configs['recommended-type-checked'].rules, // Or 'recommended' if not using type-aware linting
       // --- Add/override specific TS rules here ---
       // e.g., "@typescript-eslint/no-unused-vars": "warn",
     },
@@ -47,7 +47,7 @@ export default [
 
   // 4. JavaScript/CommonJS configuration (optional, if you have JS files too)
   {
-    files: ["**/*.{js,jsx,mjs,cjs}"], // Target JS/JSX files
+    files: ['**/*.{js,jsx,mjs,cjs}'], // Target JS/JSX files
     languageOptions: {
       globals: {
         ...globals.browser, // Or globals.node

@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { GetPaginatedPaintingsResult } from '@/sanity.types';
 import { cn } from '@wisihe/utils';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
 type ApiResponse = {
   paintings: GetPaginatedPaintingsResult;
@@ -91,9 +91,12 @@ const PaginatedPaintingGrid = ({
 
   return (
     <>
-      <div className="grid w-full h-full grid-cols-12 gap-4">
+      <div className="grid w-full h-full grid-cols-12 gap-2">
         {paintings.map((painting, index) => (
-          <div key={painting._id} className="relative col-span-full sm:col-span-6 md:col-span-3">
+          <div
+            key={painting._id}
+            className="relative col-span-full sm:col-span-6 md:col-span-4 lg:col-span-3"
+          >
             <PaintingCard
               paintingData={painting}
               shouldBeLazy={index < 4} // Prioritize first 4 paintings (visible on most screen sizes)
@@ -103,20 +106,37 @@ const PaginatedPaintingGrid = ({
       </div>
 
       {pagination.totalPages > 1 && (
-        <div className="flex justify-center w-full ring items-center mt-8 mb-4">
+        <div className="flex justify-center w-full items-center mt-8 mb-4">
           <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={pagination.page <= 1}
+              className={cn(
+                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
+                pagination.page <= 1
+                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  : 'bg-primary text-on-primary hover:bg-primary/80',
+              )}
+            >
+              <FaStepBackward />
+            </button>
+
             <button
               onClick={() => handlePageChange(pagination.page - 1)}
               disabled={pagination.page <= 1}
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page <= 1
-                  ? 'bg-primary/50 text-gray-400 cursor-not-allowed'
-                  : 'bg-primary text-white hover:bg-primary/80',
+                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
             >
-              <FaArrowLeft /> Previous
+              <FaArrowLeft />
             </button>
+
+            <span className="px-4 py-2 text-sm">
+              Page {pagination.page} of {pagination.totalPages}
+            </span>
 
             <button
               onClick={() => handlePageChange(pagination.page + 1)}
@@ -124,11 +144,24 @@ const PaginatedPaintingGrid = ({
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page >= pagination.totalPages
-                  ? 'bg-primary/50 text-gray-400 cursor-not-allowed'
-                  : 'bg-primary text-white hover:bg-primary/80',
+                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
             >
-              Next <FaArrowRight />
+              <FaArrowRight />
+            </button>
+
+            <button
+              onClick={() => handlePageChange(pagination.totalPages)}
+              disabled={pagination.page >= pagination.totalPages}
+              className={cn(
+                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
+                pagination.page >= pagination.totalPages
+                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  : 'bg-primary text-on-primary hover:bg-primary/80',
+              )}
+            >
+              <FaStepForward />
             </button>
           </div>
         </div>

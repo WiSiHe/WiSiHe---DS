@@ -61,16 +61,11 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
         />
       )}
 
-      {connectedPage && (
-        <iframe
-          src={connectedPage}
-          className="absolute inset-0 w-full h-full"
-        />
-      )}
-      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-transparent to-dark/50" />
+      {connectedPage && <iframe src={connectedPage} className="absolute inset-0 w-full h-full" />}
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-transparent to-text-primary/50" />
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-start justify-center p-4 drop-shadow-2xl">
         <motion.h1
-          className="pb-4 text-4xl font-black pointer-events-auto lg:text-8xl"
+          className="pb-4 text-4xl font-black text-on-primary pointer-events-auto lg:text-8xl"
           layoutId={`title-${projectTitle}`}
         >
           {projectTitle}
@@ -78,7 +73,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
         <div className="flex flex-wrap gap-2 pointer-events-auto max-w-prose">
           {status && <Chip label={`Status: ${status}`} Icon={STATUS_MAP} />}
           {status && (
-            <div className="inline-flex flex-row items-center gap-2 px-3 py-1 text-base font-medium transition-all ease-in-out rounded-full font-inter bg-stone-100 text-dark">{`Status: ${status}`}</div>
+            <div className="inline-flex flex-row items-center gap-2 px-3 py-1 text-base font-medium transition-all ease-in-out rounded-full font-inter bg-surface-elevated text-text-primary">{`Status: ${status}`}</div>
           )}
           {projectStart && (
             <div>
@@ -90,7 +85,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
               <Chip label={`Ended: ${projectEnd}`} />
             </div>
           )}
-          {tags.map((tag) => (
+          {tags.map(tag => (
             <Chip key={tag.name} label={tag.name} />
           ))}
         </div>
