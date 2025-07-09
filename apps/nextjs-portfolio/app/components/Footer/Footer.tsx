@@ -26,7 +26,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
           >
             <h3 className="text-2xl font-bold sm:text-3xl">
               My name is{' '}
-              <span className="text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text animate-gradient">
+              <span className="text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text animate-gradient drop-shadow-sm">
                 Henrik Wilhelm Sissener
               </span>
             </h3>
@@ -45,7 +45,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl">
+            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl drop-shadow-sm">
               Connect
             </h3>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -72,7 +72,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="pt-8 mt-4 text-center border-t border-border"
         >
-          <p className="text-sm text-text-tertiary">
+          <p className="text-sm text-text-secondary">
             © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️ in Oslo
           </p>
         </motion.div>
