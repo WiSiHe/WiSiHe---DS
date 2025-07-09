@@ -111,7 +111,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                 key={_id}
                 onClick={() => handleVideoClick(video)}
                 className={cn(
-                  'relative bg-tertiary flex roun flex-col transition-all duration-300 w-full h-full shadow-xl shadow-text-primary/20 rounded-lg overflow-clip cursor-pointer group',
+                  'relative bg-surface flex roun flex-col transition-all duration-300 w-full h-full shadow-xl shadow-foreground/20 rounded-lg overflow-clip cursor-pointer group',
                   featured ? 'col-span-full lg:col-span-6' : 'col-span-6 lg:col-span-3',
                 )}
               >
@@ -122,9 +122,9 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   )}
                   layoutId={`video-${_id}`}
                 >
-                  <div className="absolute inset-0 transition-all duration-300 opacity-20 bg-primary group-hover:opacity-60"></div>
+                  <div className="absolute inset-0 transition-all duration-300 opacity-20 bg-accent group-hover:opacity-60"></div>
                   <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-120">
-                    <FaPlay className="text-5xl text-white" />
+                    <FaPlay className="text-5xl text-on-surface" />
                   </div>
                   <picture className="w-full">
                     <source media="(min-width: 1000px)" srcSet={desktop} />
@@ -140,7 +140,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   </picture>
                 </motion.div>
                 {featured && (
-                  <div className="relative p-4 text-left shrink-0 text-dark">
+                  <div className="relative p-4 text-left shrink-0 text-foreground">
                     <h3 className="text-xl font-bold">{title}</h3>
                     {tags && (
                       <div className="flex flex-wrap gap-2 py-2">
@@ -163,7 +163,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70"
+              className="fixed inset-0 bg-foreground/70"
             />
 
             <div className="fixed inset-0 flex items-center justify-center w-screen p-4 overflow-y-auto sm:p-6 md:p-10 lg:p-12">
@@ -185,12 +185,12 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   scale: 0.95,
                   transition: { duration: 0.3 },
                 }}
-                className="w-full relative max-w-6xl  max-h-[90vh] bg-dark rounded-lg"
+                className="w-full relative max-w-6xl  max-h-[90vh] bg-surface rounded-lg"
               >
                 <div className="absolute z-20 flex items-center justify-center left-4 right-4 -top-16">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="flex gap-2 p-4 text-white transition-colors cursor-pointer bg-primary"
+                    className="flex gap-2 p-4 text-on-surface transition-colors cursor-pointer bg-accent"
                     aria-label="Close video"
                   >
                     <svg
@@ -211,7 +211,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   </button>
                 </div>
                 {selectedVideo?.videoUrl && (
-                  <div className="w-full bg-primary aspect-square lg:aspect-video">
+                  <div className="w-full bg-accent aspect-square lg:aspect-video">
                     <iframe
                       src={`https://www.youtube.com/embed/${getYouTubeVideoId(selectedVideo?.videoUrl)}?autoplay=1&loop=1&playlist=${getYouTubeVideoId(selectedVideo?.videoUrl)}`}
                       className="w-full h-full"
@@ -222,7 +222,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   </div>
                 )}
 
-                <div className="p-4 overflow-y-auto text-white">
+                <div className="p-4 overflow-y-auto text-foreground">
                   <DialogTitle className="pb-4 text-2xl font-bold">
                     {selectedVideo?.title}
                   </DialogTitle>

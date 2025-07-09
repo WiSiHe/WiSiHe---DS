@@ -14,14 +14,14 @@
 
 // Source: schema.json
 export type Social = {
-  _type: "social";
+  _type: 'social';
   linkedIn?: string;
   x?: string;
 };
 
 export type Redirect = {
   _id: string;
-  _type: "redirect";
+  _type: 'redirect';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -32,20 +32,20 @@ export type Redirect = {
 };
 
 export type Seo = {
-  _type: "seo";
+  _type: 'seo';
   title?: string;
   description?: string;
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   noIndex?: boolean;
 };
@@ -54,33 +54,33 @@ export type BlockContent = Array<{
   children?: Array<{
     marks?: Array<string>;
     text?: string;
-    _type: "span";
+    _type: 'span';
     _key: string;
   }>;
-  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet";
+  style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote';
+  listItem?: 'bullet';
   markDefs?: Array<{
-    linkType?: "href" | "slug" | "painting";
+    linkType?: 'href' | 'slug' | 'painting';
     href?: string;
     slug?: string;
     painting?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "painting";
+      [internalGroqTypeReferenceTo]?: 'painting';
     };
     openInNewTab?: boolean;
-    _type: "link";
+    _type: 'link';
     _key: string;
   }>;
   level?: number;
-  _type: "block";
+  _type: 'block';
   _key: string;
 }>;
 
 export type Tag = {
   _id: string;
-  _type: "tag";
+  _type: 'tag';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -91,21 +91,21 @@ export type Tag = {
 
 export type Project = {
   _id: string;
-  _type: "project";
+  _type: 'project';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   name: string;
   status?:
-    | "inProgress"
-    | "completed"
-    | "onHold"
-    | "cancelled"
-    | "abandoned"
-    | "unknown"
-    | "notStarted"
-    | "planned";
-  projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+    | 'inProgress'
+    | 'completed'
+    | 'onHold'
+    | 'cancelled'
+    | 'abandoned'
+    | 'unknown'
+    | 'notStarted'
+    | 'planned';
+  projectType: 'art' | 'design' | 'development' | 'gameDevelopment' | 'other';
   slug: Slug;
   projectStart?: string;
   projectEnd?: string;
@@ -113,66 +113,66 @@ export type Project = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
     markDefs?: Array<{
       href?: string;
-      _type: "link";
+      _type: 'link';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
   };
   extraImages?: Array<{
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
     _key: string;
   }>;
   connectedPaintings?: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
+    [internalGroqTypeReferenceTo]?: 'painting';
   }>;
   connectedVideo?: {
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "video";
+    [internalGroqTypeReferenceTo]?: 'video';
   };
   connectedPage?: string;
   tags: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
+    [internalGroqTypeReferenceTo]?: 'tag';
   }>;
   seo?: {
     title?: string;
@@ -180,14 +180,14 @@ export type Project = {
     image?: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      _type: "image";
+      _type: 'image';
     };
     noIndex?: boolean;
   };
@@ -205,7 +205,7 @@ export type Project = {
 
 export type Video = {
   _id: string;
-  _type: "video";
+  _type: 'video';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -217,34 +217,34 @@ export type Video = {
   thumbnail: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
   };
   linkedPainting?: {
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "painting";
+    [internalGroqTypeReferenceTo]?: 'painting';
   };
   tags: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
+    [internalGroqTypeReferenceTo]?: 'tag';
   }>;
 };
 
 export type Settings = {
   _id: string;
-  _type: "settings";
+  _type: 'settings';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -253,30 +253,30 @@ export type Settings = {
   ogImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    _type: "image";
+    _type: 'image';
   };
   twitter?: {
-    twitterCard?: "summary" | "summary_large_image";
+    twitterCard?: 'summary' | 'summary_large_image';
     twitterUsername?: string;
     twitterImage?: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      _type: "image";
+      _type: 'image';
     };
   };
   keywords?: Array<string>;
@@ -288,14 +288,14 @@ export type Settings = {
   socialLinks?: Array<{
     platform: string;
     url: string;
-    _type: "socialLink";
+    _type: 'socialLink';
     _key: string;
   }>;
 };
 
 export type Home = {
   _id: string;
-  _type: "home";
+  _type: 'home';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -304,67 +304,67 @@ export type Home = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal";
+    style?: 'normal';
     listItem?: never;
     markDefs?: Array<{
       href?: string;
-      _type: "link";
+      _type: 'link';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   paintingsTitle?: string;
   paintingsDescription: BlockContent;
   showcasePaintings?: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
+    [internalGroqTypeReferenceTo]?: 'painting';
   }>;
   projectsDescription: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal";
+    style?: 'normal';
     listItem?: never;
     markDefs?: Array<
       | {
           href?: string;
-          _type: "link";
+          _type: 'link';
           _key: string;
         }
       | {
           reference?: string;
-          _type: "internalLink";
+          _type: 'internalLink';
           _key: string;
         }
     >;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   projectsTitle?: string;
   showcaseProjects?: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "project";
+    [internalGroqTypeReferenceTo]?: 'project';
   }>;
 };
 
 export type Painting = {
   _id: string;
-  _type: "painting";
+  _type: 'painting';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -373,35 +373,35 @@ export type Painting = {
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
   };
   description: string;
   seoDescription?: string;
   images?: Array<{
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     title: string;
     alt: string;
-    _type: "image";
+    _type: 'image';
     _key: string;
   }>;
   video?: string;
-  format: "square" | "landscape" | "portrait";
+  format: 'square' | 'landscape' | 'portrait';
   views?: Array<{
     viewerId?: string;
     timestamp?: string;
@@ -418,16 +418,16 @@ export type Painting = {
   paintedAt: string;
   tagsV2: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
+    [internalGroqTypeReferenceTo]?: 'tag';
   }>;
 };
 
 export type MediaTag = {
   _id: string;
-  _type: "media.tag";
+  _type: 'media.tag';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -435,7 +435,7 @@ export type MediaTag = {
 };
 
 export type SanityAssistInstructionTask = {
-  _type: "sanity.assist.instructionTask";
+  _type: 'sanity.assist.instructionTask';
   path?: string;
   instructionKey?: string;
   started?: string;
@@ -444,7 +444,7 @@ export type SanityAssistInstructionTask = {
 };
 
 export type SanityAssistTaskStatus = {
-  _type: "sanity.assist.task.status";
+  _type: 'sanity.assist.task.status';
   tasks?: Array<
     {
       _key: string;
@@ -453,7 +453,7 @@ export type SanityAssistTaskStatus = {
 };
 
 export type SanityAssistSchemaTypeAnnotations = {
-  _type: "sanity.assist.schemaType.annotations";
+  _type: 'sanity.assist.schemaType.annotations';
   title?: string;
   fields?: Array<
     {
@@ -463,28 +463,28 @@ export type SanityAssistSchemaTypeAnnotations = {
 };
 
 export type SanityAssistOutputType = {
-  _type: "sanity.assist.output.type";
+  _type: 'sanity.assist.output.type';
   type?: string;
 };
 
 export type SanityAssistOutputField = {
-  _type: "sanity.assist.output.field";
+  _type: 'sanity.assist.output.field';
   path?: string;
 };
 
 export type SanityAssistInstructionContext = {
-  _type: "sanity.assist.instruction.context";
+  _type: 'sanity.assist.instruction.context';
   reference: {
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+    [internalGroqTypeReferenceTo]?: 'assist.instruction.context';
   };
 };
 
 export type AssistInstructionContext = {
   _id: string;
-  _type: "assist.instruction.context";
+  _type: 'assist.instruction.context';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -493,20 +493,20 @@ export type AssistInstructionContext = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal";
+    style?: 'normal';
     listItem?: never;
     markDefs?: null;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
 };
 
 export type SanityAssistInstructionUserInput = {
-  _type: "sanity.assist.instruction.userInput";
+  _type: 'sanity.assist.instruction.userInput';
   message: string;
   description?: string;
 };
@@ -516,7 +516,7 @@ export type SanityAssistInstructionPrompt = Array<{
     | {
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }
     | ({
@@ -529,21 +529,21 @@ export type SanityAssistInstructionPrompt = Array<{
         _key: string;
       } & SanityAssistInstructionUserInput)
   >;
-  style?: "normal";
+  style?: 'normal';
   listItem?: never;
   markDefs?: null;
   level?: number;
-  _type: "block";
+  _type: 'block';
   _key: string;
 }>;
 
 export type SanityAssistInstructionFieldRef = {
-  _type: "sanity.assist.instruction.fieldRef";
+  _type: 'sanity.assist.instruction.fieldRef';
   path?: string;
 };
 
 export type SanityAssistInstruction = {
-  _type: "sanity.assist.instruction";
+  _type: 'sanity.assist.instruction';
   prompt?: SanityAssistInstructionPrompt;
   icon?: string;
   title?: string;
@@ -560,7 +560,7 @@ export type SanityAssistInstruction = {
 };
 
 export type SanityAssistSchemaTypeField = {
-  _type: "sanity.assist.schemaType.field";
+  _type: 'sanity.assist.schemaType.field';
   path?: string;
   instructions?: Array<
     {
@@ -570,7 +570,7 @@ export type SanityAssistSchemaTypeField = {
 };
 
 export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
+  _type: 'sanity.imagePaletteSwatch';
   background?: string;
   foreground?: string;
   population?: number;
@@ -578,7 +578,7 @@ export type SanityImagePaletteSwatch = {
 };
 
 export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
+  _type: 'sanity.imagePalette';
   darkMuted?: SanityImagePaletteSwatch;
   lightVibrant?: SanityImagePaletteSwatch;
   darkVibrant?: SanityImagePaletteSwatch;
@@ -589,14 +589,14 @@ export type SanityImagePalette = {
 };
 
 export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
+  _type: 'sanity.imageDimensions';
   height?: number;
   width?: number;
   aspectRatio?: number;
 };
 
 export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
+  _type: 'sanity.imageHotspot';
   x?: number;
   y?: number;
   height?: number;
@@ -604,7 +604,7 @@ export type SanityImageHotspot = {
 };
 
 export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
+  _type: 'sanity.imageCrop';
   top?: number;
   bottom?: number;
   left?: number;
@@ -613,7 +613,7 @@ export type SanityImageCrop = {
 
 export type SanityFileAsset = {
   _id: string;
-  _type: "sanity.fileAsset";
+  _type: 'sanity.fileAsset';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -635,7 +635,7 @@ export type SanityFileAsset = {
 
 export type SanityImageAsset = {
   _id: string;
-  _type: "sanity.imageAsset";
+  _type: 'sanity.imageAsset';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -657,7 +657,7 @@ export type SanityImageAsset = {
 };
 
 export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
+  _type: 'sanity.imageMetadata';
   location?: Geopoint;
   dimensions?: SanityImageDimensions;
   palette?: SanityImagePalette;
@@ -668,20 +668,20 @@ export type SanityImageMetadata = {
 };
 
 export type Geopoint = {
-  _type: "geopoint";
+  _type: 'geopoint';
   lat?: number;
   lng?: number;
   alt?: number;
 };
 
 export type Slug = {
-  _type: "slug";
+  _type: 'slug';
   current: string;
   source?: string;
 };
 
 export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
+  _type: 'sanity.assetSourceData';
   name?: string;
   id?: string;
   url?: string;
@@ -728,7 +728,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 // Query: *[_type == "settings"][0]
 export type SettingsQueryResult = {
   _id: string;
-  _type: "settings";
+  _type: 'settings';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -737,30 +737,30 @@ export type SettingsQueryResult = {
   ogImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
-    _type: "image";
+    _type: 'image';
   };
   twitter?: {
-    twitterCard?: "summary_large_image" | "summary";
+    twitterCard?: 'summary_large_image' | 'summary';
     twitterUsername?: string;
     twitterImage?: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      _type: "image";
+      _type: 'image';
     };
   };
   keywords?: Array<string>;
@@ -772,7 +772,7 @@ export type SettingsQueryResult = {
   socialLinks?: Array<{
     platform: string;
     url: string;
-    _type: "socialLink";
+    _type: 'socialLink';
     _key: string;
   }>;
 } | null;
@@ -791,15 +791,15 @@ export type AllPaintingsQueryResult = Array<{
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
   };
   date: string;
 }>;
@@ -817,7 +817,7 @@ export type PaintingQueryResult = {
   slug: string;
   description: string;
   seoDescription: string | null;
-  format: "landscape" | "portrait" | "square";
+  format: 'landscape' | 'portrait' | 'square';
   likesCount: null;
   views:
     | Array<{
@@ -835,15 +835,15 @@ export type PaintingQueryResult = {
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
     lqip: string | null;
     aspectRatio: number | null;
     altText: null;
@@ -852,16 +852,16 @@ export type PaintingQueryResult = {
     | Array<{
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         title: string;
         alt: string;
-        _type: "image";
+        _type: 'image';
         _key: string;
         lqip: string | null;
         aspectRatio: number | null;
@@ -877,21 +877,21 @@ export type PaintingQueryResult = {
 // Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
 export type ProjectQueryResult = {
   _id: string;
-  _type: "project";
+  _type: 'project';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   name: string;
   status?:
-    | "abandoned"
-    | "cancelled"
-    | "completed"
-    | "inProgress"
-    | "notStarted"
-    | "onHold"
-    | "planned"
-    | "unknown";
-  projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+    | 'abandoned'
+    | 'cancelled'
+    | 'completed'
+    | 'inProgress'
+    | 'notStarted'
+    | 'onHold'
+    | 'planned'
+    | 'unknown';
+  projectType: 'art' | 'design' | 'development' | 'gameDevelopment' | 'other';
   slug: string;
   projectStart?: string;
   projectEnd?: string;
@@ -899,88 +899,88 @@ export type ProjectQueryResult = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+    listItem?: 'bullet' | 'number';
     markDefs?: Array<{
       href?: string;
-      _type: "link";
+      _type: 'link';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
     lqip: string | null;
   } | null;
   extraImages?: Array<{
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
     _key: string;
   }>;
   connectedPaintings:
     | Array<{
         title: string;
         slug: string;
-        format: "landscape" | "portrait" | "square";
+        format: 'landscape' | 'portrait' | 'square';
         image: {
           asset?: {
             _ref: string;
-            _type: "reference";
+            _type: 'reference';
             _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
           };
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
           alt: string;
-          _type: "image";
+          _type: 'image';
         };
       }>
     | Array<never>;
   connectedVideo: {
     videoUrl: string;
   } | null;
-  connectedPage: string | "";
+  connectedPage: string | '';
   tags: Array<{
     name: string;
   }>;
   seo: {
-    title: string | "";
-    description: string | "";
+    title: string | '';
+    description: string | '';
     image: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      _type: "image";
+      _type: 'image';
     } | null;
     noIndex: boolean | false;
   };
@@ -994,7 +994,7 @@ export type ProjectQueryResult = {
     linkedIn?: string;
     x?: string;
   };
-  type: "art" | "design" | "development" | "gameDevelopment" | "other";
+  type: 'art' | 'design' | 'development' | 'gameDevelopment' | 'other';
 } | null;
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
@@ -1020,27 +1020,27 @@ export type HomePageQueryResult = {
   paintingsCount: number;
   paintingsDescription: BlockContent;
   showcasePaintings: Array<{
-    _type: "painting";
+    _type: 'painting';
     _id: string;
     altText: null;
     slug: string;
     title: string;
-    format: "landscape" | "portrait" | "square";
+    format: 'landscape' | 'portrait' | 'square';
     tagsV2: Array<{
       name: string;
     }>;
     image: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt: string;
-      _type: "image";
+      _type: 'image';
       lqip: string | null;
       aspectRatio: number | null;
     };
@@ -1049,29 +1049,29 @@ export type HomePageQueryResult = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal";
+    style?: 'normal';
     listItem?: never;
     markDefs?: Array<
       | {
           reference?: string;
-          _type: "internalLink";
+          _type: 'internalLink';
           _key: string;
         }
       | {
           href?: string;
-          _type: "link";
+          _type: 'link';
           _key: string;
         }
     >;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   showcaseProjects: Array<{
-    _type: "project";
+    _type: 'project';
     _id: string;
     title: null;
     description: null;
@@ -1079,47 +1079,47 @@ export type HomePageQueryResult = {
     projectStart: string | null;
     projectEnd: string | null;
     status:
-      | "abandoned"
-      | "cancelled"
-      | "completed"
-      | "inProgress"
-      | "notStarted"
-      | "onHold"
-      | "planned"
-      | "unknown"
+      | 'abandoned'
+      | 'cancelled'
+      | 'completed'
+      | 'inProgress'
+      | 'notStarted'
+      | 'onHold'
+      | 'planned'
+      | 'unknown'
       | null;
     content: Array<{
       children?: Array<{
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-      listItem?: "bullet" | "number";
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+      listItem?: 'bullet' | 'number';
       markDefs?: Array<{
         href?: string;
-        _type: "link";
+        _type: 'link';
         _key: string;
       }>;
       level?: number;
-      _type: "block";
+      _type: 'block';
       _key: string;
     }> | null;
     seo: {
-      title: string | "";
-      description: string | "";
+      title: string | '';
+      description: string | '';
       image: {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        _type: "image";
+        _type: 'image';
       } | null;
       noIndex: boolean | false;
     };
@@ -1128,15 +1128,15 @@ export type HomePageQueryResult = {
     image: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt: string;
-      _type: "image";
+      _type: 'image';
       lqip: string | null;
     } | null;
   }> | null;
@@ -1159,15 +1159,15 @@ export type GetAllPaintingsandTagsResult = {
     image: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt: string;
-      _type: "image";
+      _type: 'image';
       lqip: string | null;
       aspectRatio: number | null;
     };
@@ -1195,15 +1195,15 @@ export type GetPaginatedPaintingsResult = Array<{
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
-    _type: "image";
+    _type: 'image';
     lqip: string | null;
     aspectRatio: number | null;
   };
@@ -1220,35 +1220,35 @@ export type GetAllProjectsResult = {
     title: null;
     description: null;
     seoDescription: null;
-    projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+    projectType: 'art' | 'design' | 'development' | 'gameDevelopment' | 'other';
     projectStart: string | null;
     projectEnd: string | null;
     status:
-      | "abandoned"
-      | "cancelled"
-      | "completed"
-      | "inProgress"
-      | "notStarted"
-      | "onHold"
-      | "planned"
-      | "unknown"
+      | 'abandoned'
+      | 'cancelled'
+      | 'completed'
+      | 'inProgress'
+      | 'notStarted'
+      | 'onHold'
+      | 'planned'
+      | 'unknown'
       | null;
     content: Array<{
       children?: Array<{
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-      listItem?: "bullet" | "number";
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+      listItem?: 'bullet' | 'number';
       markDefs?: Array<{
         href?: string;
-        _type: "link";
+        _type: 'link';
         _key: string;
       }>;
       level?: number;
-      _type: "block";
+      _type: 'block';
       _key: string;
     }> | null;
     name: string;
@@ -1258,15 +1258,15 @@ export type GetAllProjectsResult = {
     image: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt: string;
-      _type: "image";
+      _type: 'image';
       lqip: string | null;
     } | null;
   }>;
@@ -1294,15 +1294,15 @@ export type GetAllVideosResult = {
       image: {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt: string;
-        _type: "image";
+        _type: 'image';
         lqip: string | null;
       };
     } | null;
@@ -1312,15 +1312,15 @@ export type GetAllVideosResult = {
     thumbnail: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt: string;
-      _type: "image";
+      _type: 'image';
       lqip: string | null;
     };
   }>;
@@ -1358,15 +1358,15 @@ export type OG_IMAGE_QUERYResult =
       image: {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt: string;
-        _type: "image";
+        _type: 'image';
         palette: SanityImagePalette | null;
       };
     }
@@ -1375,15 +1375,15 @@ export type OG_IMAGE_QUERYResult =
       image: {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt: string;
-        _type: "image";
+        _type: 'image';
         palette: SanityImagePalette | null;
       } | null;
     }
@@ -1393,8 +1393,8 @@ export type OG_IMAGE_QUERYResult =
 export type SITEMAP_QUERYResult = Array<never>;
 
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+import '@sanity/client';
+declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n,\n      }\n    },\n  }\n': GetPageQueryResult;

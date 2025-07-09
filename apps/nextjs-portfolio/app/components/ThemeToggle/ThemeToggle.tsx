@@ -44,7 +44,7 @@ const ThemeToggle = () => {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full ring ring-primary fill-primary text-primary hover:bg-surface-elevated active:scale-95"
+      className="flex items-center justify-center cursor-pointer p-3 transition-all rounded-full fill-primary text-primary hover:bg-accent-light hover:text-on-primary active:scale-95"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
@@ -55,7 +55,7 @@ const ThemeToggle = () => {
         initial={{ rotate: -180, opacity: 0 }}
         animate={{ rotate: 0, opacity: 1 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="text-sm"
+        className="text-xs"
       >
         {getIcon()}
       </motion.div>

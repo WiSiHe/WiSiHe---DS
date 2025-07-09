@@ -87,10 +87,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     }
   };
 
-  const imageUrl = urlForImage(currentImage)?.width(1600).fit('max').format('webp').url() ?? '';
+  const imageUrl =
+    urlForImage(currentImage)?.width(1600).height(1600).fit('max').format('webp').url() ?? '';
 
   return (
-    <div className="pt-20 min-h-[calc(100vh_-_5rem)] overflow-clip" ref={constraintsRef}>
+    <div className="pt-32 min-h-[calc(100vh_-_5rem)] overflow-clip" ref={constraintsRef}>
       <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-(--breakpoint-2xl)">
         <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full">
           <motion.div
@@ -122,7 +123,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
           {allImages.length > 1 && (
             <div className="z-10 flex items-center justify-center w-full gap-4 pt-4">
               {allImages.map((img, index) => {
-                const thumbUrl = urlForImage(img)?.width(100).height(100).quality(30).url() ?? '';
+                const thumbUrl = urlForImage(img)?.width(100).height(100).quality(50).url() ?? '';
                 return (
                   <motion.button
                     key={index}
