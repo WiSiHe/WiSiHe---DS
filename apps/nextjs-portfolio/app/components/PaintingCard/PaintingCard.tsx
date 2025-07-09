@@ -195,12 +195,12 @@ const PaintingCard = ({
       {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />}
 
       <Link href={`/paintings/${slug}`} className="before:absolute before:inset-0 before:z-0">
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-primary/80 backdrop-blur-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-accent/90 backdrop-blur-lg">
           <motion.h2
             layoutId={`title-${title}`}
-            className="text-base text-on-primary capitalize lg:text-lg line-clamp-1 font-inter"
+            className="text-base text-on-primary font-black capitalize lg:text-lg line-clamp-1 font-inter"
           >
-            <strong>{title}</strong>
+            {title}
           </motion.h2>
         </div>
       </Link>
