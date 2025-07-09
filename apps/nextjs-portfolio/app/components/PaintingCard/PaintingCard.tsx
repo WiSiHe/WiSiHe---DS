@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { BsYoutube } from 'react-icons/bs';
-import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
-import { TbBoxMultiple } from 'react-icons/tb';
+import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { BsYoutube } from "react-icons/bs";
+import { FaExclamation, FaShoppingCart } from "react-icons/fa";
+import { TbBoxMultiple } from "react-icons/tb";
 
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
-import { cn } from '@wisihe/utils';
-import { motion } from 'motion/react';
+import { GetAllPaintingsandTagsResult } from "@/sanity.types";
+import { urlForImage } from "@/sanity/lib/utils";
+import { cn } from "@wisihe/utils";
+import { motion } from "motion/react";
 
 type PaintingCardProps = {
-  paintingData: GetAllPaintingsandTagsResult['paintings'][0];
+  paintingData: GetAllPaintingsandTagsResult["paintings"][0];
   shouldBeLazy?: boolean;
   storybook?: boolean;
 };
@@ -69,17 +69,17 @@ const PaintingCard = ({
 
   const { tagsV2 } = paintingData;
 
-  const filters = searchParams?.getAll('filter');
+  const filters = searchParams?.getAll("filter");
 
   const filteredTags = tagsV2?.filter(Boolean) ?? [];
-  const salesTag = filteredTags.find((t) => t.name === 'Store');
-  const nsfwTag = filteredTags.find((t) => t.name === 'NSFW');
+  const salesTag = filteredTags.find((t) => t.name === "Store");
+  const nsfwTag = filteredTags.find((t) => t.name === "NSFW");
 
   const hasStoreLinks = !!salesTag;
 
   const isNsfw = !!nsfwTag;
 
-  const isNsfwUrl = filters?.includes('nsfw');
+  const isNsfwUrl = filters?.includes("nsfw");
 
   // Early return for invalid data
   if (!paintingData || Object.keys(paintingData).length === 0) {
@@ -91,12 +91,12 @@ const PaintingCard = ({
     );
   }
 
-  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData;
+  const { image, title = "", video = "", imagesCount = 0, slug } = paintingData;
 
   return (
     <motion.article
       className={cn(
-        'relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-white rounded-2xl focus-within:ring-3 focus-within:ring-primary'
+        "relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-white rounded-2xl focus-within:ring-3 focus-within:ring-primary",
       )}
       whileHover="hover"
       initial="rest"
@@ -134,8 +134,8 @@ const PaintingCard = ({
       {/* Animated Icons */}
       <motion.ul
         className={cn(
-          'absolute z-20 flex flex-col gap-1 text-xs right-2',
-          hasStoreLinks ? 'top-12' : 'top-2'
+          "absolute z-20 flex flex-col gap-1 text-xs right-2",
+          hasStoreLinks ? "top-12" : "top-2",
         )}
         variants={iconsListVariants}
       >
@@ -185,9 +185,9 @@ const PaintingCard = ({
             blurDataURL={image?.lqip || undefined}
             quality={60}
             unoptimized={storybook}
-            alt={title || 'Painting'}
+            alt={title || "Painting"}
             src={
-              urlForImage(image)?.width(400).height(500).quality(60).url() || ''
+              urlForImage(image)?.width(600).height(800).quality(80).url() || ""
             }
             className="object-cover w-full h-full"
           />
