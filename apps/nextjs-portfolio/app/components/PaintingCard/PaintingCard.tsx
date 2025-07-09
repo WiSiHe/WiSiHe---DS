@@ -177,10 +177,11 @@ const PaintingCard = ({
             sizes="(min-width: 1040px) 20vw, 50vw"
             fill
             priority={shouldBeLazy}
+            fetchPriority={shouldBeLazy ? 'high' : 'auto'}
             // placeholder="blur-sm"
             placeholder="blur"
             blurDataURL={image?.lqip || undefined}
-            quality={60}
+            quality={80}
             unoptimized={storybook}
             alt={title || 'Painting'}
             src={urlForImage(image)?.width(600).height(800).quality(80).url() || ''}
