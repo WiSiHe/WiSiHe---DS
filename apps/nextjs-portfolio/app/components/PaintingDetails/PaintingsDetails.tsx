@@ -1,5 +1,4 @@
 'use client';
-import useIsMobile from '@/hooks/useIsMobile';
 import { PaintingQueryResult } from '@/sanity.types';
 import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
@@ -18,7 +17,6 @@ type PaintingDetailProps = {
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
-  // const [showAllDescription, setShowAllDescription] = useState(false);
 
   const constraintsRef = useRef(null);
 
@@ -30,12 +28,18 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     tagsV2 = [],
     paintedAt,
     viewsCount,
-    // format,
     image,
     images = [],
     video,
     redbubbleUrl,
+    format,
   } = paintingData;
+
+  const aspectRatioStyle = {
+    landscape: 'aspect-video',
+    square: 'aspect-square',
+    portrait: 'aspect-portrait',
+  }[format];
 
   // Combine the primary image + any additional images
   const allImages = [image, ...images];
@@ -52,8 +56,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
   // Which image is currently selected
   const currentImage = allImages[selectedIndex] || image;
-
-  const isMobile = useIsMobile(768);
 
   // On mount, patch painting views
   useEffect(() => {
@@ -87,35 +89,51 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     }
   };
 
+  // Adjust width and height based on format
+  const getImageDimensions = (format: string) => {
+    switch (format) {
+      case 'landscape':
+        return { width: 1920, height: 1080 }; // 16:9 aspect ratio
+      case 'portrait':
+        return { width: 1080, height: 1920 }; // 9:16 aspect ratio
+      case 'square':
+      default:
+        return { width: 1600, height: 1600 }; // 1:1 aspect ratio
+    }
+  };
+
+  const { width, height } = getImageDimensions(format);
   const imageUrl =
-    urlForImage(currentImage)?.width(1600).height(1600).fit('max').format('webp').url() ?? '';
+    urlForImage(currentImage)?.width(width).height(height).fit('max').format('webp').url() ?? '';
 
   return (
-    <div className="pt-32 min-h-[calc(100vh_-_5rem)] overflow-clip" ref={constraintsRef}>
+    <div className="pt-32 min-h-[calc(100vh_-_5rem)] pb-32" ref={constraintsRef}>
       <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-(--breakpoint-2xl)">
-        <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full">
+        <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8">
           <motion.div
             layoutId={`image-${title}`}
-            className="relative w-full aspect-square lg:aspect-auto h-full min-h-[50vh] lg:min-h-[90vh]" // ensure there's enough space for <Image fill />
+            className={cn('relative w-full h-full min-h-[50vh]', aspectRatioStyle)} // ensure there's enough space for <Image fill />
           >
-            {/* LQIP background placeholder */}
             <motion.img
               initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              animate={{ scale: 1, opacity: 0.45 }}
               exit={{ scale: 0.5, opacity: 0 }}
               transition={{ type: 'spring' }}
               src={currentImage.lqip ?? ''}
               alt={title}
-              className="absolute inset-0 object-contain w-full h-full scale-110 pointer-events-none blur-3xl"
+              className={cn(
+                'absolute inset-0 object-contain w-full h-full scale-125 pointer-events-none blur-3xl',
+                aspectRatioStyle,
+              )}
               aria-hidden="true"
             />
-            <div className="w-full h-full overflow-clip rounded-3xl">
+            <div className="w-full h-full relative overflow-clip aspect-square rounded-3xl">
               <Image
                 src={imageUrl}
                 alt={title}
                 priority
                 fill
-                className="object-cover lg:object-contain rounded-2xl"
+                className="object-cover rounded-2xl h-full w-full overflow-clip"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
               />
             </div>
@@ -148,20 +166,15 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             </div>
           )}
         </section>
-        <motion.aside
+        <motion.div
           layout
-          className="z-10 flex flex-col items-center justify-center gap-5 pointer-events-none col-span-full lg:right-14 lg:bottom-4 lg:top-32 lg:fixed"
+          className="z-10 flex flex-col items-center justify-center gap-5 col-span-full lg:right-14 lg:bottom-4 lg:top-42 lg:sticky md:col-span-4"
         >
           <motion.div
             initial={{ scale: 0.8, x: -20 }}
             animate={{ scale: 1, x: 0 }}
             exit={{ scale: 0.9, x: -20 }}
-            drag={!isMobile}
-            whileDrag={{ scale: 1.05 }}
             transition={{ type: 'spring' }}
-            dragElastic={1} // Higher the value, the more elastic the drag
-            dragTransition={{ bounceStiffness: 50, bounceDamping: 10 }}
-            dragConstraints={constraintsRef}
             className="w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-surface-elevated/40 backdrop-blur-3xl p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab"
           >
             <div className={cn('pt-2 flex flex-col gap-4')}>
@@ -216,32 +229,16 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   </div>
                 </motion.div>
               )}
-              <h2 className="text-2xl font-bold">Description</h2>
-              <p
-                className={cn(
-                  'prose-invert',
-                  // showAllDescription ? 'line-clamp-none' : 'line-clamp-6'
-                )}
-              >
-                {description}
-              </p>
-              {/* <div className="flex justify-end">
-                <button
-                  className="px-3 py-1 font-semibold text-white rounded-sm w-fit ring-primary ring-3 hover:bg-primary/10"
-                  onClick={() => setShowAllDescription(!showAllDescription)}
-                >
-                  {showAllDescription ? 'Show less' : 'Show more'}
-                </button>
-              </div> */}
+              <p className="whitespace-pre-wrap">{description}</p>
             </div>
           </motion.div>
-        </motion.aside>
+        </motion.div>
       </section>
 
       {/* Optional video below the image */}
       {video && (
-        <div className="grid items-start max-w-(--breakpoint-lg) grid-cols-12 gap-10 py-20 mx-auto text-text-primary">
-          <div className="relative rounded-sm col-span-full aspect-video overflow-clip">
+        <div className="grid lg:hidden items-start grid-cols-12 max-w-(--breakpoint-2xl) w-full gap-10 py-20 mx-auto text-text-primary">
+          <div className="relative rounded-sm col-span-full aspect-video md:col-span-8 w-full overflow-clip">
             <iframe
               src={`https://www.youtube.com/embed/${new URL(video).pathname.slice(1)}`}
               className="w-full h-full rounded-sm"

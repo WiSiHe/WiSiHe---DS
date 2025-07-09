@@ -10,14 +10,16 @@ import PaginatedPaintingGrid from '../components/PaginatedPaintingGrid/Paginated
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Paintings | WiSiHe',
-  description: 'A gallery of some of my paintings',
+  title: 'Digital Art Gallery | WiSiHe',
+  description:
+    'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
   alternates: {
     canonical: 'https://www.wisihe.no/paintings', // Replace with your actual domain
   },
   openGraph: {
-    title: 'Paintings | WiSiHe',
-    description: 'A gallery of some of my paintings',
+    title: 'Digital Art Gallery | WiSiHe',
+    description:
+      'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
     url: 'https://www.wisihe.no/paintings', // Replace with your actual domain
     siteName: 'WiSiHe',
     locale: 'en_US',
@@ -27,14 +29,15 @@ export const metadata: Metadata = {
         url: 'https://www.example.com/images/hell.jpg', // Replace with a representative image
         width: 1200,
         height: 630,
-        alt: 'A preview of various paintings from WiSiHe',
+        alt: "Digital art gallery showcasing WiSiHe's creative paintings and illustrations",
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Paintings | WiSiHe',
-    description: 'A gallery of some of my paintings',
+    title: 'Digital Art Gallery | WiSiHe',
+    description:
+      'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
     images: ['https://www.wisihe.no/images/hell.jpg'], // Same image as openGraph for consistency
   },
 };
@@ -84,8 +87,12 @@ export default async function Paintings({
       <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-(--breakpoint-2xl)">
         <div className="w-full p-4">
           <div className="pb-4">
-            <h1 className="font-semibold">Paintings</h1>
-            <p>A gallery of some of my paintings</p>
+            <h1 className="font-semibold">Digital Art Gallery</h1>
+            <p className="text-muted-foreground">
+              A curated collection of my digital paintings and artwork, exploring themes of
+              imagination, storytelling, and visual creativity. Each piece represents a moment of
+              artistic expression and digital craftsmanship.
+            </p>
           </div>
           <Suspense fallback={<div>Loading...</div>}>
             <PaginatedPaintingGrid

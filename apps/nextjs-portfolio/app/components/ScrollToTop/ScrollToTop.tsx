@@ -1,8 +1,8 @@
-"use client";
-import useScrollPosition from "@/hooks/useScrollPosition";
-import { cn } from "@wisihe/utils";
-import { AnimatePresence, motion, Variants } from "motion/react";
-import { IoArrowUpSharp } from "react-icons/io5";
+'use client';
+import useScrollPosition from '@/hooks/useScrollPosition';
+import { cn } from '@wisihe/utils';
+import { AnimatePresence, motion, Variants } from 'motion/react';
+import { IoArrowUpSharp } from 'react-icons/io5';
 
 type ScrollToTopButtonProps = {
   isFixed?: boolean;
@@ -15,7 +15,7 @@ const buttonVariants: Variants = {
     opacity: 0,
     y: 100,
     transition: {
-      type: "spring",
+      type: 'spring',
       bounce: 0.4,
       duration: 1,
     },
@@ -24,7 +24,7 @@ const buttonVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: 'spring',
       bounce: 0.4,
       duration: 1,
     },
@@ -32,12 +32,12 @@ const buttonVariants: Variants = {
 };
 
 const buttonClassNames = cn(
-  "flex items-center justify-center text-dark rounded-full p-4",
-  "transition-all duration-200 ease-in-out",
-  "bg-white shadow-sm hover:bg-primary hover:text-white",
-  "ring-highlight focus:outline-hidden focus-visible:ring-3",
-  "focus-visible:bg-primary focus-visible:text-white",
-  "active:bg-highlight hover:ring-3",
+  'flex items-center justify-center text-foreground rounded-full p-4',
+  'transition-all duration-200 ease-in-out',
+  'bg-surface shadow-sm hover:bg-accent hover:text-on-primary',
+  'ring-accent focus:outline-hidden focus-visible:ring-2',
+  'focus-visible:bg-accent focus-visible:text-on-primary',
+  'active:bg-accent-dark hover:ring-2',
 );
 
 const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
@@ -49,7 +49,7 @@ const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -61,7 +61,7 @@ const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
           initial="hidden"
           animate="visible"
           exit="hidden"
-          className={cn("shrink-0", isFixed && "fixed bottom-8 right-8 z-10")}
+          className={cn('shrink-0', isFixed && 'fixed bottom-8 right-8 z-10')}
         >
           <motion.button
             onClick={handleClick}
