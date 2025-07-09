@@ -12,6 +12,7 @@ export default [
       "**/node_modules/",
       "**/.turbo/",
       "**/dist/", // Add other build/output directories
+      "**/sanity.types.ts", // Auto-generated Sanity TypeGen file
       // Add other files/dirs to ignore globally
     ],
   },
