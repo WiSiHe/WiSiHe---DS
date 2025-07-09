@@ -114,7 +114,7 @@ const PaginatedPaintingGrid = ({
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page <= 1
-                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
               aria-label="First page"
@@ -128,7 +128,7 @@ const PaginatedPaintingGrid = ({
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page <= 1
-                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
               aria-label="Previous page"
@@ -146,7 +146,7 @@ const PaginatedPaintingGrid = ({
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page >= pagination.totalPages
-                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
               aria-label="Next page"
@@ -160,7 +160,7 @@ const PaginatedPaintingGrid = ({
               className={cn(
                 'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
                 pagination.page >= pagination.totalPages
-                  ? 'bg-primary/50 text-text-tertiary cursor-not-allowed'
+                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
                   : 'bg-primary text-on-primary hover:bg-primary/80',
               )}
               aria-label="Last page"

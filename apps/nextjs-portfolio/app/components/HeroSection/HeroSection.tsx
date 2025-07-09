@@ -123,7 +123,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             key={currentPaintingsIndex + 'painting-link'}
             href={`paintings/${slug}`}
             aria-label="View painting"
-            className="absolute z-10 flex items-center gap-2 px-2 py-1 text-sm rounded-full text-on-primary focus-visible:ring-2 focus-visible:ring-primary bg-accent/20 backdrop-blur-2xl top-4 right-4 hover:bg-accent-light"
+            className="absolute z-10 flex items-center gap-2 px-2 py-1 text-sm rounded-full text-on-primary focus-visible:ring-2 focus-visible:ring-primary bg-accent/80 backdrop-blur-2xl top-4 right-4 hover:bg-accent"
           >
             View Painting <FaArrowRight />
           </Link>
@@ -156,7 +156,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
-              className="flex items-center p-3 font-medium transition-all duration-300 rounded-full shadow-lg text-on-primary bg-accent/20 backdrop-blur-2xl hover:bg-accent-light hover:shadow-xl"
+              className="flex items-center p-3 font-medium transition-all duration-300 rounded-full shadow-lg text-on-primary bg-accent/80 backdrop-blur-2xl hover:bg-accent hover:shadow-xl"
               onClick={handlePreviousBackground}
               aria-label="Previous painting"
             >
@@ -168,7 +168,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                className="flex items-center px-6 py-3 font-medium text-on-primary transition-all duration-300 rounded-full shadow-lg bg-primary/30 backdrop-blur-2xl hover:bg-primary-light hover:shadow-xl"
+                className="flex items-center px-6 py-3 font-medium text-on-primary transition-all duration-300 rounded-full shadow-lg bg-primary/80 backdrop-blur-2xl hover:bg-primary hover:shadow-xl"
               >
                 View Gallery
               </motion.div>
@@ -178,7 +178,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
-              className="flex items-center p-3 font-medium transition-all duration-300 rounded-full shadow-lg text-on-primary bg-accent/20 backdrop-blur-2xl hover:bg-accent-light hover:shadow-xl"
+              className="flex items-center p-3 font-medium transition-all duration-300 rounded-full shadow-lg text-on-primary bg-accent/80 backdrop-blur-2xl hover:bg-accent hover:shadow-xl"
               onClick={handleNextBackground}
               aria-label="Next painting"
             >

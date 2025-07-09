@@ -56,18 +56,18 @@ const NotFoundSection = () => {
 
       <motion.div
         variants={itemVariants}
-        className="absolute inset-0 z-10 flex flex-col items-center p-4 mx-auto my-auto text-center text-text-primary pointer-events-none h-fit w-fit"
+        className="absolute inset-0 z-10 flex flex-col items-center bg-surface/40 backdrop-blur-3xl p-4 md:p-8 rounded mx-auto my-auto text-center text-text-primary h-fit w-fit"
       >
-        <motion.div variants={itemVariants} className="text-xs text-white">
+        <motion.div variants={itemVariants} className="text-xs text-text-primary">
           <h2>
             <strong>Still not convinced?</strong>
           </h2>
           <div className="pb-4">Come on, just a little peak, I dare you!</div>
         </motion.div>
-        <motion.div variants={itemVariants} className="flex justify-center pt-4">
+        <motion.div variants={itemVariants} className="flex justify-center">
           <Link
             href="/paintings"
-            className="px-4 py-2 bg-surface-elevated rounded-full pointer-events-auto text-text-primary hover:bg-secondary-light border border-border"
+            className="px-4 py-2 bg-surface-elevated rounded-full pointer-events-auto text-text-primary hover:bg-accent-light hover:text-on-primary"
           >
             <strong>Paintings</strong>
           </Link>
