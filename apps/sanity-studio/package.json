@@ -40,12 +40,6 @@
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   },
-  "prettier": {
-    "semi": false,
-    "printWidth": 100,
-    "bracketSpacing": false,
-    "singleQuote": true
-  },
   "engines": {
     "node": ">= 22.0.0"
   }
