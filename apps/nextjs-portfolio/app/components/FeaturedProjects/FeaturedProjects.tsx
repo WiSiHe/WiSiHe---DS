@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { HomePageQueryResult } from "@/sanity.types";
-import { urlForImage } from "@/sanity/lib/utils";
-import Link from "next/link";
-import { motion, Variants } from "motion/react";
-import TiltedCard from "../TiltedCard/TiltedCard";
+import { HomePageQueryResult } from '@/sanity.types';
+import { urlForImage } from '@/sanity/lib/utils';
+import Link from 'next/link';
+import { motion, Variants } from 'motion/react';
+import TiltedCard from '../TiltedCard/TiltedCard';
 
 type FeaturedProjectsProps = {
-  showcaseProjects?:
-    | NonNullable<HomePageQueryResult>["showcaseProjects"]
-    | null;
+  showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
 };
 
 const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
@@ -34,7 +32,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 100,
         damping: 15,
       },
@@ -46,30 +44,29 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={containerVariants}
-        className="mx-auto mb-12 text-center text-dark max-w-prose"
+        className="mx-auto mb-8 md:mb-12 text-center text-text-primary max-w-prose px-4"
       >
-        <motion.h2 variants={itemVariants} className="mb-4 text-3xl font-bold">
+        <motion.h2 variants={itemVariants} className="mb-3 md:mb-4 text-2xl md:text-3xl font-bold">
           Featured Projects
         </motion.h2>
-        <motion.p variants={itemVariants} className="text-lg text-dark/80">
-          Here are some of the projects I have worked on. Click on the project
-          to view more details.
+        <motion.p variants={itemVariants} className="text-base md:text-lg text-text-primary/80">
+          Here are some of the projects I have worked on. Click on the project to view more details.
         </motion.p>
       </motion.div>
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={containerVariants}
         className="relative"
       >
         <motion.div
           variants={containerVariants}
-          className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-4 md:gap-8 p-4 md:grid-cols-2 lg:grid-cols-3"
         >
-          {showcaseProjects.map((project) => (
+          {showcaseProjects.map(project => (
             <motion.div
               key={project._id}
               variants={itemVariants}
@@ -79,22 +76,18 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                 <TiltedCard
                   altText={project.seo.title}
                   captionText={project.seo.title}
-                  containerHeight="400px"
+                  containerHeight="300px"
                   containerWidth="100%"
-                  imageHeight="400px"
+                  imageHeight="300px"
                   imageWidth="100%"
                   rotateAmplitude={10}
-                  scaleOnHover={1.1}
+                  scaleOnHover={1.05}
                   showMobileWarning={false}
                   showTooltip={true}
                   displayOverlayContent={true}
-                  blurDataURL={project.image?.lqip || ""}
+                  blurDataURL={project.image?.lqip || ''}
                   imageSrc={
-                    urlForImage(project.image)
-                      ?.height(800)
-                      .width(800)
-                      .auto("format")
-                      .url() || ""
+                    urlForImage(project.image)?.height(800).width(800).auto('format').url() || ''
                   }
                 />
               </Link>

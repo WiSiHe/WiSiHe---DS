@@ -7,18 +7,19 @@ const chipStyles = cva(
   {
     variants: {
       variation: {
-        default: 'bg-stone-100 text-dark hover:bg-stone-200',
-        primary: 'bg-primary text-white hover:bg-primary/40',
-        secondary: 'bg-secondary text-white hover:bg-secondary/40',
-        tertiary: 'bg-tertiary text-white hover:bg-tertiary/40',
-        highlight: 'bg-highlight text-dark hover:bg-highlight/40',
+        default:
+          'bg-surface-elevated text-text-primary border border-border hover:bg-secondary-light hover:border-secondary',
+        primary: 'bg-primary text-on-primary hover:bg-primary-light',
+        secondary: 'bg-secondary text-on-primary hover:bg-secondary-light',
+        tertiary: 'bg-surface text-text-primary border border-border hover:bg-surface-elevated',
+        highlight: 'bg-accent text-text-primary hover:bg-accent-light',
       },
       outlined: {
-        true: 'border border-current hover:bg-stone-50',
+        true: 'border border-border bg-transparent hover:bg-surface-elevated text-on-surface',
         false: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-white hover:bg-primary/90',
+        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-on-primary hover:bg-primary-light',
         false: '',
       },
       iconPosition: {
@@ -38,7 +39,7 @@ const chipStyles = cva(
       iconPosition: 'left',
       size: 'medium',
     },
-  }
+  },
 );
 
 type ChipProps = React.HTMLAttributes<HTMLDivElement> &
@@ -75,19 +76,11 @@ const Chip: React.FC<ChipProps> = ({
 
   return (
     <div
-      className={cn(
-        chipStyles({ variation, outlined, selected, iconPosition, size }),
-        className
-      )}
+      className={cn(chipStyles({ variation, outlined, selected, iconPosition, size }), className)}
       {...props}
     >
       {Icon && (
-        <Icon
-          className={cn(
-            iconSizeClasses[size],
-            iconPosition === 'left' ? 'mr-2' : 'ml-2'
-          )}
-        />
+        <Icon className={cn(iconSizeClasses[size], iconPosition === 'left' ? 'mr-2' : 'ml-2')} />
       )}
       <span>
         {label} {additionalText}

@@ -1,10 +1,10 @@
-"use client";
-import { SettingsQueryResult } from "@/sanity.types";
-import { SocialListItem } from "./SocialListItem";
-import { motion } from "motion/react";
+'use client';
+import { SettingsQueryResult } from '@/sanity.types';
+import { SocialListItem } from './SocialListItem';
+import { motion } from 'motion/react';
 
 type FooterProps = {
-  socialLinks: NonNullable<SettingsQueryResult>["socialLinks"];
+  socialLinks: NonNullable<SettingsQueryResult>['socialLinks'];
 };
 
 const Footer = ({ socialLinks }: FooterProps) => {
@@ -13,9 +13,9 @@ const Footer = ({ socialLinks }: FooterProps) => {
   }
 
   return (
-    <footer className="relative w-full overflow-hidden border-t-2 bg-dark border-primary">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark/50" />
-      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-white sm:px-6 md:px-8 lg:px-12">
+    <footer className="relative w-full overflow-hidden border-t-2 bg-surface border-primary">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface/50" />
+      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-text-primary sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -25,23 +25,16 @@ const Footer = ({ socialLinks }: FooterProps) => {
             className="space-y-6"
           >
             <h3 className="text-2xl font-bold sm:text-3xl">
-              My name is{" "}
-              <span className="text-transparent bg-gradient-to-r from-primary via-highlight to-secondary bg-clip-text animate-gradient">
+              My name is{' '}
+              <span className="text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text animate-gradient">
                 Henrik Wilhelm Sissener
               </span>
             </h3>
-            <p className="max-w-lg text-base leading-relaxed text-gray-300 sm:text-lg">
-              I&apos;m a{" "}
-              <span className="font-medium text-primary">
-                frontend developer
-              </span>{" "}
-              specializing in React and Svelte. In my free time, I enjoy{" "}
-              <span className="font-medium text-highlight">drawing</span> and
-              dabbling in{" "}
-              <span className="font-medium text-highlight">
-                game development
-              </span>
-              .
+            <p className="max-w-lg text-base leading-relaxed text-text-secondary sm:text-lg">
+              I&apos;m a <span className="font-medium text-primary">frontend developer</span>{' '}
+              specializing in React and Svelte. In my free time, I enjoy{' '}
+              <span className="font-medium text-accent">drawing</span> and dabbling in{' '}
+              <span className="font-medium text-accent">game development</span>.
             </p>
           </motion.div>
 
@@ -77,11 +70,10 @@ const Footer = ({ socialLinks }: FooterProps) => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="pt-8 mt-4 text-center border-t border-gray-700/50"
+          className="pt-8 mt-4 text-center border-t border-border"
         >
-          <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️
-            in Oslo
+          <p className="text-sm text-text-tertiary">
+            © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️ in Oslo
           </p>
         </motion.div>
       </div>

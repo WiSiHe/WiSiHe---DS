@@ -1,43 +1,43 @@
-import { Analytics } from "@vercel/analytics/react";
-import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import localFont from "next/font/local";
+import { Analytics } from '@vercel/analytics/react';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
-import HeaderNavigation from "@/app/components/HeaderNavigation";
-import { sanityFetch, SanityLive } from "@/sanity/lib/live";
-import { settingsQuery } from "@/sanity/lib/queries";
-import { resolveOpenGraphImage } from "@/sanity/lib/utils";
-import { VisualEditing } from "next-sanity";
-import { draftMode } from "next/headers";
-import { handleError } from "./client-utils";
-import DraftModeToast from "./components/DraftModeToast";
-import Footer from "./components/Footer/Footer";
-import "./globals.css";
-import { PostHogProvider } from "./providers";
-import React from "react";
+import HeaderNavigation from '@/app/components/HeaderNavigation';
+import { sanityFetch, SanityLive } from '@/sanity/lib/live';
+import { settingsQuery } from '@/sanity/lib/queries';
+import { resolveOpenGraphImage } from '@/sanity/lib/utils';
+import { VisualEditing } from 'next-sanity';
+import { draftMode } from 'next/headers';
+import { handleError } from './client-utils';
+import DraftModeToast from './components/DraftModeToast';
+import Footer from './components/Footer/Footer';
+import './globals.css';
+import { PostHogProvider } from './providers';
+import React from 'react';
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+  src: './fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
 });
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const viewport: Viewport = {
-  themeColor: "#DE0D92",
-  colorScheme: "dark light",
+  themeColor: '#DE0D92',
+  colorScheme: 'dark light',
 };
 
 // export const metadata = {
@@ -87,14 +87,14 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!settings) {
     return {
       title: {
-        template: "%s",
-        default: "WiSiHe",
+        template: '%s',
+        default: 'WiSiHe',
       },
-      description: "A gallery of some of my paintings and other projects",
+      description: 'A gallery of some of my paintings and other projects',
     };
   }
 
-  const { title = "", description, keywords } = settings;
+  const { title = '', description, keywords } = settings;
 
   const ogImage = resolveOpenGraphImage(settings?.ogImage);
 
@@ -112,36 +112,29 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Henrik Sissener",
-  jobTitle: "Frontend Developer",
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Henrik Sissener',
+  jobTitle: 'Frontend Developer',
   description:
-    "Frontend developer specializing in React and Svelte, with a passion for drawing and game development.",
-  url: "https://wisihe.no",
+    'Frontend developer specializing in React and Svelte, with a passion for drawing and game development.',
+  url: 'https://wisihe.no',
   sameAs: [
-    "https://github.com/wisihe",
-    "https://www.linkedin.com/in/henrik-sissener/",
-    "https://twitter.com/wisihe",
-    "https://www.instagram.com/wisihe/",
-    "https://www.youtube.com/@wisihe",
+    'https://github.com/wisihe',
+    'https://www.linkedin.com/in/henrik-sissener/',
+    'https://twitter.com/wisihe',
+    'https://www.instagram.com/wisihe/',
+    'https://www.youtube.com/@wisihe',
   ],
-  knowsAbout: [
-    "React",
-    "Svelte",
-    "Frontend Development",
-    "Game Development",
-    "Digital Art",
-  ],
+  knowsAbout: ['React', 'Svelte', 'Frontend Development', 'Game Development', 'Digital Art'],
 };
 
 const jsonLdSite = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "WiSiHe | Portfolio",
-  description:
-    "Portfolio of Henrik Sissener, a frontend developer and creative.",
-  url: "https://wisihe.no",
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'WiSiHe | Portfolio',
+  description: 'Portfolio of Henrik Sissener, a frontend developer and creative.',
+  url: 'https://wisihe.no',
 };
 
 export default async function RootLayout({
@@ -193,7 +186,7 @@ export default async function RootLayout({
           )}
           <SanityLive onError={handleError} />
           <HeaderNavigation />
-          <main id="main-content" className="bg-dark">
+          <main id="main-content" className="bg-background">
             {children}
           </main>
           <Footer socialLinks={socialLinks} />

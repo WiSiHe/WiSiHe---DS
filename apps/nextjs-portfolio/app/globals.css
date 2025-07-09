@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* @config '../tailwind.config.ts'; */
 
@@ -12,15 +12,58 @@
 */
 
 @theme {
-  --color-primary: oklch(59.61% 0.244 350.38);
-  --color-secondary: oklch(38.13% 0.0371 160.3);
-  --color-tertiary: oklch(96.12% 0 0);
-  --color-dark: oklch(20.38% 0.0692 344.84);
-  --color-highlight: oklch(90.43% 0.1877 101.53);
-  --font-inter: "Inter", sans-serif;
-  --font-oswald: "Oswald", sans-serif;
+  /* Typography */
+  --font-inter: 'Inter', sans-serif;
+  --font-oswald: 'Oswald', sans-serif;
+
+  /* Layout */
   --aspect-portrait: 9 / 16;
   --breakpoint-2xl: 96rem; /* 1536px */
+
+  /* Light Mode Colors - Monochrome base with strategic color accents */
+  --color-primary: oklch(25% 0.02 250); /* Deep charcoal */
+  --color-primary-light: oklch(40% 0.02 250); /* Medium charcoal */
+  --color-primary-dark: oklch(15% 0.02 250); /* Very dark charcoal */
+
+  --color-secondary: oklch(50% 0.01 250); /* Medium gray */
+  --color-secondary-light: oklch(65% 0.01 250); /* Light gray */
+  --color-secondary-dark: oklch(35% 0.01 250); /* Dark gray */
+
+  /* Color accents - strategic and subtle */
+  --color-accent: oklch(65% 0.15 180); /* Teal accent for primary actions */
+  --color-accent-light: oklch(75% 0.12 180); /* Lighter teal */
+  --color-accent-dark: oklch(55% 0.18 180); /* Darker teal */
+
+  /* Additional accent colors */
+  --color-accent-warm: oklch(70% 0.12 60); /* Warm orange for highlights */
+  --color-accent-cool: oklch(60% 0.08 280); /* Subtle purple for secondary accents */
+  --color-accent-success: oklch(65% 0.12 140); /* Green for success states */
+
+  --color-success: oklch(60% 0.08 140); /* Subtle green */
+  --color-warning: oklch(70% 0.1 60); /* Subtle orange */
+  --color-error: oklch(65% 0.12 25); /* Subtle red */
+
+  --color-background: oklch(98% 0.002 250); /* Almost white */
+  --color-foreground: oklch(12% 0.01 250); /* Very dark gray */
+  --color-surface: oklch(100% 0 0); /* Pure white */
+  --color-surface-elevated: oklch(96% 0.005 250); /* Slightly tinted white */
+  --color-border: oklch(85% 0.01 250); /* Light gray border */
+  --color-border-focus: oklch(65% 0.15 180); /* Teal accent border */
+
+  --color-text-primary: oklch(12% 0.01 250); /* Very dark gray */
+  --color-text-secondary: oklch(30% 0.01 250); /* Medium dark gray */
+  --color-text-tertiary: oklch(50% 0.01 250); /* Medium gray */
+
+  /* Contrast colors for backgrounds */
+  --color-on-primary: oklch(98% 0.002 250); /* Almost white for dark backgrounds */
+  --color-on-surface: oklch(12% 0.01 250); /* Dark text for light surfaces */
+
+  /* Legacy aliases for backward compatibility */
+  --color-tertiary: oklch(100% 0 0); /* Pure white */
+  --color-dark: oklch(12% 0.01 250); /* Very dark gray */
+  --color-highlight: oklch(70% 0.12 60); /* Warm orange highlight */
+  --color-shadow: oklch(96% 0.005 250); /* Slightly tinted white */
+  --color-bright: oklch(30% 0.01 250); /* Medium dark gray */
 }
 
 @layer base {
@@ -47,20 +90,63 @@
 
 @layer utilities {
   :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    /* Light mode defaults - these are now handled by the @theme block */
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-    }
+  .dark {
+    /* Dark mode overrides - these override the @theme variables */
+    --color-background: oklch(8% 0.005 250); /* Deeper, richer dark background */
+    --color-foreground: oklch(98% 0.002 250); /* Pure white text */
+    --color-surface: oklch(12% 0.008 250); /* Slightly elevated dark surface */
+    --color-surface-elevated: oklch(16% 0.012 250); /* More elevated surface */
+    --color-border: oklch(25% 0.015 250); /* More visible borders */
+    --color-border-focus: oklch(75% 0.18 180); /* Brighter teal focus border */
+
+    /* Primary colors - more contrast */
+    --color-primary: oklch(90% 0.008 250); /* Brighter primary */
+    --color-primary-light: oklch(95% 0.005 250); /* Very bright primary light */
+    --color-primary-dark: oklch(80% 0.012 250); /* Darker primary dark */
+
+    /* Secondary colors - enhanced contrast */
+    --color-secondary: oklch(75% 0.008 250); /* Brighter secondary */
+    --color-secondary-light: oklch(85% 0.005 250); /* Brighter secondary light */
+    --color-secondary-dark: oklch(65% 0.012 250); /* Darker secondary dark */
+
+    /* Color accents - more vibrant for dark mode */
+    --color-accent: oklch(80% 0.18 180); /* More vibrant teal */
+    --color-accent-light: oklch(90% 0.15 180); /* Brighter teal light */
+    --color-accent-dark: oklch(70% 0.22 180); /* Deeper teal dark */
+
+    /* Additional accent colors - enhanced for dark mode */
+    --color-accent-warm: oklch(85% 0.15 60); /* More vibrant warm orange */
+    --color-accent-cool: oklch(75% 0.12 280); /* More vibrant purple */
+    --color-accent-success: oklch(80% 0.15 140); /* More vibrant green */
+
+    /* Semantic colors - enhanced for dark mode */
+    --color-success: oklch(80% 0.12 140); /* Brighter green */
+    --color-warning: oklch(85% 0.15 60); /* Brighter orange */
+    --color-error: oklch(80% 0.18 25); /* Brighter red */
+
+    /* Text colors - better contrast */
+    --color-text-primary: oklch(98% 0.002 250); /* Pure white */
+    --color-text-secondary: oklch(85% 0.008 250); /* Bright gray */
+    --color-text-tertiary: oklch(70% 0.012 250); /* Medium bright gray */
+
+    /* Contrast colors for backgrounds */
+    --color-on-primary: oklch(8% 0.005 250); /* Very dark for light backgrounds */
+    --color-on-surface: oklch(98% 0.002 250); /* Pure white for dark surfaces */
+
+    /* Legacy color aliases - for backward compatibility */
+    --color-tertiary: oklch(12% 0.008 250); /* Dark surface */
+    --color-dark: oklch(98% 0.002 250); /* Pure white */
+    --color-highlight: oklch(85% 0.15 60); /* Vibrant warm orange */
+    --color-shadow: oklch(16% 0.012 250); /* Elevated surface */
+    --color-bright: oklch(85% 0.008 250); /* Bright gray */
   }
 
   body {
-    color: var(--foreground);
-    background: var(--background);
+    color: var(--color-foreground);
+    background: var(--color-background);
     font-family: Inter, Arial, Helvetica, sans-serif;
   }
 
@@ -83,6 +169,39 @@
   p {
     max-width: 65ch;
     text-wrap: pretty;
+  }
+
+  /* Focus-visible styles for better accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  /* Remove default focus styles for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Custom focus styles for interactive elements */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+    transition: outline-color 0.2s ease;
+  }
+
+  /* Enhanced focus for form elements */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 1px var(--color-border-focus);
   }
 
   @supports (animation-timeline: view()) {

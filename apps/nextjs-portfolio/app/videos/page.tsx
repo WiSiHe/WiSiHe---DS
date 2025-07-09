@@ -34,12 +34,14 @@ export default async function Videos() {
   const { videos } = data;
 
   return (
-    <section className="min-h-screen p-4 pt-20 text-white mx-auto max-w-(--breakpoint-2xl)">
-      <h1 className="mb-2 text-4xl font-bold">Creative Video Gallery</h1>
-      <p className="mb-6 text-xl">
-        From timelapse drawings to game development and animations — a showcase
-        of my digital creations in motion
-      </p>
+    <section className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
+      <div className="pb-4 ">
+        <h1 className="font-semibold">Videos</h1>
+        <p>
+          From timelapse drawings to game development and animations — a showcase of my digital
+          creations in motion
+        </p>
+      </div>
 
       <VideosPage videos={videos} />
     </section>

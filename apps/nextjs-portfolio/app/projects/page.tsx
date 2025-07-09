@@ -7,8 +7,7 @@ import ProjectCategories from '../components/ProjectCategories/ProjectCategories
 
 export const metadata: Metadata = {
   title: 'Projects | WiSiHe',
-  description:
-    'Explore a collection of projects showcasing various creative and technical works.',
+  description: 'Explore a collection of projects showcasing various creative and technical works.',
   alternates: {
     canonical: 'https://wisihe.no/projects',
   },
@@ -39,9 +38,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const [{ data }] = await Promise.all([
-    sanityFetch({ query: getAllProjects }),
-  ]);
+  const [{ data }] = await Promise.all([sanityFetch({ query: getAllProjects })]);
 
   if (isEmptyObject(data)) {
     return notFound();
@@ -50,12 +47,12 @@ export default async function ProjectsPage() {
   const { projects, tags } = data;
 
   return (
-    <div className="min-h-screen p-4 pt-20 text-white mx-auto max-w-(--breakpoint-2xl)">
+    <div className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
       <div className="pb-4">
-        <h1>
-          <strong>Projects</strong>
-        </h1>
-        <p>A gallery of some of my projects, both creative and technical.</p>
+        <div className="pb-4">
+          <h1 className="font-semibold">Projects</h1>
+          <p>A gallery of some of my projects, both creative and technical.</p>
+        </div>
       </div>
       <ProjectCategories projects={projects} tags={tags} />
     </div>

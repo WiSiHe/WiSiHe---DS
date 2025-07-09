@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
-import React, { createContext, useEffect, useState } from "react";
-import { motion } from "motion/react";
-import type { JSX } from "react";
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
+import React, { createContext, useEffect, useState } from 'react';
+import { motion } from 'motion/react';
+import type { JSX } from 'react';
 
 interface CarouselProps {
   items: JSX.Element[];
@@ -32,9 +32,9 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
     };
 
     handleResize(); // Initial check
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -55,13 +55,13 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
+      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
+      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
     }
   };
 
@@ -72,23 +72,21 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
         left: scrollPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
       setCurrentIndex(index);
     }
   };
 
   return (
-    <CarouselContext.Provider
-      value={{ onCardClose: handleCardClose, currentIndex }}
-    >
+    <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
       <div className="relative w-full">
         <div
           className="flex w-full overflow-x-scroll overscroll-x-auto py-10 scroll-smooth [scrollbar-width:none]"
           ref={carouselRef}
           onScroll={checkScrollability}
         >
-          <div className="absolute right-0 z-10 h-auto w-[5%] overflow-hidden bg-linear-to-l from-dark/50 via-transparent to-transparent" />
+          <div className="absolute right-0 z-10 h-auto w-[5%] overflow-hidden bg-gradient-to-l from-black/50 via-transparent to-transparent" />
 
           <div className="flex flex-row justify-start gap-4 pl-4 pointer-events-auto">
             {items.map((item, index) => (
@@ -103,7 +101,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
                   transition: {
                     duration: 0.5,
                     delay: 0.2 * index,
-                    ease: "easeOut",
+                    ease: 'easeOut',
                   },
                 }}
                 key={`card-${index}`}
@@ -116,20 +114,20 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         </div>
         <div className="flex justify-end gap-2">
           <button
-            className="relative z-40 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-lg cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary/90"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
             onClick={scrollLeft}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-white" />
+            <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
           </button>
           <button
-            className="relative z-40 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-lg cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary/90"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
             onClick={scrollRight}
             disabled={!canScrollRight}
             aria-label="Scroll right"
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-white" />
+            <IconArrowNarrowRight className="w-6 h-6 text-on-primary" />
           </button>
         </div>
       </div>

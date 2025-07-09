@@ -1,9 +1,12 @@
+import React from 'react';
+
 const IconLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.5em"
     height="1.5em"
     viewBox="0 0 542 544"
+    fill="currentColor"
     {...props}
   >
     <path d="M7 79v62h124V17H7zm106 0v44H25V35h88z" />
