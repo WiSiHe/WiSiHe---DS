@@ -46,7 +46,7 @@ export const Card = ({
         // Provide responsive sizes for the image
         sizes="(min-width:768px) 384px, 224px"
       />
-      <motion.div className="absolute  text-on-primary bottom-4 right-4">
+      <motion.div className="absolute text-on-primary bottom-4 right-4">
         <Link
           href={card.href}
           className="flex gap-1 px-3 py-1 transition-all duration-300 rounded-full group-hover:scale-110 bg-accent hover:bg-accent/80"
