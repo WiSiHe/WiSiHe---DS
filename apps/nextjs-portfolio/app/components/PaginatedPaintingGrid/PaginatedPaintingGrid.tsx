@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { GetPaginatedPaintingsResult } from '@/sanity.types';
@@ -44,6 +44,37 @@ const PaginatedPaintingGrid = ({
   const [pagination, setPagination] = useState<PaginationInfo>(initialPagination);
   const [currentFilter, setCurrentFilter] = useState<string>(initialFilter);
 
+  const loadPage = useCallback(
+    async (pageNumber: number, filter: string = currentFilter) => {
+      if (pageNumber < 1) return;
+
+      try {
+        const url = new URL('/api/paintings', window.location.origin);
+        url.searchParams.set('page', pageNumber.toString());
+        url.searchParams.set('limit', '12');
+        if (filter) {
+          url.searchParams.set('filter', filter);
+        }
+
+        const response = await fetch(url.toString());
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch paintings');
+        }
+
+        const data = (await response.json()) as ApiResponse;
+
+        if (data.paintings) {
+          setPaintings(data.paintings);
+          setPagination(data.pagination);
+        }
+      } catch (error) {
+        console.error('Error loading paintings:', error);
+      }
+    },
+    [currentFilter],
+  );
+
   // Handle URL-based pagination and filtering
   useEffect(() => {
     const pageParam = searchParams.get('page');
@@ -61,35 +92,7 @@ const PaginatedPaintingGrid = ({
     if (pageNumber !== pagination.page && pageNumber >= 1 && pageNumber <= pagination.totalPages) {
       void loadPage(pageNumber, filterParam);
     }
-  }, [searchParams, currentFilter]);
-
-  const loadPage = async (pageNumber: number, filter: string = currentFilter) => {
-    if (pageNumber < 1) return;
-
-    try {
-      const url = new URL('/api/paintings', window.location.origin);
-      url.searchParams.set('page', pageNumber.toString());
-      url.searchParams.set('limit', '12');
-      if (filter) {
-        url.searchParams.set('filter', filter);
-      }
-
-      const response = await fetch(url.toString());
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch paintings');
-      }
-
-      const data = (await response.json()) as ApiResponse;
-
-      if (data.paintings) {
-        setPaintings(data.paintings);
-        setPagination(data.pagination);
-      }
-    } catch (error) {
-      console.error('Error loading paintings:', error);
-    }
-  };
+  }, [searchParams, currentFilter, loadPage, pagination.page, pagination.totalPages]);
 
   const handlePageChange = (pageNumber: number) => {
     // Update URL

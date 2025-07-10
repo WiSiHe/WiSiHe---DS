@@ -2,35 +2,20 @@
 
 import { GetAllVideosResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
-import Image, { getImageProps } from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Dialog, DialogPanel, DialogTitle, Description } from '@headlessui/react';
 import { FaPlay } from 'react-icons/fa';
+import { useState, useEffect, useCallback } from 'react';
+import { getImageProps } from 'next/image';
+import Image from 'next/image';
+import Link from 'next/link';
 import Chip from '../Chip/Chip';
 
 function getYouTubeVideoId(url: string): string {
-  try {
-    const videoUrl = new URL(url);
-    // Handle youtu.be format
-    if (videoUrl.hostname === 'youtu.be') {
-      return videoUrl.pathname.slice(1);
-    }
-    // Handle youtube.com formats including shorts
-    if (videoUrl.hostname.includes('youtube.com')) {
-      if (videoUrl.pathname.includes('/shorts/')) {
-        return videoUrl.pathname.split('/shorts/')[1];
-      }
-      const videoId = videoUrl.searchParams.get('v');
-      if (videoId) return videoId;
-    }
-    // Fallback to original behavior
-    return videoUrl.pathname.slice(1);
-  } catch (error) {
-    return error as string;
-  }
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : '';
 }
 
 interface VideosPageProps {
@@ -51,12 +36,11 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
     setSelectedVideo(null);
   };
 
-  // Add event listener for escape key to close video modal
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       handleClose();
     }
-  };
+  }, []);
 
   // Set up the event listener when the component mounts
   // and clean it up when the component unmounts
@@ -67,7 +51,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [handleKeyDown]);
 
   return (
     <>
@@ -136,6 +120,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                         'object-cover w-full h-full',
                         featured ? 'aspect-video' : 'aspect-square lg:aspect-portrait',
                       )}
+                      alt={video.title || 'Video thumbnail'}
                     />
                   </picture>
                 </motion.div>

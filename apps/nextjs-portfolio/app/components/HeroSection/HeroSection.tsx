@@ -3,7 +3,7 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import { getImageProps } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useCallback, useMemo } from 'react';
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -15,80 +15,55 @@ type HeroImageSectionProps = {
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
 
+  // Memoize handlers to reduce re-renders - must be before early return
+  const handleNextBackground = useCallback(() => {
+    if (!paintings || paintings.length === 0) return;
+    setCurrentPaintingsIndex(prevIndex => (prevIndex + 1) % paintings.length);
+  }, [paintings]);
+
+  const handlePreviousBackground = useCallback(() => {
+    if (!paintings || paintings.length === 0) return;
+    setCurrentPaintingsIndex(prevIndex => (prevIndex === 0 ? paintings.length - 1 : prevIndex - 1));
+  }, [paintings]);
+
+  // Memoize image props to prevent unnecessary recalculations - must be before early return
+  const imageProps = useMemo(() => {
+    if (!paintings || paintings.length === 0) return null;
+
+    const currentBackground = paintings[currentPaintingsIndex];
+    const { image, altText = '' } = currentBackground || {};
+    const { lqip } = image || {};
+
+    if (!image) return null;
+
+    return {
+      src: urlForImage(image)?.width(1200).height(675).auto('format').quality(75).url() || '',
+      alt: altText || 'Hero painting',
+      blurDataURL: lqip || '',
+    };
+  }, [paintings, currentPaintingsIndex]);
+
   if (!paintings || paintings.length === 0) {
     return <div>No paintings available.</div>;
   }
 
-  // Memoize handlers to reduce re-renders
-  const handleNextBackground = useCallback(() => {
-    setCurrentPaintingsIndex(prevIndex => (prevIndex + 1) % paintings.length);
-  }, [paintings.length]);
-
-  const handlePreviousBackground = useCallback(() => {
-    setCurrentPaintingsIndex(prevIndex => (prevIndex === 0 ? paintings.length - 1 : prevIndex - 1));
-  }, [paintings.length]);
-
   const currentBackground = paintings[currentPaintingsIndex];
-  const { image, altText = '', slug } = currentBackground || {};
+  const { image, slug } = currentBackground || {};
   const { lqip } = image || {};
-
-  // Memoize image props to prevent unnecessary recalculations
-  const imageProps = useMemo(() => {
-    if (!image) return null;
-
-    // Define common props for both mobile and desktop
-    const common = {
-      alt: altText || 'Image',
-      fill: true,
-      className: 'object-cover rounded-2xl',
-      quality: 75, // Reduced quality for better performance
-      placeholder: 'blur' as const,
-      blurDataURL: lqip || '',
-    };
-
-    // Desktop image props - reduced size for better performance
-    const {
-      props: { srcSet: desktop },
-    } = getImageProps({
-      ...common,
-      priority: true,
-      src: urlForImage(image)?.width(1200).height(675).auto('format').quality(75).url() || '', // Reduced from 1600x900
-    });
-
-    // Mobile image props - reduced size for better performance
-    const {
-      props: { srcSet: mobile, ...rest },
-    } = getImageProps({
-      ...common,
-      priority: true,
-      src: urlForImage(image)?.width(600).height(600).auto('format').quality(75).url() || '', // Reduced from 800x800
-    });
-
-    // Small mobile image props - reduced size for better performance
-    const {
-      props: { srcSet: smallMobile },
-    } = getImageProps({
-      ...common,
-      priority: true,
-      src: urlForImage(image)?.width(400).height(400).auto('format').quality(75).url() || '', // Reduced from 500x500
-    });
-
-    return { desktop, mobile, smallMobile, rest };
-  }, [image, altText, lqip]);
 
   return (
     <motion.section className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip">
       {/* Optimized background blur - use smaller image for blur effect */}
-      <img
+      <Image
         src={lqip || ''}
         alt=""
-        className="absolute inset-0 object-cover w-full h-full scale-150 blur-3xl"
+        fill
+        className="absolute inset-0 object-cover scale-150 blur-3xl"
         sizes="100vw"
-        loading="eager"
-        fetchPriority="high"
-        decoding="async"
-        width="100"
-        height="100"
+        priority
+        quality={30}
+        placeholder="blur"
+        blurDataURL={lqip || ''}
       />
 
       <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
@@ -148,20 +123,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }} // Optimized spring settings
                 className="relative w-full h-full aspect-square lg:aspect-video drop-shadow-2xl rounded-2xl bg-surface/20"
               >
-                <picture>
-                  <source media="(min-width: 1024px)" srcSet={imageProps.desktop} />
-                  <source media="(min-width: 800px)" srcSet={imageProps.mobile} />
-                  <source media="(min-width: 0px)" srcSet={imageProps.smallMobile} />
-                  <img
-                    {...imageProps.rest}
-                    style={{ width: '100%', height: '100%' }}
-                    className="object-cover rounded-2xl"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px" // Updated sizes
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                </picture>
+                <Image
+                  src={imageProps.src}
+                  alt={imageProps.alt}
+                  fill
+                  className="object-cover rounded-2xl"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                  priority
+                  quality={75}
+                  placeholder="blur"
+                  blurDataURL={imageProps.blurDataURL}
+                />
               </motion.div>
             )}
           </AnimatePresence>
