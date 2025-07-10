@@ -7,8 +7,6 @@ import { Suspense } from 'react';
 import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
 import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
-
-import NotFoundSection from './components/NotFound/NotFound';
 import SkillsSection from './components/SkillsSection/SkillsSection';
 
 export const metadata: Metadata = {
@@ -99,8 +97,8 @@ export default async function Home() {
 
   const { showcasePaintings, showcaseProjects } = homepage;
 
-  // Limit hero section to 3 paintings for performance, but keep full list for carousel
-  const limitedPaintings = showcasePaintings ? showcasePaintings.slice(0, 3) : [];
+  // Limit hero section to 2 paintings for better performance (reduced from 3)
+  const limitedPaintings = showcasePaintings ? showcasePaintings.slice(0, 2) : [];
   const shuffledHeroPaintings = limitedPaintings.length > 0 ? shuffleArray(limitedPaintings) : [];
 
   // Use full showcase paintings for the carousel section
@@ -126,10 +124,6 @@ export default async function Home() {
           />
         </Suspense>
       </section>
-
-      <Suspense fallback={<div className="h-96 bg-surface-elevated animate-pulse" />}>
-        <NotFoundSection />
-      </Suspense>
 
       <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>
         <SkillsSection />

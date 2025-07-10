@@ -24,8 +24,8 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.1, // Reduced from 0.2
+        delayChildren: 0.2, // Reduced from 0.3
       },
     },
   };
@@ -37,8 +37,8 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
       y: 0,
       transition: {
         type: 'spring',
-        stiffness: 100,
-        damping: 15,
+        stiffness: 150, // Increased from 100
+        damping: 20, // Increased from 15
       },
     },
   };
@@ -48,7 +48,7 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
     categories: painting.tagsV2 || ['Art'],
     title: painting.title || '',
     href: `/paintings/${painting.slug}`,
-    src: urlForImage(painting.image)?.height(800).width(600).auto('format').quality(80).url() || '', // Reduced from 1280x720
+    src: urlForImage(painting.image)?.height(600).width(450).auto('format').quality(75).url() || '', // Further reduced from 800x600
   }));
 
   const cards = data.map((card, index) => <Card key={card.src} card={card} index={index} />);

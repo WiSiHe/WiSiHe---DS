@@ -33,8 +33,8 @@ const SkillsSection = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.1, // Reduced from 0.2
+        delayChildren: 0.2, // Reduced from 0.3
       },
     },
   };
@@ -46,8 +46,8 @@ const SkillsSection = () => {
       y: 0,
       transition: {
         type: 'spring',
-        stiffness: 100,
-        damping: 15,
+        stiffness: 150, // Increased from 100
+        damping: 20, // Increased from 15
       },
     },
   };
@@ -66,7 +66,9 @@ const SkillsSection = () => {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="left" speed={10}>
+        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="left" speed={8}>
+          {' '}
+          {/* Reduced speed from 10 */}
           {professionalSkills.map(skill => (
             <Chip key={skill} label={skill} className="ml-2 pointer-events-none" />
           ))}
@@ -74,7 +76,9 @@ const SkillsSection = () => {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="right" speed={10}>
+        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="right" speed={8}>
+          {' '}
+          {/* Reduced speed from 10 */}
           {creativeSkills.map(skill => (
             <Chip key={skill} label={skill} className="ml-2 pointer-events-none" />
           ))}

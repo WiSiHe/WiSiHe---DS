@@ -6,58 +6,54 @@ This document outlines the performance optimizations implemented to improve the 
 
 ## Key Optimizations Implemented
 
-### 1. HeroImageSection Optimizations
+### 1. HeroImageSection Optimizations (Latest)
 
-- **Reduced image sizes**:
-  - Desktop: 1920x1080 → 1200x675 (37% reduction)
+- **Significantly reduced image sizes**:
+  - Desktop: 1600x900 → 1200x675 (25% reduction)
   - Mobile: 800x800 → 600x600 (25% reduction)
-  - Small mobile: 400x400 → 300x300 (25% reduction)
+  - Small mobile: 500x500 → 400x400 (20% reduction)
+- **Reduced image quality**: 90% → 75% for better performance
+- **Added `useMemo` and `useCallback`** to prevent unnecessary recalculations
+- **Optimized animation timings**: Reduced delays and durations
+- **Improved spring animation settings** for better performance
+- **Added proper loading attributes**: `loading="eager"`, `fetchPriority="high"`, `decoding="async"`
+- **Reduced hero paintings from 3 to 2** for faster initial load
+
+### 2. PaintingsSection Optimizations (Latest)
+
+- **Further reduced carousel image sizes**: 800x600 → 600x450 (37% reduction)
+- **Reduced image quality**: 80% → 75%
+- **Optimized animation timings**: Reduced stagger delays and improved spring settings
+- **Better responsive image handling**
+
+### 3. FeaturedProjects Optimizations (Latest)
+
+- **Further reduced project image sizes**: 600x600 → 500x500 (17% reduction)
+- **Reduced image quality**: 80% → 75%
+- **Reduced animation complexity**: Lower rotate amplitude and scale values
+- **Optimized animation timings**: Reduced stagger delays and improved spring settings
+
+### 4. SkillsSection Optimizations (Latest)
+
+- **Reduced animation complexity**: Faster stagger timing and improved spring settings
+- **Reduced marquee speed**: 10 → 8 for better performance
+- **Optimized motion transitions**
+
+### 5. Next.js Configuration Optimizations (Latest)
+
+- **Added device and image size configurations** for better responsive loading
+- **Enabled CSS optimization**: `optimizeCss: true`
+- **Added SVG optimization rules**
+- **Enabled compression**: `compress: true`
+- **Removed powered-by header**: `poweredByHeader: false`
+
+### 6. Previous Optimizations (Maintained)
+
+- **Reduced image sizes** across all components
 - **Added proper `sizes` attribute** for responsive image loading
 - **Optimized background blur image** with explicit dimensions
-
-### 2. PaintingsSection Optimizations
-
-- **Reduced carousel image sizes**: 1280x720 → 800x600 (37% reduction)
-- **Added quality parameter**: Set to 80% for optimal balance
-- **Improved lazy loading** for carousel images
-
-### 3. FeaturedProjects Optimizations
-
-- **Reduced project image sizes**: 800x800 → 600x600 (25% reduction)
-- **Added quality parameter**: Set to 80% for optimal balance
-- **Better image optimization** in TiltedCard component
-
-### 4. Card Component Optimizations
-
-- **Added explicit lazy loading** for non-critical images
-- **Set quality to 80%** for better performance
-- **Improved responsive sizes** configuration
-
-### 5. TiltedCard Optimizations
-
-- **Added quality parameter**: Set to 80% for optimal balance
-- **Maintained lazy loading** for better performance
-
-### 6. Main Page Optimizations
-
-- **Limited showcase paintings**: Only show first 3 paintings in hero section
 - **Added Suspense boundaries** with loading skeletons
 - **Implemented progressive loading** for better perceived performance
-
-### 7. Carousel Optimizations
-
-- **Capped animation delays**: Maximum 0.5s delay instead of unlimited
-- **Added useCallback** for better performance
-- **Optimized scroll handling**
-
-### 8. BlurImage Component Optimizations
-
-- **Added configurable quality** parameter (default 80%)
-- **Added configurable loading** parameter (default lazy)
-- **Better performance defaults**
-
-### 9. Next.js Configuration Optimizations
-
 - **Added WebP and AVIF support** for modern image formats
 - **Set minimum cache TTL** to 30 days
 - **Added package import optimization** for motion and icons
@@ -67,18 +63,19 @@ This document outlines the performance optimizations implemented to improve the 
 
 ### Expected Improvements
 
-1. **LCP Score**: 20-40% improvement due to smaller hero images
-2. **Initial Load Time**: 15-25% faster due to reduced image sizes
-3. **Bandwidth Usage**: 25-35% reduction in image data transfer
-4. **Perceived Performance**: Better due to Suspense boundaries and loading skeletons
+1. **LCP Score**: 40-60% improvement due to smaller hero images and optimized loading
+2. **Initial Load Time**: 25-35% faster due to reduced image sizes and better caching
+3. **Bandwidth Usage**: 30-40% reduction in image data transfer
+4. **Perceived Performance**: Better due to optimized animations and loading strategies
+5. **Total Blocking Time**: 50-70% reduction due to optimized JavaScript execution
 
 ### Metrics to Monitor
 
-- Largest Contentful Paint (LCP)
-- First Contentful Paint (FCP)
-- Time to Interactive (TTI)
-- Cumulative Layout Shift (CLS)
-- Total Blocking Time (TBT)
+- Largest Contentful Paint (LCP) - Target: < 2.5s
+- First Contentful Paint (FCP) - Target: < 1.8s
+- Time to Interactive (TTI) - Target: < 3.8s
+- Cumulative Layout Shift (CLS) - Target: < 0.1
+- Total Blocking Time (TBT) - Target: < 200ms
 
 ## Additional Recommendations
 
@@ -87,6 +84,7 @@ This document outlines the performance optimizations implemented to improve the 
 - Consider implementing **progressive JPEG** for large images
 - Use **responsive images** with appropriate breakpoints
 - Implement **image preloading** for critical above-the-fold images
+- Consider **lazy loading** for below-the-fold images
 
 ### 2. Code Splitting
 
@@ -127,6 +125,7 @@ This document outlines the performance optimizations implemented to improve the 
 - FCP < 1.8s (Good)
 - CLS < 0.1 (Good)
 - TTI < 3.8s (Good)
+- TBT < 200ms (Good)
 
 ## Implementation Notes
 
@@ -176,7 +175,7 @@ This document outlines the performance optimizations implemented to improve the 
 
 - LCP: < 2.5s
 - Bundle size: < 500KB (gzipped)
-- Image size: < 200KB per image
-- Total page size: < 2MB
+- Image size: < 150KB per image
+- Total page size: < 1.5MB
 
 This optimization guide should be updated as new performance techniques become available and as the application evolves.
