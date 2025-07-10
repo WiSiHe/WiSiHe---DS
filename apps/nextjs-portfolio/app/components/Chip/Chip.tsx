@@ -1,6 +1,7 @@
 import React from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@wisihe/utils';
+import { IoClose } from 'react-icons/io5';
 
 const chipStyles = cva(
   'inline-flex items-center transition-all ease-in-out rounded-full gap-2 font-medium font-inter',
@@ -53,6 +54,8 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
     size?: 'small' | 'medium' | 'large';
     additionalText?: string;
     className?: string;
+    removable?: boolean;
+    onRemove?: () => void;
   };
 
 const Chip: React.FC<ChipProps> = ({
@@ -65,6 +68,8 @@ const Chip: React.FC<ChipProps> = ({
   size = 'medium',
   additionalText,
   className,
+  removable = false,
+  onRemove,
   ...props
 }) => {
   // Determine icon size based on chip size
@@ -85,6 +90,21 @@ const Chip: React.FC<ChipProps> = ({
       <span>
         {label} {additionalText}
       </span>
+      {removable && onRemove && (
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          className={cn(
+            'ml-1 hover:bg-black/10 rounded-full p-0.5 transition-colors',
+            iconSizeClasses[size],
+          )}
+          aria-label={`Remove ${label}`}
+        >
+          <IoClose className="w-full h-full" />
+        </button>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { defineQuery } from "next-sanity";
-import { client } from "./client";
+import { defineQuery } from 'next-sanity';
+import { client } from './client';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
@@ -285,6 +285,42 @@ export const getPaintingsCount = defineQuery(`
   count(*[_type == "painting" && defined(slug.current)])
 `);
 
+export const getFilteredPaginatedPaintings = defineQuery(`
+  *[_type == "painting" && defined(slug.current) && (
+    ($filter0 == "" || $filter0 in tagsV2[]->name)
+    && ($filter1 == "" || $filter1 in tagsV2[]->name)
+    && ($filter2 == "" || $filter2 in tagsV2[]->name)
+    && ($filter3 == "" || $filter3 in tagsV2[]->name)
+    && ($filter4 == "" || $filter4 in tagsV2[]->name)
+  )]
+  | order(paintedAt desc, _updatedAt desc) [$start...$end] {
+    _id,
+    "slug": slug.current,
+    title,
+    tagsV2[]->{name},
+    "viewsCount": count(views),
+    paintedAt,
+    video,
+    "imagesCount": coalesce(count(images), 0),
+    "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
+    image {
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    }
+  }
+`);
+
+export const getFilteredPaintingsCount = defineQuery(`
+  count(*[_type == "painting" && defined(slug.current) && (
+    ($filter0 == "" || $filter0 in tagsV2[]->name)
+    && ($filter1 == "" || $filter1 in tagsV2[]->name)
+    && ($filter2 == "" || $filter2 in tagsV2[]->name)
+    && ($filter3 == "" || $filter3 in tagsV2[]->name)
+    && ($filter4 == "" || $filter4 in tagsV2[]->name)
+  )])
+`);
+
 export const getAllProjects = defineQuery(`
     {
       "projects": *[_type == "project" && defined(slug.current)]
@@ -357,7 +393,7 @@ export const generateStaticSlugs = defineQuery(`
 export async function getStaticSlugs(type: string) {
   return client
     .withConfig({
-      perspective: "published",
+      perspective: 'published',
       useCdn: true,
       stega: false,
     })
