@@ -20,8 +20,8 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.1, // Reduced from 0.2
+        delayChildren: 0.2, // Reduced from 0.3
       },
     },
   };
@@ -33,8 +33,8 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       y: 0,
       transition: {
         type: 'spring',
-        stiffness: 100,
-        damping: 15,
+        stiffness: 150, // Increased from 100
+        damping: 20, // Increased from 15
       },
     },
   };
@@ -80,19 +80,19 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                   containerWidth="100%"
                   imageHeight="300px"
                   imageWidth="100%"
-                  rotateAmplitude={10}
-                  scaleOnHover={1.05}
+                  rotateAmplitude={8} // Reduced from 10
+                  scaleOnHover={1.03} // Reduced from 1.05
                   showMobileWarning={false}
                   showTooltip={true}
                   displayOverlayContent={true}
                   blurDataURL={project.image?.lqip || ''}
                   imageSrc={
                     urlForImage(project.image)
-                      ?.height(600)
-                      .width(600)
+                      ?.height(500)
+                      .width(500)
                       .auto('format')
-                      .quality(80)
-                      .url() || '' // Reduced from 800x800
+                      .quality(75)
+                      .url() || '' // Further reduced from 600x600
                   }
                 />
               </Link>
