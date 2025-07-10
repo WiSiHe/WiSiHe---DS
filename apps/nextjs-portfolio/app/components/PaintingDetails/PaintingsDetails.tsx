@@ -2,12 +2,14 @@
 import { PaintingQueryResult } from '@/sanity.types';
 import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
+import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
 import { BsClockFill, BsEye } from 'react-icons/bs';
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import Chip from '../Chip/Chip';
 
 type PaintingDetailProps = {
@@ -17,8 +19,7 @@ type PaintingDetailProps = {
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
-
-  const constraintsRef = useRef(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   const {
     title,
@@ -44,18 +45,33 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   // Combine the primary image + any additional images
   const allImages = [image, ...images];
 
-  const handleSelectImage = (index: number) => {
-    setSelectedIndex(index);
-  };
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   const formattedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-
-  // Which image is currently selected
-  const currentImage = allImages[selectedIndex] || image;
 
   // On mount, patch painting views
   useEffect(() => {
@@ -102,67 +118,100 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     }
   };
 
-  const { width, height } = getImageDimensions(format);
-  const imageUrl =
-    urlForImage(currentImage)?.width(width).height(height).fit('max').format('webp').url() ?? '';
-
   return (
-    <div className="pt-32 min-h-[calc(100vh_-_5rem)] pb-32" ref={constraintsRef}>
+    <div className="pt-32 min-h-[calc(100vh_-_5rem)] pb-32 overflow-clip">
       <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-(--breakpoint-2xl)">
         <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8">
-          <motion.div
-            layoutId={`image-${title}`}
-            className={cn('relative w-full h-full min-h-[50vh]', aspectRatioStyle)} // ensure there's enough space for <Image fill />
-          >
+          <div className={cn('relative w-full h-full', aspectRatioStyle)}>
+            {/* Blurry background image */}
             <motion.img
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.45 }}
               exit={{ scale: 0.5, opacity: 0 }}
               transition={{ type: 'spring' }}
-              src={currentImage.lqip ?? ''}
+              src={
+                allImages[selectedIndex]?.lqip ??
+                urlForImage(allImages[selectedIndex])
+                  ?.width(20)
+                  .height(20)
+                  .quality(10)
+                  .blur(100)
+                  .url() ??
+                ''
+              }
               alt={title}
               className={cn(
-                'absolute inset-0 object-contain w-full h-full scale-125 pointer-events-none blur-3xl',
+                'absolute inset-0 object-cover pointer-events-none ring w-full h-full scale-125 blur-3xl',
                 aspectRatioStyle,
               )}
               aria-hidden="true"
             />
-            <div className="w-full h-full relative overflow-clip aspect-square rounded-3xl">
-              <Image
-                src={imageUrl}
-                alt={title}
-                priority
-                fill
-                className="object-cover rounded-2xl h-full w-full overflow-clip"
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
-              />
+
+            <div className="overflow-clip rounded-3xl" ref={emblaRef}>
+              <div className="flex">
+                {allImages.map((img, index) => {
+                  const { width, height } = getImageDimensions(format);
+                  const imageUrl =
+                    urlForImage(img)?.width(width).height(height).fit('max').format('webp').url() ??
+                    '';
+
+                  return (
+                    <div
+                      key={index}
+                      className={cn('relative flex-[0_0_100%] min-h-[50vh]', aspectRatioStyle)}
+                    >
+                      <div className="w-full h-full relative overflow-clip rounded-3xl">
+                        <Image
+                          src={imageUrl}
+                          alt={`${title} - Image ${index + 1}`}
+                          priority={index === 0}
+                          fill
+                          className="object-cover rounded-2xl h-full w-full overflow-clip"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </motion.div>
+
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={scrollPrev}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                  aria-label="Previous image"
+                >
+                  <IoChevronBack className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={scrollNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                  aria-label="Next image"
+                >
+                  <IoChevronForward className="w-6 h-6" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Thumbnail indicators */}
           {allImages.length > 1 && (
-            <div className="z-10 flex items-center justify-center w-full gap-4 pt-4">
-              {allImages.map((img, index) => {
-                const thumbUrl = urlForImage(img)?.width(100).height(100).quality(50).url() ?? '';
-                return (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleSelectImage(index)}
-                    className={cn(
-                      'shrink-0 transition-transform hover:scale-105 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary',
-                      index === selectedIndex ? 'ring-3 ring-primary' : '',
-                    )}
-                    aria-label={`Select image ${index + 1}`}
-                  >
-                    <Image
-                      loading="lazy"
-                      height={100}
-                      width={100}
-                      src={thumbUrl}
-                      alt={`Thumbnail ${index + 1} for ${title}`}
-                      className="object-cover object-top w-16 h-16 rounded-lg"
-                    />
-                  </motion.button>
-                );
-              })}
+            <div className="z-10 flex items-center justify-center w-full gap-2 pt-4">
+              {allImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => emblaApi?.scrollTo(index)}
+                  className={cn(
+                    'w-2 h-2 rounded-full transition-all duration-200',
+                    index === selectedIndex
+                      ? 'bg-primary scale-125'
+                      : 'bg-surface-elevated hover:bg-surface-elevated-light',
+                  )}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
             </div>
           )}
         </section>
