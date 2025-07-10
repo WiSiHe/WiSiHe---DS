@@ -19,10 +19,13 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
     loop: false,
     skipSnaps: false,
     dragFree: false,
+    containScroll: 'trimSnaps',
   });
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -32,22 +35,38 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (emblaApi) emblaApi.scrollTo(index);
+    },
+    [emblaApi],
+  );
+
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCanScrollPrev(emblaApi.canScrollPrev());
     setCanScrollNext(emblaApi.canScrollNext());
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  const onInit = useCallback(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
   }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
+    onInit();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+    emblaApi.on('init', onInit);
     return () => {
       emblaApi.off('select', onSelect);
       emblaApi.off('reInit', onSelect);
+      emblaApi.off('init', onInit);
     };
-  }, [emblaApi, onSelect]);
+  }, [emblaApi, onSelect, onInit]);
 
   if (!isNotEmptyArray(paintings)) return null;
 
@@ -79,6 +98,11 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
                       className="object-cover rounded-xl transition-opacity group-hover:opacity-90"
                       loading="lazy"
                     />
+                    {title && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-sm font-medium truncate">{title}</p>
+                      </div>
+                    )}
                   </Link>
                 </div>
               );
@@ -87,7 +111,7 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-between items-center mt-4">
           <button
             className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-primary disabled:opacity-50 hover:bg-primary-light"
             onClick={scrollPrev}
@@ -96,6 +120,23 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
           >
             <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
           </button>
+
+          {/* Dots navigation */}
+          {scrollSnaps.length > 1 && (
+            <div className="flex gap-2">
+              {scrollSnaps.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === selectedIndex ? 'bg-primary' : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  onClick={() => scrollTo(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
           <button
             className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-primary disabled:opacity-50 hover:bg-primary-light"
             onClick={scrollNext}

@@ -167,10 +167,6 @@ export default defineType({
           name: 'alt',
           type: 'string',
           validation: Rule => Rule.required(),
-          // group: ['AI', 'seo'],
-          options: {
-            isHighlighted: true,
-          },
           components: {
             input: ImageAltTextGenerator,
           },
