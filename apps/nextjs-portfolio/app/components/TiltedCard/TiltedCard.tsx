@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React, { useRef, useState } from "react";
-import { motion, SpringOptions, useMotionValue, useSpring } from "motion/react";
-import Image, { StaticImageData } from "next/image";
+import React, { useRef, useState } from 'react';
+import { motion, SpringOptions, useMotionValue, useSpring } from 'motion/react';
+import Image, { StaticImageData } from 'next/image';
 
 interface TiltedCardProps {
   imageSrc: string | StaticImageData;
   altText?: string;
   captionText?: string;
-  containerHeight?: React.CSSProperties["height"];
-  containerWidth?: React.CSSProperties["width"];
-  imageHeight?: React.CSSProperties["height"];
-  imageWidth?: React.CSSProperties["width"];
+  containerHeight?: React.CSSProperties['height'];
+  containerWidth?: React.CSSProperties['width'];
+  imageHeight?: React.CSSProperties['height'];
+  imageWidth?: React.CSSProperties['width'];
   scaleOnHover?: number;
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
@@ -29,12 +29,12 @@ const springValues: SpringOptions = {
 
 export default function TiltedCard({
   imageSrc,
-  altText = "Tilted card image",
-  captionText = "",
-  containerHeight = "300px",
-  containerWidth = "100%",
-  imageHeight = "300px",
-  imageWidth = "300px",
+  altText = 'Tilted card image',
+  captionText = '',
+  containerHeight = '300px',
+  containerWidth = '100%',
+  imageHeight = '300px',
+  imageWidth = '300px',
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
@@ -125,7 +125,7 @@ export default function TiltedCard({
           style={{
             width: imageWidth,
             height: imageHeight,
-            position: "relative",
+            position: 'relative',
           }}
         >
           <Image
@@ -137,6 +137,7 @@ export default function TiltedCard({
             loading="lazy"
             placeholder="blur"
             blurDataURL={blurDataURL}
+            quality={80}
           />
         </motion.div>
 

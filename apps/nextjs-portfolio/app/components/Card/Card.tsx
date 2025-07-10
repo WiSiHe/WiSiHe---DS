@@ -43,8 +43,10 @@ export const Card = ({
         alt={card.title}
         fill
         className="absolute inset-0 object-cover"
-        // Provide responsive sizes for the image
-        sizes="(min-width:768px) 384px, 224px"
+        // Optimized responsive sizes for better performance
+        sizes="(min-width: 768px) 384px, 224px"
+        loading="lazy"
+        quality={80}
       />
       <motion.div className="absolute text-on-primary bottom-4 right-4">
         <Link

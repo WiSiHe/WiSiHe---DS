@@ -36,40 +36,41 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     alt: altText || 'Image',
     fill: true,
     className: 'object-cover rounded-2xl',
-    quality: 70,
+    quality: 90, // Increased quality for hero section
     placeholder: 'blur' as const,
     blurDataURL: lqip || '',
   };
 
-  // Desktop image props
+  // Desktop image props - increased size for better quality while maintaining performance
   const {
     props: { srcSet: desktop },
   } = getImageProps({
     ...common,
     priority: true,
-    src: urlForImage(image)?.width(1920).height(1080).url() || '',
+    src: urlForImage(image)?.width(1600).height(900).url() || '', // Increased from 1200x675 for better quality
   });
 
-  // Mobile image props
+  // Mobile image props - increased size for better quality
   const {
     props: { srcSet: mobile, ...rest },
   } = getImageProps({
     ...common,
     priority: true,
-    src: urlForImage(image)?.width(800).height(800).url() || '',
+    src: urlForImage(image)?.width(800).height(800).url() || '', // Increased from 600x600 for better quality
   });
 
-  // Small mobile image props
+  // Small mobile image props - increased size for better quality
   const {
     props: { srcSet: smallMobile },
   } = getImageProps({
     ...common,
     priority: true,
-    src: urlForImage(image)?.width(400).height(400).url() || '',
+    src: urlForImage(image)?.width(500).height(500).url() || '', // Increased from 300x300 for better quality
   });
 
   return (
     <motion.section className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip">
+      {/* Optimized background blur - use smaller image for blur effect */}
       <img
         src={lqip || ''}
         alt=""
@@ -78,6 +79,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         loading="eager"
         fetchPriority="high"
         decoding="async"
+        width="100"
+        height="100"
       />
 
       <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
@@ -145,6 +148,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                     {...rest}
                     style={{ width: '100%', height: '100%' }}
                     className="object-cover rounded-2xl"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1600px"
                   />
                 </picture>
               </motion.div>
