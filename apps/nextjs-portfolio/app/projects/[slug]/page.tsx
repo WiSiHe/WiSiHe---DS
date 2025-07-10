@@ -1,109 +1,17 @@
-import ProjectImage from '@/app/components/Project/ProjectImage';
-import ProjectInformation from '@/app/components/Project/ProjectInformation';
+import {
+  ProjectImage,
+  ProjectInformation,
+  ConnectedPaintingsCarousel,
+  EmbeddedVideo,
+} from '@/app/components/Project';
 import { ProjectQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import { isNotEmptyArray, isNotEmptyObject } from '@wisihe/utils';
+import { isNotEmptyObject } from '@wisihe/utils';
 import { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-
-// Utility function for extracting YouTube video ID with better error handling
-function getYouTubeVideoId(url: string): string | null {
-  try {
-    const videoUrl = new URL(url);
-
-    // Handle youtu.be format
-    if (videoUrl.hostname === 'youtu.be') {
-      return videoUrl.pathname.slice(1);
-    }
-
-    // Handle youtube.com formats including shorts
-    if (videoUrl.hostname.includes('youtube.com')) {
-      if (videoUrl.pathname.includes('/shorts/')) {
-        return videoUrl.pathname.split('/shorts/')[1];
-      }
-      const videoId = videoUrl.searchParams.get('v');
-      if (videoId) return videoId;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Invalid YouTube URL:', url, error);
-    return null;
-  }
-}
-
-// Component for connected paintings grid
-function ConnectedPaintingsGrid({
-  paintings,
-}: {
-  paintings: NonNullable<ProjectQueryResult>['connectedPaintings'];
-}) {
-  if (!isNotEmptyArray(paintings)) return null;
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Connected Paintings</h2>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {paintings.map(painting => {
-          const { image, slug, title } = painting;
-          if (!image || !slug) return null;
-
-          return (
-            <Link
-              href={`/paintings/${slug}`}
-              key={`${slug}-${title}`}
-              className="relative aspect-square group transition-transform hover:scale-105"
-            >
-              <Image
-                src={urlForImage(image)?.width(400).fit('max')?.url() || ''}
-                alt={title || 'Connected painting'}
-                fill
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover rounded-xl transition-opacity group-hover:opacity-90"
-                loading="lazy"
-              />
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// Component for embedded video
-function EmbeddedVideo({ videoUrl }: { videoUrl: string }) {
-  const videoId = getYouTubeVideoId(videoUrl);
-
-  if (!videoId) {
-    return (
-      <section className="relative py-8 lg:py-20 bg-surface ring">
-        <div className="max-w-screen-lg mx-auto aspect-video flex items-center justify-center">
-          <p className="text-text-secondary">Invalid video URL</p>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="relative py-8 lg:py-20 bg-surface ring">
-      <div className="max-w-screen-lg mx-auto aspect-video">
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
-          className="w-full h-full rounded-lg"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title="Project video"
-          loading="lazy"
-        />
-      </div>
-    </section>
-  );
-}
 
 // Loading component for Suspense boundaries
 function ProjectSectionSkeleton() {
@@ -223,7 +131,7 @@ export default async function ProjectPage(props: Props) {
     const { connectedVideo, connectedPaintings = [] } = project;
 
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pt-32">
         {/* Hero Section with Project Image */}
         <section className="relative py-8 lg:py-12">
           <div className="max-w-screen-2xl mx-auto px-4">
@@ -246,7 +154,7 @@ export default async function ProjectPage(props: Props) {
             {/* Connected Content */}
             <section className="lg:col-span-6 space-y-8">
               <Suspense fallback={<ProjectSectionSkeleton />}>
-                <ConnectedPaintingsGrid paintings={connectedPaintings} />
+                <ConnectedPaintingsCarousel paintings={connectedPaintings} />
               </Suspense>
             </section>
           </div>
