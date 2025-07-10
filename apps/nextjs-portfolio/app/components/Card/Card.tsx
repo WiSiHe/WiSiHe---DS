@@ -56,7 +56,7 @@ export const Card = ({
           View <IconArrowRight />
         </Link>
       </motion.div>
-      <div className="absolute left-0 right-0 top-0  h-42 w-full pointer-events-none bg-linear-to-b from-black to-transparent" />
+      <div className="absolute left-0 right-0 top-0 h-42 w-full pointer-events-none bg-linear-to-b from-black to-transparent" />
       <div className="relative w-full p-8">
         <motion.h3 className="max-w-xs font-sans text-xl font-black text-left md:text-3xl text-white text-balance">
           {card.title}

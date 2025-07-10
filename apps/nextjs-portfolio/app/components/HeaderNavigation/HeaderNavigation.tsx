@@ -51,7 +51,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           whileHover={{ scale: 1.05, rotate: 90 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 100, damping: 10 }}
-          className="flex items-center gap-2 backdrop-blur-lg bg-surface-elevated/40 p-[0.1px] rounded-sm  text-text-primary hover:bg-accent-light hover:text-on-primary"
+          className="flex items-center gap-2 backdrop-blur-lg bg-surface-elevated rounded-sm  text-text-primary hover:bg-accent-light hover:text-on-primary"
         >
           <Link
             href="/"
@@ -67,7 +67,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center backdrop-blur-lg shadow-xl p-1 overflow-clip bg-surface-elevated/40 rounded-full"
+            className="flex items-center backdrop-blur-lg shadow-xl p-1 overflow-clip bg-surface-elevated rounded-full"
           >
             {navigationItems.map((item, i) => {
               const isActive = pathName?.includes(item.href);
