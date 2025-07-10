@@ -87,7 +87,12 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                   displayOverlayContent={true}
                   blurDataURL={project.image?.lqip || ''}
                   imageSrc={
-                    urlForImage(project.image)?.height(800).width(800).auto('format').url() || ''
+                    urlForImage(project.image)
+                      ?.height(600)
+                      .width(600)
+                      .auto('format')
+                      .quality(80)
+                      .url() || '' // Reduced from 800x800
                   }
                 />
               </Link>

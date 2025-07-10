@@ -1,7 +1,7 @@
 'use client';
 
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import type { JSX } from 'react';
 
@@ -45,38 +45,41 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
     }
   }, [initialScroll]);
 
-  const checkScrollability = () => {
+  const checkScrollability = useCallback(() => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
     }
-  };
+  }, []);
 
-  const scrollLeft = () => {
+  const scrollLeft = useCallback(() => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const scrollRight = () => {
+  const scrollRight = useCallback(() => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const handleCardClose = (index: number) => {
-    if (carouselRef.current) {
-      const cardWidth = isMobile ? 230 : 384; // (md:w-96)
-      const gap = isMobile ? 4 : 8;
-      const scrollPosition = (cardWidth + gap) * (index + 1);
-      carouselRef.current.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth',
-      });
-      setCurrentIndex(index);
-    }
-  };
+  const handleCardClose = useCallback(
+    (index: number) => {
+      if (carouselRef.current) {
+        const cardWidth = isMobile ? 230 : 384; // (md:w-96)
+        const gap = isMobile ? 4 : 8;
+        const scrollPosition = (cardWidth + gap) * (index + 1);
+        carouselRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth',
+        });
+        setCurrentIndex(index);
+      }
+    },
+    [isMobile],
+  );
 
   return (
     <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
@@ -100,7 +103,7 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
                   y: 0,
                   transition: {
                     duration: 0.5,
-                    delay: 0.2 * index,
+                    delay: Math.min(0.1 * index, 0.5), // Cap delay at 0.5s for better performance
                     ease: 'easeOut',
                   },
                 }}

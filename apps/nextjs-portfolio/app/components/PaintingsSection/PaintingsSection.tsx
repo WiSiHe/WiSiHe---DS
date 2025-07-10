@@ -43,11 +43,12 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
     },
   };
 
+  // Optimize image sizes for better performance
   const data = paintings.map(painting => ({
     categories: painting.tagsV2 || ['Art'],
     title: painting.title || '',
     href: `/paintings/${painting.slug}`,
-    src: urlForImage(painting.image)?.height(1280).width(720).auto('format').url() || '',
+    src: urlForImage(painting.image)?.height(800).width(600).auto('format').quality(80).url() || '', // Reduced from 1280x720
   }));
 
   const cards = data.map((card, index) => <Card key={card.src} card={card} index={index} />);

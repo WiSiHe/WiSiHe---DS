@@ -1,15 +1,15 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
+import { Metadata } from 'next';
+import { PortableTextBlock } from 'next-sanity';
+import { Suspense } from 'react';
 import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
 import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
-import { PortableTextBlock } from 'next-sanity';
-import { Metadata } from 'next';
 
-import SkillsSection from './components/SkillsSection/SkillsSection';
 import NotFoundSection from './components/NotFound/NotFound';
-import { createFeatureGate } from '@/utils/flags';
+import SkillsSection from './components/SkillsSection/SkillsSection';
 
 export const metadata: Metadata = {
   title: 'Henrik Sissener | Frontend Developer & Creative',
@@ -61,6 +61,25 @@ function shuffleArray(array: Painting[]): Painting[] {
   return shuffled;
 }
 
+// Loading skeleton components
+const HeroSkeleton = () => (
+  <div className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip">
+    <div className="w-full h-96 bg-surface-elevated animate-pulse rounded-2xl" />
+  </div>
+);
+
+const SectionSkeleton = () => (
+  <div className="max-w-screen-xl mx-auto px-4 py-20">
+    <div className="h-8 bg-surface-elevated animate-pulse rounded mb-4" />
+    <div className="h-4 bg-surface-elevated animate-pulse rounded mb-8" />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="h-64 bg-surface-elevated animate-pulse rounded" />
+      ))}
+    </div>
+  </div>
+);
+
 export default async function Home() {
   const [{ data: homepage }]: [{ data: HomePageQueryResult }] = await Promise.all([
     sanityFetch({ query: homePageQuery }),
@@ -79,24 +98,42 @@ export default async function Home() {
   }
 
   const { showcasePaintings, showcaseProjects } = homepage;
-  const shuffledPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
+
+  // Limit hero section to 3 paintings for performance, but keep full list for carousel
+  const limitedPaintings = showcasePaintings ? showcasePaintings.slice(0, 3) : [];
+  const shuffledHeroPaintings = limitedPaintings.length > 0 ? shuffleArray(limitedPaintings) : [];
+
+  // Use full showcase paintings for the carousel section
+  const shuffledCarouselPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
   const paintingsDescription = homepage.paintingsDescription as PortableTextBlock[];
 
-  const enabled = await createFeatureGate('my_first_gate')();
   return (
     <div className="bg-background">
-      <HeroImageSection paintings={shuffledPaintings} />
-      <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
-        <FeaturedProjects showcaseProjects={showcaseProjects} />
+      <Suspense fallback={<HeroSkeleton />}>
+        <HeroImageSection paintings={shuffledHeroPaintings} />
+      </Suspense>
 
-        <PaintingsSection
-          paintings={shuffledPaintings}
-          paintingsDescription={paintingsDescription}
-        />
+      <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
+        <Suspense fallback={<SectionSkeleton />}>
+          <FeaturedProjects showcaseProjects={showcaseProjects} />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <PaintingsSection
+            paintings={shuffledCarouselPaintings}
+            paintingsDescription={paintingsDescription}
+          />
+        </Suspense>
       </section>
-      {enabled && <NotFoundSection />}
-      <SkillsSection />
+
+      <Suspense fallback={<div className="h-96 bg-surface-elevated animate-pulse" />}>
+        <NotFoundSection />
+      </Suspense>
+
+      <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>
+        <SkillsSection />
+      </Suspense>
     </div>
   );
 }
