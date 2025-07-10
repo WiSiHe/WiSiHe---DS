@@ -37,7 +37,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons'],
     // Additional performance features
-    optimizeCss: true,
     turbo: {
       rules: {
         '*.svg': {
