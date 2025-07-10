@@ -6,7 +6,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 
 export type Link = {
   _type: 'link';
-  linkType?: 'href' | 'page' | 'post' | 'painting' | 'slug';
+  linkType?: 'href' | 'page' | 'post' | 'painting' | 'project' | 'slug';
   href?: string;
   page?: {
     _ref: string;
@@ -27,6 +27,12 @@ export type Link = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'painting';
   };
+  project?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'project';
+  };
   openInNewTab?: boolean;
 };
 
@@ -36,11 +42,13 @@ const imageBuilder = createImageUrlBuilder({
 });
 
 interface SanityImageSource {
-  asset: {
+  asset?: {
     _ref: string;
+    _type?: string;
+    _weak?: boolean;
   };
 }
-export const urlForImage = (source: any) => {
+export const urlForImage = (source: SanityImageSource | null | undefined) => {
   // Ensure that source image contains a valid reference
   if (!source?.asset?._ref) {
     return undefined;
@@ -49,11 +57,15 @@ export const urlForImage = (source: any) => {
   return imageBuilder?.image(source).auto('format').fit('max');
 };
 
-export function resolveOpenGraphImage(image: any, width = 1200, height = 627) {
+export function resolveOpenGraphImage(
+  image: (SanityImageSource & { alt?: string }) | null | undefined,
+  width = 1200,
+  height = 627,
+) {
   if (!image) return;
   const url = urlForImage(image)?.width(1200).height(627).fit('crop').url();
   if (!url) return;
-  return { url, alt: image?.alt as string, width, height };
+  return { url, alt: image?.alt || '', width, height };
 }
 
 // Depending on the type of link, we need to fetch the corresponding page, post, or URL.  Otherwise return null.
@@ -75,18 +87,23 @@ export function linkResolver(link: Link | undefined) {
       return null;
 
     case 'page':
-      if (link?.page) {
-        return `/${link.page}`;
+      if (link?.page?._ref) {
+        return `/${link.page._ref}`;
       }
       return null;
     case 'post':
-      if (link?.post) {
-        return `/posts/${link.post}`;
+      if (link?.post?._ref) {
+        return `/posts/${link.post._ref}`;
       }
       return null;
     case 'painting':
-      if (link?.painting) {
-        return `/paintings/${link.painting}`;
+      if (link?.painting?._ref) {
+        return `/paintings/${link.painting._ref}`;
+      }
+      return null;
+    case 'project':
+      if (link?.project?._ref) {
+        return `/projects/${link.project._ref}`;
       }
       return null;
     default:
@@ -94,10 +111,7 @@ export function linkResolver(link: Link | undefined) {
   }
 }
 
-export async function patchPaintingViews(
-  paintingId: string,
-  viewerId: string
-): Promise<void> {
+export async function patchPaintingViews(paintingId: string, viewerId: string): Promise<void> {
   try {
     // Apply the patch to the draft or published document
     const patch = await client
