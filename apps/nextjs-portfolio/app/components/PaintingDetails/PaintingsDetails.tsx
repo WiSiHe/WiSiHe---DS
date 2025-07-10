@@ -202,20 +202,9 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   />
                   {tagsV2.map(tag => {
                     const { name } = tag;
-                    console.log('name', name);
                     if (!name) return null;
-                    // Clean the string by removing invisible characters and normalizing
-                    const cleanName = name
-                      .normalize('NFD') // Decompose characters
-                      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
-                      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
-                      .replace(/[^\w\s-]/g, '') // Remove special characters except letters, numbers, spaces, and hyphens
-                      .trim(); // Remove leading/trailing whitespace
-
-                    const formatedName = cleanName.toLowerCase().replace(/\s+/g, '-');
-                    console.log('formatedName', formatedName);
                     return (
-                      <Link key={name} href={`/paintings?filter=${formatedName}`}>
+                      <Link key={name} href={`/paintings?filter=${name}`}>
                         <Chip variation="primary" label={name} />
                       </Link>
                     );

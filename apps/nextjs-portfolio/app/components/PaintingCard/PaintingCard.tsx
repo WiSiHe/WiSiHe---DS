@@ -72,14 +72,26 @@ const PaintingCard = ({
   const filters = searchParams?.getAll('filter');
 
   const filteredTags = tagsV2?.filter(Boolean) ?? [];
-  const salesTag = filteredTags.find(t => t.name === 'Store');
-  const nsfwTag = filteredTags.find(t => t.name === 'NSFW');
+
+  // Helper function to clean tag names by removing invisible characters and normalizing
+  const cleanTagName = (name: string) => {
+    return name
+      .normalize('NFD') // Decompose characters
+      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+      .replace(/[^\w\s-]/g, '') // Remove special characters except letters, numbers, spaces, and hyphens
+      .trim(); // Remove leading/trailing whitespace
+  };
+
+  const salesTag = filteredTags.find(t => cleanTagName(t.name) === 'Store');
+
+  const hasNSFWTag = filteredTags.find(t => cleanTagName(t.name) === 'NSFW');
 
   const hasStoreLinks = !!salesTag;
 
-  const isNsfw = !!nsfwTag;
+  const isNsfw = !!hasNSFWTag;
 
-  const isNsfwUrl = filters?.includes('nsfw');
+  const isNsfwUrl = filters?.includes('NSFW');
 
   // Early return for invalid data
   if (!paintingData || Object.keys(paintingData).length === 0) {
@@ -114,7 +126,7 @@ const PaintingCard = ({
             key={tag.name}
             variants={listItemVariants}
           >
-            {tag.name}
+            {cleanTagName(tag.name)}
           </motion.li>
         ))}
       </motion.ul>
