@@ -51,14 +51,18 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           whileHover={{ scale: 1.05, rotate: 90 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 100, damping: 10 }}
-          className="flex items-center gap-2 backdrop-blur-lg bg-surface-elevated rounded-sm  text-text-primary hover:bg-accent-light hover:text-on-primary"
+          className="flex items-center relative h-12 w-12 backdrop-blur-lg bg-surface-elevated overflow-clip rounded-full text-text-primary hover:bg-accent-light hover:text-on-primary"
         >
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="flex items-center justify-center p-1 text-sm drop-shadow-sm decoration-4"
+            className="flex items-center justify-center p-1 text-sm drop-shadow-sm rounded-full h-full w-full"
           >
-            <IconLogo className={cn('transition-all ease-in-out text-2xl md:text-3xl ')} />
+            <IconLogo
+              className={cn('transition-all ease-in-out absolute inset-0')}
+              width={64}
+              height={64}
+            />
           </Link>
         </motion.div>
         <div className="flex items-center gap-2">
@@ -88,15 +92,16 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                 >
                   <Link
                     href={href}
+                    aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 flex items-center ease-in-out duration-300 text-xs md:text-base px-4 md:px-4 py-2',
+                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-light focus-visible:text-on-primary flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3',
                       isActive
                         ? 'text-on-primary bg-accent hover:bg-accent-light'
                         : 'text-text-primary hover:bg-accent-light hover:text-on-primary',
                     )}
                   >
-                    <span className="hidden md:block text-lg">{navIcon}</span>
-                    <strong className="">{label}</strong>
+                    <span className="text-lg">{navIcon}</span>
+                    <strong className="hidden md:block not-sr-only">{label}</strong>
                   </Link>
                 </motion.li>
               );
