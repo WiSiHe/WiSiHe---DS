@@ -17,10 +17,6 @@ type PaintingsSectionProps = {
 };
 
 const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionProps) => {
-  if (!paintings || paintings.length === 0) {
-    return null;
-  }
-
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     loop: false,
@@ -56,6 +52,11 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Check for empty paintings after all hooks are called
+  if (!paintings || paintings.length === 0) {
+    return null;
+  }
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -107,7 +108,7 @@ const PaintingsSection = ({ paintings, paintingsDescription }: PaintingsSectionP
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4">
             {data.map((card, index) => (
-              <Card card={card} index={index} />
+              <Card card={card} index={index} key={index} />
             ))}
           </div>
         </div>
