@@ -9,6 +9,13 @@ pnpm turbo typecheck || {
   exit 1
 }
 
+# Run build check
+echo "🏗️  Checking build..."
+pnpm turbo build || {
+  echo "❌ Build failed. Please fix the errors and try again."
+  exit 1
+}
+
 # Run lint-staged
 echo "🔍 Running lint-staged..."
 pnpm lint-staged || {
