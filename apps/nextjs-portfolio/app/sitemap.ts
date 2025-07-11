@@ -17,10 +17,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { loc: '/', priority: 1, changeFrequency: 'daily' as const },
     { loc: '/paintings', priority: 0.9, changeFrequency: 'daily' as const },
     { loc: '/projects', priority: 0.9, changeFrequency: 'weekly' as const },
+    { loc: '/recipes', priority: 0.8, changeFrequency: 'weekly' as const },
   ];
 
   // Initialize the sitemap array with static pages
-  const sitemapEntries: MetadataRoute.Sitemap = staticPages.map((page) => ({
+  const sitemapEntries: MetadataRoute.Sitemap = staticPages.map(page => ({
     url: `${baseUrl}${page.loc}`,
     lastModified: new Date().toISOString(),
     changeFrequency: page.changeFrequency,
@@ -28,10 +29,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   try {
-    // Fetch dynamic slugs for paintings and projects from Sanity
-    const [allPaintings, allProjects] = await Promise.all([
+    // Fetch dynamic slugs for paintings, projects, and recipes from Sanity
+    const [allPaintings, allProjects, allRecipes] = await Promise.all([
       getStaticSlugs('painting'),
       getStaticSlugs('project'),
+      getStaticSlugs('recipe'),
     ]);
 
     // Add dynamic paintings
@@ -41,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: painting._updatedAt,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
-      }))
+      })),
     );
 
     // Add dynamic projects
@@ -51,7 +53,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: project._updatedAt,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
-      }))
+      })),
+    );
+
+    // Add dynamic recipes
+    sitemapEntries.push(
+      ...allRecipes.map((recipe: SanityDocument) => ({
+        url: `${baseUrl}/recipes/${recipe.slug}`,
+        lastModified: recipe._updatedAt,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      })),
     );
   } catch (error) {
     console.error('Error generating sitemap:', error);

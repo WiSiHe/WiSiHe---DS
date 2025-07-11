@@ -436,3 +436,75 @@ export const SITEMAP_QUERY = defineQuery(`
       _updatedAt
   }
   `);
+
+export const getAllRecipes = defineQuery(`
+  *[_type == "recipe" && defined(slug.current)]
+  | order(publishedAt desc, _updatedAt desc) {
+    _id,
+    "slug": slug.current,
+    title,
+    description,
+    mainImage {
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    },
+    cookingTime,
+    prepTime,
+    totalTime,
+    servings,
+    difficulty,
+    publishedAt,
+    tags[]->{name}
+  }
+`);
+
+export const getRecipe = defineQuery(`
+  *[_type == "recipe" && slug.current == $slug][0] {
+    _id,
+    "slug": slug.current,
+    title,
+    description,
+    mainImage {
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    },
+    ingredientCategories[]{
+      categoryName,
+              ingredients[]{
+          ingredient,
+          photo {
+            ...,
+            "lqip": asset->metadata.lqip,
+            "aspectRatio": asset->metadata.dimensions.aspectRatio
+          },
+          amount,
+          unit,
+          isDiscrete,
+          notes
+        }
+    },
+    instructions[]{
+      title,
+      content
+    },
+    tips[]{
+      title,
+      content,
+      icon
+    },
+    cookingTime,
+    prepTime,
+    totalTime,
+    servings,
+    difficulty,
+    publishedAt,
+    tags[]->{name}
+  }
+`);
+
+export const getRecipeSlugs = defineQuery(`
+  *[_type == "recipe" && defined(slug.current)]
+  {"slug": slug.current}
+`);
