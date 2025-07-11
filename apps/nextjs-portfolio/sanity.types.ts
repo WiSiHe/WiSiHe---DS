@@ -35,47 +35,11 @@ export type Recipe = {
     alt: string;
     _type: 'image';
   };
-  ingredients?: Array<{
-    ingredient: string;
-    amount?: string;
-    unit?: string;
-    _key: string;
-  }>;
-  instructions?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: 'span';
-          _key: string;
-        }>;
-        style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote';
-        listItem?: 'bullet' | 'number';
-        markDefs?: Array<{
-          linkType?: 'href' | 'slug' | 'painting' | 'project';
-          href?: string;
-          slug?: string;
-          painting?: {
-            _ref: string;
-            _type: 'reference';
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: 'painting';
-          };
-          project?: {
-            _ref: string;
-            _type: 'reference';
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: 'project';
-          };
-          openInNewTab?: boolean;
-          _type: 'link';
-          _key: string;
-        }>;
-        level?: number;
-        _type: 'block';
-        _key: string;
-      }
-    | {
+  ingredientCategories?: Array<{
+    categoryName: string;
+    ingredients?: Array<{
+      ingredient: string;
+      photo?: {
         asset?: {
           _ref: string;
           _type: 'reference';
@@ -86,57 +50,124 @@ export type Recipe = {
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt: string;
-        caption?: string;
         _type: 'image';
-        _key: string;
-      }
-    | {
-        code: string;
-        language?:
-          | 'javascript'
-          | 'typescript'
-          | 'html'
-          | 'css'
-          | 'json'
-          | 'python'
-          | 'bash'
-          | 'text';
-        _type: 'codeBlock';
-        _key: string;
-      }
-    | {
-        type?: 'info' | 'warning' | 'success' | 'error';
-        title?: string;
-        content?: Array<{
+      };
+      amount: string;
+      unit: string;
+      isDiscrete?: boolean;
+      notes?: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  instructions?: Array<{
+    title?: string;
+    content: Array<
+      | {
           children?: Array<{
             marks?: Array<string>;
             text?: string;
             _type: 'span';
             _key: string;
           }>;
-          style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+          style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote';
           listItem?: 'bullet' | 'number';
           markDefs?: Array<{
+            linkType?: 'href' | 'slug' | 'painting' | 'project';
             href?: string;
+            slug?: string;
+            painting?: {
+              _ref: string;
+              _type: 'reference';
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: 'painting';
+            };
+            project?: {
+              _ref: string;
+              _type: 'reference';
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: 'project';
+            };
+            openInNewTab?: boolean;
             _type: 'link';
             _key: string;
           }>;
           level?: number;
           _type: 'block';
           _key: string;
-        }>;
-        _type: 'callout';
-        _key: string;
-      }
-    | {
-        url: string;
-        title?: string;
-        caption?: string;
-        _type: 'videoEmbed';
-        _key: string;
-      }
-  >;
+        }
+      | {
+          asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt: string;
+          caption?: string;
+          _type: 'image';
+          _key: string;
+        }
+      | {
+          code: string;
+          language?:
+            | 'javascript'
+            | 'typescript'
+            | 'html'
+            | 'css'
+            | 'json'
+            | 'python'
+            | 'bash'
+            | 'text';
+          _type: 'codeBlock';
+          _key: string;
+        }
+      | {
+          type?: 'info' | 'warning' | 'success' | 'error';
+          title?: string;
+          content?: Array<{
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: 'span';
+              _key: string;
+            }>;
+            style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+            listItem?: 'bullet' | 'number';
+            markDefs?: Array<{
+              href?: string;
+              _type: 'link';
+              _key: string;
+            }>;
+            level?: number;
+            _type: 'block';
+            _key: string;
+          }>;
+          _type: 'callout';
+          _key: string;
+        }
+      | {
+          url: string;
+          title?: string;
+          caption?: string;
+          _type: 'videoEmbed';
+          _key: string;
+        }
+    >;
+    _key: string;
+  }>;
+  tips?: Array<{
+    title?: string;
+    content: string;
+    icon?: string;
+    _key: string;
+  }>;
   cookingTime?: number;
+  prepTime?: number;
+  totalTime?: number;
   servings?: number;
   difficulty?: 'easy' | 'medium' | 'hard';
   tags?: Array<{
@@ -1553,6 +1584,203 @@ export type OG_IMAGE_QUERYResult =
 // Variable: SITEMAP_QUERY
 // Query: *[_type in ["page", "post"] && defined(slug.current)] {      "href": select(        _type == "page" => "/" + slug.current,        _type == "post" => "/posts/" + slug.current,        slug.current      ),      _updatedAt  }
 export type SITEMAP_QUERYResult = Array<never>;
+// Variable: getAllRecipes
+// Query: *[_type == "recipe" && defined(slug.current)]  | order(publishedAt desc, _updatedAt desc) {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
+export type GetAllRecipesResult = Array<{
+  _id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: 'image';
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+  cookingTime: number | null;
+  prepTime: number | null;
+  totalTime: number | null;
+  servings: number | null;
+  difficulty: 'easy' | 'hard' | 'medium' | null;
+  publishedAt: string | null;
+  tags: Array<{
+    name: string;
+  }> | null;
+}>;
+// Variable: getRecipe
+// Query: *[_type == "recipe" && slug.current == $slug][0] {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    ingredientCategories[]{      categoryName,              ingredients[]{          ingredient,          photo {            ...,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          amount,          unit,          isDiscrete,          notes        }    },    instructions[]{      title,      content    },    tips[]{      title,      content,      icon    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
+export type GetRecipeResult = {
+  _id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: 'image';
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+  ingredientCategories: Array<{
+    categoryName: string;
+    ingredients: Array<{
+      ingredient: string;
+      photo: {
+        asset?: {
+          _ref: string;
+          _type: 'reference';
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string;
+        _type: 'image';
+        lqip: string | null;
+        aspectRatio: number | null;
+      } | null;
+      amount: string;
+      unit: string;
+      isDiscrete: boolean | null;
+      notes: string | null;
+    }> | null;
+  }> | null;
+  instructions: Array<{
+    title: string | null;
+    content: Array<
+      | {
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: 'span';
+            _key: string;
+          }>;
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal';
+          listItem?: 'bullet' | 'number';
+          markDefs?: Array<{
+            linkType?: 'href' | 'painting' | 'project' | 'slug';
+            href?: string;
+            slug?: string;
+            painting?: {
+              _ref: string;
+              _type: 'reference';
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: 'painting';
+            };
+            project?: {
+              _ref: string;
+              _type: 'reference';
+              _weak?: boolean;
+              [internalGroqTypeReferenceTo]?: 'project';
+            };
+            openInNewTab?: boolean;
+            _type: 'link';
+            _key: string;
+          }>;
+          level?: number;
+          _type: 'block';
+          _key: string;
+        }
+      | {
+          type?: 'error' | 'info' | 'success' | 'warning';
+          title?: string;
+          content?: Array<{
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: 'span';
+              _key: string;
+            }>;
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
+            listItem?: 'bullet' | 'number';
+            markDefs?: Array<{
+              href?: string;
+              _type: 'link';
+              _key: string;
+            }>;
+            level?: number;
+            _type: 'block';
+            _key: string;
+          }>;
+          _type: 'callout';
+          _key: string;
+        }
+      | {
+          code: string;
+          language?:
+            | 'bash'
+            | 'css'
+            | 'html'
+            | 'javascript'
+            | 'json'
+            | 'python'
+            | 'text'
+            | 'typescript';
+          _type: 'codeBlock';
+          _key: string;
+        }
+      | {
+          asset?: {
+            _ref: string;
+            _type: 'reference';
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+          };
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt: string;
+          caption?: string;
+          _type: 'image';
+          _key: string;
+        }
+      | {
+          url: string;
+          title?: string;
+          caption?: string;
+          _type: 'videoEmbed';
+          _key: string;
+        }
+    >;
+  }> | null;
+  tips: Array<{
+    title: string | null;
+    content: string;
+    icon: string | null;
+  }> | null;
+  cookingTime: number | null;
+  prepTime: number | null;
+  totalTime: number | null;
+  servings: number | null;
+  difficulty: 'easy' | 'hard' | 'medium' | null;
+  publishedAt: string | null;
+  tags: Array<{
+    name: string;
+  }> | null;
+} | null;
+// Variable: getRecipeSlugs
+// Query: *[_type == "recipe" && defined(slug.current)]  {"slug": slug.current}
+export type GetRecipeSlugsResult = Array<{
+  slug: string;
+}>;
 
 // Query TypeMap
 import '@sanity/client';
@@ -1582,5 +1810,8 @@ declare module '@sanity/client' {
     '\n  *[_type == "redirect" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n': REDIRECTS_QUERYResult;
     '\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      "palette": asset->metadata.palette,\n    },\n  }\n': OG_IMAGE_QUERYResult;
     '\n  *[_type in ["page", "post"] && defined(slug.current)] {\n      "href": select(\n        _type == "page" => "/" + slug.current,\n        _type == "post" => "/posts/" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ': SITEMAP_QUERYResult;
+    '\n  *[_type == "recipe" && defined(slug.current)]\n  | order(publishedAt desc, _updatedAt desc) {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetAllRecipesResult;
+    '\n  *[_type == "recipe" && slug.current == $slug][0] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    ingredientCategories[]{\n      categoryName,\n              ingredients[]{\n          ingredient,\n          photo {\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          amount,\n          unit,\n          isDiscrete,\n          notes\n        }\n    },\n    instructions[]{\n      title,\n      content\n    },\n    tips[]{\n      title,\n      content,\n      icon\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetRecipeResult;
+    '\n  *[_type == "recipe" && defined(slug.current)]\n  {"slug": slug.current}\n': GetRecipeSlugsResult;
   }
 }
