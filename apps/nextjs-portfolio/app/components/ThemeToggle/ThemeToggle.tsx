@@ -44,7 +44,7 @@ const ThemeToggle = () => {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="flex items-center justify-center cursor-pointer p-3 transition-all rounded-full bg-background fill-primary text-primary hover:bg-accent-light hover:text-on-primary active:scale-95"
+      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full bg-background fill-primary text-primary hover:bg-accent-light hover:text-on-primary active:scale-95"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}

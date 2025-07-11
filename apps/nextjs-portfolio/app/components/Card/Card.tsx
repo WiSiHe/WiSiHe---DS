@@ -31,12 +31,12 @@ export const Card = ({
   };
 
   return (
-    <motion.div
+    <motion.article
       layoutId={layout ? `card-${card.title}` : undefined}
       whileHover="hover"
       initial="rest"
       animate="rest"
-      className="rounded-3xl group pointer-events-auto bg-surface h-96 w-56 md:h-[40rem] md:w-96 overflow-clip flex flex-col items-start justify-start relative"
+      className="rounded-3xl group pointer-events-auto bg-surface h-[30rem] md:h-[40rem] w-96 shrink-0 overflow-clip flex flex-col items-start justify-start relative"
     >
       <BlurImage
         src={card.src}
@@ -73,6 +73,6 @@ export const Card = ({
           ))}
         </motion.div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
