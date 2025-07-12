@@ -9,18 +9,32 @@ export const metadata: Metadata = {
   title: 'Creative Video Gallery | WiSiHe',
   description:
     'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
+  alternates: {
+    canonical: 'https://www.wisihe.no/videos',
+  },
   openGraph: {
     title: 'Creative Video Gallery | WiSiHe',
     description:
       'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
-    images: ['/images/video-gallery-og.jpg'],
+    url: 'https://www.wisihe.no/videos',
+    siteName: 'WiSiHe',
+    locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.wisihe.no/images/hell.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Creative video gallery showcasing digital animations and timelapse drawings',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Creative Video Gallery | WiSiHe',
     description:
       'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
+    images: ['https://www.wisihe.no/images/hell.jpg'],
   },
 };
 
@@ -33,17 +47,53 @@ export default async function Videos() {
 
   const { videos } = data;
 
-  return (
-    <section className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
-      <div className="pb-4 ">
-        <h1 className="font-semibold">Videos</h1>
-        <p>
-          From timelapse drawings to game development and animations — a showcase of my digital
-          creations in motion
-        </p>
-      </div>
+  // Create structured data for video collection
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Creative Video Collection',
+    description:
+      'A collection of digital creations in motion - from timelapse drawings to game development and animations',
+    numberOfItems: videos?.length || 0,
+    itemListElement:
+      videos?.map((video: Record<string, unknown>, index: number) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'VideoObject',
+          '@id': `https://www.wisihe.no/videos/${(video.slug as string) || index}`,
+          name: video.title as string,
+          description: video.description as string,
+          thumbnailUrl: video.thumbnailUrl as string,
+          uploadDate: video.publishedAt as string,
+          creator: {
+            '@type': 'Person',
+            name: 'Henrik Sissener',
+            url: 'https://www.wisihe.no',
+          },
+        },
+      })) || [],
+  };
 
-      <VideosPage videos={videos} />
-    </section>
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
+      <section className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
+        <div className="pb-4 ">
+          <h1 className="font-semibold">Videos</h1>
+          <p>
+            From timelapse drawings to game development and animations — a showcase of my digital
+            creations in motion
+          </p>
+        </div>
+
+        <VideosPage videos={videos} />
+      </section>
+    </>
   );
 }

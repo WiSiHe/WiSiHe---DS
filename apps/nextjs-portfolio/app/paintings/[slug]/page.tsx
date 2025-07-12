@@ -19,10 +19,7 @@ export async function generateStaticParams() {
   return data;
 }
 
-export async function generateMetadata(
-  props: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const params = await props.params;
 
   const { data: painting } = await sanityFetch({
@@ -32,8 +29,7 @@ export async function generateMetadata(
   });
 
   const title = painting?.title || 'Untitled Painting';
-  const description =
-    painting?.seoDescription || painting?.description || 'View this painting.';
+  const description = painting?.seoDescription || painting?.description || 'View this painting.';
   const ogImage = resolveOpenGraphImage(painting?.image);
   const previousImages = (await parent).openGraph?.images || [];
   const url = `https://www.wisihe.no/paintings/${params.slug}`;
@@ -65,12 +61,44 @@ export async function generateMetadata(
 export default async function PaintingPage(props: Props) {
   const params = await props.params;
 
-  const [{ data: painting }]: [{ data: PaintingQueryResult }] =
-    await Promise.all([sanityFetch({ query: paintingQuery, params })]);
+  const [{ data: painting }]: [{ data: PaintingQueryResult }] = await Promise.all([
+    sanityFetch({ query: paintingQuery, params }),
+  ]);
 
   if (!painting?._id) {
     return notFound();
   }
 
-  return <PaintingDetail paintingData={painting} />;
+  // Create structured data for the painting
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    '@id': `https://www.wisihe.no/paintings/${params.slug}`,
+    name: painting.title,
+    description:
+      painting.description || painting.seoDescription || `Digital painting: ${painting.title}`,
+    contentUrl: painting.image ? resolveOpenGraphImage(painting.image) : undefined,
+    creator: {
+      '@type': 'Person',
+      name: 'Henrik Sissener',
+      url: 'https://www.wisihe.no',
+    },
+    license: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
+    ...(painting.tagsV2 &&
+      painting.tagsV2.length > 0 && {
+        keywords: painting.tagsV2.map((tag: { name: string }) => tag.name).join(', '),
+      }),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
+      <PaintingDetail paintingData={painting} />
+    </>
+  );
 }

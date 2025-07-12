@@ -40,43 +40,6 @@ export const viewport: Viewport = {
   colorScheme: 'dark light',
 };
 
-// export const metadata = {
-//   metadataBase: new URL('/', 'https://wisihe.no'),
-//   title: 'Home | WiSiHe',
-//   description: 'A gallery of some of my paintings and other projects',
-//   locale: 'no_NO',
-//   lang: 'en',
-//   type: 'website',
-//   url: 'https://wisihe.no',
-//   openGraph: {
-//     images: [
-//       {
-//         url: 'https://wisihe.no/images/og-image.jpg',
-//         width: 1200,
-//         height: 630,
-//         alt: 'WiSiHe',
-//       },
-//     ],
-//   },
-//   keywords: [
-//     'wisihe',
-//     'art',
-//     'painting',
-//     'gallery',
-//     'projects',
-//     'portfolio',
-//     'website',
-//     'web development',
-//     'web design',
-//     'web developer',
-//     'web designer',
-//     'developer',
-//     'designer',
-//   ],
-//   author: { name: 'Henrik Wilhelm Sissener', url: 'https://wisihe.no' },
-//   applicationName: 'WiSiHe',
-// };
-
 export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await sanityFetch({
     query: settingsQuery,
@@ -118,7 +81,7 @@ const jsonLd = {
   jobTitle: 'Frontend Developer',
   description:
     'Frontend developer specializing in React and Svelte, with a passion for drawing and game development.',
-  url: 'https://wisihe.no',
+  url: 'https://www.wisihe.no',
   sameAs: [
     'https://github.com/wisihe',
     'https://www.linkedin.com/in/henrik-sissener/',
@@ -134,7 +97,7 @@ const jsonLdSite = {
   '@type': 'WebSite',
   name: 'WiSiHe | Portfolio',
   description: 'Portfolio of Henrik Sissener, a frontend developer and creative.',
-  url: 'https://wisihe.no',
+  url: 'https://www.wisihe.no',
 };
 
 export default async function RootLayout({
@@ -160,6 +123,7 @@ export default async function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <link rel="icon" href="/wisihe.svg" sizes="any" />
+        <link rel="apple-touch-icon" href="/wisihe.svg" />
         <meta name="theme-color" content="#DE0D92" />
         <script
           type="application/ld+json"

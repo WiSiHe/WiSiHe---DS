@@ -107,13 +107,23 @@ export default async function RecipesPage() {
         }}
       />
       <div className="min-h-screen p-4 pt-32 mx-auto max-w-screen-2xl">
-        <h1 className="font-semibold">Recipes</h1>
-        <p>A collection of recipes I&apos;ve tried and enjoyed.</p>
+        <h1 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+          Recipes
+        </h1>
+        <p style={{ color: 'var(--color-text-secondary)' }}>
+          A collection of recipes I&apos;ve tried and enjoyed.
+        </p>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {recipes?.map((recipe: Recipe) => (
             <li key={recipe._id}>
               <Link href={`/recipes/${recipe.slug}`}>
-                <article className="flex flex-col gap-2 p-4 border border-gray-200 rounded-md hover:border-gray-300 transition-colors">
+                <article
+                  className="flex flex-col gap-2 p-4 rounded-md transition-all duration-200 hover:shadow-lg"
+                  style={{
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                  }}
+                >
                   {recipe.mainImage && (
                     <div className="aspect-video overflow-hidden rounded-md">
                       <Image
@@ -125,9 +135,19 @@ export default async function RecipesPage() {
                       />
                     </div>
                   )}
-                  <h2 className="text-lg font-semibold">{recipe.title}</h2>
-                  <p className="text-sm text-gray-500">{recipe.description}</p>
-                  <div className="flex gap-4 text-xs text-gray-400">
+                  <h2
+                    className="text-lg font-semibold"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {recipe.title}
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                    {recipe.description}
+                  </p>
+                  <div
+                    className="flex gap-4 text-xs"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
                     {recipe.cookingTime && <span>⏱️ {recipe.cookingTime} min</span>}
                     {recipe.servings && <span>👥 {recipe.servings} servings</span>}
                     {recipe.difficulty && <span>📊 {recipe.difficulty}</span>}

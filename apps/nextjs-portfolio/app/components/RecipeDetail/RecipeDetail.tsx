@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
 import { PortableTextBlock } from 'next-sanity';
 import { FiClock, FiThermometer, FiUsers, FiBarChart, FiZap, FiTag } from 'react-icons/fi';
+import Link from 'next/link';
 
 interface RecipeIngredient {
   ingredient: string;
@@ -82,11 +83,40 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
           {/* Header */}
           <header className="text-center mb-16">
             <div className="max-w-4xl mx-auto">
+              {/* Breadcrumb navigation for internal linking */}
+              <nav className="flex justify-center mb-8" aria-label="Breadcrumb">
+                <ol className="flex items-center space-x-2 text-sm">
+                  <li>
+                    <Link
+                      href="/"
+                      className="hover:underline"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li style={{ color: 'var(--color-text-tertiary)' }}>/</li>
+                  <li>
+                    <Link
+                      href="/recipes"
+                      className="hover:underline"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Recipes
+                    </Link>
+                  </li>
+                  <li style={{ color: 'var(--color-text-tertiary)' }}>/</li>
+                  <li style={{ color: 'var(--color-text-primary)' }}>{recipe.title}</li>
+                </ol>
+              </nav>
+
               <h1
                 className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {recipe.title}
+                {recipe.title.length < 20
+                  ? `${recipe.title} - Delicious Homemade Recipe`
+                  : recipe.title}
               </h1>
               {recipe.description && (
                 <p
@@ -194,6 +224,42 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
             <div className="xl:col-span-1">
               <div className="xl:sticky xl:top-8">
                 <RecipeIngredients ingredientCategories={recipe.ingredientCategories} />
+
+                {/* Additional internal links in sidebar */}
+                <div
+                  className="mt-8 p-6 rounded-xl shadow-lg"
+                  style={{
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                  }}
+                >
+                  <h3 className="font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                    More Recipes
+                  </h3>
+                  <div className="space-y-3">
+                    <Link
+                      href="/recipes"
+                      className="block text-sm hover:underline"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      Browse All Recipes
+                    </Link>
+                    <Link
+                      href="/projects"
+                      className="block text-sm hover:underline"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      View Projects
+                    </Link>
+                    <Link
+                      href="/paintings"
+                      className="block text-sm hover:underline"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      Digital Art Gallery
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
 

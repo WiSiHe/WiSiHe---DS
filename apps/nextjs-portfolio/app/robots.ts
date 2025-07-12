@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/private/', '/api/', '/_next/'],
+        disallow: ['/private/', '/api/', '/_next/', '/test/'],
         crawlDelay: 10,
       },
       {
@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/'],
       },
     ],
-    sitemap: 'https://wisihe.no/sitemap.xml',
-    host: 'https://wisihe.no',
+    sitemap: 'https://www.wisihe.no/sitemap.xml',
+    host: 'https://www.wisihe.no',
   };
 }
