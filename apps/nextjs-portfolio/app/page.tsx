@@ -97,11 +97,8 @@ export default async function Home() {
 
   const { showcasePaintings, showcaseProjects } = homepage;
 
-  // Limit hero section to 2 paintings for better performance (reduced from 3)
-  const limitedPaintings = showcasePaintings ? showcasePaintings.slice(0, 2) : [];
-  const shuffledHeroPaintings = limitedPaintings.length > 0 ? shuffleArray(limitedPaintings) : [];
+  const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
-  // Use full showcase paintings for the carousel section
   const shuffledCarouselPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
   const paintingsDescription = homepage.paintingsDescription as PortableTextBlock[];
