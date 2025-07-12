@@ -66,7 +66,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         blurDataURL={lqip || ''}
       />
 
-      <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-(--breakpoint-2xl) xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
+      <div className="relative z-10 flex flex-col items-start w-full gap-4 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-12 xl:pt-32 xl:items-start">
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.99 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }} // Optimized spring settings
-                className="relative w-full h-full aspect-square lg:aspect-video drop-shadow-2xl rounded-2xl bg-surface/20"
+                className="relative w-full h-full aspect-square lg:aspect-video drop-shadow-2xl rounded-2xl bg-surface/20 lg:max-h-[75vh]"
               >
                 <Image
                   src={imageProps.src}
