@@ -5,6 +5,7 @@ import RecipeInstructions from '../RecipeInstructions/RecipeInstructions';
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
 import { PortableTextBlock } from 'next-sanity';
+import { FiClock, FiThermometer, FiUsers, FiBarChart, FiZap, FiTag } from 'react-icons/fi';
 
 interface RecipeIngredient {
   ingredient: string;
@@ -103,46 +104,69 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
               >
                 {recipe.prepTime && (
                   <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
+                    style={{
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-secondary)',
+                    }}
                   >
-                    <span>⏱️</span>
+                    <FiClock className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                     <span>Prep: {recipe.prepTime} min</span>
                   </div>
                 )}
                 {recipe.cookingTime && (
                   <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
+                    style={{
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-secondary)',
+                    }}
                   >
-                    <span>🔥</span>
+                    <FiThermometer
+                      className="w-4 h-4"
+                      style={{ color: 'var(--color-accent-warm)' }}
+                    />
                     <span>Cook: {recipe.cookingTime} min</span>
                   </div>
                 )}
                 {recipe.totalTime && (
                   <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
+                    style={{
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-secondary)',
+                    }}
                   >
-                    <span>⏰</span>
+                    <FiClock className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
                     <span>Total: {recipe.totalTime} min</span>
                   </div>
                 )}
                 {recipe.servings && (
                   <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
+                    style={{
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-secondary)',
+                    }}
                   >
-                    <span>👥</span>
+                    <FiUsers className="w-4 h-4" style={{ color: 'var(--color-accent-success)' }} />
                     <span>Serves: {recipe.servings}</span>
                   </div>
                 )}
                 {recipe.difficulty && (
                   <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm"
-                    style={{ background: 'var(--color-surface)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
+                    style={{
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-secondary)',
+                    }}
                   >
-                    <span>📊</span>
+                    <FiBarChart className="w-4 h-4" style={{ color: 'var(--color-accent-cool)' }} />
                     <span className="capitalize">{recipe.difficulty}</span>
                   </div>
                 )}
@@ -192,14 +216,19 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 {recipe.tips.map((tip, index) => (
                   <div
                     key={index}
-                    className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                    className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                     style={{
                       background: 'var(--color-surface)',
                       border: '1px solid var(--color-border)',
                     }}
                   >
                     <div className="flex items-start gap-4">
-                      {tip.icon && <span className="text-2xl flex-shrink-0">{tip.icon}</span>}
+                      <div
+                        className="flex-shrink-0 p-2 rounded-lg"
+                        style={{ background: 'var(--color-accent-light)' }}
+                      >
+                        <FiZap className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                      </div>
                       <div>
                         {tip.title && (
                           <h3
@@ -233,13 +262,14 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 {recipe.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
                     style={{
                       background: 'var(--color-surface)',
                       color: 'var(--color-text-secondary)',
                       border: '1px solid var(--color-border)',
                     }}
                   >
+                    <FiTag className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
                     {tag.name}
                   </span>
                 ))}

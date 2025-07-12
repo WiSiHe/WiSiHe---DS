@@ -3,6 +3,8 @@
 import PortableText from '../PortableText/PortableText';
 import { PortableTextBlock } from 'next-sanity';
 import { processInstructionText } from '../../utils/instructionProcessor';
+import { useState } from 'react';
+import { FiCheck } from 'react-icons/fi';
 
 interface Ingredient {
   ingredient: string;
@@ -23,9 +25,23 @@ interface RecipeInstructionsProps {
 }
 
 export default function RecipeInstructions({ instructions, ingredients }: RecipeInstructionsProps) {
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+
   if (!instructions || instructions.length === 0) {
     return null;
   }
+
+  const toggleStep = (stepIndex: number) => {
+    setCompletedSteps(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(stepIndex)) {
+        newSet.delete(stepIndex);
+      } else {
+        newSet.add(stepIndex);
+      }
+      return newSet;
+    });
+  };
 
   const processContent = (content: PortableTextBlock[]): PortableTextBlock[] => {
     return content.map(block => {
@@ -88,38 +104,100 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
         Instructions
       </h2>
       <div className="space-y-6">
-        {instructions.map((instruction, index) => (
-          <div key={index} className="flex gap-4">
-            <div className="flex-shrink-0">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium"
-                style={{
-                  background: 'var(--color-primary)',
-                  color: 'var(--color-primary-foreground)',
-                }}
-              >
-                {index + 1}
-              </div>
-            </div>
-            <div className="flex-1">
-              {instruction.title && (
-                <h3
-                  className="text-lg font-semibold mb-3"
-                  style={{ color: 'var(--color-text-primary)' }}
+        {instructions.map((instruction, index) => {
+          const isCompleted = completedSteps.has(index);
+
+          return (
+            <div
+              key={index}
+              className={`flex gap-4 transition-all duration-200 ${
+                isCompleted ? 'opacity-75' : ''
+              }`}
+            >
+              <div className="flex-shrink-0">
+                {/* Step Number - Clickable */}
+                <button
+                  onClick={() => toggleStep(index)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
+                    isCompleted ? 'scale-90' : ''
+                  }`}
+                  style={{
+                    background: isCompleted ? 'var(--color-accent-success)' : 'var(--color-accent)',
+                    color: 'var(--color-on-primary)',
+                  }}
+                  aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
                 >
-                  {instruction.title}
-                </h3>
-              )}
+                  {isCompleted ? <FiCheck className="w-4 h-4" /> : index + 1}
+                </button>
+              </div>
+
               <div
-                className="prose prose-gray max-w-none"
-                style={{ color: 'var(--color-text-secondary)' }}
+                className={`flex-1 transition-all duration-200 ${
+                  isCompleted ? 'line-through' : ''
+                }`}
               >
-                <PortableText value={processContent(instruction.content)} />
+                {instruction.title && (
+                  <h3
+                    className={`text-lg font-semibold mb-3 transition-all duration-200 ${
+                      isCompleted ? 'line-through' : ''
+                    }`}
+                    style={{
+                      color: isCompleted
+                        ? 'var(--color-text-tertiary)'
+                        : 'var(--color-text-primary)',
+                    }}
+                  >
+                    {instruction.title}
+                  </h3>
+                )}
+                <div
+                  className={`prose prose-gray max-w-none transition-all duration-200 ${
+                    isCompleted ? 'line-through' : ''
+                  }`}
+                  style={{
+                    color: isCompleted
+                      ? 'var(--color-text-tertiary)'
+                      : 'var(--color-text-secondary)',
+                  }}
+                >
+                  <PortableText value={processContent(instruction.content)} />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* Progress indicator */}
+      {completedSteps.size > 0 && (
+        <div className="mt-8 pt-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="flex items-center justify-between text-sm">
+            <span style={{ color: 'var(--color-text-secondary)' }}>
+              Progress: {completedSteps.size} of {instructions.length} steps completed
+            </span>
+            <button
+              onClick={() => setCompletedSteps(new Set())}
+              className="px-3 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:shadow-md"
+              style={{
+                background: 'var(--color-surface)',
+                color: 'var(--color-text-secondary)',
+                border: '1px solid var(--color-border)',
+              }}
+            >
+              Reset
+            </button>
+          </div>
+          <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="h-2 rounded-full transition-all duration-300"
+              style={{
+                background: 'var(--color-accent-success)',
+                width: `${(completedSteps.size / instructions.length) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
