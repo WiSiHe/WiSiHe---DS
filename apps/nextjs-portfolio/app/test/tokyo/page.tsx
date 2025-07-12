@@ -1,5 +1,10 @@
 import TokyoPage from '@/app/components/Tokyo/TokyoPage';
+import { Metadata } from 'next';
 
-export default async function Tokyo() {
+export const metadata: Metadata = {
+  robots: 'noindex, nofollow',
+};
+
+export default function Tokyo() {
   return <TokyoPage />;
 }

@@ -1,6 +1,11 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllPaintingsandTags } from '@/sanity/lib/queries';
 import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: 'noindex, nofollow',
+};
 
 export default async function TestPage() {
   const result = await sanityFetch({

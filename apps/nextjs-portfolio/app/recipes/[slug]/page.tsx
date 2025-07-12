@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { PortableTextBlock } from 'next-sanity';
 import { urlForImage } from '@/sanity/lib/utils';
 import RecipeDetail from '../../components/RecipeDetail/RecipeDetail';
+import Link from 'next/link';
 
 interface RecipeIngredient {
   ingredient: string;
@@ -84,10 +85,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${recipe.title} | Recipes | WiSiHe`;
+  // Limit tags to 9 for SEO
+  const limitedTags = recipe.tags?.slice(0, 9) || [];
+
+  // Create title without word repetition
+  const title = recipe.title.toLowerCase().includes('recipe')
+    ? `${recipe.title} | WiSiHe`
+    : `${recipe.title} | Recipe | WiSiHe`;
+
   const description =
     recipe.description ||
-    `Learn how to make ${recipe.title} with step-by-step instructions, ingredients, and cooking tips.`;
+    `Learn how to make ${recipe.title} with step-by-step instructions, ingredients, and cooking tips. Perfect for home cooking.`;
   const imageUrl = recipe.mainImage
     ? urlForImage(recipe.mainImage)?.url() || 'https://wisihe.no/og-image.jpg'
     : 'https://wisihe.no/og-image.jpg';
@@ -112,7 +120,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
       publishedTime: recipe.publishedAt,
       authors: ['WiSiHe'],
-      tags: recipe.tags?.map(tag => tag.name) || [],
+      tags: limitedTags.map(tag => tag.name),
     },
     twitter: {
       card: 'summary_large_image',
@@ -127,8 +135,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       'recipe',
       'cooking',
       'food',
+      'home cooking',
+      'delicious',
       recipe.title,
-      ...(recipe.tags?.map(tag => tag.name) || []),
+      ...limitedTags.map(tag => tag.name),
     ].join(', '),
   };
 }
@@ -141,6 +151,9 @@ export default async function RecipePage({ params }: Props) {
   if (!recipe) {
     notFound();
   }
+
+  // Limit tags to 9 for SEO
+  const limitedTags = recipe.tags?.slice(0, 9) || [];
 
   // Create structured data
   const structuredData = {
@@ -161,7 +174,7 @@ export default async function RecipePage({ params }: Props) {
     recipeYield: recipe.servings ? `${recipe.servings} servings` : undefined,
     recipeCategory: 'Main Course',
     recipeCuisine: 'International',
-    keywords: recipe.tags?.map(tag => tag.name).join(', '),
+    keywords: limitedTags.map(tag => tag.name).join(', '),
     recipeIngredient:
       recipe.ingredientCategories?.flatMap(category =>
         category.ingredients.map(ingredient => ({
@@ -195,7 +208,117 @@ export default async function RecipePage({ params }: Props) {
           __html: JSON.stringify(structuredData),
         }}
       />
-      <RecipeDetail recipe={recipe} />
+      <RecipeDetail recipe={{ ...recipe, tags: limitedTags }} />
+
+      {/* Additional internal links section for SEO */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Explore More Recipes
+          </h2>
+          <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+            Discover other delicious recipes and cooking inspiration
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Link
+            href="/recipes"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">All Recipes</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Browse our complete collection of delicious recipes
+            </p>
+          </Link>
+
+          <Link
+            href="/projects"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">Other Projects</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Check out our other creative projects and artwork
+            </p>
+          </Link>
+
+          <Link
+            href="/paintings"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">Digital Art</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Explore our collection of digital paintings and artwork
+            </p>
+          </Link>
+
+          <Link
+            href="/videos"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">Video Content</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Watch our latest videos and creative content
+            </p>
+          </Link>
+
+          <Link
+            href="/contact"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">Get in Touch</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Have questions about our recipes? Contact us!
+            </p>
+          </Link>
+
+          <Link
+            href="/"
+            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+            }}
+          >
+            <h3 className="text-xl font-semibold mb-3">Home</h3>
+            <p style={{ color: 'var(--color-text-secondary)' }}>
+              Return to our homepage and explore everything we offer
+            </p>
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

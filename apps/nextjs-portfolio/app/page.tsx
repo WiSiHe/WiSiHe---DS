@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     'game development',
     'art',
   ],
+  alternates: {
+    canonical: 'https://www.wisihe.no',
+  },
   openGraph: {
     title: 'Henrik Sissener | Frontend Developer & Creative',
     description:
@@ -29,6 +32,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'Henrik Sissener Portfolio',
+    url: 'https://www.wisihe.no',
     images: [
       {
         url: '/images/hell.jpg',
