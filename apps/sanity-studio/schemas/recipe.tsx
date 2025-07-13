@@ -1,20 +1,48 @@
 import { defineType, defineField } from 'sanity';
+import { seoType } from './seoType';
+import { FaWeibo } from 'react-icons/fa';
 
 export default defineType({
   name: 'recipe',
   title: 'Recipe',
   type: 'document',
+  groups: [
+    {
+      name: 'main',
+      title: 'Main Info',
+      default: true,
+    },
+    {
+      name: 'ingredients',
+      title: 'Ingredients',
+    },
+    {
+      name: 'instructions',
+      title: 'Instructions',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+      icon: FaWeibo,
+    },
+    {
+      name: 'metadata',
+      title: 'Metadata',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
+      group: 'main',
       validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      group: 'main',
       options: {
         source: 'title',
         maxLength: 96,
@@ -25,12 +53,14 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'text',
+      group: 'main',
       rows: 3,
     }),
     defineField({
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
+      group: 'main',
       options: {
         hotspot: true,
       },
@@ -47,6 +77,7 @@ export default defineType({
       name: 'ingredientCategories',
       title: 'Ingredient Categories',
       type: 'array',
+      group: 'ingredients',
       of: [
         {
           type: 'object',
@@ -128,6 +159,7 @@ export default defineType({
       name: 'instructions',
       title: 'Instructions',
       type: 'array',
+      group: 'instructions',
       of: [
         {
           type: 'object',
@@ -154,6 +186,7 @@ export default defineType({
       name: 'tips',
       title: 'Tips & Tricks',
       type: 'array',
+      group: 'instructions',
       of: [
         {
           type: 'object',
@@ -185,26 +218,31 @@ export default defineType({
       name: 'cookingTime',
       title: 'Cooking Time (minutes)',
       type: 'number',
+      group: 'metadata',
     }),
     defineField({
       name: 'prepTime',
       title: 'Prep Time (minutes)',
       type: 'number',
+      group: 'metadata',
     }),
     defineField({
       name: 'totalTime',
       title: 'Total Time (minutes)',
       type: 'number',
+      group: 'metadata',
     }),
     defineField({
       name: 'servings',
       title: 'Servings',
       type: 'number',
+      group: 'metadata',
     }),
     defineField({
       name: 'difficulty',
       title: 'Difficulty',
       type: 'string',
+      group: 'metadata',
       options: {
         list: [
           { title: 'Easy', value: 'easy' },
@@ -217,12 +255,15 @@ export default defineType({
       name: 'tags',
       title: 'Tags',
       type: 'array',
+      group: 'metadata',
       of: [{ type: 'reference', to: { type: 'tag' } }],
     }),
     defineField({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
+      group: 'metadata',
     }),
+    defineField(seoType),
   ],
 });

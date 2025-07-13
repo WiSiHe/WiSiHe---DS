@@ -12,6 +12,7 @@ import { PortableText, type PortableTextComponents, type PortableTextBlock } fro
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
 import ResolvedLink from '../ResolvedLink/ResolvedLink';
+import RecipeTipComponent from '../RecipeTip/RecipeTip';
 
 // Type for link mark definitions from Sanity
 type LinkMark = {
@@ -139,6 +140,15 @@ const PortableTextCallout = ({
   );
 };
 
+// Recipe tip component
+const PortableTextRecipeTip = ({
+  value,
+}: {
+  value: { icon?: string; title?: string; content: string; type: string };
+}) => {
+  return <RecipeTipComponent tip={value} />;
+};
+
 // Video embed component
 const PortableTextVideo = ({
   value,
@@ -203,6 +213,11 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       callout: ({ value }) => (
         <PortableTextCallout
           value={value as { type: string; title?: string; content: PortableTextBlock[] }}
+        />
+      ),
+      recipeTip: ({ value }) => (
+        <PortableTextRecipeTip
+          value={value as { icon?: string; title?: string; content: string; type: string }}
         />
       ),
       videoEmbed: ({ value }) => (
