@@ -1,17 +1,17 @@
 /* global process */
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {presentationTool} from 'sanity/presentation'
+import { defineConfig } from 'sanity';
+import { structureTool } from 'sanity/structure';
+import { presentationTool } from 'sanity/presentation';
 
-import {schemaTypes} from './schemas'
-import {assist} from '@sanity/assist'
-import {media} from 'sanity-plugin-media'
+import { schemaTypes } from './schemas';
+import { assist } from '@sanity/assist';
+import { media } from 'sanity-plugin-media';
 
-export const projectId = process.env.SANITY_STUDIO_PROJECT_ID
-export const dataset = process.env.SANITY_STUDIO_DATASET
+export const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
+export const dataset = process.env.SANITY_STUDIO_DATASET;
 
 // URL for preview functionality, defaults to localhost:3000 if not set
-const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://wisihe.no'
+const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://wisihe.no';
 
 //  Main Sanity Studio configuration
 export default defineConfig({
@@ -29,6 +29,12 @@ export default defineConfig({
           enable: '/api/draft-mode/enable',
         },
       },
+      allowOrigins: [
+        'https://wisihe.no',
+        'https://www.wisihe.no',
+        'http://localhost:3000',
+        'http://localhost:3001',
+      ],
       // resolve: {
       //   // The Main Document Resolver API provides a method of resolving a main document from a given route or route pattern. https://www.sanity.io/docs/presentation-resolver-api#57720a5678d9
       //   mainDocuments: defineDocuments([
@@ -91,4 +97,4 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
-})
+});
