@@ -150,6 +150,14 @@ export type Recipe = {
           _key: string;
         }
       | {
+          icon?: string;
+          title?: string;
+          content: string;
+          type?: 'pro' | 'time' | 'flavor' | 'technique' | 'substitution';
+          _type: 'recipeTip';
+          _key: string;
+        }
+      | {
           url: string;
           title?: string;
           caption?: string;
@@ -178,6 +186,23 @@ export type Recipe = {
     [internalGroqTypeReferenceTo]?: 'tag';
   }>;
   publishedAt?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: 'image';
+    };
+    noIndex?: boolean;
+  };
 };
 
 export type Social = {
@@ -294,6 +319,14 @@ export type BlockContent = Array<
         _key: string;
       }>;
       _type: 'callout';
+      _key: string;
+    }
+  | {
+      icon?: string;
+      title?: string;
+      content: string;
+      type?: 'pro' | 'time' | 'flavor' | 'technique' | 'substitution';
+      _type: 'recipeTip';
       _key: string;
     }
   | {
@@ -1750,6 +1783,14 @@ export type GetRecipeResult = {
           alt: string;
           caption?: string;
           _type: 'image';
+          _key: string;
+        }
+      | {
+          icon?: string;
+          title?: string;
+          content: string;
+          type?: 'flavor' | 'pro' | 'substitution' | 'technique' | 'time';
+          _type: 'recipeTip';
           _key: string;
         }
       | {

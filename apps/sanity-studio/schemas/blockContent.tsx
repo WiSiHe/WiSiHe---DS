@@ -254,6 +254,61 @@ export default defineType({
         },
       },
     }),
+    // Add recipe tip blocks
+    defineArrayMember({
+      type: 'object',
+      name: 'recipeTip',
+      title: 'Recipe Tip',
+      fields: [
+        defineField({
+          name: 'icon',
+          title: 'Icon',
+          type: 'string',
+          description: 'Optional emoji or icon (e.g., "💡", "🔥", "⏰")',
+        }),
+        defineField({
+          name: 'title',
+          title: 'Tip Title',
+          type: 'string',
+          description: 'e.g., "Pro Tip", "Time Saver", "Flavor Boost"',
+        }),
+        defineField({
+          name: 'content',
+          title: 'Tip Content',
+          type: 'text',
+          rows: 3,
+          validation: Rule => Rule.required(),
+        }),
+        defineField({
+          name: 'type',
+          title: 'Tip Type',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Pro Tip', value: 'pro' },
+              { title: 'Time Saver', value: 'time' },
+              { title: 'Flavor Tip', value: 'flavor' },
+              { title: 'Technique', value: 'technique' },
+              { title: 'Substitution', value: 'substitution' },
+            ],
+          },
+          initialValue: 'pro',
+        }),
+      ],
+      preview: {
+        select: {
+          title: 'title',
+          icon: 'icon',
+          type: 'type',
+        },
+        prepare({ title, icon, type }: { title?: string; icon?: string; type?: string }) {
+          return {
+            title: `${icon || '💡'} ${title || 'Recipe Tip'}`,
+            subtitle: `Type: ${type || 'pro'}`,
+          };
+        },
+      },
+    }),
     // Add video embed support
     defineArrayMember({
       type: 'object',
