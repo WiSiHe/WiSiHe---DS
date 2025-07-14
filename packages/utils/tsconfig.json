@@ -2,6 +2,7 @@
   "extends": "@wisihe/typescript-config/base.json",
   "include": ["."],
   "compilerOptions": {
+    "target": "ES2017",
     "resolveJsonModule": true
   },
   "exclude": ["dist", "build", "node_modules"]
