@@ -6,6 +6,8 @@
     "jsx": "react-jsx",
     "lib": ["dom", "ES2015"],
     "module": "ESNext",
+    "noEmit": false,
+    "resolveJsonModule": true,
     "target": "es6"
   }
 }
