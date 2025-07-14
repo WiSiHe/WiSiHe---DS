@@ -90,8 +90,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Create title without word repetition
   const title = recipe.title.toLowerCase().includes('recipe')
-    ? `${recipe.title} | WiSiHe`
-    : `${recipe.title} | Recipe | WiSiHe`;
+    ? recipe.title
+    : `${recipe.title} | Recipe`;
 
   const description =
     recipe.description ||
