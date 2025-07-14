@@ -35,6 +35,21 @@ export type Recipe = {
     alt: string;
     _type: 'image';
   };
+  additionalImages?: Array<{
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: 'image';
+    _key: string;
+  }>;
   ingredientCategories?: Array<{
     categoryName: string;
     ingredients?: Array<{
@@ -346,7 +361,33 @@ export type Tag = {
   _rev: string;
   name: string;
   description: string;
-  color?: string;
+  parent?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'tag';
+  };
+  children?: Array<{
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: 'tag';
+  }>;
+  color?:
+    | '#ef4444'
+    | '#f97316'
+    | '#eab308'
+    | '#22c55e'
+    | '#3b82f6'
+    | '#a855f7'
+    | '#ec4899'
+    | '#6b7280'
+    | '#a16207'
+    | '#14b8a6';
+  isFeatured?: boolean;
+  isRoot?: boolean;
+  sortOrder?: number;
 };
 
 export type Settings = {
