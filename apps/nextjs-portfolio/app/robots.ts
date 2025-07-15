@@ -7,11 +7,11 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: ['/private/', '/api/', '/_next/', '/test/'],
-        crawlDelay: 10,
+        crawlDelay: 1, // Reduced from 10 to 1 second for better SEO
       },
       {
         userAgent: 'GPTBot',
-        disallow: ['/'],
+        disallow: ['/'], // Block AI training crawlers
       },
     ],
     sitemap: 'https://www.wisihe.no/sitemap.xml',
