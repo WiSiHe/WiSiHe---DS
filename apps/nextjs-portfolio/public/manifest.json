@@ -2,7 +2,7 @@
   "name": "WiSiHe",
   "short_name": "WiSiHe",
   "description": "Portfolio of Henrik Sissener, a frontend developer and creative.",
-  "theme_color": "#DE0D92",
+  "theme_color": "oklch(65% 0.15 180)",
   "background_color": "#ffffff",
   "display": "browser",
   "orientation": "portrait",
