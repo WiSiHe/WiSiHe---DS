@@ -1,7 +1,7 @@
-"use client";
-import { cn } from "@wisihe/utils";
-import React, { useRef, useEffect } from "react";
-import * as THREE from "three";
+'use client';
+import { cn } from '@wisihe/utils';
+import React, { useRef, useEffect } from 'react';
+import * as THREE from 'three';
 
 interface GridDistortionProps {
   grid?: number;
@@ -43,7 +43,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
   strength = 0.15,
   relaxation = 0.9,
   imageSrc,
-  className = "",
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageAspectRef = useRef<number>(1);
@@ -58,7 +58,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: "high-performance",
+      powerPreference: 'high-performance',
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
@@ -75,31 +75,32 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     };
 
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(imageSrc, (texture) => {
+    textureLoader.load(imageSrc, texture => {
       texture.minFilter = THREE.LinearFilter;
       imageAspectRef.current =
-        (texture.image as HTMLImageElement).width /
-        (texture.image as HTMLImageElement).height;
+        (texture.image as HTMLImageElement).width / (texture.image as HTMLImageElement).height;
       uniforms.uTexture.value = texture;
       handleResize();
     });
 
     const size = grid;
     const data = new Float32Array(4 * size * size);
+
+    // Use a deterministic seed to avoid hydration mismatch
+    const seed = 42; // Fixed seed for consistent server/client rendering
+    const seededRandom = (index: number) => {
+      const x = Math.sin(index + seed) * 10000;
+      return x - Math.floor(x);
+    };
+
     for (let i = 0; i < size * size; i++) {
-      data[i * 4] = Math.random() * 255 - 125;
-      data[i * 4 + 1] = Math.random() * 255 - 125;
+      data[i * 4] = seededRandom(i) * 255 - 125;
+      data[i * 4 + 1] = seededRandom(i + 1000) * 255 - 125;
       // Leave G and A channels as 0 by default
     }
     initialDataRef.current = new Float32Array(data);
 
-    const dataTexture = new THREE.DataTexture(
-      data,
-      size,
-      size,
-      THREE.RGBAFormat,
-      THREE.FloatType,
-    );
+    const dataTexture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.FloatType);
     dataTexture.needsUpdate = true;
     uniforms.uDataTexture.value = dataTexture;
 
@@ -165,9 +166,9 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
       });
     };
 
-    container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("resize", handleResize);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('resize', handleResize);
     handleResize();
 
     const animate = () => {
@@ -186,8 +187,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
 
       for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
-          const distSq =
-            Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
+          const distSq = Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
           if (distSq < maxDist * maxDist) {
             const index = 4 * (i + size * j);
             const power = Math.min(maxDist / Math.sqrt(distSq), 10);
@@ -203,9 +203,9 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     animate();
 
     return () => {
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("resize", handleResize);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('resize', handleResize);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -214,12 +214,7 @@ const GridDistortion: React.FC<GridDistortionProps> = ({
     };
   }, [grid, mouse, strength, relaxation, imageSrc]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={cn("w-full h-full overflow-hidden", className)}
-    />
-  );
+  return <div ref={containerRef} className={cn('w-full h-full overflow-hidden', className)} />;
 };
 
 export default GridDistortion;
