@@ -17,14 +17,14 @@ import FilterManager from '../components/Filters/FilterManager';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Digital Art Gallery | WiSiHe',
+  title: 'Digital Art Gallery',
   description:
     'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
   alternates: {
     canonical: 'https://wisihe.no/paintings',
   },
   openGraph: {
-    title: 'Digital Art Gallery | WiSiHe',
+    title: 'Digital Art Gallery',
     description:
       'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
     url: 'https://wisihe.no/paintings',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Digital Art Gallery | WiSiHe',
+    title: 'Digital Art Gallery',
     description:
       'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
     images: ['https://wisihe.no/images/hell.jpg'],

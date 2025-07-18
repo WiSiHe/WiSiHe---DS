@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { IoAdd } from 'react-icons/io5';
+import { IoAdd, IoClose } from 'react-icons/io5';
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
+import { motion, AnimatePresence } from 'motion/react';
 import Chip from '../Chip/Chip';
 
 type Tag = {
@@ -19,36 +20,15 @@ type FilterManagerProps = {
 const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Filter available tags (exclude already selected ones)
-  const availableTags = tags.filter(tag => !currentFilters.includes(tag.name));
-
-  // Filter tags based on search term
-  const filteredTags = availableTags.filter(tag =>
-    tag.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-        setSearchTerm('');
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Filter available tags (exclude already selected ones) and sort by paintings count
+  const availableTags = tags
+    .filter(tag => !currentFilters.includes(tag.name))
+    .sort((a, b) => b.paintingsCount - a.paintingsCount);
 
   const addFilter = (tagName: string) => {
     const newFilters = [...currentFilters, tagName];
     updateURL(newFilters);
-    setIsDropdownOpen(false);
-    setSearchTerm('');
   };
 
   const removeFilter = (tagName: string) => {
@@ -78,93 +58,125 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
-        <h3 className="text-sm font-medium text-muted-foreground">Filters:</h3>
+        <h3 className="font-medium text-sm text-text-secondary">Filters:</h3>
         {currentFilters.length > 0 && (
           <button
             onClick={clearAllFilters}
-            className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+            className="text-accent hover:text-accent-dark hover:underline transition-colors duration-200"
           >
             Clear all
           </button>
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        {/* Current filters */}
-        {currentFilters.map(filter => (
-          <Chip
-            key={filter}
-            label={filter}
-            onRemove={() => removeFilter(filter)}
-            removable
-            size="small"
-          />
-        ))}
-
-        {/* Add filter button */}
-        {currentFilters.length < 5 && (
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="inline-flex items-center gap-1 px-3 py-1 text-sm border border-dashed border-border rounded-full hover:border-secondary hover:bg-surface-elevated transition-colors"
+      <motion.div className="flex flex-wrap items-center gap-2 mb-3" layout>
+        {/* Add filter listbox - always first */}
+        <motion.div layout>
+          {currentFilters.length < 5 && (
+            <Listbox
+              value={null}
+              onChange={(tag: Tag | null) => {
+                if (tag) {
+                  addFilter(tag.name);
+                }
+              }}
             >
-              <IoAdd className="w-4 h-4" />
-              Add filter
-            </button>
+              <div className="relative">
+                <ListboxButton className="inline-flex items-center gap-1 px-3 py-1 text-sm border border-dashed border-border rounded-full hover:border-accent hover:bg-surface-elevated transition-all duration-200 bg-transparent w-auto min-w-[120px] focus:outline-none focus:ring-2 focus:ring-border-focus cursor-pointer group">
+                  <IoAdd className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors duration-200" />
+                  <span className="text-text-secondary group-hover:text-text-primary transition-colors duration-200">
+                    Add filter
+                  </span>
+                </ListboxButton>
 
-            {/* Dropdown */}
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-surface border border-border rounded-lg shadow-lg z-10">
-                {/* Search input */}
-                <div className="p-3 border-b border-border">
-                  <input
-                    type="text"
-                    placeholder="Search tags..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-border-focus bg-surface text-text-primary"
-                    autoFocus
-                  />
-                </div>
-
-                {/* Tags list */}
-                <div className="max-h-48 overflow-y-auto">
-                  {filteredTags.length > 0 ? (
-                    filteredTags.map(tag => (
-                      <button
-                        key={tag._id}
-                        onClick={() => addFilter(tag.name)}
-                        className="w-full px-3 py-2 text-left text-sm hover:bg-surface-elevated flex items-center justify-between text-text-primary"
+                <ListboxOptions
+                  anchor="bottom"
+                  className="w-64 bg-surface border border-border rounded-lg shadow-xl z-20 mt-2 backdrop-blur-sm max-h-48 overflow-y-auto"
+                  transition
+                >
+                  <AnimatePresence>
+                    {availableTags.length > 0 ? (
+                      availableTags.map((tag, index) => (
+                        <motion.div
+                          key={tag._id}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{
+                            delay: index * 0.05,
+                            duration: 0.2,
+                          }}
+                        >
+                          <ListboxOption
+                            value={tag}
+                            className="group flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-elevated text-text-primary data-focus:bg-surface-elevated cursor-pointer transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg"
+                          >
+                            <span className="font-medium">{tag.name}</span>
+                            <span className="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded-full">
+                              {tag.paintingsCount} paintings
+                            </span>
+                          </ListboxOption>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <motion.div
+                        className="px-3 py-4 text-sm text-text-tertiary text-center italic"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                       >
-                        <span>{tag.name}</span>
-                        <span className="text-xs text-text-tertiary">
-                          {tag.paintingsCount} paintings
-                        </span>
-                      </button>
-                    ))
-                  ) : (
-                    <div className="px-3 py-2 text-sm text-text-tertiary">
-                      {searchTerm ? 'No tags found' : 'No available tags'}
-                    </div>
-                  )}
-                </div>
+                        No available tags
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </ListboxOptions>
               </div>
-            )}
-          </div>
-        )}
+            </Listbox>
+          )}
+        </motion.div>
+
+        {/* Current filters */}
+        <AnimatePresence mode="popLayout">
+          {currentFilters.map(filter => (
+            <motion.div
+              key={filter}
+              layout
+              initial={{ opacity: 0, scale: 0.8, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: -10 }}
+              transition={{
+                type: 'spring',
+                stiffness: 500,
+                damping: 30,
+                duration: 0.2,
+              }}
+            >
+              <Chip
+                label={filter}
+                onRemove={() => removeFilter(filter)}
+                onClick={() => removeFilter(filter)}
+                Icon={IoClose}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
 
         {/* Max filters warning */}
-        {currentFilters.length >= 5 && (
-          <span className="text-xs text-text-tertiary">Maximum 5 filters reached</span>
-        )}
-      </div>
-
-      {/* Filter info */}
-      {currentFilters.length > 0 && (
-        <div className="text-xs text-muted-foreground">
-          Showing paintings with <strong>all</strong> selected tags
-        </div>
-      )}
+        <AnimatePresence>
+          {currentFilters.length >= 5 && (
+            <motion.span
+              className="text-xs text-warning bg-surface-elevated px-2 py-1 rounded-full border border-border"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+            >
+              Maximum 5 filters reached
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 };
