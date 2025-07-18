@@ -109,21 +109,20 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const getImageDimensions = (format: string) => {
     switch (format) {
       case 'landscape':
-        return { width: 1920, height: 1080 }; // 16:9 aspect ratio
+        return { width: 1200, height: 675 }; // 16:9 aspect ratio, reduced for mobile
       case 'portrait':
-        return { width: 1080, height: 1920 }; // 9:16 aspect ratio
+        return { width: 675, height: 1200 }; // 9:16 aspect ratio, reduced for mobile
       case 'square':
       default:
-        return { width: 1600, height: 1600 }; // 1:1 aspect ratio
+        return { width: 1200, height: 1200 }; // 1:1 aspect ratio, reduced for mobile
     }
   };
 
   return (
     <div className="pt-32 min-h-[calc(100vh_-_5rem)] pb-32 overflow-clip">
-      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-(--breakpoint-2xl)">
+      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-screen-2xl">
         <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8">
-          <div className={cn('relative w-full h-full', aspectRatioStyle)}>
-            {/* Blurry background image */}
+          <div className="relative w-full">
             <motion.img
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.45 }}
@@ -141,62 +140,65 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               }
               alt={title}
               className={cn(
-                'absolute inset-0 object-cover pointer-events-none ring w-full h-full scale-125 blur-3xl',
+                'absolute inset-0 object-cover pointer-events-none w-full h-full blur-3xl overflow-clip',
                 aspectRatioStyle,
               )}
               aria-hidden="true"
             />
 
-            <div className="overflow-clip rounded-3xl" ref={emblaRef}>
-              <div className="flex">
-                {allImages.map((img, index) => {
-                  const { width, height } = getImageDimensions(format);
-                  const imageUrl =
-                    urlForImage(img)?.width(width).height(height).fit('max').format('webp').url() ??
-                    '';
+            <div className={cn('relative', aspectRatioStyle)}>
+              <div className="overflow-clip rounded-3xl w-full h-full" ref={emblaRef}>
+                <div className="flex w-full h-full">
+                  {allImages.map((img, index) => {
+                    const { width, height } = getImageDimensions(format);
+                    const imageUrl =
+                      urlForImage(img)
+                        ?.width(width)
+                        .height(height)
+                        .fit('max')
+                        .format('webp')
+                        .quality(80)
+                        .url() ?? '';
 
-                  return (
-                    <div
-                      key={index}
-                      className={cn('relative flex-[0_0_100%] min-h-[50vh]', aspectRatioStyle)}
-                    >
-                      <div className="w-full h-full relative overflow-clip rounded-3xl">
-                        <Image
-                          src={imageUrl}
-                          alt={`${title} - Image ${index + 1}`}
-                          priority={index === 0}
-                          fill
-                          className="object-cover rounded-2xl h-full w-full overflow-clip"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
-                        />
+                    return (
+                      <div key={index} className="relative flex-[0_0_100%] w-full h-full">
+                        <div className="w-full h-full relative overflow-clip rounded-3xl">
+                          <Image
+                            src={imageUrl}
+                            alt={`${title} - Image ${index + 1}`}
+                            priority={index === 0}
+                            fill
+                            className="object-cover rounded-2xl h-full w-full overflow-clip"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {allImages.length > 1 && (
-              <>
-                <button
-                  onClick={scrollPrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
-                  aria-label="Previous image"
-                >
-                  <IoChevronBack className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={scrollNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
-                  aria-label="Next image"
-                >
-                  <IoChevronForward className="w-6 h-6" />
-                </button>
-              </>
-            )}
+              {allImages.length > 1 && (
+                <>
+                  <button
+                    onClick={scrollPrev}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                    aria-label="Previous image"
+                  >
+                    <IoChevronBack className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={scrollNext}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                    aria-label="Next image"
+                  >
+                    <IoChevronForward className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Thumbnail indicators */}
           {allImages.length > 1 && (
             <div className="z-10 flex items-center justify-center w-full gap-2 pt-4">
               {allImages.map((_, index) => (
