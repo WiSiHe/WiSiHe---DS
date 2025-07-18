@@ -59,10 +59,13 @@ const NotFoundSection = () => {
         className="absolute inset-0 z-10 flex flex-col items-center bg-surface/40 backdrop-blur-3xl p-4 md:p-8 rounded mx-auto my-auto text-center text-text-primary h-fit w-fit"
       >
         <motion.div variants={itemVariants} className="text-xs text-text-primary">
-          <h2>
-            <strong>Still not convinced?</strong>
+          <h1 className="text-4xl font-bold mb-2">404</h1>
+          <h2 className="text-lg mb-2">
+            <strong>Page Not Found</strong>
           </h2>
-          <div className="pb-4">Come on, just a little peak, I dare you!</div>
+          <div className="pb-4">
+            The page you&apos;re looking for doesn&apos;t exist. But hey, while you&apos;re here...
+          </div>
         </motion.div>
         <motion.div variants={itemVariants} className="flex justify-center">
           <Link
