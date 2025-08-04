@@ -47,11 +47,11 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: 'website',
-      url: 'https://wisihe.no/recipes',
+      url: 'https://www.wisihe.no/recipes',
       siteName: 'WiSiHe',
       images: [
         {
-          url: 'https://wisihe.no/og-image.jpg', // Replace with your actual OG image
+          url: 'https://www.wisihe.no/og-image.jpg', // Replace with your actual OG image
           width: 1200,
           height: 630,
           alt: 'WiSiHe Recipes',
@@ -62,10 +62,10 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://wisihe.no/og-image.jpg'], // Replace with your actual OG image
+      images: ['https://www.wisihe.no/og-image.jpg'], // Replace with your actual OG image
     },
     alternates: {
-      canonical: 'https://wisihe.no/recipes',
+      canonical: 'https://www.wisihe.no/recipes',
     },
   };
 }
@@ -91,7 +91,7 @@ export default async function RecipesPage() {
                 position: index + 1,
                 item: {
                   '@type': 'Recipe',
-                  '@id': `https://wisihe.no/recipes/${recipe.slug}`,
+                  '@id': `https://www.wisihe.no/recipes/${recipe.slug}`,
                   name: recipe.title,
                   description: recipe.description,
                   image: recipe.mainImage ? urlForImage(recipe.mainImage)?.url() : undefined,

@@ -12,7 +12,7 @@ export const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
 export const dataset = process.env.SANITY_STUDIO_DATASET;
 
 // URL for preview functionality, defaults to localhost:3000 if not set
-const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://wisihe.no';
+const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://www.wisihe.no';
 
 // Custom structure configuration
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */

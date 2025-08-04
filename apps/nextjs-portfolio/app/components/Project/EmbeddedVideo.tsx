@@ -33,7 +33,7 @@ export default function EmbeddedVideo({ videoUrl }: EmbeddedVideoProps) {
 
   if (!videoId) {
     return (
-      <section className="relative py-8 lg:py-20 bg-surface ring">
+      <section className="relative py-8 lg:py-20 ">
         <div className="max-w-screen-lg mx-auto aspect-video flex items-center justify-center">
           <p className="text-text-secondary">Invalid video URL</p>
         </div>
@@ -42,8 +42,8 @@ export default function EmbeddedVideo({ videoUrl }: EmbeddedVideoProps) {
   }
 
   return (
-    <section className="relative py-8 lg:py-20 bg-surface ring">
-      <div className="max-w-screen-lg mx-auto aspect-video">
+    <section className="relative">
+      <div className="aspect-video">
         <iframe
           src={`https://www.youtube.com/embed/${videoId}`}
           className="w-full h-full rounded-lg"

@@ -97,9 +97,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     recipe.description ||
     `Learn how to make ${recipe.title} with step-by-step instructions, ingredients, and cooking tips. Perfect for home cooking.`;
   const imageUrl = recipe.mainImage
-    ? urlForImage(recipe.mainImage)?.url() || 'https://wisihe.no/og-image.jpg'
-    : 'https://wisihe.no/og-image.jpg';
-  const url = `https://wisihe.no/recipes/${recipe.slug}`;
+    ? urlForImage(recipe.mainImage)?.url() || 'https://www.wisihe.no/og-image.jpg'
+    : 'https://www.wisihe.no/og-image.jpg';
+  const url = `https://www.wisihe.no/recipes/${recipe.slug}`;
 
   return {
     title,
@@ -159,7 +159,7 @@ export default async function RecipePage({ params }: Props) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
-    '@id': `https://wisihe.no/recipes/${recipe.slug}`,
+    '@id': `https://www.wisihe.no/recipes/${recipe.slug}`,
     name: recipe.title,
     description: recipe.description,
     image: recipe.mainImage ? urlForImage(recipe.mainImage)?.url() : undefined,

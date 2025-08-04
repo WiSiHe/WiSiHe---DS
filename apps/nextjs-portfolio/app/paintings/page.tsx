@@ -21,19 +21,19 @@ export const metadata: Metadata = {
   description:
     'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
   alternates: {
-    canonical: 'https://wisihe.no/paintings',
+    canonical: 'https://www.wisihe.no/paintings',
   },
   openGraph: {
     title: 'Digital Art Gallery',
     description:
       'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
-    url: 'https://wisihe.no/paintings',
+    url: 'https://www.wisihe.no/paintings',
     siteName: 'WiSiHe',
     locale: 'en_US',
     type: 'website',
     images: [
       {
-        url: 'https://wisihe.no/images/hell.jpg',
+        url: 'https://www.wisihe.no/images/hell.jpg',
         width: 1200,
         height: 630,
         alt: "Digital art gallery showcasing WiSiHe's creative paintings and illustrations",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: 'Digital Art Gallery',
     description:
       'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.',
-    images: ['https://wisihe.no/images/hell.jpg'],
+    images: ['https://www.wisihe.no/images/hell.jpg'],
   },
 };
 
