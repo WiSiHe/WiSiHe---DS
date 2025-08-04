@@ -70,7 +70,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         ? urlForImage(image)?.width(1200).height(630).url()
         : defaultOgImage;
 
-    const url = `https://wisihe.no/projects/${project.slug}`;
+    const url = `https://www.wisihe.no/projects/${project.slug}`;
 
     const metadata: Metadata = {
       title: seo?.title || name,
@@ -156,16 +156,14 @@ export default async function ProjectPage(props: Props) {
               <Suspense fallback={<ProjectSectionSkeleton />}>
                 <ConnectedPaintingsCarousel paintings={connectedPaintings} />
               </Suspense>
+              {connectedVideo?.videoUrl && (
+                <Suspense fallback={<ProjectSectionSkeleton />}>
+                  <EmbeddedVideo videoUrl={connectedVideo.videoUrl} />
+                </Suspense>
+              )}
             </section>
           </div>
         </div>
-
-        {/* Video Section */}
-        {connectedVideo?.videoUrl && (
-          <Suspense fallback={<ProjectSectionSkeleton />}>
-            <EmbeddedVideo videoUrl={connectedVideo.videoUrl} />
-          </Suspense>
-        )}
       </div>
     );
   } catch (error) {
