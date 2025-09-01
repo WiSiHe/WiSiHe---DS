@@ -13,9 +13,9 @@
     "./storybook.js": "./storybook.js"
   },
   "devDependencies": {
-    "@vercel/style-guide": "^5.1.0",
-    "eslint-config-turbo": "^1.11.3",
-    "eslint-plugin-mdx": "^2.3.2",
+    "@vercel/style-guide": "^5.2.0",
+    "eslint-config-turbo": "^1.13.4",
+    "eslint-plugin-mdx": "^2.3.4",
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-storybook": "^0.6.15"
   }
