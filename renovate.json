@@ -15,12 +15,14 @@
     {
       "matchPaths": ["apps/**"],
       "groupName": "app dependencies",
-      "groupSlug": "apps"
+      "groupSlug": "apps",
+      "automerge": false
     },
     {
       "matchPaths": ["packages/**"],
       "groupName": "package dependencies",
-      "groupSlug": "packages"
+      "groupSlug": "packages",
+      "automerge": false
     }
   ],
   "rangeStrategy": "bump",
@@ -31,5 +33,7 @@
   "commitMessagePrefix": "chore(deps):",
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
-  "commitMessageExtra": "to {{newVersion}}"
+  "commitMessageExtra": "to {{newVersion}}",
+  "schedule": ["before 4am on monday"],
+  "timezone": "UTC"
 }
