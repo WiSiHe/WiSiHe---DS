@@ -23,7 +23,7 @@
     "@sanity/image-url": "^1.2.0",
     "@sanity/studio-secrets": "^3.0.2",
     "@sanity/ui": "^2.16.13",
-    "@sanity/vision": "^3.99.0",
+    "@sanity/vision": "^4.6.0",
     "openai": "^5.16.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
