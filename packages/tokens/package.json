@@ -1,0 +1,21 @@
+{
+  "name": "@wisihe/tokens",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./css": "./dist/css/variables.css",
+    "./tailwind": "./dist/tailwind/config.js",
+    "./tailwind-v4": "./dist/tailwind/theme.css",
+    "./tailwind-v4-dark": "./dist/tailwind/theme-dark.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "style-dictionary": "5.0.4"
+  }
+}
