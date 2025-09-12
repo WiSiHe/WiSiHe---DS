@@ -1,5 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/live';
-import { getRecipe } from '@/sanity/lib/queries';
+import { getRecipe, getRecipeSlugs } from '@/sanity/lib/queries';
+import { client } from '@/sanity/lib/client';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { PortableTextBlock } from 'next-sanity';
@@ -72,6 +73,14 @@ interface RecipeQueryResult {
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const slugs = (await client.fetch(getRecipeSlugs)) as { slug: string }[];
+
+  return slugs.map(({ slug }) => ({
+    slug,
+  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
