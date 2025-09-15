@@ -6,6 +6,6 @@ export default defineConfig(options => ({
   dts: true,
   sourcemap: true,
   external: ['react'],
-  css: true,
+  css: false, // Don't bundle CSS since consumers use Tailwind
   ...options,
 }));

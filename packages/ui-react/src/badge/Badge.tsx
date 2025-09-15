@@ -76,13 +76,7 @@ export interface BadgeProps
   children?: React.ReactNode;
 }
 
-export function Badge({
-  className,
-  variant,
-  size,
-  children,
-  ...props
-}: BadgeProps): React.JSX.Element {
+export function Badge({ className, variant, size, children, ...props }: BadgeProps) {
   return (
     <div className={cn(badge({ variant, size }), className)} {...props}>
       {children}

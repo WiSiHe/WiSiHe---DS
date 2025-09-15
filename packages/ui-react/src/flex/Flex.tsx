@@ -61,7 +61,7 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement>, Variant
   children?: React.ReactNode;
 }
 
-export function Flex({ className, children, ...props }: FlexProps): React.JSX.Element {
+export function Flex({ className, children, ...props }: FlexProps) {
   return (
     <div className={cn(flex(props), className)} {...props}>
       {children}

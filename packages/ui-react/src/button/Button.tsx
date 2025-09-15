@@ -105,7 +105,7 @@ export function Button({
   children,
   type = 'button',
   ...props
-}: ButtonProps): React.ReactElement {
+}: ButtonProps) {
   return (
     <button
       className={cn(
