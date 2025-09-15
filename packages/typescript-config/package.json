@@ -12,5 +12,8 @@
     "./react-library.json": "./react-library.json",
     "./sanity.json": "./sanity.json",
     "./storybook.json": "./storybook.json"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
