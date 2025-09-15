@@ -11,6 +11,7 @@
  * https://www.sanity.io/docs/sanity-typegen
  * ---------------------------------------------------------------------------------
  */
+
 // Source: schema.json
 export type Recipe = {
   _id: string;
