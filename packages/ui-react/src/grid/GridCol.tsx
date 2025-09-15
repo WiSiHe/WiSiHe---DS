@@ -96,12 +96,9 @@ export function GridCol({
   lg,
   xl,
   ...props
-}: GridColProps): JSX.Element {
+}: GridColProps): React.JSX.Element {
   return (
-    <div
-      className={cn(gridCol({ span, sm, md, lg, xl }), className)}
-      {...props}
-    >
+    <div className={cn(gridCol({ span, sm, md, lg, xl }), className)} {...props}>
       {children}
     </div>
   );

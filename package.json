@@ -3,7 +3,8 @@
   "name": "@wisihe/ds",
   "type": "module",
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter=!storybook",
+    "build:storybook": "turbo run build --filter=storybook",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

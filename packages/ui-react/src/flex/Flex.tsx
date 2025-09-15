@@ -1,4 +1,6 @@
+import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@wisihe/utils';
 
 const flex = cva('flex', {
   variants: {
@@ -55,19 +57,13 @@ const flex = cva('flex', {
     gap: 4,
   },
 });
-export interface FlexProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof flex> {
+export interface FlexProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof flex> {
   children?: React.ReactNode;
 }
 
-export function Flex({
-  className,
-  children,
-  ...props
-}: FlexProps): JSX.Element {
+export function Flex({ className, children, ...props }: FlexProps): React.JSX.Element {
   return (
-    <div className={`${flex(props)} ${className}`} {...props}>
+    <div className={cn(flex(props), className)} {...props}>
       {children}
     </div>
   );

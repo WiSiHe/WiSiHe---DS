@@ -5,14 +5,22 @@ import { isEmptyObject, isNotEmptyObject } from '@wisihe/utils';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
+interface PaletteColor {
+  background?: string;
+  foreground?: string;
+}
+
+interface Palette {
+  vibrant?: PaletteColor;
+  darkVibrant?: PaletteColor;
+}
+
 export const runtime = 'edge';
 
 async function loadGoogleFont(font: string, text: string) {
   const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
-  const resource = css.match(
-    /src: url\((.+)\) format\('(opentype|truetype)'\)/
-  );
+  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
 
   if (resource) {
     const response = await fetch(resource[1]);
@@ -50,8 +58,9 @@ export async function GET(request: Request) {
   let darkVibrantBackground = '#3B82F6';
 
   if (palette && isNotEmptyObject(palette)) {
-    vibrantBackground = palette?.vibrant?.background || '#3B82F6';
-    darkVibrantBackground = palette?.darkVibrant?.background || '#3B82F6';
+    const typedPalette = palette as Palette;
+    vibrantBackground = typedPalette?.vibrant?.background || '#3B82F6';
+    darkVibrantBackground = typedPalette?.darkVibrant?.background || '#3B82F6';
   }
 
   if (!data) {
@@ -103,6 +112,6 @@ export async function GET(request: Request) {
           style: 'normal',
         },
       ],
-    }
+    },
   );
 }
