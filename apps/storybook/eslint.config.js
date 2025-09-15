@@ -6,11 +6,13 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
-import { globalIgnores } from 'eslint/config';
+// Removed invalid import - using direct ignore pattern instead
 
 export default tseslint.config(
   [
-    globalIgnores(['dist']),
+    {
+      ignores: ['dist/**'],
+    },
     {
       files: ['**/*.{ts,tsx}'],
       ignores: ['.storybook/**', 'vitest.shims.d.ts'],
