@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/react';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -175,22 +176,25 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
       >
-        <PostHogProvider>
-          {isDraftMode && (
-            <>
-              <DraftModeToast />
-              <VisualEditing />
-            </>
-          )}
-          <SanityLive onError={handleError} />
-          <HeaderNavigation />
-          <main id="main-content" className="bg-background">
-            {children}
-          </main>
-          <Footer socialLinks={socialLinks} />
-          <Analytics />
-          <SpeedInsights />
-        </PostHogProvider>
+        <ProgressBarProvider>
+          <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50" />
+          <PostHogProvider>
+            {isDraftMode && (
+              <>
+                <DraftModeToast />
+                <VisualEditing />
+              </>
+            )}
+            <SanityLive onError={handleError} />
+            <HeaderNavigation />
+            <main id="main-content" className="bg-background">
+              {children}
+            </main>
+            <Footer socialLinks={socialLinks} />
+            <Analytics />
+            <SpeedInsights />
+          </PostHogProvider>
+        </ProgressBarProvider>
       </body>
     </html>
   );
