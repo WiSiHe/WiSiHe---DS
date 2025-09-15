@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@flags-sdk/statsig": "^0.2.2",
-    "@headlessui/react": "^2.2.7",
+    "@headlessui/react": "^2.2.8",
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
@@ -32,7 +32,7 @@
     "motion": "^12.23.12",
     "next": "15.2.4",
     "next-sanity": "^9.12.3",
-    "posthog-js": "^1.264.2",
+    "posthog-js": "^1.266.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-fast-marquee": "^1.6.5",
@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
-    "@types/node": "^22.18.1",
-    "@types/react": "^19.1.12",
+    "@types/node": "^22.18.3",
+    "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "eslint": "^9.35.0",
     "eslint-config-next": "15.2.4",
