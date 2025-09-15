@@ -29,7 +29,7 @@
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
-    "eslint": "^8.57.1",
+    "eslint": "^9.35.0",
     "framer-motion": "^11.18.2",
     "react": "^19.1.1",
     "tailwindcss": "^4.0.0",
