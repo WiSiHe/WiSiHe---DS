@@ -32,13 +32,7 @@ export interface SpinnerProps
   children?: React.ReactNode;
 }
 
-export function Spinner({
-  className,
-  size,
-  color,
-  children,
-  ...props
-}: SpinnerProps): React.JSX.Element {
+export function Spinner({ className, size, color, children, ...props }: SpinnerProps) {
   return (
     <svg
       className={cn(spinner({ size, color }), className)}

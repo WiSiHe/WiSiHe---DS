@@ -87,16 +87,7 @@ export interface GridColProps
   children?: React.ReactNode;
 }
 
-export function GridCol({
-  className,
-  children,
-  span,
-  sm,
-  md,
-  lg,
-  xl,
-  ...props
-}: GridColProps): React.JSX.Element {
+export function GridCol({ className, children, span, sm, md, lg, xl, ...props }: GridColProps) {
   return (
     <div className={cn(gridCol({ span, sm, md, lg, xl }), className)} {...props}>
       {children}

@@ -28,13 +28,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement>, Variant
   children?: React.ReactNode;
 }
 
-export function Card({
-  className,
-  variant,
-  padding,
-  children,
-  ...props
-}: CardProps): React.JSX.Element {
+export function Card({ className, variant, padding, children, ...props }: CardProps) {
   return (
     <div className={cn(card({ variant, padding }), className)} {...props}>
       {children}
@@ -63,12 +57,7 @@ export interface CardHeaderProps
   children?: React.ReactNode;
 }
 
-export function CardHeader({
-  className,
-  padding,
-  children,
-  ...props
-}: CardHeaderProps): React.JSX.Element {
+export function CardHeader({ className, padding, children, ...props }: CardHeaderProps) {
   return (
     <div className={cn(cardHeader({ padding }), className)} {...props}>
       {children}
@@ -96,12 +85,7 @@ export interface CardTitleProps
   children?: React.ReactNode;
 }
 
-export function CardTitle({
-  className,
-  size,
-  children,
-  ...props
-}: CardTitleProps): React.JSX.Element {
+export function CardTitle({ className, size, children, ...props }: CardTitleProps) {
   return (
     <h3 className={cn(cardTitle({ size }), className)} {...props}>
       {children}
@@ -128,12 +112,7 @@ export interface CardDescriptionProps
   children?: React.ReactNode;
 }
 
-export function CardDescription({
-  className,
-  size,
-  children,
-  ...props
-}: CardDescriptionProps): React.JSX.Element {
+export function CardDescription({ className, size, children, ...props }: CardDescriptionProps) {
   return (
     <p className={cn(cardDescription({ size }), className)} {...props}>
       {children}
@@ -162,12 +141,7 @@ export interface CardContentProps
   children?: React.ReactNode;
 }
 
-export function CardContent({
-  className,
-  padding,
-  children,
-  ...props
-}: CardContentProps): React.JSX.Element {
+export function CardContent({ className, padding, children, ...props }: CardContentProps) {
   return (
     <div className={cn(cardContent({ padding }), className)} {...props}>
       {children}
@@ -196,12 +170,7 @@ export interface CardFooterProps
   children?: React.ReactNode;
 }
 
-export function CardFooter({
-  className,
-  padding,
-  children,
-  ...props
-}: CardFooterProps): React.JSX.Element {
+export function CardFooter({ className, padding, children, ...props }: CardFooterProps) {
   return (
     <div className={cn(cardFooter({ padding }), className)} {...props}>
       {children}
