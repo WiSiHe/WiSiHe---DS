@@ -50,15 +50,22 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   // Bundle analyzer (uncomment for debugging)
-  // webpack: (config, { isServer }) => {
-  //   if (!isServer) {
-  //     config.resolve.fallback = {
-  //       ...config.resolve.fallback,
-  //       fs: false,
-  //     };
-  //   }
-  //   return config;
-  // },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+
+    // Help resolve workspace packages
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@wisihe/utils': require.resolve('@wisihe/utils'),
+    };
+
+    return config;
+  },
   // async redirects() {
   // x  return await fetchRedirects();
   // },
