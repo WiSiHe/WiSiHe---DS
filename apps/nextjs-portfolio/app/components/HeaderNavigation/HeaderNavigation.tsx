@@ -1,10 +1,11 @@
 'use client';
 
 import { motion, Variants } from 'motion/react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type JSX } from 'react';
 import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
+
+import Link from '../ProgressLink';
 
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
