@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@wisihe/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import React from 'react';
+import { cn } from '@wisihe/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 function LoadingIcon(): React.ReactElement {
   return (
@@ -12,11 +12,7 @@ function LoadingIcon(): React.ReactElement {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-      <g
-        id="SVGRepo_tracerCarrier"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
       <g id="SVGRepo_iconCarrier">
         <path
           d="M20.0001 12C20.0001 13.3811 19.6425 14.7386 18.9623 15.9405C18.282 17.1424 17.3022 18.1477 16.1182 18.8587C14.9341 19.5696 13.5862 19.9619 12.2056 19.9974C10.825 20.0328 9.45873 19.7103 8.23975 19.0612"
@@ -29,61 +25,62 @@ function LoadingIcon(): React.ReactElement {
   );
 }
 
-const button = cva("button", {
+const button = cva('button', {
   variants: {
     variant: {
       primary: [
-        "bg-blue-900",
-        "text-white",
-        "border-transparent",
-        "hover:bg-blue-600",
-        "stroke-white",
+        'bg-primary-900',
+        'text-surface-pure',
+        'border-transparent',
+        'hover:bg-primary-600',
+        'stroke-surface-pure',
       ],
       secondary: [
-        "bg-white",
-        "text-gray-800",
-        "border-gray-400",
-        "hover:bg-gray-100",
+        'bg-surface-pure',
+        'text-text-primary',
+        'border-border-default',
+        'hover:bg-neutral-100',
       ],
       tertiary: [
-        "bg-transparent",
-        "text-blue-900",
-        "border-transparent",
-        "hover:bg-blue-100",
+        'bg-transparent',
+        'text-primary-900',
+        'border-transparent',
+        'hover:bg-primary-100',
       ],
       destructive: [
-        "bg-red-900",
-        "text-white",
-        "border-transparent",
-        "hover:bg-red-600",
+        'bg-error-900',
+        'text-surface-pure',
+        'border-transparent',
+        'hover:bg-error-600',
       ],
       success: [
-        "bg-green-900",
-        "text-white",
-        "border-transparent",
-        "hover:bg-green-600",
+        'bg-success-900',
+        'text-surface-pure',
+        'border-transparent',
+        'hover:bg-success-600',
       ],
+      accent: ['bg-accent-500', 'text-surface-pure', 'border-transparent', 'hover:bg-accent-600'],
     },
     size: {
-      small: ["text-sm", "py-1", "px-2"],
-      medium: ["text-base", "py-2", "px-4"],
-      large: ["text-lg", "py-3", "px-6"],
-      icon: ["p-2"],
+      small: ['text-sm', 'py-1', 'px-2', 'h-8'],
+      medium: ['text-base', 'py-2', 'px-4', 'h-10'],
+      large: ['text-lg', 'py-3', 'px-6', 'h-12'],
+      icon: ['p-2', 'h-10', 'w-10'],
     },
     isDisabled: {
-      true: ["opacity-50", "cursor-not-allowed"],
+      true: ['opacity-50', 'cursor-not-allowed'],
     },
   },
   compoundVariants: [
     {
-      variant: "primary",
-      size: "medium",
-      class: "uppercase",
+      variant: 'primary',
+      size: 'medium',
+      class: 'uppercase',
     },
   ],
   defaultVariants: {
-    variant: "primary",
-    size: "medium",
+    variant: 'primary',
+    size: 'medium',
   },
 });
 
@@ -91,10 +88,10 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof button> {
   Icon?: React.ElementType | null;
-  iconPosition?: "left" | "right";
+  iconPosition?: 'left' | 'right';
   isLoading?: boolean;
   isDisabled?: boolean;
-  type?: "button" | "submit" | "reset";
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export function Button({
@@ -102,17 +99,17 @@ export function Button({
   variant,
   size,
   Icon,
-  iconPosition = "left",
+  iconPosition = 'left',
   isLoading = false,
   isDisabled = false,
   children,
-  type = "button",
+  type = 'button',
   ...props
 }: ButtonProps): React.ReactElement {
   return (
     <button
       className={cn(
-        "flex items-center gap-1 rounded-sm",
+        'flex items-center gap-1 rounded-sm',
         button({
           variant,
           size,
@@ -121,15 +118,15 @@ export function Button({
         }),
       )}
       disabled={isLoading || isDisabled}
-      type={type === "button" ? "button" : "submit"}
+      type={type === 'button' ? 'button' : 'submit'}
       {...props}
     >
-      {Icon && iconPosition === "left" ? <Icon /> : null}
+      {Icon && iconPosition === 'left' ? <Icon /> : null}
       {isLoading ? <LoadingIcon /> : null}
       {children}
-      {Icon && iconPosition === "right" ? <Icon /> : null}
+      {Icon && iconPosition === 'right' ? <Icon /> : null}
     </button>
   );
 }
 
-Button.displayName = "Button";
+Button.displayName = 'Button';

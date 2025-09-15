@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { GridCol } from './GridCol';
@@ -75,17 +76,11 @@ const grid = cva('grid', {
   },
 });
 
-export interface GridProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof grid> {
+export interface GridProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof grid> {
   children?: React.ReactNode;
 }
 
-export function Grid({
-  className,
-  children,
-  ...props
-}: GridProps): JSX.Element {
+export function Grid({ className, children, ...props }: GridProps): React.JSX.Element {
   return (
     <div className={cn(grid(props), className)} {...props}>
       {children}

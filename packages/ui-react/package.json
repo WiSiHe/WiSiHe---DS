@@ -1,6 +1,7 @@
 {
   "name": "@wisihe/ui-react",
   "version": "0.0.0",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -19,21 +20,27 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/react": "^18.3.24",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "eslint": "^8.57.1",
     "framer-motion": "^11.18.2",
-    "react": "^18.3.1",
+    "react": "^19.1.1",
+    "tailwindcss": "^4.0.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@wisihe/tokens": "workspace:*",
     "class-variance-authority": "^0.7.1"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=3.0.0"
   }
 }
