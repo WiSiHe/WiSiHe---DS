@@ -1,7 +1,21 @@
+/**
+ * Available breakpoint values for responsive design.
+ */
 export type Breakpoints = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | `${number}px`;
+
+/**
+ * Available column counts for grid layouts.
+ */
 export type Cols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+/**
+ * Available gap values for grid spacing.
+ */
 export type Gap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 16 | 20 | 24 | 32 | 40 | 48 | 56 | 64;
 
+/**
+ * Breakpoint values mapping for responsive design.
+ */
 export const breakpointValues: Record<Exclude<Breakpoints, `${number}px`>, string> = {
   base: '0px',
   sm: '640px',
@@ -11,6 +25,9 @@ export const breakpointValues: Record<Exclude<Breakpoints, `${number}px`>, strin
   '2xl': '1536px',
 };
 
+/**
+ * Spacing scale mapping for consistent spacing values.
+ */
 export const spacingScale: Record<Gap, string> = {
   0: '0px',
   1: '0.25rem',
@@ -32,11 +49,22 @@ export const spacingScale: Record<Gap, string> = {
   64: '16rem',
 };
 
+/**
+ * CSS class prefixes for different query types.
+ */
 export const TYPE_CLASSES = {
   media: '',
   container: 'tw-@container',
 };
 
+/**
+ * Generates CSS styles for responsive values.
+ * @param values - The values to generate styles for
+ * @param type - The query type (container or media)
+ * @param styleProperty - The CSS property name
+ * @param scale - The scale mapping for values
+ * @returns Generated CSS string
+ */
 const generateStyles = (
   values: Cols | Gap | Partial<Record<Breakpoints, Cols | Gap>>,
   type: 'container' | 'media',
@@ -53,7 +81,9 @@ const generateStyles = (
         const breakpointValue = isContainerQuery
           ? breakpoint
           : breakpointValues[breakpoint as keyof typeof breakpointValues];
-        const query = isContainerQuery ? `(min-width: ${breakpoint})` : `(min-width: ${breakpointValue})`;
+        const query = isContainerQuery
+          ? `(min-width: ${breakpoint})`
+          : `(min-width: ${breakpointValue})`;
 
         return `${mediaType} ${query} { ${styleProperty}: ${scale[value as number]}; }`;
       })
@@ -62,6 +92,12 @@ const generateStyles = (
   return '';
 };
 
+/**
+ * Generates CSS grid column styles with responsive breakpoints.
+ * @param cols - Column count or responsive column mapping
+ * @param type - Query type (container or media)
+ * @returns Generated CSS grid-template-columns string
+ */
 export const generateGridColStyles = (
   cols: Cols | Partial<Record<Breakpoints, Cols>>,
   type: 'container' | 'media',
@@ -81,6 +117,12 @@ export const generateGridColStyles = (
     12: 'repeat(12, minmax(0, 1fr))',
   });
 
+/**
+ * Generates CSS grid gap styles with responsive breakpoints.
+ * @param gap - Gap value or responsive gap mapping
+ * @param type - Query type (container or media)
+ * @returns Generated CSS grid-gap string
+ */
 export const generateGridGapStyles = (
   gap: Gap | Partial<Record<Breakpoints, Gap>>,
   type: 'container' | 'media',

@@ -5,7 +5,12 @@ export default defineConfig(options => ({
   format: ['cjs', 'esm'],
   dts: true,
   sourcemap: true,
-  external: ['react'],
+  external: ['react', '@wisihe/utils'],
   css: false, // Don't bundle CSS since consumers use Tailwind
+  outExtension({ format }) {
+    return {
+      js: format === 'esm' ? '.mjs' : '.cjs',
+    };
+  },
   ...options,
 }));
