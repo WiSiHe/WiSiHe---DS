@@ -12,14 +12,12 @@ export default [
       '**/dist/',
       '**/build/',
       '**/.next/',
-      '**/storybook-static/',
       '**/sanity.types.ts',
       // Exclude packages that have their own ESLint configs
       '**/packages/ui-react/**',
       '**/packages/utils/**',
       '**/packages/tokens/**',
       '**/packages/typescript-config/**',
-      '**/apps/storybook/**',
     ],
   },
 
