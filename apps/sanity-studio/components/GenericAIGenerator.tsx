@@ -1,11 +1,11 @@
-import React from 'react'
-import {Button, Card, Text, TextArea, Flex, Badge, Spinner} from '@sanity/ui'
-import {useEffect, useState} from 'react'
-import {set, StringInputProps, unset, useFormValue} from 'sanity'
-import {urlFor} from '../utils/image'
-import OpenAI from 'openai'
-import {OPENAI_API_KEY} from '../environment'
-import {WiStars} from 'react-icons/wi'
+import React from 'react';
+import { Button, Card, Text, TextArea, Flex, Badge, Spinner } from '@sanity/ui';
+import { useEffect, useState } from 'react';
+import { set, StringInputProps, unset, useFormValue } from 'sanity';
+import { urlFor } from '../utils/image';
+import OpenAI from 'openai';
+import { OPENAI_API_KEY } from '../environment';
+import { WiStars } from 'react-icons/wi';
 import {
   ApiIcon,
   DocumentIcon,
@@ -13,30 +13,30 @@ import {
   CheckmarkCircleIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-} from '@sanity/icons'
+} from '@sanity/icons';
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
-})
+});
 
 interface GenericAIGeneratorProps extends StringInputProps {
   // The prompt to send to the AI
-  prompt?: string
+  prompt?: string;
   // Optional image field to analyze (for image-based generation)
-  imageField?: string
+  imageField?: string;
   // Character limit for the output (optional)
-  characterLimit?: number
+  characterLimit?: number;
   // Number of rows for the textarea
-  rows?: number
+  rows?: number;
   // Placeholder text for the textarea
-  placeholder?: string
+  placeholder?: string;
   // Optional function to transform the AI response before setting it
-  transformResponse?: (response: string) => string
+  transformResponse?: (response: string) => string;
   // Optional field dependencies to include in the prompt
   fieldDependencies?: {
-    [key: string]: string // field path -> variable name in prompt
-  }
+    [key: string]: string; // field path -> variable name in prompt
+  };
 }
 
 const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
@@ -50,88 +50,130 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     placeholder = 'Generated content will appear here...',
     transformResponse,
     fieldDependencies,
-  } = props
+  } = props;
 
   // Default prompt if none provided
   const defaultPrompt = imageField
     ? 'Describe this image: style, colors, subject, mood.'
-    : 'Generate relevant content for this field.'
+    : 'Generate relevant content for this field.';
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [imageUrl, setImageUrl] = useState<string>('')
-  const [showPromptEditor, setShowPromptEditor] = useState(false)
-  const [customPrompt, setCustomPrompt] = useState(prompt || defaultPrompt)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [showPromptEditor, setShowPromptEditor] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState(prompt || defaultPrompt);
 
   // Get the image value if imageField is specified
-  const image = imageField ? (useFormValue([imageField]) as string) : null
+  const image = imageField ? (useFormValue([imageField]) as string) : null;
+
+  // Function to extract plain text from blockContent
+  const extractTextFromBlockContent = (blockContent: any): string => {
+    if (!blockContent || !Array.isArray(blockContent)) return '';
+
+    return blockContent
+      .map((block: any) => {
+        if (block._type === 'block' && block.children) {
+          return block.children.map((child: any) => child.text || '').join('');
+        }
+        return '';
+      })
+      .join(' ')
+      .trim();
+  };
+
+  // Function to extract tag names from tags array
+  const extractTagNames = (tags: any): string => {
+    if (!tags || !Array.isArray(tags)) return '';
+
+    return tags
+      .map((tag: any) => {
+        if (typeof tag === 'string') return tag;
+        if (tag && typeof tag === 'object' && tag.name) return tag.name;
+        return '';
+      })
+      .filter(Boolean)
+      .join(', ');
+  };
 
   // Get field dependency values
-  const dependencyValues: Record<string, string> = {}
+  const dependencyValues: Record<string, string> = {};
   if (fieldDependencies) {
     Object.entries(fieldDependencies).forEach(([fieldPath, variableName]) => {
-      const fieldValue = useFormValue(fieldPath.split('.')) as string
-      dependencyValues[variableName] = fieldValue || ''
-    })
+      const fieldValue = useFormValue(fieldPath.split('.'));
+
+      // Special handling for different field types
+      if (fieldPath === 'content' && fieldValue) {
+        dependencyValues[variableName] = extractTextFromBlockContent(fieldValue);
+      } else if (fieldPath === 'tags' && fieldValue) {
+        dependencyValues[variableName] = extractTagNames(fieldValue);
+      } else {
+        // Convert to string and handle non-string values
+        dependencyValues[variableName] = fieldValue ? String(fieldValue) : '';
+      }
+    });
   }
 
-  const finalPrompt = customPrompt || defaultPrompt
+  const finalPrompt = customPrompt || defaultPrompt;
+
+  // Debug: Log the extracted values
+  console.log('AI Generator - Extracted values:', dependencyValues);
 
   function handleChangeContent(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    const response = e.target.value
-    onChange(response ? set(response) : unset())
+    const response = e.target.value;
+    onChange(response ? set(response) : unset());
   }
 
   async function handleAIGeneration() {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     // If image is required but not available
     if (imageField && !imageUrl) {
-      setError('Image URL is missing')
-      setIsLoading(false)
-      return
+      setError('Image URL is missing');
+      setIsLoading(false);
+      return;
     }
 
     // If field dependencies are required but not available
     if (fieldDependencies) {
       const missingDependencies = Object.entries(dependencyValues).filter(([, value]) => {
-        return !value || value.trim() === ''
-      })
+        return !value || (typeof value === 'string' && value.trim() === '');
+      });
 
       if (missingDependencies.length > 0) {
-        const missingFields = missingDependencies.map(([variableName]) => variableName).join(', ')
-        setError(`Required fields are missing: ${missingFields}`)
-        setIsLoading(false)
-        return
+        const missingFields = missingDependencies.map(([variableName]) => variableName).join(', ');
+        setError(`Required fields are missing: ${missingFields}`);
+        setIsLoading(false);
+        return;
       }
     }
 
     try {
-      const content: OpenAI.Chat.ChatCompletionContentPart[] = []
+      const content: OpenAI.Chat.ChatCompletionContentPart[] = [];
 
       // Add text content
-      let processedPrompt = finalPrompt
+      let processedPrompt = finalPrompt;
 
       // Replace field dependency variables in the prompt
       if (fieldDependencies && Object.keys(dependencyValues).length > 0) {
         Object.entries(dependencyValues).forEach(([variableName, value]) => {
-          const placeholder = `{${variableName}}`
-          processedPrompt = processedPrompt.replace(new RegExp(placeholder, 'g'), value)
-        })
+          const placeholder = `{${variableName}}`;
+          const stringValue = typeof value === 'string' ? value : String(value || '');
+          processedPrompt = processedPrompt.replace(new RegExp(placeholder, 'g'), stringValue);
+        });
       }
 
       content.push({
         type: 'text',
         text: processedPrompt,
-      })
+      });
 
       // Add image content if available
       if (imageUrl) {
         content.push({
           type: 'image_url',
-          image_url: {url: imageUrl},
-        })
+          image_url: { url: imageUrl },
+        });
       }
 
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
@@ -139,29 +181,29 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
           role: 'user',
           content,
         },
-      ]
+      ];
 
       const params: OpenAI.Chat.ChatCompletionCreateParams = {
         model: 'o4-mini-2025-04-16',
         messages,
-      }
+      };
 
       const chatCompletion: OpenAI.Chat.ChatCompletion =
-        await client.chat.completions.create(params)
+        await client.chat.completions.create(params);
 
-      const response = chatCompletion.choices[0].message.content?.trim() || ''
+      const response = chatCompletion.choices[0].message.content?.trim() || '';
 
       // Apply transformation if provided, otherwise just clean quotes
       const finalResponse = transformResponse
         ? transformResponse(response)
-        : response.replace(/"/g, '')
+        : response.replace(/"/g, '');
 
-      onChange(set(finalResponse))
+      onChange(set(finalResponse));
     } catch (err: unknown) {
-      console.error('Error generating content:', err)
-      setError(err instanceof Error ? err.message : 'Error occurred while generating content')
+      console.error('Error generating content:', err);
+      setError(err instanceof Error ? err.message : 'Error occurred while generating content');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -170,15 +212,15 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     if (!imageField || !image) {
       // Only show image error if we're not using field dependencies
       if (!fieldDependencies) {
-        setError('Image URL is missing')
-        setIsLoading(false)
+        setError('Image URL is missing');
+        setIsLoading(false);
       }
-      return
+      return;
     }
 
-    const sanityUrl = urlFor(image).width(256).height(256).url()
-    setImageUrl(sanityUrl)
-  }, [image, imageField, fieldDependencies])
+    const sanityUrl = urlFor(image).width(256).height(256).url();
+    setImageUrl(sanityUrl);
+  }, [image, imageField, fieldDependencies]);
 
   return (
     <Card padding={4} tone="transparent" border radius={2} shadow={1}>
@@ -205,7 +247,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
           onClick={() => setShowPromptEditor(!showPromptEditor)}
           icon={showPromptEditor ? ChevronUpIcon : ChevronDownIcon}
           text={showPromptEditor ? 'Hide prompt editor' : 'Customize prompt'}
-          style={{width: '100%', justifyContent: 'flex-start'}}
+          style={{ width: '100%', justifyContent: 'flex-start' }}
         />
         {showPromptEditor && (
           <Card paddingTop={2} tone="transparent">
@@ -243,16 +285,20 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       </Card>
 
       {/* Field dependency warning */}
-      {fieldDependencies && Object.keys(dependencyValues).some((key) => !dependencyValues[key]) && (
-        <Card paddingBottom={2} tone="transparent">
-          <Flex align="center" gap={1}>
-            <WarningOutlineIcon />
-            <Text size={1} muted>
-              Fill in the required fields first to generate content
-            </Text>
-          </Flex>
-        </Card>
-      )}
+      {fieldDependencies &&
+        Object.keys(dependencyValues).some(key => {
+          const value = dependencyValues[key];
+          return !value || (typeof value === 'string' && value.trim() === '');
+        }) && (
+          <Card paddingBottom={2} tone="transparent">
+            <Flex align="center" gap={1}>
+              <WarningOutlineIcon />
+              <Text size={1} muted>
+                Fill in the required fields first to generate content
+              </Text>
+            </Flex>
+          </Card>
+        )}
 
       {/* Text area */}
       <Card tone="transparent" paddingBottom={3}>
@@ -276,7 +322,10 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
             isLoading ||
             (imageField && !imageUrl) ||
             (fieldDependencies &&
-              Object.keys(dependencyValues).some((key) => !dependencyValues[key]))
+              Object.keys(dependencyValues).some(key => {
+                const value = dependencyValues[key];
+                return !value || (typeof value === 'string' && value.trim() === '');
+              }))
           }
           loading={isLoading}
           tone="primary"
@@ -288,7 +337,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
         {error && (
           <Flex align="center" gap={1} paddingTop={2}>
             <WarningOutlineIcon />
-            <Text size={1} weight="medium" style={{color: 'var(--card-danger-fg-color)'}}>
+            <Text size={1} weight="medium" style={{ color: 'var(--card-danger-fg-color)' }}>
               {error}
             </Text>
           </Flex>
@@ -297,14 +346,14 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
         {value && !isLoading && !error && (
           <Flex align="center" gap={1} paddingTop={2}>
             <CheckmarkCircleIcon />
-            <Text size={1} style={{color: 'var(--card-success-fg-color)'}}>
+            <Text size={1} style={{ color: 'var(--card-success-fg-color)' }}>
               Content generated successfully
             </Text>
           </Flex>
         )}
       </Card>
     </Card>
-  )
-}
+  );
+};
 
-export default GenericAIGenerator
+export default GenericAIGenerator;
