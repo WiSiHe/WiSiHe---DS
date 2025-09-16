@@ -323,8 +323,27 @@ export const getFilteredPaintingsCount = defineQuery(`
 
 export const getAllProjects = defineQuery(`
     {
-      "projects": *[_type == "project" && defined(slug.current)]
+      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]
         | order(projectStart desc) {
+          _id,
+          "slug": slug.current,
+          title,
+          description,
+          seoDescription,
+          projectType,
+          projectStart,
+          projectEnd,
+          status,
+          content,
+          name,
+          "tags": tags[]->{name},
+          image {
+            ...,
+            "lqip": asset->metadata.lqip
+          }
+        },
+      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]
+        | order(projectEnd desc) {
           _id,
           "slug": slug.current,
           title,

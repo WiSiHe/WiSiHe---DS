@@ -44,7 +44,7 @@ export default async function ProjectsPage() {
     return notFound();
   }
 
-  const { projects, tags } = data;
+  const { ongoingProjects, pastProjects, tags } = data;
 
   return (
     <div className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
@@ -54,7 +54,11 @@ export default async function ProjectsPage() {
           <p>A gallery of some of my projects, both creative and technical.</p>
         </div>
       </div>
-      <ProjectCategories projects={projects} tags={tags} />
+      <ProjectCategories
+        ongoingProjects={ongoingProjects}
+        pastProjects={pastProjects}
+        tags={tags}
+      />
     </div>
   );
 }
