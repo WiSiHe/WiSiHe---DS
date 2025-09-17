@@ -241,6 +241,9 @@ importers:
 
   apps/ui-docs:
     dependencies:
+      '@wisihe/ui-react':
+        specifier: workspace:*
+        version: link:../../packages/ui-react
       react:
         specifier: ^19.1.1
         version: 19.1.1
