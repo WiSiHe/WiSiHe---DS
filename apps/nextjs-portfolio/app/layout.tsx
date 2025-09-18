@@ -10,7 +10,7 @@ import HeaderNavigation from '@/app/components/HeaderNavigation';
 import { sanityFetch, SanityLive } from '@/sanity/lib/live';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
-import { VisualEditing } from 'next-sanity';
+import { VisualEditing } from 'next-sanity/visual-editing';
 import { draftMode } from 'next/headers';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
