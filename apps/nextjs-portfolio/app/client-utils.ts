@@ -1,11 +1,11 @@
 'use client';
 
-import { isCorsOriginError } from 'next-sanity';
 import { toast } from 'sonner';
+import { isCorsOriginError } from 'next-sanity/live';
 
 export function handleError(error: unknown) {
   if (isCorsOriginError(error)) {
-    const { addOriginUrl } = error;
+    const { addOriginUrl } = error as { addOriginUrl?: string };
     toast.error(`Sanity Live couldn't connect`, {
       description: `Your origin is blocked by CORS policy`,
       duration: Infinity,
