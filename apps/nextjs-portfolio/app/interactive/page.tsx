@@ -78,48 +78,64 @@ const InteractiveHeroSection = () => (
 
 // Interactive Globe Section
 const InteractiveGlobeSection = () => (
-  <section className="py-20 px-4 bg-surface">
-    <div className="w-full">
-      <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">Interactive Earth Globe</h2>
-        <p className="text-text-secondary max-w-2xl mx-auto">
-          Explore our beautiful planet with an interactive 3D Earth globe. Hover over Oslo, Norway
-          to discover interactive features.
-        </p>
-      </div>
+  <section className="py-20 px-4 bg-surface flex flex-col gap-8">
+    <div className="max-w-prose">
+      <h2 className="text-3xl md:text-4xl font-bold">Interactive Earth Globe</h2>
+      <p className="text-text-secondary">
+        Explore our beautiful planet with an interactive 3D Earth globe. Click on cities around the
+        world to zoom in and discover connections between locations.
+      </p>
+    </div>
 
-      <div className="w-full h-screen">
-        <InteractiveGlobe className="w-full h-full" />
-      </div>
+    <InteractiveGlobe className="w-full h-full" />
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-accent text-2xl">🌍</span>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Earth Globe Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface-elevated to-surface rounded-2xl p-8 border border-border/50 hover:border-accent/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent/20 to-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-pulse">🌍</span>
           </div>
-          <h3 className="font-semibold mb-2">Earth Globe</h3>
-          <p className="text-text-secondary text-sm">
-            Realistic Earth representation with proper lighting and atmospheric effects
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent transition-colors duration-300">
+            Earth Globe
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Realistic Earth representation with NASA textures, atmospheric glow, and dynamic
+            lighting effects
           </p>
         </div>
+      </div>
 
-        <div className="text-center">
-          <div className="w-16 h-16 bg-accent-warm/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-accent-warm text-2xl">🎮</span>
+      {/* Interactive Controls Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface-elevated to-surface rounded-2xl p-8 border border-border/50 hover:border-accent-warm/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent-warm/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-warm/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent-warm/20 to-accent-warm/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-bounce">🎮</span>
           </div>
-          <h3 className="font-semibold mb-2">Interactive Controls</h3>
-          <p className="text-text-secondary text-sm">
-            Smooth orbit controls with auto-rotation and zoom functionality
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent-warm transition-colors duration-300">
+            Interactive Controls
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Smooth orbit controls with auto-rotation, responsive zoom, and camera animations
           </p>
         </div>
+      </div>
 
-        <div className="text-center">
-          <div className="w-16 h-16 bg-accent-cool/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-accent-cool text-2xl">🇳🇴</span>
+      {/* Global Cities Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface-elevated to-surface rounded-2xl p-8 border border-border/50 hover:border-accent-cool/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent-cool/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-cool/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent-cool/20 to-accent-cool/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-pulse">🌐</span>
           </div>
-          <h3 className="font-semibold mb-2">Oslo Point</h3>
-          <p className="text-text-secondary text-sm">
-            Interactive marker for Oslo, Norway with hover effects and animations
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent-cool transition-colors duration-300">
+            Global Cities
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Interactive city markers with animated connections, hover effects, and detailed
+            information
           </p>
         </div>
       </div>

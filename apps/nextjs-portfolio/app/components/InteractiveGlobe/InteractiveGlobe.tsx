@@ -251,7 +251,11 @@ const FresnelAtmosphere: React.FC = () => {
   const materialRef = useRef<ShaderMaterial>(null);
 
   useFrame(state => {
-    if (materialRef.current) {
+    if (
+      materialRef.current &&
+      materialRef.current.uniforms &&
+      materialRef.current.uniforms.cameraPosition
+    ) {
       // Update camera position for fresnel calculation
       // The shader needs to know where the camera is to calculate the glow effect
       materialRef.current.uniforms.cameraPosition.value.copy(state.camera.position);
@@ -268,7 +272,7 @@ const FresnelAtmosphere: React.FC = () => {
         transparent // Allow transparency
         side={2} // BackSide = only render the inside faces
         uniforms={{
-          cameraPosition: { value: new Vector3() }, // Pass camera position to shader
+          cameraPosition: { value: new Vector3(0, 0, 0) }, // Initialize with default value
         }}
       />
     </Sphere>
@@ -453,7 +457,7 @@ const LocationPoint: React.FC<LocationPointProps> = ({
     if (meshRef.current && glowRef.current) {
       // Calculate dynamic size based on camera distance
       // Closer camera = smaller points, farther camera = larger points
-      const baseSize = Math.max(0.008, Math.min(0.025, cameraDistance * 0.004));
+      const baseSize = Math.max(0.012, Math.min(0.035, cameraDistance * 0.005)); // Larger base sizes for mobile
 
       // Enhanced pulsing animation with different speeds for selected/hovered states
       const pulseSpeed = isSelected ? 3 : 2;
@@ -465,9 +469,9 @@ const LocationPoint: React.FC<LocationPointProps> = ({
       if (hovered) finalScale *= 1.4;
       if (isSelected) finalScale *= 1.2;
 
-      // Apply the base size scaling
+      // Apply the base size scaling with mobile-friendly sizing
       meshRef.current.scale.setScalar((finalScale * baseSize) / 0.02); // Normalize to base size
-      glowRef.current.scale.setScalar((finalScale * 1.5 * baseSize) / 0.04); // Normalize glow size
+      glowRef.current.scale.setScalar((finalScale * 2.0 * baseSize) / 0.04); // Larger glow for better touch targets
     }
 
     // Calculate optimal tooltip position to avoid overlap
@@ -493,7 +497,7 @@ const LocationPoint: React.FC<LocationPointProps> = ({
     // Delay tooltip appearance to avoid interfering with clicks
     hoverTimeoutRef.current = setTimeout(() => {
       setShowTooltip(true);
-    }, 200); // Even faster tooltip for better responsiveness
+    }, 100); // Very fast tooltip for mobile responsiveness
   };
 
   const handlePointerOut = () => {
@@ -536,13 +540,13 @@ const LocationPoint: React.FC<LocationPointProps> = ({
 
   return (
     <group>
-      {/* Enhanced outer glow effect */}
+      {/* Enhanced outer glow effect - larger for mobile touch targets */}
       <mesh ref={glowRef} position={position}>
-        <sphereGeometry args={[0.04, 16, 16]} />
+        <sphereGeometry args={[0.06, 16, 16]} />
         <meshBasicMaterial color={getPointColor()} transparent opacity={getGlowOpacity()} />
       </mesh>
 
-      {/* Main point with enhanced visual feedback */}
+      {/* Main point with enhanced visual feedback - larger base size */}
       <mesh
         ref={meshRef}
         position={position}
@@ -550,8 +554,19 @@ const LocationPoint: React.FC<LocationPointProps> = ({
         onPointerOut={handlePointerOut}
         onClick={handleClick}
       >
-        <sphereGeometry args={[0.02, 16, 16]} />
+        <sphereGeometry args={[0.03, 16, 16]} />
         <meshBasicMaterial color={getPointColor()} transparent opacity={getMainOpacity()} />
+      </mesh>
+
+      {/* Invisible larger touch target for mobile */}
+      <mesh
+        position={position}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+        onClick={handleClick}
+      >
+        <sphereGeometry args={[0.08, 8, 8]} />
+        <meshBasicMaterial transparent opacity={0} />
       </mesh>
 
       {/* Enhanced tooltip with smart positioning */}
@@ -685,6 +700,18 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 
   useEffect(() => {
     setIsClient(true);
+
+    // Handle window resize to recalculate camera positions
+    const handleResize = () => {
+      // Force a re-render when window is resized
+      // This will help with responsive camera positioning
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const animateCameraToLocation = (targetPosition: Vector3, isZoomOut: boolean = false) => {
@@ -694,10 +721,23 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
     const phaseDuration = 1000; // 1 second per phase
     const totalDuration = isZoomOut ? phaseDuration : phaseDuration * 2; // Two phases: zoom out then zoom in
 
+    // Calculate responsive distances based on viewport size
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const aspectRatio = viewportWidth / viewportHeight;
+
+    // Adjust distances based on aspect ratio for better centering
+    const baseWideDistance = 6.0;
+    const baseCloseDistance = 2.8;
+
+    // For wider screens, we need to zoom in more to center properly
+    const aspectRatioFactor = Math.max(0.8, Math.min(1.2, aspectRatio));
+
+    const wideDistance = baseWideDistance * aspectRatioFactor;
+    const closeDistance = baseCloseDistance * aspectRatioFactor;
+
     // Calculate the target camera position to face the city
     const cityDirection = targetPosition.clone().normalize();
-    const wideDistance = 6.0; // Wide view distance
-    const closeDistance = 2.8; // Close zoom distance
     const targetDistance = isZoomOut ? wideDistance : closeDistance;
     const targetCameraPosition = cityDirection.clone().multiplyScalar(targetDistance);
 
@@ -885,10 +925,101 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
   }
 
   return (
-    <div className={`w-full h-full max-h-[50vh] ${className}`}>
-      <div className="grid grid-cols-3 gap-4 h-full">
-        {/* 3D Globe - Takes up 2/3 of the space */}
-        <div className="col-span-2 relative bg-surface-elevated rounded-lg overflow-hidden">
+    <div className={`w-full h-full ${className}`}>
+      {/* Mobile Layout: Stacked vertically */}
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 h-full">
+        {/* 3D Globe - Square aspect ratio on mobile, 2/3 on desktop */}
+        <div className="aspect-square lg:col-span-2 lg:aspect-auto relative bg-surface-elevated rounded-lg overflow-hidden lg:flex-1">
+          {/* Reset View Button - Small icon in top-right corner */}
+          <button
+            onClick={resetCamera}
+            className="absolute top-2 right-2 lg:top-4 lg:right-4 z-10 w-8 h-8 lg:w-10 lg:h-10 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 border border-white/20"
+            title="Reset View"
+          >
+            <span className="text-white text-sm lg:text-lg">🌍</span>
+          </button>
+
+          {/* Location Details Card - Full screen modal on mobile, overlay on desktop */}
+          {selectedLocation && (
+            <>
+              {/* Mobile: Ultra-compact overlay panel */}
+              <div className="lg:hidden absolute bottom-3 left-3 right-3 z-20 bg-white/95 backdrop-blur-sm rounded-lg p-2.5 shadow-lg border border-white/20">
+                <div className="flex items-center justify-between mb-1.5">
+                  <h3 className="font-semibold text-sm text-gray-900 pr-2 truncate">
+                    {selectedLocation.name}
+                  </h3>
+                  <button
+                    onClick={() => setSelectedLocation(null)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors w-5 h-5 flex items-center justify-center rounded-full hover:bg-gray-100 flex-shrink-0 text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-gray-600 text-xs mb-2 line-clamp-1">
+                  {selectedLocation.description}
+                </p>
+
+                {/* Connected Cities */}
+                {selectedLocation.connections && selectedLocation.connections.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-xs font-medium">Connections:</span>
+                    <div className="flex gap-1">
+                      {selectedLocation.connections.map(connectedId => {
+                        const connectedCity = LOCATIONS.find(loc => loc.id === connectedId);
+                        return connectedCity ? (
+                          <button
+                            key={connectedId}
+                            onClick={() => handleLocationClick(connectedCity)}
+                            className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded text-xs font-medium transition-colors"
+                          >
+                            {connectedCity.name.split(',')[0]}
+                          </button>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop: Corner overlay */}
+              <div className="hidden lg:block absolute bottom-4 left-4 z-10 max-w-sm bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-white/20">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="font-semibold text-lg text-gray-900 pr-2">
+                    {selectedLocation.name}
+                  </h3>
+                  <button
+                    onClick={() => setSelectedLocation(null)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-gray-700 text-sm mb-3">{selectedLocation.description}</p>
+
+                {/* Connected Cities */}
+                {selectedLocation.connections && selectedLocation.connections.length > 0 && (
+                  <div className="mb-3">
+                    <h4 className="text-gray-900 text-sm font-medium mb-2">Connected Cities:</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedLocation.connections.map(connectedId => {
+                        const connectedCity = LOCATIONS.find(loc => loc.id === connectedId);
+                        return connectedCity ? (
+                          <button
+                            key={connectedId}
+                            onClick={() => handleLocationClick(connectedCity)}
+                            className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs font-medium transition-colors"
+                          >
+                            {connectedCity.name.split(',')[0]}
+                          </button>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           <Canvas
             camera={{ position: [0, 0, 4.5], fov: 45 }}
             style={{
@@ -912,9 +1043,15 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
             <AnimatedNebula />
             <DistantGalaxy />
 
-            {/* Space lighting - sun light only */}
+            {/* Space lighting with static sun */}
             <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={2.5} />
+            <directionalLight position={[50, 0, 0]} intensity={2.5} />
+
+            {/* Static sun - positioned realistically far away */}
+            <mesh position={[50, 0, 0]}>
+              <sphereGeometry args={[0.8, 16, 16]} />
+              <meshBasicMaterial color="#ffaa00" />
+            </mesh>
 
             {/* Earth Globe */}
             <group>
@@ -955,10 +1092,32 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
           </Canvas>
         </div>
 
-        {/* Side Menu - Takes up 1/3 of the space */}
-        <div className="col-span-1 bg-surface-elevated rounded-lg p-4 overflow-y-auto">
-          <h3 className="text-text-primary text-lg font-semibold mb-4">Locations</h3>
-          <div className="space-y-2 mb-4">
+        {/* Side Menu - Horizontal scroll on mobile, vertical on desktop */}
+        <div className="lg:col-span-1 bg-surface-elevated rounded-lg p-3 lg:p-4 overflow-hidden lg:overflow-y-auto">
+          <h3 className="text-text-primary text-base lg:text-lg font-semibold mb-3 lg:mb-4">
+            Locations
+          </h3>
+
+          {/* Mobile: Horizontal scroll */}
+          <div className="lg:hidden flex gap-2 overflow-x-auto pb-2">
+            {LOCATIONS.map(location => (
+              <button
+                key={location.id}
+                onClick={() => handleLocationClick(location)}
+                className={`flex-shrink-0 text-center px-4 py-3 rounded-lg text-sm transition-colors min-w-[120px] ${
+                  selectedLocation?.id === location.id
+                    ? 'bg-accent/20 text-accent border border-accent/30'
+                    : 'hover:bg-surface text-text-secondary hover:text-text-primary border border-transparent'
+                }`}
+              >
+                <div className="font-medium">{location.name.split(',')[0]}</div>
+                <div className="text-xs opacity-75">{location.name.split(',')[1]?.trim()}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Desktop: Vertical list */}
+          <div className="hidden lg:block space-y-2">
             {LOCATIONS.map(location => (
               <button
                 key={location.id}
@@ -974,49 +1133,6 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
               </button>
             ))}
           </div>
-
-          {/* Reset Button */}
-          <button
-            onClick={resetCamera}
-            className="w-full px-3 py-3 bg-surface hover:bg-surface-elevated text-text-primary rounded-lg text-sm font-medium transition-colors border border-border"
-          >
-            🌍 Reset View
-          </button>
-
-          {/* Location Information Panel */}
-          {selectedLocation && (
-            <div className="mt-6 p-4 bg-background rounded-lg border border-border">
-              <h3 className="font-semibold text-lg mb-2">{selectedLocation.name}</h3>
-              <p className="text-text-secondary text-sm mb-3">{selectedLocation.description}</p>
-
-              {/* Connected Cities */}
-              {selectedLocation.connections && selectedLocation.connections.length > 0 && (
-                <div className="mb-3">
-                  <h4 className="text-text-primary text-sm font-medium mb-2">Connected Cities:</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {selectedLocation.connections.map(connectedId => {
-                      const connectedCity = LOCATIONS.find(loc => loc.id === connectedId);
-                      return connectedCity ? (
-                        <span
-                          key={connectedId}
-                          className="inline-block bg-accent/20 text-accent px-2 py-1 rounded text-xs font-medium"
-                        >
-                          {connectedCity.name.split(',')[0]}
-                        </span>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <button
-                onClick={() => setSelectedLocation(null)}
-                className="text-accent hover:text-accent-dark text-sm font-medium"
-              >
-                Close
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
