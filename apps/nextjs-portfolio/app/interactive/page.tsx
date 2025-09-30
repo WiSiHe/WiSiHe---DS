@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
+import InteractiveGlobe from '../components/InteractiveGlobe';
 
 export const metadata: Metadata = {
   title: 'Interactive Art & 3D Experiences',
@@ -75,44 +76,52 @@ const InteractiveHeroSection = () => (
   </div>
 );
 
-// Interactive Gallery Section
-const InteractiveGallerySection = () => (
+// Interactive Globe Section
+const InteractiveGlobeSection = () => (
   <section className="py-20 px-4 bg-surface">
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Interactive Works</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Interactive Earth Globe</h2>
         <p className="text-text-secondary max-w-2xl mx-auto">
-          A curated selection of my interactive 3D artwork, immersive experiences, and digital
-          sculptures.
+          Explore our beautiful planet with an interactive 3D Earth globe. Hover over Oslo, Norway
+          to discover interactive features.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Interactive Art Cards */}
-        {[1, 2, 3, 4, 5, 6].map(item => (
-          <div
-            key={item}
-            className="group relative bg-surface-elevated rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-          >
-            <div className="aspect-square bg-gradient-to-br from-accent/20 to-accent-warm/20 flex items-center justify-center">
-              <div className="text-4xl">🎨</div>
-            </div>
-            <div className="p-6">
-              <h3 className="font-semibold text-lg mb-2">Interactive Artwork {item}</h3>
-              <p className="text-text-secondary text-sm mb-4">
-                Interactive 3D experience showcasing creative design and technical innovation.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-accent/10 text-accent text-xs rounded-full">
-                  3D Modeling
-                </span>
-                <span className="px-3 py-1 bg-accent-warm/10 text-accent-warm text-xs rounded-full">
-                  Interactive
-                </span>
-              </div>
-            </div>
+      <div className="w-full h-screen">
+        <InteractiveGlobe className="w-full h-full" />
+      </div>
+
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-accent text-2xl">🌍</span>
           </div>
-        ))}
+          <h3 className="font-semibold mb-2">Earth Globe</h3>
+          <p className="text-text-secondary text-sm">
+            Realistic Earth representation with proper lighting and atmospheric effects
+          </p>
+        </div>
+
+        <div className="text-center">
+          <div className="w-16 h-16 bg-accent-warm/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-accent-warm text-2xl">🎮</span>
+          </div>
+          <h3 className="font-semibold mb-2">Interactive Controls</h3>
+          <p className="text-text-secondary text-sm">
+            Smooth orbit controls with auto-rotation and zoom functionality
+          </p>
+        </div>
+
+        <div className="text-center">
+          <div className="w-16 h-16 bg-accent-cool/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-accent-cool text-2xl">🇳🇴</span>
+          </div>
+          <h3 className="font-semibold mb-2">Oslo Point</h3>
+          <p className="text-text-secondary text-sm">
+            Interactive marker for Oslo, Norway with hover effects and animations
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -221,7 +230,7 @@ export default function InteractivePage() {
         </Suspense>
 
         <Suspense fallback={<InteractiveSkeleton />}>
-          <InteractiveGallerySection />
+          <InteractiveGlobeSection />
         </Suspense>
 
         <Suspense fallback={<InteractiveSkeleton />}>
