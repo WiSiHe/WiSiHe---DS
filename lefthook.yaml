@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: true
+  commands:
+    typecheck:
+      glob: '*.{ts,tsx,js,jsx}'
+      run: |
+        echo "📝 Checking TypeScript types..."
+        pnpm turbo typecheck
+      fail_text: '❌ TypeScript type checking failed. Please fix the errors and try again.'
+
+    build:
+      glob: '*.{ts,tsx,js,jsx}'
+      run: |
+        echo "🏗️  Checking build..."
+        pnpm turbo build --filter=!sanity-studio
+      fail_text: '❌ Build failed. Please fix the errors and try again.'
+
+    lint-staged:
+      glob: '*.{js,jsx,ts,tsx,json,md,css,scss}'
+      run: |
+        echo "🔍 Running lint-staged..."
+        pnpm lint-staged
+      fail_text: '❌ Pre-commit checks failed. Please fix the errors and try again.'
