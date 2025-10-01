@@ -7,7 +7,7 @@
 // React Three Fiber: React wrapper for Three.js (the main 3D library)
 import { Canvas, useFrame } from '@react-three/fiber';
 // Drei: Helper components for common 3D operations
-import { OrbitControls, Sphere, Stars, Html, useTexture } from '@react-three/drei';
+import { OrbitControls, Sphere, Stars, useTexture } from '@react-three/drei';
 // Standard React hooks
 import { useRef, useState, useEffect, Suspense } from 'react';
 // Three.js core classes for 3D objects and materials
@@ -110,7 +110,7 @@ const LOCATIONS: Location[] = [
     description: 'The City of Light, famous for the Eiffel Tower, Louvre, and romantic atmosphere.',
     lat: 48.8566,
     lon: 2.3522,
-    color: '#ef4444',
+    color: '#8b5cf6', // Changed color to distinguish from London
     connections: ['london'], // Paris connects to London
   },
   {
@@ -303,6 +303,46 @@ const latLonToVector3 = (lat: number, lon: number, radius: number = 1.52) => {
   );
 };
 
+// Collision detection and adjustment for close cities
+const adjustCloseCities = (locations: Location[]) => {
+  const adjustedLocations = [...locations];
+  const minDistance = 0.15; // Minimum distance between city points
+
+  for (let i = 0; i < adjustedLocations.length; i++) {
+    for (let j = i + 1; j < adjustedLocations.length; j++) {
+      const pos1 = latLonToVector3(adjustedLocations[i].lat, adjustedLocations[i].lon);
+      const pos2 = latLonToVector3(adjustedLocations[j].lat, adjustedLocations[j].lon);
+
+      const distance = pos1.distanceTo(pos2);
+
+      if (distance < minDistance) {
+        // Calculate adjustment direction
+        const direction = pos2.clone().sub(pos1).normalize();
+        const adjustment = direction.multiplyScalar((minDistance - distance) / 2);
+
+        // Adjust positions by moving them slightly apart
+        const newPos1 = pos1.clone().sub(adjustment);
+        const newPos2 = pos2.clone().add(adjustment);
+
+        // Convert back to lat/lon (approximate)
+        const newLat1 = 90 - Math.acos(newPos1.y / newPos1.length()) * (180 / Math.PI);
+        const newLon1 = Math.atan2(newPos1.z, -newPos1.x) * (180 / Math.PI) - 180;
+
+        const newLat2 = 90 - Math.acos(newPos2.y / newPos2.length()) * (180 / Math.PI);
+        const newLon2 = Math.atan2(newPos2.z, -newPos2.x) * (180 / Math.PI) - 180;
+
+        // Apply small adjustments to prevent overlap
+        adjustedLocations[i].lat = newLat1;
+        adjustedLocations[i].lon = newLon1;
+        adjustedLocations[j].lat = newLat2;
+        adjustedLocations[j].lon = newLon2;
+      }
+    }
+  }
+
+  return adjustedLocations;
+};
+
 // ============================================================================
 // CURVED LINE CREATION - Drawing Arcs Between Cities
 // ============================================================================
@@ -358,16 +398,16 @@ const createCurvedLine = (start: Vector3, end: Vector3, segments: number = 40) =
 const createAnimatedLineTexture = () => {
   const canvas = document.createElement('canvas');
   canvas.width = 256;
-  canvas.height = 64;
+  canvas.height = 32; // Reduced height for thinner lines
   const ctx = canvas.getContext('2d')!;
 
-  // Create gradient texture with much higher opacity
+  // Create gradient texture with controlled opacity
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-  gradient.addColorStop(0, 'rgba(38, 198, 218, 0.3)'); // Teal, more visible
-  gradient.addColorStop(0.3, 'rgba(38, 198, 218, 0.6)');
-  gradient.addColorStop(0.5, 'rgba(77, 208, 225, 1.0)'); // Bright teal, fully opaque
-  gradient.addColorStop(0.7, 'rgba(38, 198, 218, 0.6)');
-  gradient.addColorStop(1, 'rgba(38, 198, 218, 0.3)');
+  gradient.addColorStop(0, 'rgba(38, 198, 218, 0.2)'); // Reduced opacity
+  gradient.addColorStop(0.3, 'rgba(38, 198, 218, 0.4)');
+  gradient.addColorStop(0.5, 'rgba(77, 208, 225, 0.8)'); // Reduced max opacity
+  gradient.addColorStop(0.7, 'rgba(38, 198, 218, 0.4)');
+  gradient.addColorStop(1, 'rgba(38, 198, 218, 0.2)');
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -427,7 +467,7 @@ const CurvedLine: React.FC<CurvedLineProps> = ({ start, end }) => {
   return (
     <line>
       <bufferGeometry ref={geometryRef} />
-      <lineBasicMaterial ref={materialRef} map={texture} transparent opacity={1.0} linewidth={12} />
+      <lineBasicMaterial ref={materialRef} map={texture} transparent opacity={0.8} linewidth={2} />
     </line>
   );
 };
@@ -448,16 +488,13 @@ const LocationPoint: React.FC<LocationPointProps> = ({
   const meshRef = useRef<Mesh>(null);
   const glowRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const position = latLonToVector3(location.lat, location.lon);
-  const [tooltipPosition, setTooltipPosition] = useState<Vector3>(new Vector3());
 
   useFrame(state => {
     if (meshRef.current && glowRef.current) {
       // Calculate dynamic size based on camera distance
       // Closer camera = smaller points, farther camera = larger points
-      const baseSize = Math.max(0.012, Math.min(0.035, cameraDistance * 0.005)); // Larger base sizes for mobile
+      const baseSize = Math.max(0.008, Math.min(0.025, cameraDistance * 0.003)); // Smaller base sizes for mobile
 
       // Enhanced pulsing animation with different speeds for selected/hovered states
       const pulseSpeed = isSelected ? 3 : 2;
@@ -466,56 +503,24 @@ const LocationPoint: React.FC<LocationPointProps> = ({
 
       // Apply different scales based on state
       let finalScale = scale;
-      if (hovered) finalScale *= 1.4;
-      if (isSelected) finalScale *= 1.2;
+      if (hovered) finalScale *= 1.3; // Reduced hover scale
+      if (isSelected) finalScale *= 1.1; // Reduced selected scale
 
       // Apply the base size scaling with mobile-friendly sizing
-      meshRef.current.scale.setScalar((finalScale * baseSize) / 0.02); // Normalize to base size
-      glowRef.current.scale.setScalar((finalScale * 2.0 * baseSize) / 0.04); // Larger glow for better touch targets
-    }
-
-    // Calculate optimal tooltip position to avoid overlap
-    if (showTooltip) {
-      const cameraPosition = state.camera.position;
-      const directionToCamera = cameraPosition.clone().sub(position).normalize();
-
-      // Position tooltip away from camera direction with better offset
-      const tooltipOffset = 0.4; // Increased offset for better separation
-      const optimalPosition = position
-        .clone()
-        .add(directionToCamera.clone().multiplyScalar(-tooltipOffset));
-
-      // Add slight upward offset to make it more readable
-      optimalPosition.y += 0.1;
-
-      setTooltipPosition(optimalPosition);
+      meshRef.current.scale.setScalar((finalScale * baseSize) / 0.015); // Normalize to smaller base size
+      glowRef.current.scale.setScalar((finalScale * 1.5 * baseSize) / 0.03); // Smaller glow for mobile
     }
   });
 
   const handlePointerOver = () => {
     setHovered(true);
-    // Delay tooltip appearance to avoid interfering with clicks
-    hoverTimeoutRef.current = setTimeout(() => {
-      setShowTooltip(true);
-    }, 100); // Very fast tooltip for mobile responsiveness
   };
 
   const handlePointerOut = () => {
     setHovered(false);
-    setShowTooltip(false);
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
   };
 
   const handleClick = () => {
-    // Hide tooltip immediately when clicking
-    setShowTooltip(false);
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
     onLocationClick(location);
   };
 
@@ -565,19 +570,9 @@ const LocationPoint: React.FC<LocationPointProps> = ({
         onPointerOut={handlePointerOut}
         onClick={handleClick}
       >
-        <sphereGeometry args={[0.08, 8, 8]} />
+        <sphereGeometry args={[0.12, 8, 8]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
-
-      {/* Enhanced tooltip with smart positioning */}
-      {showTooltip && (
-        <Html position={tooltipPosition} center>
-          <div className="bg-black/95 text-white px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap shadow-xl pointer-events-none border border-white/20">
-            {location.name}
-            {isSelected && <span className="ml-2">✓</span>}
-          </div>
-        </Html>
-      )}
     </group>
   );
 };
@@ -698,6 +693,9 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
 
+  // Use adjusted locations to prevent overlapping cities
+  const adjustedLocations = adjustCloseCities(LOCATIONS);
+
   useEffect(() => {
     setIsClient(true);
 
@@ -717,9 +715,15 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
   const animateCameraToLocation = (targetPosition: Vector3, isZoomOut: boolean = false) => {
     if (!controlsRef.current) return;
 
+    // Validate target position
+    if (!targetPosition || targetPosition.length() === 0) {
+      console.warn('Invalid target position for camera animation');
+      return;
+    }
+
     const startTime = Date.now();
-    const phaseDuration = 1000; // 1 second per phase
-    const totalDuration = isZoomOut ? phaseDuration : phaseDuration * 2; // Two phases: zoom out then zoom in
+    const phaseDuration = 800; // Reduced duration for faster response
+    const totalDuration = isZoomOut ? phaseDuration : phaseDuration * 1.5; // Reduced total duration
 
     // Calculate responsive distances based on viewport size
     const viewportWidth = window.innerWidth;
@@ -727,8 +731,8 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
     const aspectRatio = viewportWidth / viewportHeight;
 
     // Adjust distances based on aspect ratio for better centering
-    const baseWideDistance = 6.0;
-    const baseCloseDistance = 2.8;
+    const baseWideDistance = 5.5; // Reduced for better mobile experience
+    const baseCloseDistance = 2.5; // Reduced for better mobile experience
 
     // For wider screens, we need to zoom in more to center properly
     const aspectRatioFactor = Math.max(0.8, Math.min(1.2, aspectRatio));
@@ -739,17 +743,23 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
     // Calculate the target camera position to face the city
     const cityDirection = targetPosition.clone().normalize();
     const targetDistance = isZoomOut ? wideDistance : closeDistance;
+
+    // Position camera to face the city for perfect centering
     const targetCameraPosition = cityDirection.clone().multiplyScalar(targetDistance);
 
     // Calculate spherical coordinates for smooth rotation - more robust calculation
     const startPosition = controlsRef.current.object.position.clone();
     const startRadius = startPosition.length();
+
+    // Validate start position
+    if (startRadius < 0.001) {
+      console.warn('Invalid start position for camera animation');
+      return;
+    }
+
     const startSpherical = {
       radius: startRadius,
-      phi:
-        startRadius > 0.001
-          ? Math.acos(Math.max(-1, Math.min(1, startPosition.y / startRadius)))
-          : 0,
+      phi: Math.acos(Math.max(-1, Math.min(1, startPosition.y / startRadius))),
       theta: Math.atan2(startPosition.z, startPosition.x),
     };
 
@@ -773,21 +783,12 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 
       let easedProgress = easeInOutCubic(progress);
 
-      // Debug logging for first frame
-      if (progress < 0.01) {
-        console.log('Animation start:', {
-          startSpherical,
-          targetSpherical,
-          targetPosition: targetPosition.toArray(),
-          cityDirection: cityDirection.toArray(),
-        });
-      }
-
       // For two-phase animation (zoom out then zoom in)
       if (!isZoomOut) {
-        if (progress < 0.5) {
+        if (progress < 0.6) {
+          // Adjusted phase split
           // Phase 1: Zoom out to wide view
-          const phaseProgress = progress * 2; // 0 to 1
+          const phaseProgress = progress / 0.6; // 0 to 1
           easedProgress = easeInOutCubic(phaseProgress);
 
           // Interpolate to wide distance
@@ -810,12 +811,14 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
             currentRadius * Math.sin(currentPhi) * Math.sin(currentTheta),
           );
 
-          controlsRef.current.object.position.copy(newPosition);
-          controlsRef.current.target.set(0, 0, 0);
-          controlsRef.current.update();
+          if (controlsRef.current) {
+            controlsRef.current.object.position.copy(newPosition);
+            controlsRef.current.target.set(0, 0, 0);
+            controlsRef.current.update();
+          }
         } else {
           // Phase 2: Zoom in to close view (already at correct angle)
-          const phaseProgress = (progress - 0.5) * 2; // 0 to 1
+          const phaseProgress = (progress - 0.6) / 0.4; // 0 to 1
           easedProgress = easeInOutCubic(phaseProgress);
 
           // Start from wide distance and zoom to close distance
@@ -832,9 +835,11 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
             currentRadius * Math.sin(currentPhi) * Math.sin(currentTheta),
           );
 
-          controlsRef.current.object.position.copy(newPosition);
-          controlsRef.current.target.set(0, 0, 0);
-          controlsRef.current.update();
+          if (controlsRef.current) {
+            controlsRef.current.object.position.copy(newPosition);
+            controlsRef.current.target.set(0, 0, 0);
+            controlsRef.current.update();
+          }
         }
       } else {
         // Single phase: just zoom out
@@ -864,13 +869,6 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 
       if (progress < 1) {
         requestAnimationFrame(animate);
-      } else {
-        // Debug logging for final position
-        console.log('Animation complete:', {
-          finalPosition: controlsRef.current.object.position.toArray(),
-          targetPosition: targetPosition.toArray(),
-          distance: controlsRef.current.object.position.distanceTo(targetPosition),
-        });
       }
     };
 
@@ -879,14 +877,15 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 
   const handleLocationClick = (location: Location) => {
     setSelectedLocation(location);
-    console.log('Clicked location:', location);
 
     // Calculate position on globe surface - this is what we want to face
     const position = latLonToVector3(location.lat, location.lon, 1.5);
-    console.log('Target position:', position);
 
-    // Animate camera to orbit around and face this position with two-phase animation
-    animateCameraToLocation(position, false); // false = two-phase animation (zoom out then zoom in)
+    // Add a small delay to ensure state updates are processed
+    setTimeout(() => {
+      // Animate camera to orbit around and face this position with two-phase animation
+      animateCameraToLocation(position, false); // false = two-phase animation (zoom out then zoom in)
+    }, 50);
   };
 
   const resetCamera = () => {
@@ -943,19 +942,19 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
           {selectedLocation && (
             <>
               {/* Mobile: Ultra-compact overlay panel */}
-              <div className="lg:hidden absolute bottom-3 left-3 right-3 z-20 bg-white/95 backdrop-blur-sm rounded-lg p-2.5 shadow-lg border border-white/20">
-                <div className="flex items-center justify-between mb-1.5">
-                  <h3 className="font-semibold text-sm text-gray-900 pr-2 truncate">
+              <div className="lg:hidden absolute bottom-2 left-2 right-2 z-20 bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-white/20">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="font-semibold text-xs text-gray-900 pr-2 truncate">
                     {selectedLocation.name}
                   </h3>
                   <button
                     onClick={() => setSelectedLocation(null)}
-                    className="text-gray-500 hover:text-gray-700 transition-colors w-5 h-5 flex items-center justify-center rounded-full hover:bg-gray-100 flex-shrink-0 text-xs"
+                    className="text-gray-500 hover:text-gray-700 transition-colors w-4 h-4 flex items-center justify-center rounded-full hover:bg-gray-100 flex-shrink-0 text-xs"
                   >
                     ✕
                   </button>
                 </div>
-                <p className="text-gray-600 text-xs mb-2 line-clamp-1">
+                <p className="text-gray-600 text-xs mb-1.5 line-clamp-2">
                   {selectedLocation.description}
                 </p>
 
@@ -965,12 +964,12 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
                     <span className="text-gray-500 text-xs font-medium">Connections:</span>
                     <div className="flex gap-1">
                       {selectedLocation.connections.map(connectedId => {
-                        const connectedCity = LOCATIONS.find(loc => loc.id === connectedId);
+                        const connectedCity = adjustedLocations.find(loc => loc.id === connectedId);
                         return connectedCity ? (
                           <button
                             key={connectedId}
                             onClick={() => handleLocationClick(connectedCity)}
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded text-xs font-medium transition-colors"
+                            className="bg-blue-100 hover:bg-blue-200 text-blue-800 px-1 py-0.5 rounded text-xs font-medium transition-colors"
                           >
                             {connectedCity.name.split(',')[0]}
                           </button>
@@ -1002,7 +1001,7 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
                     <h4 className="text-gray-900 text-sm font-medium mb-2">Connected Cities:</h4>
                     <div className="flex flex-wrap gap-1">
                       {selectedLocation.connections.map(connectedId => {
-                        const connectedCity = LOCATIONS.find(loc => loc.id === connectedId);
+                        const connectedCity = adjustedLocations.find(loc => loc.id === connectedId);
                         return connectedCity ? (
                           <button
                             key={connectedId}
@@ -1065,7 +1064,7 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
                 <EarthGlobe
                   isHovered={isGlobeHovered}
                   isCitySelected={!!selectedLocation}
-                  locations={LOCATIONS}
+                  locations={adjustedLocations}
                   onLocationClick={handleLocationClick}
                   selectedLocation={selectedLocation}
                   onGlobeHover={setIsGlobeHovered}
@@ -1080,31 +1079,35 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
               enablePan={false}
               enableRotate={true}
               autoRotate={!isGlobeHovered && !selectedLocation}
-              autoRotateSpeed={0.5}
-              minDistance={2.0}
-              maxDistance={8}
-              dampingFactor={0.05}
+              autoRotateSpeed={0.3}
+              minDistance={1.8}
+              maxDistance={7}
+              dampingFactor={0.08}
               enableDamping={true}
-              zoomSpeed={0.8}
+              zoomSpeed={1.0}
               panSpeed={0}
               screenSpacePanning={false}
+              touches={{
+                ONE: 2, // Single finger rotates
+                TWO: 1, // Two fingers zoom
+              }}
             />
           </Canvas>
         </div>
 
         {/* Side Menu - Horizontal scroll on mobile, vertical on desktop */}
-        <div className="lg:col-span-1 bg-surface-elevated rounded-lg p-3 lg:p-4 overflow-hidden lg:overflow-y-auto">
-          <h3 className="text-text-primary text-base lg:text-lg font-semibold mb-3 lg:mb-4">
+        <div className="lg:col-span-1 bg-surface-elevated rounded-lg p-2 lg:p-4 overflow-hidden lg:overflow-y-auto">
+          <h3 className="text-text-primary text-sm lg:text-lg font-semibold mb-2 lg:mb-4">
             Locations
           </h3>
 
           {/* Mobile: Horizontal scroll */}
-          <div className="lg:hidden flex gap-2 overflow-x-auto pb-2">
-            {LOCATIONS.map(location => (
+          <div className="lg:hidden flex gap-1.5 overflow-x-auto pb-1">
+            {adjustedLocations.map(location => (
               <button
                 key={location.id}
                 onClick={() => handleLocationClick(location)}
-                className={`flex-shrink-0 text-center px-4 py-3 rounded-lg text-sm transition-colors min-w-[120px] ${
+                className={`flex-shrink-0 text-center px-3 py-2 rounded-lg text-xs transition-colors min-w-[100px] ${
                   selectedLocation?.id === location.id
                     ? 'bg-accent/20 text-accent border border-accent/30'
                     : 'hover:bg-surface text-text-secondary hover:text-text-primary border border-transparent'
@@ -1118,7 +1121,7 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 
           {/* Desktop: Vertical list */}
           <div className="hidden lg:block space-y-2">
-            {LOCATIONS.map(location => (
+            {adjustedLocations.map(location => (
               <button
                 key={location.id}
                 onClick={() => handleLocationClick(location)}
