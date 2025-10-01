@@ -19,6 +19,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Videos', href: '/videos' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Interactive', href: '/interactive' },
   ];
 
   return (

@@ -108,7 +108,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                 >
                   <div className="absolute inset-0 transition-all duration-300 opacity-20 bg-accent group-hover:opacity-60"></div>
                   <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-120">
-                    <FaPlay className="text-5xl text-on-surface" />
+                    <FaPlay className="text-5xl text-white" />
                   </div>
                   <picture className="w-full">
                     <source media="(min-width: 1000px)" srcSet={desktop} />

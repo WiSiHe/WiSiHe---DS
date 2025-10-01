@@ -52,7 +52,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const { lqip } = image || {};
 
   return (
-    <motion.section className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip">
+    <motion.section className="relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 min-h-screen lg:pt-0 bg-surface overflow-clip">
       {/* Optimized background blur - use smaller image for blur effect */}
       <Image
         src={lqip || ''}
