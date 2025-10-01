@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 import InteractiveGlobe from '../components/InteractiveGlobe';
+import Empty3DExample from '../components/Empty3DExample';
 
 export const metadata: Metadata = {
   title: 'Interactive Art & 3D Experiences',
@@ -205,6 +206,63 @@ const InteractiveFeaturesSection = () => (
   </section>
 );
 
+// Empty 3D Example Section
+const Empty3DExampleSection = () => (
+  <section className="py-20 px-4 bg-surface-elevated flex flex-col gap-8">
+    <Empty3DExample />
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Animated Objects Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface to-surface-elevated rounded-2xl p-8 border border-border/50 hover:border-accent/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent/20 to-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-pulse">🎲</span>
+          </div>
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent transition-colors duration-300">
+            Animated Objects
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Rotating cube and sphere with smooth animations and floating effects
+          </p>
+        </div>
+      </div>
+
+      {/* Particle System Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface to-surface-elevated rounded-2xl p-8 border border-border/50 hover:border-accent-warm/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent-warm/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-warm/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent-warm/20 to-accent-warm/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-bounce">✨</span>
+          </div>
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent-warm transition-colors duration-300">
+            Particle System
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Floating particles in a circular pattern with smooth rotation animation
+          </p>
+        </div>
+      </div>
+
+      {/* Interactive Controls Feature */}
+      <div className="group relative overflow-hidden bg-gradient-to-br from-surface to-surface-elevated rounded-2xl p-8 border border-border/50 hover:border-accent-cool/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent-cool/10 hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-cool/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative">
+          <div className="w-20 h-20 bg-gradient-to-br from-accent-cool/20 to-accent-cool/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span className="text-3xl group-hover:animate-pulse">🎮</span>
+          </div>
+          <h3 className="font-bold text-lg mb-3 text-text-primary group-hover:text-accent-cool transition-colors duration-300">
+            Interactive Controls
+          </h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            Full orbit controls with zoom, pan, and rotation for complete 3D navigation
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 // Technology Stack Section
 const TechnologyStackSection = () => (
   <section className="py-20 px-4 bg-surface">
@@ -247,6 +305,10 @@ export default function InteractivePage() {
 
         <Suspense fallback={<InteractiveSkeleton />}>
           <InteractiveGlobeSection />
+        </Suspense>
+
+        <Suspense fallback={<InteractiveSkeleton />}>
+          <Empty3DExampleSection />
         </Suspense>
 
         <Suspense fallback={<InteractiveSkeleton />}>
