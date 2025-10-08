@@ -5,7 +5,8 @@
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": ["EXPERIMENTATION_CONFIG_ITEM_KEY", "STATSIG_SERVER_API_KEY"]
     },
     "lint": {
       "dependsOn": []
