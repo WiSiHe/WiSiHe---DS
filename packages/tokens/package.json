@@ -16,9 +16,9 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "style-dictionary": "5.0.4"
+    "style-dictionary": "5.1.1"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.20.0"
   }
 }
