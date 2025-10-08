@@ -20,7 +20,6 @@ import {
   ShaderMaterial, // Custom material using GPU shaders
   LineBasicMaterial, // Material for drawing lines
   CanvasTexture, // Texture created from HTML canvas
-  Texture, // Base texture type
 } from 'three';
 // TypeScript type for camera controls - using any for OrbitControls ref
 
@@ -413,7 +412,7 @@ const createAnimatedLineTexture = () => {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  return new CanvasTexture(canvas) as Texture;
+  return new CanvasTexture(canvas);
 };
 
 interface CurvedLineProps {
@@ -425,7 +424,7 @@ const CurvedLine: React.FC<CurvedLineProps> = ({ start, end }) => {
   const geometryRef = useRef<BufferGeometry>(null);
   const materialRef = useRef<LineBasicMaterial>(null);
   const [waveOffset] = useState(Math.random() * Math.PI * 2);
-  const [texture] = useState(() => createAnimatedLineTexture());
+  const [texture] = useState<CanvasTexture>(() => createAnimatedLineTexture());
 
   useEffect(() => {
     if (geometryRef.current) {
@@ -468,7 +467,13 @@ const CurvedLine: React.FC<CurvedLineProps> = ({ start, end }) => {
   return (
     <line>
       <bufferGeometry ref={geometryRef} />
-      <lineBasicMaterial ref={materialRef} map={texture} transparent opacity={0.8} linewidth={2} />
+      <lineBasicMaterial
+        ref={materialRef}
+        map={texture as unknown as import('three').Texture}
+        transparent
+        opacity={0.8}
+        linewidth={2}
+      />
     </line>
   );
 };
