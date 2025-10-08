@@ -1149,3 +1149,4 @@ const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) =
 };
 
 export default InteractiveGlobe;
+// Test comment
