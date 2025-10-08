@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", ":semanticCommits", ":semanticCommitTypeAll(chore)"],
   "packageRules": [
     {
       "matchDepTypes": ["dependencies"],
@@ -13,6 +13,20 @@
       "enabled": false
     },
     {
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchDepTypes": ["dependencies"],
+      "matchPackageNames": ["react", "react-dom"],
+      "groupName": "React dependencies",
+      "groupSlug": "react"
+    },
+    {
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchDepTypes": ["dependencies"],
+      "matchPackagePatterns": ["^@types/"],
+      "groupName": "TypeScript types",
+      "groupSlug": "types"
+    },
+    {
       "matchPaths": ["apps/**"],
       "groupName": "app dependencies",
       "groupSlug": "apps",
@@ -23,6 +37,12 @@
       "groupName": "package dependencies",
       "groupSlug": "packages",
       "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "pr"
     }
   ],
   "rangeStrategy": "bump",
@@ -30,10 +50,15 @@
   "prConcurrentLimit": 10,
   "repositories": ["."],
   "labels": ["dependencies", "renovate"],
-  "commitMessagePrefix": "chore(deps):",
-  "commitMessageAction": "update",
-  "commitMessageTopic": "{{depName}}",
-  "commitMessageExtra": "to {{newVersion}}",
   "schedule": ["before 4am on monday"],
-  "timezone": "UTC"
+  "timezone": "UTC",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"]
+  },
+  "ignorePaths": ["**/node_modules/**", "**/dist/**", "**/build/**"],
+  "ignoreDeps": ["lefthook"],
+  "constraints": {
+    "node": ">=22.0.0"
+  }
 }

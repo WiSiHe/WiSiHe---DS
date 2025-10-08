@@ -27,11 +27,11 @@
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "clsx": "^2.1.1",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "tailwind-merge": "^2.6.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.46.0"
   },
   "publishConfig": {
     "access": "public"
