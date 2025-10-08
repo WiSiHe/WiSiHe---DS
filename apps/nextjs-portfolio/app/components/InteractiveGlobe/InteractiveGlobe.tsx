@@ -20,6 +20,7 @@ import {
   ShaderMaterial, // Custom material using GPU shaders
   LineBasicMaterial, // Material for drawing lines
   CanvasTexture, // Texture created from HTML canvas
+  Texture, // Base texture type
 } from 'three';
 // TypeScript type for camera controls - using any for OrbitControls ref
 
@@ -412,7 +413,7 @@ const createAnimatedLineTexture = () => {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  return new CanvasTexture(canvas);
+  return new CanvasTexture(canvas) as Texture;
 };
 
 interface CurvedLineProps {
