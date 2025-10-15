@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { GetPaginatedPaintingsResult } from '@/sanity.types';
 import { cn } from '@wisihe/utils';
@@ -38,7 +39,6 @@ const PaginatedPaintingGrid = ({
   initialPagination,
   initialFilter = '',
 }: PaginatedPaintingGridProps) => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [paintings, setPaintings] = useState<Painting[]>(initialPaintings);
   const [pagination, setPagination] = useState<PaginationInfo>(initialPagination);
@@ -94,18 +94,20 @@ const PaginatedPaintingGrid = ({
     }
   }, [searchParams, currentFilter, loadPage, pagination.page, pagination.totalPages]);
 
-  const handlePageChange = (pageNumber: number) => {
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (pageNumber === 1) {
-      params.delete('page');
-    } else {
+  // Helper function to build pagination URL
+  const buildPageUrl = (pageNumber: number): string => {
+    const params = new URLSearchParams();
+    if (pageNumber > 1) {
       params.set('page', pageNumber.toString());
     }
-    router.push(`/paintings?${params.toString()}`, { scroll: true });
-
-    // Load the new page data
-    void loadPage(pageNumber);
+    if (currentFilter) {
+      params.set('filter', currentFilter);
+    }
+    const queryString = params.toString();
+    if (queryString) {
+      return `/paintings?${queryString}`;
+    }
+    return '/paintings';
   };
 
   return (
@@ -127,67 +129,108 @@ const PaginatedPaintingGrid = ({
       {pagination.totalPages > 1 && (
         <div className="flex justify-center w-full items-center mt-8 mb-4">
           <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handlePageChange(1)}
-              disabled={pagination.page <= 1}
-              className={cn(
-                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
-                pagination.page <= 1
-                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
-                  : 'bg-primary text-on-primary hover:bg-primary/80',
-              )}
-              aria-label="First page"
-            >
-              <FaStepBackward />
-            </button>
+            {/* First Page Link */}
+            {pagination.page > 1 ? (
+              <Link
+                href={buildPageUrl(1)}
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                aria-label="First page"
+              >
+                <FaStepBackward />
+              </Link>
+            ) : (
+              <span
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                aria-label="First page"
+              >
+                <FaStepBackward />
+              </span>
+            )}
 
-            <button
-              onClick={() => handlePageChange(pagination.page - 1)}
-              disabled={pagination.page <= 1}
-              className={cn(
-                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
-                pagination.page <= 1
-                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
-                  : 'bg-primary text-on-primary hover:bg-primary/80',
-              )}
-              aria-label="Previous page"
-            >
-              <FaArrowLeft />
-            </button>
+            {/* Previous Page Link */}
+            {pagination.page > 1 ? (
+              <Link
+                href={buildPageUrl(pagination.page - 1)}
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                aria-label="Previous page"
+              >
+                <FaArrowLeft />
+              </Link>
+            ) : (
+              <span
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                aria-label="Previous page"
+              >
+                <FaArrowLeft />
+              </span>
+            )}
 
             <span className="px-4 py-2 text-sm">
               Page {pagination.page} of {pagination.totalPages}
             </span>
 
-            <button
-              onClick={() => handlePageChange(pagination.page + 1)}
-              disabled={pagination.page >= pagination.totalPages}
-              className={cn(
-                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
-                pagination.page >= pagination.totalPages
-                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
-                  : 'bg-primary text-on-primary hover:bg-primary/80',
-              )}
-              aria-label="Next page"
-            >
-              <FaArrowRight />
-            </button>
+            {/* Next Page Link */}
+            {pagination.page < pagination.totalPages ? (
+              <Link
+                href={buildPageUrl(pagination.page + 1)}
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                aria-label="Next page"
+              >
+                <FaArrowRight />
+              </Link>
+            ) : (
+              <span
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                aria-label="Next page"
+              >
+                <FaArrowRight />
+              </span>
+            )}
 
-            <button
-              onClick={() => handlePageChange(pagination.totalPages)}
-              disabled={pagination.page >= pagination.totalPages}
-              className={cn(
-                'px-4 py-2 rounded flex items-center gap-2 cursor-pointer',
-                pagination.page >= pagination.totalPages
-                  ? 'bg-primary/30 text-text-secondary cursor-not-allowed'
-                  : 'bg-primary text-on-primary hover:bg-primary/80',
-              )}
-              aria-label="Last page"
-            >
-              <FaStepForward />
-            </button>
+            {/* Last Page Link */}
+            {pagination.page < pagination.totalPages ? (
+              <Link
+                href={buildPageUrl(pagination.totalPages)}
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                aria-label="Last page"
+              >
+                <FaStepForward />
+              </Link>
+            ) : (
+              <span
+                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                aria-label="Last page"
+              >
+                <FaStepForward />
+              </span>
+            )}
           </div>
         </div>
+      )}
+
+      {/* Browse All Pages Navigation */}
+      {pagination.totalPages > 3 && (
+        <nav aria-label="All painting pages" className="mt-8 p-4 bg-surface-elevated rounded-lg">
+          <h2 className="text-lg font-semibold mb-3">Browse All Pages</h2>
+          <div className="flex flex-wrap gap-2">
+            {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(pageNum => (
+              <Link
+                key={pageNum}
+                href={buildPageUrl(pageNum)}
+                className={cn(
+                  'px-3 py-1 rounded transition-colors',
+                  pageNum === pagination.page
+                    ? 'bg-primary text-on-primary font-semibold'
+                    : 'bg-surface hover:bg-surface-elevated-light text-text-primary',
+                )}
+                aria-label={`Go to page ${pageNum}`}
+                aria-current={pageNum === pagination.page ? 'page' : undefined}
+              >
+                {pageNum}
+              </Link>
+            ))}
+          </div>
+        </nav>
       )}
     </>
   );
