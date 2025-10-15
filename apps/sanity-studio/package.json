@@ -18,7 +18,7 @@
   "dependencies": {
     "@amexiogroup/sanity-plugin-media-i18n": "^2.3.7",
     "@sanity/assist": "^4.4.8",
-    "@sanity/cli": "4.6.0",
+    "@sanity/cli": "4.10.2",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/studio-secrets": "^3.0.2",
@@ -43,6 +43,6 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">= 22.0.0"
+    "node": ">= 22.20.0"
   }
 }
