@@ -1,17 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { motion, Variants } from 'motion/react';
-import GridDistortion from '../GridDistortion/GridDistortion';
-
-const randomImageArray = [
-  '/images/bathtub.jpg',
-  '/images/celestial.jpg',
-  '/images/cloud.jpg',
-  '/images/cute.jpg',
-  '/images/space.jpg',
-  '/images/winter.jpg',
-  '/images/sunlight.jpg',
-];
 
 const NotFoundSection = () => {
   const containerVariants: Variants = {
@@ -44,19 +33,11 @@ const NotFoundSection = () => {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative grid w-full h-full grid-flow-col-dense bg-surface aspect-square xl:aspect-video overflow-clip"
+      className="relative flex items-center justify-center w-full min-h-screen bg-surface"
     >
-      <GridDistortion
-        grid={10}
-        mouse={0.1}
-        strength={0.15}
-        relaxation={0.9}
-        imageSrc={randomImageArray[0]}
-      />
-
       <motion.div
         variants={itemVariants}
-        className="absolute inset-0 z-10 flex flex-col items-center bg-surface/40 backdrop-blur-3xl p-4 md:p-8 rounded mx-auto my-auto text-center text-text-primary h-fit w-fit"
+        className="flex flex-col items-center bg-surface-elevated p-8 md:p-12 rounded-lg shadow-xl mx-4 text-center text-text-primary max-w-lg"
       >
         <motion.div variants={itemVariants} className="text-xs text-text-primary">
           <h1 className="text-4xl font-bold mb-2">404</h1>
