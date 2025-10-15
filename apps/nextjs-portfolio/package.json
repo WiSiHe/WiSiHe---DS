@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "npm run typegen",
-    "dev": "next dev --turbopack -p 1992",
+    "dev": "next dev --turbo -p 1992",
     "prebuild": "npm run typegen",
     "build": "next build",
     "start": "next start",
