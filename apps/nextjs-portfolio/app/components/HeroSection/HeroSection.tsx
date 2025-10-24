@@ -74,9 +74,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       gsap.set('.loading-name', { opacity: 0, y: 50, scale: 0.8 });
       gsap.set('.loading-logo', { scale: 0, rotation: 180, opacity: 0 });
       gsap.set('.loading-text', { opacity: 0, y: 20 });
-      gsap.set('.loading-journey', { opacity: 0, y: 30 });
       gsap.set('.loading-bar', { scaleX: 0 });
-      gsap.set('.loading-tags', { opacity: 0, y: 30 });
       gsap.set('.loading-grid-cell', { opacity: 1, scale: 1 });
 
       // Loading sequence - start with logo
@@ -90,13 +88,24 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         .to(
           '.loading-logo',
           {
-            scale: 1.1,
-            duration: 0.3,
+            scale: 1.2,
+            rotation: 5,
+            duration: 0.4,
             ease: 'power2.out',
             yoyo: true,
-            repeat: 1,
+            repeat: 2,
           },
           '-=0.5',
+        )
+        .to(
+          '.loading-logo',
+          {
+            scale: 1,
+            rotation: 0,
+            duration: 0.6,
+            ease: 'elastic.out(1, 0.6)',
+          },
+          '-=0.2',
         )
         .to(
           '.loading-text',
@@ -118,26 +127,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             ease: 'elastic.out(1, 0.4)',
           },
           '-=0.4',
-        )
-        .to(
-          '.loading-journey',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-          },
-          '-=0.6',
-        )
-        .to(
-          '.loading-tags',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.3',
         )
         .to(
           '.loading-bar',
@@ -178,28 +167,6 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             ease: 'power2.in',
           },
           '-=0.6',
-        )
-        .to(
-          '.loading-journey',
-          {
-            scale: 0.5,
-            opacity: 0,
-            duration: 0.5,
-            ease: 'power2.in',
-            stagger: 0.1,
-          },
-          '-=0.4',
-        )
-        .to(
-          '.loading-tags',
-          {
-            scale: 0,
-            opacity: 0,
-            duration: 0.4,
-            ease: 'back.in(1.7)',
-            stagger: 0.1,
-          },
-          '-=0.3',
         )
         .to(
           '.loading-name',
@@ -418,8 +385,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           ref={loadingRef}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center text-on-primary overflow-hidden"
         >
-          {/* Grid background - pixel-like */}
-          <div className="absolute inset-0 grid grid-cols-32 grid-rows-24 md:grid-cols-48 md:grid-rows-32">
+          {/* Grid background - pixel-like with perfect squares */}
+          <div className="absolute inset-0 grid grid-cols-24 grid-rows-32 md:grid-cols-32 md:grid-rows-24">
             {Array.from({ length: 768 }, (_, i) => (
               <div key={i} className={`loading-grid-cell bg-black rounded-none`} />
             ))}
@@ -444,38 +411,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 {loadingMessage}
               </div>
 
-              {/* Creative journey indicators */}
-              <div className="loading-journey flex gap-6 mb-8 text-sm text-on-primary/70">
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  Artist
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent-warm rounded-full"></div>
-                  Developer
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent-cool rounded-full"></div>
-                  Designer
-                </span>
-              </div>
-
               {/* Minimal progress bar */}
               <div className="loading-progress-container w-64 h-1 bg-secondary/30 rounded-full overflow-hidden">
                 <div className="loading-bar h-full bg-accent origin-left"></div>
-              </div>
-
-              {/* Skill tags */}
-              <div className="loading-tags mt-8 flex gap-4 text-sm opacity-0">
-                <span className="px-4 py-2 bg-accent/10 rounded-full backdrop-blur-sm text-on-primary border border-accent/20">
-                  Art
-                </span>
-                <span className="px-4 py-2 bg-accent-warm/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-warm/20">
-                  Code
-                </span>
-                <span className="px-4 py-2 bg-accent-cool/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-cool/20">
-                  Design
-                </span>
               </div>
             </div>
 
