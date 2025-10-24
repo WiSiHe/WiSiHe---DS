@@ -82,7 +82,10 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
               }}
             >
               <div className="relative">
-                <ListboxButton className="inline-flex items-center gap-1 px-3 py-1 text-sm border border-dashed border-border rounded-full hover:border-accent hover:bg-surface-elevated transition-all duration-200 bg-transparent w-auto min-w-[120px] focus:outline-none focus:ring-2 focus:ring-border-focus cursor-pointer group">
+                <ListboxButton
+                  id="add-filter-button"
+                  className="inline-flex items-center gap-1 px-3 py-1 text-sm border border-dashed border-border rounded-full hover:border-accent hover:bg-surface-elevated transition-all duration-200 bg-transparent w-auto min-w-[120px] focus:outline-none focus:ring-2 focus:ring-border-focus cursor-pointer group"
+                >
                   <IoAdd className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors duration-200" />
                   <span className="text-text-secondary group-hover:text-text-primary transition-colors duration-200">
                     Add filter
@@ -90,6 +93,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
                 </ListboxButton>
 
                 <ListboxOptions
+                  id="add-filter-options"
                   anchor="bottom"
                   className="w-64 bg-surface border border-border rounded-lg shadow-xl z-20 mt-2 backdrop-blur-sm max-h-48 overflow-y-auto"
                   transition
