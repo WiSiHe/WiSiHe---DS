@@ -29,17 +29,34 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
   // Random loading messages
   const loadingMessages = [
-    'Crafting digital art...',
-    'Mixing colors and code...',
-    'Building something beautiful...',
-    'Creating visual stories...',
-    'Designing the future...',
-    'Painting with pixels...',
-    'Engineering creativity...',
-    'Making magic happen...',
-    'Weaving ideas together...',
-    'Bringing visions to life...',
+    "Welcome to Henrik's Creative Universe",
+    'Crafting Digital Masterpieces',
+    'Where Art Meets Technology',
+    "Building Tomorrow's Experiences",
+    'Creating Visual Stories',
+    'Designing the Future',
+    "Henrik's Portfolio Loading...",
+    'Preparing Creative Magic',
+    'Loading Artistic Vision',
+    "Henrik's World Awaits",
   ];
+
+  // Custom stagger function using Perlin noise
+  const perlinStagger = (index: number, target: Element) => {
+    const rect = target.getBoundingClientRect();
+    const x = rect.left;
+    const y = rect.top;
+
+    // Simple noise-like function using position
+    const noise1 = Math.sin(x * 0.01) * Math.cos(y * 0.01);
+    const noise2 = Math.sin(x * 0.005) * Math.cos(y * 0.005);
+    const noise3 = Math.sin(x * 0.002) * Math.cos(y * 0.002);
+
+    const combinedNoise = (noise1 + noise2 + noise3) / 3;
+    const normalizedNoise = (combinedNoise + 1) / 2; // Normalize to 0-1
+
+    return normalizedNoise * 1.5; // Spread over 1.5 seconds
+  };
 
   // Loading animation
   useGSAP(
@@ -54,42 +71,22 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
       // Set initial loading state
       gsap.set(loadingRef.current, { opacity: 1 });
+      gsap.set('.loading-name', { opacity: 0, y: 50, scale: 0.8 });
       gsap.set('.loading-logo', { scale: 0, rotation: 180, opacity: 0 });
       gsap.set('.loading-text', { opacity: 0, y: 20 });
+      gsap.set('.loading-journey', { opacity: 0, y: 30 });
       gsap.set('.loading-bar', { scaleX: 0 });
       gsap.set('.loading-tags', { opacity: 0, y: 30 });
-      gsap.set('.loading-paint-splash-1', { scale: 0, rotation: 45 });
-      gsap.set('.loading-paint-splash-2', { scale: 0, rotation: -30 });
-      gsap.set('.loading-paint-splash-3', { scale: 0, rotation: 60 });
-      gsap.set('.loading-paint-splash-4', { scale: 0, rotation: -45 });
+      gsap.set('.loading-grid-cell', { opacity: 1, scale: 1 });
 
-      // Loading sequence - paint splashes first
-      tl.to(
-        [
-          '.loading-paint-splash-1',
-          '.loading-paint-splash-2',
-          '.loading-paint-splash-3',
-          '.loading-paint-splash-4',
-        ],
-        {
-          scale: 1,
-          rotation: 0,
-          duration: 1.2,
-          ease: 'elastic.out(1, 0.3)',
-          stagger: 0.2,
-        },
-      )
-        .to(
-          '.loading-logo',
-          {
-            scale: 1,
-            rotation: 0,
-            opacity: 1,
-            duration: 1.5,
-            ease: 'elastic.out(1, 0.4)',
-          },
-          '-=0.8',
-        )
+      // Loading sequence - start with logo
+      tl.to('.loading-logo', {
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: 'elastic.out(1, 0.4)',
+      })
         .to(
           '.loading-logo',
           {
@@ -112,6 +109,27 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           '-=0.6',
         )
         .to(
+          '.loading-name',
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: 'elastic.out(1, 0.4)',
+          },
+          '-=0.4',
+        )
+        .to(
+          '.loading-journey',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+          },
+          '-=0.6',
+        )
+        .to(
           '.loading-tags',
           {
             opacity: 1,
@@ -130,11 +148,87 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           },
           '-=0.4',
         )
+        // Fun removal sequence - each element disappears differently
+        .to(
+          '.loading-progress-container',
+          {
+            opacity: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          },
+          '-=0.2',
+        )
+        .to(
+          '.loading-logo',
+          {
+            scale: 0,
+            rotation: 360,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'back.in(1.7)',
+          },
+          '-=0.1',
+        )
+        .to(
+          '.loading-text',
+          {
+            y: -50,
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.in',
+          },
+          '-=0.6',
+        )
+        .to(
+          '.loading-journey',
+          {
+            scale: 0.5,
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.in',
+            stagger: 0.1,
+          },
+          '-=0.4',
+        )
+        .to(
+          '.loading-tags',
+          {
+            scale: 0,
+            opacity: 0,
+            duration: 0.4,
+            ease: 'back.in(1.7)',
+            stagger: 0.1,
+          },
+          '-=0.3',
+        )
+        .to(
+          '.loading-name',
+          {
+            y: 100,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power2.in',
+          },
+          '-=0.1',
+        )
+        // Then fragment the grid background with Perlin noise pattern
+        .to(
+          '.loading-grid-cell',
+          {
+            opacity: 0,
+            scale: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+            stagger: perlinStagger,
+          },
+          '-=0.3',
+        )
+        // Finally fade out the entire container
         .to(
           loadingRef.current,
           {
             opacity: 0,
-            duration: 0.8,
+            duration: 0.3,
             ease: 'power2.out',
             onComplete: () => setIsLoading(false),
           },
@@ -322,43 +416,72 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       {isLoading && (
         <div
           ref={loadingRef}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-primary text-on-primary overflow-hidden"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center text-on-primary overflow-hidden"
         >
-          {/* Subtle background pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="loading-paint-splash-1 absolute top-20 left-20 w-32 h-32 bg-accent rounded-full blur-xl"></div>
-            <div className="loading-paint-splash-2 absolute top-40 right-32 w-24 h-24 bg-accent-warm rounded-full blur-lg"></div>
-            <div className="loading-paint-splash-3 absolute bottom-32 left-40 w-40 h-40 bg-accent-cool rounded-full blur-2xl"></div>
-            <div className="loading-paint-splash-4 absolute bottom-20 right-20 w-28 h-28 bg-accent-success rounded-full blur-xl"></div>
+          {/* Grid background - pixel-like */}
+          <div className="absolute inset-0 grid grid-cols-32 grid-rows-24 md:grid-cols-48 md:grid-rows-32">
+            {Array.from({ length: 768 }, (_, i) => (
+              <div key={i} className={`loading-grid-cell bg-black rounded-none`} />
+            ))}
+            {Array.from({ length: 768 }, (_, i) => (
+              <div
+                key={i + 768}
+                className={`loading-grid-cell bg-black rounded-none hidden md:block`}
+              />
+            ))}
           </div>
 
           {/* Main content */}
-          <div className="relative z-10 flex flex-col items-center max-w-md mx-auto px-8">
-            <div className="loading-logo mb-12 drop-shadow-2xl">
-              <IconLogo className="w-20 h-20 text-on-primary" />
+          <div className="relative z-10 flex flex-col items-center justify-center h-full max-w-lg mx-auto px-8">
+            {/* Top section */}
+            <div className="flex flex-col items-center mb-16">
+              <div className="loading-logo mb-8 drop-shadow-2xl">
+                <IconLogo className="w-16 h-16 text-on-primary" />
+              </div>
+
+              {/* Loading text */}
+              <div className="loading-text text-lg font-medium mb-8 text-center text-on-primary">
+                {loadingMessage}
+              </div>
+
+              {/* Creative journey indicators */}
+              <div className="loading-journey flex gap-6 mb-8 text-sm text-on-primary/70">
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-accent rounded-full"></div>
+                  Artist
+                </span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-accent-warm rounded-full"></div>
+                  Developer
+                </span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-accent-cool rounded-full"></div>
+                  Designer
+                </span>
+              </div>
+
+              {/* Minimal progress bar */}
+              <div className="loading-progress-container w-64 h-1 bg-secondary/30 rounded-full overflow-hidden">
+                <div className="loading-bar h-full bg-accent origin-left"></div>
+              </div>
+
+              {/* Skill tags */}
+              <div className="loading-tags mt-8 flex gap-4 text-sm opacity-0">
+                <span className="px-4 py-2 bg-accent/10 rounded-full backdrop-blur-sm text-on-primary border border-accent/20">
+                  Art
+                </span>
+                <span className="px-4 py-2 bg-accent-warm/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-warm/20">
+                  Code
+                </span>
+                <span className="px-4 py-2 bg-accent-cool/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-cool/20">
+                  Design
+                </span>
+              </div>
             </div>
 
-            {/* Loading text */}
-            <div className="loading-text text-xl font-medium mb-8 text-center text-on-primary">
-              {loadingMessage}
-            </div>
-
-            {/* Minimal progress bar */}
-            <div className="w-64 h-1 bg-secondary/30 rounded-full overflow-hidden">
-              <div className="loading-bar h-full bg-accent origin-left"></div>
-            </div>
-
-            {/* Skill tags */}
-            <div className="loading-tags mt-8 flex gap-4 text-sm opacity-0">
-              <span className="px-4 py-2 bg-accent/10 rounded-full backdrop-blur-sm text-on-primary border border-accent/20">
-                Art
-              </span>
-              <span className="px-4 py-2 bg-accent-warm/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-warm/20">
-                Code
-              </span>
-              <span className="px-4 py-2 bg-accent-cool/10 rounded-full backdrop-blur-sm text-on-primary border border-accent-cool/20">
-                Design
-              </span>
+            {/* Bottom section - Name */}
+            <div className="loading-name text-4xl font-bold text-center text-on-primary tracking-tight">
+              HENRIK SISSENER
             </div>
           </div>
         </div>
