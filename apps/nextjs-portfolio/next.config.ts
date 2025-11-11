@@ -66,9 +66,26 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-  // async redirects() {
-  // x  return await fetchRedirects();
-  // },
+  async redirects() {
+    try {
+      const { fetchRedirects } = await import('./sanity/lib/fetchRedirects');
+      const redirects = await fetchRedirects();
+
+      return redirects
+        .filter(
+          (redirect): redirect is { source: string; destination: string; permanent: boolean } =>
+            Boolean(redirect.source && redirect.destination),
+        )
+        .map(redirect => ({
+          source: redirect.source!,
+          destination: redirect.destination!,
+          permanent: redirect.permanent ?? false,
+        }));
+    } catch (error) {
+      console.error('Error fetching redirects:', error);
+      return [];
+    }
+  },
 };
 
 export default nextConfig;
