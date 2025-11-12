@@ -7,5 +7,7 @@ export default defineCliConfig({
     // eslint-disable-next-line no-undef
     dataset: process.env.SANITY_STUDIO_API_DATASET || '',
   },
-  autoUpdates: true,
+  deployment: {
+    autoUpdates: true,
+  },
 });
