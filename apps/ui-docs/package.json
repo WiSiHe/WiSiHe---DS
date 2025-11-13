@@ -12,7 +12,6 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@wisihe/ui-react": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

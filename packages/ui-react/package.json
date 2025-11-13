@@ -30,7 +30,6 @@
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "eslint": "^9.39.1",
-    "framer-motion": "^11.18.2",
     "react": "^19.2.0",
     "tailwindcss": "^4.1.17",
     "tsup": "^8.5.0",

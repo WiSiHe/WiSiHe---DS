@@ -1,0 +1,44 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    "apps/nextjs-portfolio": {
+      "entry": [
+        "app/**/*.{ts,tsx}",
+        "next.config.ts",
+        "postcss.config.mjs",
+        "sanity/**/*.ts",
+        "utils/**/*.ts",
+        "hooks/**/*.ts",
+        "store/**/*.ts"
+      ],
+      "ignore": ["sanity.types.ts"]
+    },
+    "apps/sanity-studio": {
+      "entry": ["sanity.config.ts", "sanity.cli.ts", "components/**/*.tsx", "schemas/**/*.{ts,tsx}"]
+    }
+  },
+  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts"],
+  "ignoreDependencies": [
+    "@sanity/assist",
+    "@sanity/icons",
+    "@sanity/image-url",
+    "@sanity/studio-secrets",
+    "@sanity/ui",
+    "@sanity/vision",
+    "sanity-plugin-media",
+    "@amexiogroup/sanity-plugin-media-i18n",
+    "eslint-config-next",
+    "eslint",
+    "prettier",
+    "@vercel/style-guide",
+    "eslint-config-turbo",
+    "eslint-plugin-mdx",
+    "eslint-plugin-only-warn",
+    "eslint-plugin-storybook",
+    "@wisihe/eslint-config",
+    "postcss",
+    "tailwindcss",
+    "lint-staged",
+    "@wisihe/tokens"
+  ]
+}

@@ -77,109 +77,7 @@ export type Recipe = {
   }>;
   instructions?: Array<{
     title?: string;
-    content: Array<
-      | {
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: 'span';
-            _key: string;
-          }>;
-          style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote';
-          listItem?: 'bullet' | 'number';
-          markDefs?: Array<{
-            linkType?: 'href' | 'slug' | 'painting' | 'project';
-            href?: string;
-            slug?: string;
-            painting?: {
-              _ref: string;
-              _type: 'reference';
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: 'painting';
-            };
-            project?: {
-              _ref: string;
-              _type: 'reference';
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: 'project';
-            };
-            openInNewTab?: boolean;
-            _type: 'link';
-            _key: string;
-          }>;
-          level?: number;
-          _type: 'block';
-          _key: string;
-        }
-      | {
-          asset?: {
-            _ref: string;
-            _type: 'reference';
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt: string;
-          caption?: string;
-          _type: 'image';
-          _key: string;
-        }
-      | {
-          code: string;
-          language?:
-            | 'javascript'
-            | 'typescript'
-            | 'html'
-            | 'css'
-            | 'json'
-            | 'python'
-            | 'bash'
-            | 'text';
-          _type: 'codeBlock';
-          _key: string;
-        }
-      | {
-          type?: 'info' | 'warning' | 'success' | 'error';
-          title?: string;
-          content?: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: 'span';
-              _key: string;
-            }>;
-            style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
-            listItem?: 'bullet' | 'number';
-            markDefs?: Array<{
-              href?: string;
-              _type: 'link';
-              _key: string;
-            }>;
-            level?: number;
-            _type: 'block';
-            _key: string;
-          }>;
-          _type: 'callout';
-          _key: string;
-        }
-      | {
-          icon?: string;
-          title?: string;
-          content: string;
-          type?: 'pro' | 'time' | 'flavor' | 'technique' | 'substitution';
-          _type: 'recipeTip';
-          _key: string;
-        }
-      | {
-          url: string;
-          title?: string;
-          caption?: string;
-          _type: 'videoEmbed';
-          _key: string;
-        }
-    >;
+    content: BlockContent;
     _key: string;
   }>;
   tips?: Array<{
@@ -220,41 +118,20 @@ export type Recipe = {
   };
 };
 
-export type Social = {
-  _type: 'social';
-  linkedIn?: string;
-  x?: string;
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop';
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
-export type Redirect = {
-  _id: string;
-  _type: 'redirect';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  source?: string;
-  destination?: string;
-  permanent?: boolean;
-  isEnabled?: boolean;
-};
-
-export type Seo = {
-  _type: 'seo';
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  noIndex?: boolean;
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot';
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type BlockContent = Array<
@@ -352,6 +229,49 @@ export type BlockContent = Array<
       _key: string;
     }
 >;
+
+export type Slug = {
+  _type: 'slug';
+  current: string;
+  source?: string;
+};
+
+export type Social = {
+  _type: 'social';
+  linkedIn?: string;
+  x?: string;
+};
+
+export type Redirect = {
+  _id: string;
+  _type: 'redirect';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  source?: string;
+  destination?: string;
+  permanent?: boolean;
+  isEnabled?: boolean;
+};
+
+export type Seo = {
+  _type: 'seo';
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+  noIndex?: boolean;
+};
 
 export type Tag = {
   _id: string;
@@ -879,20 +799,15 @@ export type SanityImageDimensions = {
   aspectRatio: number;
 };
 
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot';
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop';
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
+export type SanityImageMetadata = {
+  _type: 'sanity.imageMetadata';
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -915,6 +830,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: 'sanity.assetSourceData';
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -940,17 +862,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: 'sanity.imageMetadata';
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
 export type Geopoint = {
   _type: 'geopoint';
   lat?: number;
@@ -958,25 +869,15 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: 'slug';
-  current: string;
-  source?: string;
-};
-
-export type SanityAssetSourceData = {
-  _type: 'sanity.assetSourceData';
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
 export type AllSanitySchemaTypes =
   | Recipe
+  | SanityImageCrop
+  | SanityImageHotspot
+  | BlockContent
+  | Slug
   | Social
   | Redirect
   | Seo
-  | BlockContent
   | Tag
   | Settings
   | Home
@@ -999,14 +900,11 @@ export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
-  | SanityImageHotspot
-  | SanityImageCrop
-  | SanityFileAsset
-  | SanityImageAsset
   | SanityImageMetadata
-  | Geopoint
-  | Slug
-  | SanityAssetSourceData;
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -1778,109 +1676,7 @@ export type GetRecipeResult = {
   }> | null;
   instructions: Array<{
     title: string | null;
-    content: Array<
-      | {
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: 'span';
-            _key: string;
-          }>;
-          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal';
-          listItem?: 'bullet' | 'number';
-          markDefs?: Array<{
-            linkType?: 'href' | 'painting' | 'project' | 'slug';
-            href?: string;
-            slug?: string;
-            painting?: {
-              _ref: string;
-              _type: 'reference';
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: 'painting';
-            };
-            project?: {
-              _ref: string;
-              _type: 'reference';
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: 'project';
-            };
-            openInNewTab?: boolean;
-            _type: 'link';
-            _key: string;
-          }>;
-          level?: number;
-          _type: 'block';
-          _key: string;
-        }
-      | {
-          type?: 'error' | 'info' | 'success' | 'warning';
-          title?: string;
-          content?: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: 'span';
-              _key: string;
-            }>;
-            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal';
-            listItem?: 'bullet' | 'number';
-            markDefs?: Array<{
-              href?: string;
-              _type: 'link';
-              _key: string;
-            }>;
-            level?: number;
-            _type: 'block';
-            _key: string;
-          }>;
-          _type: 'callout';
-          _key: string;
-        }
-      | {
-          code: string;
-          language?:
-            | 'bash'
-            | 'css'
-            | 'html'
-            | 'javascript'
-            | 'json'
-            | 'python'
-            | 'text'
-            | 'typescript';
-          _type: 'codeBlock';
-          _key: string;
-        }
-      | {
-          asset?: {
-            _ref: string;
-            _type: 'reference';
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-          };
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt: string;
-          caption?: string;
-          _type: 'image';
-          _key: string;
-        }
-      | {
-          icon?: string;
-          title?: string;
-          content: string;
-          type?: 'flavor' | 'pro' | 'substitution' | 'technique' | 'time';
-          _type: 'recipeTip';
-          _key: string;
-        }
-      | {
-          url: string;
-          title?: string;
-          caption?: string;
-          _type: 'videoEmbed';
-          _key: string;
-        }
-    >;
+    content: BlockContent;
   }> | null;
   tips: Array<{
     title: string | null;

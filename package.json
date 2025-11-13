@@ -31,6 +31,7 @@
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.5.0",
+    "knip": "5.69.0",
     "lefthook": "1.13.6",
     "lint-staged": "^15.5.2",
     "prettier": "^3.6.2",
@@ -40,7 +41,25 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "lefthook"
-    ]
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "19",
+        "react-dom": "19",
+        "sanity": "4",
+        "eslint": "9"
+      },
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    },
+    "allowedDeprecatedVersions": {
+      "eslint-plugin-markdown": "*",
+      "glob": "8.1.0",
+      "inflight": "*",
+      "source-map": "0.8.0-beta.0"
+    }
   },
   "engines": {
     "node": ">=22.0.0"
