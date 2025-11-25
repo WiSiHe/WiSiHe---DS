@@ -24,7 +24,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/react": "^19.2.3",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
@@ -32,9 +32,9 @@
     "eslint": "^9.39.1",
     "react": "^19.2.0",
     "tailwindcss": "^4.1.17",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.48.0"
   },
   "publishConfig": {
     "access": "public"
