@@ -28,7 +28,7 @@
     "flags": "^3.2.0",
     "gsap": "3.13.0",
     "motion": "^12.23.24",
-    "next": "15.5.4",
+    "next": "16.0.4",
     "next-sanity": "^11.6.9",
     "posthog-js": "^1.298.0",
     "react": "19.2.0",
@@ -43,15 +43,22 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^22.19.1",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.1",
-    "eslint-config-next": "15.5.4",
+    "eslint-config-next": "16.0.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=22.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }
