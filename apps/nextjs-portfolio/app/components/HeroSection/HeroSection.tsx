@@ -33,9 +33,7 @@ const LOADING_MESSAGES = [
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState(
-    () => LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)],
-  );
+  const [loadingMessage, setLoadingMessage] = useState(LOADING_MESSAGES[0]);
   const containerRef = useRef<HTMLElement>(null);
   const textSectionRef = useRef<HTMLElement>(null);
   const imageSectionRef = useRef<HTMLElement>(null);
@@ -67,6 +65,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   // Handle splash screen state
   useEffect(() => {
     const isDev = process.env.NODE_ENV === 'development';
+    setLoadingMessage(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
     if (isDev) {
       // In dev, we always want to show it (or at least not hide it via the script)
       document.documentElement.classList.remove('splash-shown');

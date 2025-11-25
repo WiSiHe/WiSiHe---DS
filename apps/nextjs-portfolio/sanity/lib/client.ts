@@ -14,7 +14,7 @@ export const client = createClient({
   apiVersion,
   useCdn: true,
   perspective: 'published',
-  token: writeToken,
+  token: typeof window === 'undefined' ? writeToken : undefined,
   stega: {
     studioUrl,
     // logger: console,
