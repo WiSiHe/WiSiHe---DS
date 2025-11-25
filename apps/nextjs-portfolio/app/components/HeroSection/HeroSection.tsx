@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import IconLogo from '../icons/IconLogo';
+
 
 gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies
 
@@ -16,230 +16,24 @@ type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
 };
 
-// Random loading messages
-const LOADING_MESSAGES = [
-  "Welcome to Henrik's Creative Universe",
-  'Crafting Digital Masterpieces',
-  'Where Art Meets Technology',
-  "Building Tomorrow's Experiences",
-  'Creating Visual Stories',
-  'Designing the Future',
-  "Henrik's Portfolio Loading...",
-  'Preparing Creative Magic',
-  'Loading Artistic Vision',
-  "Henrik's World Awaits",
-];
+
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [currentPaintingsIndex, setCurrentPaintingsIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState(LOADING_MESSAGES[0]);
+
   const containerRef = useRef<HTMLElement>(null);
   const textSectionRef = useRef<HTMLElement>(null);
   const imageSectionRef = useRef<HTMLElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const loadingRef = useRef<HTMLDivElement>(null);
 
-  // Custom stagger function using Perlin noise - Optimized to avoid layout thrashing
-  const perlinStagger = (index: number) => {
-    // We use window.innerWidth to determine grid layout
-    // This is much faster than getBoundingClientRect() for every element
-    const isDesktop = window.innerWidth >= 768;
-    const cols = isDesktop ? 32 : 24;
 
-    const col = index % cols;
-    const row = Math.floor(index / cols);
 
-    // Simple noise-like function using grid position
-    const noise1 = Math.sin(col * 0.2) * Math.cos(row * 0.2);
-    const noise2 = Math.sin(col * 0.1) * Math.cos(row * 0.1);
-    const noise3 = Math.sin(col * 0.05) * Math.cos(row * 0.05);
-
-    const combinedNoise = (noise1 + noise2 + noise3) / 3;
-    const normalizedNoise = (combinedNoise + 1) / 2; // Normalize to 0-1
-
-    return normalizedNoise * 1.5; // Spread over 1.5 seconds
-  };
-
-  // Handle splash screen state
-  useEffect(() => {
-    const isDev = process.env.NODE_ENV === 'development';
-    setLoadingMessage(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
-    if (isDev) {
-      // In dev, we always want to show it (or at least not hide it via the script)
-      document.documentElement.classList.remove('splash-shown');
-      return;
-    }
-
-    const hasShown = sessionStorage.getItem('hasShownSplash');
-    if (hasShown) {
-      setIsLoading(false);
-    } else {
-      sessionStorage.setItem('hasShownSplash', 'true');
-    }
-  }, []);
-
-  // Loading animation
-  useGSAP(
-    () => {
-      if (!loadingRef.current) return;
-
-      if (!loadingRef.current) return;
-
-      const tl = gsap.timeline();
-
-      // Set initial loading state
-      gsap.set(loadingRef.current, { opacity: 1 });
-      gsap.set('.loading-name', { opacity: 0, y: 50, scale: 0.8 });
-      gsap.set('.loading-logo', { scale: 0, rotation: 180, opacity: 0 });
-      gsap.set('.loading-text', { opacity: 0, y: 20 });
-      gsap.set('.loading-progress-container', { opacity: 0, y: 20 });
-      gsap.set('.loading-bar', { scaleX: 0 });
-      gsap.set('.loading-grid-cell', { opacity: 1, scale: 1 });
-
-      // Loading sequence - start with logo
-      tl.to('.loading-logo', {
-        scale: 1,
-        rotation: 0,
-        opacity: 1,
-        duration: 1.5,
-        ease: 'elastic.out(1, 0.4)',
-      })
-        .to(
-          '.loading-logo',
-          {
-            scale: 1.2,
-            rotation: 5,
-            duration: 0.4,
-            ease: 'power2.out',
-            yoyo: true,
-            repeat: 2,
-          },
-          '-=0.5',
-        )
-        .to(
-          '.loading-logo',
-          {
-            scale: 1,
-            rotation: 0,
-            duration: 0.6,
-            ease: 'elastic.out(1, 0.6)',
-          },
-          '-=0.2',
-        )
-        .to(
-          '.loading-text',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.6',
-        )
-        .to(
-          '.loading-name',
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1.2,
-            ease: 'elastic.out(1, 0.4)',
-          },
-          '-=0.4',
-        )
-        .to(
-          '.loading-progress-container',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.8',
-        )
-        .to(
-          '.loading-bar',
-          {
-            scaleX: 1,
-            duration: 2,
-            ease: 'power2.out',
-          },
-          '-=0.4',
-        )
-        // Fun removal sequence - each element disappears differently
-        .to(
-          '.loading-progress-container',
-          {
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.out',
-          },
-          '-=0.2',
-        )
-        .to(
-          '.loading-logo',
-          {
-            scale: 0,
-            rotation: 360,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'back.in(1.7)',
-          },
-          '-=0.1',
-        )
-        .to(
-          '.loading-text',
-          {
-            y: -50,
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power2.in',
-          },
-          '-=0.6',
-        )
-        .to(
-          '.loading-name',
-          {
-            y: 100,
-            opacity: 0,
-            duration: 0.7,
-            ease: 'power2.in',
-          },
-          '-=0.1',
-        )
-        // Then fragment the grid background with Perlin noise pattern
-        .to(
-          '.loading-grid-cell',
-          {
-            opacity: 0,
-            scale: 0,
-            duration: 0.3,
-            ease: 'power2.out',
-            stagger: perlinStagger,
-          },
-          '-=0.3',
-        )
-        // Finally fade out the entire container
-        .to(
-          loadingRef.current,
-          {
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.out',
-            onComplete: () => setIsLoading(false),
-          },
-          '-=0.2',
-        );
-    },
-    { scope: loadingRef },
-  );
 
   // GSAP animations - Initial load
   useGSAP(
     () => {
-      if (!paintings || paintings.length === 0 || isLoading) return;
+      if (!paintings || paintings.length === 0) return;
 
       const timeline = gsap.timeline();
 
@@ -411,50 +205,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <>
       {/* Loading Screen */}
-      {isLoading && (
-        <div
-          ref={loadingRef}
-          className="loading-screen fixed inset-0 z-50 flex flex-col items-center justify-center text-on-primary overflow-hidden"
-        >
-          {/* Grid background - pixel-like with perfect squares */}
-          <div className="absolute inset-0 grid grid-cols-24 grid-rows-32 md:grid-cols-32 md:grid-rows-24">
-            {Array.from({ length: 768 }, (_, i) => (
-              <div key={i} className={`loading-grid-cell bg-black rounded-none`} />
-            ))}
-            {Array.from({ length: 768 }, (_, i) => (
-              <div
-                key={i + 768}
-                className={`loading-grid-cell bg-black rounded-none hidden md:block`}
-              />
-            ))}
-          </div>
 
-          {/* Main content */}
-          <div className="relative z-10 flex flex-col items-center justify-center h-full max-w-lg mx-auto px-8">
-            {/* Top section */}
-            <div className="flex flex-col items-center mb-16">
-              <div className="loading-logo mb-8 drop-shadow-2xl opacity-0">
-                <IconLogo className="w-16 h-16 text-on-primary" />
-              </div>
-
-              {/* Loading text */}
-              <div className="loading-text text-lg font-medium mb-8 text-center text-on-primary opacity-0">
-                {loadingMessage}
-              </div>
-
-              {/* Minimal progress bar */}
-              <div className="loading-progress-container w-64 h-1 bg-secondary/30 rounded-full overflow-hidden opacity-0">
-                <div className="loading-bar h-full bg-accent origin-left scale-x-0"></div>
-              </div>
-            </div>
-
-            {/* Bottom section - Name */}
-            <div className="loading-name text-4xl font-bold text-center text-on-primary tracking-tight opacity-0">
-              HENRIK WILHELM SISSENER
-            </div>
-          </div>
-        </div>
-      )}
 
       <section
         ref={containerRef}
