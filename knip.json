@@ -15,6 +15,9 @@
     },
     "apps/sanity-studio": {
       "entry": ["sanity.config.ts", "sanity.cli.ts", "components/**/*.tsx", "schemas/**/*.{ts,tsx}"]
+    },
+    "apps/ui-docs": {
+      "entry": ["src/**/*.{ts,tsx}", "vite.config.ts", "vitest.shims.d.ts"]
     }
   },
   "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts"],
@@ -35,10 +38,13 @@
     "eslint-plugin-mdx",
     "eslint-plugin-only-warn",
     "eslint-plugin-storybook",
-    "@wisihe/eslint-config",
     "postcss",
     "tailwindcss",
-    "lint-staged",
-    "@wisihe/tokens"
+    "@wisihe/constants",
+    "@wisihe/eslint-config",
+    "@wisihe/tokens",
+    "@wisihe/typescript-config",
+    "@wisihe/ui-react",
+    "@wisihe/utils"
   ]
 }

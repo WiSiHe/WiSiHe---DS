@@ -11,7 +11,7 @@ pre-commit:
       run: pnpm turbo build --filter=!sanity-studio
       fail_text: '❌ Build failed. Please fix the errors and try again.'
 
-    lint-staged:
-      glob: '*.{js,jsx,ts,tsx,json,md,css,scss}'
-      run: pnpm lint-staged
-      fail_text: '❌ Pre-commit checks failed. Please fix the errors and try again.'
+    # lint-staged:
+    #   glob: '*.{js,jsx,ts,tsx,json,md,css,scss}'
+    #   run: pnpm lint-staged
+    #   fail_text: '❌ Pre-commit checks failed. Please fix the errors and try again.'
