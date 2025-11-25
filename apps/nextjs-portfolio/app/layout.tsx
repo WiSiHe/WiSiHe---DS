@@ -103,6 +103,10 @@ export async function generateMetadata(): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
+    referrer: 'strict-origin-when-cross-origin',
+    other: {
+      'msapplication-TileColor': 'oklch(65% 0.15 180)',
+    },
   };
 }
 
@@ -156,10 +160,7 @@ export default async function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/wisihe.svg" color="oklch(65% 0.15 180)" />
-        <meta name="msapplication-TileColor" content="oklch(65% 0.15 180)" />
-        <meta name="theme-color" content="oklch(65% 0.15 180)" />
-        <meta name="referrer" content="strict-origin-when-cross-origin" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
