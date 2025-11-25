@@ -58,7 +58,7 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof chipStyles> & {
     label: string;
     selected?: boolean;
-    Icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+    Icon?: React.ElementType;
     iconPosition?: 'left' | 'right';
     variation?: 'primary' | 'secondary' | 'tertiary' | 'highlight' | 'success' | 'default';
     outlined?: boolean;

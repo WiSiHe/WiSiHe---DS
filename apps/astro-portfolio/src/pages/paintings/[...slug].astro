@@ -1,0 +1,114 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import imageUrl, { client } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const paintings = await client.fetch(`*[_type == "painting"]{
+    ...,
+    image {
+      asset->{
+        _id,
+        metadata {
+          dimensions
+        }
+      }
+    }
+  }`);
+  return paintings.map((painting: any) => ({
+    params: { slug: painting.slug.current },
+    props: { painting },
+  }));
+}
+
+const { painting } = Astro.props;
+const { width, height } = painting.image?.asset?.metadata?.dimensions || {
+  width: 800,
+  height: 600,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${painting.title} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+    <style>
+      .painting-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .painting-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        aspect-ratio: var(--aspect-ratio);
+        background-color: #f0f0f0;
+        object-fit: cover;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        text-decoration: none;
+        color: #333;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+      .tag {
+        background: #eee;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        color: #333;
+      }
+      .description {
+        line-height: 1.6;
+        color: #444;
+        margin-top: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main class="painting-container">
+      <a href="/paintings" class="back-link">← Back to Paintings</a>
+      <h1>{painting.title}</h1>
+
+      {
+        painting.image && (
+          <img
+            src={imageUrl(painting.image).width(1200).url()}
+            alt={painting.title}
+            class="painting-image"
+            width={width}
+            height={height}
+            style={`--aspect-ratio: ${width} / ${height}`}
+            transition:name={`image-${painting.slug.current}`}
+          />
+        )
+      }
+
+      <div class="painting-content">
+        {
+          painting.tags && painting.tags.length > 0 && (
+            <div class="tags">
+              {painting.tags.map((tag: string) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+
+        {painting.description && <p class="description">{painting.description}</p>}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
