@@ -1,7 +1,6 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
-import { Metadata } from 'next';
 import { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
@@ -9,47 +8,7 @@ import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import SkillsSection from './components/SkillsSection/SkillsSection';
 
-export const metadata: Metadata = {
-  title: 'Henrik Sissener | Frontend Developer & Creative',
-  description:
-    'Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.',
-  keywords: [
-    'frontend developer',
-    'React',
-    'Svelte',
-    'portfolio',
-    'web development',
-    'game development',
-    'art',
-  ],
-  alternates: {
-    canonical: 'https://www.wisihe.no',
-  },
-  openGraph: {
-    title: 'Henrik Sissener | Frontend Developer & Creative',
-    description:
-      'Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.',
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Henrik Sissener Portfolio',
-    url: 'https://www.wisihe.no',
-    images: [
-      {
-        url: '/images/hell.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Henrik Sissener Portfolio Preview',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Henrik Sissener | Frontend Developer & Creative',
-    description:
-      'Portfolio of Henrik Sissener, a frontend developer specializing in React and Svelte. Explore my projects, artwork, and development skills.',
-    images: ['/images/hell.jpg'],
-  },
-};
+
 
 type Painting = NonNullable<NonNullable<HomePageQueryResult>['showcasePaintings']>[number];
 
