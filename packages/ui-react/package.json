@@ -45,8 +45,5 @@
   },
   "peerDependencies": {
     "tailwindcss": ">=3.4.18"
-  },
-  "engines": {
-    "node": ">=22.21.1"
   }
 }

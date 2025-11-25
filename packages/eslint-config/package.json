@@ -18,8 +18,5 @@
     "eslint-plugin-mdx": "^3.6.2",
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-storybook": "^0.12.0"
-  },
-  "engines": {
-    "node": ">=22.21.1"
   }
 }
