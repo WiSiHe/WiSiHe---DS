@@ -101,7 +101,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         
         tl.to(progressObj, {
           value: 100,
-          duration: 2.5,
+          duration: 2.0, // Slightly faster load
           ease: 'power2.inOut',
           onUpdate: () => setProgress(Math.round(progressObj.value)),
         });
@@ -128,36 +128,19 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           );
         });
 
+        // Fade out loader
         tl.to(loaderRef.current, {
           opacity: 0,
           y: -50,
           filter: 'blur(10px)',
-          duration: 0.8,
+          duration: 0.5,
           ease: 'power2.in',
           display: 'none',
         }, '-=0.5');
 
-        // 2. Text Entrance
-        if (textRef.current) {
-          const textElements = textRef.current.children;
-          tl.fromTo(
-            textElements,
-            { opacity: 0, y: 30, filter: 'blur(5px)' },
-            { 
-              opacity: 1, 
-              y: 0, 
-              filter: 'blur(0px)',
-              duration: 1, 
-              stagger: 0.15,
-              ease: 'power3.out' 
-            },
-            '-=0.3'
-          );
-        }
-
         tl.addLabel('explode', '+=0.1');
 
-        // 3. Explode & Float
+        // 2. Explode & Float
         Array.from(images).forEach((img, i) => {
           const pos = FIXED_POSITIONS[i % FIXED_POSITIONS.length];
           
@@ -170,8 +153,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               scale: pos.scale,
               xPercent: -50,
               yPercent: -50,
-              duration: 1.8,
-              ease: 'power4.out',
+              duration: 1.2, // Faster explosion
+              ease: 'back.out(2)', // Springier
               zIndex: 10,
             },
             'explode'
@@ -185,9 +168,27 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             repeat: -1,
             yoyo: true,
             ease: 'sine.inOut',
-            delay: 4 + i * 0.1,
+            delay: 3 + i * 0.1,
           });
         });
+
+        // 3. Text Entrance (After explosion)
+        if (textRef.current) {
+          const textElements = textRef.current.children;
+          tl.fromTo(
+            textElements,
+            { opacity: 0, y: 30, filter: 'blur(5px)' },
+            { 
+              opacity: 1, 
+              y: 0, 
+              filter: 'blur(0px)',
+              duration: 1, 
+              stagger: 0.15,
+              ease: 'power3.out' 
+            },
+            '-=0.4' // Overlap slightly with end of explosion
+          );
+        }
       }
     },
     { scope: containerRef, dependencies: [paintings] }
@@ -212,14 +213,24 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     Array.from(images).forEach((img, i) => {
       if (i !== index) {
         const baseScale = FIXED_POSITIONS[i % FIXED_POSITIONS.length].scale;
+        
+        // If this image was previously high (hovered), drop it slightly 
+        // so it doesn't fight the new target, but keep it above others
+        const currentZ = gsap.getProperty(img, 'zIndex');
+        if (typeof currentZ === 'number' && currentZ > 10) {
+          gsap.set(img, { zIndex: 40 });
+        }
+
         gsap.to(img, {
           scale: baseScale * 0.9,
           filter: 'grayscale(100%) blur(4px)',
           opacity: 0.4,
-          zIndex: 10,
           duration: 0.5,
           ease: 'power2.out',
           overwrite: 'auto',
+          onComplete: () => {
+            gsap.set(img, { zIndex: 10 });
+          }
         });
       }
     });
@@ -232,14 +243,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     // Reset all images
     Array.from(images).forEach((img, i) => {
       const baseScale = FIXED_POSITIONS[i % FIXED_POSITIONS.length].scale;
+      
       gsap.to(img, {
         scale: baseScale,
         filter: 'grayscale(0%) blur(0px)',
         opacity: 1,
-        zIndex: 10,
         duration: 0.5,
         ease: 'power2.out',
         overwrite: 'auto',
+        onComplete: () => {
+          gsap.set(img, { zIndex: 10 });
+        }
       });
     });
   });
@@ -258,7 +272,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         ref={loaderRef}
         className="fixed inset-0 z-[60] flex items-center justify-center pointer-events-none"
       >
-        <div className="text-9xl font-black font-mono tracking-tighter text-[var(--color-text-primary)]/20 blur-[1px]">
+        <div className="text-9xl font-black font-mono tracking-tighter text-[var(--color-text-primary)] blur-[0.5px]">
           {progress}%
         </div>
       </div>
