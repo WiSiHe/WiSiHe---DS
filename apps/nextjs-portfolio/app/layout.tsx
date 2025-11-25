@@ -172,6 +172,18 @@ export default async function RootLayout({
             __html: JSON.stringify(jsonLdSite),
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var isDev = ${process.env.NODE_ENV === 'development'};
+                if (!isDev && sessionStorage.getItem('hasShownSplash')) {
+                  document.documentElement.classList.add('splash-shown');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
