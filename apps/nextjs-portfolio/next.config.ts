@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import { fetchRedirects } from './sanity/lib/fetchRedirects';
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   images: {
     remotePatterns: [
       {
@@ -31,38 +32,12 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  env: {
-    // Matches the behavior of `sanity dev` which sets styled-components to use the fastest way of inserting CSS rules in both dev and production. It's default behavior is to disable it in dev mode.
-    SC_DISABLE_SPEEDY: 'false',
-  },
-
   // Performance optimizations
   experimental: {
     optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons']
   },
 
-  // Compression and optimization
-  compress: true,
-
   poweredByHeader: false,
-
-  // Bundle analyzer (uncomment for debugging)
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-
-    // Help resolve workspace packages
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@wisihe/utils': require.resolve('@wisihe/utils'),
-    };
-
-    return config;
-  },
 
   async redirects() {
     try {
@@ -83,15 +58,6 @@ const nextConfig: NextConfig = {
       return [];
     }
   },
-
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    }
-  }
 };
 
 export default nextConfig;
