@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { fetchRedirects } from './sanity/lib/fetchRedirects';
 
 const nextConfig: NextConfig = {
   images: {
@@ -29,26 +30,22 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
+
   env: {
     // Matches the behavior of `sanity dev` which sets styled-components to use the fastest way of inserting CSS rules in both dev and production. It's default behavior is to disable it in dev mode.
     SC_DISABLE_SPEEDY: 'false',
   },
+
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons'],
-    // Additional performance features
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
+    optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons']
   },
+
   // Compression and optimization
   compress: true,
+
   poweredByHeader: false,
+
   // Bundle analyzer (uncomment for debugging)
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -66,9 +63,9 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+
   async redirects() {
     try {
-      const { fetchRedirects } = await import('./sanity/lib/fetchRedirects');
       const redirects = await fetchRedirects();
 
       return redirects
@@ -86,6 +83,15 @@ const nextConfig: NextConfig = {
       return [];
     }
   },
+
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    }
+  }
 };
 
 export default nextConfig;

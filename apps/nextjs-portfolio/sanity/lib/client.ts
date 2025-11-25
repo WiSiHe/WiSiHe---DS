@@ -6,7 +6,7 @@ import {
   projectId,
   studioUrl,
   writeToken,
-} from '@/sanity/lib/api';
+} from './api';
 
 export const client = createClient({
   projectId,
