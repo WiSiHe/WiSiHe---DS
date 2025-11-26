@@ -62,8 +62,6 @@ export default async function Home() {
 
   const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
-  const shuffledCarouselPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
-
   const paintingsDescription = homepage.paintingsDescription as PortableTextBlock[];
 
   return (
@@ -79,7 +77,6 @@ export default async function Home() {
 
         <Suspense fallback={<SectionSkeleton />}>
           <PaintingsSection
-            paintings={shuffledCarouselPaintings}
             paintingsDescription={paintingsDescription}
           />
         </Suspense>

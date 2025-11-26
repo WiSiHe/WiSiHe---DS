@@ -527,3 +527,17 @@ export const getRecipeSlugs = defineQuery(`
   *[_type == "recipe" && defined(slug.current)]
   {"slug": slug.current}
 `);
+
+export const randomPaintingsQuery = defineQuery(`
+  *[_type == "painting" && defined(slug.current) && defined(image)] | order(_createdAt desc) [0...50] {
+    _id,
+    title,
+    "slug": slug.current,
+    tagsV2[]->{name},
+    image{
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    }
+  }
+`);
