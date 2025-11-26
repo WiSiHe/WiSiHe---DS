@@ -13,10 +13,9 @@ import CustomPortableText from '../PortableText/PortableText';
 
 type PaintingsCarouselProps = {
   paintings: RandomPaintingsQueryResult;
-  paintingsDescription?: PortableTextBlock[];
 };
 
-const PaintingsCarousel = ({ paintings, paintingsDescription }: PaintingsCarouselProps) => {
+const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     loop: false,
@@ -98,12 +97,6 @@ const PaintingsCarousel = ({ paintings, paintingsDescription }: PaintingsCarouse
       variants={containerVariants}
       className=""
     >
-      <motion.div variants={itemVariants} className="px-4 text-text-primary">
-        {paintingsDescription && (
-          <CustomPortableText value={paintingsDescription} className="prose-invert" />
-        )}
-      </motion.div>
-
       <motion.div variants={itemVariants} className="relative">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4">
