@@ -1698,6 +1698,31 @@ export type GetRecipeResult = {
 export type GetRecipeSlugsResult = Array<{
   slug: string;
 }>;
+// Variable: randomPaintingsQuery
+// Query: *[_type == "painting" && defined(slug.current) && defined(image)] | order(_createdAt desc) [0...50] {    _id,    title,    "slug": slug.current,    tagsV2[]->{name},    image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
+export type RandomPaintingsQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  tagsV2: Array<{
+    name: string;
+  }>;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: 'image';
+    lqip: string | null;
+    aspectRatio: number | null;
+  };
+}>;
 
 // Query TypeMap
 import '@sanity/client';
@@ -1730,5 +1755,6 @@ declare module '@sanity/client' {
     '\n  *[_type == "recipe" && defined(slug.current)]\n  | order(publishedAt desc, _updatedAt desc) {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetAllRecipesResult;
     '\n  *[_type == "recipe" && slug.current == $slug][0] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    ingredientCategories[]{\n      categoryName,\n              ingredients[]{\n          ingredient,\n          photo {\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          amount,\n          unit,\n          isDiscrete,\n          notes\n        }\n    },\n    instructions[]{\n      title,\n      content\n    },\n    tips[]{\n      title,\n      content,\n      icon\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetRecipeResult;
     '\n  *[_type == "recipe" && defined(slug.current)]\n  {"slug": slug.current}\n': GetRecipeSlugsResult;
+    '\n  *[_type == "painting" && defined(slug.current) && defined(image)] | order(_createdAt desc) [0...50] {\n    _id,\n    title,\n    "slug": slug.current,\n    tagsV2[]->{name},\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': RandomPaintingsQueryResult;
   }
 }
