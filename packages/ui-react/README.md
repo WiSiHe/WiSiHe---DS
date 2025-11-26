@@ -19,15 +19,7 @@ pnpm add @wisihe/ui-react @wisihe/tokens @wisihe/utils
 
 ## Setup
 
-### 1. Import CSS
-
-Import the CSS file in your app's entry point:
-
-```tsx
-import '@wisihe/ui-react/dist/index.css';
-```
-
-### 2. Configure Tailwind
+### 1. Configure Tailwind
 
 Add the Tailwind configuration to your `tailwind.config.js`:
 
@@ -201,6 +193,12 @@ const MyButton: React.FC<ButtonProps> = props => {
   return <Button {...props} />;
 };
 ```
+
+## Source Code
+
+This package exports its uncompiled TypeScript source code. If you prefer to compile the components yourself (e.g., for debugging or optimization), you can configure your bundler to resolve the `source` field in `package.json`.
+
+For example, in a Vite project, you might not need extra configuration if it supports `source` field resolution, or you can alias the package to `src/index.tsx`.
 
 ## Development
 

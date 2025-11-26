@@ -1,35 +1,26 @@
-const { resolve } = require("node:path");
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import globals from 'globals';
+import onlyWarn from 'eslint-plugin-only-warn';
+import turbo from 'eslint-config-turbo';
 
-const project = resolve(process.cwd(), "tsconfig.json");
-
-/*
- * This is a custom ESLint configuration for use with
- * typescript packages.
- *
- * This config extends the Vercel Engineering Style Guide.
- * For more information, see https://github.com/vercel/style-guide
- *
- */
-
-module.exports = {
-  extends: [
-    "@vercel/style-guide/eslint/node",
-    "@vercel/style-guide/eslint/typescript",
-  ].map(require.resolve),
-  parserOptions: {
-    project,
-  },
-  plugins: ["only-warn"],
-  globals: {
-    React: true,
-    JSX: true,
-  },
-  settings: {
-    "import/resolver": {
-      typescript: {
-        project,
+export const config = [
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    plugins: {
+      'only-warn': onlyWarn,
+      turbo: turbo,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.node,
       },
     },
+    rules: {
+      'turbo/no-undeclared-env-vars': 'warn',
+    },
   },
-  ignorePatterns: ["node_modules/", "dist/"],
-};
+];
+
+export default config;

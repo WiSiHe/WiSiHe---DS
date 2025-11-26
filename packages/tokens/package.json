@@ -6,16 +6,21 @@
     "./css": "./dist/css/variables.css",
     "./tailwind": "./dist/tailwind/config.js",
     "./tailwind-v4": "./dist/tailwind/theme.css",
-    "./tailwind-v4-dark": "./dist/tailwind/theme-dark.css"
+    "./tailwind-v4-dark": "./dist/tailwind/theme-dark.css",
+    "./raw": "./tokens.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "tokens.json"
   ],
   "scripts": {
     "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
-    "style-dictionary": "5.1.1"
+    "style-dictionary": "5.1.1",
+    "eslint": "^9.39.1",
+    "@wisihe/eslint-config": "workspace:*"
   }
 }

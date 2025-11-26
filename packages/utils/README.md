@@ -10,8 +10,6 @@ npm install @wisihe/utils
 
 ## Usage
 
-### ESM (Recommended)
-
 ```javascript
 import { isObject, formatDate, cn, first, isEmptyArray } from '@wisihe/utils';
 
@@ -26,13 +24,8 @@ const firstItem = first([1, 2, 3]); // 1
 const isEmpty = isEmptyArray([]); // true
 ```
 
-### CommonJS
+const isEmpty = isEmptyArray([]); // true
 
-```javascript
-const { isObject, formatDate, cn, first, isEmptyArray } = require('@wisihe/utils');
-
-console.log(isObject({})); // true
-console.log(formatDate('2024-01-01')); // "January 1, 2024"
 ```
 
 ## API Reference
@@ -83,3 +76,4 @@ console.log(formatDate('2024-01-01')); // "January 1, 2024"
 ## License
 
 MIT
+```

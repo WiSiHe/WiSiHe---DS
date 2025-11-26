@@ -86,6 +86,16 @@ Or use the theme variables directly:
 /* Dark mode will automatically apply when .dark class is present */
 ```
 
+### Raw Tokens
+
+You can access the raw `tokens.json` file directly:
+
+```javascript
+import tokens from '@wisihe/tokens/raw';
+
+console.log(tokens.core.colors.primary['500'].$value); // "#3b82f6"
+```
+
 ## Token Structure
 
 The package includes the following token categories:
