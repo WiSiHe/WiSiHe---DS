@@ -2,21 +2,26 @@
   "name": "@wisihe/eslint-config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "files": [
     "library.js",
     "react.js",
     "storybook.js"
   ],
   "exports": {
-    "./library.js": "./library.js",
-    "./react.js": "./react.js",
-    "./storybook.js": "./storybook.js"
+    "./library": "./library.js",
+    "./react": "./react.js",
+    "./storybook": "./storybook.js"
   },
-  "devDependencies": {
+  "dependencies": {
+    "@eslint/js": "^9.17.0",
     "@vercel/style-guide": "^5.2.0",
     "eslint-config-turbo": "^1.13.4",
     "eslint-plugin-mdx": "^3.6.2",
     "eslint-plugin-only-warn": "^1.1.0",
-    "eslint-plugin-storybook": "^0.12.0"
+    "eslint-plugin-storybook": "^0.12.0",
+    "globals": "^15.14.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.18.1"
   }
 }
