@@ -321,6 +321,8 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             'w-40 md:w-64', 
             'w-52 md:w-80'
           ];
+          // Optimize LCP: Prioritize the first few images
+          const isPriority = index < 4;
           
           const aspectRatio = aspectRatios[index % aspectRatios.length];
           const size = sizes[index % sizes.length];
@@ -339,6 +341,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   src={imageUrl}
                   alt={altText || 'Painting'}
                   fill
+                  priority={isPriority}
                   className="object-cover rounded-lg shadow-2xl"
                   sizes="(max-width: 768px) 40vw, 30vw"
                 />
