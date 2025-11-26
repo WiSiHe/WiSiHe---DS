@@ -4,9 +4,7 @@ import { PortableTextBlock } from 'next-sanity';
 import PaintingsCarousel from './PaintingsCarousel';
 import { RandomPaintingsQueryResult } from '@/sanity.types';
 
-type PaintingsSectionProps = {
-  paintingsDescription?: PortableTextBlock[];
-};
+
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -18,7 +16,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-const PaintingsSection = async ({ paintingsDescription }: PaintingsSectionProps) => {
+const PaintingsSection = async () => {
   const allPaintings = await client.fetch<RandomPaintingsQueryResult>(
     randomPaintingsQuery,
     {},
@@ -37,7 +35,7 @@ const PaintingsSection = async ({ paintingsDescription }: PaintingsSectionProps)
   return (
     <PaintingsCarousel 
       paintings={shuffledPaintings} 
-      paintingsDescription={paintingsDescription} 
+      
     />
   );
 };

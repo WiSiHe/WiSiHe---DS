@@ -62,8 +62,6 @@ export default async function Home() {
 
   const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
-  const paintingsDescription = homepage.paintingsDescription as PortableTextBlock[];
-
   return (
     <div className="bg-background">
       <Suspense fallback={<HeroSkeleton />}>
@@ -75,11 +73,7 @@ export default async function Home() {
           <FeaturedProjects showcaseProjects={showcaseProjects} />
         </Suspense>
 
-        <Suspense fallback={<SectionSkeleton />}>
-          <PaintingsSection
-            paintingsDescription={paintingsDescription}
-          />
-        </Suspense>
+        <PaintingsSection />
       </section>
 
       <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>

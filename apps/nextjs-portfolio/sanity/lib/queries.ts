@@ -221,6 +221,7 @@ export const homePageQuery = defineQuery(`
         "noIndex": seo.noIndex == true
       },
       name,
+      "tags": tags[]->{name},
       "slug": slug.current,
       image{
         ...,
