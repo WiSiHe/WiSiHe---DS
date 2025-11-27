@@ -3,7 +3,7 @@
   "name": "@wisihe/ds",
   "type": "module",
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

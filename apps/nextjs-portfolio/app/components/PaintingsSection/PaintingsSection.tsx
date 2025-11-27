@@ -1,10 +1,8 @@
 import { client } from '@/sanity/lib/client';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
-import { PortableTextBlock } from 'next-sanity';
+import { PortableText, PortableTextBlock } from 'next-sanity';
 import PaintingsCarousel from './PaintingsCarousel';
-import { RandomPaintingsQueryResult } from '@/sanity.types';
-
-
+import { RandomPaintingsQueryResult, BlockContent } from '@/sanity.types';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -16,7 +14,8 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-const PaintingsSection = async () => {
+const PaintingsSection = async ({ paintingsDescription }: { paintingsDescription: BlockContent }) => {
+  console.log(paintingsDescription);
   const allPaintings = await client.fetch<RandomPaintingsQueryResult>(
     randomPaintingsQuery,
     {},
@@ -33,10 +32,14 @@ const PaintingsSection = async () => {
   const shuffledPaintings = shuffleArray(allPaintings).slice(0, 10);
 
   return (
-    <PaintingsCarousel 
-      paintings={shuffledPaintings} 
-      
-    />
+    <>
+    <div className="mb-12 px-4">
+      <PortableText value={paintingsDescription as PortableTextBlock[]} />
+    </div>
+      <PaintingsCarousel 
+        paintings={shuffledPaintings} 
+      />
+    </>
   );
 };
 

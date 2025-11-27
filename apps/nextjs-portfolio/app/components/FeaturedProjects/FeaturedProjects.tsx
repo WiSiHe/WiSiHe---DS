@@ -2,10 +2,9 @@
 
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import Link from 'next/link';
-import Image from 'next/image';
-import { motion, Variants } from 'motion/react';
 import { IconArrowRight } from '@tabler/icons-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
@@ -16,124 +15,108 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
     return null;
   }
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut',
-      },
-    },
-  };
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12 md:py-24">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
-        variants={containerVariants}
-        className="mx-auto mb-24 text-center text-text-primary max-w-prose"
-      >
-        <h2 className="mb-6 text-4xl md:text-5xl font-bold font-serif">
-          Featured Projects
-        </h2>
-        <p className="text-xl text-text-secondary leading-relaxed">
-          A selection of my recent work, ranging from web applications to design systems.
-        </p>
-      </motion.div>
-      
-      <div className="flex flex-col">
-        {showcaseProjects.map((project, index) => {
-          const imageUrl = urlForImage(project.image)?.height(800).width(1200).auto('format').quality(90).url();
-          const year = project.projectStart ? new Date(project.projectStart).getFullYear() : null;
+    <section className="py-24 px-4 md:px-8 bg-[var(--color-background)]">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="mb-4 text-4xl md:text-5xl font-bold font-serif text-[var(--color-text-primary)]">
+            Featured Projects
+          </h2>
+          <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-prose mx-auto">
+            Selected works & experiments.
+          </p>
+        </div>
 
-          return (
-            <motion.div
-              key={project._id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="sticky mb-12 last:mb-0"
-              style={{ 
-                top: `calc(5rem + ${index * 1.5}rem)`,
-                zIndex: index + 1 
-              }}
-            >
-              <Link href={`projects/${project.slug}`} className="block group">
-                <article className="flex flex-col md:flex-row bg-surface-elevated rounded-3xl overflow-hidden shadow-2xl border border-border/50 min-h-[400px] transition-transform duration-500 hover:scale-[1.02]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {showcaseProjects.map((project) => {
+            const imageUrl = urlForImage(project.image)
+              ?.height(600)
+              .width(800)
+              .auto('format')
+              .quality(90)
+              .url();
+            const year = project.projectStart
+              ? new Date(project.projectStart).getFullYear()
+              : null;
+
+            return (
+              <Link
+                key={project._id}
+                href={`projects/${project.slug}`}
+                className="group block h-full"
+              >
+                <article className="flex flex-col h-full bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--color-border-focus)] hover:shadow-lg hover:-translate-y-1">
                   {/* Image Container */}
-                  <div className="relative w-full md:w-1/2 h-64 md:h-auto overflow-hidden bg-surface-elevated">
+                  <div className="relative aspect-video w-full overflow-hidden bg-[var(--color-surface)]">
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
                         alt={project.seo?.title || project.title || 'Project Image'}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index < 2}
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-surface-elevated text-text-tertiary">
+                      <div className="w-full h-full flex items-center justify-center text-[var(--color-text-tertiary)]">
                         No Image
                       </div>
                     )}
-                    
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
                   {/* Content */}
-                  <div className="flex flex-col justify-center w-full md:w-1/2 p-8 md:p-10 bg-surface-elevated">
+                  <div className="flex flex-col flex-grow p-6">
                     <div className="flex items-center justify-between mb-4">
                       {project.name && (
-                        <span className="text-xs font-bold tracking-widest text-primary uppercase">
+                        <span className="text-xs font-bold tracking-[0.2em] text-[var(--color-primary)] uppercase">
                           {project.name}
                         </span>
                       )}
                       {year && (
-                        <span className="text-xs font-mono font-medium px-2 py-1 rounded-full bg-surface text-text-secondary border border-border">
+                        <span className="text-xs font-mono text-[var(--color-text-tertiary)] border border-[var(--color-border)] px-2 py-1 rounded">
                           {year}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-3xl md:text-4xl font-bold mb-4 text-text-primary group-hover:text-primary transition-colors font-serif">
+                    <h3 className="text-2xl font-medium mb-3 text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors font-serif tracking-tight">
                       {project.title}
                     </h3>
-                    
-                    <p className="text-text-secondary text-base leading-relaxed mb-6 line-clamp-4">
+
+                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-6 line-clamp-3 font-light flex-grow">
                       {project.seo?.description || project.description}
                     </p>
 
                     {/* Technologies / Tags */}
                     {project.tags && project.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-8">
-                        {project.tags.map((tag, i) => (
-                          <span 
-                            key={i} 
-                            className="text-xs font-medium px-2.5 py-1 rounded-md bg-surface border border-border text-text-secondary/80"
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tags.slice(0, 3).map((tag, i) => (
+                          <span
+                            key={i}
+                            className="text-[10px] font-medium px-2 py-1 rounded bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)]"
                           >
                             {tag.name}
                           </span>
                         ))}
+                         {project.tags.length > 3 && (
+                           <span className="text-[10px] font-medium px-2 py-1 rounded bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                             +{project.tags.length - 3}
+                           </span>
+                        )}
                       </div>
                     )}
 
-                    <div className="flex items-center text-primary font-bold text-lg mt-auto group/link">
-                      View Project
-                      <IconArrowRight className="w-5 h-5 ml-2 transition-transform group-hover/link:translate-x-2" />
+                    <div className="flex items-center text-[var(--color-text-primary)] font-medium text-sm pt-4 border-t border-[var(--color-border)] mt-auto">
+                      View Case Study
+                      <IconArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1 text-[var(--color-primary)]" />
                     </div>
                   </div>
                 </article>
               </Link>
-            </motion.div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
