@@ -58,22 +58,28 @@ export default async function Home() {
     );
   }
 
-  const { showcasePaintings, showcaseProjects } = homepage;
+  const { showcasePaintings, showcaseProjects, paintingsDescription } = homepage;
 
   const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
 
   return (
     <div className="bg-background">
-      <Suspense fallback={<HeroSkeleton />}>
-        <HeroImageSection paintings={shuffledHeroPaintings} />
-      </Suspense>
-
-      <section className="px-4 py-20 space-y-10 lg:space-y-42 md:px-8 bg-gradient-to-b from-tertiary to-tertiary/70">
-        <Suspense fallback={<SectionSkeleton />}>
-          <FeaturedProjects showcaseProjects={showcaseProjects} />
+      {/* Hero & Projects Wrapper with Gradient */}
+      <div className="bg-gradient-to-b from-transparent via-background to-surface-elevated">
+        <Suspense fallback={<HeroSkeleton />}>
+          <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
 
-        <PaintingsSection />
+        <section className="px-4 md:px-8">
+          <Suspense fallback={<SectionSkeleton />}>
+            <FeaturedProjects showcaseProjects={showcaseProjects} />
+          </Suspense>
+        </section>
+      </div>
+
+      {/* Paintings Section with distinct background */}
+      <section className="bg-surface py-24 px-4 md:px-8">
+        <PaintingsSection paintingsDescription={paintingsDescription} />
       </section>
 
       <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>
