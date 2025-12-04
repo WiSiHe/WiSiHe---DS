@@ -64,7 +64,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const revalidate = 86400;
+// Revalidation is handled automatically by defineLive + SanityLive
+// export const revalidate = 86400;
 
 export default async function Paintings({
   searchParams,

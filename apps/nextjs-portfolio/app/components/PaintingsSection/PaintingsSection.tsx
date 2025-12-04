@@ -1,4 +1,4 @@
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/live';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
 import { PortableText, PortableTextBlock } from 'next-sanity';
 import PaintingsCarousel from './PaintingsCarousel';
@@ -15,14 +15,10 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 const PaintingsSection = async ({ paintingsDescription }: { paintingsDescription: BlockContent }) => {
-  console.log(paintingsDescription);
-  const allPaintings = await client.fetch<RandomPaintingsQueryResult>(
-    randomPaintingsQuery,
-    {},
-    { 
-      next: { revalidate: 86400 } 
-    }
-  );
+
+  const { data: allPaintings }: { data: RandomPaintingsQueryResult } = await sanityFetch({
+    query: randomPaintingsQuery,
+  });
 
   if (!allPaintings) {
     return null;
