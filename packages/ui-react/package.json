@@ -32,11 +32,11 @@
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "eslint": "^9.39.1",
-    "react": "^19.2.0",
+    "react": "^19.2.1",
     "tailwindcss": "^4.1.17",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.0"
+    "typescript-eslint": "^8.48.1"
   },
   "publishConfig": {
     "access": "public"
