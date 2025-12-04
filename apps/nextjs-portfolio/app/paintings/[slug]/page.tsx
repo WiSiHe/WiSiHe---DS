@@ -77,13 +77,16 @@ export default async function PaintingPage(props: Props) {
     name: painting.title,
     description:
       painting.description || painting.seoDescription || `Digital painting: ${painting.title}`,
-    contentUrl: painting.image ? resolveOpenGraphImage(painting.image) : undefined,
+    contentUrl: painting.image ? resolveOpenGraphImage(painting.image)?.url : undefined,
     creator: {
       '@type': 'Person',
       name: 'Henrik Sissener',
       url: 'https://www.wisihe.no',
     },
     license: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
+    acquireLicensePage: 'https://www.wisihe.no/contact',
+    copyrightNotice: 'Henrik Sissener',
+    creditText: 'Henrik Sissener',
     ...(painting.tagsV2 &&
       painting.tagsV2.length > 0 && {
         keywords: painting.tagsV2.map((tag: { name: string }) => tag.name).join(', '),
