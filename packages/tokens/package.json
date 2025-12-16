@@ -19,8 +19,8 @@
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
-    "style-dictionary": "5.1.1",
-    "eslint": "^9.39.1",
-    "@wisihe/eslint-config": "workspace:*"
+    "@wisihe/eslint-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "style-dictionary": "5.1.1"
   }
 }
