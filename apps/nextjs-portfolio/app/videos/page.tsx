@@ -61,7 +61,7 @@ export default async function Videos() {
         position: index + 1,
         item: {
           '@type': 'VideoObject',
-          '@id': `https://www.wisihe.no/videos/${(video.slug as string) || index}`,
+          '@id': `https://www.wisihe.no/videos#${(video.slug as string) || index}`,
           name: video.title as string,
           description: video.description as string,
           thumbnailUrl: video.thumbnailUrl as string,
