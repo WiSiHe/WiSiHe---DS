@@ -17,11 +17,11 @@ import { Suspense } from 'react';
 function ProjectSectionSkeleton() {
   return (
     <div className="animate-pulse space-y-4">
-      <div className="h-96 bg-surface rounded-xl" />
+      <div className="h-96 bg-surface-subtle rounded-xl border border-border/20" />
       <div className="space-y-3">
-        <div className="h-4 bg-surface rounded w-3/4" />
-        <div className="h-4 bg-surface rounded w-1/2" />
-        <div className="h-4 bg-surface rounded w-5/6" />
+        <div className="h-4 bg-surface-subtle rounded w-3/4" />
+        <div className="h-4 bg-surface-subtle rounded w-1/2" />
+        <div className="h-4 bg-surface-subtle rounded w-5/6" />
       </div>
     </div>
   );
@@ -134,7 +134,7 @@ export default async function ProjectPage(props: Props) {
       <div className="min-h-screen bg-background pt-32">
         {/* Hero Section with Project Image */}
         <section className="relative py-8 lg:py-12">
-          <div className="max-w-screen-2xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-4">
             <Suspense fallback={<ProjectSectionSkeleton />}>
               <ProjectImage project={project} />
             </Suspense>
@@ -142,7 +142,7 @@ export default async function ProjectPage(props: Props) {
         </section>
 
         {/* Main Content Grid */}
-        <div className="max-w-screen-2xl mx-auto px-4 py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Project Information */}
             <section className="lg:col-span-6">

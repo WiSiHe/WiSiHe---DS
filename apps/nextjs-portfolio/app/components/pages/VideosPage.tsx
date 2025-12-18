@@ -95,7 +95,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                 key={_id}
                 onClick={() => handleVideoClick(video)}
                 className={cn(
-                  'relative bg-surface flex roun flex-col transition-all duration-300 w-full h-full shadow-xl shadow-foreground/20 rounded-lg overflow-clip cursor-pointer group',
+                  'relative bg-surface border border-border/30 flex flex-col transition-all duration-300 w-full h-full shadow-lg hover:shadow-xl rounded-lg overflow-clip cursor-pointer group hover:border-accent/30',
                   featured ? 'col-span-full lg:col-span-6' : 'col-span-6 lg:col-span-3',
                 )}
               >
@@ -107,8 +107,8 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   layoutId={`video-${_id}`}
                 >
                   <div className="absolute inset-0 transition-all duration-300 opacity-20 bg-accent group-hover:opacity-60"></div>
-                  <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-120">
-                    <FaPlay className="text-5xl text-white" />
+                  <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                    <FaPlay className="text-5xl text-white drop-shadow-2xl" />
                   </div>
                   <picture className="w-full">
                     <source media="(min-width: 1000px)" srcSet={desktop} />
@@ -125,8 +125,8 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   </picture>
                 </motion.div>
                 {featured && (
-                  <div className="relative p-4 text-left shrink-0 text-foreground">
-                    <h3 className="text-xl font-bold">{title}</h3>
+                  <div className="relative p-4 text-left shrink-0 text-foreground bg-surface">
+                    <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
                     {tags && (
                       <div className="flex flex-wrap gap-2 py-2">
                         {tags.map(tag => (
@@ -134,7 +134,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                         ))}
                       </div>
                     )}
-                    <p className="line-clamp-3">{description}</p>
+                    <p className="line-clamp-3 text-foreground-subtle">{description}</p>
                   </div>
                 )}
               </button>
@@ -148,7 +148,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-foreground/70"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
             />
 
             <div className="fixed inset-0 flex items-center justify-center w-screen p-4 overflow-y-auto sm:p-6 md:p-10 lg:p-12">
@@ -170,12 +170,12 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   scale: 0.95,
                   transition: { duration: 0.3 },
                 }}
-                className="w-full relative max-w-6xl  max-h-[90vh] bg-surface rounded-lg"
+                className="w-full relative max-w-6xl max-h-[90vh] backdrop-blur-xl bg-surface/95 border border-border/50 rounded-lg shadow-2xl"
               >
                 <div className="absolute z-20 flex items-center justify-center left-4 right-4 -top-16">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="flex gap-2 p-4 text-on-surface transition-colors cursor-pointer bg-accent"
+                    className="flex gap-2 px-4 py-2 rounded-lg text-accent-contrast transition-all duration-200 cursor-pointer bg-accent hover:bg-accent-hover shadow-lg"
                     aria-label="Close video"
                   >
                     <svg
@@ -207,14 +207,18 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   </div>
                 )}
 
-                <div className="p-4 overflow-y-auto text-foreground">
-                  <DialogTitle className="pb-4 text-2xl font-bold">
+                <div className="p-6 overflow-y-auto text-foreground">
+                  <DialogTitle className="pb-4 text-2xl font-bold text-foreground">
                     {selectedVideo?.title}
                   </DialogTitle>
-                  <Description className="line-clamp-3">{selectedVideo?.description}</Description>
+                  <Description className="line-clamp-3 text-foreground-subtle">
+                    {selectedVideo?.description}
+                  </Description>
                   {selectedVideo?.linkedPainting && (
                     <div className="mt-4">
-                      <h3 className="mb-2 text-lg font-bold">The finished painting:</h3>
+                      <h3 className="mb-2 text-lg font-bold text-foreground">
+                        The finished painting:
+                      </h3>
                       <Link href={`/paintings/${selectedVideo?.linkedPainting?.slug}`}>
                         <Image
                           src={

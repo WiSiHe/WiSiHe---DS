@@ -37,32 +37,72 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
   const filteredOngoingProjects = filterProjects(ongoingProjects);
   const filteredPastProjects = filterProjects(pastProjects);
 
-  return (
-    <section className="flex flex-col w-full gap-5">
-      <div className="relative">
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-background to-transparent" />
-        <ul className="flex w-full gap-2 overflow-x-auto py-1 pr-26">
-          {tags.map(tag => {
-            const { name, _id, count } = tag;
-            const isActive = activeFilters.includes(name);
+  const totalFilteredCount = filteredOngoingProjects.length + filteredPastProjects.length;
+  const totalCount = ongoingProjects.length + pastProjects.length;
 
-            const newName = `${name} (${count})`;
-            return (
-              <li key={_id} className="shrink-0">
-                <Chip
-                  size="small"
-                  variation="tertiary"
-                  outlined
-                  selected={isActive}
-                  label={newName}
-                  removable={isActive}
-                  onClick={() => handleToggleFilter(name)}
-                />
-              </li>
-            );
-          })}
-        </ul>
+  const clearAllFilters = () => {
+    setActiveFilters([]);
+  };
+
+  return (
+    <section className="flex flex-col w-full gap-6">
+      {/* Filter Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="font-medium text-sm text-foreground-subtle">Filter by tag:</h3>
+          {activeFilters.length > 0 && (
+            <button
+              onClick={clearAllFilters}
+              className="text-sm text-accent hover:text-accent-hover hover:underline transition-colors duration-200"
+            >
+              Clear all ({activeFilters.length})
+            </button>
+          )}
+        </div>
+        <div className="relative">
+          <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-background via-transparent to-background" />
+          <ul className="flex w-full gap-2 overflow-x-auto py-2 px-1 scrollbar-hide">
+            {tags.map(tag => {
+              const { name, _id, count } = tag;
+              const isActive = activeFilters.includes(name);
+
+              return (
+                <li key={_id} className="shrink-0">
+                  <Chip
+                    size="small"
+                    variation={isActive ? 'default' : 'tertiary'}
+                    outlined={!isActive}
+                    selected={isActive}
+                    label={`${name} (${count})`}
+                    onClick={() => handleToggleFilter(name)}
+                    className="transition-all duration-200"
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        {activeFilters.length > 0 && (
+          <div className="text-sm text-foreground-muted">
+            Showing {totalFilteredCount} of {totalCount} project{totalCount !== 1 ? 's' : ''}
+          </div>
+        )}
       </div>
+
+      {/* No Results Message */}
+      {activeFilters.length > 0 && totalFilteredCount === 0 && (
+        <div className="text-center py-12 px-4">
+          <p className="text-lg text-foreground-subtle mb-2">
+            No projects found with the selected filters.
+          </p>
+          <button
+            onClick={clearAllFilters}
+            className="text-accent hover:text-accent-hover hover:underline transition-colors duration-200"
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
 
       {/* Ongoing Projects Section */}
       {filteredOngoingProjects.length > 0 && (
@@ -212,7 +252,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                 <motion.li
                   key={project._id}
                   layout
-                  className="relative within z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface shadow-sm shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 rounded-xl group"
+                  className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface border border-border/30 rounded-xl shadow-sm hover:shadow-lg shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group transition-all duration-300 hover:border-accent/30"
                 >
                   <motion.article className="w-full">
                     <motion.div
@@ -241,7 +281,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                       >
                         <motion.h2
                           layoutId={`title-${projectTitle}`}
-                          className="text-2xl font-bold"
+                          className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300"
                         >
                           {projectTitle}
                         </motion.h2>

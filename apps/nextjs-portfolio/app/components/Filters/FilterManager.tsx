@@ -21,9 +21,9 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Filter available tags (exclude already selected ones) and sort by paintings count
+  // Filter available tags (exclude already selected ones, only show tags with 7+ paintings) and sort by paintings count
   const availableTags = tags
-    .filter(tag => !currentFilters.includes(tag.name))
+    .filter(tag => !currentFilters.includes(tag.name) && tag.paintingsCount >= 7)
     .sort((a, b) => b.paintingsCount - a.paintingsCount);
 
   const addFilter = (tagName: string) => {
@@ -58,11 +58,11 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-2 mb-3">
-        <h3 className="font-medium text-sm text-text-secondary">Filters:</h3>
+        <h3 className="font-medium text-sm text-foreground-subtle">Filters:</h3>
         {currentFilters.length > 0 && (
           <button
             onClick={clearAllFilters}
-            className="text-accent hover:text-accent-dark hover:underline transition-colors duration-200"
+            className="text-accent hover:text-accent-hover hover:underline transition-colors duration-200 text-sm"
           >
             Clear all
           </button>
@@ -84,10 +84,10 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
               <div className="relative">
                 <ListboxButton
                   id="add-filter-button"
-                  className="inline-flex items-center gap-1 px-3 py-1 text-sm border border-dashed border-border rounded-full hover:border-accent hover:bg-surface-elevated transition-all duration-200 bg-transparent w-auto min-w-[120px] focus:outline-none focus:ring-2 focus:ring-border-focus cursor-pointer group"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm border border-dashed border-border/50 rounded-full backdrop-blur-xl bg-surface/60 hover:border-accent hover:bg-surface-hover/80 hover:shadow-lg transition-all duration-200 w-auto min-w-[140px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer group shadow-sm"
                 >
-                  <IoAdd className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors duration-200" />
-                  <span className="text-text-secondary group-hover:text-text-primary transition-colors duration-200">
+                  <IoAdd className="w-4 h-4 text-foreground-muted group-hover:text-accent transition-colors duration-200" />
+                  <span className="text-foreground-subtle group-hover:text-foreground transition-colors duration-200 font-medium">
                     Add filter
                   </span>
                 </ListboxButton>
@@ -95,36 +95,42 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
                 <ListboxOptions
                   id="add-filter-options"
                   anchor="bottom"
-                  className="w-64 bg-surface border border-border rounded-lg shadow-xl z-20 mt-2 backdrop-blur-sm max-h-48 overflow-y-auto"
+                  className="w-[600px] backdrop-blur-xl bg-surface/80 border border-border/50 rounded-lg shadow-2xl z-20 mt-4 mb-4 mx-2 max-h-96 overflow-y-auto p-4"
                   transition
                 >
                   <AnimatePresence>
                     {availableTags.length > 0 ? (
-                      availableTags.map((tag, index) => (
-                        <motion.div
-                          key={tag._id}
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{
-                            delay: index * 0.05,
-                            duration: 0.2,
-                          }}
-                        >
-                          <ListboxOption
-                            value={tag}
-                            className="group flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-elevated text-text-primary data-focus:bg-surface-elevated cursor-pointer transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg"
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableTags.map((tag, index) => (
+                          <motion.div
+                            key={tag._id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{
+                              delay: index * 0.02,
+                              duration: 0.15,
+                            }}
                           >
-                            <span className="font-medium">{tag.name}</span>
-                            <span className="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded-full">
-                              {tag.paintingsCount} paintings
-                            </span>
-                          </ListboxOption>
-                        </motion.div>
-                      ))
+                            <ListboxOption
+                              value={tag}
+                              className="group flex flex-col gap-1 px-3 py-2.5 text-sm hover:bg-surface-hover/80 hover:shadow-md text-foreground data-focus:bg-surface-hover/80 data-focus:shadow-md cursor-pointer transition-all duration-200 rounded-lg border border-border/20 hover:border-accent/30"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-foreground group-hover:text-accent transition-colors">
+                                  {tag.name}
+                                </span>
+                                <span className="text-xs text-accent-contrast bg-accent/20 group-hover:bg-accent/30 px-2 py-0.5 rounded-full font-medium transition-colors">
+                                  {tag.paintingsCount}
+                                </span>
+                              </div>
+                            </ListboxOption>
+                          </motion.div>
+                        ))}
+                      </div>
                     ) : (
                       <motion.div
-                        className="px-3 py-4 text-sm text-text-tertiary text-center italic"
+                        className="px-4 py-6 text-sm text-foreground-muted text-center"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -170,7 +176,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
         <AnimatePresence>
           {currentFilters.length >= 5 && (
             <motion.span
-              className="text-xs text-warning bg-surface-elevated px-2 py-1 rounded-full border border-border"
+              className="text-xs text-warning-contrast bg-warning/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-warning/30 shadow-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}

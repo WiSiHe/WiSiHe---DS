@@ -152,21 +152,24 @@ export default async function Paintings({
 
   return (
     <>
-      <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-(--breakpoint-2xl)">
+      <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-7xl bg-background">
         <div className="w-full p-4">
           <div className="pb-4">
-            <h1 className="font-semibold">Digital Art Gallery</h1>
-            <p className="text-muted-foreground">
+            <h1 className="font-semibold text-foreground text-3xl md:text-4xl mb-3">
+              Digital Art Gallery
+            </h1>
+            <p className="text-foreground-subtle text-base md:text-lg leading-relaxed">
               A curated collection of my digital paintings and artwork, exploring themes of
               imagination, storytelling, and visual creativity. Each piece represents a moment of
               artistic expression and digital craftsmanship.
             </p>
             {filters.length > 0 && (
-              <div className="mt-2">
-                <p className="text-sm text-muted-foreground">
-                  Filtering by: <span className="font-medium">{filters.join(', ')}</span>
+              <div className="mt-4">
+                <p className="text-sm text-foreground-subtle">
+                  Filtering by:{' '}
+                  <span className="font-medium text-foreground">{filters.join(', ')}</span>
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-foreground-muted mt-1">
                   Found {totalCount} painting{totalCount !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -176,7 +179,7 @@ export default async function Paintings({
           {/* Filter Manager */}
           <FilterManager tags={tags} currentFilters={filters} />
 
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div className="text-foreground-subtle">Loading...</div>}>
             <PaginatedPaintingGrid
               initialPaintings={paintings}
               initialPagination={initialPagination}

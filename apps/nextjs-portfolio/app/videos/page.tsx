@@ -83,10 +83,10 @@ export default async function Videos() {
           __html: JSON.stringify(structuredData),
         }}
       />
-      <section className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
-        <div className="pb-4 ">
-          <h1 className="font-semibold">Videos</h1>
-          <p>
+      <section className="min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl">
+        <div className="pb-6">
+          <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">Videos</h1>
+          <p className="text-base md:text-lg text-foreground-subtle max-w-2xl leading-relaxed">
             From timelapse drawings to game development and animations — a showcase of my digital
             creations in motion
           </p>
