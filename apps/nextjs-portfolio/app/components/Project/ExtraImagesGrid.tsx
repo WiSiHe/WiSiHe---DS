@@ -5,7 +5,7 @@ import { isNotEmptyArray } from '@wisihe/utils';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import ImageModal from './ImageModal';
 
 type ExtraImagesGridProps = {
@@ -15,13 +15,16 @@ type ExtraImagesGridProps = {
 const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
-    loop: true,
-    dragFree: true,
+    loop: false,
+    skipSnaps: false,
+    dragFree: false,
     containScroll: 'trimSnaps',
   });
 
-  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
-  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -33,10 +36,23 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (emblaApi) emblaApi.scrollTo(index);
+    },
+    [emblaApi],
+  );
+
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setPrevBtnEnabled(emblaApi.canScrollPrev());
-    setNextBtnEnabled(emblaApi.canScrollNext());
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  const onInit = useCallback(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
   }, [emblaApi]);
 
   const handleImageClick = (index: number) => {
@@ -51,42 +67,25 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
+    onInit();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+    emblaApi.on('init', onInit);
     return () => {
       emblaApi.off('select', onSelect);
       emblaApi.off('reInit', onSelect);
+      emblaApi.off('init', onInit);
     };
-  }, [emblaApi, onSelect]);
+  }, [emblaApi, onSelect, onInit]);
 
   if (!isNotEmptyArray(images)) return null;
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Extra Images</h2>
+      <h2 className="text-xl font-semibold font-serif text-foreground">Additional Images</h2>
 
       <div className="relative">
-        {/* Navigation Buttons */}
-        <button
-          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-all hover:bg-black/70 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={scrollPrev}
-          disabled={!prevBtnEnabled}
-          aria-label="Previous image"
-        >
-          <FaChevronLeft className="h-4 w-4" />
-        </button>
-
-        <button
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-all hover:bg-black/70 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={scrollNext}
-          disabled={!nextBtnEnabled}
-          aria-label="Next image"
-        >
-          <FaChevronRight className="h-4 w-4" />
-        </button>
-
-        {/* Carousel Container */}
-        <div className="overflow-hidden rounded-xl" ref={emblaRef}>
+        <div className="overflow-hidden rounded-xl border border-border/20" ref={emblaRef}>
           <div className="flex">
             {images.map((extraImage, index) => {
               if (!extraImage) return null;
@@ -94,19 +93,19 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
               return (
                 <div
                   key={extraImage._key}
-                  className="relative flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%]"
+                  className="relative flex-[0_0_100%] min-w-0"
                 >
                   <div
-                    className="relative aspect-square mx-2 cursor-pointer transition-transform hover:scale-105"
+                    className="relative aspect-video cursor-pointer"
                     onClick={() => handleImageClick(index)}
                   >
                     <Image
-                      src={urlForImage(extraImage)?.width(600).fit('max')?.url() || ''}
+                      src={urlForImage(extraImage)?.width(1200).fit('max')?.url() || ''}
                       alt={`Project extra image ${index + 1}`}
                       fill
-                      className="object-cover rounded-lg"
-                      loading="lazy"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      className="object-cover"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1200px"
                     />
                   </div>
                 </div>
@@ -114,6 +113,47 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
             })}
           </div>
         </div>
+
+        {/* Navigation buttons */}
+        {images.length > 1 && (
+          <div className="flex justify-between items-center mt-4">
+            <button
+              className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              aria-label="Previous image"
+            >
+              <IconArrowNarrowLeft className="w-6 h-6" />
+            </button>
+
+            {/* Dots navigation */}
+            {scrollSnaps.length > 1 && (
+              <div className="flex gap-2">
+                {scrollSnaps.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      index === selectedIndex
+                        ? 'bg-accent'
+                        : 'bg-surface-hover hover:bg-surface-subtle'
+                    }`}
+                    onClick={() => scrollTo(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            <button
+              className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              aria-label="Next image"
+            >
+              <IconArrowNarrowRight className="w-6 h-6" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Image Modal */}

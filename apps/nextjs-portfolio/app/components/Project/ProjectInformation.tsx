@@ -44,30 +44,61 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   const projectTitle = name || 'Untitled Project';
   const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.unknown;
 
+  // Format dates
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
-    <motion.div layout>
+    <motion.div layout className="space-y-6">
       <motion.h1
-        className="pb-1 text-4xl font-black text-text-primary lg:text-8xl"
+        className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight"
         layoutId={`title-${projectTitle}`}
       >
         {projectTitle}
       </motion.h1>
-      <div className="flex pb-4 flex-wrap gap-2 pointer-events-auto max-w-prose">
+
+      <div className="flex flex-wrap gap-2">
         {/* Status chip */}
-        <Chip label={statusConfig.label} Icon={statusConfig.icon} />
+        <Chip variation="secondary" label={statusConfig.label} Icon={statusConfig.icon} />
 
         {/* Project dates */}
-        {projectStart && <Chip label={`Started: ${projectStart}`} />}
-        {projectEnd && <Chip label={`Ended: ${projectEnd}`} />}
+        {projectStart && (
+          <Chip
+            variation="tertiary"
+            label={`Started ${formatDate(projectStart)}`}
+            Icon={IconCalendar}
+          />
+        )}
+        {projectEnd && (
+          <Chip
+            variation="tertiary"
+            label={`Ended ${formatDate(projectEnd)}`}
+            Icon={IconCalendar}
+          />
+        )}
 
         {/* Tags */}
         {tags.map(tag => (
-          <Chip key={tag.name} label={tag.name} />
+          <Chip key={tag.name} variation="primary" label={tag.name} />
         ))}
       </div>
 
       {projectContent && (
-        <CustomPortableText value={projectContent} className="whitespace-pre-wrap max-w-prose" />
+        <div className="prose prose-lg max-w-none">
+          <CustomPortableText
+            value={projectContent}
+            className="text-foreground-subtle leading-relaxed"
+          />
+        </div>
       )}
     </motion.div>
   );
