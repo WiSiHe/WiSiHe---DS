@@ -55,7 +55,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="group relative flex items-center justify-center p-2 rounded-lg backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:bg-surface-hover/80 hover:border-accent/50 hover:shadow-xl transition-all"
+            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border/30 shadow-lg hover:bg-surface-hover hover:border-accent/50 hover:shadow-xl transition-all"
           >
             <IconLogo
               color="currentColor"
@@ -72,7 +72,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center backdrop-blur-xl bg-surface/60 border border-border/30 shadow-xl p-1 overflow-clip rounded-full"
+            className="flex items-center bg-surface border border-border/30 shadow-xl p-1 overflow-clip rounded-full"
             style={{ isolation: 'isolate' }}
           >
             {navigationItems.map((item, i) => {
@@ -96,10 +96,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent focus-visible:backdrop-blur-md flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3 rounded-full',
+                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3 rounded-full',
                       isActive
-                        ? 'text-accent-contrast bg-accent backdrop-blur-md border border-accent-border shadow-lg'
-                        : 'text-foreground hover:bg-surface-hover/80 hover:text-accent hover:backdrop-blur-md',
+                        ? 'text-accent-contrast bg-accent border border-accent-border shadow-lg'
+                        : 'text-foreground hover:bg-surface-hover hover:text-accent',
                     )}
                   >
                     <span className="text-lg">{navIcon}</span>
