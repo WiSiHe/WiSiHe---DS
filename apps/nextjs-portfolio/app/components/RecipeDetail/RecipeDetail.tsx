@@ -142,31 +142,31 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
               {/* Recipe Meta */}
               <div className="flex flex-wrap gap-3">
                 {prepTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
                     <FiClock className="w-4 h-4" />
                     <span className="text-sm font-medium">Prep: {prepTime} min</span>
                   </div>
                 )}
                 {cookingTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
                     <FiThermometer className="w-4 h-4" />
                     <span className="text-sm font-medium">Cook: {cookingTime} min</span>
                   </div>
                 )}
                 {totalTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
                     <FiClock className="w-4 h-4" />
                     <span className="text-sm font-medium">Total: {totalTime} min</span>
                   </div>
                 )}
                 {servings && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
                     <FiUsers className="w-4 h-4" />
                     <span className="text-sm font-medium">Serves: {servings}</span>
                   </div>
                 )}
                 {difficulty && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
                     <FiBarChart className="w-4 h-4" />
                     <span className="text-sm font-medium capitalize">{difficulty}</span>
                   </div>
@@ -218,31 +218,31 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
             {/* Recipe Meta */}
             <div className="flex flex-wrap gap-3 mb-12">
               {prepTime && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
                   <FiClock className="w-4 h-4 text-accent" />
                   <span>Prep: {prepTime} min</span>
                 </div>
               )}
               {cookingTime && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
                   <FiThermometer className="w-4 h-4 text-accent" />
                   <span>Cook: {cookingTime} min</span>
                 </div>
               )}
               {totalTime && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
                   <FiClock className="w-4 h-4 text-accent" />
                   <span>Total: {totalTime} min</span>
                 </div>
               )}
               {servings && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
                   <FiUsers className="w-4 h-4 text-success" />
                   <span>Serves: {servings}</span>
                 </div>
               )}
               {difficulty && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
                   <FiBarChart className="w-4 h-4 text-info" />
                   <span className="capitalize">{difficulty}</span>
                 </div>
@@ -262,24 +262,24 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 <RecipeIngredients ingredientCategories={ingredientCategories} />
 
                 {/* Explore More */}
-                <div className="p-6 rounded-2xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg">
+                <div className="p-6 rounded-2xl bg-surface border border-border/30 shadow-lg">
                   <h3 className="font-semibold mb-4 text-foreground">Explore More</h3>
                   <div className="space-y-3">
                     <Link
                       href="/recipes"
-                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover transition-all duration-200"
                     >
                       Browse All Recipes
                     </Link>
                     <Link
                       href="/projects"
-                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover transition-all duration-200"
                     >
                       View Projects
                     </Link>
                     <Link
                       href="/paintings"
-                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover transition-all duration-200"
                     >
                       Digital Art Gallery
                     </Link>
@@ -327,7 +327,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                     <Link
                       key={index}
                       href={`/recipes?tag=${tag.name}`}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md hover:border-accent/30 hover:bg-accent-surface transition-all duration-200 text-foreground-subtle hover:text-foreground"
+                      className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-surface border border-border/30 shadow-sm hover:shadow-md hover:border-accent/30 hover:bg-accent-surface transition-all duration-200 text-foreground-subtle hover:text-foreground"
                     >
                       <FiTag className="w-3.5 h-3.5 text-accent" />
                       {tag.name}

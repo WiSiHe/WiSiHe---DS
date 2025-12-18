@@ -93,7 +93,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
   };
 
   return (
-    <div className="rounded-2xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg p-6 md:p-8">
+    <div className="rounded-2xl bg-surface border border-border/30 shadow-lg p-6 md:p-8">
       <div className="mb-8">
         <h2 className="text-3xl font-bold font-serif text-foreground mb-2">Instructions</h2>
         <p className="text-sm text-foreground-muted">
@@ -173,7 +173,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
             </div>
             <button
               onClick={() => setCompletedSteps(new Set())}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md backdrop-blur-xl bg-surface/60 border border-border/30 text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50"
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md bg-surface-hover border border-border/30 text-foreground-subtle hover:text-foreground hover:bg-surface-active"
             >
               Reset
             </button>

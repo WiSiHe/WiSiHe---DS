@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 gsap.registerPlugin(useGSAP);
 
@@ -54,6 +54,30 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const loaderRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  // Hide scroll indicator after user scrolls
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      // Hide after scrolling 100px or when hero section is out of view
+      if (scrollY > 100 || containerRect.bottom < 0) {
+        setShowScrollIndicator(false);
+      } else {
+        setShowScrollIndicator(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Check initial state
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const { contextSafe } = useGSAP(
     () => {
@@ -424,14 +448,16 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       </div>
 
       {/* Scroll Indicator - Bottom with high z-index */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none">
-        <span className="text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse">
-          Scroll
-        </span>
-        <div className="w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden">
-          <div className="w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator" />
+      {showScrollIndicator && (
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none transition-opacity duration-500">
+          <span className="text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse">
+            Scroll
+          </span>
+          <div className="w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden">
+            <div className="w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator" />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

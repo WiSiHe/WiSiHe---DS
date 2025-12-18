@@ -27,40 +27,6 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       if (!showcaseProjects || showcaseProjects.length === 0) return;
 
       const panels = gsap.utils.toArray<HTMLElement>('.project-section');
-      const header = headerRef.current;
-
-      // Animate header to shrink and move to top-left corner
-      if (header && panels.length > 0) {
-        const firstPanel = panels[0] as HTMLElement;
-        const headerContent = header.querySelector('div > div') as HTMLElement;
-
-        ScrollTrigger.create({
-          trigger: firstPanel,
-          start: 'top 80%',
-          end: 'top 20%',
-          scrub: 1,
-          onUpdate: self => {
-            const progress = self.progress;
-            const scale = 1 - progress * 0.45; // Scale from 1 to 0.55
-            // Keep it in bounds - don't move it, just scale it
-            // The sticky positioning already handles the corner placement
-
-            gsap.set(header, {
-              scale: scale,
-              x: 0,
-              y: 0,
-            });
-
-            // Also reduce padding on the inner content for a more compact look
-            if (headerContent) {
-              const padding = 40 - progress * 28; // Reduce padding from 40px to 12px
-              gsap.set(headerContent, {
-                padding: `${padding}px`,
-              });
-            }
-          },
-        });
-      }
 
       // Set initial z-index for all panels (later sections higher, so they appear on top)
       panels.forEach((panel, index) => {
@@ -128,18 +94,25 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
 
   return (
     <section ref={containerRef} className="relative">
-      <div
-        ref={headerRef}
-        className="sticky top-8 md:top-24 left-4 md:left-4 z-50 text-white mix-blend-difference pointer-events-none origin-top-left w-fit"
-      >
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-3 md:mb-4">
-          Featured Projects
-        </h2>
-        <p className="text-lg md:text-xl max-w-2xl">Selected works & experiments</p>
+      {/* Header Section */}
+      <div ref={headerRef} className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-16 md:py-24">
+        <div className="max-w-4xl">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-6 text-foreground">
+            Featured Projects
+          </h2>
+          <p className="text-xl md:text-2xl mb-6 text-foreground-subtle leading-relaxed">
+            Selected works & experiments
+          </p>
+          <p className="text-base md:text-lg text-foreground-subtle leading-relaxed max-w-3xl">
+            Explore a curated collection of my most impactful projects, from innovative web
+            applications to creative digital experiences. Each project represents a unique challenge
+            solved through thoughtful design, technical excellence, and user-centered thinking.
+          </p>
+        </div>
       </div>
 
       {/* Projects */}
-      <div className="slides-wrapper pt-24">
+      <div className="slides-wrapper">
         {showcaseProjects.map((project, index) => {
           const imageUrl = urlForImage(project.image)
             ?.height(1200)

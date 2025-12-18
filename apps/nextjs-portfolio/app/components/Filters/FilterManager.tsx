@@ -84,7 +84,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
               <div className="relative">
                 <ListboxButton
                   id="add-filter-button"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm border border-dashed border-border/50 rounded-full backdrop-blur-xl bg-surface/60 hover:border-accent hover:bg-surface-hover/80 hover:shadow-lg transition-all duration-200 w-auto min-w-[140px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer group shadow-sm"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm border border-dashed border-border/50 rounded-full bg-surface hover:border-accent hover:bg-surface-hover hover:shadow-lg transition-all duration-200 w-auto min-w-[140px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer group shadow-sm"
                 >
                   <IoAdd className="w-4 h-4 text-foreground-muted group-hover:text-accent transition-colors duration-200" />
                   <span className="text-foreground-subtle group-hover:text-foreground transition-colors duration-200 font-medium">
@@ -95,7 +95,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
                 <ListboxOptions
                   id="add-filter-options"
                   anchor="bottom"
-                  className="w-[600px] backdrop-blur-xl bg-surface/80 border border-border/50 rounded-lg shadow-2xl z-20 mt-4 mb-4 mx-2 max-h-96 overflow-y-auto p-4"
+                  className="w-[600px] bg-surface border border-border/50 rounded-lg shadow-2xl z-20 mt-4 mb-4 mx-2 max-h-96 overflow-y-auto p-4"
                   transition
                 >
                   <AnimatePresence>
@@ -114,7 +114,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
                           >
                             <ListboxOption
                               value={tag}
-                              className="group flex flex-col gap-1 px-3 py-2.5 text-sm hover:bg-surface-hover/80 hover:shadow-md text-foreground data-focus:bg-surface-hover/80 data-focus:shadow-md cursor-pointer transition-all duration-200 rounded-lg border border-border/20 hover:border-accent/30"
+                              className="group flex flex-col gap-1 px-3 py-2.5 text-sm hover:bg-surface-hover hover:shadow-md text-foreground data-focus:bg-surface-hover data-focus:shadow-md cursor-pointer transition-all duration-200 rounded-lg border border-border/20 hover:border-accent/30"
                             >
                               <div className="flex items-center justify-between">
                                 <span className="font-medium text-foreground group-hover:text-accent transition-colors">
@@ -176,7 +176,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
         <AnimatePresence>
           {currentFilters.length >= 5 && (
             <motion.span
-              className="text-xs text-warning-contrast bg-warning/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-warning/30 shadow-sm"
+              className="text-xs text-warning-contrast bg-warning/20 px-3 py-1.5 rounded-full border border-warning/30 shadow-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
