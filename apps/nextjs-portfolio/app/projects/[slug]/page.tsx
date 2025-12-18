@@ -1,8 +1,9 @@
 import {
-  ProjectImage,
-  ProjectInformation,
+  ConnectedPage,
   ConnectedPaintingsCarousel,
   EmbeddedVideo,
+  ProjectImage,
+  ProjectInformation,
 } from '@/app/components/Project';
 import { ProjectQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
@@ -164,6 +165,11 @@ export default async function ProjectPage(props: Props) {
             </section>
           </div>
         </div>
+
+        {/* Connected Page Section - Full Width */}
+        <Suspense fallback={<ProjectSectionSkeleton />}>
+          <ConnectedPage project={project} />
+        </Suspense>
       </div>
     );
   } catch (error) {

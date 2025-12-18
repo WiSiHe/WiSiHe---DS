@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import Chip from '../Chip/Chip';
 import { useState } from 'react';
+import { IconArrowNarrowRight } from '@tabler/icons-react';
 
 type ProjectCategoriesProps = {
   ongoingProjects: GetAllProjectsResult['ongoingProjects'];
@@ -107,8 +108,8 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
       {/* Ongoing Projects Section */}
       {filteredOngoingProjects.length > 0 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-foreground">Ongoing Projects</h2>
-          <ul className="grid w-full grid-cols-12 gap-6 lg:gap-8">
+          <h2 className="text-2xl font-semibold font-serif text-foreground">Ongoing Projects</h2>
+          <ul className="grid w-full grid-cols-1 gap-6 lg:gap-8">
             {filteredOngoingProjects.map((project, index) => {
               const {
                 title,
@@ -124,103 +125,82 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
               const projectTitle = title ?? name;
 
               return (
-                <motion.li key={project._id} layout className="relative z-10 w-full col-span-full">
-                  <motion.article className="group relative h-full flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-surface via-surface-hover to-surface rounded-2xl border border-border/30 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-accent/20">
-                    {/* Image Section - Top on mobile, Left on desktop */}
-                    <motion.div
-                      layoutId={`image-${projectTitle}`}
-                      className="relative aspect-square md:aspect-square md:min-w-96 md:h-full flex-shrink-0 overflow-hidden"
-                    >
-                      <Image
-                        src={urlForImage(image)?.width(600).height(400).quality(80).url() || ''}
-                        alt={image?.alt || projectTitle}
-                        priority={index < 4}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 320px"
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/10 to-transparent group-hover:from-black/20 group-hover:via-black/5 transition-all duration-500" />
-
-                      {/* Subtle shine effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-
-                      {/* Status Badge - Overlaid on image */}
-                      <div className="absolute top-4 right-4 z-20">
-                        {status && (
-                          <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                          >
-                            <Chip variation="secondary" label={status} />
-                          </motion.div>
-                        )}
-                      </div>
-                    </motion.div>
-
-                    {/* Content Section - Bottom on mobile, Right on desktop */}
-                    <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                      {/* Top Content */}
-                      <div className="space-y-4">
-                        {/* Title */}
-                        <Link
-                          href={`projects/${slug}`}
-                          className="before:absolute before:inset-0 before:z-0"
-                        >
-                          <motion.h2
-                            layoutId={`title-${projectTitle}`}
-                            className="text-2xl font-bold text-foreground group-hover:text-accent transition-all duration-300 group-hover:translate-x-1"
-                          >
-                            {projectTitle}
-                          </motion.h2>
-                        </Link>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {tags?.map((tag, tagIndex) => (
-                            <motion.div
-                              key={tag.name}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.1 * tagIndex, duration: 0.3 }}
-                            >
-                              <Chip
-                                variation="primary"
-                                label={tag.name}
-                                className="hover:scale-105 transition-transform duration-200 hover:shadow-md"
-                              />
-                            </motion.div>
-                          ))}
+                <motion.li key={project._id} layout className="relative w-full">
+                  <motion.article className="group relative overflow-hidden bg-surface border border-border/30 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:border-accent/30">
+                    <Link href={`projects/${slug}`} className="block">
+                      <div className="flex flex-col lg:flex-row">
+                        {/* Image Section */}
+                        <div className="relative w-full lg:w-80 lg:shrink-0 aspect-video lg:aspect-square overflow-hidden">
+                          <Image
+                            src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
+                            alt={image?.alt || projectTitle}
+                            priority={index < 2}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 320px"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          {/* Status Badge - Overlaid on image */}
+                          {status && (
+                            <div className="absolute top-4 right-4 z-10">
+                              <Chip variation="secondary" label={status} />
+                            </div>
+                          )}
                         </div>
 
-                        {/* Description */}
-                        <p className="text-foreground-subtle text-base leading-relaxed line-clamp-4">
-                          {seoDescription || description}
-                        </p>
-                      </div>
+                        {/* Content Section */}
+                        <div className="flex-1 p-6 flex flex-col justify-between">
+                          <div className="space-y-4">
+                            {/* Title */}
+                            <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">
+                              {projectTitle}
+                            </h3>
 
-                      {/* Bottom Content - Start Date */}
-                      {projectStart && (
-                        <div className="flex items-center gap-2 text-foreground-muted text-sm pt-4 border-t border-border/20">
-                          <div className="w-2 h-2 bg-accent rounded-full" />
-                          <span>
-                            Started{' '}
-                            {new Date(projectStart).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })}
-                          </span>
+                            {/* Tags */}
+                            {tags && tags.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {tags.slice(0, 3).map(tag => (
+                                  <Chip
+                                    key={tag.name}
+                                    variation="primary"
+                                    label={tag.name}
+                                    className="hover:scale-105 transition-transform duration-200"
+                                  />
+                                ))}
+                                {tags.length > 3 && (
+                                  <Chip variation="tertiary" label={`+${tags.length - 3} more`} />
+                                )}
+                              </div>
+                            )}
+
+                            {/* Description */}
+                            <p className="text-foreground-subtle text-base leading-relaxed line-clamp-3">
+                              {seoDescription ?? description}
+                            </p>
+
+                            {/* Link Button */}
+                            <div className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent-hover transition-colors duration-200 group/button">
+                              <span>View Project</span>
+                              <IconArrowNarrowRight className="w-4 h-4 transition-transform duration-200 group-hover/button:translate-x-1" />
+                            </div>
+                          </div>
+
+                          {/* Bottom Content - Start Date */}
+                          {projectStart && (
+                            <div className="flex items-center gap-2 text-foreground-muted text-sm pt-4 mt-4 border-t border-border/20">
+                              <div className="w-2 h-2 bg-accent rounded-full" />
+                              <span>
+                                Started{' '}
+                                {new Date(projectStart).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                })}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-
-                    {/* Hover Effect Border */}
-                    <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-accent/30 transition-all duration-500" />
-
-                    {/* Subtle background pattern */}
-                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-accent/5 via-transparent to-accent/5" />
+                      </div>
+                    </Link>
                   </motion.article>
                 </motion.li>
               );
@@ -232,7 +212,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
       {/* Past Projects Section */}
       {filteredPastProjects.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-foreground">Past Projects</h2>
+          <h2 className="text-xl font-semibold font-serif text-foreground">Past Projects</h2>
           <ul className="grid w-full grid-cols-12 gap-4 lg:gap-6">
             {filteredPastProjects.map((project, index) => {
               const {
@@ -261,9 +241,12 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                     >
                       <div className="absolute z-10 flex flex-wrap gap-2 p-2">
                         {status && <Chip variation="secondary" label={status} />}
-                        {tags.map(tag => (
+                        {tags.slice(0, 2).map(tag => (
                           <Chip variation="primary" key={tag.name} label={tag.name} />
                         ))}
+                        {tags.length > 2 && (
+                          <Chip variation="tertiary" label={`+${tags.length - 2}`} />
+                        )}
                       </div>
                       <Image
                         src={urlForImage(image)?.width(400).height(500).quality(60).url() || ''}
@@ -287,7 +270,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                         </motion.h2>
                       </Link>
                       <p className="line-clamp-3 text-foreground-subtle">
-                        {seoDescription || description}
+                        {seoDescription ?? description}
                       </p>
                       {projectEnd && (
                         <p className="text-sm text-foreground-muted mt-2">

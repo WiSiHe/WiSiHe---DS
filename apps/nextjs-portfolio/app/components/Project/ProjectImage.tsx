@@ -13,7 +13,7 @@ type ProjectImageProps = {
 };
 
 const ProjectImage = ({ project }: ProjectImageProps) => {
-  const { name, image, connectedPage, extraImages = [] } = project;
+  const { name, image, extraImages = [] } = project;
   const projectTitle = name || 'Untitled Project';
 
   // Create array with main image first, then extra images
@@ -74,7 +74,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
       {hasMultipleImages && (
         <>
           <button
-            className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:bg-black/70 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             onClick={scrollPrev}
             disabled={!prevBtnEnabled}
             aria-label="Previous image"
@@ -83,7 +83,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
           </button>
 
           <button
-            className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:bg-black/70 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             onClick={scrollNext}
             disabled={!nextBtnEnabled}
             aria-label="Next image"
@@ -95,7 +95,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
 
       {/* Image Counter */}
       {hasMultipleImages && (
-        <div className="absolute top-4 left-4 z-10 rounded-full bg-black/50 px-3 py-1 text-white text-sm">
+        <div className="absolute top-4 left-4 z-10 rounded-full bg-surface border border-border/30 px-3 py-1 text-foreground text-sm shadow-lg">
           {currentSlideIndex + 1} / {allImages.length}
         </div>
       )}
@@ -150,16 +150,6 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
               />
             )}
           </div>
-        )}
-
-        {/* Connected page iframe - overlay on top */}
-        {connectedPage && (
-          <iframe
-            src={connectedPage}
-            className="absolute inset-0 w-full h-full rounded-xl"
-            title={`Connected page for ${projectTitle}`}
-            loading="lazy"
-          />
         )}
       </motion.div>
 

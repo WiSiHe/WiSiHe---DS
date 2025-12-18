@@ -72,10 +72,10 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Connected Paintings</h2>
+      <h2 className="text-xl font-semibold font-serif text-foreground">Connected Paintings</h2>
 
       <div className="relative">
-        <div className="overflow-hidden" ref={emblaRef}>
+        <div className="overflow-hidden rounded-xl border border-border/20" ref={emblaRef}>
           <div className="flex gap-4">
             {paintings.map(painting => {
               const { image, slug, title } = painting;
@@ -88,14 +88,14 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
                 >
                   <Link
                     href={`/paintings/${slug}`}
-                    className="relative aspect-square group transition-transform hover:scale-105 block"
+                    className="relative aspect-square group transition-transform hover:scale-105 block rounded-xl overflow-hidden"
                   >
                     <Image
                       src={urlForImage(image)?.width(400).fit('max')?.url() || ''}
                       alt={title || 'Connected painting'}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover rounded-xl transition-opacity group-hover:opacity-90"
+                      className="object-cover transition-opacity group-hover:opacity-90"
                       loading="lazy"
                     />
                     {title && (
@@ -113,12 +113,12 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
         {/* Navigation buttons */}
         <div className="flex justify-between items-center mt-4">
           <button
-            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             aria-label="Scroll to previous painting"
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowLeft className="w-6 h-6" />
           </button>
 
           {/* Dots navigation */}
@@ -128,7 +128,9 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
                 <button
                   key={index}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    index === selectedIndex ? 'bg-primary' : 'bg-gray-300 hover:bg-gray-400'
+                    index === selectedIndex
+                      ? 'bg-accent'
+                      : 'bg-surface-hover hover:bg-surface-subtle'
                   }`}
                   onClick={() => scrollTo(index)}
                   aria-label={`Go to slide ${index + 1}`}
@@ -138,12 +140,12 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
           )}
 
           <button
-            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label="Scroll to next painting"
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowRight className="w-6 h-6" />
           </button>
         </div>
       </div>
