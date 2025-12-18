@@ -9,24 +9,24 @@ const chipStyles = cva(
     variants: {
       variation: {
         default:
-          'bg-surface-elevated text-text-primary border border-border hover:bg-surface hover:border-accent hover:shadow-sm active:scale-95',
+          'bg-surface-hover text-foreground border border-border hover:bg-surface hover:border-accent hover:shadow-sm active:scale-95',
         primary:
-          'bg-primary text-on-primary hover:bg-primary-dark hover:shadow-md active:scale-95 shadow-sm',
+          'bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-md active:scale-95 shadow-sm',
         secondary:
-          'bg-secondary text-on-primary hover:bg-secondary-dark hover:shadow-md active:scale-95 shadow-sm',
+          'bg-surface-hover text-foreground border border-border hover:bg-surface-active hover:border-accent hover:shadow-md active:scale-95 shadow-sm',
         tertiary:
-          'bg-surface text-text-primary border border-border hover:bg-surface-elevated hover:border-accent hover:shadow-sm active:scale-95',
+          'bg-surface text-foreground border border-border hover:bg-surface-hover hover:border-accent hover:shadow-sm active:scale-95',
         highlight:
-          'bg-accent text-text-primary hover:bg-accent-dark hover:shadow-md active:scale-95 shadow-sm',
+          'bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-md active:scale-95 shadow-sm',
         success:
-          'bg-success text-on-primary hover:bg-accent-success hover:shadow-md active:scale-95 shadow-sm',
+          'bg-success text-success-contrast hover:bg-success hover:opacity-90 hover:shadow-md active:scale-95 shadow-sm',
       },
       outlined: {
-        true: 'border-2 border-border bg-transparent hover:bg-surface hover:border-accent text-text-primary hover:text-text-primary active:scale-95',
+        true: 'border-2 border-border bg-transparent hover:bg-surface hover:border-accent text-foreground hover:text-foreground active:scale-95',
         false: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-primary bg-primary text-on-primary hover:bg-primary-dark hover:shadow-lg active:scale-95 shadow-md',
+        true: 'ring-2 ring-offset-2 ring-accent bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-lg active:scale-95 shadow-md',
         false: '',
       },
       iconPosition: {

@@ -1,86 +1,17 @@
 'use client';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
-import React, { useEffect, createContext, useContext, useState } from 'react';
+import React, { useEffect } from 'react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import PostHogPageView from './components/PostHogPageView/PostHogPageView';
-
-type Theme = 'light' | 'dark' | 'system';
-
-interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  resolvedTheme: 'light' | 'dark';
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // eslint-disable-next-line no-undef
 const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 // eslint-disable-next-line no-undef
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}
-
-function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('system');
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    // Load theme from localStorage on mount
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  useEffect(() => {
-    // Save theme to localStorage
-    localStorage.setItem('theme', theme);
-
-    // Determine resolved theme
-    let resolved: 'light' | 'dark';
-    if (theme === 'system') {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    } else {
-      resolved = theme;
-    }
-
-    setResolvedTheme(resolved);
-
-    // Apply theme to document
-    const root = document.documentElement;
-    if (resolved === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
-
-  useEffect(() => {
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
-        setResolvedTheme(mediaQuery.matches ? 'dark' : 'light');
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme]);
-
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
+// Re-export useTheme from next-themes for convenience
+export { useTheme } from 'next-themes';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -97,11 +28,16 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <ThemeProvider>
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
       <PHProvider client={posthog}>
         <PostHogPageView />
         {children}
       </PHProvider>
-    </ThemeProvider>
+    </NextThemesProvider>
   );
 }

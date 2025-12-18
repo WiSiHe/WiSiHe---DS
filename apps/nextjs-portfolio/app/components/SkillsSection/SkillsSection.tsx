@@ -58,11 +58,13 @@ const SkillsSection = () => {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative flex flex-col gap-4 py-20 text-text-primary"
+      className="relative flex flex-col gap-8 py-20 text-text-primary"
     >
-      <motion.div variants={itemVariants} className="z-10 px-4 pointer-events-none lg:px-10">
-        <h2 className="text-4xl font-bold">Skills</h2>
-        <p>Here are some of the skills I have acquired over the years.</p>
+      <motion.div variants={itemVariants} className="z-10 pointer-events-none px-4 md:px-8">
+        <h2 className="text-4xl md:text-5xl font-bold mb-3">Skills</h2>
+        <p className="text-lg text-foreground-subtle">
+          Here are some of the skills I have acquired over the years.
+        </p>
       </motion.div>
 
       <motion.div variants={itemVariants}>

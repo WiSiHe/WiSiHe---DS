@@ -156,7 +156,7 @@ export default async function RootLayout({
   const { socialLinks } = settings;
 
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/wisihe.svg" color="oklch(65% 0.15 180)" />
