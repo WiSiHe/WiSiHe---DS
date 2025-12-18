@@ -97,8 +97,8 @@ const PaintingCard = ({
   if (!paintingData || Object.keys(paintingData).length === 0) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full">
-        <TbBoxMultiple className="w-10 h-10 text-primary" />
-        <strong>Could not find painting</strong>
+        <TbBoxMultiple className="w-10 h-10 text-foreground-muted" />
+        <strong className="text-foreground">Could not find painting</strong>
       </div>
     );
   }
@@ -108,7 +108,7 @@ const PaintingCard = ({
   return (
     <motion.article
       className={cn(
-        'relative aspect-[3/4] within group overflow-hidden bg-primary/20 text-text-primary rounded-2xl focus-within:ring-3 focus-within:ring-primary',
+        'relative aspect-[3/4] within group overflow-hidden bg-surface-subtle text-foreground rounded-2xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background',
       )}
       whileHover="hover"
       initial="rest"
@@ -122,7 +122,7 @@ const PaintingCard = ({
       >
         {filteredTags.map(tag => (
           <motion.li
-            className="px-1 text-sm text-on-primary uppercase rounded-sm bg-primary"
+            className="px-2 py-0.5 text-xs text-accent-contrast uppercase rounded-md bg-accent backdrop-blur-sm shadow-sm"
             key={tag.name}
             variants={listItemVariants}
           >
@@ -134,7 +134,7 @@ const PaintingCard = ({
       {/* Always Visible Icon */}
       {hasStoreLinks && (
         <div className="absolute z-20 right-2 top-2">
-          <div className="p-2 text-xs rounded-full text-on-primary bg-accent">
+          <div className="p-2 text-xs rounded-full text-accent-contrast bg-accent shadow-lg">
             <FaShoppingCart aria-label="Available for sale" className="w-4 h-4" />
           </div>
         </div>
@@ -150,7 +150,7 @@ const PaintingCard = ({
       >
         {imagesCount > 0 && (
           <motion.li
-            className="p-2 text-xs text-on-primary rounded-full bg-primary"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
             variants={iconVariants}
           >
             <TbBoxMultiple className="w-4 h-4" />
@@ -158,7 +158,7 @@ const PaintingCard = ({
         )}
         {video && (
           <motion.li
-            className="p-2 text-xs text-on-primary rounded-full bg-primary"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
             variants={iconVariants}
           >
             <BsYoutube className="w-4 h-4" />
@@ -166,7 +166,7 @@ const PaintingCard = ({
         )}
         {isNsfw && (
           <motion.li
-            className="p-2 text-xs text-on-primary rounded-full bg-primary"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
             variants={iconVariants}
           >
             <FaExclamation className="w-4 h-4" />
@@ -200,7 +200,7 @@ const PaintingCard = ({
             className="object-cover w-full h-full"
           />
         ) : (
-          <div className="w-full h-full bg-surface animate-pulse" />
+          <div className="w-full h-full bg-surface-subtle animate-pulse" />
         )}
       </motion.div>
 
@@ -208,10 +208,10 @@ const PaintingCard = ({
       {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />}
 
       <Link href={`/paintings/${slug}`} className="before:absolute before:inset-0 before:z-0">
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-2 transition-all duration-500 ease-in-out bg-accent/90 backdrop-blur-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-accent backdrop-blur-xl shadow-lg">
           <motion.h2
             layoutId={`title-${title}`}
-            className="text-base text-on-primary font-black capitalize lg:text-lg line-clamp-1 font-inter"
+            className="text-base text-accent-contrast font-black capitalize lg:text-lg line-clamp-1 font-inter"
           >
             {title}
           </motion.h2>

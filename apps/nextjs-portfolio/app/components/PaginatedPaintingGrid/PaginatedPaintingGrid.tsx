@@ -133,14 +133,14 @@ const PaginatedPaintingGrid = ({
             {pagination.page > 1 ? (
               <Link
                 href={buildPageUrl(1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                 aria-label="First page"
               >
                 <FaStepBackward />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
                 aria-label="First page"
               >
                 <FaStepBackward />
@@ -151,21 +151,21 @@ const PaginatedPaintingGrid = ({
             {pagination.page > 1 ? (
               <Link
                 href={buildPageUrl(pagination.page - 1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                 aria-label="Previous page"
               >
                 <FaArrowLeft />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
                 aria-label="Previous page"
               >
                 <FaArrowLeft />
               </span>
             )}
 
-            <span className="px-4 py-2 text-sm">
+            <span className="px-4 py-2 text-sm text-foreground">
               Page {pagination.page} of {pagination.totalPages}
             </span>
 
@@ -173,14 +173,14 @@ const PaginatedPaintingGrid = ({
             {pagination.page < pagination.totalPages ? (
               <Link
                 href={buildPageUrl(pagination.page + 1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                 aria-label="Next page"
               >
                 <FaArrowRight />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
                 aria-label="Next page"
               >
                 <FaArrowRight />
@@ -191,14 +191,14 @@ const PaginatedPaintingGrid = ({
             {pagination.page < pagination.totalPages ? (
               <Link
                 href={buildPageUrl(pagination.totalPages)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary text-on-primary hover:bg-primary/80"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                 aria-label="Last page"
               >
                 <FaStepForward />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-primary/30 text-text-secondary cursor-not-allowed"
+                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
                 aria-label="Last page"
               >
                 <FaStepForward />
@@ -210,18 +210,17 @@ const PaginatedPaintingGrid = ({
 
       {/* Browse All Pages Navigation */}
       {pagination.totalPages > 3 && (
-        <nav aria-label="All painting pages" className="mt-8 p-4 bg-surface-elevated rounded-lg">
-          <h2 className="text-lg font-semibold mb-3">Browse All Pages</h2>
-          <div className="flex flex-wrap gap-2">
+        <nav aria-label="All painting pages" className="mt-6 flex justify-center">
+          <div className="flex flex-wrap items-center gap-1.5">
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(pageNum => (
               <Link
                 key={pageNum}
                 href={buildPageUrl(pageNum)}
                 className={cn(
-                  'px-3 py-1 rounded transition-colors',
+                  'min-w-10 px-2.5 py-1.5 text-sm rounded-md transition-all duration-200 text-center',
                   pageNum === pagination.page
-                    ? 'bg-primary text-on-primary font-semibold'
-                    : 'bg-surface hover:bg-surface-elevated-light text-text-primary',
+                    ? 'bg-accent text-accent-contrast font-semibold shadow-sm'
+                    : 'text-foreground-subtle hover:bg-surface-hover hover:text-foreground',
                 )}
                 aria-label={`Go to page ${pageNum}`}
                 aria-current={pageNum === pagination.page ? 'page' : undefined}

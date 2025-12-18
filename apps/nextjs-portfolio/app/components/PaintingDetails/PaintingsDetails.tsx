@@ -119,8 +119,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   };
 
   return (
-    <div className="pt-32 min-h-[calc(100vh_-_5rem)] pb-32 overflow-clip">
-      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-text-primary lg:gap-10 max-w-screen-2xl">
+    <div className="pt-32 min-h-[calc(100vh-5rem)] pb-32 overflow-clip">
+      <section className="grid items-start grid-cols-12 gap-4 mx-auto text-foreground lg:gap-10 max-w-screen-2xl">
         <section className="relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8">
           <div className="relative w-full">
             <motion.img
@@ -147,7 +147,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             />
 
             <div className={cn('relative', aspectRatioStyle)}>
-              <div className="overflow-clip rounded-3xl w-full h-full" ref={emblaRef}>
+              <div className="overflow-hidden rounded-3xl w-full h-full shadow-2xl" ref={emblaRef}>
                 <div className="flex w-full h-full">
                   {allImages.map((img, index) => {
                     const { width, height } = getImageDimensions(format);
@@ -161,14 +161,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                         .url() ?? '';
 
                     return (
-                      <div key={index} className="relative flex-[0_0_100%] w-full h-full">
-                        <div className="w-full h-full relative overflow-clip rounded-3xl">
+                      <div key={index} className="relative flex-[0_0_100%] w-full h-full min-w-0">
+                        <div className="w-full h-full relative">
                           <Image
                             src={imageUrl}
                             alt={`${title} - Image ${index + 1}`}
                             priority={index === 0}
                             fill
-                            className="object-cover rounded-2xl h-full w-full overflow-clip"
+                            className="object-cover h-full w-full"
                             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px"
                           />
                         </div>
@@ -182,14 +182,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 <>
                   <button
                     onClick={scrollPrev}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full backdrop-blur-xl bg-surface/90 border border-border/50 hover:bg-surface-hover/90 transition-all duration-200 text-foreground shadow-xl hover:scale-110"
                     aria-label="Previous image"
                   >
                     <IoChevronBack className="w-6 h-6" />
                   </button>
                   <button
                     onClick={scrollNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-elevated/80 backdrop-blur-sm hover:bg-surface-elevated transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full backdrop-blur-xl bg-surface/90 border border-border/50 hover:bg-surface-hover/90 transition-all duration-200 text-foreground shadow-xl hover:scale-110"
                     aria-label="Next image"
                   >
                     <IoChevronForward className="w-6 h-6" />
@@ -200,16 +200,16 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
           </div>
 
           {allImages.length > 1 && (
-            <div className="z-10 flex items-center justify-center w-full gap-2 pt-4">
+            <div className="z-10 flex items-center justify-center w-full gap-2.5 pt-6">
               {allImages.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => emblaApi?.scrollTo(index)}
                   className={cn(
-                    'w-2 h-2 rounded-full transition-all duration-200',
+                    'w-2.5 h-2.5 rounded-full transition-all duration-200',
                     index === selectedIndex
-                      ? 'bg-primary scale-125'
-                      : 'bg-surface-elevated hover:bg-surface-elevated-light',
+                      ? 'bg-accent scale-125 shadow-lg shadow-accent/50'
+                      : 'bg-surface-hover/60 hover:bg-surface-hover border border-border/30',
                   )}
                   aria-label={`Go to image ${index + 1}`}
                 />
@@ -226,12 +226,12 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             animate={{ scale: 1, x: 0 }}
             exit={{ scale: 0.9, x: -20 }}
             transition={{ type: 'spring' }}
-            className="w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-surface-elevated/40 backdrop-blur-3xl p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab"
+            className="w-full lg:rounded-lg pointer-events-auto h-fit lg:backdrop-blur-xl lg:bg-surface/60 lg:border lg:border-border/30 p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab"
           >
             <div className={cn('pt-2 flex flex-col gap-4')}>
               <motion.h1
                 // layoutId={`title-${title}`}
-                className="text-3xl font-bold text-balance"
+                className="text-3xl font-bold text-balance text-foreground"
               >
                 {title}
               </motion.h1>
@@ -268,23 +268,29 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ type: 'spring', delay: 0.4 }}
                 >
-                  <hr className="my-4 opacity-15" />
+                  <hr className="my-4 border-border/30" />
 
                   <div className="flex flex-col">
-                    <h2 className="text-2xl font-semibold">Want to own this piece?</h2>
-                    <p>This painting is available for purchase on my Redbubble store.</p>
+                    <h2 className="text-2xl font-semibold text-foreground mb-2">
+                      Want to own this piece?
+                    </h2>
+                    <p className="text-foreground-subtle mb-3">
+                      This painting is available for purchase on my Redbubble store.
+                    </p>
                     <a
                       href={redbubbleUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-2 mt-2 flex rounded-lg bg-accent hover:bg-accent-light font-semibold text-on-primary justify-center items-center gap-2 w-fit"
+                      className="px-4 py-2.5 mt-2 flex rounded-lg bg-accent hover:bg-accent-hover font-semibold text-accent-contrast justify-center items-center gap-2 w-fit transition-colors shadow-lg hover:shadow-xl"
                     >
                       <BiLogoRedbubble className="inline" /> Go to store <BiRightArrow />
                     </a>
                   </div>
                 </motion.div>
               )}
-              <p className="whitespace-pre-wrap">{description}</p>
+              <p className="whitespace-pre-wrap text-foreground-subtle leading-relaxed">
+                {description}
+              </p>
             </div>
           </motion.div>
         </motion.div>
@@ -292,7 +298,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
       {/* Optional video below the image */}
       {video && (
-        <div className="grid lg:hidden items-start grid-cols-12 max-w-(--breakpoint-2xl) w-full gap-10 py-20 mx-auto text-text-primary">
+        <div className="grid lg:hidden items-start grid-cols-12 max-w-7xl w-full gap-10 py-20 mx-auto text-foreground">
           <div className="relative rounded-sm col-span-full aspect-video md:col-span-8 w-full overflow-clip">
             <iframe
               src={`https://www.youtube.com/embed/${new URL(video).pathname.slice(1)}`}

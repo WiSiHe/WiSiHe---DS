@@ -107,48 +107,60 @@ export default async function RecipesPage() {
           }),
         }}
       />
-      <div className="min-h-screen p-4 pt-32 mx-auto max-w-screen-2xl">
-        <h1 className="font-semibold text-text-primary">Recipes</h1>
-        <p className="text-text-secondary">A collection of recipes I&apos;ve tried and enjoyed.</p>
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
+      <div className="min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl">
+        <div className="pb-6">
+          <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">
+            Recipes
+          </h1>
+          <p className="text-base md:text-lg text-foreground-subtle max-w-2xl leading-relaxed">
+            A collection of recipes I&apos;ve tried and enjoyed.
+          </p>
+        </div>
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {recipes?.map((recipe: Recipe) => (
             <li key={recipe._id}>
-              <article className="relative flex flex-col gap-2 rounded-md transition-all duration-200 hover:shadow-lg border border-border">
+              <article className="group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl border border-border/30 bg-surface hover:border-accent/30">
                 {recipe.mainImage && (
-                  <div className="aspect-video overflow-hidden">
+                  <div className="aspect-video overflow-hidden relative">
                     <Image
                       src={urlForImage(recipe.mainImage)?.url() || ''}
                       alt={recipe.mainImage.alt}
                       width={640}
                       height={360}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 )}
-                <div className="p-4">
+                <div className="p-5 flex flex-col gap-3">
                   <Link
                     href={`/recipes/${recipe.slug}`}
                     className="before:absolute before:inset-0 before:z-0"
                   >
-                    <h2 className="text-lg font-semibold text-text-primary">{recipe.title}</h2>
+                    <h2 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
+                      {recipe.title}
+                    </h2>
                   </Link>
-                  <p className="text-sm text-text-secondary">{recipe.description}</p>
-                  <div className="flex gap-4 text-xs text-text-tertiary">
+                  {recipe.description && (
+                    <p className="text-sm text-foreground-subtle line-clamp-2">
+                      {recipe.description}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-4 text-xs text-foreground-muted">
                     {recipe.cookingTime && (
-                      <span className="flex items-center gap-1">
-                        <FiThermometer className="w-3 h-3 text-accent-warm" />
+                      <span className="flex items-center gap-1.5">
+                        <FiThermometer className="w-3.5 h-3.5 text-accent" />
                         {recipe.cookingTime} min
                       </span>
                     )}
                     {recipe.servings && (
-                      <span className="flex items-center gap-1">
-                        <FiUsers className="w-3 h-3 text-accent-success" />
+                      <span className="flex items-center gap-1.5">
+                        <FiUsers className="w-3.5 h-3.5 text-success" />
                         {recipe.servings} servings
                       </span>
                     )}
                     {recipe.difficulty && (
-                      <span className="flex items-center gap-1">
-                        <FiBarChart className="w-3 h-3 text-accent-cool" />
+                      <span className="flex items-center gap-1.5">
+                        <FiBarChart className="w-3.5 h-3.5 text-info" />
                         {recipe.difficulty}
                       </span>
                     )}

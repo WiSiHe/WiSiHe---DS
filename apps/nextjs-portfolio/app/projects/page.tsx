@@ -48,15 +48,11 @@ export default async function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl">
-      <div className="pb-4">
-        <div className="pb-4">
-          <h1 className="text-4xl md:text-5xl font-bold font-serif text-foreground mb-4">
-            Projects
-          </h1>
-          <p className="text-lg text-foreground-subtle max-w-2xl">
-            A gallery of some of my projects, both creative and technical.
-          </p>
-        </div>
+      <div className="pb-6">
+        <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">Projects</h1>
+        <p className="text-base md:text-lg text-foreground-subtle max-w-2xl leading-relaxed">
+          A gallery of some of my projects, both creative and technical.
+        </p>
       </div>
       <ProjectCategories
         ongoingProjects={ongoingProjects}

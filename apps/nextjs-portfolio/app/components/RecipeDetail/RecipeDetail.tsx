@@ -87,226 +87,255 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
     recipe.ingredientCategories?.flatMap(category => category.ingredients) || [];
 
   return (
-    <div className="min-h-screen">
-      <div className="pt-24 pb-16">
-        <article className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <header className="text-center mb-16">
-            <div className="max-w-4xl mx-auto">
-              {/* Breadcrumb navigation for internal linking */}
-              <nav className="flex justify-center mb-8" aria-label="Breadcrumb">
+    <div className="min-h-screen bg-background">
+      {/* Hero Section with Image */}
+      {mainImage && (
+        <div className="relative h-[60vh] min-h-[400px] max-h-[600px] overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src={urlForImage(mainImage)?.url() || ''}
+              alt={mainImage.alt}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background" />
+          </div>
+          <div className="relative h-full flex items-end">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+              {/* Breadcrumb */}
+              <nav className="mb-6" aria-label="Breadcrumb">
                 <ol className="flex items-center space-x-2 text-sm">
                   <li>
                     <Link
                       href="/"
-                      className="hover:underline"
-                      style={{ color: 'var(--color-text-tertiary)' }}
+                      className="text-white/70 hover:text-white hover:underline transition-colors backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full"
                     >
                       Home
                     </Link>
                   </li>
-                  <li style={{ color: 'var(--color-text-tertiary)' }}>/</li>
+                  <li className="text-white/50">/</li>
                   <li>
                     <Link
                       href="/recipes"
-                      className="hover:underline"
-                      style={{ color: 'var(--color-text-tertiary)' }}
+                      className="text-white/70 hover:text-white hover:underline transition-colors backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full"
                     >
                       Recipes
                     </Link>
                   </li>
-                  <li style={{ color: 'var(--color-text-tertiary)' }}>/</li>
-                  <li style={{ color: 'var(--color-text-primary)' }}>{recipe.title}</li>
+                  <li className="text-white/50">/</li>
+                  <li className="text-white/90 font-medium backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full">
+                    {recipe.title}
+                  </li>
                 </ol>
               </nav>
 
-              <h1
-                className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                {title.length < 20 ? `${title} - Delicious Homemade Recipe` : title}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-4 leading-tight text-white drop-shadow-2xl">
+                {title}
               </h1>
               {description && (
-                <p
-                  className="text-xl mb-8 leading-relaxed max-w-3xl mx-auto"
-                  style={{ color: 'var(--color-text-secondary)' }}
-                >
+                <p className="text-lg md:text-xl mb-6 leading-relaxed max-w-3xl text-white/90 drop-shadow-lg">
                   {description}
                 </p>
               )}
 
               {/* Recipe Meta */}
-              <div className="flex flex-wrap justify-center gap-6 text-sm mb-8 text-text-tertiary">
+              <div className="flex flex-wrap gap-3">
                 {prepTime && (
-                  <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
-                    style={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    <FiClock className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                    <span>Prep: {prepTime} min</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                    <FiClock className="w-4 h-4" />
+                    <span className="text-sm font-medium">Prep: {prepTime} min</span>
                   </div>
                 )}
                 {cookingTime && (
-                  <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
-                    style={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    <FiThermometer
-                      className="w-4 h-4"
-                      style={{ color: 'var(--color-accent-warm)' }}
-                    />
-                    <span>Cook: {cookingTime} min</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                    <FiThermometer className="w-4 h-4" />
+                    <span className="text-sm font-medium">Cook: {cookingTime} min</span>
                   </div>
                 )}
                 {totalTime && (
-                  <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
-                    style={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    <FiClock className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                    <span>Total: {totalTime} min</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                    <FiClock className="w-4 h-4" />
+                    <span className="text-sm font-medium">Total: {totalTime} min</span>
                   </div>
                 )}
                 {servings && (
-                  <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
-                    style={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    <FiUsers className="w-4 h-4" style={{ color: 'var(--color-accent-success)' }} />
-                    <span>Serves: {servings}</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                    <FiUsers className="w-4 h-4" />
+                    <span className="text-sm font-medium">Serves: {servings}</span>
                   </div>
                 )}
                 {difficulty && (
-                  <div
-                    className="flex items-center gap-2 px-4 py-2 rounded-full shadow-sm transition-all duration-200 hover:shadow-md"
-                    style={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    <FiBarChart className="w-4 h-4" style={{ color: 'var(--color-accent-cool)' }} />
-                    <span className="capitalize">{difficulty}</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg text-white">
+                    <FiBarChart className="w-4 h-4" />
+                    <span className="text-sm font-medium capitalize">{difficulty}</span>
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-              {/* Main Image */}
-              {mainImage && (
-                <div className="aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl mb-12">
-                  <Image
-                    src={urlForImage(mainImage)?.url() || ''}
-                    alt={mainImage.alt}
-                    width={1200}
-                    height={675}
-                    className="w-full h-full object-cover"
-                    priority
-                  />
+      {/* Content Section */}
+      {!mainImage && (
+        <div className="pt-32 pb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Breadcrumb */}
+            <nav className="mb-8" aria-label="Breadcrumb">
+              <ol className="flex items-center space-x-2 text-sm">
+                <li>
+                  <Link
+                    href="/"
+                    className="text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li className="text-foreground-muted">/</li>
+                <li>
+                  <Link
+                    href="/recipes"
+                    className="text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                  >
+                    Recipes
+                  </Link>
+                </li>
+                <li className="text-foreground-muted">/</li>
+                <li className="text-foreground font-medium">{recipe.title}</li>
+              </ol>
+            </nav>
+
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-6 leading-tight text-foreground">
+              {title}
+            </h1>
+            {description && (
+              <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-3xl text-foreground-subtle">
+                {description}
+              </p>
+            )}
+
+            {/* Recipe Meta */}
+            <div className="flex flex-wrap gap-3 mb-12">
+              {prepTime && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                  <FiClock className="w-4 h-4 text-accent" />
+                  <span>Prep: {prepTime} min</span>
+                </div>
+              )}
+              {cookingTime && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                  <FiThermometer className="w-4 h-4 text-accent" />
+                  <span>Cook: {cookingTime} min</span>
+                </div>
+              )}
+              {totalTime && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                  <FiClock className="w-4 h-4 text-accent" />
+                  <span>Total: {totalTime} min</span>
+                </div>
+              )}
+              {servings && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                  <FiUsers className="w-4 h-4 text-success" />
+                  <span>Serves: {servings}</span>
+                </div>
+              )}
+              {difficulty && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md transition-all duration-200 text-foreground-subtle">
+                  <FiBarChart className="w-4 h-4 text-info" />
+                  <span className="capitalize">{difficulty}</span>
                 </div>
               )}
             </div>
-          </header>
+          </div>
+        </div>
+      )}
 
+      <div className="pb-20">
+        <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Content */}
-          <div className="flex flex-col xl:flex-row justify-center items-start gap-12 max-w-screen-2xl mx-auto">
-            <div className="xl:sticky xl:top-8 w-full xl:w-auto">
-              <RecipeIngredients ingredientCategories={ingredientCategories} />
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Sidebar - Ingredients */}
+            <aside className="lg:w-80 lg:shrink-0">
+              <div className="lg:sticky lg:top-8 space-y-6">
+                <RecipeIngredients ingredientCategories={ingredientCategories} />
 
-              <div
-                className="mt-8 p-6 rounded-xl shadow-lg"
-                style={{
-                  background: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                }}
-              >
-                <h3 className="font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                  More Recipes
-                </h3>
-                <div className="space-y-3">
-                  <Link
-                    href="/recipes"
-                    className="block text-sm hover:underline"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    Browse All Recipes
-                  </Link>
-                  <Link
-                    href="/projects"
-                    className="block text-sm hover:underline"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    View Projects
-                  </Link>
-                  <Link
-                    href="/paintings"
-                    className="block text-sm hover:underline"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    Digital Art Gallery
-                  </Link>
+                {/* Explore More */}
+                <div className="p-6 rounded-2xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg">
+                  <h3 className="font-semibold mb-4 text-foreground">Explore More</h3>
+                  <div className="space-y-3">
+                    <Link
+                      href="/recipes"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                    >
+                      Browse All Recipes
+                    </Link>
+                    <Link
+                      href="/projects"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                    >
+                      View Projects
+                    </Link>
+                    <Link
+                      href="/paintings"
+                      className="block px-4 py-2.5 rounded-lg text-sm text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50 transition-all duration-200"
+                    >
+                      Digital Art Gallery
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            </aside>
 
-            {/* Instructions */}
-            <div className="w-full xl:max-w-prose">
+            {/* Main Content - Instructions */}
+            <div className="flex-1 min-w-0">
               <RecipeInstructions instructions={instructions} ingredients={allIngredients} />
             </div>
           </div>
 
           {/* Tips & Tricks */}
           {tips && tips.length > 0 && (
-            <div className="mt-20 max-w-prose mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-4 text-text-primary">Tips & Tricks</h2>
-                <p className="text-lg text-center text-text-secondary">
-                  Pro tips to help you master this recipe
-                </p>
+            <section className="mt-24">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground font-serif">
+                    Tips & Tricks
+                  </h2>
+                  <p className="text-lg text-foreground-subtle">
+                    Pro tips to help you master this recipe
+                  </p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  {tips?.map((tip, index) => {
+                    return <RecipeTipComponent key={index} tip={tip} />;
+                  })}
+                </div>
               </div>
-              <ul className="space-y-4 list-disc list-inside">
-                {tips?.map((tip, index) => {
-                  return <RecipeTipComponent key={index} tip={tip} />;
-                })}
-              </ul>
-            </div>
+            </section>
           )}
 
           {/* Tags */}
           {tags && tags.length > 0 && (
-            <div className="mt-16 pt-12 max-w-4xl mx-auto text-center ring ring-border">
-              <div className="flex flex-wrap justify-center gap-3">
-                {tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
-                    style={{
-                      background: 'var(--color-surface)',
-                      color: 'var(--color-text-secondary)',
-                      border: '1px solid var(--color-border)',
-                    }}
-                  >
-                    <FiTag className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
-                    {tag.name}
-                  </span>
-                ))}
+            <section className="mt-24 pt-12 border-t border-border/30">
+              <div className="max-w-4xl mx-auto">
+                <h3 className="text-center text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-6">
+                  Tags
+                </h3>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {tags.map((tag, index) => (
+                    <Link
+                      key={index}
+                      href={`/recipes?tag=${tag.name}`}
+                      className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl bg-surface/60 border border-border/30 shadow-sm hover:shadow-md hover:border-accent/30 hover:bg-accent-surface transition-all duration-200 text-foreground-subtle hover:text-foreground"
+                    >
+                      <FiTag className="w-3.5 h-3.5 text-accent" />
+                      {tag.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            </section>
           )}
         </article>
       </div>

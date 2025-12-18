@@ -93,74 +93,65 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
   };
 
   return (
-    <div
-      className="rounded-2xl shadow-lg p-6"
-      style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-      }}
-    >
-      <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>
-        Instructions
-      </h2>
-      <div className="space-y-6">
+    <div className="rounded-2xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg p-6 md:p-8">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold font-serif text-foreground mb-2">Instructions</h2>
+        <p className="text-sm text-foreground-muted">
+          Follow these steps to create your recipe. Click each step to mark it as complete.
+        </p>
+      </div>
+
+      <div className="space-y-8">
         {instructions.map((instruction, index) => {
           const isCompleted = completedSteps.has(index);
 
           return (
             <div
               key={index}
-              className={`flex gap-4 transition-all duration-200 ${
-                isCompleted ? 'opacity-75' : ''
+              className={`group relative flex gap-6 transition-all duration-300 ${
+                isCompleted ? 'opacity-60' : ''
               }`}
             >
-              <div className="flex-shrink-0">
+              {/* Connecting line */}
+              {index < instructions.length - 1 && (
+                <div className="absolute left-4 top-12 w-0.5 h-full bg-border/30 -z-10" />
+              )}
+
+              <div className="shrink-0">
                 {/* Step Number - Clickable */}
                 <button
                   onClick={() => toggleStep(index)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer ${
-                    isCompleted ? 'scale-90' : ''
+                  className={`relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer shadow-md ${
+                    isCompleted
+                      ? 'bg-success text-success-contrast scale-95'
+                      : 'bg-accent text-accent-contrast hover:bg-accent-hover'
                   }`}
-                  style={{
-                    background: isCompleted ? 'var(--color-accent-success)' : 'var(--color-accent)',
-                    color: 'var(--color-on-primary)',
-                  }}
                   aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
                 >
-                  {isCompleted ? <FiCheck className="w-4 h-4" /> : index + 1}
+                  {isCompleted ? <FiCheck className="w-5 h-5" /> : <span>{index + 1}</span>}
                 </button>
               </div>
 
-              <div
-                className={`flex-1 transition-all duration-200 ${
-                  isCompleted ? 'line-through' : ''
-                }`}
-              >
+              <div className="flex-1 min-w-0">
                 {instruction.title && (
                   <h3
-                    className={`text-lg font-semibold mb-3 transition-all duration-200 ${
-                      isCompleted ? 'line-through' : ''
+                    className={`text-xl font-semibold mb-3 transition-all duration-300 ${
+                      isCompleted
+                        ? 'line-through text-foreground-muted'
+                        : 'text-foreground group-hover:text-accent'
                     }`}
-                    style={{
-                      color: isCompleted
-                        ? 'var(--color-text-tertiary)'
-                        : 'var(--color-text-primary)',
-                    }}
                   >
                     {instruction.title}
                   </h3>
                 )}
                 <div
-                  className={`prose prose-gray max-w-none transition-all duration-200 ${
+                  className={`prose prose-gray max-w-none transition-all duration-300 ${
                     isCompleted ? 'line-through' : ''
                   }`}
-                  style={{
-                    color: isCompleted
-                      ? 'var(--color-text-tertiary)'
-                      : 'var(--color-text-secondary)',
-                  }}
                 >
-                  <PortableText value={processContent(instruction.content)} />
+                  <div className={isCompleted ? 'text-foreground-muted' : 'text-foreground-subtle'}>
+                    <PortableText value={processContent(instruction.content)} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -170,28 +161,27 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
 
       {/* Progress indicator */}
       {completedSteps.size > 0 && (
-        <div className="mt-8 pt-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
-          <div className="flex items-center justify-between text-sm">
-            <span style={{ color: 'var(--color-text-secondary)' }}>
-              Progress: {completedSteps.size} of {instructions.length} steps completed
-            </span>
+        <div className="mt-10 pt-8 border-t border-border/30">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                Progress: {completedSteps.size} of {instructions.length} steps completed
+              </p>
+              <p className="text-xs text-foreground-muted mt-1">
+                {Math.round((completedSteps.size / instructions.length) * 100)}% complete
+              </p>
+            </div>
             <button
               onClick={() => setCompletedSteps(new Set())}
-              className="px-3 py-1 rounded-md text-xs font-medium transition-all duration-200 hover:shadow-md"
-              style={{
-                background: 'var(--color-surface)',
-                color: 'var(--color-text-secondary)',
-                border: '1px solid var(--color-border)',
-              }}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md backdrop-blur-xl bg-surface/60 border border-border/30 text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50"
             >
               Reset
             </button>
           </div>
-          <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full h-2.5 bg-surface-hover/50 rounded-full overflow-hidden">
             <div
-              className="h-2 rounded-full transition-all duration-300"
+              className="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-success to-success/80 shadow-sm"
               style={{
-                background: 'var(--color-accent-success)',
                 width: `${(completedSteps.size / instructions.length) * 100}%`,
               }}
             />

@@ -220,109 +220,79 @@ export default async function RecipePage({ params }: Props) {
       <RecipeDetail recipe={{ ...recipe, tags: limitedTags }} />
 
       {/* Additional internal links section for SEO */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-background">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            Explore More Recipes
-          </h2>
-          <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+          <h2 className="text-3xl font-bold mb-4 text-foreground">Explore More</h2>
+          <p className="text-lg text-foreground-subtle">
             Discover other delicious recipes and cooking inspiration
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             href="/recipes"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">All Recipes</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              All Recipes
+            </h3>
+            <p className="text-foreground-subtle">
               Browse our complete collection of delicious recipes
             </p>
           </Link>
 
           <Link
             href="/projects"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">Other Projects</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              Other Projects
+            </h3>
+            <p className="text-foreground-subtle">
               Check out our other creative projects and artwork
             </p>
           </Link>
 
           <Link
             href="/paintings"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">Digital Art</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              Digital Art
+            </h3>
+            <p className="text-foreground-subtle">
               Explore our collection of digital paintings and artwork
             </p>
           </Link>
 
           <Link
             href="/videos"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">Video Content</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
-              Watch our latest videos and creative content
-            </p>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              Video Content
+            </h3>
+            <p className="text-foreground-subtle">Watch our latest videos and creative content</p>
           </Link>
 
           <Link
             href="/contact"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">Get in Touch</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
-              Have questions about our recipes? Contact us!
-            </p>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              Get in Touch
+            </h3>
+            <p className="text-foreground-subtle">Have questions about our recipes? Contact us!</p>
           </Link>
 
           <Link
             href="/"
-            className="p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 block"
-            style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              textDecoration: 'none',
-            }}
+            className="group p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 shadow-lg hover:shadow-xl hover:border-accent/30 transition-all duration-200 block no-underline"
           >
-            <h3 className="text-xl font-semibold mb-3">Home</h3>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
+            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+              Home
+            </h3>
+            <p className="text-foreground-subtle">
               Return to our homepage and explore everything we offer
             </p>
           </Link>

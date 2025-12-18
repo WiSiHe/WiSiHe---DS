@@ -23,24 +23,20 @@ export default function RecipeTipComponent({ tip, className = '' }: RecipeTipPro
   return (
     <div
       className={cn(
-        'p-6 rounded-xl ring ring-accent-light hover:shadow-md transition-all duration-200 bg-surface flex items-center gap-4',
+        'p-6 rounded-xl backdrop-blur-xl bg-surface/60 border border-border/30 hover:shadow-lg transition-all duration-200 flex items-start gap-4',
         className,
       )}
     >
-      <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center">
-          <TbBasket className="w-5 h-5" />
-        </div>
-        <div className="flex-1 min-w-0">
-          {tip.title && (
-            <h4 className="font-semibold text-lg mb-2" style={{ color: 'var(--color-accent)' }}>
-              {tip.title}
-            </h4>
-          )}
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {tip.content}
-          </p>
-        </div>
+      <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-accent/10 text-accent">
+        <TbBasket className="w-5 h-5" />
+      </div>
+      <div className="flex-1 min-w-0">
+        {tip.title && (
+          <h4 className="font-semibold text-lg mb-2 text-foreground">{tip.title}</h4>
+        )}
+        <p className="text-sm leading-relaxed text-foreground-subtle [&_a]:no-underline [&_*]:no-underline">
+          {tip.content}
+        </p>
       </div>
     </div>
   );
