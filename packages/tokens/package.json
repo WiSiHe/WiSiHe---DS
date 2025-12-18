@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./css": "./dist/css/variables.css",
+    "./css/semantic": "./dist/css/semantic-colors.css",
     "./tailwind": "./dist/tailwind/config.js",
     "./tailwind-v4": "./dist/tailwind/theme.css",
     "./tailwind-v4-dark": "./dist/tailwind/theme-dark.css",
@@ -14,7 +15,7 @@
     "tokens.json"
   ],
   "scripts": {
-    "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js",
+    "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js && node scripts/generate-semantic-colors.js",
     "clean": "rm -rf dist",
     "lint": "eslint . --max-warnings 0"
   },

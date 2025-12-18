@@ -15,19 +15,6 @@ function generateTailwindV4Theme(tokens) {
 @theme {
 `;
 
-  // Add manual spacing values first (resolved from dimension calculations)
-  output += `  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 32px;
-  --spacing-xl: 64px;
-  --spacing-multi-value: 8px 64px;
-  --radius-sm: 4px;
-  --radius-lg: 8px;
-  --radius-xl: 16px;
-  --radius-multi-value: 4px 8px;
-`;
-
   // Process each token category
   Object.entries(tokens).forEach(([category, categoryTokens]) => {
     if (typeof categoryTokens === 'object' && categoryTokens !== null) {
@@ -59,8 +46,9 @@ function processTokenCategory(category, tokens, output) {
 
   const namespace = namespaceMap[category] || category;
 
-  // Skip dimension, spacing, and borderRadius categories as we handle them manually
-  if (category === 'dimension' || category === 'spacing' || category === 'borderRadius') {
+  // Skip dimension, spacing, borderRadius, and semantic categories
+  // We let Tailwind use its default spacing scale
+  if (category === 'dimension' || category === 'spacing' || category === 'borderRadius' || category === 'semantic') {
     return output;
   }
 
@@ -88,11 +76,28 @@ function formatTokenValue(value, type) {
   // Handle different token types
   switch (type) {
     case 'color':
+      // Preserve OKLCH colors as-is
+      if (typeof value === 'string' && value.startsWith('oklch(')) {
+        return value;
+      }
       return value;
     case 'dimension':
-      return value.endsWith('px') || value.endsWith('rem') || value.endsWith('em')
-        ? value
-        : `${value}px`;
+      // Convert numeric values to rem (assuming pixel values: 16px = 1rem)
+      if (typeof value === 'string') {
+        if (value.endsWith('px')) {
+          const num = parseFloat(value);
+          return `${num / 16}rem`;
+        }
+        if (value.endsWith('rem') || value.endsWith('em')) {
+          return value;
+        }
+        // If it's a number without unit, assume pixels and convert to rem
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+          return `${num / 16}rem`;
+        }
+      }
+      return value;
     case 'fontSize':
       return value.endsWith('rem') ? value : `${value}rem`;
     case 'fontWeight':
@@ -102,7 +107,22 @@ function formatTokenValue(value, type) {
     case 'letterSpacing':
       return value.endsWith('em') ? value : `${value}em`;
     case 'borderRadius':
-      return value.endsWith('px') ? value : `${value}px`;
+      // Convert numeric values to rem (assuming pixel values: 16px = 1rem)
+      if (typeof value === 'string') {
+        if (value.endsWith('px')) {
+          const num = parseFloat(value);
+          return `${num / 16}rem`;
+        }
+        if (value.endsWith('rem') || value.endsWith('em')) {
+          return value;
+        }
+        // If it's a number without unit, assume pixels and convert to rem
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+          return `${num / 16}rem`;
+        }
+      }
+      return value;
     case 'boxShadow':
       return value;
     case 'duration':
@@ -110,9 +130,22 @@ function formatTokenValue(value, type) {
     case 'cubicBezier':
       return value;
     case 'spacing':
-      return value.endsWith('px') || value.endsWith('rem') || value.endsWith('em')
-        ? value
-        : `${value}px`;
+      // Convert numeric values to rem (assuming pixel values: 16px = 1rem)
+      if (typeof value === 'string') {
+        if (value.endsWith('px')) {
+          const num = parseFloat(value);
+          return `${num / 16}rem`;
+        }
+        if (value.endsWith('rem') || value.endsWith('em')) {
+          return value;
+        }
+        // If it's a number without unit, assume pixels and convert to rem
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+          return `${num / 16}rem`;
+        }
+      }
+      return value;
     default:
       return value;
   }
