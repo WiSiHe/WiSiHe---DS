@@ -71,7 +71,7 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
     disabled?: boolean;
   };
 
-const Chip: React.FC<ChipProps> = ({
+const Chip = ({
   label,
   selected = false,
   Icon,
@@ -87,7 +87,7 @@ const Chip: React.FC<ChipProps> = ({
   disabled = false,
   onClick,
   ...props
-}) => {
+}: ChipProps) => {
   // Determine icon size based on chip size
   const iconSizeClasses = {
     small: 'w-3 h-3',

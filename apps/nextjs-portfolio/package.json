@@ -23,6 +23,7 @@
     "@wisihe/constants": "workspace:*",
     "@wisihe/ui-react": "workspace:*",
     "@wisihe/utils": "workspace:*",
+    "@wisihe/tokens": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "embla-carousel-react": "^8.6.0",
     "flags": "^4.0.2",

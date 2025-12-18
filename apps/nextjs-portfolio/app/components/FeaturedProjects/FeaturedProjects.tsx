@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
+import Chip from '../Chip/Chip';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,11 +127,10 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
   }
 
   return (
-    <section ref={containerRef} className="relative bg-background">
-      {/* Sticky Header */}
+    <section ref={containerRef} className="relative">
       <div
         ref={headerRef}
-        className="sticky top-8 md:top-20 left-4 md:left-4 z-50 text-black mix-blend-difference pointer-events-none origin-top-left w-fit"
+        className="sticky top-8 md:top-24 left-4 md:left-4 z-50 text-white mix-blend-difference pointer-events-none origin-top-left w-fit"
       >
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif mb-3 md:mb-4">
           Featured Projects
@@ -139,7 +139,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       </div>
 
       {/* Projects */}
-      <div className="slides-wrapper">
+      <div className="slides-wrapper pt-24">
         {showcaseProjects.map((project, index) => {
           const imageUrl = urlForImage(project.image)
             ?.height(1200)
@@ -177,62 +177,62 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                         No Image
                       </div>
                     )}
-                    {/* Subtle overlay */}
-                    <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/20 to-black/80" />
+                    {/* Subtle overlay - Enhanced for better text readability */}
+                    <div className="absolute inset-0 bg-linear-to-b from-black to-transparent" />
                   </div>
 
                   {/* Content */}
                   <div className="relative z-10 h-full flex items-start pb-8 md:pt-16 lg:pt-24">
                     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
-                      <Link href={`projects/${project.slug}`} className="group block max-w-4xl">
-                        {/* Meta info */}
-                        <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6">
-                          {project.name && (
-                            <span className="text-xs md:text-sm lg:text-base font-semibold tracking-wider text-accent uppercase">
-                              {project.name}
-                            </span>
-                          )}
-                          {year && (
-                            <span className="text-xs md:text-sm font-mono text-white/70">
-                              {year}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 md:mb-6 lg:mb-8 text-white group-hover:text-accent transition-colors font-serif tracking-tight leading-[0.95]">
-                          {project.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-base md:text-lg lg:text-xl text-white/80 leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-2xl">
-                          {project.seo?.description || project.description}
-                        </p>
-
-                        {/* Tags */}
-                        {project.tags && project.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6 lg:mb-8">
-                            {project.tags.slice(0, 5).map((tag, i) => (
-                              <span
-                                key={i}
-                                className="text-xs font-medium px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/90 border border-white/20"
-                              >
-                                {tag.name}
-                              </span>
-                            ))}
-                            {project.tags.length > 5 && (
-                              <span className="text-xs font-medium px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/90 border border-white/20">
-                                +{project.tags.length - 5}
-                              </span>
-                            )}
-                          </div>
+                      {/* Meta info */}
+                      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6">
+                        {project.name && (
+                          <span className="text-xs md:text-sm lg:text-2xl font-semibold tracking-wider text-accent uppercase">
+                            {project.name}
+                          </span>
                         )}
+                        {year && (
+                          <span className="text-xs md:text-sm font-mono text-white drop-shadow-md">
+                            {year}
+                          </span>
+                        )}
+                      </div>
 
-                        {/* CTA */}
-                        <div className="inline-flex items-center gap-2 md:gap-3 text-white font-medium text-sm md:text-base px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-accent group-hover:border-accent transition-all">
-                          View Case Study
-                          <IconArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:translate-x-1" />
+                      {/* Description */}
+                      <p className="text-base md:text-lg lg:text-xl text-white leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-2xl drop-shadow-lg">
+                        {project.seo?.description || project.description}
+                      </p>
+
+                      {/* Tags */}
+                      {project.tags && project.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6 lg:mb-8">
+                          {project.tags.slice(0, 5).map((tag, i) => (
+                            <Chip key={i} label={tag.name} variation="default" size="medium" />
+                          ))}
+                          {project.tags.length > 5 && (
+                            <Chip
+                              label={`+${project.tags.length - 5}`}
+                              variation="secondary"
+                              size="medium"
+                            />
+                          )}
                         </div>
+                      )}
+
+                      {/* CTA */}
+                      <Link
+                        href={`projects/${project.slug}`}
+                        className={cn(
+                          'inline-flex hover:scale-105 duration-200 items-center gap-2 md:gap-3 text-white font-medium text-sm md:text-base px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-accent group-hover:border-accent transition-all',
+                          'hover:bg-accent hover:border-accent',
+                          'hover:text-accent-contrast',
+                          'hover:shadow-md',
+                          'hover:scale-105',
+                          'hover:translate-x-1',
+                        )}
+                      >
+                        View Case Study
+                        <IconArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:translate-x-1" />
                       </Link>
                     </div>
                   </div>

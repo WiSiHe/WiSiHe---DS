@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+/* Import design tokens from @wisihe/tokens package */
+@import '../../../packages/tokens/dist/tailwind/theme.css';
+@import '../../../packages/tokens/dist/css/semantic-colors.css';
 
 /* ============================================================================
    CUSTOM VARIANTS
@@ -20,302 +23,6 @@
   --aspect-portrait: 9 / 16;
   --breakpoint-2xl: 96rem; /* 1536px */
   --radius: 0.5rem; /* Default border radius */
-
-  /* ============================================
-     NUMERIC COLOR SCALES (Fixed colors)
-     These stay the same in light/dark mode
-     Use for precise control and custom designs
-     =========================================== */
-
-  /* Neutral scale (50-950) - Grayscale */
-  --color-neutral-50: oklch(98% 0 0);
-  --color-neutral-100: oklch(96% 0.002 250);
-  --color-neutral-200: oklch(92% 0.005 250);
-  --color-neutral-300: oklch(85% 0.01 250);
-  --color-neutral-400: oklch(70% 0.01 250);
-  --color-neutral-500: oklch(50% 0.01 250);
-  --color-neutral-600: oklch(40% 0.01 250);
-  --color-neutral-700: oklch(30% 0.01 250);
-  --color-neutral-800: oklch(20% 0.01 250);
-  --color-neutral-900: oklch(12% 0.01 250);
-  --color-neutral-950: oklch(8% 0.005 250);
-
-  /* Accent scale (50-950) - Neon Cyan - High saturation */
-  --color-accent-50: oklch(96% 0.12 200);
-  --color-accent-100: oklch(92% 0.18 200);
-  --color-accent-200: oklch(88% 0.24 200);
-  --color-accent-300: oklch(82% 0.28 200);
-  --color-accent-400: oklch(75% 0.3 200);
-  --color-accent-500: oklch(68% 0.32 200);
-  --color-accent-600: oklch(62% 0.33 200);
-  --color-accent-700: oklch(55% 0.34 200);
-  --color-accent-800: oklch(48% 0.35 200);
-  --color-accent-900: oklch(38% 0.36 200);
-  --color-accent-950: oklch(28% 0.36 200);
-
-  /* Success scale (50-950) - Green - Bolder */
-  --color-success-50: oklch(96% 0.08 140);
-  --color-success-100: oklch(92% 0.12 140);
-  --color-success-200: oklch(88% 0.16 140);
-  --color-success-300: oklch(80% 0.2 140);
-  --color-success-400: oklch(72% 0.22 140);
-  --color-success-500: oklch(65% 0.24 140);
-  --color-success-600: oklch(58% 0.25 140);
-  --color-success-700: oklch(50% 0.26 140);
-  --color-success-800: oklch(42% 0.27 140);
-  --color-success-900: oklch(32% 0.28 140);
-  --color-success-950: oklch(22% 0.28 140);
-
-  /* Warning scale (50-950) - Orange - Bolder */
-  --color-warning-50: oklch(96% 0.08 60);
-  --color-warning-100: oklch(92% 0.12 60);
-  --color-warning-200: oklch(88% 0.16 60);
-  --color-warning-300: oklch(80% 0.2 60);
-  --color-warning-400: oklch(72% 0.22 60);
-  --color-warning-500: oklch(65% 0.24 60);
-  --color-warning-600: oklch(58% 0.25 60);
-  --color-warning-700: oklch(50% 0.26 60);
-  --color-warning-800: oklch(42% 0.27 60);
-  --color-warning-900: oklch(32% 0.28 60);
-  --color-warning-950: oklch(22% 0.28 60);
-
-  /* Danger scale (50-950) - Red - Bolder */
-  --color-danger-50: oklch(96% 0.08 25);
-  --color-danger-100: oklch(92% 0.12 25);
-  --color-danger-200: oklch(88% 0.16 25);
-  --color-danger-300: oklch(80% 0.2 25);
-  --color-danger-400: oklch(72% 0.22 25);
-  --color-danger-500: oklch(65% 0.24 25);
-  --color-danger-600: oklch(58% 0.25 25);
-  --color-danger-700: oklch(50% 0.26 25);
-  --color-danger-800: oklch(42% 0.27 25);
-  --color-danger-900: oklch(32% 0.28 25);
-  --color-danger-950: oklch(22% 0.28 25);
-
-  /* Info scale (50-950) - Blue - Bolder */
-  --color-info-50: oklch(96% 0.08 240);
-  --color-info-100: oklch(92% 0.12 240);
-  --color-info-200: oklch(88% 0.16 240);
-  --color-info-300: oklch(80% 0.2 240);
-  --color-info-400: oklch(72% 0.22 240);
-  --color-info-500: oklch(65% 0.24 240);
-  --color-info-600: oklch(58% 0.25 240);
-  --color-info-700: oklch(50% 0.26 240);
-  --color-info-800: oklch(42% 0.27 240);
-  --color-info-900: oklch(32% 0.28 240);
-  --color-info-950: oklch(22% 0.28 240);
-}
-
-/* ============================================================================
-   SEMANTIC COLOR SYSTEM (Theme-aware)
-   These change between light/dark mode
-   ========================================================================= */
-
-/* Light mode semantic colors - Brighter and bolder */
-:root {
-  /* Background - Main page backgrounds - Soft off-white */
-  --background: oklch(98% 0.002 250);
-  --background-subtle: oklch(97% 0.003 250);
-
-  /* Surface - Cards, panels, elevated elements - Slightly off-white with subtle contrast */
-  --surface: oklch(99% 0.001 250);
-  --surface-subtle: oklch(98% 0.002 250);
-  --surface-hover: oklch(96% 0.003 250);
-  --surface-active: oklch(94% 0.004 250);
-
-  /* Border - Borders and dividers - More visible */
-  --border: oklch(80% 0.008 250);
-  --border-subtle: oklch(90% 0.003 250);
-  --border-strong: oklch(65% 0.012 250);
-
-  /* Foreground - Text and icons - Soft dark gray, not pure black */
-  --foreground: oklch(12% 0.006 250);
-  --foreground-subtle: oklch(28% 0.008 250);
-  --foreground-muted: oklch(45% 0.01 250);
-
-  /* Accent - Primary brand color (Neon Cyan) - High saturation neon */
-  --accent: oklch(68% 0.32 200);
-  --accent-hover: oklch(65% 0.33 200);
-  --accent-active: oklch(62% 0.34 200);
-  --accent-subtle: oklch(96% 0.12 200);
-  --accent-contrast: oklch(98% 0.002 250);
-
-  /* Accent variants for different contexts */
-  --accent-surface: oklch(96% 0.12 200);
-  --accent-border: oklch(75% 0.3 200);
-  --accent-text: oklch(55% 0.34 200);
-
-  /* Success - Green for positive actions - Bolder */
-  --success: oklch(58% 0.25 140);
-  --success-contrast: oklch(98% 0.002 250);
-  --success-subtle: oklch(96% 0.08 140);
-  --success-text: oklch(42% 0.27 140);
-
-  /* Warning - Orange for warnings - Bolder */
-  --warning: oklch(68% 0.24 60);
-  --warning-contrast: oklch(12% 0.006 250);
-  --warning-subtle: oklch(96% 0.08 60);
-  --warning-text: oklch(50% 0.26 60);
-
-  /* Danger - Red for errors and destructive actions - Bolder */
-  --danger: oklch(62% 0.24 25);
-  --danger-contrast: oklch(98% 0.002 250);
-  --danger-subtle: oklch(96% 0.08 25);
-  --danger-text: oklch(50% 0.26 25);
-
-  /* Info - Blue for informational messages - Bolder */
-  --info: oklch(62% 0.24 240);
-  --info-contrast: oklch(98% 0.002 250);
-  --info-subtle: oklch(96% 0.08 240);
-  --info-text: oklch(50% 0.26 240);
-
-  /* Focus ring */
-  --ring: oklch(68% 0.32 200);
-}
-
-/* Dark mode semantic colors - Darker and more saturated */
-.dark {
-  /* Background - Soft dark gray, not pure black */
-  --background: oklch(10% 0.005 250);
-  --background-subtle: oklch(12% 0.007 250);
-
-  /* Surface - Dark gray with more contrast */
-  --surface: oklch(12% 0.006 250);
-  --surface-subtle: oklch(14% 0.008 250);
-  --surface-hover: oklch(16% 0.01 250);
-  --surface-active: oklch(18% 0.012 250);
-
-  /* Border - More visible in dark mode */
-  --border: oklch(30% 0.02 250);
-  --border-subtle: oklch(15% 0.01 250);
-  --border-strong: oklch(45% 0.025 250);
-
-  /* Foreground - Soft light gray, not pure white */
-  --foreground: oklch(98% 0.002 250);
-  --foreground-subtle: oklch(88% 0.005 250);
-  --foreground-muted: oklch(75% 0.01 250);
-
-  /* Accent - Neon cyan, very bright and saturated in dark mode */
-  --accent: oklch(80% 0.36 200);
-  --accent-hover: oklch(82% 0.35 200);
-  --accent-active: oklch(85% 0.34 200);
-  --accent-subtle: oklch(20% 0.18 200);
-  --accent-contrast: oklch(10% 0.005 250);
-
-  --accent-surface: oklch(20% 0.18 200);
-  --accent-border: oklch(65% 0.33 200);
-  --accent-text: oklch(85% 0.34 200);
-
-  /* Success - More vibrant in dark mode */
-  --success: oklch(75% 0.28 140);
-  --success-contrast: oklch(10% 0.005 250);
-  --success-subtle: oklch(18% 0.12 140);
-  --success-text: oklch(82% 0.26 140);
-
-  /* Warning - More vibrant in dark mode */
-  --warning: oklch(82% 0.26 60);
-  --warning-contrast: oklch(10% 0.005 250);
-  --warning-subtle: oklch(18% 0.12 60);
-  --warning-text: oklch(88% 0.24 60);
-
-  /* Danger - More vibrant in dark mode */
-  --danger: oklch(75% 0.28 25);
-  --danger-contrast: oklch(10% 0.005 250);
-  --danger-subtle: oklch(18% 0.12 25);
-  --danger-text: oklch(82% 0.26 25);
-
-  /* Info - More vibrant in dark mode */
-  --info: oklch(75% 0.28 240);
-  --info-contrast: oklch(10% 0.005 250);
-  --info-subtle: oklch(18% 0.12 240);
-  --info-text: oklch(82% 0.26 240);
-
-  /* Focus ring */
-  --ring: oklch(80% 0.36 200);
-}
-
-/* ============================================================================
-   MAP TO TAILWIND UTILITIES
-   ========================================================================= */
-
-@theme inline {
-  /* Semantic colors (theme-aware) */
-  --color-background: var(--background);
-  --color-background-subtle: var(--background-subtle);
-
-  --color-surface: var(--surface);
-  --color-surface-subtle: var(--surface-subtle);
-  --color-surface-hover: var(--surface-hover);
-  --color-surface-active: var(--surface-active);
-
-  --color-border: var(--border);
-  --color-border-subtle: var(--border-subtle);
-  --color-border-strong: var(--border-strong);
-
-  --color-foreground: var(--foreground);
-  --color-foreground-subtle: var(--foreground-subtle);
-  --color-foreground-muted: var(--foreground-muted);
-
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-active: var(--accent-active);
-  --color-accent-subtle: var(--accent-subtle);
-  --color-accent-contrast: var(--accent-contrast);
-  --color-accent-surface: var(--accent-surface);
-  --color-accent-border: var(--accent-border);
-  --color-accent-text: var(--accent-text);
-
-  --color-success: var(--success);
-  --color-success-contrast: var(--success-contrast);
-  --color-success-subtle: var(--success-subtle);
-  --color-success-text: var(--success-text);
-
-  --color-warning: var(--warning);
-  --color-warning-contrast: var(--warning-contrast);
-  --color-warning-subtle: var(--warning-subtle);
-  --color-warning-text: var(--warning-text);
-
-  --color-danger: var(--danger);
-  --color-danger-contrast: var(--danger-contrast);
-  --color-danger-subtle: var(--danger-subtle);
-  --color-danger-text: var(--danger-text);
-
-  --color-info: var(--info);
-  --color-info-contrast: var(--info-contrast);
-  --color-info-subtle: var(--info-subtle);
-  --color-info-text: var(--info-text);
-
-  --color-ring: var(--ring);
-
-  /* ============================================
-     LEGACY ALIASES (for backward compatibility)
-     TODO: Gradually migrate to semantic names
-     =========================================== */
-
-  /* Old shadcn/ui style names */
-  --color-primary: var(--accent);
-  --color-primary-foreground: var(--accent-contrast);
-  --color-secondary: var(--surface-hover);
-  --color-secondary-foreground: var(--foreground);
-  --color-muted: var(--surface-subtle);
-  --color-muted-foreground: var(--foreground-muted);
-  --color-card: var(--surface);
-  --color-card-foreground: var(--foreground);
-  --color-popover: var(--surface);
-  --color-popover-foreground: var(--foreground);
-  --color-input: var(--border);
-  --color-destructive: var(--danger);
-  --color-destructive-foreground: var(--danger-contrast);
-  --color-accent-warm: oklch(70% 0.12 60);
-  --color-accent-cool: oklch(60% 0.08 280);
-
-  /* Old custom names */
-  --color-text-primary: var(--foreground);
-  --color-text-secondary: var(--foreground-subtle);
-  --color-text-tertiary: var(--foreground-muted);
-  --color-on-primary: var(--accent-contrast);
-  --color-on-surface: var(--foreground);
-  --color-surface-elevated: var(--surface-hover);
 }
 
 /* ============================================================================
@@ -453,6 +160,26 @@
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient 8s ease infinite;
+}
+
+/* Scroll indicator animation */
+@keyframes scroll-indicator {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(1rem);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-scroll-indicator {
+  animation: scroll-indicator 2s ease-in-out infinite;
 }
 
 .splash-shown .loading-screen {

@@ -14,19 +14,37 @@ type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
 };
 
-const FIXED_POSITIONS = [
+// Positions that avoid the center text area but are closer together
+// Center text area: approximately 35-65% vertical, 30-70% horizontal
+// Mobile positions can use space below text (65%+ vertical)
+const FIXED_POSITIONS_DESKTOP = [
   { top: '15%', left: '20%', rotation: -12, scale: 0.9 },
-  { top: '22%', left: '75%', rotation: 15, scale: 0.85 },
-  { top: '45%', left: '15%', rotation: -5, scale: 1.1 },
-  { top: '50%', left: '85%', rotation: 10, scale: 0.95 },
-  { top: '75%', left: '25%', rotation: -15, scale: 0.8 },
-  { top: '70%', left: '75%', rotation: 5, scale: 1.05 },
+  { top: '20%', left: '80%', rotation: 15, scale: 0.85 },
+  { top: '30%', left: '15%', rotation: -5, scale: 1.0 },
+  { top: '25%', left: '85%', rotation: 10, scale: 0.95 },
+  { top: '75%', left: '20%', rotation: -15, scale: 0.85 },
+  { top: '80%', left: '80%', rotation: 5, scale: 1.0 },
   { top: '12%', left: '50%', rotation: -8, scale: 0.9 },
-  { top: '80%', left: '50%', rotation: 12, scale: 0.85 },
-  { top: '32%', left: '18%', rotation: -6, scale: 1.0 },
-  { top: '62%', left: '82%', rotation: 20, scale: 0.95 },
-  { top: '28%', left: '80%', rotation: -3, scale: 0.85 },
-  { top: '78%', left: '18%', rotation: 8, scale: 1.0 },
+  { top: '88%', left: '50%', rotation: 12, scale: 0.9 },
+];
+
+// Mobile positions - use space both above and below text
+// Text area is approximately 35-65% vertical, so positions above 35% and below 65%
+const FIXED_POSITIONS_MOBILE = [
+  // Above text (top area)
+  { top: '10%', left: '15%', rotation: -12, scale: 0.8 },
+  { top: '15%', left: '85%', rotation: 15, scale: 0.75 },
+  { top: '8%', left: '50%', rotation: -8, scale: 0.8 },
+  { top: '20%', left: '20%', rotation: -10, scale: 0.75 },
+  { top: '25%', left: '80%', rotation: 12, scale: 0.8 },
+  { top: '12%', left: '30%', rotation: -5, scale: 0.75 },
+  // Below text (bottom area)
+  { top: '70%', left: '20%', rotation: -15, scale: 0.8 },
+  { top: '75%', left: '80%', rotation: 5, scale: 0.75 },
+  { top: '85%', left: '50%', rotation: 12, scale: 0.8 },
+  { top: '80%', left: '15%', rotation: -8, scale: 0.75 },
+  { top: '78%', left: '85%', rotation: 10, scale: 0.8 },
+  { top: '88%', left: '30%', rotation: -12, scale: 0.75 },
 ];
 
 const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
@@ -35,6 +53,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const imagesRef = useRef<HTMLDivElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
   const { contextSafe } = useGSAP(
     () => {
@@ -51,22 +70,22 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           isTablet: '(min-width: 768px) and (max-width: 1023px)',
           isDesktop: '(min-width: 1024px)',
         },
-        (context) => {
+        context => {
           const { isMobile, isTablet } = context.conditions || {};
           const tl = gsap.timeline();
           const isDev = process.env.NODE_ENV === 'development';
           const hasPlayed = sessionStorage.getItem('hero-splash-played');
 
-          // On mobile: 4 images
-          // On tablet: 8 images
-          // On desktop: all images
+          // On mobile: 12 images (6 above, 6 below text)
+          // On tablet: 7 images
+          // On desktop: 8 images
           let visibleImages;
           if (isMobile) {
-            visibleImages = Array.from(images).slice(0, 4);
+            visibleImages = Array.from(images).slice(0, 12);
           } else if (isTablet) {
-            visibleImages = Array.from(images).slice(0, 8);
+            visibleImages = Array.from(images).slice(0, 7);
           } else {
-            visibleImages = Array.from(images);
+            visibleImages = Array.from(images).slice(0, 8);
           }
 
           if (hasPlayed && !isDev) {
@@ -85,8 +104,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             }
 
             // Position Images & Start Float
+            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
             visibleImages.forEach((img, i) => {
-              const pos = FIXED_POSITIONS[i % FIXED_POSITIONS.length];
+              // Only use positions up to the number of visible images (don't cycle)
+              const pos = positions[i] || positions[i % positions.length];
 
               // Set to final position
               gsap.set(img, {
@@ -112,6 +133,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 delay: i * 0.1,
               });
             });
+
+            // Enable hover effects immediately for fast track
+            setIsAnimationComplete(true);
           } else {
             // --- FULL ANIMATION SEQUENCE ---
 
@@ -124,12 +148,19 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
             tl.to(progressObj, {
               value: 100,
-              duration: 2.0, // Slightly faster load
+              duration: 2.5, // Slightly longer for better stacking effect
               ease: 'power2.inOut',
               onUpdate: () => setProgress(Math.round(progressObj.value)),
             });
 
+            // Stack images in center (same position as loader), starting from bottom and stacking upward
             visibleImages.forEach((img, i) => {
+              // Calculate stacking offset - centered horizontally, stacking upward vertically
+              const stackOffsetX = 0; // Keep centered horizontally
+              const stackOffsetY = -(i * 15); // Stack upward from center (negative Y moves up)
+              const stackRotation = (i % 3) * 3 - 3; // Small rotation: -3, 0, 3
+              const stackScale = 1 - i * 0.03; // Slightly smaller as they stack
+
               tl.fromTo(
                 img,
                 {
@@ -138,16 +169,20 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   xPercent: -50,
                   yPercent: -50,
                   left: '50%',
-                  top: '50%',
-                  rotation: Math.random() * 10 - 5,
+                  top: '50%', // Start at center (same as loader)
+                  rotation: 0,
+                  zIndex: i + 1, // First image has lowest z-index, last has highest (on top)
                 },
                 {
-                  scale: 1,
+                  scale: stackScale,
                   opacity: 1,
-                  duration: 0.8,
-                  ease: 'back.out(1.2)',
+                  x: stackOffsetX,
+                  y: stackOffsetY, // Stack upward from center
+                  rotation: stackRotation,
+                  duration: 0.6,
+                  ease: 'back.out(1.4)',
                 },
-                0.2 + i * 0.15
+                0.1 + i * 0.12, // Stagger the stacking
               );
             });
 
@@ -162,14 +197,16 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                 ease: 'power2.in',
                 display: 'none',
               },
-              '-=0.5'
+              '-=0.5',
             );
 
             tl.addLabel('explode', '+=0.1');
 
             // 2. Explode & Float
+            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
             visibleImages.forEach((img, i) => {
-              const pos = FIXED_POSITIONS[i % FIXED_POSITIONS.length];
+              // Only use positions up to the number of visible images (don't cycle)
+              const pos = positions[i] || positions[i % positions.length];
 
               tl.to(
                 img,
@@ -184,7 +221,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   ease: 'back.out(2)', // Springier
                   zIndex: 1,
                 },
-                'explode'
+                'explode',
               );
 
               gsap.to(img, {
@@ -213,77 +250,68 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                   stagger: 0.15,
                   ease: 'power3.out',
                 },
-                '-=0.4' // Overlap slightly with end of explosion
+                '-=0.4', // Overlap slightly with end of explosion
               );
             }
+
+            // 4. Enable hover effects after all animations complete
+            tl.call(() => {
+              setIsAnimationComplete(true);
+            });
           }
-        }
+        },
       );
     },
-    { scope: containerRef, dependencies: [paintings] }
+    { scope: containerRef, dependencies: [paintings] },
   );
 
   const handleMouseEnter = contextSafe((index: number) => {
-    const images = imagesRef.current?.children;
-    if (!images) return;
+    // Only allow hover effects after animation is complete
+    if (!isAnimationComplete) return;
 
-    // Animate hovered image
-    gsap.to(images[index], {
-      scale: 1.2,
+    const imageElements = imagesRef.current?.children;
+    if (!imageElements) return;
+
+    // Determine which position set to use based on window width
+    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
+    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
+    const baseScale = positions[index % positions.length].scale;
+
+    gsap.to(imageElements[index], {
+      scale: baseScale * 1.2,
       zIndex: 20,
-      filter: 'grayscale(0%) blur(0px)',
-      opacity: 1,
       duration: 0.5,
       ease: 'power2.out',
       overwrite: 'auto',
     });
-
-    // Animate other images
-    Array.from(images).forEach((img, i) => {
-      if (i !== index) {
-        const baseScale = FIXED_POSITIONS[i % FIXED_POSITIONS.length].scale;
-        
-        // If this image was previously high (hovered), drop it slightly 
-        // so it doesn't fight the new target, but keep it above others
-        const currentZ = gsap.getProperty(img, 'zIndex');
-        if (typeof currentZ === 'number' && currentZ > 1) {
-          gsap.set(img, { zIndex: 15 });
-        }
-
-        gsap.to(img, {
-          scale: baseScale * 0.9,
-          filter: 'grayscale(100%) blur(4px)',
-          opacity: 0.4,
-          duration: 0.5,
-          ease: 'power2.out',
-          overwrite: 'auto',
-          onComplete: () => {
-            gsap.set(img, { zIndex: 1 });
-          }
-        });
-      }
-    });
   });
 
   const handleMouseLeave = contextSafe(() => {
-    const images = imagesRef.current?.children;
-    if (!images) return;
+    // Only allow hover effects after animation is complete
+    if (!isAnimationComplete) return;
 
-    // Reset all images
-    Array.from(images).forEach((img, i) => {
-      const baseScale = FIXED_POSITIONS[i % FIXED_POSITIONS.length].scale;
-      
-      gsap.to(img, {
-        scale: baseScale,
-        filter: 'grayscale(0%) blur(0px)',
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power2.out',
-        overwrite: 'auto',
-        onComplete: () => {
-          gsap.set(img, { zIndex: 1 });
-        }
-      });
+    // Reset hovered image to its base position
+    const imageElements = imagesRef.current?.children;
+    if (!imageElements) return;
+
+    // Determine which position set to use (we'll check if mobile by checking window width)
+    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
+    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
+
+    Array.from(imageElements).forEach((img, i) => {
+      const baseScale = positions[i % positions.length].scale;
+      const currentZ = gsap.getProperty(img, 'zIndex');
+
+      // Only reset if this image was hovered (zIndex > 1)
+      if (typeof currentZ === 'number' && currentZ > 1) {
+        gsap.to(img, {
+          scale: baseScale,
+          zIndex: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }
     });
   });
 
@@ -294,14 +322,17 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen pb-20 overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-muted via-background to-card flex items-center justify-center transition-colors duration-500"
+      className="relative w-full h-dvh overflow-hidden flex items-center justify-center transition-colors duration-500"
+      style={{
+        background: `radial-gradient(ellipse at center, var(--surface-subtle) 0%, var(--background) 50%, var(--surface) 100%)`,
+      }}
     >
       {/* Loader */}
-      <div 
+      <div
         ref={loaderRef}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] flex items-center justify-center pointer-events-none"
       >
-        <div className="text-9xl font-black font-mono tracking-tighter text-foreground blur-[0.5px]">
+        <div className="text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl">
           {progress}%
         </div>
       </div>
@@ -311,22 +342,22 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         ref={textRef}
         className="relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none"
       >
-        <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-muted-foreground">
+        <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-foreground-subtle">
           My name is
         </p>
         <h1 className="text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground">
           Henrik
         </h1>
-        <p className="text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-muted-foreground">
+        <p className="text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-foreground-subtle">
           I&apos;m a design engineer, painter and a maker.
           <br />
           Explore my work.
         </p>
-        
+
         <div className="mt-8 pointer-events-auto opacity-0">
           <Link
             href="/paintings"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold tracking-wide transition-all hover:scale-105 hover:opacity-90 shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg"
           >
             View Gallery
           </Link>
@@ -339,29 +370,33 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           const { image, altText, slug } = painting;
           if (!image) return null;
 
-          const imageUrl =
-            urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
+          const imageUrl = urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
 
           // Deterministic random-like properties based on index
           const aspectRatios = ['aspect-square', 'aspect-video', 'aspect-[3/4]', 'aspect-[4/5]'];
           const sizes = [
-            'w-48 md:w-80 lg:max-w-[20vw]', 
-            'w-56 md:w-96 lg:max-w-[22vw]', 
-            'w-40 md:w-64 lg:max-w-[18vw]', 
-            'w-52 md:w-80 lg:max-w-[20vw]'
+            'w-48 md:w-80 lg:max-w-[20vw]',
+            'w-56 md:w-96 lg:max-w-[22vw]',
+            'w-40 md:w-64 lg:max-w-[18vw]',
+            'w-52 md:w-80 lg:max-w-[20vw]',
           ];
           // Optimize LCP: Prioritize the first few images
           const isPriority = index < 4;
-          
+
           const aspectRatio = aspectRatios[index % aspectRatios.length];
           const size = sizes[index % sizes.length];
-          
-          // Show fewer paintings on mobile (4), tablet (8), all on desktop
-          let visibilityClass = 'hidden lg:block'; 
-          if (index < 4) {
+
+          // Show paintings: mobile (12), tablet (7), desktop (8)
+          let visibilityClass = 'hidden';
+          if (index < 7) {
+            // Show on all devices (mobile, tablet, desktop)
             visibilityClass = 'block';
-          } else if (index < 8) {
-            visibilityClass = 'hidden md:block';
+          } else if (index === 7) {
+            // Show on mobile and desktop, hide on tablet
+            visibilityClass = 'block md:hidden lg:block';
+          } else if (index < 12) {
+            // Show on mobile only (images 8-11)
+            visibilityClass = 'block md:hidden';
           }
 
           return (
@@ -386,6 +421,16 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             </Link>
           );
         })}
+      </div>
+
+      {/* Scroll Indicator - Bottom with high z-index */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none">
+        <span className="text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse">
+          Scroll
+        </span>
+        <div className="w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden">
+          <div className="w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator" />
+        </div>
       </div>
     </section>
   );
