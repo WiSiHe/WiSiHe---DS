@@ -8,8 +8,6 @@ import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import SkillsSection from './components/SkillsSection/SkillsSection';
 
-
-
 type Painting = NonNullable<NonNullable<HomePageQueryResult>['showcasePaintings']>[number];
 
 // Fisher-Yates shuffle algorithm
@@ -70,7 +68,7 @@ export default async function Home() {
           <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
 
-        <section className="px-4 md:px-8">
+        <section className="relative overflow-clip">
           <Suspense fallback={<SectionSkeleton />}>
             <FeaturedProjects showcaseProjects={showcaseProjects} />
           </Suspense>

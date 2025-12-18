@@ -294,14 +294,14 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen pb-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[var(--color-surface-elevated)] via-[var(--color-background)] to-[var(--color-surface)] flex items-center justify-center transition-colors duration-500"
+      className="relative w-full h-screen pb-20 overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-muted via-background to-card flex items-center justify-center transition-colors duration-500"
     >
       {/* Loader */}
       <div 
         ref={loaderRef}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] flex items-center justify-center pointer-events-none"
       >
-        <div className="text-9xl font-black font-mono tracking-tighter text-[var(--color-text-primary)] blur-[0.5px]">
+        <div className="text-9xl font-black font-mono tracking-tighter text-foreground blur-[0.5px]">
           {progress}%
         </div>
       </div>
@@ -309,24 +309,24 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       {/* Central Text Content */}
       <div
         ref={textRef}
-        className="relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none text-[var(--color-text-primary)]"
+        className="relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none"
       >
-        <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-[var(--color-text-secondary)]">
+        <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-muted-foreground">
           My name is
         </p>
-        <h1 className="text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 drop-shadow-2xl text-[var(--color-text-primary)]">
+        <h1 className="text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground">
           Henrik
         </h1>
-        <p className="text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed drop-shadow-md text-[var(--color-text-secondary)]">
+        <p className="text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-muted-foreground">
           I&apos;m a design engineer, painter and a maker.
           <br />
           Explore my work.
         </p>
         
         <div className="mt-8 pointer-events-auto opacity-0">
-             <Link
+          <Link
             href="/paintings"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-[var(--color-primary)] text-[var(--color-on-primary)] font-bold tracking-wide transition-all hover:scale-105 hover:opacity-90 shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold tracking-wide transition-all hover:scale-105 hover:opacity-90 shadow-lg"
           >
             View Gallery
           </Link>

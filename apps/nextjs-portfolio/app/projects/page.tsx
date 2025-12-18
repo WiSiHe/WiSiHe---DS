@@ -47,11 +47,15 @@ export default async function ProjectsPage() {
   const { ongoingProjects, pastProjects, tags } = data;
 
   return (
-    <div className="min-h-screen p-4 pt-32 mx-auto max-w-(--breakpoint-2xl)">
+    <div className="min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl">
       <div className="pb-4">
         <div className="pb-4">
-          <h1 className="font-semibold">Projects</h1>
-          <p>A gallery of some of my projects, both creative and technical.</p>
+          <h1 className="text-4xl md:text-5xl font-bold font-serif text-foreground mb-4">
+            Projects
+          </h1>
+          <p className="text-lg text-foreground-subtle max-w-2xl">
+            A gallery of some of my projects, both creative and technical.
+          </p>
         </div>
       </div>
       <ProjectCategories

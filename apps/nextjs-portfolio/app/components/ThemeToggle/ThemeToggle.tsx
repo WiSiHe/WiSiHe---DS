@@ -13,10 +13,6 @@ const ThemeToggle = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return <div className="rounded-full bg-surface-elevated/20" />;
-  }
-
   const toggleTheme = () => {
     if (theme === 'light') {
       setTheme('dark');
@@ -41,17 +37,26 @@ const ThemeToggle = () => {
     return theme === 'dark' ? 'Light mode' : 'Dark mode';
   };
 
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center p-4 rounded-full bg-surface/60 backdrop-blur-xl border border-border/30">
+        <div className="w-4 h-4" />
+      </div>
+    );
+  }
+
   return (
     <motion.button
       onClick={toggleTheme}
-      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full bg-background fill-primary text-primary hover:bg-accent-light hover:text-on-primary active:scale-95"
+      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full backdrop-blur-xl bg-surface/60 border border-border/30 text-foreground hover:bg-accent-surface hover:text-accent hover:border-accent/50 active:scale-95 shadow-lg"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={getLabel()}
     >
       <motion.div
-        key={theme + resolvedTheme}
+        key={(theme ?? 'system') + resolvedTheme}
         initial={{ rotate: -180, opacity: 0 }}
         animate={{ rotate: 0, opacity: 1 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}

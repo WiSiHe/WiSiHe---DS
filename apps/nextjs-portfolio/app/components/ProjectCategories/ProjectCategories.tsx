@@ -40,7 +40,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
   return (
     <section className="flex flex-col w-full gap-5">
       <div className="relative">
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-surface to-transparent" />
+        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-l via-transparent from-background to-transparent" />
         <ul className="flex w-full gap-2 overflow-x-auto py-1 pr-26">
           {tags.map(tag => {
             const { name, _id, count } = tag;
@@ -67,7 +67,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
       {/* Ongoing Projects Section */}
       {filteredOngoingProjects.length > 0 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-text-primary">Ongoing Projects</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Ongoing Projects</h2>
           <ul className="grid w-full grid-cols-12 gap-6 lg:gap-8">
             {filteredOngoingProjects.map((project, index) => {
               const {
@@ -85,7 +85,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
 
               return (
                 <motion.li key={project._id} layout className="relative z-10 w-full col-span-full">
-                  <motion.article className="group relative h-full flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-surface via-surface-elevated to-surface rounded-2xl border border-border/30 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/20">
+                  <motion.article className="group relative h-full flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-surface via-surface-hover to-surface rounded-2xl border border-border/30 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-accent/20">
                     {/* Image Section - Top on mobile, Left on desktop */}
                     <motion.div
                       layoutId={`image-${projectTitle}`}
@@ -130,7 +130,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                         >
                           <motion.h2
                             layoutId={`title-${projectTitle}`}
-                            className="text-2xl font-bold text-text-primary group-hover:text-primary transition-all duration-300 group-hover:translate-x-1"
+                            className="text-2xl font-bold text-foreground group-hover:text-accent transition-all duration-300 group-hover:translate-x-1"
                           >
                             {projectTitle}
                           </motion.h2>
@@ -155,15 +155,15 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                         </div>
 
                         {/* Description */}
-                        <p className="text-text-secondary text-base leading-relaxed line-clamp-4">
+                        <p className="text-foreground-subtle text-base leading-relaxed line-clamp-4">
                           {seoDescription || description}
                         </p>
                       </div>
 
                       {/* Bottom Content - Start Date */}
                       {projectStart && (
-                        <div className="flex items-center gap-2 text-text-tertiary text-sm pt-4 border-t border-border/20">
-                          <div className="w-2 h-2 bg-primary rounded-full" />
+                        <div className="flex items-center gap-2 text-foreground-muted text-sm pt-4 border-t border-border/20">
+                          <div className="w-2 h-2 bg-accent rounded-full" />
                           <span>
                             Started{' '}
                             {new Date(projectStart).toLocaleDateString('en-US', {
@@ -177,10 +177,10 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                     </div>
 
                     {/* Hover Effect Border */}
-                    <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/30 transition-all duration-500 group-hover:shadow-[0_0_0_1px_rgba(var(--primary),0.1)]" />
+                    <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-accent/30 transition-all duration-500" />
 
                     {/* Subtle background pattern */}
-                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-accent/5 via-transparent to-accent/5" />
                   </motion.article>
                 </motion.li>
               );
@@ -192,7 +192,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
       {/* Past Projects Section */}
       {filteredPastProjects.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-text-primary">Past Projects</h2>
+          <h2 className="text-xl font-semibold text-foreground">Past Projects</h2>
           <ul className="grid w-full grid-cols-12 gap-4 lg:gap-6">
             {filteredPastProjects.map((project, index) => {
               const {
@@ -212,7 +212,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                 <motion.li
                   key={project._id}
                   layout
-                  className="relative within z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface shadow-sm shrink-0 text-text-primary col-span-full md:col-span-6 lg:col-span-4 rounded-xl group"
+                  className="relative within z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface shadow-sm shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 rounded-xl group"
                 >
                   <motion.article className="w-full">
                     <motion.div
@@ -246,11 +246,11 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
                           {projectTitle}
                         </motion.h2>
                       </Link>
-                      <p className="line-clamp-3 text-text-secondary">
+                      <p className="line-clamp-3 text-foreground-subtle">
                         {seoDescription || description}
                       </p>
                       {projectEnd && (
-                        <p className="text-sm text-text-tertiary mt-2">
+                        <p className="text-sm text-foreground-muted mt-2">
                           Completed:{' '}
                           {new Date(projectEnd).toLocaleDateString('en-US', {
                             year: 'numeric',

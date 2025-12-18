@@ -41,38 +41,41 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
       <nav
         aria-label="Main Navigation"
         className={cn(
-          'z-30 flex items-center justify-between rounded-full',
+          'z-30 flex items-center justify-between',
           isAbsolute ? 'fixed top-4 left-4 right-4' : 'relative',
         )}
       >
         <motion.div
-          initial={{ opacity: 0, y: -100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -100 }}
-          whileHover={{ scale: 1.05, rotate: 90 }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.95 }}
-          transition={{ type: 'spring', stiffness: 100, damping: 10 }}
-          className="flex items-center relative h-12 w-12 backdrop-blur-lg bg-surface-elevated overflow-clip rounded-full text-text-primary hover:bg-accent-light hover:text-on-primary"
         >
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="flex items-center justify-center p-1 text-sm drop-shadow-sm rounded-full h-full w-full"
+            className="group relative flex items-center justify-center p-2 rounded-lg backdrop-blur-xl bg-surface/60 border border-border/30 hover:bg-accent-surface hover:border-accent/50 transition-all shadow-lg hover:shadow-accent/20"
           >
             <IconLogo
-              className={cn('transition-all ease-in-out absolute inset-0')}
-              width={64}
-              height={64}
+              className={cn('transition-all duration-300 text-foreground group-hover:text-accent')}
+              width={48}
+              height={48}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-lg bg-accent/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300"
+              initial={false}
             />
           </Link>
         </motion.div>
+
         <div className="flex items-center gap-2">
           <motion.ul
             key="nav"
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center backdrop-blur-lg shadow-xl p-1 overflow-clip bg-surface-elevated rounded-full"
+            className="flex items-center backdrop-blur-xl bg-surface/60 border border-border/30 shadow-xl p-1 overflow-clip rounded-full"
           >
             {navigationItems.map((item, i) => {
               const isActive = pathName?.includes(item.href);
@@ -95,10 +98,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-light focus-visible:text-on-primary flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3',
+                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent focus-visible:backdrop-blur-md flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3 rounded-full',
                       isActive
-                        ? 'text-on-primary bg-accent hover:bg-accent-light'
-                        : 'text-text-primary hover:bg-accent-light hover:text-on-primary',
+                        ? 'text-accent-contrast bg-accent/90 backdrop-blur-md border border-accent/60 shadow-lg'
+                        : 'text-foreground hover:bg-accent-surface hover:text-accent hover:backdrop-blur-md',
                     )}
                   >
                     <span className="text-lg">{navIcon}</span>
