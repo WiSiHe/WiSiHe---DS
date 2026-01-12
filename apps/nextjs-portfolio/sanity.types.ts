@@ -1007,8 +1007,7 @@ export type PaintingQueryResult = {
         viewerId: string | null;
         timestamp: string | null;
       }>
-    | Array<never>
-    | null;
+    | Array<never>;
   viewsCount: number | null;
   paintedAt: string;
   artstationUrl: string | null;
