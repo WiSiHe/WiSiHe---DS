@@ -15,7 +15,7 @@ interface ResourceLinksProps {
 
 export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLinksProps) {
   const linksContent = (
-    <div className="mb-10 space-y-4">
+    <div className={`${shouldAnimate ? 'mb-10' : 'mb-8'} ${shouldAnimate ? 'space-y-4' : 'space-y-3'}`}>
       <h3 className="text-lg font-bold text-foreground mb-3">Resources:</h3>
       <div className="flex flex-wrap gap-3">
         {links.map((link, linkIndex) => (
@@ -65,5 +65,5 @@ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLi
     );
   }
 
-  return <div className="mb-8 space-y-3">{linksContent}</div>;
+  return linksContent;
 }

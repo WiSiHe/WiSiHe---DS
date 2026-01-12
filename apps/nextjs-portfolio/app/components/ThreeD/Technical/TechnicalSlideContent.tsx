@@ -5,21 +5,15 @@ import { TechnicalSlideIndicators } from './TechnicalSlideIndicators';
 import { CodeExampleWrapper } from './CodeExampleWrapper';
 import { ResourceLinks } from './ResourceLinks';
 import type { Slide } from '../../../three-d/types';
+import type { ShowcaseControls, LightControls } from '../types';
 
 interface TechnicalSlideContentProps {
   currentSlide: number;
   currentSlideData: Slide;
   previousSlideData: Slide | undefined;
   totalSlides: number;
-  showcaseTexture: string;
-  onTextureChange: (texture: string) => void;
-  textureOptions: Array<{ name: string; value: string }>;
-  autoRotate: boolean;
-  onAutoRotateChange: (enabled: boolean) => void;
-  directionalLightPosition: [number, number, number];
-  onDirectionalLightPositionChange: (position: [number, number, number]) => void;
-  directionalLightIntensity: number;
-  onDirectionalLightIntensityChange: (intensity: number) => void;
+  showcaseControls: ShowcaseControls;
+  lightControls: LightControls;
   onSlideClick?: (index: number) => void;
 }
 
@@ -28,17 +22,23 @@ export function TechnicalSlideContent({
   currentSlideData,
   previousSlideData,
   totalSlides,
-  showcaseTexture,
-  onTextureChange,
-  textureOptions,
-  autoRotate,
-  onAutoRotateChange,
-  directionalLightPosition,
-  onDirectionalLightPositionChange,
-  directionalLightIntensity,
-  onDirectionalLightIntensityChange,
+  showcaseControls,
+  lightControls,
   onSlideClick,
 }: TechnicalSlideContentProps) {
+  const {
+    texture: showcaseTexture,
+    onTextureChange,
+    textureOptions,
+    autoRotate,
+    onAutoRotateChange,
+  } = showcaseControls;
+  const {
+    directionalLightPosition,
+    onDirectionalLightPositionChange,
+    directionalLightIntensity,
+    onDirectionalLightIntensityChange,
+  } = lightControls;
   // Track what changed between slides
   const titleChanged = previousSlideData?.title !== currentSlideData.title;
   const descriptionChanged = previousSlideData?.description !== currentSlideData.description;
@@ -167,7 +167,7 @@ export function TechnicalSlideContent({
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-foreground">Swap Texture:</h3>
                     <div className="flex flex-wrap gap-3" role="group" aria-label="Texture selection">
-                      {textureOptions.map(texture => (
+                      {textureOptions.map((texture: { name: string; value: string }) => (
                         <motion.button
                           key={texture.value}
                           onClick={() => onTextureChange(texture.value)}
@@ -201,10 +201,11 @@ export function TechnicalSlideContent({
                             <label className="text-xs text-foreground/60 uppercase">{axis}</label>
                             <input
                               type="number"
-                              value={directionalLightPosition[index]}
+                              value={directionalLightPosition?.[index] ?? 0}
                               onChange={e => {
                                 const newValue = parseFloat(e.target.value) || 0;
-                                const newPosition: [number, number, number] = [...directionalLightPosition];
+                                const currentPosition = directionalLightPosition ?? [0, 0, 0];
+                                const newPosition: [number, number, number] = [...currentPosition];
                                 newPosition[index] = newValue;
                                 onDirectionalLightPositionChange(newPosition);
                               }}
