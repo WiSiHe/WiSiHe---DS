@@ -3,7 +3,7 @@
 import React from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { isMesh, type ThreeMesh, type ThreeMaterial } from './threeTypes';
+import { isMesh, type ThreeMesh, type ThreeMaterial } from './types';
 
 interface VansShoeProps {
   color: string;

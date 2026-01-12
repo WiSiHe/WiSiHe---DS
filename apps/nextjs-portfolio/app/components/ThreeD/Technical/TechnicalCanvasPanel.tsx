@@ -3,7 +3,7 @@
 import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion } from 'motion/react';
-import { PersistentScene } from '../PersistentScene';
+import { PersistentScene } from '../scenes';
 import type { SlideMode } from '../../../three-d/types';
 
 interface TechnicalCanvasPanelProps {

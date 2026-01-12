@@ -8,22 +8,21 @@ import { TechnicalNavigation } from './TechnicalNavigation';
 import { GridBackground } from '../GridBackground';
 import technicalSlidesData from '../../../three-d/technicalSlides.json';
 import type { Slide } from '../../../three-d/types';
-
-const textureOptions = [
-  { name: 'Regular', value: '/Regular - texture.jpg' },
-  { name: 'Blueberry', value: '/Blueberry - texture.jpg' },
-  { name: 'Mango', value: '/Mango - texture.jpg' },
-  { name: 'Bearnaise', value: '/Bearnaise - texture.jpg' },
-];
+import {
+  TEXTURE_OPTIONS,
+  DEFAULT_TEXTURE,
+  DEFAULT_LIGHT_POSITION,
+  DEFAULT_LIGHT_INTENSITY,
+} from '../constants';
 
 export function TechnicalDeck() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showcaseTexture, setShowcaseTexture] = useState('/Regular - texture.jpg');
+  const [showcaseTexture, setShowcaseTexture] = useState(DEFAULT_TEXTURE);
   const [autoRotate, setAutoRotate] = useState(false);
-  const [directionalLightPosition, setDirectionalLightPosition] = useState<
-    [number, number, number]
-  >([10, 10, 5]);
-  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1);
+  const [directionalLightPosition, setDirectionalLightPosition] =
+    useState<[number, number, number]>(DEFAULT_LIGHT_POSITION);
+  const [directionalLightIntensity, setDirectionalLightIntensity] =
+    useState(DEFAULT_LIGHT_INTENSITY);
   const previousSlideRef = useRef(0);
 
   // Type assertion for JSON import
@@ -75,15 +74,19 @@ export function TechnicalDeck() {
         currentSlideData={currentSlideData}
         previousSlideData={previousSlideData}
         totalSlides={slides.length}
-        showcaseTexture={showcaseTexture}
-        onTextureChange={setShowcaseTexture}
-        textureOptions={textureOptions}
-        autoRotate={autoRotate}
-        onAutoRotateChange={setAutoRotate}
-        directionalLightPosition={directionalLightPosition}
-        onDirectionalLightPositionChange={setDirectionalLightPosition}
-        directionalLightIntensity={directionalLightIntensity}
-        onDirectionalLightIntensityChange={setDirectionalLightIntensity}
+        showcaseControls={{
+          texture: showcaseTexture,
+          onTextureChange: setShowcaseTexture,
+          textureOptions: [...TEXTURE_OPTIONS],
+          autoRotate,
+          onAutoRotateChange: setAutoRotate,
+        }}
+        lightControls={{
+          directionalLightPosition,
+          onDirectionalLightPositionChange: setDirectionalLightPosition,
+          directionalLightIntensity,
+          onDirectionalLightIntensityChange: setDirectionalLightIntensity,
+        }}
         onSlideClick={handleSlideClick}
       />
 

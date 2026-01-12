@@ -11,7 +11,7 @@ export const navigationItems = [
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
   { label: '3D', href: '/three-d', description: '3D Art & Experiments' },
-  { label: 'About', href: '/about', description: 'About Henrik' },
+  // { label: 'About', href: '/about', description: 'About Henrik' },
 ];
 
 export const socialMediaLinks = [
@@ -33,8 +33,4 @@ export const socialMediaLinks = [
   },
 ];
 
-export const aboutMeBulletPoints = [
-  'Frontend developer',
-  'Digital artist',
-  'Game developer',
-];
+export const aboutMeBulletPoints = ['Frontend developer', 'Digital artist', 'Game developer'];
