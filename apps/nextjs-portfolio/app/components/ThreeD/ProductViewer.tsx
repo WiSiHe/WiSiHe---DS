@@ -5,7 +5,6 @@ import { OrbitControls, Stage, MeshReflectorMaterial, useCursor, Float, Perspect
 import { Suspense, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-import VansShoe from './VansShoe';
 
 const ProductViewer = () => {
   const [activeColor, setActiveColor] = useState('#3b82f6'); // Default Blue
@@ -26,7 +25,7 @@ const ProductViewer = () => {
           
           <Suspense fallback={null}>
             <Stage environment="city" intensity={0.5} shadows="contact">
-              <VansShoe color={activeColor} scale={1.5} />
+              {/* VansShoe component removed */}
             </Stage>
           </Suspense>
 
