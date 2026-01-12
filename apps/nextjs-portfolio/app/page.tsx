@@ -7,6 +7,7 @@ import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
 import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import SkillsSection from './components/SkillsSection/SkillsSection';
+import ThreeDShowcase from './components/ThreeDShowcase/ThreeDShowcase';
 
 type Painting = NonNullable<NonNullable<HomePageQueryResult>['showcasePaintings']>[number];
 
@@ -68,11 +69,13 @@ export default async function Home() {
           <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
 
-        <section className="relative pt-24">
+        <section className="relative pt-24 pb-12">
           <Suspense fallback={<SectionSkeleton />}>
             <FeaturedProjects showcaseProjects={showcaseProjects} />
           </Suspense>
         </section>
+
+        <ThreeDShowcase />
       </div>
 
       {/* Paintings Section with distinct background */}

@@ -2,218 +2,122 @@
 
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
-import { useGSAP } from '@gsap/react';
 import { IconArrowRight } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
 import Chip from '../Chip/Chip';
-
-gsap.registerPlugin(ScrollTrigger);
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
 };
 
 const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      if (!showcaseProjects || showcaseProjects.length === 0) return;
-
-      const panels = gsap.utils.toArray<HTMLElement>('.project-section');
-
-      // Set initial z-index for all panels (later sections higher, so they appear on top)
-      panels.forEach((panel, index) => {
-        gsap.set(panel, { zIndex: index + 1 });
-      });
-
-      // Remove last panel from animation (it stays visible)
-      const animatedPanels = panels.slice(0, -1);
-
-      animatedPanels.forEach((panel, index) => {
-        // Get the element holding the content inside the panel
-        const innerpanel = panel.querySelector('.section-inner') as HTMLElement;
-        if (!innerpanel) return;
-
-        // Get the Height of the content inside the panel
-        const panelHeight = innerpanel.offsetHeight;
-
-        // Get the window height
-        const windowHeight = window.innerHeight;
-
-        const difference = panelHeight - windowHeight;
-
-        // ratio (between 0 and 1) representing the portion of the overall animation that's for the fake-scrolling
-        const fakeScrollRatio = difference > 0 ? difference / (difference + windowHeight) : 0;
-
-        // if we need to fake scroll (because the panel is taller than the window), add margin
-        if (fakeScrollRatio) {
-          panel.style.marginBottom = panelHeight * fakeScrollRatio + 'px';
-        }
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: panel,
-            start: 'bottom bottom',
-            end: () => (fakeScrollRatio ? `+=${innerpanel.offsetHeight}` : 'bottom top'),
-            pinSpacing: false,
-            pin: true,
-            scrub: true,
-          },
-        });
-
-        // fake scroll. We use 1 because that's what the rest of the timeline consists of scale animation
-        if (fakeScrollRatio) {
-          tl.to(innerpanel, {
-            yPercent: -100,
-            y: window.innerHeight,
-            duration: 1 / (1 - fakeScrollRatio) - 1,
-            ease: 'none',
-          });
-        }
-        // Scale down, fade out, and reduce z-index as it exits
-        tl.to(panel, { scale: 0.9, opacity: 0, zIndex: 0, duration: 1 });
-      });
-
-      return () => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      };
-    },
-    { scope: containerRef, dependencies: [showcaseProjects] },
-  );
-
   if (!showcaseProjects || showcaseProjects.length === 0) {
     return null;
   }
 
+  // Only show the first 3 projects
+  const displayedProjects = showcaseProjects.slice(0, 3);
+
   return (
-    <section ref={containerRef} className="relative">
-      {/* Header Section */}
-      <div ref={headerRef} className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-16 md:py-24">
-        <div className="max-w-4xl">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-6 text-foreground">
+    <section className="bg-background py-24 md:py-32">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+        {/* Header Section */}
+        <div className="max-w-4xl mb-16 md:mb-24">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-8 text-foreground">
             Featured Projects
           </h2>
-          <p className="text-xl md:text-2xl mb-6 text-foreground-subtle leading-relaxed">
-            Selected works & experiments
-          </p>
-          <p className="text-base md:text-lg text-foreground-subtle leading-relaxed max-w-3xl">
-            Explore a curated collection of my most impactful projects, from innovative web
-            applications to creative digital experiences. Each project represents a unique challenge
-            solved through thoughtful design, technical excellence, and user-centered thinking.
-          </p>
+          <div className="space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed max-w-3xl">
+            <p>
+              I specialize in bridging the gap between design and engineering, creating digital
+              experiences that are both visually stunning and technically robust. My work often
+              revolves around high-performance web applications, interactive 3D environments, and
+              scalable design systems.
+            </p>
+            <p>
+              Here's a selection of projects where I've pushed the boundaries of what's possible on
+              the web, combining creative front-end development with solid architectural
+              foundations.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Projects */}
-      <div className="slides-wrapper">
-        {showcaseProjects.map((project, index) => {
-          const imageUrl = urlForImage(project.image)
-            ?.height(1200)
-            .width(1600)
-            .auto('format')
-            .quality(90)
-            .url();
-          const year = project.projectStart ? new Date(project.projectStart).getFullYear() : null;
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          {displayedProjects.map(project => {
+            const imageUrl = urlForImage(project.image)
+              ?.height(800)
+              .width(1000)
+              .auto('format')
+              .quality(90)
+              .url();
+            const year = project.projectStart ? new Date(project.projectStart).getFullYear() : null;
 
-          const isLastSection = index === showcaseProjects.length - 1;
+            return (
+              <Link
+                key={project._id}
+                href={`projects/${project.slug}`}
+                className="group flex flex-col h-full bg-surface/30 rounded-3xl overflow-hidden border border-border/40 hover:border-accent/40 transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5"
+              >
+                {/* Image Container */}
+                <div className="relative aspect-4/3 overflow-hidden">
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt={project.seo?.title || project.title || 'Project Image'}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-surface flex items-center justify-center text-foreground-muted">
+                      No Image
+                    </div>
+                  )}
+                  {/* Subtle overlay */}
+                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
 
-          return (
-            <section
-              key={project._id}
-              className={cn(
-                'project-section relative w-full h-screen flex justify-center overflow-hidden',
-                !isLastSection && 'rounded-2xl',
-              )}
-            >
-              <div className="section-content w-full">
-                <div className="section-inner h-full overflow-hidden">
-                  {/* Background Image */}
-                  <div className="absolute inset-0 w-full h-full">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={project.seo?.title || project.title || 'Project Image'}
-                        fill
-                        className="object-cover"
-                        sizes="100vw"
-                        priority={index === 0}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-surface flex items-center justify-center text-foreground-muted">
-                        No Image
-                      </div>
+                {/* Content */}
+                <div className="p-6 md:p-8 flex flex-col flex-grow">
+                  <div className="flex items-center justify-between mb-4">
+                    {project.name && (
+                      <span className="text-xs font-bold tracking-widest text-accent uppercase">
+                        {project.name}
+                      </span>
                     )}
-                    {/* Subtle overlay - Enhanced for better text readability */}
-                    <div className="absolute inset-0 bg-linear-to-b from-black to-transparent" />
+                    {year && <span className="text-xs font-mono text-foreground-muted">{year}</span>}
                   </div>
 
-                  {/* Content */}
-                  <div className="relative z-10 h-full flex items-start pb-8 md:pt-16 lg:pt-24">
-                    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
-                      {/* Meta info */}
-                      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6">
-                        {project.name && (
-                          <span className="text-xs md:text-sm lg:text-2xl font-semibold tracking-wider text-accent uppercase">
-                            {project.name}
-                          </span>
-                        )}
-                        {year && (
-                          <span className="text-xs md:text-sm font-mono text-white drop-shadow-md">
-                            {year}
-                          </span>
-                        )}
-                      </div>
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
+                    {project.title}
+                  </h3>
 
-                      {/* Description */}
-                      <p className="text-base md:text-lg lg:text-xl text-white leading-relaxed mb-4 md:mb-6 lg:mb-8 max-w-2xl drop-shadow-lg">
-                        {project.seo?.description || project.description}
-                      </p>
+                  <p className="text-foreground-subtle text-sm md:text-base leading-relaxed mb-6 line-clamp-3">
+                    {project.seo?.description || project.description}
+                  </p>
 
-                      {/* Tags */}
-                      {project.tags && project.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6 lg:mb-8">
-                          {project.tags.slice(0, 5).map((tag, i) => (
-                            <Chip key={i} label={tag.name} variation="default" size="medium" />
-                          ))}
-                          {project.tags.length > 5 && (
-                            <Chip
-                              label={`+${project.tags.length - 5}`}
-                              variation="secondary"
-                              size="medium"
-                            />
-                          )}
-                        </div>
-                      )}
-
-                      {/* CTA */}
-                      <Link
-                        href={`projects/${project.slug}`}
-                        className={cn(
-                          'inline-flex hover:scale-105 duration-200 items-center gap-2 md:gap-3 text-white font-medium text-sm md:text-base px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-accent group-hover:border-accent transition-all',
-                          'hover:bg-accent hover:border-accent',
-                          'hover:text-accent-contrast',
-                          'hover:shadow-md',
-                          'hover:scale-105',
-                          'hover:translate-x-1',
-                        )}
-                      >
-                        View Case Study
-                        <IconArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:translate-x-1" />
-                      </Link>
-                    </div>
+                  <div className="mt-auto pt-6 flex items-center gap-2 text-accent font-semibold text-sm">
+                    View Case Study
+                    <IconArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
-              </div>
-            </section>
-          );
-        })}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Global CTA */}
+        <div className="mt-16 md:mt-24 flex justify-center">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full font-bold hover:bg-accent hover:text-accent-contrast transition-all duration-300 hover:scale-105 group"
+          >
+            Explore all projects
+            <IconArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
     </section>
   );
