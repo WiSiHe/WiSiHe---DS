@@ -31,9 +31,7 @@
       "doubleSided": true,
       "name": "Can",
       "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 0
-        },
+        "baseColorFactor": [0.8, 0.8, 0.8, 1],
         "metallicFactor": 0.4595959186553955,
         "roughnessFactor": 0.34343433380126953
       }
@@ -94,19 +92,8 @@
       ]
     }
   ],
-  "textures": [
-    {
-      "sampler": 0,
-      "source": 0
-    }
-  ],
-  "images": [
-    {
-      "mimeType": "image/jpeg",
-      "name": "Regular - texture",
-      "uri": "Regular%20-%20texture.jpg"
-    }
-  ],
+  "textures": [],
+  "images": [],
   "accessors": [
     {
       "bufferView": 0,
