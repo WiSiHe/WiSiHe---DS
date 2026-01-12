@@ -3,7 +3,7 @@
 import { motion, Variants } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { type JSX } from 'react';
-import { FaBrush, FaFolder, FaMailBulk, FaTv } from 'react-icons/fa';
+import { FaBrush, FaCube, FaFolder, FaMailBulk, FaTv, FaUser } from 'react-icons/fa';
 
 import Link from '../ProgressLink';
 
@@ -41,7 +41,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
       <nav
         aria-label="Main Navigation"
         className={cn(
-          'z-30 flex items-center justify-between',
+          'z-[100] flex items-center justify-between',
           isAbsolute ? 'fixed top-4 left-4 right-4' : 'relative',
         )}
       >
@@ -60,13 +60,13 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             <IconLogo
               color="currentColor"
               className={cn('transition-all duration-300 text-foreground group-hover:text-accent')}
-              width={48}
-              height={48}
+              width={32}
+              height={32}
             />
           </Link>
         </motion.div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2">
           <motion.ul
             key="nav"
             variants={container}
@@ -83,6 +83,8 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                 Paintings: <FaBrush />,
                 Projects: <FaFolder />,
                 Videos: <FaTv />,
+                '3D': <FaCube />,
+                About: <FaUser />,
                 Contact: <FaMailBulk />,
               }[label];
 
@@ -96,10 +98,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent flex items-center ease-in-out duration-300 text-xs md:text-base px-6 md:py-2 md:px-4 py-3 rounded-full',
+                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full',
                       isActive
-                        ? 'text-accent-contrast bg-accent border border-accent-border shadow-lg'
-                        : 'text-foreground hover:bg-surface-hover hover:text-accent',
+                        ? 'text-accent-contrast bg-accent border border-accent-border shadow-lg aspect-square justify-center p-2.5 md:px-4 md:py-2 md:aspect-auto'
+                        : 'text-foreground hover:bg-surface-hover hover:text-accent px-3 py-2.5 md:px-4 md:py-2',
                     )}
                   >
                     <span className="text-lg">{navIcon}</span>

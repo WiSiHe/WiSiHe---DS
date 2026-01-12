@@ -1,0 +1,88 @@
+[
+  {
+    "title": "What is Three.js?",
+    "description": "Three.js is a powerful JavaScript library that brings 3D graphics to the web. Built on WebGL, it abstracts away the complexity and gives developers a clean, intuitive API for creating stunning 3D scenes, animations, and interactive experiences.",
+    "mode": "threejs-intro"
+  },
+  {
+    "title": "Understanding 3D",
+    "description": "Three-dimensional graphics create depth and immersion. Every 3D object is constructed from three fundamental building blocks: vertices (points), edges (lines), and faces (surfaces).",
+    "mode": "intro"
+  },
+  {
+    "title": "Your First Scene",
+    "description": "Setting up a basic React Three Fiber scene is simple. The Canvas component handles all the WebGL setup, and you can add meshes and lights just like regular React components.",
+    "mode": "r3f-first-scene",
+    "code": "import { Canvas } from '@react-three/fiber';\n\nfunction Scene() {\n  return (\n    <Canvas>\n      <mesh>\n        <boxGeometry args={[2, 2, 2]} />\n        <meshStandardMaterial />\n      </mesh>\n      <ambientLight intensity={0.1} />\n      <directionalLight position={[0, 0, 5]} color=\"red\" />\n    </Canvas>\n  );\n}\n\nexport default Scene;",
+    "links": [
+      {
+        "text": "R3F Documentation: Your First Scene",
+        "url": "https://r3f.docs.pmnd.rs/getting-started/your-first-scene"
+      }
+    ]
+  },
+  {
+    "title": "React Three Fiber Basics",
+    "description": "R3F makes Three.js feel like React. Props map directly to Three.js properties, constructor arguments use the `args` prop, and vectors/colors have convenient shortcuts.",
+    "mode": "r3f-basics",
+    "code": "import { Canvas } from '@react-three/fiber';\n\nfunction Scene() {\n  return (\n    <Canvas>\n      {/* Props map directly to Three.js properties */}\n      <mesh position={[1, 2, 3]} rotation={[0, Math.PI / 4, 0]}>\n        <boxGeometry args={[2, 2, 2]} />\n        <meshStandardMaterial color=\"hotpink\" />\n      </mesh>\n\n      {/* Vectors and colors have convenient shortcuts */}\n      <directionalLight \n        position={[0, 0, 5]} \n        color=\"red\" \n        intensity={0.5} \n      />\n    </Canvas>\n  );\n}",
+    "links": [
+      {
+        "text": "R3F API Documentation",
+        "url": "https://r3f.docs.pmnd.rs/api"
+      }
+    ]
+  },
+  {
+    "title": "Materials & Textures",
+    "description": "Materials define how surfaces look, while textures add detail and realism. React Three Fiber supports all Three.js materials and makes loading textures easy with helpers from @react-three/drei.",
+    "mode": "r3f-materials",
+    "code": "import { Canvas } from '@react-three/fiber';\nimport { useTexture } from '@react-three/drei';\n\nfunction TexturedBox() {\n  // Load textures using useTexture hook from drei\n  // It automatically handles loading and returns texture objects\n  const [diffuse, normal, roughness] = useTexture([\n    '/textures/diffuse.jpg',\n    '/textures/normal.jpg',\n    '/textures/roughness.jpg'\n  ]);\n\n  return (\n    <mesh>\n      <boxGeometry args={[1, 1, 1]} />\n      <meshStandardMaterial \n        map={diffuse}           // Diffuse/albedo texture\n        normalMap={normal}      // Normal map for surface detail\n        roughnessMap={roughness} // Roughness map for material variation\n      />\n    </mesh>\n  );\n}\n\nfunction Scene() {\n  return (\n    <Canvas>\n      {/* Basic material - no lighting required */}\n      <mesh position={[-2, 0, 0]}>\n        <boxGeometry args={[1, 1, 1]} />\n        <meshBasicMaterial color=\"blue\" />\n      </mesh>\n\n      {/* Standard material - PBR with lighting */}\n      <mesh position={[0, 0, 0]}>\n        <boxGeometry args={[1, 1, 1]} />\n        <meshStandardMaterial \n          color=\"gold\" \n          metalness={0.8}\n          roughness={0.2}\n        />\n      </mesh>\n\n      {/* Material with textures */}\n      <TexturedBox position={[2, 0, 0]} />\n    </Canvas>\n  );\n}",
+    "links": [
+      {
+        "text": "Three.js Materials",
+        "url": "https://threejs.org/docs/#api/en/materials/Material"
+      },
+      {
+        "text": "@react-three/drei - useTexture",
+        "url": "https://github.com/pmndrs/drei#usetexture"
+      }
+    ]
+  },
+  {
+    "title": "Geometry and Shapes",
+    "description": "Geometries define the shape of 3D objects. Use the `args` prop to pass constructor arguments. React Three Fiber supports all Three.js geometries.",
+    "mode": "r3f-geometries",
+    "code": "import { Canvas } from '@react-three/fiber';\n\nfunction Scene() {\n  return (\n    <Canvas>\n      {/* Box with custom dimensions: width, height, depth */}\n      <mesh position={[-2, 0, 0]}>\n        <boxGeometry args={[2, 3, 1]} />\n        <meshStandardMaterial color=\"#3b82f6\" />\n      </mesh>\n\n      {/* Sphere: radius, widthSegments, heightSegments */}\n      <mesh position={[-0.7, 0, 0]}>\n        <sphereGeometry args={[1, 32, 32]} />\n        <meshStandardMaterial color=\"#10b981\" />\n      </mesh>\n\n      {/* Torus (donut): radius, tube, radialSegments, tubularSegments */}\n      <mesh position={[0.7, 0, 0]}>\n        <torusGeometry args={[0.5, 0.15, 16, 100]} />\n        <meshStandardMaterial color=\"#8b5cf6\" />\n      </mesh>\n\n      {/* Cylinder: radiusTop, radiusBottom, height, radialSegments */}\n      <mesh position={[2, 0, 0]}>\n        <cylinderGeometry args={[0.5, 0.5, 1, 32]} />\n        <meshStandardMaterial color=\"#f59e0b\" />\n      </mesh>\n    </Canvas>\n  );\n}",
+    "links": [
+      {
+        "text": "Three.js Geometries",
+        "url": "https://threejs.org/docs/#api/en/geometries/Geometry"
+      }
+    ]
+  },
+  {
+    "title": "Vertices: The Foundation",
+    "description": "Vertices are the fundamental points that define 3D geometry. Each vertex has X, Y, and Z coordinates in 3D space. When rendered as points, you see the underlying structure of your geometry.",
+    "mode": "vertices",
+    "code": "import { useMemo } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport * as THREE from 'three';\n\nfunction VerticesExample() {\n  // Create geometry from a cylinder\n  // We extract the vertex positions and create a BufferGeometry\n  const pointsGeometry = useMemo(() => {\n    const geometry = new THREE.CylinderGeometry(0.6, 0.6, 2, 32);\n    const positions = geometry.attributes.position.array;\n    const bufferGeometry = new THREE.BufferGeometry();\n    bufferGeometry.setAttribute(\n      'position',\n      new THREE.Float32BufferAttribute(positions, 3)\n    );\n    return bufferGeometry;\n  }, []);\n\n  return (\n    <Canvas>\n      <points geometry={pointsGeometry}>\n        <pointsMaterial size={0.05} color=\"#10b981\" sizeAttenuation />\n      </points>\n    </Canvas>\n  );\n}\n\nexport default VerticesExample;"
+  },
+  {
+    "title": "Edges: Connecting the Dots",
+    "description": "Edges connect vertices together, creating the wireframe skeleton of your 3D object. This wireframe view helps visualize the structure and topology of complex geometries before adding surfaces.",
+    "mode": "edges",
+    "code": "import { useMemo } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport { Edges } from '@react-three/drei';\nimport * as THREE from 'three';\n\nfunction EdgesExample() {\n  // Create a cylinder geometry (beer can shape)\n  const canGeometry = useMemo(() => {\n    return new THREE.CylinderGeometry(0.6, 0.6, 2, 32);\n  }, []);\n\n  return (\n    <Canvas>\n      <mesh geometry={canGeometry}>\n        {/* Invisible material - we only want to see the edges */}\n        <meshBasicMaterial transparent opacity={0} />\n        {/* Edges component from drei draws the wireframe */}\n        <Edges color=\"#3b82f6\" threshold={0} />\n      </mesh>\n    </Canvas>\n  );\n}\n\nexport default EdgesExample;"
+  },
+  {
+    "title": "Faces: Adding Surfaces",
+    "description": "Faces are the surfaces created when three or more vertices connect. With faces, we can apply materials, colors, and textures to transform wireframes into solid, visible 3D objects.",
+    "mode": "faces",
+    "code": "import { useMemo } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport { Edges } from '@react-three/drei';\nimport * as THREE from 'three';\n\nfunction FacesExample() {\n  // Create the main cylinder geometry\n  const canGeometry = useMemo(() => {\n    return new THREE.CylinderGeometry(0.6, 0.6, 2, 32);\n  }, []);\n\n  // Create edges geometry for wireframe overlay\n  const edgesGeometry = useMemo(() => {\n    const geometry = new THREE.CylinderGeometry(0.6, 0.6, 2, 32);\n    return new THREE.EdgesGeometry(geometry);\n  }, []);\n\n  // Get accent color from CSS variable (fallback to teal)\n  const accentColor = typeof window !== 'undefined'\n    ? getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#14b8a6'\n    : '#14b8a6';\n\n  return (\n    <Canvas>\n      <mesh geometry={canGeometry}>\n        {/* Standard material with PBR properties using accent color */}\n        <meshStandardMaterial \n          color={accentColor} \n          metalness={0.8}\n          roughness={0.2}\n        />\n        {/* Optional: Add edges overlay to see the structure */}\n        <Edges geometry={edgesGeometry} color=\"#000000\" threshold={0} />\n      </mesh>\n    </Canvas>\n  );\n}\n\nexport default FacesExample;"
+  },
+  {
+    "title": "Interactive Showcase",
+    "description": "Combine vertices, edges, and faces to create interactive 3D experiences. Try swapping textures below to see how different materials transform the same 3D model in real-time.",
+    "mode": "showcase",
+    "code": "import { useLayoutEffect } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport { useGLTF } from '@react-three/drei';\nimport { useTexture } from '@react-three/drei';\nimport * as THREE from 'three';\n\nfunction BeerCan({ texturePath }: { texturePath: string }) {\n  const { scene } = useGLTF('/Beer.gltf');\n  const texture = useTexture(texturePath);\n\n  // Apply texture to the model's materials\n  useLayoutEffect(() => {\n    scene.traverse((obj: any) => {\n      if (obj.isMesh && obj.material) {\n        // Apply the texture to the material\n        obj.material.map = texture;\n        obj.material.needsUpdate = true;\n      }\n    });\n  }, [scene, texture]);\n\n  return <primitive object={scene} />;\n}\n\nfunction Scene({ texturePath }: { texturePath: string }) {\n  return (\n    <Canvas>\n      <BeerCan texturePath={texturePath} />\n      <ambientLight intensity={0.5} />\n      <directionalLight position={[5, 5, 5]} intensity={1} />\n    </Canvas>\n  );\n}\n\nexport default Scene;"
+  }
+]

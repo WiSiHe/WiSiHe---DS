@@ -10,6 +10,8 @@ export const navigationItems = [
     description: 'Projects',
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
+  { label: '3D', href: '/three-d', description: '3D Art & Experiments' },
+  { label: 'About', href: '/about', description: 'About Henrik' },
 ];
 
 export const socialMediaLinks = [

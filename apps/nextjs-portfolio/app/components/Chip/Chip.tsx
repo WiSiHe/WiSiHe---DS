@@ -96,9 +96,21 @@ const Chip = ({
   };
 
   // Enhanced click handler with proper event handling
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (disabled || !interactive) return;
-    onClick?.(e);
+    onClick?.(e as React.MouseEvent<HTMLDivElement>);
+  };
+
+  // Keyboard handler for accessibility
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
+    if (disabled || !interactive) return;
+    // Support Enter and Space keys for activation
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // Create a synthetic click event
+      const syntheticEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+      onClick?.(syntheticEvent as unknown as React.MouseEvent<HTMLDivElement>);
+    }
   };
 
   // Enhanced remove handler
@@ -108,39 +120,86 @@ const Chip = ({
     onRemove?.();
   };
 
+  const baseClassName = cn(
+    chipStyles({
+      variation,
+      outlined,
+      selected,
+      iconPosition,
+      size,
+      interactive: interactive && !disabled,
+    }),
+    disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
+    className,
+  );
+
+  if (interactive) {
+    return (
+      <button
+        type="button"
+        className={baseClassName}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        disabled={disabled}
+        aria-pressed={selected}
+        aria-label={props['aria-label'] || label}
+        {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      >
+        {/* Subtle background animation on hover */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+
+        {Icon &&
+          React.createElement(Icon, {
+            className: cn(
+              iconSizeClasses[size],
+              'transition-transform duration-200 group-hover:scale-110',
+              iconPosition === 'left' ? 'mr-0.5' : 'ml-0.5',
+            ),
+          } as React.ComponentProps<typeof Icon>)}
+
+        <span className="relative z-10 font-medium">
+          {label}
+          {additionalText && <span className="ml-1 opacity-75">{additionalText}</span>}
+        </span>
+
+        {removable && onRemove && (
+          <button
+            onClick={handleRemove}
+            className={cn(
+              'relative z-10 ml-1 hover:bg-black/10 active:bg-black/20 rounded-full p-0.5 transition-all duration-200 hover:scale-110 active:scale-95',
+              iconSizeClasses[size],
+              disabled && 'pointer-events-none opacity-50',
+            )}
+            aria-label={`Remove ${label}`}
+            disabled={disabled}
+          >
+            <IoClose className="w-full h-full" />
+          </button>
+        )}
+
+        {/* If removable is true but no onRemove function, show a visual indicator but make it clickable */}
+        {removable && !onRemove && (
+          <div className={cn('relative z-10 ml-1 rounded-full p-0.5', iconSizeClasses[size])}>
+            <IoClose className="w-full h-full opacity-30" />
+          </div>
+        )}
+      </button>
+    );
+  }
+
   return (
-    <div
-      className={cn(
-        chipStyles({
-          variation,
-          outlined,
-          selected,
-          iconPosition,
-          size,
-          interactive: interactive && !disabled,
-        }),
-        disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
-        className,
-      )}
-      onClick={handleClick}
-      role={interactive ? 'button' : undefined}
-      tabIndex={interactive && !disabled ? 0 : undefined}
-      aria-pressed={selected}
-      aria-disabled={disabled}
-      {...props}
-    >
+    <div className={baseClassName} {...props}>
       {/* Subtle background animation on hover */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
 
-      {Icon && (
-        <Icon
-          className={cn(
+      {Icon &&
+        React.createElement(Icon, {
+          className: cn(
             iconSizeClasses[size],
             'transition-transform duration-200 group-hover:scale-110',
             iconPosition === 'left' ? 'mr-0.5' : 'ml-0.5',
-          )}
-        />
-      )}
+          ),
+        } as React.ComponentProps<typeof Icon>)}
 
       <span className="relative z-10 font-medium">
         {label}

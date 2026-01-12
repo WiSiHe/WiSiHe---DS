@@ -1,0 +1,52 @@
+'use client';
+
+import { cn } from '@wisihe/utils';
+
+interface GridBackgroundProps {
+  className?: string;
+  opacity?: number;
+  size?: number;
+  secondarySize?: number;
+  secondaryOpacity?: number;
+  fixed?: boolean;
+}
+
+export function GridBackground({
+  className = '',
+  opacity = 0.15,
+  size = 50,
+  secondarySize = 250,
+  secondaryOpacity = 0.1,
+  fixed = false,
+}: GridBackgroundProps) {
+  const positionClass = fixed ? 'fixed' : 'absolute';
+
+  return (
+    <>
+      {/* Primary Grid Pattern */}
+      <div
+        className={cn(positionClass, 'inset-0 pointer-events-none z-0', className)}
+        style={{
+          opacity,
+          backgroundImage:
+            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
+          backgroundSize: `${size}px ${size}px`,
+          backgroundPosition: '0 0',
+        }}
+        aria-hidden="true"
+      />
+      {/* Secondary Grid Pattern for Depth */}
+      <div
+        className={cn(positionClass, 'inset-0 pointer-events-none z-0', className)}
+        style={{
+          opacity: secondaryOpacity,
+          backgroundImage:
+            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
+          backgroundSize: `${secondarySize}px ${secondarySize}px`,
+          backgroundPosition: '0 0',
+        }}
+        aria-hidden="true"
+      />
+    </>
+  );
+}
