@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import Image from 'next/image';
 import type { PresentationSlide } from '../../../three-d/types';
 import {
   PerformanceChart,
@@ -109,7 +110,7 @@ export const ContentSlide = ({
                 transition={{ delay: 0.3 + exampleIndex * 0.1, duration: 0.4 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-300 ${
+                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   selectedExampleIndex === exampleIndex
                     ? 'bg-accent/20 border-accent shadow-lg shadow-accent/20'
                     : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
@@ -136,7 +137,7 @@ export const ContentSlide = ({
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-3 h-3 rounded-full bg-accent flex-shrink-0 mt-1"
+                      className="w-3 h-3 rounded-full bg-accent shrink-0 mt-1"
                     />
                   )}
                 </div>
@@ -187,7 +188,7 @@ export const ContentSlide = ({
           }
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: shouldAnimate ? 0.3 : 0, duration: 0.6 }}
-          className="flex-shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0"
+          className="shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -199,11 +200,13 @@ export const ContentSlide = ({
               className="w-full"
             >
               {selectedExample.image ? (
-                <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50">
-                  <img
+                <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50 aspect-video">
+                  <Image
                     src={selectedExample.image}
                     alt={`${selectedExample.name} - ${selectedExample.description || 'Interactive 3D example'}`}
-                    className="w-full h-auto block max-w-full max-h-[60vh] object-contain"
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     loading="lazy"
                   />
                 </div>
@@ -300,7 +303,7 @@ export const ContentSlide = ({
                     transition={{ delay: 0.2 + 0.1 * itemIndex, duration: 0.4 }}
                     className="flex items-start group gap-4"
                   >
-                    <div className="flex-shrink-0 mt-2">
+                    <div className="shrink-0 mt-2">
                       <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200" />
                     </div>
                     <span className="text-lg md:text-xl lg:text-2xl text-foreground/90 leading-relaxed group-hover:text-foreground transition-colors break-words flex-1">
@@ -356,7 +359,7 @@ export const ContentSlide = ({
           }
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: shouldAnimate ? 0.3 : 0, duration: 0.6 }}
-          className="flex-shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0"
+          className="shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0"
         >
           {slideData.tools ? (
             <div className="w-full max-w-full p-6 bg-surface-elevated rounded-2xl border-2 border-border overflow-hidden min-w-0">
@@ -490,12 +493,15 @@ export const ContentSlide = ({
               )}
             </div>
           ) : slideData.image ? (
-            <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50">
-              <img
+            <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50 aspect-video">
+              <Image
                 src={slideData.image}
                 alt={slideData.subtitle ? `${slideData.title} - ${slideData.subtitle}` : slideData.title}
-                className="w-full h-auto block max-w-full max-h-[60vh] object-contain"
-                loading="lazy"
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading={index <= 2 ? 'eager' : 'lazy'}
+                priority={index <= 2}
               />
             </div>
           ) : null}

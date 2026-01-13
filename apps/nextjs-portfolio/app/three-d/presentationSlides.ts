@@ -34,6 +34,28 @@ export const presentationSlides: PresentationSlide[] = [
     category: 'Introduction',
   },
   {
+    title: 'What is 3D?',
+    subtitle: 'You Experience It Every Day',
+    content: [
+      '3D (three-dimensional) adds depth to flat 2D screens',
+      'Everyday examples:',
+      '• Video games with realistic environments',
+      '• Product configurators on shopping sites',
+      '• Virtual tours of real estate',
+      '• AR filters on social media',
+      '• Medical visualizations and training',
+      '• Architectural walkthroughs',
+      '',
+      '3D makes digital experiences feel more real and interactive',
+    ],
+    type: 'content',
+    category: 'Introduction',
+    // TODO: Replace Giphy placeholder with actual image
+    // Suggested: Collage or illustration showing multiple everyday 3D examples
+    // Image should represent: "Everyday 3D experiences" or "3D in daily life"
+    image: 'https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif',
+  },
+  {
     title: 'Awwwards Conference Workshop',
     subtitle: 'Amsterdam 2024',
     content: [

@@ -19,18 +19,18 @@ export default function ThreeDSlideDeck() {
         style={{ scrollBehavior: 'smooth' }}
       >
         {/* Intro Presentation Section */}
-        <div className="snap-start h-screen flex-shrink-0">
+        <div className="snap-start h-screen shrink-0">
           <IntroPresentation technicalDeckRef={technicalDeckRef} />
         </div>
         {/* Separator Section */}
         <section
           aria-label="Transition to technical content"
-          className="snap-start h-screen w-full flex flex-col items-center justify-center pt-28 md:pt-32 lg:pt-36 relative overflow-hidden bg-gradient-to-b from-background via-surface/20 to-background flex-shrink-0"
+          className="snap-start h-screen w-full flex flex-col items-center justify-center pt-28 md:pt-32 lg:pt-36 relative overflow-hidden bg-linear-to-b from-background via-surface/20 to-background shrink-0"
         >
           <GridBackground />
 
           {/* Decorative Lines */}
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-50" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent opacity-50" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-px bg-accent opacity-30" />
 
           {/* Content */}
