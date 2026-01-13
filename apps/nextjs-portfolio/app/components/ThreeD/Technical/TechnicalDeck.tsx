@@ -57,7 +57,7 @@ export function TechnicalDeck() {
   };
 
   return (
-    <div className="snap-start h-screen w-full flex flex-col lg:flex-row bg-background text-foreground overflow-hidden max-w-full relative flex-shrink-0">
+    <div className="snap-start h-screen w-full flex flex-col lg:flex-row bg-background text-foreground overflow-hidden max-w-full relative shrink-0">
       <GridBackground />
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0">

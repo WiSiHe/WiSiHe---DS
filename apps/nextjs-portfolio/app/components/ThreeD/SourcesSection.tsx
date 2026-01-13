@@ -78,7 +78,7 @@ export function SourcesSection() {
   ];
 
   return (
-    <section className="snap-start h-screen w-full flex flex-col items-center justify-center pt-28 md:pt-32 lg:pt-36 relative overflow-hidden bg-background flex-shrink-0">
+    <section className="snap-start h-screen w-full flex flex-col items-center justify-center pt-28 md:pt-32 lg:pt-36 relative overflow-hidden bg-background shrink-0">
       <GridBackground />
 
       {/* Decorative Background Elements */}
@@ -259,7 +259,7 @@ export function SourcesSection() {
                     viewBox="0 0 24 24"
                     strokeWidth={2}
                     stroke="currentColor"
-                    className="w-5 h-5 text-foreground/40 group-hover:text-accent transition-colors flex-shrink-0"
+                    className="w-5 h-5 text-foreground/40 group-hover:text-accent transition-colors shrink-0"
                   >
                     <path
                       strokeLinecap="round"

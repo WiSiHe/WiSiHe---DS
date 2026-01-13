@@ -23,12 +23,13 @@ export function TechnicalNavigation({
         type="button"
         whileHover={!isFirstSlide ? { scale: 1.05 } : {}}
         whileTap={!isFirstSlide ? { scale: 0.95 } : {}}
-        className={`px-8 py-4 rounded-xl font-bold text-lg transition-all ${
+        className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isFirstSlide
             ? 'bg-surface-elevated/90 text-foreground/30 cursor-not-allowed'
             : 'bg-surface-elevated/90 text-foreground border-2 border-border/50 hover:border-accent/50 hover:bg-surface/90'
         }`}
         aria-label="Previous slide"
+        aria-disabled={isFirstSlide}
       >
         <span aria-hidden="true">←</span> Previous
       </motion.button>
@@ -38,12 +39,13 @@ export function TechnicalNavigation({
         type="button"
         whileHover={!isLastSlide ? { scale: 1.05 } : {}}
         whileTap={!isLastSlide ? { scale: 0.95 } : {}}
-        className={`px-8 py-4 rounded-xl font-bold text-lg transition-all ${
+        className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isLastSlide
             ? 'bg-surface-elevated/90 text-foreground/30 cursor-not-allowed'
             : 'bg-accent/90 text-accent-foreground hover:opacity-90 shadow-lg shadow-accent/30'
         }`}
         aria-label="Next slide"
+        aria-disabled={isLastSlide}
       >
         Next <span aria-hidden="true">→</span>
       </motion.button>

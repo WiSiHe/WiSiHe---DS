@@ -138,7 +138,7 @@ export function TechnicalSlideContent({
                       type="button"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all ${
+                      className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                         autoRotate
                           ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
                           : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
@@ -174,7 +174,7 @@ export function TechnicalSlideContent({
                           type="button"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                          className={`px-6 py-3 rounded-xl font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                             showcaseTexture === texture.value
                               ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
                               : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
@@ -210,7 +210,7 @@ export function TechnicalSlideContent({
                                 onDirectionalLightPositionChange(newPosition);
                               }}
                               step="0.5"
-                              className="w-full px-3 py-2 rounded-lg bg-surface-elevated border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                              className="w-full px-3 py-2 rounded-lg bg-surface-elevated border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                               aria-label={`Light position ${axis} axis`}
                             />
                           </div>
@@ -230,7 +230,7 @@ export function TechnicalSlideContent({
                         step="0.1"
                         value={directionalLightIntensity}
                         onChange={e => onDirectionalLightIntensityChange(parseFloat(e.target.value))}
-                        className="w-full h-2 bg-surface-elevated rounded-lg appearance-none cursor-pointer accent-accent"
+                        className="w-full h-2 bg-surface-elevated rounded-lg appearance-none cursor-pointer accent-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         aria-label="Light intensity"
                       />
                       <div className="flex justify-between text-xs text-foreground/50">

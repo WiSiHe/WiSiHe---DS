@@ -3,12 +3,12 @@
 import { cn } from '@wisihe/utils';
 
 interface GridBackgroundProps {
-  className?: string;
-  opacity?: number;
-  size?: number;
-  secondarySize?: number;
-  secondaryOpacity?: number;
-  fixed?: boolean;
+  readonly className?: string;
+  readonly opacity?: number;
+  readonly size?: number;
+  readonly secondarySize?: number;
+  readonly secondaryOpacity?: number;
+  readonly fixed?: boolean;
 }
 
 export function GridBackground({

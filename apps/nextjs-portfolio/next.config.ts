@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'w.wallhaven.cc',
       },
+      {
+        protocol: 'https',
+        hostname: 'media.giphy.com',
+      },
     ],
     // Optimize image loading performance
     formats: ['image/webp', 'image/avif'],

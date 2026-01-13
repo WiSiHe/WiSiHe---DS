@@ -153,7 +153,7 @@ export const IntroPresentation = ({
       {!isTechnicalSectionVisible && (
         <button
           onClick={handleSkipToCoolPart}
-          className="fixed bottom-6 right-6 z-50 px-6 py-3 bg-accent text-accent-foreground rounded-full font-semibold shadow-lg shadow-accent/30 hover:bg-accent/90 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+          className="fixed bottom-6 right-6 z-50 px-6 py-3 bg-accent text-accent-foreground rounded-full font-semibold shadow-lg shadow-accent/30 hover:bg-accent/90 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           aria-label="Skip to technical slide deck"
           type="button"
         >
@@ -161,6 +161,13 @@ export const IntroPresentation = ({
           <span aria-hidden="true">→</span>
         </button>
       )}
+
+      {/* Screen reader announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {presentationSlides[currentSlide]?.title && (
+          <span>Slide {currentSlide + 1} of {presentationSlides.length}: {presentationSlides[currentSlide].title}</span>
+        )}
+      </div>
 
       {/* Scroll Container */}
       <section
@@ -186,7 +193,7 @@ export const IntroPresentation = ({
               ref={el => {
                 slideRefs.current[index] = el;
               }}
-              className="h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 flex-shrink-0 overflow-hidden max-w-full"
+              className="h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 shrink-0 overflow-hidden max-w-full"
             >
               <div className="w-full max-w-full flex items-center justify-center overflow-hidden">
                 {slideData.type === 'separator' ? (
