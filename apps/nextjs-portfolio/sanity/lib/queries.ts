@@ -542,3 +542,155 @@ export const randomPaintingsQuery = defineQuery(`
     }
   }
 `);
+
+export const presentationQuery = defineQuery(`
+  *[_type == "presentation" && slug.current == $slug][0] {
+    _id,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      name
+    },
+    slides[] {
+      _type,
+      status,
+      _type == "contentSlide" => {
+        title,
+        subtitle,
+        content,
+        slideDesign,
+        media {
+          mediaType,
+          mediaType == "image" => {
+            image {
+              ...,
+              "url": asset->url,
+              "lqip": asset->metadata.lqip,
+              "aspectRatio": asset->metadata.dimensions.aspectRatio,
+              alt
+            },
+            imageAspectRatio
+          },
+          mediaType == "video" => {
+            videoUrl
+          },
+          mediaType == "iframe" => {
+            iframeUrl,
+            iframeAspectRatio
+          },
+          mediaType == "numbers" => {
+            metrics[] {
+              label,
+              value,
+              description,
+              color
+            }
+          },
+          mediaType == "graph" => {
+            chartType
+          },
+          mediaType == "custom" => {
+            componentName,
+            componentProps
+          }
+        },
+        category->{
+          _id,
+          name,
+          description,
+          color
+        },
+        sources[] {
+          text,
+          url
+        },
+        tools[] {
+          name,
+          description,
+          url,
+          category,
+          workshopUrl,
+          nerdLevel
+        },
+        examples[] {
+          name,
+          description,
+          image {
+            ...,
+            "url": asset->url,
+            "lqip": asset->metadata.lqip,
+            "aspectRatio": asset->metadata.dimensions.aspectRatio
+          },
+          iframe,
+          url
+        }
+      },
+      _type == "titleSlide" => {
+        title,
+        subtitle,
+        slideDesign,
+        media {
+          mediaType,
+          mediaType == "image" => {
+            image {
+              ...,
+              "url": asset->url,
+              "lqip": asset->metadata.lqip,
+              "aspectRatio": asset->metadata.dimensions.aspectRatio,
+              alt
+            },
+            imageAspectRatio
+          },
+          mediaType == "video" => {
+            videoUrl
+          },
+          mediaType == "iframe" => {
+            iframeUrl,
+            iframeAspectRatio
+          },
+          mediaType == "numbers" => {
+            metrics[] {
+              label,
+              value,
+              description,
+              color
+            }
+          },
+          mediaType == "graph" => {
+            chartType
+          },
+          mediaType == "custom" => {
+            componentName,
+            componentProps
+          }
+        }
+      },
+      _type == "separatorSlide" => {
+        title,
+        slideDesign,
+        category->{
+          _id,
+          name,
+          description,
+          color
+        }
+      }
+    }
+  }
+`);
+
+export const allPresentationsQuery = defineQuery(`
+  *[_type == "presentation"] | order(_createdAt desc) {
+    _id,
+    title,
+    description,
+    "slug": slug.current,
+    "slidesCount": count(slides),
+    tags[]->{
+      _id,
+      name
+    }
+  }
+`);

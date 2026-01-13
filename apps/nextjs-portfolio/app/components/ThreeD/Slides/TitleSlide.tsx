@@ -16,6 +16,22 @@ export const TitleSlide = ({
   shouldAnimate,
   slideDirection,
 }: TitleSlideProps) => {
+  const slideDesign = slideData.slideDesign || 'default';
+  
+  const getTitleClasses = () => {
+    switch (slideDesign) {
+      case 'minimal':
+        return 'text-4xl md:text-6xl lg:text-7xl';
+      case 'hero':
+        return 'text-6xl md:text-8xl lg:text-9xl xl:text-[12rem] 2xl:text-[14rem]';
+      default:
+        return 'text-5xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[12rem]';
+    }
+  };
+
+  const showDecorations = slideDesign !== 'minimal';
+  const isHero = slideDesign === 'hero';
+
   return (
     <motion.div
       key={`title-${index}`}
@@ -30,11 +46,15 @@ export const TitleSlide = ({
       }
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      className="text-center space-y-8 py-12 relative w-full"
+      className={`text-center space-y-8 relative w-full ${slideDesign === 'minimal' ? 'py-8' : isHero ? 'py-16 lg:py-24' : 'py-12'}`}
     >
       {/* Decorative elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+      {showDecorations && (
+        <>
+          <div className={`absolute top-0 left-1/2 -translate-x-1/2 ${isHero ? 'w-[600px] h-[600px]' : 'w-96 h-96'} bg-accent/${isHero ? '10' : '5'} rounded-full blur-3xl`} />
+          <div className={`absolute bottom-0 right-0 ${isHero ? 'w-96 h-96' : 'w-64 h-64'} bg-accent/${isHero ? '10' : '5'} rounded-full blur-3xl`} />
+        </>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -59,7 +79,7 @@ export const TitleSlide = ({
           </>
         )}
       </motion.div>
-      <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[12rem] font-black mb-8 text-foreground uppercase leading-[1.1] tracking-tight relative z-10 px-4">
+      <h1 className={`${getTitleClasses()} font-black mb-8 text-foreground uppercase leading-[1.1] tracking-tight relative z-10 px-4 break-words overflow-wrap-anywhere max-w-full`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
         <motion.span
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,14 +106,16 @@ export const TitleSlide = ({
           transition={{ delay: 0.5, duration: 0.6 }}
           className="relative z-10"
         >
-          <p className="text-2xl md:text-4xl lg:text-5xl text-foreground/80 font-bold max-w-5xl mx-auto leading-relaxed mb-6">
+          <p className="text-2xl md:text-4xl lg:text-5xl text-foreground/80 font-bold max-w-5xl mx-auto leading-relaxed mb-6 break-words overflow-wrap-anywhere" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             {slideData.subtitle}
           </p>
-          <div className="flex justify-center gap-2 mt-8">
-            <div className="h-1 w-16 bg-accent rounded-full" />
-            <div className="h-1 w-8 bg-accent/50 rounded-full" />
-            <div className="h-1 w-4 bg-accent/30 rounded-full" />
-          </div>
+          {showDecorations && (
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="h-1 w-16 bg-accent rounded-full" />
+              <div className="h-1 w-8 bg-accent/50 rounded-full" />
+              <div className="h-1 w-4 bg-accent/30 rounded-full" />
+            </div>
+          )}
         </motion.div>
       )}
     </motion.div>

@@ -60,8 +60,8 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             <IconLogo
               color="currentColor"
               className={cn('transition-all duration-300 text-foreground group-hover:text-accent')}
-              width={32}
-              height={32}
+              width={80}
+              height={80}
             />
           </Link>
         </motion.div>

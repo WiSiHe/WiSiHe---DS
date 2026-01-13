@@ -42,20 +42,55 @@ export interface Example {
   url?: string;
 }
 
-// Support for nested content items (main bullets with sub-bullets)
-export type ContentItem = string | { text: string; children?: ContentItem[] };
+// Support for nested content items (main bullets with sub-bullets and links)
+// Used for static fallback slides
+export type ContentItem = string | { text: string; url?: string; children?: ContentItem[] };
+
+export interface Metric {
+  label: string;
+  value: string;
+  description?: string;
+  color?: string;
+}
+
+// Portable Text block type (simplified for type checking)
+// Full type comes from next-sanity's PortableTextBlock
+export interface PortableTextBlockLike {
+  _type: string;
+  _key?: string;
+  children?: unknown[];
+  markDefs?: unknown[];
+  style?: string;
+  listItem?: string;
+  level?: number;
+}
+
+// Content can be either:
+// - PortableTextBlock[] from Sanity (rich text with formatting)
+// - ContentItem[] from static fallback slides (simple text/links)
+export type SlideContent = PortableTextBlockLike[] | ContentItem[] | null;
 
 export interface PresentationSlide {
   title: string;
   subtitle?: string;
-  content: ContentItem[] | null;
+  content: SlideContent;
   type: 'title' | 'content' | 'separator';
+  // Media fields (only one will be set based on mediaType)
   image?: string;
+  imageAspectRatio?: 'video' | 'square' | 'portrait' | 'landscape' | 'auto' | string;
+  videoUrl?: string;
   iframe?: string;
+  iframeAspectRatio?: 'video' | 'square' | 'portrait' | 'landscape' | 'auto' | string;
+  metrics?: Metric[];
+  chartType?: 'performance' | 'business-impact' | 'engagement' | 'history-timeline';
+  currentEra?: string; // Used for history timeline to indicate which era is active
+  customComponent?: string;
+  customProps?: Record<string, any>;
+  // Design and organization
+  slideDesign?: 'default' | 'centered' | 'split' | 'full-width' | 'minimal' | 'hero' | 'bold';
+  category?: string;
+  // Additional content
   tools?: Tool[];
   examples?: Example[];
   sources?: Source[];
-  category?: string;
-  chartType?: 'performance' | 'business-impact' | 'engagement' | 'history-timeline';
-  currentEra?: string;
 }
