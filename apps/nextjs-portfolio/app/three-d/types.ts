@@ -42,10 +42,13 @@ export interface Example {
   url?: string;
 }
 
+// Support for nested content items (main bullets with sub-bullets)
+export type ContentItem = string | { text: string; children?: ContentItem[] };
+
 export interface PresentationSlide {
   title: string;
   subtitle?: string;
-  content: string[] | null;
+  content: ContentItem[] | null;
   type: 'title' | 'content' | 'separator';
   image?: string;
   iframe?: string;

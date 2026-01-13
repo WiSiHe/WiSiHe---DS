@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Image from 'next/image';
-import type { PresentationSlide } from '../../../three-d/types';
+import type { PresentationSlide, ContentItem } from '../../../three-d/types';
 import {
   PerformanceChart,
   BusinessImpactChart,
@@ -87,14 +87,16 @@ export const ContentSlide = ({
             </motion.p>
           )}
 
-          {slideData.content && (
+          {slideData.content && slideData.content.length > 0 && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
               className="text-xl md:text-2xl text-foreground/80 mb-8 leading-relaxed break-words"
             >
-              {slideData.content[0]}
+              {typeof slideData.content[0] === 'string'
+                ? slideData.content[0].trim().replace(/^•\s*/, '')
+                : slideData.content[0].text.trim().replace(/^•\s*/, '')}
             </motion.p>
           )}
 
@@ -288,29 +290,78 @@ export const ContentSlide = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-4 max-w-full list-none"
+            className="space-y-5 max-w-full list-none"
           >
             {slideData.content
-              .filter(item => item.trim() !== '') // Filter out empty strings
+              .filter(item => {
+                // Filter out empty strings or empty objects
+                if (typeof item === 'string') {
+                  return item.trim() !== '';
+                }
+                return item.text?.trim() !== '';
+              })
               .map((item, itemIndex) => {
-                // Remove leading bullet character if present
-                const cleanItem = item.trim().replace(/^•\s*/, '');
-                return (
-                  <motion.li
-                    key={itemIndex}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + 0.1 * itemIndex, duration: 0.4 }}
-                    className="flex items-start group gap-4"
-                  >
-                    <div className="shrink-0 mt-2">
-                      <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200" />
-                    </div>
-                    <span className="text-lg md:text-xl lg:text-2xl text-foreground/90 leading-relaxed group-hover:text-foreground transition-colors break-words flex-1">
-                      {cleanItem}
-                    </span>
-                  </motion.li>
-                );
+                // Recursive component for rendering nested bullets
+                const renderContentItem = (
+                  contentItem: ContentItem,
+                  index: number,
+                  level: number = 0,
+                ) => {
+                  const isNested = level > 0;
+                  const isObject = typeof contentItem === 'object';
+                  const text = isObject ? contentItem.text : contentItem;
+                  const children = isObject ? contentItem.children : undefined;
+                  
+                  // Remove leading bullet character if present
+                  const cleanText = text.trim().replace(/^•\s*/, '');
+
+                  return (
+                    <motion.li
+                      key={`${index}-${level}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + 0.1 * itemIndex + 0.05 * level, duration: 0.4 }}
+                      className={`flex items-start group gap-4 ${isNested ? 'pl-8 md:pl-12' : ''}`}
+                    >
+                      <div className="shrink-0 mt-2">
+                        {isNested ? (
+                          // Sub-bullet: smaller dash
+                          <div className="w-3 h-0.5 bg-accent/70 group-hover:bg-accent group-hover:scale-110 transition-all duration-200" />
+                        ) : (
+                          // Main bullet: accent-colored dot
+                          <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <span
+                          className={`leading-relaxed group-hover:text-foreground transition-colors break-words ${
+                            isNested
+                              ? 'text-base md:text-lg lg:text-xl text-foreground/80'
+                              : 'text-lg md:text-xl lg:text-2xl text-foreground/90'
+                          }`}
+                        >
+                          {cleanText}
+                        </span>
+                        {children && children.length > 0 && (
+                          <ul className="mt-3 space-y-3 list-none">
+                            {children
+                              .filter(child => {
+                                if (typeof child === 'string') {
+                                  return child.trim() !== '';
+                                }
+                                return child.text?.trim() !== '';
+                              })
+                              .map((child, childIndex) =>
+                                renderContentItem(child, childIndex, level + 1),
+                              )}
+                          </ul>
+                        )}
+                      </div>
+                    </motion.li>
+                  );
+                };
+
+                return renderContentItem(item, itemIndex);
               })}
           </motion.ul>
         )}

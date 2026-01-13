@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion } from 'motion/react';
+import { ThreeDHero } from '../components/ThreeD/ThreeDHero';
 import { IntroPresentation } from '../components/ThreeD/IntroPresentation';
 import { TechnicalDeck } from '../components/ThreeD/Technical/TechnicalDeck';
 import { SourcesSection } from '../components/ThreeD/SourcesSection';
@@ -18,6 +19,9 @@ export default function ThreeDSlideDeck() {
         className="w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden max-w-full"
         style={{ scrollBehavior: 'smooth' }}
       >
+        {/* Hero Section with Spline Viewer */}
+        <ThreeDHero />
+
         {/* Intro Presentation Section */}
         <div className="snap-start h-screen shrink-0">
           <IntroPresentation technicalDeckRef={technicalDeckRef} />

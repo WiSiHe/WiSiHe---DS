@@ -112,7 +112,11 @@ export function TechnicalCanvasPanel({
           }
         >
           <Canvas
-            camera={{ position: [0, 0, 5], fov: 50 }}
+            camera={
+              mode === 'showcase'
+                ? { position: [0, 2, 8], fov: 45 }
+                : { position: [0, 0, 5], fov: 50 }
+            }
             gl={{
               antialias: true,
               preserveDrawingBuffer: false,
