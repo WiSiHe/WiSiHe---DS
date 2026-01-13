@@ -60,5 +60,5 @@ export const TEXTURE_OPTIONS = [
 export const DEFAULT_TEXTURE = '/Regular - texture.jpg';
 
 // Default light configuration
-export const DEFAULT_LIGHT_POSITION: [number, number, number] = [10, 10, 5];
-export const DEFAULT_LIGHT_INTENSITY = 1;
+export const DEFAULT_LIGHT_POSITION: [number, number, number] = [8, 12, 6];
+export const DEFAULT_LIGHT_INTENSITY = 1.2;

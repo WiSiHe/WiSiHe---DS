@@ -126,6 +126,14 @@ export const IntroPresentation = ({
     technicalDeckRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleScrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       {/* Scroll Indicator */}
@@ -149,17 +157,35 @@ export const IntroPresentation = ({
         </motion.div>
       )}
 
-      {/* Skip Button - Hidden when technical section is visible */}
+      {/* Navigation Buttons - Hidden when technical section is visible */}
       {!isTechnicalSectionVisible && (
-        <button
-          onClick={handleSkipToCoolPart}
-          className="fixed bottom-6 right-6 z-50 px-6 py-3 bg-accent text-accent-foreground rounded-full font-semibold shadow-lg shadow-accent/30 hover:bg-accent/90 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          aria-label="Skip to technical slide deck"
-          type="button"
-        >
-          <span>Skip to the cool part</span>
-          <span aria-hidden="true">→</span>
-        </button>
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+          {/* Scroll to Top Button */}
+          <motion.button
+            onClick={handleScrollToTop}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-surface-elevated/90 text-foreground rounded-full font-semibold shadow-lg shadow-accent/20 border-2 border-border/50 hover:border-accent/50 hover:bg-surface/90 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Scroll to top"
+            type="button"
+          >
+            <span aria-hidden="true">↑</span>
+            <span>Scroll to top</span>
+          </motion.button>
+
+          {/* Skip to Cool Part Button */}
+          <motion.button
+            onClick={handleSkipToCoolPart}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-accent text-accent-foreground rounded-full font-semibold shadow-lg shadow-accent/30 hover:bg-accent hover:opacity-100 active:scale-95 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Skip to technical slide deck"
+            type="button"
+          >
+            <span>Skip to the cool part</span>
+            <span aria-hidden="true">→</span>
+          </motion.button>
+        </div>
       )}
 
       {/* Screen reader announcements */}

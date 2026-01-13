@@ -61,7 +61,7 @@ export function PersistentScene({
 
   return (
     <>
-      <SceneLights lightConfig={lightConfig} />
+      <SceneLights lightConfig={lightConfig} mode={mode} />
 
       {/* Route to appropriate scene based on mode */}
       {mode === 'intro' && <IntroScene />}

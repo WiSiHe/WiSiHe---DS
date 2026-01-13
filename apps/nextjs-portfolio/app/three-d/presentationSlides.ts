@@ -2,13 +2,6 @@ import type { PresentationSlide } from './types';
 
 export const presentationSlides: PresentationSlide[] = [
   {
-    title: "Houston, we're coding 3D! 🚀",
-    subtitle: 'Does Three.js have to be rocket science in 2026?',
-    content: null,
-    type: 'title',
-    category: 'Introduction',
-  },
-  {
     title: 'Meet Your Guide & The Mission',
     subtitle: 'Henrik Wilhelm Sissener - Frontend Developer @NOA-IGNITE',
     content: [
