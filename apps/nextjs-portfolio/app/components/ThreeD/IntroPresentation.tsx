@@ -6,18 +6,26 @@ import { ScrollIndicator } from '../ScrollIndicator';
 import { SeparatorSlide } from './Slides/SeparatorSlide';
 import { TitleSlide } from './Slides/TitleSlide';
 import { ContentSlide } from './Slides/ContentSlide';
-import { presentationSlides } from '../../three-d/presentationSlides';
+import { presentationSlides as fallbackSlides } from '../../three-d/presentationSlides';
 import { GridBackground } from './GridBackground';
+import type { PresentationSlide } from '../../three-d/types';
 
 export const IntroPresentation = ({
   technicalDeckRef,
+  technicalSeparatorRef,
+  slides,
 }: {
   technicalDeckRef: React.RefObject<HTMLDivElement | null>;
+  technicalSeparatorRef?: React.RefObject<HTMLElement | null>;
+  slides?: PresentationSlide[] | null;
 }) => {
+  // Use Sanity slides if available, otherwise fall back to static slides
+  const presentationSlides = slides && slides.length > 0 ? slides : fallbackSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showCategoryTransition, setShowCategoryTransition] = useState(false);
   const [previousSlideIndex, setPreviousSlideIndex] = useState(0);
   const [isTechnicalSectionVisible, setIsTechnicalSectionVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const previousCategoryRef = useRef<string | undefined>(undefined);
@@ -123,16 +131,59 @@ export const IntroPresentation = ({
   }, [currentSlide, presentationSlides.length]);
 
   const handleSkipToCoolPart = () => {
-    technicalDeckRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleScrollToTop = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to the "Now for the Technical Part" separator section
+    if (technicalSeparatorRef?.current) {
+      technicalSeparatorRef.current.scrollIntoView({ behavior: 'smooth' });
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Fallback to technical deck if separator ref not available
+      technicalDeckRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Track scroll position to show/hide scroll to top button
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      // Check if scrolled down (more than 50px threshold)
+      const scrolled = container.scrollTop > 50;
+      setIsScrolled(scrolled);
+    };
+
+    // Check initial scroll position
+    handleScroll();
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleScrollToTop = () => {
+    // Scroll to absolute top
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Also scroll window to top as fallback
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePrevSlide = () => {
+    if (currentSlide > 0) {
+      slideRefs.current[currentSlide - 1]?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNextSlide = () => {
+    if (currentSlide < presentationSlides.length - 1) {
+      slideRefs.current[currentSlide + 1]?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const isFirstSlide = currentSlide === 0;
+  const isLastSlide = currentSlide === presentationSlides.length - 1;
 
   return (
     <>
@@ -157,41 +208,100 @@ export const IntroPresentation = ({
         </motion.div>
       )}
 
-      {/* Navigation Buttons - Hidden when technical section is visible */}
+      {/* Navigation Panel - All controls on right side */}
       {!isTechnicalSectionVisible && (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-          {/* Scroll to Top Button */}
-          <motion.button
-            onClick={handleScrollToTop}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-surface-elevated/90 text-foreground rounded-full font-semibold shadow-lg shadow-accent/20 border-2 border-border/50 hover:border-accent/50 hover:bg-surface/90 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label="Scroll to top"
-            type="button"
-          >
-            <span aria-hidden="true">↑</span>
-            <span>Scroll to top</span>
-          </motion.button>
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+          {/* Slide Navigation Group */}
+          <div className="flex flex-col items-center gap-1 bg-surface-elevated/95 backdrop-blur-sm rounded-2xl p-2 border border-border/50 shadow-lg">
+            {/* Previous Slide Button */}
+            <motion.button
+              onClick={handlePrevSlide}
+              disabled={isFirstSlide}
+              whileHover={isFirstSlide ? {} : { scale: 1.1 }}
+              whileTap={isFirstSlide ? {} : { scale: 0.95 }}
+              className={`w-10 h-10 rounded-xl font-semibold transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                isFirstSlide
+                  ? 'text-foreground/30 cursor-not-allowed'
+                  : 'text-foreground hover:bg-surface/80 hover:text-accent'
+              }`}
+              aria-label="Previous slide"
+              type="button"
+            >
+              <span aria-hidden="true" className="text-lg">
+                ↑
+              </span>
+            </motion.button>
 
-          {/* Skip to Cool Part Button */}
-          <motion.button
-            onClick={handleSkipToCoolPart}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-accent text-accent-foreground rounded-full font-semibold shadow-lg shadow-accent/30 hover:bg-accent hover:opacity-100 active:scale-95 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label="Skip to technical slide deck"
-            type="button"
-          >
-            <span>Skip to the cool part</span>
-            <span aria-hidden="true">→</span>
-          </motion.button>
+            {/* Slide Counter */}
+            <div className="px-3 py-1">
+              <span className="text-xs font-mono text-foreground/60">
+                {currentSlide + 1}/{presentationSlides.length}
+              </span>
+            </div>
+
+            {/* Next Slide Button */}
+            <motion.button
+              onClick={handleNextSlide}
+              disabled={isLastSlide}
+              whileHover={isLastSlide ? {} : { scale: 1.1 }}
+              whileTap={isLastSlide ? {} : { scale: 0.95 }}
+              className={`w-10 h-10 rounded-xl font-semibold transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                isLastSlide
+                  ? 'text-foreground/30 cursor-not-allowed'
+                  : 'text-foreground hover:bg-surface/80 hover:text-accent'
+              }`}
+              aria-label="Next slide"
+              type="button"
+            >
+              <span aria-hidden="true" className="text-lg">
+                ↓
+              </span>
+            </motion.button>
+          </div>
+
+          {/* Action Buttons Group */}
+          <div className="flex flex-col gap-2">
+            {/* Scroll to Top Button - Only show when scrolled */}
+            {isScrolled && (
+              <motion.button
+                onClick={handleScrollToTop}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-4 py-2 bg-surface-elevated/95 backdrop-blur-sm text-foreground rounded-xl font-medium text-sm shadow-lg border border-border/50 hover:border-accent/50 hover:text-accent transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-label="Scroll to top"
+                type="button"
+              >
+                <span aria-hidden="true">↑</span>
+                <span>Top</span>
+              </motion.button>
+            )}
+
+            {/* Skip to Cool Part Button */}
+            <motion.button
+              onClick={handleSkipToCoolPart}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-4 py-2 bg-accent text-accent-foreground rounded-xl font-medium text-sm shadow-lg shadow-accent/20 hover:opacity-90 transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="Skip to technical presentation"
+              type="button"
+            >
+              <span>Skip ahead</span>
+              <span aria-hidden="true">→</span>
+            </motion.button>
+          </div>
         </div>
       )}
 
       {/* Screen reader announcements */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {presentationSlides[currentSlide]?.title && (
-          <span>Slide {currentSlide + 1} of {presentationSlides.length}: {presentationSlides[currentSlide].title}</span>
+          <span>
+            Slide {currentSlide + 1} of {presentationSlides.length}:{' '}
+            {presentationSlides[currentSlide].title}
+          </span>
         )}
       </div>
 
@@ -222,21 +332,23 @@ export const IntroPresentation = ({
               className="h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 shrink-0 overflow-hidden max-w-full"
             >
               <div className="w-full max-w-full flex items-center justify-center overflow-hidden">
-                {slideData.type === 'separator' ? (
+                {slideData.type === 'separator' && (
                   <SeparatorSlide
                     slideData={slideData}
                     index={index}
                     shouldAnimate={shouldAnimate}
                     slideDirection={slideDirection}
                   />
-                ) : slideData.type === 'title' ? (
+                )}
+                {slideData.type === 'title' && (
                   <TitleSlide
                     slideData={slideData}
                     index={index}
                     shouldAnimate={shouldAnimate}
                     slideDirection={slideDirection}
                   />
-                ) : (
+                )}
+                {slideData.type === 'content' && (
                   <ContentSlide
                     slideData={slideData}
                     index={index}

@@ -37,6 +37,14 @@ const categories: CategoryItem[] = [
     items: [{ title: 'Recipes', icon: '🍳', schemaType: 'recipe' }],
   },
   {
+    title: 'Presentations',
+    icon: '📊',
+    items: [
+      { title: 'Presentations', icon: '📊', schemaType: 'presentation' },
+      { title: 'Categories', icon: '🏷️', schemaType: 'presentationCategory' },
+    ],
+  },
+  {
     title: 'Management',
     icon: '🏷️',
     items: [{ title: 'Tags', icon: '🏷️', schemaType: 'tag' }],

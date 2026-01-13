@@ -1,181 +1,177 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { resolveCssColorForAnimation } from '../ThreeD/utils/colorUtils';
-import { useMemo } from 'react';
+import Image from 'next/image';
+import { cn } from '@wisihe/utils';
 
-export const HistoryTimeline = ({
-  currentHistorySlideIndex,
-}: {
-  currentHistorySlideIndex?: number;
-}) => {
-  // Timeline with all eras, progressively animating based on slide index (0-3)
-  const milestones = [
-    { period: '1995-2010', milestone: 'Plugin Era', position: 0 },
-    { period: '2011', milestone: 'WebGL', position: 33 },
-    { period: 'Mid-2010s', milestone: 'Three.js', position: 66 },
-    { period: '2020s', milestone: 'React Three Fiber', position: 100 },
-  ];
+interface HistoryTimelineProps {
+  activeIndex: number;
+}
 
-  // Calculate progress based on slide index (0-3 maps to 0%, 33%, 66%, 100%)
-  const slideIndex = currentHistorySlideIndex ?? 0;
-  const progressWidth = (slideIndex / 3) * 100;
+interface Phase {
+  period: string;
+  title: string;
+  icon?: string;
+  emoji?: string;
+  color: string;
+}
 
-  // Resolve CSS colors for animations (only on client side)
-  const accentColor = useMemo(
-    () => resolveCssColorForAnimation('hsl(var(--accent))', '#ff00ff'),
-    [],
-  );
-  const foregroundColor = useMemo(
-    () => resolveCssColorForAnimation('hsl(var(--foreground))', '#ffffff'),
-    [],
-  );
-  const foregroundColor20 = useMemo(
-    () => resolveCssColorForAnimation('hsl(var(--foreground) / 0.2)', 'rgba(255, 255, 255, 0.2)'),
-    [],
-  );
-  const foregroundColor50 = useMemo(
-    () => resolveCssColorForAnimation('hsl(var(--foreground) / 0.5)', 'rgba(255, 255, 255, 0.5)'),
-    [],
-  );
-  const foregroundColor60 = useMemo(
-    () => resolveCssColorForAnimation('hsl(var(--foreground) / 0.6)', 'rgba(255, 255, 255, 0.6)'),
-    [],
-  );
+const PHASES: Phase[] = [
+  {
+    period: '1995-2010',
+    title: 'The Dark Ages',
+    emoji: '⚡',
+    color: '#8b5cf6',
+  },
+  {
+    period: '2011',
+    title: 'The Spark',
+    emoji: '🔺',
+    color: '#f59e0b',
+  },
+  {
+    period: 'Mid-2010s',
+    title: 'The Foundation',
+    emoji: '📦',
+    color: '#10b981',
+  },
+  {
+    period: '2020s',
+    title: 'The Explosion',
+    emoji: '🚀',
+    color: '#ec4899',
+  },
+];
+
+export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
+  // Calculate progress percentage for the line fill
+  const progressPercent = (activeIndex / (PHASES.length - 1)) * 100;
 
   return (
-    <div className="w-full min-w-0 max-w-full py-4 md:py-6 px-2 md:px-4 overflow-hidden">
-      <div className="relative max-w-full">
-        {/* Timeline Line Background */}
-        <div className="absolute top-6 md:top-8 left-0 right-0 h-1 md:h-1.5 bg-surface rounded-full" />
+    <div className="w-full py-8 px-4">
+      {/* Timeline container */}
+      <div className="relative">
+        {/* Horizontal line - background */}
+        <div className="absolute top-5 left-0 right-0 h-0.5 bg-foreground/10" />
 
-        {/* Animated Progress Line - Progressive Drawing with Spring */}
+        {/* Horizontal line - progress fill */}
         <motion.div
+          className="absolute top-5 left-0 h-0.5 origin-left"
+          style={{ backgroundColor: PHASES[activeIndex].color }}
           initial={{ width: 0 }}
-          animate={{ width: `${progressWidth}%` }}
-          transition={{
-            type: 'spring',
-            bounce: 0.3,
-            duration: 1.5,
-            ease: [0.4, 0, 0.2, 1],
-          }}
-          className="absolute top-6 md:top-8 left-0 h-1 md:h-1.5 bg-accent rounded-full origin-left"
-          style={{
-            boxShadow: '0 0 12px hsl(var(--accent) / 0.5)',
-          }}
-        />
-        {/* Animated glow effect that follows the line */}
-        <motion.div
-          animate={{
-            left: `${progressWidth}%`,
-            opacity: progressWidth > 0 ? 1 : 0,
-          }}
-          transition={{
-            type: 'spring',
-            bounce: 0.2,
-            duration: 1.5,
-            ease: [0.4, 0, 0.2, 1],
-          }}
-          className="absolute top-6 md:top-8 w-6 md:w-8 h-1 md:h-1.5 -translate-x-1/2 bg-accent rounded-full blur-md opacity-60"
+          animate={{ width: `${progressPercent}%` }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         />
 
-        {/* Milestone Points */}
-        <div className="relative flex justify-between items-start pt-2 gap-2 md:gap-0">
-          {milestones.map((milestone, index) => {
-            const isActive = index === slideIndex;
-            const isReached = index <= slideIndex;
-            const isNewlyActive = isActive && index === slideIndex;
+        {/* Points and labels */}
+        <div className="relative flex justify-between">
+          {PHASES.map((phase, index) => {
+            const isActive = index === activeIndex;
+            const isReached = index <= activeIndex;
 
             return (
-              <motion.div
-                key={milestone.period}
-                initial={{ opacity: 0, scale: 0, y: 20 }}
-                animate={{
-                  opacity: isReached ? 1 : 0.3,
-                  scale: isActive ? 1.2 : isReached ? 1 : 0.7,
-                  y: 0,
-                }}
-                transition={{
-                  type: 'spring',
-                  bounce: isNewlyActive ? 0.6 : 0.3,
-                  duration: 0.8,
-                  delay: isReached ? index * 0.1 : 0,
-                }}
-                whileHover={
-                  isReached
-                    ? {
-                        scale: isActive ? 1.3 : 1.15,
-                        y: -8,
-                        transition: { type: 'spring', bounce: 0.4, duration: 0.5 },
-                      }
-                    : {}
-                }
-                className="flex flex-col items-center relative z-10 cursor-pointer flex-1 min-w-0"
-                style={{ maxWidth: index === milestones.length - 1 ? 'auto' : '25%' }}
+              <div
+                key={phase.period}
+                className="flex flex-col items-center"
+                style={{ width: '25%' }}
               >
+                {/* Dot */}
                 <motion.div
+                  className={cn(
+                    'w-3 h-3 rounded-full border-2 transition-colors duration-300',
+                    isReached ? 'border-transparent' : 'border-foreground/20 bg-background',
+                  )}
+                  style={{
+                    backgroundColor: isReached ? phase.color : undefined,
+                  }}
                   animate={{
-                    scale: isActive ? 1.4 : isReached ? 1 : 0.5,
-                    backgroundColor: isActive
-                      ? accentColor
-                      : isReached
-                        ? accentColor
-                        : foregroundColor20,
+                    scale: isActive ? 2 : 1,
                   }}
-                  transition={{
-                    type: 'spring',
-                    bounce: isNewlyActive ? 0.5 : 0.3,
-                    duration: 0.7,
-                    delay: isReached ? index * 0.1 : 0,
-                  }}
-                  className={[
-                    'w-4 h-4 md:w-5 md:h-5 rounded-full border-2 md:border-4 border-background relative z-10 transition-all',
-                    isActive && 'ring-4 ring-accent/50',
-                    !isActive && isReached && 'ring-2 ring-accent/30',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
+                  transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
                 />
-                <div className="mt-3 md:mt-4 text-center space-y-1 min-w-0 px-1">
-                  <motion.div
-                    animate={{
-                      color: isActive
-                        ? accentColor
-                        : isReached
-                          ? accentColor
-                          : foregroundColor60,
-                      fontWeight: isActive ? 700 : 600,
-                      scale: isActive ? 1.05 : 1,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      bounce: isNewlyActive ? 0.4 : 0.2,
-                      duration: 0.6,
-                    }}
-                    className="text-xs md:text-sm font-semibold break-words"
-                  >
-                    {milestone.milestone}
-                  </motion.div>
-                  <motion.div
-                    animate={{
-                      color: isActive ? foregroundColor : foregroundColor50,
-                      scale: isActive ? 1.05 : 1,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      bounce: isNewlyActive ? 0.3 : 0.2,
-                      duration: 0.5,
-                    }}
-                    className="text-[10px] md:text-xs mt-1 break-words"
-                  >
-                    {milestone.period}
-                  </motion.div>
-                </div>
-              </motion.div>
+
+                {/* Icon container */}
+                <motion.div
+                  className={cn(
+                    'mt-4 w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300',
+                    isReached ? 'bg-foreground/5' : 'bg-transparent',
+                  )}
+                  animate={{
+                    opacity: isReached ? 1 : 0.4,
+                    y: isActive ? -2 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {phase.icon ? (
+                    <Image
+                      src={phase.icon}
+                      alt={phase.title}
+                      width={24}
+                      height={24}
+                      className="object-contain"
+                    />
+                  ) : (
+                    <span className={cn('text-2xl', !isReached && 'grayscale opacity-50')}>
+                      {phase.emoji}
+                    </span>
+                  )}
+                </motion.div>
+
+                {/* Title */}
+                <motion.span
+                  className={cn(
+                    'mt-2 text-xs md:text-sm font-semibold text-center leading-tight transition-colors duration-300',
+                  )}
+                  style={{
+                    color: isActive ? phase.color : undefined,
+                  }}
+                  animate={{
+                    opacity: isReached ? 1 : 0.4,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {phase.title}
+                </motion.span>
+
+                {/* Period */}
+                <motion.span
+                  className="mt-1 text-[10px] md:text-xs text-foreground/50 text-center"
+                  animate={{
+                    opacity: isReached ? 0.7 : 0.3,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {phase.period}
+                </motion.span>
+              </div>
             );
           })}
         </div>
       </div>
+
+      {/* "We are here" indicator */}
+      {activeIndex === PHASES.length - 1 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="flex justify-center mt-6"
+        >
+          <span
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
+            style={{
+              backgroundColor: `${PHASES.at(-1)?.color}15`,
+              color: PHASES.at(-1)?.color,
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: PHASES.at(-1)?.color }}
+            />
+            We are here
+          </span>
+        </motion.div>
+      )}
     </div>
   );
 };

@@ -78,7 +78,7 @@ export function SourcesSection() {
   ];
 
   return (
-    <section className="snap-start h-screen w-full flex flex-col items-center justify-center pt-28 md:pt-32 lg:pt-36 relative overflow-hidden bg-background shrink-0">
+    <section className="w-full flex flex-col items-center py-16 md:py-24 lg:py-32 relative bg-background">
       <GridBackground />
 
       {/* Decorative Background Elements */}
@@ -87,8 +87,8 @@ export function SourcesSection() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 overflow-y-auto max-h-full">
-        <div className="space-y-12 py-12">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+        <div className="space-y-12">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

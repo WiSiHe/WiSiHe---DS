@@ -10,6 +10,17 @@ import { redirectType } from './redirectType';
 import { socialType } from './socialType';
 import painting from './painting';
 import recipe from './recipe';
+import presentation, {
+  sourceType,
+  toolType,
+  exampleType,
+  metricType,
+  mediaType,
+  contentSlideType,
+  titleSlideType,
+  separatorSlideType,
+} from './presentation';
+import presentationCategory from './presentationCategory';
 
 export const schemaTypes = [
   home,
@@ -23,4 +34,15 @@ export const schemaTypes = [
   redirectType,
   socialType,
   recipe,
+  // Presentation schema and supporting types
+  presentationCategory,
+  sourceType,
+  toolType,
+  exampleType,
+  metricType,
+  mediaType,
+  contentSlideType,
+  titleSlideType,
+  separatorSlideType,
+  presentation,
 ];
