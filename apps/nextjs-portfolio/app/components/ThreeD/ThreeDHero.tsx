@@ -71,12 +71,12 @@ export function ThreeDHero() {
             className="space-y-6 w-full"
           >
             {/* Title */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight leading-tight">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tight leading-tight">
               Houston, we're coding 3D! 🚀
             </h1>
 
             {/* Subtitle */}
-            <p className="text-2xl md:text-3xl lg:text-4xl text-foreground font-semibold">
+            <p className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white">
               Does Three.js have to be rocket science in 2026?
             </p>
           </motion.div>
@@ -102,39 +102,23 @@ export function ThreeDHero() {
           </motion.div>
         </div>
 
-        {/* Right Side - Spline 3D Viewer */}
-        <div className="flex-1 lg:w-1/2 h-full relative z-0">
-          {isLoaded ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="w-full h-full"
-            >
-              {/* @ts-expect-error - spline-viewer is a custom web component */}
-              <spline-viewer
-                url="https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  pointerEvents: 'auto',
-                }}
-                className="w-full h-full"
-              />
-            </motion.div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center min-h-[400px]">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center space-y-4"
-              >
-                <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
-                <div className="text-foreground font-medium">Loading 3D Scene...</div>
-              </motion.div>
-            </div>
-          )}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="w-full h-full absolute inset-0"
+        >
+          {/* @ts-expect-error - spline-viewer is a custom web component */}
+          <spline-viewer
+            url="https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode"
+            style={{
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'auto',
+            }}
+            className="w-full h-full"
+          />
+        </motion.div>
       </div>
     </section>
   );
