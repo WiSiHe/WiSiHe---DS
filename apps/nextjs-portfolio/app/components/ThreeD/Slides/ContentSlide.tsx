@@ -20,6 +20,7 @@ import { Numbers } from '../Numbers/Numbers';
 import { GridBackground } from '../GridBackground';
 import { presentationSlides } from '../../../three-d/presentationSlides';
 import PresentationPortableText from '../PresentationPortableText';
+import { urlForImage } from '../../../../sanity/lib/utils';
 
 // Type guard to check if content is Portable Text (from Sanity) vs ContentItem[] (static fallback)
 function isPortableText(content: SlideContent): content is PortableTextBlockLike[] {
@@ -95,13 +96,13 @@ export const ContentSlide = ({
         initial={
           shouldAnimate
             ? {
-                opacity: 0,
-                x: slideDirection === 'down' ? 100 : -100,
-              }
+              opacity: 0,
+              x: slideDirection === 'down' ? 100 : -100,
+            }
             : { opacity: 1, x: 0 }
         }
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
         className="w-full h-full flex flex-col lg:flex-row gap-8 lg:gap-12 overflow-hidden max-w-full"
       >
         {/* Left Side - Example List */}
@@ -178,20 +179,18 @@ export const ContentSlide = ({
                 transition={{ delay: 0.3 + exampleIndex * 0.1, duration: 0.4 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                  selectedExampleIndex === exampleIndex
-                    ? 'bg-accent/20 border-accent shadow-lg shadow-accent/20'
-                    : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
-                }`}
+                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${selectedExampleIndex === exampleIndex
+                  ? 'bg-accent/20 border-accent shadow-lg shadow-accent/20'
+                  : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
+                  }`}
                 aria-label={`View ${example.name} example`}
                 aria-pressed={selectedExampleIndex === exampleIndex}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <h3
-                      className={`text-xl md:text-2xl font-bold mb-2 transition-colors ${
-                        selectedExampleIndex === exampleIndex ? 'text-accent' : 'text-foreground'
-                      }`}
+                      className={`text-xl md:text-2xl font-bold mb-2 transition-colors ${selectedExampleIndex === exampleIndex ? 'text-accent' : 'text-foreground'
+                        }`}
                     >
                       {example.name}
                     </h3>
@@ -365,13 +364,13 @@ export const ContentSlide = ({
       initial={
         shouldAnimate
           ? {
-              opacity: 0,
-              x: slideDirection === 'down' ? 100 : -100,
-            }
+            opacity: 0,
+            x: slideDirection === 'down' ? 100 : -100,
+          }
           : { opacity: 1, x: 0 }
       }
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
       className={`w-full h-full ${getLayoutClasses()} overflow-hidden max-w-full ${slideDesign === 'minimal' ? 'p-4' : 'p-8 lg:p-12'}`}
     >
       {/* Content Section */}
@@ -410,13 +409,12 @@ export const ContentSlide = ({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className={`text-accent font-bold break-words overflow-wrap-anywhere max-w-full ${
-              slideDesign === 'minimal'
-                ? 'text-xl md:text-2xl lg:text-3xl mb-6'
-                : slideDesign === 'hero'
-                  ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
-                  : 'text-2xl md:text-3xl lg:text-4xl mb-6'
-            }`}
+            className={`text-accent font-bold break-words overflow-wrap-anywhere max-w-full ${slideDesign === 'minimal'
+              ? 'text-xl md:text-2xl lg:text-3xl mb-6'
+              : slideDesign === 'hero'
+                ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
+                : 'text-2xl md:text-3xl lg:text-4xl mb-6'
+              }`}
             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
           >
             {slideData.subtitle}
@@ -444,13 +442,12 @@ export const ContentSlide = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className={`max-w-full list-none overflow-x-hidden px-4 md:px-6 ${
-              slideDesign === 'minimal'
-                ? 'space-y-3'
-                : slideDesign === 'hero'
-                  ? 'space-y-6'
-                  : 'space-y-4'
-            }`}
+            className={`max-w-full list-none overflow-x-hidden px-4 md:px-6 ${slideDesign === 'minimal'
+              ? 'space-y-3'
+              : slideDesign === 'hero'
+                ? 'space-y-6'
+                : 'space-y-4'
+              }`}
           >
             {slideData.content
               .filter(item => {
@@ -503,22 +500,20 @@ export const ContentSlide = ({
                             href={url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noopener noreferrer' : undefined}
-                            className={`leading-relaxed transition-colors break-words inline-block ${
-                              isNested
-                                ? 'text-base md:text-lg lg:text-xl text-accent'
-                                : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline'
-                            }`}
+                            className={`leading-relaxed transition-colors break-words inline-block ${isNested
+                              ? 'text-base md:text-lg lg:text-xl text-accent'
+                              : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline'
+                              }`}
                           >
                             {cleanText}
                           </a>
                         ) : (
                           // Render as plain text
                           <span
-                            className={`leading-relaxed break-words ${
-                              isNested
-                                ? 'text-base md:text-lg lg:text-xl text-foreground/80'
-                                : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors'
-                            }`}
+                            className={`leading-relaxed break-words ${isNested
+                              ? 'text-base md:text-lg lg:text-xl text-foreground/80'
+                              : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors'
+                              }`}
                           >
                             {cleanText}
                           </span>
@@ -642,17 +637,16 @@ export const ContentSlide = ({
                             return (
                               <div
                                 key={level}
-                                className={`w-2 h-2 rounded-full transition-all ${
-                                  level <= nerdLevel
-                                    ? level <= 2
-                                      ? 'bg-green-500'
-                                      : level <= 3
-                                        ? 'bg-yellow-500'
-                                        : level <= 4
-                                          ? 'bg-orange-500'
-                                          : 'bg-red-500'
-                                    : 'bg-foreground/10'
-                                }`}
+                                className={`w-2 h-2 rounded-full transition-all ${level <= nerdLevel
+                                  ? level <= 2
+                                    ? 'bg-green-500'
+                                    : level <= 3
+                                      ? 'bg-yellow-500'
+                                      : level <= 4
+                                        ? 'bg-orange-500'
+                                        : 'bg-red-500'
+                                  : 'bg-foreground/10'
+                                  }`}
                               />
                             );
                           })}
@@ -717,23 +711,31 @@ export const ContentSlide = ({
           <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
             <Numbers metrics={slideData.metrics} />
           </div>
+        ) : slideData.chartType === 'history-timeline' ? (
+          <div className="w-full h-full min-h-[400px]">
+            <HistoryTimeline activeIndex={currentHistorySlideIndex ?? 0} />
+          </div>
         ) : slideData.chartType ? (
           <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
             {slideData.chartType === 'performance' && <PerformanceChart />}
             {slideData.chartType === 'business-impact' && <BusinessImpactChart />}
             {slideData.chartType === 'engagement' && <EngagementChart />}
-            {slideData.chartType === 'history-timeline' && (
-              <HistoryTimeline activeIndex={currentHistorySlideIndex ?? 0} />
-            )}
           </div>
         ) : slideData.image ? (
           <div
             className={`relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50 ${getAspectRatioClass(slideData.imageAspectRatio)}`}
           >
             <Image
-              src={slideData.image}
+              src={
+                typeof slideData.image === 'object'
+                  ? urlForImage(slideData.image)?.url() || ''
+                  : slideData.image
+              }
               alt={
-                slideData.subtitle ? `${slideData.title} - ${slideData.subtitle}` : slideData.title
+                (typeof slideData.image === 'object' && slideData.image.alt) ||
+                (slideData.subtitle
+                  ? `${slideData.title} - ${slideData.subtitle}`
+                  : slideData.title)
               }
               fill
               className="object-cover"

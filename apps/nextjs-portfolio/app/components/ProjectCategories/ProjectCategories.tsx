@@ -48,8 +48,8 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
   return (
     <section className="flex flex-col w-full gap-6">
       {/* Filter Section */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between gap-4">
+      <div className="bg-surface-elevated border border-border rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-4 mb-4">
           <h3 className="font-medium text-sm text-foreground-subtle">Filter by tag:</h3>
           {activeFilters.length > 0 && (
             <button
@@ -60,31 +60,30 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             </button>
           )}
         </div>
-        <div className="relative">
-          <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-background via-transparent to-background" />
-          <ul className="flex w-full gap-2 overflow-x-auto py-2 px-1 scrollbar-hide">
-            {tags.map(tag => {
-              const { name, _id, count } = tag;
-              const isActive = activeFilters.includes(name);
 
-              return (
-                <li key={_id} className="shrink-0">
-                  <Chip
-                    size="small"
-                    variation={isActive ? 'default' : 'tertiary'}
-                    outlined={!isActive}
-                    selected={isActive}
-                    label={`${name} (${count})`}
-                    onClick={() => handleToggleFilter(name)}
-                    className="transition-all duration-200"
-                  />
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <ul className="flex flex-wrap gap-2">
+          {tags.map(tag => {
+            const { name, _id, count } = tag;
+            const isActive = activeFilters.includes(name);
+
+            return (
+              <li key={_id} className="shrink-0">
+                <Chip
+                  size="medium"
+                  variation={isActive ? 'primary' : 'default'}
+                  outlined={!isActive}
+                  selected={isActive}
+                  label={`${name} (${count})`}
+                  onClick={() => handleToggleFilter(name)}
+                  className="transition-all duration-200"
+                />
+              </li>
+            );
+          })}
+        </ul>
+
         {activeFilters.length > 0 && (
-          <div className="text-sm text-foreground-muted">
+          <div className="mt-4 pt-4 border-t border-border/50 text-sm text-foreground-muted">
             Showing {totalFilteredCount} of {totalCount} project{totalCount !== 1 ? 's' : ''}
           </div>
         )}

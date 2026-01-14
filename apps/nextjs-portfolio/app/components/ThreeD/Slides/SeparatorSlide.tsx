@@ -55,7 +55,7 @@ export const SeparatorSlide = ({
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-6xl md:text-8xl lg:text-[10rem] xl:text-[12rem] font-black text-foreground uppercase tracking-tighter text-center leading-none"
+          className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tighter text-center leading-none px-4"
         >
           {slideData.title}
         </motion.h2>
@@ -80,7 +80,7 @@ export const SeparatorSlide = ({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="text-5xl md:text-7xl lg:text-9xl font-black text-foreground uppercase tracking-tight text-center px-4"
+          className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center px-4"
         >
           {slideData.title}
         </motion.h2>
@@ -116,7 +116,7 @@ export const SeparatorSlide = ({
           className="w-3 h-3 bg-accent rounded-full mb-8"
         />
 
-        <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold text-foreground text-center px-4 relative z-10">
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground text-center px-4 relative z-10">
           {slideData.title}
         </h2>
 
@@ -150,7 +150,7 @@ export const SeparatorSlide = ({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1, duration: 0.5 }}
         className={cn(
-          'text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-foreground uppercase tracking-tight text-center px-4 relative z-10',
+          'text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center px-4 relative z-10',
         )}
       >
         {slideData.title}

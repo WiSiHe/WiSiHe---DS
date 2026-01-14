@@ -22,7 +22,7 @@ const chipStyles = cva(
           'bg-success text-success-contrast hover:bg-success hover:opacity-90 hover:shadow-md active:scale-95 shadow-sm',
       },
       outlined: {
-        true: 'border-2 border-border bg-transparent hover:bg-surface hover:border-accent text-foreground hover:text-foreground active:scale-95',
+        true: 'border border-border bg-transparent hover:bg-surface hover:border-accent text-foreground hover:text-foreground active:scale-95',
         false: '',
       },
       selected: {
@@ -35,8 +35,8 @@ const chipStyles = cva(
       },
       size: {
         small: 'px-2.5 py-1 text-xs min-h-[24px]',
-        medium: 'px-3.5 py-1.5 text-sm min-h-[32px]',
-        large: 'px-4.5 py-2 text-base min-h-[40px]',
+        medium: 'px-4 py-2 text-sm min-h-[32px]',
+        large: 'px-5 py-2.5 text-base min-h-[40px]',
       },
       interactive: {
         true: 'cursor-pointer select-none',

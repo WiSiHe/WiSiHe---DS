@@ -76,7 +76,7 @@ export interface PresentationSlide {
   content: SlideContent;
   type: 'title' | 'content' | 'separator';
   // Media fields (only one will be set based on mediaType)
-  image?: string;
+  image?: string | { asset: { _ref: string }; alt?: string };
   imageAspectRatio?: 'video' | 'square' | 'portrait' | 'landscape' | 'auto' | string;
   videoUrl?: string;
   iframe?: string;
