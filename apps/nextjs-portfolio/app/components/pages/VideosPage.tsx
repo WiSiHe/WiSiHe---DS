@@ -13,10 +13,11 @@ import Link from 'next/link';
 import Chip from '../Chip/Chip';
 
 function getYouTubeVideoId(url: string): string {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
   const match = url.match(regExp);
-  return match && match[2].length === 11 ? match[2] : '';
+  return match && match[2].length >= 11 ? match[2] : '';
 }
+
 
 interface VideosPageProps {
   videos: GetAllVideosResult['videos'];
@@ -91,9 +92,17 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
             });
 
             return (
-              <button
+              <div
                 key={_id}
                 onClick={() => handleVideoClick(video)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleVideoClick(video);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 className={cn(
                   'relative bg-surface border border-border/30 flex flex-col transition-all duration-300 w-full h-full shadow-lg hover:shadow-xl rounded-lg overflow-clip cursor-pointer group hover:border-accent/30',
                   featured ? 'col-span-full lg:col-span-6' : 'col-span-6 lg:col-span-3',
@@ -137,7 +146,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     <p className="line-clamp-3 text-foreground-subtle">{description}</p>
                   </div>
                 )}
-              </button>
+              </div>
             );
           })}
       </div>
@@ -170,7 +179,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   scale: 0.95,
                   transition: { duration: 0.3 },
                 }}
-                className="w-full relative max-w-6xl max-h-[90vh] backdrop-blur-xl bg-surface/95 border border-border/50 rounded-lg shadow-2xl"
+                className="w-full relative max-w-6xl max-h-[90vh] bg-surface-elevated border border-border rounded-lg shadow-2xl overflow-hidden"
               >
                 <div className="absolute z-20 flex items-center justify-center left-4 right-4 -top-16">
                   <button

@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 /* Import design tokens from @wisihe/tokens package */
 @import '../../../packages/tokens/dist/tailwind/theme.css';
+@import '../../../packages/tokens/dist/css/variables.css';
 @import '../../../packages/tokens/dist/css/semantic-colors.css';
 
 /* ============================================================================
@@ -21,8 +22,10 @@
 
   /* Layout */
   --aspect-portrait: 9 / 16;
-  --breakpoint-2xl: 96rem; /* 1536px */
-  --radius: 0.5rem; /* Default border radius */
+  --breakpoint-2xl: 96rem;
+  /* 1536px */
+  --radius: 0.5rem;
+  /* Default border radius */
 }
 
 /* ============================================================================
@@ -30,6 +33,7 @@
    ========================================================================= */
 
 @layer base {
+
   /* Reset border colors */
   *,
   ::after,
@@ -126,6 +130,7 @@
         opacity: 0.9;
         transform: translateY(200px) scale(0.85);
       }
+
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -145,9 +150,11 @@
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -168,10 +175,12 @@
     transform: translateY(0);
     opacity: 1;
   }
+
   50% {
     transform: translateY(1rem);
     opacity: 0.3;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;

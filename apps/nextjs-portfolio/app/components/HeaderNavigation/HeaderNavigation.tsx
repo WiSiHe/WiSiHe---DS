@@ -55,7 +55,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border/30 shadow-lg hover:bg-surface-hover hover:border-accent/50 hover:shadow-xl transition-all"
+            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface-elevated border border-border shadow-lg hover:bg-surface-hover hover:border-accent hover:shadow-xl transition-all"
           >
             <IconLogo
               color="currentColor"
@@ -72,7 +72,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center bg-surface border border-border/30 shadow-xl p-1 overflow-clip rounded-full"
+            className="flex items-center bg-surface-elevated border border-border shadow-xl p-1 overflow-clip rounded-full"
             style={{ isolation: 'isolate' }}
           >
             {navigationItems.map((item, i) => {

@@ -36,7 +36,7 @@ export function TechnicalCanvasPanel({
   }, [contextLost]);
 
   return (
-    <div className="flex-1 lg:w-1/2 h-full relative bg-gradient-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden">
+    <div className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden">
       {/* Subtle Grid Pattern */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none z-0"
@@ -47,15 +47,7 @@ export function TechnicalCanvasPanel({
         }}
       />
 
-      {/* Canvas Label */}
-      <div className="absolute top-6 right-6 z-50 bg-surface-elevated px-4 py-2.5 rounded-lg border-2 border-accent/50 shadow-2xl">
-        <div className="flex items-center gap-2">
-          <div className={`h-2 w-2 rounded-full ${contextLost ? 'bg-red-500' : 'bg-accent'} animate-pulse`} />
-          <span className="text-xs font-mono text-accent uppercase tracking-wider font-semibold">
-            3D Canvas
-          </span>
-        </div>
-      </div>
+
 
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
@@ -98,138 +90,138 @@ export function TechnicalCanvasPanel({
       )}
 
       <Suspense
-          fallback={
-            <div className="w-full h-full flex items-center justify-center">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center space-y-4"
-              >
-                <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
-                <div className="text-foreground/60 font-medium">Loading 3D Scene...</div>
-              </motion.div>
-            </div>
+        fallback={
+          <div className="w-full h-full flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center space-y-4"
+            >
+              <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="text-foreground/60 font-medium">Loading 3D Scene...</div>
+            </motion.div>
+          </div>
+        }
+      >
+        <Canvas
+          camera={
+            mode === 'showcase'
+              ? { position: [0, 2, 8], fov: 45 }
+              : { position: [0, 0, 5], fov: 50 }
           }
-        >
-          <Canvas
-            camera={
-              mode === 'showcase'
-                ? { position: [0, 2, 8], fov: 45 }
-                : { position: [0, 0, 5], fov: 50 }
-            }
-            gl={{
-              antialias: true,
-              preserveDrawingBuffer: false,
-              powerPreference: 'high-performance',
-              failIfMajorPerformanceCaveat: false,
-              alpha: true,
-              premultipliedAlpha: false,
-              stencil: false,
-              depth: true,
-            }}
-            dpr={1}
-            className="w-full h-full"
-            onCreated={({ gl, scene }) => {
-              // Handle WebGL context loss
-              const canvas = gl.domElement;
-              
-              const handleContextLost = (event: Event) => {
-                event.preventDefault();
-                setContextLost(true);
-                setContextError('WebGL context lost - attempting to restore...');
-                console.warn('WebGL context lost - attempting to preserve state');
-                
-                // Log comprehensive resource info
-                if ('memory' in performance) {
-                  const mem = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
-                  const memoryInfo = {
-                    used: `${(mem.usedJSHeapSize / 1048576).toFixed(2)} MB`,
-                    total: `${(mem.totalJSHeapSize / 1048576).toFixed(2)} MB`,
-                    usagePercent: `${((mem.usedJSHeapSize / mem.totalJSHeapSize) * 100).toFixed(1)}%`,
-                  };
-                  console.warn('Memory usage:', memoryInfo);
-                  
-                  // Warn if memory usage is high
-                  const usagePercent = (mem.usedJSHeapSize / mem.totalJSHeapSize) * 100;
-                  if (usagePercent > 80) {
-                    console.warn(`High memory usage: ${usagePercent.toFixed(1)}% - this may cause context loss`);
-                  }
-                }
-                
-                // Log WebGL info
-                const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
-                if (webglContext) {
-                  try {
-                    const maxTextureSize = webglContext.getParameter(webglContext.MAX_TEXTURE_SIZE);
-                    const maxCombinedTextureImageUnits = webglContext.getParameter(webglContext.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
-                    console.warn('WebGL limits:', {
-                      maxTextureSize,
-                      maxCombinedTextureImageUnits,
-                    });
-                  } catch (error) {
-                    console.warn('Could not get WebGL parameters:', error);
-                  }
-                }
-              };
-              
-              const handleContextRestored = () => {
-                console.log('WebGL context restored - reinitializing');
-                setContextLost(false);
-                setContextError(null);
-                
-                // Force a complete reinitialization
-                try {
-                  // Reinitialize the renderer
-                  gl.setSize(gl.domElement.width, gl.domElement.height);
-                  // Clear any stale state - use Three.js API
-                  gl.setClearColor(0x000000, 0);
-                  // Reset renderer state
-                  gl.resetState();
-                  console.log('WebGL context successfully restored');
-                } catch (error) {
-                  console.error('Error during context restoration:', error);
-                  setContextError('Failed to restore WebGL context. Please refresh the page.');
-                }
-              };
+          gl={{
+            antialias: true,
+            preserveDrawingBuffer: false,
+            powerPreference: 'high-performance',
+            failIfMajorPerformanceCaveat: false,
+            alpha: true,
+            premultipliedAlpha: false,
+            stencil: false,
+            depth: true,
+          }}
+          dpr={1}
+          className="w-full h-full"
+          onCreated={({ gl, scene }) => {
+            // Handle WebGL context loss
+            const canvas = gl.domElement;
 
-              // Set clear color to transparent
-              gl.setClearColor(0x000000, 0);
-              
-              // Set resource limits to prevent context loss
-              // Get WebGL context to check extensions
-              const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
-              if (webglContext && 'getSupportedExtensions' in webglContext) {
-                try {
-                  const extensions = webglContext.getSupportedExtensions();
-                  if (extensions) {
-                    // Log available extensions for debugging
-                    console.debug('WebGL extensions:', extensions);
-                  }
-                } catch (error) {
-                  // Silently fail if extensions can't be accessed
-                  console.debug('Could not access WebGL extensions:', error);
+            const handleContextLost = (event: Event) => {
+              event.preventDefault();
+              setContextLost(true);
+              setContextError('WebGL context lost - attempting to restore...');
+              console.warn('WebGL context lost - attempting to preserve state');
+
+              // Log comprehensive resource info
+              if ('memory' in performance) {
+                const mem = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+                const memoryInfo = {
+                  used: `${(mem.usedJSHeapSize / 1048576).toFixed(2)} MB`,
+                  total: `${(mem.totalJSHeapSize / 1048576).toFixed(2)} MB`,
+                  usagePercent: `${((mem.usedJSHeapSize / mem.totalJSHeapSize) * 100).toFixed(1)}%`,
+                };
+                console.warn('Memory usage:', memoryInfo);
+
+                // Warn if memory usage is high
+                const usagePercent = (mem.usedJSHeapSize / mem.totalJSHeapSize) * 100;
+                if (usagePercent > 80) {
+                  console.warn(`High memory usage: ${usagePercent.toFixed(1)}% - this may cause context loss`);
                 }
               }
 
-              canvas.addEventListener('webglcontextlost', handleContextLost, false);
-              canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+              // Log WebGL info
+              const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
+              if (webglContext) {
+                try {
+                  const maxTextureSize = webglContext.getParameter(webglContext.MAX_TEXTURE_SIZE);
+                  const maxCombinedTextureImageUnits = webglContext.getParameter(webglContext.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+                  console.warn('WebGL limits:', {
+                    maxTextureSize,
+                    maxCombinedTextureImageUnits,
+                  });
+                } catch (error) {
+                  console.warn('Could not get WebGL parameters:', error);
+                }
+              }
+            };
 
-              // Cleanup function
-              return () => {
-                canvas.removeEventListener('webglcontextlost', handleContextLost, false);
-                canvas.removeEventListener('webglcontextrestored', handleContextRestored, false);
-              };
-            }}
-          >
-            <PersistentScene
-              mode={mode}
-              showcaseTexture={showcaseTexture}
-              autoRotate={autoRotate}
-              directionalLightPosition={directionalLightPosition}
-              directionalLightIntensity={directionalLightIntensity}
-            />
-          </Canvas>
-        </Suspense>
+            const handleContextRestored = () => {
+              console.log('WebGL context restored - reinitializing');
+              setContextLost(false);
+              setContextError(null);
+
+              // Force a complete reinitialization
+              try {
+                // Reinitialize the renderer
+                gl.setSize(gl.domElement.width, gl.domElement.height);
+                // Clear any stale state - use Three.js API
+                gl.setClearColor(0x000000, 0);
+                // Reset renderer state
+                gl.resetState();
+                console.log('WebGL context successfully restored');
+              } catch (error) {
+                console.error('Error during context restoration:', error);
+                setContextError('Failed to restore WebGL context. Please refresh the page.');
+              }
+            };
+
+            // Set clear color to transparent
+            gl.setClearColor(0x000000, 0);
+
+            // Set resource limits to prevent context loss
+            // Get WebGL context to check extensions
+            const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
+            if (webglContext && 'getSupportedExtensions' in webglContext) {
+              try {
+                const extensions = webglContext.getSupportedExtensions();
+                if (extensions) {
+                  // Log available extensions for debugging
+                  console.debug('WebGL extensions:', extensions);
+                }
+              } catch (error) {
+                // Silently fail if extensions can't be accessed
+                console.debug('Could not access WebGL extensions:', error);
+              }
+            }
+
+            canvas.addEventListener('webglcontextlost', handleContextLost, false);
+            canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+
+            // Cleanup function
+            return () => {
+              canvas.removeEventListener('webglcontextlost', handleContextLost, false);
+              canvas.removeEventListener('webglcontextrestored', handleContextRestored, false);
+            };
+          }}
+        >
+          <PersistentScene
+            mode={mode}
+            showcaseTexture={showcaseTexture}
+            autoRotate={autoRotate}
+            directionalLightPosition={directionalLightPosition}
+            directionalLightIntensity={directionalLightIntensity}
+          />
+        </Canvas>
+      </Suspense>
     </div>
   );
 }
