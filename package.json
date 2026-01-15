@@ -24,7 +24,7 @@
     "globals": "^16.5.0",
     "knip": "5.70.2",
     "lefthook": "1.13.6",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.0",
     "turbo": "^2.7.4"
   },
   "packageManager": "pnpm@10.23.0",
