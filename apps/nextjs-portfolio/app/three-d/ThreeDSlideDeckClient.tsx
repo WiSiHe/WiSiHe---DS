@@ -1,31 +1,45 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { ThreeDHero } from '../components/ThreeD/ThreeDHero';
+import { useEffect, useRef, useState } from 'react';
 import { IntroPresentation } from '../components/ThreeD/IntroPresentation';
+import { PresentationControls } from '../components/ThreeD/PresentationControls';
 import { SourcesSection } from '../components/ThreeD/SourcesSection';
 import { StructuredData } from '../components/ThreeD/StructuredData';
-import { TechnicalSeparator } from '../components/ThreeD/TechnicalSeparator';
 import { TechnicalDeckSkeleton } from '../components/ThreeD/Technical/TechnicalDeckSkeleton';
+import { TechnicalSeparator } from '../components/ThreeD/TechnicalSeparator';
+import { ThreeDHero } from '../components/ThreeD/ThreeDHero';
 import type { PresentationSlide } from './types';
 
 const TechnicalDeck = dynamic(
   () =>
-    import('../components/ThreeD/Technical/TechnicalDeck').then((mod) => ({
+    import('../components/ThreeD/Technical/TechnicalDeck').then(mod => ({
       default: mod.TechnicalDeck,
     })),
   {
     ssr: false,
     loading: () => <TechnicalDeckSkeleton />,
-  }
+  },
 );
 
-export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] | null }) {
+export function ThreeDSlideDeckClient({
+  slides,
+}: Readonly<{ slides: PresentationSlide[] | null }>) {
+  const mainRef = useRef<HTMLElement>(null);
   const technicalDeckRef = useRef<HTMLDivElement>(null);
   const technicalSeparatorRef = useRef<HTMLElement>(null);
   const [shouldLoadTechnical, setShouldLoadTechnical] = useState(false);
   const [shouldPreloadTechnical, setShouldPreloadTechnical] = useState(false);
+  const [presentationState, setPresentationState] = useState<{
+    currentSlide: number;
+    totalSlides: number;
+    isTechnicalSectionVisible: boolean;
+    isScrolled: boolean;
+    onNext: () => void;
+    onPrev: () => void;
+    onScrollToTop: () => void;
+    onSkipToCoolPart: () => void;
+  } | null>(null);
 
   // Preload TechnicalDeck earlier - when user is halfway through intro presentation
   // This reduces the CSR bailout impact by loading the component before it's needed
@@ -40,7 +54,7 @@ export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] 
           observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '400px' } // Very early preload - 400px before visible
+      { threshold: 0.1, rootMargin: '400px' }, // Very early preload - 400px before visible
     );
 
     observer.observe(technicalSeparatorRef.current);
@@ -59,7 +73,7 @@ export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] 
           observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '300px' } // Increased from 200px for earlier loading
+      { threshold: 0.1, rootMargin: '300px' }, // Increased from 200px for earlier loading
     );
 
     observer.observe(technicalDeckRef.current);
@@ -80,6 +94,7 @@ export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] 
     <>
       <StructuredData />
       <main
+        ref={mainRef}
         className="w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden"
         style={{
           scrollBehavior: 'smooth',
@@ -98,9 +113,11 @@ export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] 
 
         {/* Intro Presentation - Renders multiple snap-start slides internally */}
         <IntroPresentation
+          mainRef={mainRef}
           technicalDeckRef={technicalDeckRef}
           technicalSeparatorRef={technicalSeparatorRef}
           slides={slides}
+          onPresentationStateChange={setPresentationState}
         />
 
         {/* Technical Separator */}
@@ -125,6 +142,20 @@ export function ThreeDSlideDeckClient({ slides }: { slides: PresentationSlide[] 
           <SourcesSection />
         </div>
       </main>
+
+      {/* Presentation Controls - rendered outside main to avoid transform containing block issues */}
+      {presentationState && (
+        <PresentationControls
+          currentSlide={presentationState.currentSlide}
+          totalSlides={presentationState.totalSlides}
+          onNext={presentationState.onNext}
+          onPrev={presentationState.onPrev}
+          onScrollToTop={presentationState.onScrollToTop}
+          onSkipToCoolPart={presentationState.onSkipToCoolPart}
+          isScrolled={presentationState.isScrolled}
+          isVisible={!presentationState.isTechnicalSectionVisible}
+        />
+      )}
     </>
   );
 }
