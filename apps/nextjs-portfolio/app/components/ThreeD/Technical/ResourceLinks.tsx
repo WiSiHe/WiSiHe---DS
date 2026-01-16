@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface Link {
   text: string;
@@ -9,13 +9,13 @@ interface Link {
 
 interface ResourceLinksProps {
   links: Link[];
-  shouldAnimate: boolean;
+  shouldAnimate?: boolean;
   currentSlide: number;
 }
 
 export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLinksProps) {
   const linksContent = (
-    <div className={`${shouldAnimate ? 'mb-10' : 'mb-8'} ${shouldAnimate ? 'space-y-4' : 'space-y-3'}`}>
+    <div className="mb-8 space-y-3">
       <h3 className="text-lg font-bold text-foreground mb-3">Resources:</h3>
       <div className="flex flex-wrap gap-3">
         {links.map((link, linkIndex) => (
@@ -48,22 +48,6 @@ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLi
       </div>
     </div>
   );
-
-  if (shouldAnimate) {
-    return (
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`links-${currentSlide}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-        >
-          {linksContent}
-        </motion.div>
-      </AnimatePresence>
-    );
-  }
 
   return linksContent;
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { cn } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
 import type {
   PresentationSlide,
@@ -50,8 +50,8 @@ function isContentItemArray(content: SlideContent): content is ContentItem[] {
 interface ContentSlideProps {
   slideData: PresentationSlide;
   index: number;
-  shouldAnimate: boolean;
-  slideDirection: 'up' | 'down';
+  shouldAnimate?: boolean;
+  slideDirection?: 'up' | 'down';
   currentHistorySlideIndex?: number;
 }
 
@@ -68,6 +68,31 @@ const getAspectRatioClass = (ratio?: string): string => {
   return map[ratio] || ratio; // Use custom string as-is if not in map
 };
 
+// Hook to lazy load iframes based on visibility
+const useLazyIframe = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Keep observing to unload if far off-screen (optional optimization)
+        }
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return { isVisible, containerRef };
+};
+
 export const ContentSlide = ({
   slideData,
   index,
@@ -76,6 +101,8 @@ export const ContentSlide = ({
   currentHistorySlideIndex,
 }: ContentSlideProps) => {
   const [selectedExampleIndex, setSelectedExampleIndex] = useState(0);
+  const exampleIframeRef = useLazyIframe();
+  const mainIframeRef = useLazyIframe();
 
   // Get slide design variant - ensure consistent value for SSR
   const slideDesign = (slideData.slideDesign || 'default') as
@@ -91,32 +118,14 @@ export const ContentSlide = ({
     const selectedExample = slideData.examples[selectedExampleIndex];
 
     return (
-      <motion.div
-        key={`content-${index}`}
-        initial={
-          shouldAnimate
-            ? {
-              opacity: 0,
-              x: slideDirection === 'down' ? 100 : -100,
-            }
-            : { opacity: 1, x: 0 }
-        }
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-        className="w-full h-full flex flex-col lg:flex-row gap-8 lg:gap-12 overflow-hidden max-w-full"
-      >
+      <div className="w-full h-full flex flex-col lg:flex-row gap-8 lg:gap-12 overflow-hidden max-w-full">
         {/* Left Side - Example List */}
         <div className="flex-1 flex flex-col justify-center space-y-4 overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full">
           <div className="flex items-center gap-3 mb-4 flex-wrap">
             {slideData.category && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider"
-              >
+              <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
                 {slideData.category}
-              </motion.span>
+              </span>
             )}
             <div className="h-1 w-12 bg-accent rounded-full" />
             <span className="text-sm font-mono text-accent uppercase tracking-wider">
@@ -124,33 +133,18 @@ export const ContentSlide = ({
             </span>
           </div>
 
-          <motion.h2
-            initial={shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: shouldAnimate ? 0.1 : 0 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words max-w-full"
-          >
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words max-w-full">
             {slideData.title}
-          </motion.h2>
+          </h2>
 
           {slideData.subtitle && (
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="text-2xl md:text-3xl lg:text-4xl text-accent font-bold mb-8 break-words max-w-full"
-            >
+            <p className="text-2xl md:text-3xl lg:text-4xl text-accent font-bold mb-8 break-words max-w-full">
               {slideData.subtitle}
-            </motion.p>
+            </p>
           )}
 
           {slideData.content && slideData.content.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-xl md:text-2xl text-foreground/80 mb-8 leading-relaxed break-words"
-            >
+            <div className="text-xl md:text-2xl text-foreground/80 mb-8 leading-relaxed break-words">
               {isPortableText(slideData.content) && (
                 <PresentationPortableText
                   value={slideData.content as PortableTextBlock[]}
@@ -164,33 +158,32 @@ export const ContentSlide = ({
                     : slideData.content[0].text.trim().replace(/^•\s*/, '')}
                 </p>
               )}
-            </motion.div>
+            </div>
           )}
 
           {/* Example Buttons */}
           <div className="space-y-3">
             {slideData.examples.map((example, exampleIndex) => (
-              <motion.button
+              <button
                 key={exampleIndex}
                 onClick={() => setSelectedExampleIndex(exampleIndex)}
                 type="button"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + exampleIndex * 0.1, duration: 0.4 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${selectedExampleIndex === exampleIndex
-                  ? 'bg-accent/20 border-accent shadow-lg shadow-accent/20'
-                  : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
-                  }`}
+                className={cn(
+                  'w-full text-left p-5 rounded-xl border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  selectedExampleIndex === exampleIndex
+                    ? 'bg-accent/20 border-accent shadow-lg shadow-accent/20'
+                    : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
+                )}
                 aria-label={`View ${example.name} example`}
                 aria-pressed={selectedExampleIndex === exampleIndex}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <h3
-                      className={`text-xl md:text-2xl font-bold mb-2 transition-colors ${selectedExampleIndex === exampleIndex ? 'text-accent' : 'text-foreground'
-                        }`}
+                      className={cn(
+                        'text-xl md:text-2xl font-bold mb-2 transition-colors',
+                        selectedExampleIndex === exampleIndex ? 'text-accent' : 'text-foreground'
+                      )}
                     >
                       {example.name}
                     </h3>
@@ -199,25 +192,16 @@ export const ContentSlide = ({
                     </p>
                   </div>
                   {selectedExampleIndex === exampleIndex && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="w-3 h-3 rounded-full bg-accent shrink-0 mt-1"
-                    />
+                    <div className="w-3 h-3 rounded-full bg-accent shrink-0 mt-1" />
                   )}
                 </div>
-              </motion.button>
+              </button>
             ))}
           </div>
 
           {/* Sources */}
           {slideData.sources && slideData.sources.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-              className="mt-8 pt-8 border-t border-border/30"
-            >
+            <div className="mt-8 pt-8 border-t border-border/30">
               <p className="text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider">
                 Sources:
               </p>
@@ -240,33 +224,19 @@ export const ContentSlide = ({
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           )}
         </div>
 
         {/* Right Side - Example Showcase */}
-        <motion.div
-          initial={
-            shouldAnimate
-              ? { opacity: 0, x: slideDirection === 'down' ? 100 : -100 }
-              : { opacity: 1, x: 0 }
-          }
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: shouldAnimate ? 0.3 : 0, duration: 0.6 }}
-          className="shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedExampleIndex}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              className="w-full"
-            >
+        <div className="shrink-0 lg:w-1/2 flex items-center justify-center max-w-full overflow-hidden min-w-0">
+          <div key={selectedExampleIndex} className="w-full">
               {selectedExample.image ? (
                 <div
-                  className={`relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50 ${getAspectRatioClass(slideData.imageAspectRatio)}`}
+                  className={cn(
+                    'relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50',
+                    getAspectRatioClass(slideData.imageAspectRatio)
+                  )}
                 >
                   <Image
                     src={selectedExample.image}
@@ -278,20 +248,29 @@ export const ContentSlide = ({
                   />
                 </div>
               ) : selectedExample.iframe ? (
-                <div className="relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 max-h-[60vh] bg-surface/50">
-                  <iframe
-                    src={selectedExample.iframe}
-                    className="w-full h-full border-0 min-h-[400px]"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    title={`${selectedExample.name} Demo`}
-                  />
+                <div 
+                  ref={exampleIframeRef.containerRef}
+                  className="relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 max-h-[60vh] bg-surface/50"
+                >
+                  {exampleIframeRef.isVisible ? (
+                    <iframe
+                      src={selectedExample.iframe}
+                      className="w-full h-full border-0 min-h-[400px]"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={`${selectedExample.name} Demo`}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-surface/30">
+                      <div className="text-foreground/40 text-sm">Loading...</div>
+                    </div>
+                  )}
                 </div>
               ) : null}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-      </motion.div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -359,34 +338,25 @@ export const ContentSlide = ({
 
   // Default layout for non-example slides
   return (
-    <motion.div
-      key={`content-${index}`}
-      initial={
-        shouldAnimate
-          ? {
-            opacity: 0,
-            x: slideDirection === 'down' ? 100 : -100,
-          }
-          : { opacity: 1, x: 0 }
-      }
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-      className={`w-full h-full ${getLayoutClasses()} overflow-hidden max-w-full ${slideDesign === 'minimal' ? 'p-4' : 'p-8 lg:p-12'}`}
+    <div
+      className={cn(
+        'w-full h-full overflow-hidden max-w-full',
+        getLayoutClasses(),
+        slideDesign === 'minimal' ? 'p-4' : 'p-8 lg:p-12'
+      )}
     >
       {/* Content Section */}
       <article
-        className={`${getContentClasses()} overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2`}
+        className={cn(
+          getContentClasses(),
+          'overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2'
+        )}
       >
         <div className="flex items-center gap-3 mb-4 flex-wrap">
           {slideData.category && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3 }}
-              className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider"
-            >
+            <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
               {slideData.category}
-            </motion.span>
+            </span>
           )}
           <div className="h-1 w-12 bg-accent rounded-full" />
           <span className="text-sm font-mono text-accent uppercase tracking-wider">
@@ -394,60 +364,47 @@ export const ContentSlide = ({
           </span>
         </div>
 
-        <motion.h1
-          initial={shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: shouldAnimate ? 0.1 : 0 }}
-          className={`${getTitleClasses()} font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere max-w-full`}
-          style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
-        >
+        <h1 className={cn(getTitleClasses(), 'font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere max-w-full')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
           {slideData.title}
-        </motion.h1>
+        </h1>
 
         {slideData.subtitle && (
-          <motion.h2
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className={`text-accent font-bold break-words overflow-wrap-anywhere max-w-full ${slideDesign === 'minimal'
-              ? 'text-xl md:text-2xl lg:text-3xl mb-6'
-              : slideDesign === 'hero'
-                ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
-                : 'text-2xl md:text-3xl lg:text-4xl mb-6'
-              }`}
+          <h2
+            className={cn(
+              'text-accent font-bold break-words overflow-wrap-anywhere max-w-full',
+              slideDesign === 'minimal'
+                ? 'text-xl md:text-2xl lg:text-3xl mb-6'
+                : slideDesign === 'hero'
+                  ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
+                  : 'text-2xl md:text-3xl lg:text-4xl mb-6'
+            )}
             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
           >
             {slideData.subtitle}
-          </motion.h2>
+          </h2>
         )}
 
         {/* Content - Portable Text (Sanity) or ContentItem[] (static fallback) */}
         {slideData.content && isPortableText(slideData.content) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="max-w-full overflow-x-hidden px-4 md:px-6"
-          >
+          <div className="max-w-full overflow-x-hidden px-4 md:px-6">
             <PresentationPortableText
               value={slideData.content as PortableTextBlock[]}
               slideDesign={slideDesign}
             />
-          </motion.div>
+          </div>
         )}
 
         {/* Legacy ContentItem[] rendering for static fallback slides */}
         {slideData.content && isContentItemArray(slideData.content) && (
-          <motion.ul
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className={`max-w-full list-none overflow-x-hidden px-4 md:px-6 ${slideDesign === 'minimal'
-              ? 'space-y-3'
-              : slideDesign === 'hero'
-                ? 'space-y-6'
-                : 'space-y-4'
-              }`}
+          <ul
+            className={cn(
+              'max-w-full list-none overflow-x-hidden px-4 md:px-6',
+              slideDesign === 'minimal'
+                ? 'space-y-3'
+                : slideDesign === 'hero'
+                  ? 'space-y-6'
+                  : 'space-y-4'
+            )}
           >
             {slideData.content
               .filter(item => {
@@ -477,12 +434,9 @@ export const ContentSlide = ({
                   const isExternal = url?.startsWith('http://') || url?.startsWith('https://');
 
                   return (
-                    <motion.li
+                    <li
                       key={`${index}-${level}`}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + 0.1 * itemIndex + 0.05 * level, duration: 0.4 }}
-                      className={`flex items-start gap-4 min-w-0 ${isNested ? 'pl-6 md:pl-8' : 'group'}`}
+                      className={cn('flex items-start gap-4 min-w-0', isNested ? 'pl-6 md:pl-8' : 'group')}
                     >
                       <div className="shrink-0 mt-2">
                         {isNested ? (
@@ -500,20 +454,24 @@ export const ContentSlide = ({
                             href={url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noopener noreferrer' : undefined}
-                            className={`leading-relaxed transition-colors break-words inline-block ${isNested
-                              ? 'text-base md:text-lg lg:text-xl text-accent'
-                              : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline'
-                              }`}
+                            className={cn(
+                              'leading-relaxed transition-colors break-words inline-block',
+                              isNested
+                                ? 'text-base md:text-lg lg:text-xl text-accent'
+                                : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline'
+                            )}
                           >
                             {cleanText}
                           </a>
                         ) : (
                           // Render as plain text
                           <span
-                            className={`leading-relaxed break-words ${isNested
-                              ? 'text-base md:text-lg lg:text-xl text-foreground/80'
-                              : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors'
-                              }`}
+                            className={cn(
+                              'leading-relaxed break-words',
+                              isNested
+                                ? 'text-base md:text-lg lg:text-xl text-foreground/80'
+                                : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors'
+                            )}
                           >
                             {cleanText}
                           </span>
@@ -533,23 +491,18 @@ export const ContentSlide = ({
                           </ul>
                         )}
                       </div>
-                    </motion.li>
+                    </li>
                   );
                 };
 
                 return renderContentItem(item, itemIndex);
               })}
-          </motion.ul>
+          </ul>
         )}
 
         {/* Sources */}
         {slideData.sources && slideData.sources.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-            className="mt-12 pt-8 border-t border-border/30"
-          >
+          <div className="mt-12 pt-8 border-t border-border/30">
             <p className="text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider">
               Sources:
             </p>
@@ -572,33 +525,21 @@ export const ContentSlide = ({
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         )}
       </article>
 
       {/* Media Section - Chart, Image, Iframe, Numbers, Tools, or Decorative Placeholder */}
-      <motion.div
-        initial={
-          shouldAnimate
-            ? { opacity: 0, x: slideDirection === 'down' ? 100 : -100 }
-            : { opacity: 1, x: 0 }
-        }
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: shouldAnimate ? 0.3 : 0, duration: 0.6 }}
-        className={[getMediaContainerClasses(), slideDesign === 'full-width' ? 'order-first' : '']
-          .filter(Boolean)
-          .join(' ')}
+      <div
+        className={cn(getMediaContainerClasses(), slideDesign === 'full-width' && 'order-first')}
       >
         {slideData.tools ? (
           <div className="w-full max-w-full p-6 bg-surface-elevated rounded-2xl border-2 border-border overflow-hidden min-w-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {slideData.tools.map((tool, toolIndex) => (
-                <motion.div
+                <div
                   key={tool.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: toolIndex * 0.1, duration: 0.4 }}
-                  className="group p-5 bg-surface rounded-xl border-2 border-border hover:border-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-accent/20"
+                  className="group p-5 bg-surface rounded-xl border-2 border-border hover:border-accent/50 transition-all duration-200 hover:shadow-lg hover:shadow-accent/20"
                 >
                   <a href={tool.url} target="_blank" rel="noopener noreferrer" className="block">
                     <div className="flex items-start justify-between mb-3">
@@ -637,16 +578,18 @@ export const ContentSlide = ({
                             return (
                               <div
                                 key={level}
-                                className={`w-2 h-2 rounded-full transition-all ${level <= nerdLevel
-                                  ? level <= 2
-                                    ? 'bg-green-500'
-                                    : level <= 3
-                                      ? 'bg-yellow-500'
-                                      : level <= 4
-                                        ? 'bg-orange-500'
-                                        : 'bg-red-500'
-                                  : 'bg-foreground/10'
-                                  }`}
+                                className={cn(
+                                  'w-2 h-2 rounded-full transition-all',
+                                  level <= nerdLevel
+                                    ? level <= 2
+                                      ? 'bg-green-500'
+                                      : level <= 3
+                                        ? 'bg-yellow-500'
+                                        : level <= 4
+                                          ? 'bg-orange-500'
+                                          : 'bg-red-500'
+                                    : 'bg-foreground/10'
+                                )}
                               />
                             );
                           })}
@@ -661,13 +604,11 @@ export const ContentSlide = ({
                     {tool.description}
                   </p>
                   {tool.workshopUrl && (
-                    <motion.a
+                    <a
                       href={tool.workshopUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent border-2 border-accent/30 hover:border-accent/50 rounded-lg font-semibold text-sm transition-all duration-300"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent border-2 border-accent/30 hover:border-accent/50 rounded-lg font-semibold text-sm transition-all duration-200"
                     >
                       <svg
                         className="w-4 h-4"
@@ -689,23 +630,34 @@ export const ContentSlide = ({
                         />
                       </svg>
                       <span>View Workshop</span>
-                    </motion.a>
+                    </a>
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         ) : slideData.iframe ? (
           <div
-            className={`relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 bg-surface/50 ${getAspectRatioClass(slideData.iframeAspectRatio)}`}
+            ref={mainIframeRef.containerRef}
+            className={cn(
+              'relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 bg-surface/50',
+              getAspectRatioClass(slideData.iframeAspectRatio)
+            )}
           >
-            <iframe
-              src={slideData.iframe}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="Interactive 3D Workshop Demo"
-            />
+            {mainIframeRef.isVisible ? (
+              <iframe
+                src={slideData.iframe}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Interactive 3D Workshop Demo"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-surface/30 min-h-[400px]">
+                <div className="text-foreground/40 text-sm">Loading...</div>
+              </div>
+            )}
           </div>
         ) : slideData.metrics ? (
           <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
@@ -723,7 +675,10 @@ export const ContentSlide = ({
           </div>
         ) : slideData.image ? (
           <div
-            className={`relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50 ${getAspectRatioClass(slideData.imageAspectRatio)}`}
+            className={cn(
+              'relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50',
+              getAspectRatioClass(slideData.imageAspectRatio)
+            )}
           >
             <Image
               src={
@@ -768,7 +723,7 @@ export const ContentSlide = ({
             )}
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };

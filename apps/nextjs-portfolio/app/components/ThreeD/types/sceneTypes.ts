@@ -32,7 +32,7 @@ export type SceneRef = THREE.Group | THREE.Mesh | null;
 export interface ShowcaseControls {
   texture: string;
   onTextureChange: (texture: string) => void;
-  textureOptions: Array<{ name: string; value: string }>;
+  textureOptions: ReadonlyArray<{ name: string; value: string }>;
   autoRotate: boolean;
   onAutoRotateChange: (enabled: boolean) => void;
 }

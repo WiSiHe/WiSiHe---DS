@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@wisihe/utils';
 import { IoClose } from 'react-icons/io5';
@@ -54,6 +54,13 @@ const chipStyles = cva(
   },
 );
 
+// Move icon size classes outside component to avoid recreation
+const iconSizeClasses = {
+  small: 'w-3 h-3',
+  medium: 'w-4 h-4',
+  large: 'w-5 h-5',
+} as const;
+
 type ChipProps = React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof chipStyles> & {
     label: string;
@@ -71,7 +78,7 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
     disabled?: boolean;
   };
 
-const Chip = ({
+const Chip = React.memo(({
   label,
   selected = false,
   Icon,
@@ -88,21 +95,14 @@ const Chip = ({
   onClick,
   ...props
 }: ChipProps) => {
-  // Determine icon size based on chip size
-  const iconSizeClasses = {
-    small: 'w-3 h-3',
-    medium: 'w-4 h-4',
-    large: 'w-5 h-5',
-  };
-
-  // Enhanced click handler with proper event handling
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+  // Memoize click handler
+  const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (disabled || !interactive) return;
     onClick?.(e as React.MouseEvent<HTMLDivElement>);
-  };
+  }, [disabled, interactive, onClick]);
 
-  // Keyboard handler for accessibility
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
+  // Memoize keyboard handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (disabled || !interactive) return;
     // Support Enter and Space keys for activation
     if (e.key === 'Enter' || e.key === ' ') {
@@ -111,26 +111,94 @@ const Chip = ({
       const syntheticEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       onClick?.(syntheticEvent as unknown as React.MouseEvent<HTMLDivElement>);
     }
-  };
+  }, [disabled, interactive, onClick]);
 
-  // Enhanced remove handler
-  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // Memoize remove handler
+  const handleRemove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (disabled) return;
     onRemove?.();
-  };
+  }, [disabled, onRemove]);
 
-  const baseClassName = cn(
-    chipStyles({
-      variation,
-      outlined,
-      selected,
-      iconPosition,
-      size,
-      interactive: interactive && !disabled,
-    }),
-    disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
-    className,
+  // Memoize className computation
+  const baseClassName = useMemo(
+    () =>
+      cn(
+        chipStyles({
+          variation,
+          outlined,
+          selected,
+          iconPosition,
+          size,
+          interactive: interactive && !disabled,
+        }),
+        disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
+        className,
+      ),
+    [variation, outlined, selected, iconPosition, size, interactive, disabled, className],
+  );
+
+  // Memoize icon props
+  const iconProps = useMemo(
+    () =>
+      Icon
+        ? {
+            className: cn(
+              iconSizeClasses[size],
+              'transition-transform duration-200 group-hover:scale-110',
+              iconPosition === 'left' ? 'mr-0.5' : 'ml-0.5',
+            ),
+          }
+        : null,
+    [Icon, size, iconPosition],
+  );
+
+  // Memoize remove button className
+  const removeButtonClassName = useMemo(
+    () =>
+      cn(
+        'relative z-10 ml-1 hover:bg-black/10 active:bg-black/20 rounded-full p-0.5 transition-all duration-200 hover:scale-110 active:scale-95',
+        iconSizeClasses[size],
+        disabled && 'pointer-events-none opacity-50',
+      ),
+    [size, disabled],
+  );
+
+  // Render icon component
+  const iconElement = Icon && iconProps ? React.createElement(Icon, iconProps as React.ComponentProps<typeof Icon>) : null;
+
+  // Shared content
+  const content = (
+    <>
+      {/* Optimized: Only render gradient overlay for interactive chips to reduce DOM nodes */}
+      {interactive && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+      )}
+
+      {iconElement}
+
+      <span className="relative z-10 font-medium">
+        {label}
+        {additionalText && <span className="ml-1 opacity-75">{additionalText}</span>}
+      </span>
+
+      {removable && onRemove && (
+        <button
+          onClick={handleRemove}
+          className={removeButtonClassName}
+          aria-label={`Remove ${label}`}
+          disabled={disabled}
+        >
+          <IoClose className="w-full h-full" />
+        </button>
+      )}
+
+      {removable && !onRemove && (
+        <div className={cn('relative z-10 ml-1 rounded-full p-0.5', iconSizeClasses[size])}>
+          <IoClose className="w-full h-full opacity-30" />
+        </div>
+      )}
+    </>
   );
 
   if (interactive) {
@@ -145,90 +213,18 @@ const Chip = ({
         aria-label={props['aria-label'] || label}
         {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       >
-        {/* Subtle background animation on hover */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
-
-        {Icon &&
-          React.createElement(Icon, {
-            className: cn(
-              iconSizeClasses[size],
-              'transition-transform duration-200 group-hover:scale-110',
-              iconPosition === 'left' ? 'mr-0.5' : 'ml-0.5',
-            ),
-          } as React.ComponentProps<typeof Icon>)}
-
-        <span className="relative z-10 font-medium">
-          {label}
-          {additionalText && <span className="ml-1 opacity-75">{additionalText}</span>}
-        </span>
-
-        {removable && onRemove && (
-          <button
-            onClick={handleRemove}
-            className={cn(
-              'relative z-10 ml-1 hover:bg-black/10 active:bg-black/20 rounded-full p-0.5 transition-all duration-200 hover:scale-110 active:scale-95',
-              iconSizeClasses[size],
-              disabled && 'pointer-events-none opacity-50',
-            )}
-            aria-label={`Remove ${label}`}
-            disabled={disabled}
-          >
-            <IoClose className="w-full h-full" />
-          </button>
-        )}
-
-        {/* If removable is true but no onRemove function, show a visual indicator but make it clickable */}
-        {removable && !onRemove && (
-          <div className={cn('relative z-10 ml-1 rounded-full p-0.5', iconSizeClasses[size])}>
-            <IoClose className="w-full h-full opacity-30" />
-          </div>
-        )}
+        {content}
       </button>
     );
   }
 
   return (
     <div className={baseClassName} {...props}>
-      {/* Subtle background animation on hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
-
-      {Icon &&
-        React.createElement(Icon, {
-          className: cn(
-            iconSizeClasses[size],
-            'transition-transform duration-200 group-hover:scale-110',
-            iconPosition === 'left' ? 'mr-0.5' : 'ml-0.5',
-          ),
-        } as React.ComponentProps<typeof Icon>)}
-
-      <span className="relative z-10 font-medium">
-        {label}
-        {additionalText && <span className="ml-1 opacity-75">{additionalText}</span>}
-      </span>
-
-      {removable && onRemove && (
-        <button
-          onClick={handleRemove}
-          className={cn(
-            'relative z-10 ml-1 hover:bg-black/10 active:bg-black/20 rounded-full p-0.5 transition-all duration-200 hover:scale-110 active:scale-95',
-            iconSizeClasses[size],
-            disabled && 'pointer-events-none opacity-50',
-          )}
-          aria-label={`Remove ${label}`}
-          disabled={disabled}
-        >
-          <IoClose className="w-full h-full" />
-        </button>
-      )}
-
-      {/* If removable is true but no onRemove function, show a visual indicator but make it clickable */}
-      {removable && !onRemove && (
-        <div className={cn('relative z-10 ml-1 rounded-full p-0.5', iconSizeClasses[size])}>
-          <IoClose className="w-full h-full opacity-30" />
-        </div>
-      )}
+      {content}
     </div>
   );
-};
+});
+
+Chip.displayName = 'Chip';
 
 export default Chip;

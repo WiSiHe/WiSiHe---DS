@@ -24,6 +24,7 @@ interface PersistentSceneProps {
   autoRotate: boolean;
   directionalLightPosition?: [number, number, number];
   directionalLightIntensity?: number;
+  isVisible?: boolean;
 }
 
 export function PersistentScene({
@@ -32,6 +33,7 @@ export function PersistentScene({
   autoRotate,
   directionalLightPosition,
   directionalLightIntensity,
+  isVisible = true,
 }: PersistentSceneProps) {
   const showcaseRef = useRef<THREE.Group>(null);
   const threejsIntroRef = useRef<THREE.Group>(null);
@@ -45,10 +47,11 @@ export function PersistentScene({
     directionalLightIntensity,
   };
 
-  // Handle animations
+  // Handle animations - pause when not visible
   useSceneAnimation({
     mode,
     autoRotate,
+    isVisible,
     refs: {
       showcase: showcaseRef,
       threejsIntro: threejsIntroRef,
@@ -63,7 +66,7 @@ export function PersistentScene({
     <>
       <SceneLights lightConfig={lightConfig} mode={mode} />
 
-      {/* Route to appropriate scene based on mode */}
+      {/* Only render the active scene to reduce render overhead */}
       {mode === 'intro' && <IntroScene />}
       {mode === 'vertices' && <VerticesScene />}
       {mode === 'edges' && <EdgesScene />}

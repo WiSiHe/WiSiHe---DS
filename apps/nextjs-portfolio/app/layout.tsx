@@ -158,6 +158,10 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/wisihe.svg" color="oklch(65% 0.15 180)" />
 

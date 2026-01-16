@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import { motion, Variants } from 'motion/react';
 import Marquee from 'react-fast-marquee';
 import Chip from '../Chip/Chip';
@@ -16,7 +17,7 @@ const professionalSkills = [
   'Sanity CMS Integration',
   'Performance Optimization',
   'Interactive Prototyping',
-];
+] as const;
 
 const creativeSkills = [
   'Digital Drawing & Painting',
@@ -25,32 +26,49 @@ const creativeSkills = [
   'Video Editing & Production',
   'Interactive 3D Design (Spline)',
   'Concept Art & Illustration',
-];
+] as const;
 
-const SkillsSection = () => {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1, // Reduced from 0.2
-        delayChildren: 0.2, // Reduced from 0.3
-      },
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
-  };
+  },
+};
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 150, // Increased from 100
-        damping: 20, // Increased from 15
-      },
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 150,
+      damping: 20,
     },
-  };
+  },
+};
+
+const SkillsSection = React.memo(function SkillsSection() {
+  // Memoize chip arrays to prevent recreation on every render
+  const professionalChips = useMemo(
+    () =>
+      professionalSkills.map(skill => (
+        <Chip key={skill} label={skill} className="ml-2 pointer-events-none" interactive={false} />
+      )),
+    [],
+  );
+
+  const creativeChips = useMemo(
+    () =>
+      creativeSkills.map(skill => (
+        <Chip key={skill} label={skill} className="ml-2 pointer-events-none" interactive={false} />
+      )),
+    [],
+  );
 
   return (
     <motion.section
@@ -68,26 +86,32 @@ const SkillsSection = () => {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="left" speed={8}>
-          {' '}
-          {/* Reduced speed from 10 */}
-          {professionalSkills.map(skill => (
-            <Chip key={skill} label={skill} className="ml-2 pointer-events-none" />
-          ))}
+        <Marquee
+          gradientColor="hsl(var(--surface))"
+          autoFill
+          gradient
+          direction="left"
+          speed={8}
+          pauseOnHover={false}
+        >
+          {professionalChips}
         </Marquee>
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee gradientColor="hsl(var(--surface))" autoFill gradient direction="right" speed={8}>
-          {' '}
-          {/* Reduced speed from 10 */}
-          {creativeSkills.map(skill => (
-            <Chip key={skill} label={skill} className="ml-2 pointer-events-none" />
-          ))}
+        <Marquee
+          gradientColor="hsl(var(--surface))"
+          autoFill
+          gradient
+          direction="right"
+          speed={8}
+          pauseOnHover={false}
+        >
+          {creativeChips}
         </Marquee>
       </motion.div>
     </motion.section>
   );
-};
+});
 
 export default SkillsSection;

@@ -1,4 +1,6 @@
-//
+'use client';
+
+import React, { useMemo } from 'react';
 import { linkResolver } from '@/sanity/lib/utils';
 import Link from 'next/link';
 
@@ -9,25 +11,31 @@ interface ResolvedLinkProps {
   className?: string;
 }
 
-export default function ResolvedLink({
+const ResolvedLink = React.memo(function ResolvedLink({
   link,
   children,
   className,
 }: ResolvedLinkProps) {
-  // resolveLink() is used to determine the type of link and return the appropriate URL.
-  const resolvedLink = linkResolver(link);
+  // Memoize link resolution to avoid recalculating on every render
+  const resolvedLink = useMemo(() => linkResolver(link), [link]);
 
-  if (typeof resolvedLink === 'string') {
-    return (
-      <Link
-        href={resolvedLink}
-        target={link?.openInNewTab ? '_blank' : undefined}
-        rel={link?.openInNewTab ? 'noopener noreferrer' : undefined}
-        className={className}
-      >
-        {children}
-      </Link>
-    );
+  // Memoize link props - only create when resolvedLink is a string
+  const linkProps = useMemo(() => {
+    if (typeof resolvedLink !== 'string') {
+      return null;
+    }
+    return {
+      href: resolvedLink,
+      target: link?.openInNewTab ? ('_blank' as const) : undefined,
+      rel: link?.openInNewTab ? 'noopener noreferrer' : undefined,
+      className,
+    };
+  }, [resolvedLink, link?.openInNewTab, className]);
+
+  if (typeof resolvedLink === 'string' && linkProps) {
+    return <Link {...linkProps}>{children}</Link>;
   }
   return <>{children}</>;
-}
+});
+
+export default ResolvedLink;
