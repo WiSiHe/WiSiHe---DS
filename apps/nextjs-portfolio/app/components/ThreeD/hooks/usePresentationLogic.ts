@@ -3,12 +3,14 @@ import { PresentationSlide } from '../../../three-d/types';
 
 interface UsePresentationLogicProps {
     slides: PresentationSlide[];
+    mainRef?: RefObject<HTMLElement | null>;
     technicalDeckRef?: RefObject<HTMLDivElement | null>;
     technicalSeparatorRef?: RefObject<HTMLElement | null>;
 }
 
 export const usePresentationLogic = ({
     slides,
+    mainRef,
     technicalDeckRef,
     technicalSeparatorRef,
 }: UsePresentationLogicProps) => {
@@ -226,32 +228,35 @@ export const usePresentationLogic = ({
         };
     }, [flushPendingUpdates]);
 
-    const handleSkipToCoolPart = () => {
+    const handleSkipToCoolPart = useCallback(() => {
         if (technicalSeparatorRef?.current) {
             technicalSeparatorRef.current.scrollIntoView({ behavior: 'smooth' });
         } else {
             technicalDeckRef?.current?.scrollIntoView({ behavior: 'smooth' });
         }
-    };
+    }, [technicalSeparatorRef, technicalDeckRef]);
 
-    const handleScrollToTop = () => {
-        if (containerRef.current) {
-            containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    const handleScrollToTop = useCallback(() => {
+        // Scroll the main element to top (the actual scroll container)
+        if (mainRef?.current) {
+            mainRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            // Fallback: scroll window if main ref is not available
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    }, [mainRef]);
 
-    const handlePrevSlide = () => {
-        if (currentSlide > 0) {
-            slideRefs.current[currentSlide - 1]?.scrollIntoView({ behavior: 'smooth' });
+    const handlePrevSlide = useCallback(() => {
+        if (currentSlideRef.current > 0) {
+            slideRefs.current[currentSlideRef.current - 1]?.scrollIntoView({ behavior: 'smooth' });
         }
-    };
+    }, []);
 
-    const handleNextSlide = () => {
-        if (currentSlide < slides.length - 1) {
-            slideRefs.current[currentSlide + 1]?.scrollIntoView({ behavior: 'smooth' });
+    const handleNextSlide = useCallback(() => {
+        if (currentSlideRef.current < slides.length - 1) {
+            slideRefs.current[currentSlideRef.current + 1]?.scrollIntoView({ behavior: 'smooth' });
         }
-    };
+    }, [slides.length]);
 
     return {
         currentSlide,

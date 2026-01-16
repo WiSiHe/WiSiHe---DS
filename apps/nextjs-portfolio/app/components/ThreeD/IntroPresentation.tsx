@@ -8,18 +8,30 @@ import { TitleSlide } from './Slides/TitleSlide';
 import { ContentSlide } from './Slides/ContentSlide';
 import { presentationSlides as fallbackSlides } from '../../three-d/presentationSlides';
 import { GridBackground } from './GridBackground';
-import { PresentationControls } from './PresentationControls';
 import type { PresentationSlide } from '../../three-d/types';
 import { usePresentationLogic } from './hooks/usePresentationLogic';
 
 export const IntroPresentation = React.memo(function IntroPresentation({
+  mainRef,
   technicalDeckRef,
   technicalSeparatorRef,
   slides,
+  onPresentationStateChange,
 }: {
+  mainRef?: React.RefObject<HTMLElement | null>;
   technicalDeckRef?: React.RefObject<HTMLDivElement | null>;
   technicalSeparatorRef?: React.RefObject<HTMLElement | null>;
   slides?: PresentationSlide[] | null;
+  onPresentationStateChange?: (state: {
+    currentSlide: number;
+    totalSlides: number;
+    isTechnicalSectionVisible: boolean;
+    isScrolled: boolean;
+    onNext: () => void;
+    onPrev: () => void;
+    onScrollToTop: () => void;
+    onSkipToCoolPart: () => void;
+  }) => void;
 }) {
   const presentationSlides = slides && slides.length > 0 ? slides : fallbackSlides;
 
@@ -30,12 +42,13 @@ export const IntroPresentation = React.memo(function IntroPresentation({
     isScrolled,
     containerRef,
     slideRefs,
-    handleSkipToCoolPart,
     handleScrollToTop,
     handlePrevSlide,
     handleNextSlide,
+    handleSkipToCoolPart,
   } = usePresentationLogic({
     slides: presentationSlides,
+    mainRef,
     technicalDeckRef,
     technicalSeparatorRef,
   });
@@ -65,6 +78,51 @@ export const IntroPresentation = React.memo(function IntroPresentation({
     return presentationSlides[currentSlide].category;
   }, [showCategoryTransition, presentationSlides, currentSlide]);
 
+  // Expose presentation state to parent for controls rendering
+  // Use refs to track previous values and only update when they actually change
+  const prevStateRef = React.useRef({
+    currentSlide,
+    totalSlides: presentationSlides.length,
+    isTechnicalSectionVisible,
+    isScrolled,
+  });
+
+  React.useEffect(() => {
+    const prevState = prevStateRef.current;
+    const hasChanged =
+      prevState.currentSlide !== currentSlide ||
+      prevState.totalSlides !== presentationSlides.length ||
+      prevState.isTechnicalSectionVisible !== isTechnicalSectionVisible ||
+      prevState.isScrolled !== isScrolled;
+
+    if (hasChanged && onPresentationStateChange) {
+      prevStateRef.current = {
+        currentSlide,
+        totalSlides: presentationSlides.length,
+        isTechnicalSectionVisible,
+        isScrolled,
+      };
+      onPresentationStateChange({
+        currentSlide,
+        totalSlides: presentationSlides.length,
+        isTechnicalSectionVisible,
+        isScrolled,
+        onNext: handleNextSlide,
+        onPrev: handlePrevSlide,
+        onScrollToTop: handleScrollToTop,
+        onSkipToCoolPart: handleSkipToCoolPart,
+      });
+    }
+  }, [
+    currentSlide,
+    presentationSlides.length,
+    isTechnicalSectionVisible,
+    isScrolled,
+    onPresentationStateChange,
+    // Note: handlers are stable from usePresentationLogic, but we don't need them in deps
+    // since we only update when the actual state values change
+  ]);
+
   return (
     <>
       <ScrollIndicator currentSlide={currentSlide} totalSlides={presentationSlides.length} />
@@ -93,17 +151,6 @@ export const IntroPresentation = React.memo(function IntroPresentation({
         )}
       </AnimatePresence>
 
-      <PresentationControls
-        currentSlide={currentSlide}
-        totalSlides={presentationSlides.length}
-        onNext={handleNextSlide}
-        onPrev={handlePrevSlide}
-        onSkip={handleSkipToCoolPart}
-        onScrollToTop={handleScrollToTop}
-        isScrolled={isScrolled}
-        isVisible={!isTechnicalSectionVisible}
-      />
-
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {presentationSlides[currentSlide]?.title && (
           <span>
@@ -113,11 +160,6 @@ export const IntroPresentation = React.memo(function IntroPresentation({
         )}
       </div>
 
-      {/* 
-        This section is NO LONGER a scroll container. 
-        It is just a wrapper for the slides which are snap-start children of the Main Loop.
-        We passed technicalDeckRef to usePresentationLogic, so logic works.
-      */}
       <div ref={containerRef} className="w-full bg-background text-foreground relative">
         {/* Single fixed GridBackground instance shared across all slides */}
         <GridBackground fixed />

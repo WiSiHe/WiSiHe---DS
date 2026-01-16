@@ -41,7 +41,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
       <nav
         aria-label="Main Navigation"
         className={cn(
-          'z-[100] flex items-center justify-between',
+          'z-20 flex items-start justify-between',
           isAbsolute ? 'fixed top-4 left-4 right-4' : 'relative',
         )}
       >

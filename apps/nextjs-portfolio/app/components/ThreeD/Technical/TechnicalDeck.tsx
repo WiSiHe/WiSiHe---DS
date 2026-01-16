@@ -24,14 +24,14 @@ export const TechnicalDeck = React.memo(function TechnicalDeck() {
   // Dynamically load technical slides JSON data - optimized with error handling
   useEffect(() => {
     let cancelled = false;
-    
+
     import('../../../three-d/technicalSlides.json')
-      .then((data) => {
+      .then(data => {
         if (!cancelled) {
           setSlides(data.default as Slide[]);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Failed to load technical slides:', error);
         if (!cancelled) {
           setSlides([]); // Set empty array to prevent infinite loading state
@@ -61,14 +61,14 @@ export const TechnicalDeck = React.memo(function TechnicalDeck() {
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentSlide((prev) => {
+    setCurrentSlide(prev => {
       if (!slides || slides.length === 0) return prev;
       return Math.min(prev + 1, slides.length - 1);
     });
   }, [slides]);
 
   const handlePrev = useCallback(() => {
-    setCurrentSlide((prev) => Math.max(prev - 1, 0));
+    setCurrentSlide(prev => Math.max(prev - 1, 0));
   }, []);
 
   // Memoize control objects to prevent unnecessary re-renders
