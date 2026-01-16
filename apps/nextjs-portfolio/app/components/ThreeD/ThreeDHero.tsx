@@ -9,7 +9,7 @@ export function ThreeDHero() {
   const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Track visibility to optimize Spline viewer
+  // Track visibility to optimize Spline viewer - load when visible, unload when not
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -17,9 +17,14 @@ export function ThreeDHero() {
       ([entry]) => {
         const visible = entry.isIntersecting && entry.intersectionRatio > 0.1;
         setIsVisible(visible);
-        // Only load Spline when section becomes visible
+        // Load Spline when section becomes visible for the first time
         if (visible && !shouldLoadSpline) {
           setShouldLoadSpline(true);
+        }
+        // Unload Spline when section is completely out of view (to save resources)
+        // Only unload if it was previously loaded and now completely out of view
+        if (!visible && shouldLoadSpline && entry.intersectionRatio === 0) {
+          setShouldLoadSpline(false);
         }
       },
       { threshold: [0, 0.1, 0.5, 1], rootMargin: '100px' },
@@ -32,15 +37,15 @@ export function ThreeDHero() {
   return (
     <section
       ref={sectionRef}
-      className="snap-start h-screen w-full relative overflow-hidden bg-background flex items-center shrink-0 z-10"
+      className="snap-start h-screen w-full relative overflow-hidden bg-black flex items-center shrink-0 z-10"
       aria-label="3D Hero Section"
     >
-      {/* {shouldLoadSpline && (
+      {shouldLoadSpline && (
         <Script
           type="module"
-          src="https://unpkg.com/@splinetool/viewer@1.12.35/build/spline-viewer.js"
+          src="https://unpkg.com/@splinetool/viewer@1.12.36/build/spline-viewer.js"
         />
-      )} */}
+      )}
 
       {/* Two-column layout: Text on left, 3D model on right */}
       <div className="w-full h-full flex flex-col lg:flex-row items-center justify-between px-6 md:px-12 lg:px-16 max-w-7xl mx-auto gap-8 lg:gap-12">
@@ -84,19 +89,20 @@ export function ThreeDHero() {
           </motion.div>
         </div>
 
-        {/* {shouldLoadSpline && (
+        {shouldLoadSpline && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: isVisible ? 1 : 0.3, scale: 1 }}
             transition={{ duration: 0.5 }}
             className="w-full h-full absolute inset-0 pointer-events-none"
-            style={{ 
+            style={{
               pointerEvents: isVisible ? 'auto' : 'none',
-              transition: 'opacity 0.3s ease-out'
+              transition: 'opacity 0.3s ease-out',
             }}
           >
-            @ts-ignore
+            {/* @ts-ignore */}
             <spline-viewer
+              loading-anim-type="spinner-small-dark"
               url="https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode"
               style={{
                 width: '100%',
@@ -106,7 +112,7 @@ export function ThreeDHero() {
               className="w-full h-full"
             />
           </motion.div>
-        )} */}
+        )}
       </div>
     </section>
   );
