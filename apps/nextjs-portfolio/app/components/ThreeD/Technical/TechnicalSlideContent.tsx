@@ -46,7 +46,7 @@ export function TechnicalSlideContent({
   } = lightControls;
 
   return (
-    <article className="flex-1 lg:w-1/2 flex flex-col relative z-10">
+    <article className="h-full flex flex-col relative z-10">
       {/* Fixed Header */}
       <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
@@ -97,67 +97,142 @@ export function TechnicalSlideContent({
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto pb-8 px-8 md:pb-12 md:px-12 lg:pb-16 lg:px-16">
-        <div className="flex flex-col justify-center max-w-4xl mx-auto w-full">
-          <div className="space-y-12 pt-8">
-            <p className="text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed mb-8">
+        <div className="max-w-prose mx-auto text-left">
+          <div className="space-y-10 pt-8">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="prose prose-lg text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed max-w-none"
+            >
               {currentSlideData.description}
-            </p>
+            </motion.p>
 
-            {currentSlideData.code && (
-              <CodeExampleWrapper
-                code={currentSlideData.code}
-                currentSlide={currentSlide}
-              />
-            )}
-
-            {currentSlideData.links && currentSlideData.links.length > 0 && (
-              <ResourceLinks
-                links={currentSlideData.links}
-                currentSlide={currentSlide}
-              />
-            )}
-
+            {/* Interactive Controls - Show before code example for showcase mode */}
             {currentSlideData.mode === 'showcase' && (
-              <div className="mt-8 space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="space-y-6 pb-4 max-w-none"
+              >
+                {/* Auto-Rotate Control */}
                 <div className="space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">Auto-Rotate:</h3>
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-accent"
+                    >
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                    Auto-Rotate
+                  </h3>
                   <motion.button
                     onClick={() => onAutoRotateChange(!autoRotate)}
                     type="button"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${autoRotate
-                      ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
-                      : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
-                      }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                      autoRotate
+                        ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
+                        : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
+                    }`}
                   >
                     <span>{autoRotate ? 'Rotating' : 'Paused'}</span>
+                    {autoRotate && (
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="animate-spin"
+                      >
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                      </svg>
+                    )}
                   </motion.button>
                 </div>
 
+                {/* Swap Texture Control */}
                 <div className="space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">Swap Texture:</h3>
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-accent"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <path d="M9 3v18M21 9H3" />
+                    </svg>
+                    Swap Texture
+                  </h3>
                   <div className="flex flex-wrap gap-3">
                     {textureOptions.map((texture: { name: string; value: string }) => (
                       <motion.button
                         key={texture.value}
                         onClick={() => onTextureChange(texture.value)}
                         type="button"
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-6 py-3 rounded-xl font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${showcaseTexture === texture.value
-                          ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
-                          : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
-                          }`}
+                        className={`px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                          showcaseTexture === texture.value
+                            ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
+                            : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
+                        }`}
                       >
                         {texture.name}
                       </motion.button>
                     ))}
                   </div>
                 </div>
+              </motion.div>
+            )}
 
-                {/* Light controls omitted for brevity but logic is preserved in parent if needed */}
-              </div>
+            {/* Code Example - Break out of prose width */}
+            {currentSlideData.code && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: currentSlideData.mode === 'showcase' ? 0.2 : 0.1 }}
+                className="w-full -mx-8 md:-mx-12 lg:-mx-16 px-8 md:px-12 lg:px-16"
+              >
+                <CodeExampleWrapper
+                  code={currentSlideData.code}
+                  currentSlide={currentSlide}
+                />
+              </motion.div>
+            )}
+
+            {/* Resource Links */}
+            {currentSlideData.links && currentSlideData.links.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="max-w-none"
+              >
+                <ResourceLinks
+                  links={currentSlideData.links}
+                  currentSlide={currentSlide}
+                />
+              </motion.div>
             )}
           </div>
         </div>

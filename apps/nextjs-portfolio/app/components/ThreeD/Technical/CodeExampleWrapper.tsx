@@ -33,7 +33,9 @@ export function CodeExampleWrapper({
           <div className="w-3 h-3 rounded-full bg-green-500/80" />
         </div>
       </div>
-      <CodeHighlighter language="tsx" code={code} />
+      <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+        <CodeHighlighter language="tsx" code={code} />
+      </div>
     </div>
   );
 

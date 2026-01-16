@@ -55,7 +55,7 @@ export function TechnicalCanvasPanel({
   return (
     <div 
       ref={canvasContainerRef}
-      className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden"
+      className="h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden"
     >
       {/* Subtle Grid Pattern */}
       <div
