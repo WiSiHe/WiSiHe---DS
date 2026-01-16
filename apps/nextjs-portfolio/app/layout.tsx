@@ -158,10 +158,9 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <script
-          crossOrigin="anonymous"
-          src="//unpkg.com/react-scan/dist/auto.global.js"
-        />
+        {process.env.NODE_ENV === 'development' && (
+          <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />
+        )}
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/wisihe.svg" color="oklch(65% 0.15 180)" />
 
@@ -175,18 +174,6 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLdSite),
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var isDev = ${process.env.NODE_ENV === 'development'};
-                if (!isDev && sessionStorage.getItem('hasShownSplash')) {
-                  document.documentElement.classList.add('splash-shown');
-                }
-              } catch (e) {}
-            `,
           }}
         />
       </head>
