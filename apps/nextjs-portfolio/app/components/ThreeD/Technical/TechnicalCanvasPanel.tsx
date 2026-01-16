@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion } from 'motion/react';
 import { PersistentScene } from '../scenes';
@@ -23,6 +23,23 @@ export function TechnicalCanvasPanel({
 }: TechnicalCanvasPanelProps) {
   const [contextLost, setContextLost] = useState(false);
   const [contextError, setContextError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+
+  // Track visibility to pause animations when off-screen
+  useEffect(() => {
+    if (!canvasContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting && entry.intersectionRatio > 0.1);
+      },
+      { threshold: [0, 0.1, 0.5, 1], rootMargin: '50px' }
+    );
+
+    observer.observe(canvasContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     // Reset context lost state after a delay (context should restore automatically)
@@ -36,7 +53,10 @@ export function TechnicalCanvasPanel({
   }, [contextLost]);
 
   return (
-    <div className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden">
+    <div 
+      ref={canvasContainerRef}
+      className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden"
+    >
       {/* Subtle Grid Pattern */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none z-0"
@@ -219,6 +239,7 @@ export function TechnicalCanvasPanel({
             autoRotate={autoRotate}
             directionalLightPosition={directionalLightPosition}
             directionalLightIntensity={directionalLightIntensity}
+            isVisible={isVisible}
           />
         </Canvas>
       </Suspense>

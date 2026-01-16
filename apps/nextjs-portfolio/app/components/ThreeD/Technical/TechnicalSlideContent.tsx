@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { TechnicalSlideIndicators } from './TechnicalSlideIndicators';
 import { CodeExampleWrapper } from './CodeExampleWrapper';
 import { ResourceLinks } from './ResourceLinks';
@@ -44,11 +44,6 @@ export function TechnicalSlideContent({
     directionalLightIntensity,
     onDirectionalLightIntensityChange,
   } = lightControls;
-
-  const titleChanged = previousSlideData?.title !== currentSlideData.title;
-  const descriptionChanged = previousSlideData?.description !== currentSlideData.description;
-  const codeChanged = previousSlideData?.code !== currentSlideData.code;
-  const linksChanged = JSON.stringify(previousSlideData?.links) !== JSON.stringify(currentSlideData.links);
 
   return (
     <article className="flex-1 lg:w-1/2 flex flex-col relative z-10">
@@ -95,54 +90,22 @@ export function TechnicalSlideContent({
             </button>
           </div>
         </div>
-        {titleChanged ? (
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={currentSlide}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight"
-            >
-              {currentSlideData.title}
-            </motion.h2>
-          </AnimatePresence>
-        ) : (
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight">
-            {currentSlideData.title}
-          </h2>
-        )}
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight">
+          {currentSlideData.title}
+        </h2>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto pb-8 px-8 md:pb-12 md:px-12 lg:pb-16 lg:px-16">
         <div className="flex flex-col justify-center max-w-4xl mx-auto w-full">
           <div className="space-y-12 pt-8">
-
-            {descriptionChanged ? (
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={currentSlide}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-xl md:text-2xl lg:text-3xl text-foreground leading-relaxed mb-10"
-                >
-                  {currentSlideData.description}
-                </motion.p>
-              </AnimatePresence>
-            ) : (
-              <p className="text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed mb-8">
-                {currentSlideData.description}
-              </p>
-            )}
+            <p className="text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed mb-8">
+              {currentSlideData.description}
+            </p>
 
             {currentSlideData.code && (
               <CodeExampleWrapper
                 code={currentSlideData.code}
-                shouldAnimate={codeChanged}
                 currentSlide={currentSlide}
               />
             )}
@@ -150,7 +113,6 @@ export function TechnicalSlideContent({
             {currentSlideData.links && currentSlideData.links.length > 0 && (
               <ResourceLinks
                 links={currentSlideData.links}
-                shouldAnimate={linksChanged}
                 currentSlide={currentSlide}
               />
             )}

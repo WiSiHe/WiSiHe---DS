@@ -2,17 +2,45 @@
 
 import { motion } from 'motion/react';
 import Script from 'next/script';
+import { useState, useEffect, useRef } from 'react';
 
 export function ThreeDHero() {
+  const [isVisible, setIsVisible] = useState(true);
+  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Track visibility to optimize Spline viewer
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting && entry.intersectionRatio > 0.1;
+        setIsVisible(visible);
+        // Only load Spline when section becomes visible
+        if (visible && !shouldLoadSpline) {
+          setShouldLoadSpline(true);
+        }
+      },
+      { threshold: [0, 0.1, 0.5, 1], rootMargin: '100px' },
+    );
+
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [shouldLoadSpline]);
+
   return (
     <section
+      ref={sectionRef}
       className="snap-start h-screen w-full relative overflow-hidden bg-background flex items-center shrink-0 z-10"
       aria-label="3D Hero Section"
     >
-      <Script
-        type="module"
-        src="https://unpkg.com/@splinetool/viewer@1.12.35/build/spline-viewer.js"
-      />
+      {/* {shouldLoadSpline && (
+        <Script
+          type="module"
+          src="https://unpkg.com/@splinetool/viewer@1.12.35/build/spline-viewer.js"
+        />
+      )} */}
 
       {/* Two-column layout: Text on left, 3D model on right */}
       <div className="w-full h-full flex flex-col lg:flex-row items-center justify-between px-6 md:px-12 lg:px-16 max-w-7xl mx-auto gap-8 lg:gap-12">
@@ -56,23 +84,29 @@ export function ThreeDHero() {
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="w-full h-full absolute inset-0 pointer-events-none"
-        >
-          {/* @ts-ignore */}
-          <spline-viewer
-            url="https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode"
-            style={{
-              width: '100%',
-              height: '100%',
-              pointerEvents: 'auto',
+        {/* {shouldLoadSpline && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: isVisible ? 1 : 0.3, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="w-full h-full absolute inset-0 pointer-events-none"
+            style={{ 
+              pointerEvents: isVisible ? 'auto' : 'none',
+              transition: 'opacity 0.3s ease-out'
             }}
-            className="w-full h-full"
-          />
-        </motion.div>
+          >
+            @ts-ignore
+            <spline-viewer
+              url="https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode"
+              style={{
+                width: '100%',
+                height: '100%',
+                pointerEvents: isVisible ? 'auto' : 'none',
+              }}
+              className="w-full h-full"
+            />
+          </motion.div>
+        )} */}
       </div>
     </section>
   );

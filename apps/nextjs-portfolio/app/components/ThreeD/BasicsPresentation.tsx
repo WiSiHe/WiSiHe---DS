@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { cn } from '@wisihe/utils';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -294,7 +295,7 @@ export default function BasicsPresentation() {
           <div className="flex justify-between items-end">
             <div className="text-[10px] bg-black/80 p-4 border border-[#00ff00]/20">
               {['COMPILING...', 'LINKING...', 'READY'].map((t, i) => (
-                <div key={i} className={i === 2 ? 'text-white' : 'opacity-40'}>{t}</div>
+                <div key={i} className={cn(i === 2 && 'text-white', i !== 2 && 'opacity-40')}>{t}</div>
               ))}
             </div>
             <div className="text-[10px] opacity-40 text-right max-w-xs leading-tight">
@@ -312,7 +313,12 @@ export default function BasicsPresentation() {
           <section key={i} className="slide-trigger h-screen flex flex-col justify-center px-4 md:px-24">
             <div className="slide-content max-w-xl bg-black/90 backdrop-blur-xl border border-[#00ff00]/20 p-8 md:p-12 shadow-[0_0_100px_rgba(0,255,0,0.05)] transform transition-all duration-700">
               <div className="flex items-center gap-4 mb-6">
-                 <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-[10px] font-bold ${currentStep === i ? 'border-[#00ff00] text-[#00ff00]' : 'border-white/20 text-white/20'}`}>
+                 <div
+                   className={cn(
+                     'w-8 h-8 rounded-full border flex items-center justify-center text-[10px] font-bold',
+                     currentStep === i ? 'border-[#00ff00] text-[#00ff00]' : 'border-white/20 text-white/20'
+                   )}
+                 >
                     0{i+1}
                  </div>
                  <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">
@@ -320,7 +326,7 @@ export default function BasicsPresentation() {
                  </span>
               </div>
               
-              <h3 className={`text-4xl md:text-6xl font-black mb-8 uppercase italic leading-none transition-colors duration-500 ${slide.color}`}>
+              <h3 className={cn('text-4xl md:text-6xl font-black mb-8 uppercase italic leading-none transition-colors duration-500', slide.color)}>
                 {slide.title}
               </h3>
               
@@ -330,7 +336,13 @@ export default function BasicsPresentation() {
               
               <div className="flex gap-2">
                  {[0,1,2,3,4,5,6,7,8,9].map(dot => (
-                   <div key={dot} className={`h-1 transition-all duration-300 ${i === dot ? 'w-8 bg-[#00ff00]' : 'w-2 bg-white/10'}`} />
+                   <div
+                     key={dot}
+                     className={cn(
+                       'h-1 transition-all duration-300',
+                       i === dot ? 'w-8 bg-[#00ff00]' : 'w-2 bg-white/10'
+                     )}
+                   />
                  ))}
               </div>
             </div>
