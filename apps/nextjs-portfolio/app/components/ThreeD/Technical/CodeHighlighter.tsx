@@ -52,9 +52,13 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
           margin: 0,
           padding: '2rem',
           fontSize: `${currentFontSize}rem`,
-          lineHeight: '2',
+          lineHeight: '1.6',
           background: 'transparent',
+          minWidth: 'fit-content',
         }}
+        PreTag="div"
+        wrapLines={false}
+        wrapLongLines={true}
       >
         {code}
       </SyntaxHighlighter>
