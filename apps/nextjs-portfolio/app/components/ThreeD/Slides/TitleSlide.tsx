@@ -36,7 +36,7 @@ export const TitleSlide = ({
     <div
       className={cn(
         'text-center space-y-8 relative w-full',
-        slideDesign === 'minimal' ? 'py-8' : isHero ? 'py-16 lg:py-24' : 'py-12'
+        slideDesign === 'minimal' ? 'py-12 md:py-16 lg:py-20' : isHero ? 'py-12 md:py-16 lg:py-24' : 'py-12 md:py-16 lg:py-24'
       )}
     >
       {/* Decorative elements */}
@@ -57,7 +57,7 @@ export const TitleSlide = ({
         </>
       )}
 
-      <div className="inline-flex items-center gap-3 mb-8 relative z-10 px-4 py-2.5 bg-surface-elevated/80 backdrop-blur-sm rounded-full border border-border/50 shadow-lg">
+      <div className="inline-flex items-center gap-3 mb-12 relative z-10 px-4 py-2.5 bg-surface-elevated/80 backdrop-blur-sm rounded-full border border-border/50 shadow-lg">
         <span className="px-4 py-1.5 text-xs font-mono text-foreground/60 uppercase tracking-wider">
           PRESENTATION
         </span>
@@ -71,23 +71,23 @@ export const TitleSlide = ({
         )}
       </div>
       <div className="max-w-prose mx-auto relative z-10">
-        <h1 className={cn(getTitleClasses(), 'font-black mb-8 text-foreground uppercase leading-[1.1] tracking-tight px-4 break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
-          <span className="block mb-4 text-foreground">
+        <h1 className={cn(getTitleClasses(), 'font-black mb-8 md:mb-10 text-foreground uppercase leading-[1.1] tracking-tight px-4 break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+          <span className="block mb-4 md:mb-6 text-foreground">
             {slideData.title.split(':')[0]}
           </span>
           {slideData.title.includes(':') && (
-            <span className="block text-4xl md:text-5xl lg:text-6xl text-accent mt-4">
+            <span className="block text-4xl md:text-5xl lg:text-6xl text-accent mt-4 md:mt-6">
               {slideData.title.split(':').slice(1).join(':')}
             </span>
           )}
         </h1>
         {slideData.subtitle && (
           <div>
-            <p className="text-2xl md:text-4xl lg:text-5xl text-foreground/80 font-bold leading-relaxed mb-6 break-words overflow-wrap-anywhere" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+            <p className="text-2xl md:text-4xl lg:text-5xl text-foreground/80 font-bold leading-relaxed mt-8 md:mt-12 break-words overflow-wrap-anywhere" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
               {slideData.subtitle}
             </p>
             {showDecorations && (
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex justify-center gap-2 mt-12 md:mt-16">
                 <div className="h-1 w-16 bg-accent rounded-full" />
                 <div className="h-1 w-8 bg-accent/50 rounded-full" />
                 <div className="h-1 w-4 bg-accent/30 rounded-full" />

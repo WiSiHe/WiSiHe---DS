@@ -344,7 +344,7 @@ export const ContentSlide = ({
       className={cn(
         'w-full h-full overflow-hidden max-w-full',
         getLayoutClasses(),
-        slideDesign === 'minimal' ? 'p-4' : 'p-8 lg:p-12'
+        'p-6 md:p-8 lg:p-12 xl:p-16'
       )}
     >
       {/* Content Section */}
@@ -354,8 +354,8 @@ export const ContentSlide = ({
           'overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2'
         )}
       >
-        <div className="max-w-prose mx-auto w-full">
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <div className="max-w-prose mx-auto w-full space-y-6 md:space-y-8 lg:space-y-10">
+          <div className="flex items-center gap-3 mb-6 md:mb-8 flex-wrap">
             {slideData.category && (
               <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
                 {slideData.category}
@@ -367,7 +367,7 @@ export const ContentSlide = ({
             </span>
           </div>
 
-          <h1 className={cn(getTitleClasses(), 'font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+          <h1 className={cn(getTitleClasses(), 'font-black mb-6 md:mb-8 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             {slideData.title}
           </h1>
 
@@ -376,10 +376,10 @@ export const ContentSlide = ({
               className={cn(
                 'text-accent font-bold break-words overflow-wrap-anywhere',
                 slideDesign === 'minimal'
-                  ? 'text-xl md:text-2xl lg:text-3xl mb-6'
+                  ? 'text-xl md:text-2xl lg:text-3xl mb-8 md:mb-10 lg:mb-12'
                   : slideDesign === 'hero'
-                    ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
-                    : 'text-2xl md:text-3xl lg:text-4xl mb-6'
+                    ? 'text-3xl md:text-4xl lg:text-5xl mb-8 md:mb-10 lg:mb-12'
+                    : 'text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-10 lg:mb-12'
               )}
               style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
             >
@@ -403,10 +403,10 @@ export const ContentSlide = ({
             className={cn(
               'max-w-prose mx-auto w-full list-none overflow-x-hidden px-4 md:px-6',
               slideDesign === 'minimal'
-                ? 'space-y-3'
+                ? 'space-y-4 md:space-y-5'
                 : slideDesign === 'hero'
-                  ? 'space-y-6'
-                  : 'space-y-4'
+                  ? 'space-y-6 md:space-y-8'
+                  : 'space-y-5 md:space-y-6'
             )}
           >
             {slideData.content
