@@ -67,8 +67,19 @@ export function TechnicalSlideContent({
               className="p-2 rounded-full hover:bg-surface-elevated disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
               aria-label="Previous Slide"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
 
@@ -84,8 +95,19 @@ export function TechnicalSlideContent({
               className="p-2 rounded-full hover:bg-surface-elevated disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
               aria-label="Next Slide"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -97,13 +119,13 @@ export function TechnicalSlideContent({
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto pb-8 px-8 md:pb-12 md:px-12 lg:pb-16 lg:px-16">
-        <div className="max-w-prose mx-auto text-left">
+        <div className="">
           <div className="space-y-10 pt-8">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="prose prose-lg text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed max-w-none"
+              className="max-w-prose balance-text text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed"
             >
               {currentSlideData.description}
             </motion.p>
@@ -114,7 +136,7 @@ export function TechnicalSlideContent({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="space-y-6 pb-4 max-w-none"
+                className="space-y-6 pb-4"
               >
                 {/* Auto-Rotate Control */}
                 <div className="space-y-3">
@@ -210,13 +232,13 @@ export function TechnicalSlideContent({
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: currentSlideData.mode === 'showcase' ? 0.2 : 0.1 }}
+                transition={{
+                  duration: 0.4,
+                  delay: currentSlideData.mode === 'showcase' ? 0.2 : 0.1,
+                }}
                 className="w-full -mx-8 md:-mx-12 lg:-mx-16 px-8 md:px-12 lg:px-16"
               >
-                <CodeExampleWrapper
-                  code={currentSlideData.code}
-                  currentSlide={currentSlide}
-                />
+                <CodeExampleWrapper code={currentSlideData.code} currentSlide={currentSlide} />
               </motion.div>
             )}
 
@@ -226,12 +248,8 @@ export function TechnicalSlideContent({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
-                className="max-w-none"
               >
-                <ResourceLinks
-                  links={currentSlideData.links}
-                  currentSlide={currentSlide}
-                />
+                <ResourceLinks links={currentSlideData.links} currentSlide={currentSlide} />
               </motion.div>
             )}
           </div>
