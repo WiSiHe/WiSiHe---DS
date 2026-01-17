@@ -24,56 +24,57 @@ export function SourcesSection() {
 
   const tools = [
     {
-      title: 'Blender',
-      url: 'https://www.blender.org/',
-      description: 'Free and open-source 3D creation suite',
+      title: 'React Three Fiber',
+      url: 'https://docs.pmnd.rs/react-three-fiber',
+      description: 'The React renderer for Three.js (The Engine)',
     },
     {
       title: 'Spline',
       url: 'https://spline.design/',
-      description: 'Web-based 3D design tool',
-    },
-    {
-      title: 'Three.js',
-      url: 'https://threejs.org/',
-      description: 'JavaScript 3D library',
-    },
-    {
-      title: 'React Three Fiber',
-      url: 'https://docs.pmnd.rs/react-three-fiber',
-      description: 'React renderer for Three.js',
+      description: 'Web-based 3D design tool (The Design Tool)',
     },
     {
       title: '@react-three/drei',
       url: 'https://github.com/pmndrs/drei',
-      description: 'Useful helpers for React Three Fiber',
+      description: 'Useful helpers for R3F (The Toolbelt)',
+    },
+    {
+      title: 'Google Draco',
+      url: 'https://google.github.io/draco/',
+      description: '3D geometry compression (The Feather)',
+    },
+    {
+      title: 'Blender',
+      url: 'https://www.blender.org/',
+      description: 'Free open-source 3D creation suite',
     },
   ];
 
   const sources = [
     {
-      title: 'Shopify - 3D Ecommerce Blog',
+      title: 'Shopify - 3D Ecommerce Study',
       url: 'https://www.shopify.com/blog/3d-ecommerce',
+      description: 'Source for the 94% conversion rate statistic',
     },
     {
-      title: 'Threekit - ROI of 3D and AR',
+      title: 'Cappasity - Engagement Metrics',
+      url: 'https://cappasity.com/blog/3d-product-imaging-metrics/',
+      description: 'Source for the 300% increase in dwell time',
+    },
+    {
+      title: 'Threekit - ROI & Returns Report',
       url: 'https://www.threekit.com/guide-to-roi-in-3d-and-augmented-reality',
-    },
-    {
-      title: 'BigCommerce - 3D Visualization',
-      url: 'https://www.bigcommerce.com/blog/3d-visualization/',
-    },
-    {
-      title: 'Virsabi - Increase conversions with 94%',
-      url: 'https://virsabi.com/increase-conversions-in-online-shops-with-94/',
+      description: 'Source for the 40% reduction in returns',
     },
     {
       title: 'Bruno Simon Portfolio',
       url: 'https://bruno-simon.com/',
+      description: 'The inspiration behind the interactive demo',
     },
     {
-      title: 'IKEA Place - AR Furniture',
-      url: 'https://www.ikea.com/us/en/customer-service/mobile-apps/ikea-place/',
+      title: 'Virsabi - VR/AR Business Cases',
+      url: 'https://virsabi.com/increase-conversions-in-online-shops-with-94/',
+      description: 'Additional data on immersive commerce',
     },
   ];
 
