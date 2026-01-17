@@ -121,48 +121,50 @@ export const ContentSlide = ({
       <div className="w-full h-full flex flex-col lg:flex-row gap-8 lg:gap-12 overflow-hidden max-w-full">
         {/* Left Side - Example List */}
         <div className="flex-1 flex flex-col justify-center space-y-4 overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full">
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
-            {slideData.category && (
-              <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
-                {slideData.category}
+          <div className="max-w-prose mx-auto w-full">
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              {slideData.category && (
+                <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
+                  {slideData.category}
+                </span>
+              )}
+              <div className="h-1 w-12 bg-accent rounded-full" />
+              <span className="text-sm font-mono text-accent uppercase tracking-wider">
+                Slide {index + 1} / {presentationSlides.length}
               </span>
+            </div>
+
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words">
+              {slideData.title}
+            </h2>
+
+            {slideData.subtitle && (
+              <p className="text-2xl md:text-3xl lg:text-4xl text-accent font-bold mb-8 break-words">
+                {slideData.subtitle}
+              </p>
             )}
-            <div className="h-1 w-12 bg-accent rounded-full" />
-            <span className="text-sm font-mono text-accent uppercase tracking-wider">
-              Slide {index + 1} / {presentationSlides.length}
-            </span>
+
+            {slideData.content && slideData.content.length > 0 && (
+              <div className="text-xl md:text-2xl text-foreground/80 mb-8 leading-relaxed break-words">
+                {isPortableText(slideData.content) && (
+                  <PresentationPortableText
+                    value={slideData.content as PortableTextBlock[]}
+                    slideDesign={slideDesign}
+                  />
+                )}
+                {isContentItemArray(slideData.content) && (
+                  <p>
+                    {typeof slideData.content[0] === 'string'
+                      ? slideData.content[0].trim().replace(/^•\s*/, '')
+                      : slideData.content[0].text.trim().replace(/^•\s*/, '')}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words max-w-full">
-            {slideData.title}
-          </h2>
-
-          {slideData.subtitle && (
-            <p className="text-2xl md:text-3xl lg:text-4xl text-accent font-bold mb-8 break-words max-w-full">
-              {slideData.subtitle}
-            </p>
-          )}
-
-          {slideData.content && slideData.content.length > 0 && (
-            <div className="text-xl md:text-2xl text-foreground/80 mb-8 leading-relaxed break-words">
-              {isPortableText(slideData.content) && (
-                <PresentationPortableText
-                  value={slideData.content as PortableTextBlock[]}
-                  slideDesign={slideDesign}
-                />
-              )}
-              {isContentItemArray(slideData.content) && (
-                <p>
-                  {typeof slideData.content[0] === 'string'
-                    ? slideData.content[0].trim().replace(/^•\s*/, '')
-                    : slideData.content[0].text.trim().replace(/^•\s*/, '')}
-                </p>
-              )}
-            </div>
-          )}
-
           {/* Example Buttons */}
-          <div className="space-y-3">
+          <div className="max-w-prose mx-auto w-full space-y-3">
             {slideData.examples.map((example, exampleIndex) => (
               <button
                 key={exampleIndex}
@@ -201,7 +203,7 @@ export const ContentSlide = ({
 
           {/* Sources */}
           {slideData.sources && slideData.sources.length > 0 && (
-            <div className="mt-8 pt-8 border-t border-border/30">
+            <div className="max-w-prose mx-auto w-full mt-8 pt-8 border-t border-border/30">
               <p className="text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider">
                 Sources:
               </p>
@@ -352,41 +354,42 @@ export const ContentSlide = ({
           'overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2'
         )}
       >
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          {slideData.category && (
-            <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
-              {slideData.category}
-            </span>
-          )}
-          <div className="h-1 w-12 bg-accent rounded-full" />
-          <span className="text-sm font-mono text-accent uppercase tracking-wider">
-            Slide {index + 1} / {presentationSlides.length}
-          </span>
-        </div>
-
-        <h1 className={cn(getTitleClasses(), 'font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere max-w-full')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
-          {slideData.title}
-        </h1>
-
-        {slideData.subtitle && (
-          <h2
-            className={cn(
-              'text-accent font-bold break-words overflow-wrap-anywhere max-w-full',
-              slideDesign === 'minimal'
-                ? 'text-xl md:text-2xl lg:text-3xl mb-6'
-                : slideDesign === 'hero'
-                  ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
-                  : 'text-2xl md:text-3xl lg:text-4xl mb-6'
+        <div className="max-w-prose mx-auto w-full">
+          <div className="flex items-center gap-3 mb-4 flex-wrap">
+            {slideData.category && (
+              <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
+                {slideData.category}
+              </span>
             )}
-            style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
-          >
-            {slideData.subtitle}
-          </h2>
-        )}
+            <div className="h-1 w-12 bg-accent rounded-full" />
+            <span className="text-sm font-mono text-accent uppercase tracking-wider">
+              Slide {index + 1} / {presentationSlides.length}
+            </span>
+          </div>
+
+          <h1 className={cn(getTitleClasses(), 'font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+            {slideData.title}
+          </h1>
+
+          {slideData.subtitle && (
+            <h2
+              className={cn(
+                'text-accent font-bold break-words overflow-wrap-anywhere',
+                slideDesign === 'minimal'
+                  ? 'text-xl md:text-2xl lg:text-3xl mb-6'
+                  : slideDesign === 'hero'
+                    ? 'text-3xl md:text-4xl lg:text-5xl mb-10'
+                    : 'text-2xl md:text-3xl lg:text-4xl mb-6'
+              )}
+              style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+            >
+              {slideData.subtitle}
+            </h2>
+          )}
 
         {/* Content - Portable Text (Sanity) or ContentItem[] (static fallback) */}
         {slideData.content && isPortableText(slideData.content) && (
-          <div className="max-w-full overflow-x-hidden px-4 md:px-6">
+          <div className="max-w-prose mx-auto w-full overflow-x-hidden px-4 md:px-6">
             <PresentationPortableText
               value={slideData.content as PortableTextBlock[]}
               slideDesign={slideDesign}
@@ -398,7 +401,7 @@ export const ContentSlide = ({
         {slideData.content && isContentItemArray(slideData.content) && (
           <ul
             className={cn(
-              'max-w-full list-none overflow-x-hidden px-4 md:px-6',
+              'max-w-prose mx-auto w-full list-none overflow-x-hidden px-4 md:px-6',
               slideDesign === 'minimal'
                 ? 'space-y-3'
                 : slideDesign === 'hero'
@@ -502,7 +505,7 @@ export const ContentSlide = ({
 
         {/* Sources */}
         {slideData.sources && slideData.sources.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-border/30">
+          <div className="max-w-prose mx-auto w-full mt-12 pt-8 border-t border-border/30">
             <p className="text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider">
               Sources:
             </p>
@@ -527,6 +530,7 @@ export const ContentSlide = ({
             </ul>
           </div>
         )}
+        </div>
       </article>
 
       {/* Media Section - Chart, Image, Iframe, Numbers, Tools, or Decorative Placeholder */}
