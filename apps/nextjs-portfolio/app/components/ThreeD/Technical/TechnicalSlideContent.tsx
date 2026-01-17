@@ -29,7 +29,7 @@ export function TechnicalSlideContent({
   onSlideClick,
   onNext,
   onPrev,
-}: TechnicalSlideContentProps) {
+}: Readonly<TechnicalSlideContentProps>) {
   const {
     texture: showcaseTexture,
     onTextureChange,
@@ -46,38 +46,38 @@ export function TechnicalSlideContent({
   } = lightControls;
 
   return (
-    <article className="h-full flex flex-col relative z-10">
+    <article className="h-full flex flex-col relative">
       {/* Fixed Header */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-20 md:pt-24 lg:pt-28 xl:pt-32 pb-6 md:pb-8 px-4">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4 md:gap-6">
+          <div className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-accent/10 border border-accent/20 backdrop-blur-md shadow-sm shadow-accent/5 hover:shadow-md hover:shadow-accent/10 transition-all duration-200">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent shadow-sm shadow-accent/50"></span>
             </span>
             <span className="text-xs font-bold text-accent uppercase tracking-widest">
               Technical Deep Dive &middot; {currentSlide + 1} / {totalSlides}
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
             <button
               onClick={onPrev}
               disabled={currentSlide === 0}
-              className="p-2 rounded-full hover:bg-surface-elevated disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
+              className="p-2.5 md:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95"
               aria-label="Previous Slide"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-5 w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
@@ -92,40 +92,40 @@ export function TechnicalSlideContent({
             <button
               onClick={onNext}
               disabled={currentSlide === totalSlides - 1}
-              className="p-2 rounded-full hover:bg-surface-elevated disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
+              className="p-2.5 md:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95"
               aria-label="Next Slide"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-5 w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M9 5l7 7-7 7"
                 />
               </svg>
             </button>
           </div>
         </div>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mt-6 md:mt-8">
           {currentSlideData.title}
         </h2>
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto pb-8 px-8 md:pb-12 md:px-12 lg:pb-16 lg:px-16">
+      <div className="flex-1 overflow-y-auto pb-12 md:pb-16 lg:pb-20 px-8">
         <div className="">
-          <div className="space-y-10 pt-8">
+          <div className="space-y-8 md:space-y-10 lg:space-y-12 pt-8">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="max-w-prose balance-text text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed"
+              className="max-w-prose balance-text text-lg md:text-xl lg:text-2xl text-foreground/70 leading-relaxed mb-8 md:mb-10"
             >
               {currentSlideData.description}
             </motion.p>
@@ -136,7 +136,7 @@ export function TechnicalSlideContent({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="space-y-6 pb-4"
+                className="space-y-6 md:space-y-8 pb-4"
               >
                 {/* Auto-Rotate Control */}
                 <div className="space-y-3">
@@ -236,7 +236,7 @@ export function TechnicalSlideContent({
                   duration: 0.4,
                   delay: currentSlideData.mode === 'showcase' ? 0.2 : 0.1,
                 }}
-                className="w-full -mx-8 md:-mx-12 lg:-mx-16 px-8 md:px-12 lg:px-16"
+                className="w-full -mx-6 md:-mx-8 lg:-mx-12 xl:-mx-16 px-6 md:px-8 lg:px-12 xl:px-16 mt-8 md:mt-10 lg:mt-12"
               >
                 <CodeExampleWrapper code={currentSlideData.code} currentSlide={currentSlide} />
               </motion.div>
@@ -248,6 +248,7 @@ export function TechnicalSlideContent({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
+                className="mt-10 md:mt-12 lg:mt-16"
               >
                 <ResourceLinks links={currentSlideData.links} currentSlide={currentSlide} />
               </motion.div>
