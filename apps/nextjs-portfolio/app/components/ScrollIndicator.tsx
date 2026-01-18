@@ -15,7 +15,7 @@ export const ScrollIndicator = ({
 
   return (
     <div
-      className="fixed left-0 top-0 h-full w-1.5 z-40 pointer-events-none"
+      className="hidden md:block fixed left-0 top-0 h-full w-1.5 z-40 pointer-events-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

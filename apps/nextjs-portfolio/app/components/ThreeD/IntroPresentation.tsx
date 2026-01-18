@@ -136,7 +136,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+            className="fixed top-16 md:top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
           >
             <div className="flex items-center gap-3 px-6 py-2.5 bg-surface-elevated border border-border rounded-full shadow-2xl">
               <span className="relative flex h-2 w-2">

@@ -48,9 +48,9 @@ export function TechnicalSlideContent({
   return (
     <article className="h-full flex flex-col relative">
       {/* Fixed Header */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-20 md:pt-24 lg:pt-28 xl:pt-32 pb-6 md:pb-8 px-4">
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4 md:gap-6">
-          <div className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-accent/10 border border-accent/20 backdrop-blur-md shadow-sm shadow-accent/5 hover:shadow-md hover:shadow-accent/10 transition-all duration-200">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-16 md:pt-24 lg:pt-28 xl:pt-32 pb-6 md:pb-8 px-4">
+        <div className="flex items-center justify-between mb-6 md:mb-8 flex-wrap gap-3 md:gap-4 lg:gap-6">
+          <div className="flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-accent/10 border border-accent/20 backdrop-blur-md shadow-sm shadow-accent/5 hover:shadow-md hover:shadow-accent/10 transition-all duration-200">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent shadow-sm shadow-accent/50"></span>
@@ -64,8 +64,9 @@ export function TechnicalSlideContent({
             <button
               onClick={onPrev}
               disabled={currentSlide === 0}
-              className="p-2.5 md:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95"
+              className="p-3 md:p-2.5 lg:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
               aria-label="Previous Slide"
+              style={{ touchAction: 'manipulation' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,8 +93,9 @@ export function TechnicalSlideContent({
             <button
               onClick={onNext}
               disabled={currentSlide === totalSlides - 1}
-              className="p-2.5 md:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95"
+              className="p-3 md:p-2.5 lg:p-3 rounded-full bg-surface-elevated/50 hover:bg-surface-elevated border border-border/50 hover:border-accent/30 disabled:opacity-30 disabled:hover:bg-surface-elevated/50 disabled:hover:border-border/50 disabled:cursor-not-allowed transition-all duration-200 text-foreground hover:text-accent hover:shadow-md hover:shadow-accent/10 active:scale-95 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
               aria-label="Next Slide"
+              style={{ touchAction: 'manipulation' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -112,15 +114,15 @@ export function TechnicalSlideContent({
             </button>
           </div>
         </div>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mt-6 md:mt-8">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mt-4 md:mt-6 lg:mt-8">
           {currentSlideData.title}
         </h2>
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto pb-12 md:pb-16 lg:pb-20 px-8">
+      <div className="flex-1 overflow-y-auto pb-12 md:pb-16 lg:pb-20 px-4 md:px-6 lg:px-8">
         <div className="">
-          <div className="space-y-8 md:space-y-10 lg:space-y-12 pt-8">
+          <div className="space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pt-6 md:pt-8">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -161,11 +163,12 @@ export function TechnicalSlideContent({
                     type="button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                    className={`w-full flex items-center justify-center gap-3 px-4 md:px-6 py-3 md:py-4 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-[44px] md:min-h-0 ${
                       autoRotate
                         ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
                         : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
                     }`}
+                    style={{ touchAction: 'manipulation' }}
                   >
                     <span>{autoRotate ? 'Rotating' : 'Paused'}</span>
                     {autoRotate && (
@@ -205,7 +208,7 @@ export function TechnicalSlideContent({
                     </svg>
                     Swap Texture
                   </h3>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 md:gap-3">
                     {textureOptions.map((texture: { name: string; value: string }) => (
                       <motion.button
                         key={texture.value}
@@ -213,11 +216,12 @@ export function TechnicalSlideContent({
                         type="button"
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                        className={`px-4 md:px-5 py-2.5 md:py-3 rounded-xl font-semibold text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-[44px] md:min-h-0 ${
                           showcaseTexture === texture.value
                             ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
                             : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
                         }`}
+                        style={{ touchAction: 'manipulation' }}
                       >
                         {texture.name}
                       </motion.button>
@@ -236,7 +240,7 @@ export function TechnicalSlideContent({
                   duration: 0.4,
                   delay: currentSlideData.mode === 'showcase' ? 0.2 : 0.1,
                 }}
-                className="w-full -mx-6 md:-mx-8 lg:-mx-12 xl:-mx-16 px-6 md:px-8 lg:px-12 xl:px-16 mt-8 md:mt-10 lg:mt-12"
+                className="w-full -mx-4 md:-mx-6 lg:-mx-8 xl:-mx-12 2xl:-mx-16 px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-16 mt-6 md:mt-8 lg:mt-10 xl:mt-12"
               >
                 <CodeExampleWrapper code={currentSlideData.code} currentSlide={currentSlide} />
               </motion.div>
