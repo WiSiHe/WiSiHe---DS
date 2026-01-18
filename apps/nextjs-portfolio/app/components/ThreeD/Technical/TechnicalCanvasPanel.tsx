@@ -67,8 +67,6 @@ export function TechnicalCanvasPanel({
         }}
       />
 
-
-
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">

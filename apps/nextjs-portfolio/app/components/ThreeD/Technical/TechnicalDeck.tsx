@@ -97,7 +97,7 @@ export const TechnicalDeck = React.memo(function TechnicalDeck() {
   if (!slides || slides.length === 0 || !currentSlideData) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-5 h-full w-full overflow-hidden bg-background">
-        <div className="lg:col-span-5 flex items-center justify-center">
+        <div className="col-span-1 lg:col-span-5 flex items-center justify-center">
           <div className="text-center space-y-4">
             <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
             <div className="text-foreground/60 font-medium">Loading slides...</div>
@@ -109,8 +109,8 @@ export const TechnicalDeck = React.memo(function TechnicalDeck() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 h-full w-full overflow-hidden bg-background">
-      {/* Left Content Panel - 3/5 width */}
-      <div className="lg:col-span-3 h-full overflow-hidden">
+      {/* Content Panel - Full width on mobile, 3/5 width on desktop */}
+      <div className="col-span-1 lg:col-span-3 h-full overflow-hidden">
         <TechnicalSlideContent
           currentSlide={currentSlide}
           currentSlideData={currentSlideData}
@@ -124,8 +124,8 @@ export const TechnicalDeck = React.memo(function TechnicalDeck() {
         />
       </div>
 
-      {/* Right 3D Panel - 2/5 width - Always render, visibility-based animation pausing is handled inside */}
-      <div className="lg:col-span-2 h-full overflow-hidden">
+      {/* 3D Panel - Hidden on mobile, 2/5 width on desktop - Always render, visibility-based animation pausing is handled inside */}
+      <div className="hidden lg:block lg:col-span-2 h-full overflow-hidden">
         <TechnicalCanvasPanel
           mode={currentSlideData.mode}
           showcaseTexture={showcaseTexture}

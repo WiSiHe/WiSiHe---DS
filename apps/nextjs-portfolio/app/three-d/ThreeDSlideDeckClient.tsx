@@ -104,7 +104,9 @@ export function ThreeDSlideDeckClient({
           overscrollBehavior: 'contain',
           // Use GPU acceleration for scrolling
           transform: 'translateZ(0)',
-        }}
+          // Smooth scrolling on iOS
+          WebkitOverflowScrolling: 'touch',
+        } as React.CSSProperties}
       >
         {/* Hero Section */}
         <section className="snap-start shrink-0 h-screen w-full relative">
@@ -152,7 +154,6 @@ export function ThreeDSlideDeckClient({
           onPrev={presentationState.onPrev}
           onScrollToTop={presentationState.onScrollToTop}
           onSkipToCoolPart={presentationState.onSkipToCoolPart}
-          isScrolled={presentationState.isScrolled}
           isVisible={!presentationState.isTechnicalSectionVisible}
         />
       )}

@@ -9,7 +9,6 @@ type PresentationControlsProps = Readonly<{
   onPrev: () => void;
   onScrollToTop: () => void;
   onSkipToCoolPart: () => void;
-  isScrolled: boolean;
   isVisible: boolean;
 }>;
 
@@ -20,7 +19,6 @@ export function PresentationControls({
   onPrev,
   onScrollToTop,
   onSkipToCoolPart,
-  isScrolled,
   isVisible,
 }: PresentationControlsProps) {
   if (!isVisible) return null;
@@ -29,7 +27,7 @@ export function PresentationControls({
   const isLastSlide = currentSlide === totalSlides - 1;
 
   return (
-    <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4 pointer-events-none">
+    <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50 flex flex-col items-end gap-3 md:gap-4 pointer-events-none">
       {/* Navigation Group */}
       <div className="pointer-events-auto flex flex-col items-center bg-surface-elevated border border-border rounded-2xl p-1.5 shadow-xl overflow-hidden">
         <motion.button
@@ -37,12 +35,13 @@ export function PresentationControls({
           disabled={isFirstSlide}
           whileHover={isFirstSlide ? {} : { backgroundColor: 'var(--color-surface-active)' }}
           whileTap={isFirstSlide ? {} : { scale: 0.95 }}
-          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+          className={`w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-colors touch-manipulation ${
             isFirstSlide
               ? 'text-foreground/20 cursor-not-allowed'
               : 'text-foreground hover:text-accent cursor-pointer'
           }`}
           aria-label="Previous slide"
+          style={{ touchAction: 'manipulation' }}
         >
           <svg
             width="20"
@@ -69,12 +68,13 @@ export function PresentationControls({
           disabled={isLastSlide}
           whileHover={isLastSlide ? {} : { backgroundColor: 'var(--color-surface-active)' }}
           whileTap={isLastSlide ? {} : { scale: 0.95 }}
-          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+          className={`w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-colors touch-manipulation ${
             isLastSlide
               ? 'text-foreground/20 cursor-not-allowed'
               : 'text-foreground hover:text-accent cursor-pointer'
           }`}
           aria-label="Next slide"
+          style={{ touchAction: 'manipulation' }}
         >
           <svg
             width="20"
@@ -92,13 +92,14 @@ export function PresentationControls({
       </div>
 
       {/* Actions Group */}
-      <div className="flex flex-col gap-3 items-end pointer-events-auto">
+      <div className="flex flex-col gap-2 md:gap-3 items-end pointer-events-auto">
         {/* Skip to Cool Part Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onSkipToCoolPart}
-          className="group flex items-center gap-2 px-4 py-2 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer"
+          className="group flex items-center gap-2 px-3 md:px-4 py-2.5 md:py-2 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer touch-manipulation min-h-[44px] md:min-h-0"
+          style={{ touchAction: 'manipulation' }}
         >
           <div className="p-1 rounded-full bg-surface group-hover:bg-accent/20 transition-colors">
             <svg
@@ -115,7 +116,7 @@ export function PresentationControls({
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </div>
-          <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">
+          <span className="text-xs md:text-sm font-medium text-foreground/80 group-hover:text-foreground hidden sm:inline">
             Skip to Cool Part
           </span>
         </motion.button>
@@ -125,8 +126,9 @@ export function PresentationControls({
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           onClick={onScrollToTop}
-          className="group flex items-center gap-2 px-4 py-2.5 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer"
+          className="group flex items-center gap-2 px-3 md:px-4 py-2.5 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer touch-manipulation min-h-[44px] md:min-h-0"
           aria-label="Scroll to top"
+          style={{ touchAction: 'manipulation' }}
         >
           <div className="p-1.5 rounded-full bg-surface group-hover:bg-accent/20 transition-colors flex items-center justify-center">
             <svg
