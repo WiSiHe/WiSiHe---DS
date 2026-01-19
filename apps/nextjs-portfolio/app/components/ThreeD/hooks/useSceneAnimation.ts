@@ -17,6 +17,8 @@ interface UseSceneAnimationProps {
     r3fBasics?: React.RefObject<SceneRef>;
     r3fMaterials?: React.RefObject<SceneRef>;
     r3fGeometries?: React.RefObject<SceneRef>;
+    r3fAnimation?: React.RefObject<SceneRef>;
+    r3fInteraction?: React.RefObject<SceneRef>;
   };
 }
 

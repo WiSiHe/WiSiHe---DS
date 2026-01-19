@@ -17,28 +17,28 @@ interface Phase {
 
 const PHASES: Phase[] = [
   {
-    period: 'Jan 1995 - 2010',
-    title: 'The Plugin Era',
-    emoji: '🕸️',
-    color: '#ec4899', // Pink
+    period: '1995 - 2010',
+    title: 'The Dark Ages',
+    emoji: '🔌', // Flash/VRML plugins
+    color: '#64748b', 
   },
   {
-    period: 'March 2011',
-    title: 'The Spark',
-    emoji: '⚡',
-    color: '#f59e0b', // Amber
+    period: '2011 - 2018',
+    title: 'The Hard Way',
+    emoji: '📐', // WebGL/Vanilla Three.js (Math heavy)
+    color: '#f59e0b',
   },
   {
-    period: 'Mid 2010s',
-    title: 'The Foundation',
-    emoji: '🏗️',
-    color: '#3b82f6', // Blue
+    period: '2019 - 2023',
+    title: 'The React Era',
+    emoji: '⚛️', // R3F changed the DX (Developer Experience)
+    color: '#3b82f6',
   },
   {
-    period: '2020s & Beyond',
-    title: 'The Explosion',
+    period: 'Now & Beyond',
+    title: 'WebGPU & Spline', // The "New" stuff: Performance + Tooling
     emoji: '🚀',
-    color: '#10b981', // Emerald
+    color: '#10b981',
   },
 ];
 
