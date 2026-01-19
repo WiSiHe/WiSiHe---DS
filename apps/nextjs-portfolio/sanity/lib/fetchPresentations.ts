@@ -11,7 +11,11 @@ interface SanityPresentationResponse {
     content?: unknown;
     media?: {
       mediaType?: string;
-      image?: { url?: string } | string;
+      image?: { 
+        asset?: { _ref?: string; _type?: string; url?: string };
+        alt?: string;
+        url?: string;
+      } | string;
       imageAspectRatio?: string;
       videoUrl?: string;
       iframeUrl?: string;
@@ -88,7 +92,24 @@ export async function fetchPresentationSlides(
           const result: any = {};
 
           if (mediaType === 'image') {
-            result.image = media.image?.url || media.image;
+            // Preserve the full Sanity image object structure for urlForImage to work
+            // If image has asset._ref, use the full object; otherwise fall back to URL string
+            if (media.image?.asset?._ref) {
+              result.image = {
+                _type: 'image', // Required by @sanity/image-url builder
+                asset: {
+                  _ref: media.image.asset._ref,
+                  _type: media.image.asset._type,
+                },
+                alt: media.image.alt,
+                // Preserve hotspot and crop if they exist (for proper image cropping)
+                ...(media.image.hotspot && { hotspot: media.image.hotspot }),
+                ...(media.image.crop && { crop: media.image.crop }),
+              };
+            } else {
+              // Fallback to URL string if asset reference is not available
+              result.image = media.image?.url || media.image;
+            }
             result.imageAspectRatio = media.imageAspectRatio;
           } else if (mediaType === 'video') {
             result.videoUrl = media.videoUrl;

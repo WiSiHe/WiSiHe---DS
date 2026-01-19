@@ -10,7 +10,9 @@ export type SlideMode =
   | 'r3f-first-scene'
   | 'r3f-basics'
   | 'r3f-materials'
-  | 'r3f-geometries';
+  | 'r3f-geometries'
+  | 'r3f-animation'
+  | 'r3f-interaction';
 
 export interface Slide {
   title: string;

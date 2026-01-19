@@ -6,13 +6,13 @@ import { motion } from 'motion/react';
 import { PersistentScene } from '../scenes';
 import type { SlideMode } from '../../../three-d/types';
 
-interface TechnicalCanvasPanelProps {
+type TechnicalCanvasPanelProps = {
   mode: SlideMode;
   showcaseTexture: string;
   autoRotate: boolean;
   directionalLightPosition?: [number, number, number];
   directionalLightIntensity?: number;
-}
+};
 
 export function TechnicalCanvasPanel({
   mode,
@@ -20,7 +20,7 @@ export function TechnicalCanvasPanel({
   autoRotate,
   directionalLightPosition = [10, 10, 5],
   directionalLightIntensity = 1,
-}: TechnicalCanvasPanelProps) {
+}: Readonly<TechnicalCanvasPanelProps>) {
   const [contextLost, setContextLost] = useState(false);
   const [contextError, setContextError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(true);

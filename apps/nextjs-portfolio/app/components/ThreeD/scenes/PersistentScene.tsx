@@ -15,6 +15,8 @@ import { R3FFirstScene } from './R3FFirstScene';
 import { R3FBasicsScene } from './R3FBasicsScene';
 import { R3FMaterialsScene } from './R3FMaterialsScene';
 import { R3FGeometriesScene } from './R3FGeometriesScene';
+import { R3FAnimationScene } from './R3FAnimationScene';
+import { R3FInteractionScene } from './R3FInteractionScene';
 import { ShowcaseScene } from './ShowcaseScene';
 import type { LightConfig } from '../types';
 
@@ -41,6 +43,8 @@ export function PersistentScene({
   const r3fBasicsRef = useRef<THREE.Mesh>(null);
   const r3fMaterialsRef = useRef<THREE.Group>(null);
   const r3fGeometriesRef = useRef<THREE.Group>(null);
+  const r3fAnimationRef = useRef<THREE.Mesh>(null);
+  const r3fInteractionRef = useRef<THREE.Mesh>(null);
 
   const lightConfig: LightConfig = {
     directionalLightPosition,
@@ -59,6 +63,8 @@ export function PersistentScene({
       r3fBasics: r3fBasicsRef,
       r3fMaterials: r3fMaterialsRef,
       r3fGeometries: r3fGeometriesRef,
+      r3fAnimation: r3fAnimationRef,
+      r3fInteraction: r3fInteractionRef,
     },
   });
 
@@ -76,6 +82,8 @@ export function PersistentScene({
       {mode === 'r3f-basics' && <R3FBasicsScene ref={r3fBasicsRef} />}
       {mode === 'r3f-materials' && <R3FMaterialsScene ref={r3fMaterialsRef} />}
       {mode === 'r3f-geometries' && <R3FGeometriesScene ref={r3fGeometriesRef} />}
+      {mode === 'r3f-animation' && <R3FAnimationScene ref={r3fAnimationRef} />}
+      {mode === 'r3f-interaction' && <R3FInteractionScene ref={r3fInteractionRef} />}
       {mode === 'showcase' && <ShowcaseScene texturePath={showcaseTexture} ref={showcaseRef} />}
 
       <OrbitControls makeDefault enableZoom={true} enablePan={true} />

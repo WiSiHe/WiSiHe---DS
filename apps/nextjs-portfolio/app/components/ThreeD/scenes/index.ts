@@ -32,4 +32,6 @@ export { R3FFirstScene } from './R3FFirstScene';
 export { R3FBasicsScene } from './R3FBasicsScene';
 export { R3FMaterialsScene } from './R3FMaterialsScene';
 export { R3FGeometriesScene } from './R3FGeometriesScene';
+export { R3FAnimationScene } from './R3FAnimationScene';
+export { R3FInteractionScene } from './R3FInteractionScene';
 export { ShowcaseScene } from './ShowcaseScene';
