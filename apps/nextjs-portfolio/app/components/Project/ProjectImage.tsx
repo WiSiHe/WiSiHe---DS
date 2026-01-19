@@ -6,7 +6,6 @@ import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import ImageModal from './ImageModal';
 
 type ProjectImageProps = {
   project: NonNullable<ProjectQueryResult>;
@@ -29,8 +28,6 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
 
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   const scrollPrev = useCallback(() => {
@@ -47,15 +44,6 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
     setNextBtnEnabled(emblaApi.canScrollNext());
     setCurrentSlideIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-
-  const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -115,10 +103,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
 
                 return (
                   <div key={`image-${index}`} className="relative flex-[0_0_100%] min-w-0 h-full">
-                    <div
-                      className="relative w-full h-full cursor-pointer"
-                      onClick={() => handleImageClick(index)}
-                    >
+                    <div className="relative w-full h-full">
                       <Image
                         src={urlForImage(img)?.width(1200).fit('max')?.url() || ''}
                         alt={`${projectTitle} - Image ${index + 1}`}
@@ -126,6 +111,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
                         className="object-cover"
                         priority={index === 0}
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                        draggable={false}
                       />
                     </div>
                   </div>
@@ -135,10 +121,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
           </div>
         ) : (
           // Single image (no carousel needed)
-          <div
-            className="relative w-full h-full cursor-pointer"
-            onClick={() => handleImageClick(0)}
-          >
+          <div className="relative w-full h-full">
             {image && (
               <Image
                 src={urlForImage(image)?.width(1200).fit('max')?.url() || ''}
@@ -147,19 +130,12 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
                 className="object-cover"
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                draggable={false}
               />
             )}
           </div>
         )}
       </motion.div>
-
-      {/* Image Modal */}
-      <ImageModal
-        images={allImages}
-        initialIndex={selectedImageIndex}
-        isOpen={modalOpen}
-        onClose={closeModal}
-      />
     </div>
   );
 };
