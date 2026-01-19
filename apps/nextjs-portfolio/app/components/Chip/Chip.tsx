@@ -78,7 +78,7 @@ type ChipProps = React.HTMLAttributes<HTMLDivElement> &
     disabled?: boolean;
   };
 
-const Chip = React.memo(({
+const Chip = ({
   label,
   selected = false,
   Icon,
@@ -223,7 +223,7 @@ const Chip = React.memo(({
       {content}
     </div>
   );
-});
+};
 
 Chip.displayName = 'Chip';
 
