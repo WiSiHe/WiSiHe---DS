@@ -1,5 +1,14 @@
 # AI Rules
 
+## React Compiler & Performance
+
+1.  **No Manual Memoization**: This project uses the React Compiler, which automatically handles memoization and optimization.
+2.  **DO NOT use**:
+    - `React.memo()` or `memo()` - The compiler handles component memoization automatically
+    - `useMemo()` - The compiler optimizes value computations automatically
+    - `useCallback()` - The compiler optimizes function references automatically
+3.  **Write clean, straightforward code**: Let the React Compiler handle all performance optimizations. Only use manual memoization if explicitly requested by the user or if there's a specific performance issue that the compiler cannot handle.
+
 ## Tailwind CSS & Styling Guidelines
 
 1.  **Tailwind CSS v4**: Always prioritize Tailwind CSS v4 syntax and features.
