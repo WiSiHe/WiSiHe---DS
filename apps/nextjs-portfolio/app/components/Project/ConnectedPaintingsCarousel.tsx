@@ -6,7 +6,7 @@ import { isNotEmptyArray } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 
 interface ConnectedPaintingsCarouselProps {
@@ -68,6 +68,17 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
     };
   }, [emblaApi, onSelect, onInit]);
 
+  const handleLinkClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Allow normal link navigation - no lightbox
+    // Event propagation is already stopped in onPointerDown, so clicks work correctly
+  }, []);
+
+  const handleLinkPointerDown = useCallback((e: React.PointerEvent<HTMLAnchorElement>) => {
+    // Stop propagation to prevent Embla from capturing the pointer event
+    // This ensures clicks go to the link, not the carousel drag handler
+    e.stopPropagation();
+  }, []);
+
   if (!isNotEmptyArray(paintings)) return null;
 
   return (
@@ -89,14 +100,18 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
                   <Link
                     href={`/paintings/${slug}`}
                     className="relative aspect-square group transition-transform hover:scale-105 block rounded-xl overflow-hidden"
+                    onClick={handleLinkClick}
+                    onPointerDown={handleLinkPointerDown}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <Image
                       src={urlForImage(image)?.width(400).fit('max')?.url() || ''}
                       alt={title || 'Connected painting'}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover transition-opacity group-hover:opacity-90"
+                      className="object-cover transition-opacity group-hover:opacity-90 pointer-events-none"
                       loading="lazy"
+                      draggable={false}
                     />
                     {title && (
                       <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity">
