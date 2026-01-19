@@ -2,7 +2,8 @@
 
 import { motion } from 'motion/react';
 import { cn } from '@wisihe/utils';
-import { GridBackground } from '../ThreeD/GridBackground';
+import { FaPlug, FaCode, FaReact, FaRocket } from 'react-icons/fa';
+import type { IconType } from 'react-icons';
 
 interface HistoryTimelineProps {
   activeIndex: number;
@@ -11,42 +12,40 @@ interface HistoryTimelineProps {
 interface Phase {
   period: string;
   title: string;
-  emoji: string;
-  color: string;
+  icon: IconType;
+  iconColor: string;
 }
 
 const PHASES: Phase[] = [
   {
     period: '1995 - 2010',
     title: 'The Dark Ages',
-    emoji: '🔌', // Flash/VRML plugins
-    color: '#64748b', 
+    icon: FaPlug, // Flash/VRML plugins
+    iconColor: 'text-neutral-500',
   },
   {
     period: '2011 - 2018',
     title: 'The Hard Way',
-    emoji: '📐', // WebGL/Vanilla Three.js (Math heavy)
-    color: '#f59e0b',
+    icon: FaCode, // WebGL/Vanilla Three.js (Math heavy)
+    iconColor: 'text-warning-500',
   },
   {
     period: '2019 - 2023',
     title: 'The React Era',
-    emoji: '⚛️', // R3F changed the DX (Developer Experience)
-    color: '#3b82f6',
+    icon: FaReact, // R3F changed the DX (Developer Experience)
+    iconColor: 'text-info-500',
   },
   {
     period: 'Now & Beyond',
     title: 'WebGPU & Spline', // The "New" stuff: Performance + Tooling
-    emoji: '🚀',
-    color: '#10b981',
+    icon: FaRocket,
+    iconColor: 'text-success-500',
   },
 ];
 
 export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
   return (
     <div className="w-full h-full relative flex items-center justify-center p-8 lg:p-12">
-      {/* Grid Background */}
-      <GridBackground size={40} opacity={0.05} />
 
       {/* Main Container */}
       <div className="relative w-full max-w-lg">
@@ -59,10 +58,10 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
 
           {/* Active Progress Line */}
           <motion.div
-            className="absolute top-0 w-0.5 bg-pink-500 rounded-full origin-top"
+            className="absolute top-0 w-0.5 bg-accent rounded-full origin-top"
             initial={{ height: 0 }}
             animate={{ height: `${(activeIndex / (PHASES.length - 1)) * 100}%` }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
+            transition={{ duration: 0.8, type: 'spring', stiffness: 100, damping: 10 }}
           />
         </div>
 
@@ -73,6 +72,25 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
             const isPast = index < activeIndex;
             const isFuture = index > activeIndex;
 
+            // Calculate opacity for animation
+            const getOpacity = () => {
+              if (isFuture) return 0;
+              if (isPast) return 0.5;
+              return 1;
+            };
+
+            // Get node classes based on state
+            const getNodeClasses = () => {
+              const base = "rounded-full transition-all duration-700";
+              if (isActive) {
+                return `${base} w-4 h-4 bg-background border-2 border-accent shadow-[0_0_0_4px_rgba(77,212,212,0.2)]`;
+              }
+              if (isPast) {
+                return `${base} w-3 h-3 bg-accent border-none`;
+              }
+              return `${base} w-3 h-3 bg-background border border-border`;
+            };
+
             return (
               <motion.div
                 key={phase.title}
@@ -82,19 +100,15 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
                 )}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{
-                  opacity: isFuture ? 0 : isPast ? 0.5 : 1,
-                  x: isFuture ? 20 : 0
+                  opacity: getOpacity(),
+                  x: isFuture ? 20 : 0,
                 }}
-                transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
+                transition={{ duration: 0.8, type: 'spring', stiffness: 100, damping: 10 }}
               >
                 {/* Node - Centered in the 4rem (w-16) right gutter */}
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-16 flex items-center justify-center z-10">
                   <motion.div
-                    className={cn(
-                      "rounded-full transition-all duration-700",
-                      isActive ? "w-4 h-4 bg-background border-2 border-pink-500 shadow-[0_0_0_4px_rgba(236,72,153,0.2)]" :
-                        isPast ? "w-3 h-3 bg-pink-500 border-none" : "w-3 h-3 bg-background border border-border"
-                    )}
+                    className={getNodeClasses()}
                     animate={{
                       scale: isActive ? 1.2 : 1,
                     }}
@@ -109,23 +123,24 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
                   )}
                   style={{
                     // Only apply border to active item for emphasis, inactive blends in
-                    border: isActive ? '1px solid rgba(236, 72, 153, 0.2)' : '1px solid transparent'
+                    border: isActive ? '1px solid rgba(77, 212, 212, 0.2)' : '1px solid transparent'
                   }}
                 >
                   {/* Active Accent Strip */}
                   {isActive && (
                     <motion.div
                       layoutId="active-strip"
-                      className="absolute left-0 top-0 bottom-0 w-1 bg-pink-500"
+                      className="absolute left-0 top-0 bottom-0 w-1 bg-accent"
                     />
                   )}
 
                   <div className="p-4 pl-6 flex items-center gap-4">
                     <div className={cn(
                       "w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors bg-surface-elevated/80",
-                      isActive ? "text-xl" : "text-base opacity-50"
+                      phase.iconColor,
+                      isActive ? "opacity-100" : "opacity-50"
                     )}>
-                      {phase.emoji}
+                      <phase.icon className={isActive ? "w-6 h-6" : "w-5 h-5"} />
                     </div>
 
                     <div className="min-w-0 flex-1">
