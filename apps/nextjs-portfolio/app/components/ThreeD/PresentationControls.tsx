@@ -1,6 +1,12 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  HiChevronUp, 
+  HiChevronDown, 
+  HiArrowSmallUp, 
+  HiRocketLaunch 
+} from 'react-icons/hi2';
 
 type PresentationControlsProps = Readonly<{
   currentSlide: number;
@@ -21,135 +27,102 @@ export function PresentationControls({
   onSkipToCoolPart,
   isVisible,
 }: PresentationControlsProps) {
-  if (!isVisible) return null;
-
   const isFirstSlide = currentSlide === 0;
   const isLastSlide = currentSlide === totalSlides - 1;
 
   return (
-    <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50 flex flex-col items-end gap-3 md:gap-4 pointer-events-none">
-      {/* Navigation Group */}
-      <div className="pointer-events-auto flex flex-col items-center bg-surface-elevated border border-border rounded-2xl p-1.5 shadow-xl overflow-hidden">
-        <motion.button
-          onClick={onPrev}
-          disabled={isFirstSlide}
-          whileHover={isFirstSlide ? {} : { backgroundColor: 'var(--color-surface-active)' }}
-          whileTap={isFirstSlide ? {} : { scale: 0.95 }}
-          className={`w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-colors touch-manipulation ${
-            isFirstSlide
-              ? 'text-foreground/20 cursor-not-allowed'
-              : 'text-foreground hover:text-accent cursor-pointer'
-          }`}
-          aria-label="Previous slide"
-          style={{ touchAction: 'manipulation' }}
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 400, 
+            damping: 30,
+            opacity: { duration: 0.2 }
+          }}
+          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 flex flex-col items-end gap-3 md:gap-4 pointer-events-none"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m18 15-6-6-6 6" />
-          </svg>
-        </motion.button>
-
-        <div className="py-2 text-[10px] font-mono font-medium text-foreground/50 select-none">
-          {String(currentSlide + 1).padStart(2, '0')}
-          <span className="opacity-30">/</span>
-          {String(totalSlides).padStart(2, '0')}
-        </div>
-
-        <motion.button
-          onClick={onNext}
-          disabled={isLastSlide}
-          whileHover={isLastSlide ? {} : { backgroundColor: 'var(--color-surface-active)' }}
-          whileTap={isLastSlide ? {} : { scale: 0.95 }}
-          className={`w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-colors touch-manipulation ${
-            isLastSlide
-              ? 'text-foreground/20 cursor-not-allowed'
-              : 'text-foreground hover:text-accent cursor-pointer'
-          }`}
-          aria-label="Next slide"
-          style={{ touchAction: 'manipulation' }}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </motion.button>
-      </div>
-
-      {/* Actions Group */}
-      <div className="flex flex-col gap-2 md:gap-3 items-end pointer-events-auto">
-        {/* Skip to Cool Part Button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onSkipToCoolPart}
-          className="group flex items-center gap-2 px-3 md:px-4 py-2.5 md:py-2 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer touch-manipulation min-h-[44px] md:min-h-0"
-          style={{ touchAction: 'manipulation' }}
-        >
-          <div className="p-1 rounded-full bg-surface group-hover:bg-accent/20 transition-colors">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="group-hover:text-accent transition-colors"
+          {/* Navigation Group - Minimal Vertical Toolbar */}
+          <div className="pointer-events-auto flex flex-col items-center bg-surface-elevated/80 backdrop-blur-xl border border-border/50 rounded-2xl p-1 shadow-2xl overflow-hidden ring-1 ring-white/5">
+            <motion.button
+              onClick={onPrev}
+              disabled={isFirstSlide}
+              whileHover={isFirstSlide ? {} : { backgroundColor: 'rgba(var(--color-foreground-rgb), 0.05)' }}
+              whileTap={isFirstSlide ? {} : { scale: 0.92 }}
+              className={`w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                isFirstSlide
+                  ? 'text-foreground/10 cursor-not-allowed'
+                  : 'text-foreground/60 hover:text-accent cursor-pointer'
+              }`}
+              aria-label="Previous slide"
             >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </div>
-          <span className="text-xs md:text-sm font-medium text-foreground/80 group-hover:text-foreground hidden sm:inline">
-            Skip to Cool Part
-          </span>
-        </motion.button>
+              <HiChevronUp className="w-6 h-6" />
+            </motion.button>
 
-        {/* Scroll to Top Button */}
-        <motion.button
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onScrollToTop}
-          className="group flex items-center gap-2 px-3 md:px-4 py-2.5 bg-surface-elevated border border-border rounded-xl shadow-lg hover:shadow-xl hover:bg-surface-active transition-all cursor-pointer touch-manipulation min-h-[44px] md:min-h-0"
-          aria-label="Scroll to top"
-          style={{ touchAction: 'manipulation' }}
-        >
-          <div className="p-1.5 rounded-full bg-surface group-hover:bg-accent/20 transition-colors flex items-center justify-center">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="group-hover:text-accent transition-colors"
+            <div className="py-1.5 flex flex-col items-center gap-0.5 select-none border-y border-border/10 w-full bg-foreground/5">
+              <span className="text-[10px] font-black text-foreground antialiased leading-none">
+                {String(currentSlide + 1).padStart(2, '0')}
+              </span>
+              <div className="w-4 h-[1px] bg-foreground/20" />
+              <span className="text-[9px] font-bold text-foreground/40 antialiased leading-none">
+                {String(totalSlides).padStart(2, '0')}
+              </span>
+            </div>
+
+            <motion.button
+              onClick={onNext}
+              disabled={isLastSlide}
+              whileHover={isLastSlide ? {} : { backgroundColor: 'rgba(var(--color-foreground-rgb), 0.05)' }}
+              whileTap={isLastSlide ? {} : { scale: 0.92 }}
+              className={`w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                isLastSlide
+                  ? 'text-foreground/10 cursor-not-allowed'
+                  : 'text-foreground/60 hover:text-accent cursor-pointer'
+              }`}
+              aria-label="Next slide"
             >
-              <path d="m18 15-6-6-6 6" />
-            </svg>
+              <HiChevronDown className="w-6 h-6" />
+            </motion.button>
           </div>
-          <span className="text-sm font-medium text-foreground/90 group-hover:text-foreground">
-            Scroll to Top
-          </span>
-        </motion.button>
-      </div>
-    </div>
+
+          {/* Actions Group - Horizontal Label Buttons */}
+          <div className="flex flex-col gap-2.5 items-end pointer-events-auto">
+            {/* Skip to Cool Part Button */}
+            <motion.button
+              whileHover={{ scale: 1.02, x: -4 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onSkipToCoolPart}
+              className="group flex items-center gap-3 px-4 py-2 bg-surface-elevated/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-xl hover:shadow-accent/10 hover:border-accent/30 transition-all duration-300 ring-1 ring-white/5"
+            >
+              <span className="text-xs font-bold text-foreground/60 group-hover:text-accent transition-colors uppercase tracking-wider pl-1">
+                Skip to Cool Part
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300 shadow-inner">
+                <HiRocketLaunch className="w-4 h-4" />
+              </div>
+            </motion.button>
+
+            {/* Scroll to Top Button */}
+            <motion.button
+              whileHover={{ scale: 1.02, x: -4 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onScrollToTop}
+              className="group flex items-center gap-3 px-4 py-2 bg-surface-elevated/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-xl hover:shadow-black/5 transition-all duration-300 ring-1 ring-white/5"
+              aria-label="Scroll to top"
+            >
+              <span className="text-xs font-bold text-foreground/60 group-hover:text-foreground transition-colors uppercase tracking-wider pl-1 font-mono">
+                TOP
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-300">
+                <HiArrowSmallUp className="w-5 h-5" />
+              </div>
+            </motion.button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

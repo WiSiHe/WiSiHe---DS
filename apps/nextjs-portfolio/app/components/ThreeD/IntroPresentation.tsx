@@ -79,12 +79,12 @@ export const IntroPresentation = React.memo(function IntroPresentation({
   }, [showCategoryTransition, presentationSlides, currentSlide]);
 
   // Expose presentation state to parent for controls rendering
-  // Use refs to track previous values and only update when they actually change
+  // Initialize with null-like values to ensure the first state is always emitted
   const prevStateRef = React.useRef({
-    currentSlide,
-    totalSlides: presentationSlides.length,
-    isTechnicalSectionVisible,
-    isScrolled,
+    currentSlide: -1,
+    totalSlides: -1,
+    isTechnicalSectionVisible: false,
+    isScrolled: false,
   });
 
   React.useEffect(() => {
