@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { GridBackground } from './GridBackground';
+import { HiCodeBracket } from 'react-icons/hi2';
+import RippleGrid from './Common/RippleGrid';
+import DecryptedText from './Common/DecryptedText';
 
 export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLElement> }>) {
   return (
@@ -9,82 +11,129 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
       id="technical"
       ref={ref}
       aria-label="Transition to technical content"
-      className="snap-start h-screen w-full flex flex-col items-center justify-center pt-24 md:pt-28 lg:pt-32 relative overflow-hidden bg-background shrink-0"
+      className="snap-start h-screen w-full flex flex-col items-center justify-center relative overflow-hidden bg-background shrink-0"
     >
-      <GridBackground />
+      {/* Dynamic Ripple Grid Background */}
+      <div className="absolute inset-0 opacity-40">
+        <RippleGrid
+          gridColor="var(--color-accent)"
+          gridSize={12}
+          gridThickness={20}
+          rippleIntensity={0.08}
+          glowIntensity={0.2}
+          mouseInteractionRadius={1.5}
+        />
+      </div>
 
-      {/* Bold Top Accent Bar */}
-      <div className="absolute top-0 left-0 right-0 h-2 md:h-3 bg-accent" />
-
-      {/* Bold Bottom Accent Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-2 md:h-3 bg-accent" />
-
-      {/* Bold Horizontal Line */}
-      <div className="absolute top-1/2 left-0 right-0 h-1 bg-accent/40" />
-
-      {/* Bold Vertical Accent Lines */}
-      <div className="absolute top-0 bottom-0 left-8 md:left-16 lg:left-24 w-1 bg-accent/30" />
-      <div className="absolute top-0 bottom-0 right-8 md:right-16 lg:right-24 w-1 bg-accent/30" />
+      {/* Heavy Mechanical Accent Bars */}
+      <div className="absolute top-0 left-0 right-0 h-2 md:h-3 bg-accent opacity-50" />
+      <div className="absolute bottom-0 left-0 right-0 h-2 md:h-3 bg-accent opacity-50" />
+      
+      {/* Background Text Backdrop (Outline) */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <motion.span 
+          initial={{ opacity: 0, scale: 1.2 }}
+          whileInView={{ opacity: 0.05, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2 }}
+          className="text-[35vw] font-black text-foreground uppercase tracking-tighter leading-none italic"
+          style={{ WebkitTextStroke: '1px currentColor', color: 'transparent' }}
+        >
+          CODE
+        </motion.span>
+      </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center space-y-10 md:space-y-12 lg:space-y-16 px-4 md:px-6 lg:px-8">
-        {/* Bold Icon Badge */}
+      <div className="relative z-30 flex flex-col items-center px-6 text-center w-full max-w-7xl">
+        {/* Glowing Technical Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, type: 'spring', stiffness: 200 }}
-          className="inline-flex items-center justify-center p-5 md:p-6 rounded-full bg-accent border-2 border-accent shadow-lg shadow-accent/50 mb-8 md:mb-10"
+          transition={{ duration: 0.8, type: 'spring' }}
+          className="group relative mb-8 md:mb-12"
         >
-          <div className="h-4 w-4 md:h-5 md:w-5 rounded-full bg-background" />
+          <div className="absolute inset-0 bg-accent blur-3xl opacity-20 group-hover:opacity-40 transition-opacity" />
+          <div className="relative flex flex-col items-center">
+            <div className="p-4 md:p-6 rounded-2xl bg-surface-elevated/80 backdrop-blur-md border border-accent/30 shadow-2xl flex items-center justify-center text-accent">
+              <HiCodeBracket className="w-10 h-10 md:w-14 md:h-14" />
+            </div>
+            <div className="mt-4 px-6 py-1 bg-accent/20 border border-accent/40 text-accent text-[11px] font-black uppercase tracking-[0.4em] rounded-full backdrop-blur-sm">
+              <DecryptedText 
+                text="SYSTEM READY" 
+                animateOn="view"
+                speed={40}
+                sequential={true}
+              />
+            </div>
+          </div>
         </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1, type: 'spring', stiffness: 100 }}
-          className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-foreground uppercase tracking-tighter leading-[0.85] mb-6 md:mb-8"
-        >
-          Now for the
-          <br />
-          <span className="text-accent drop-shadow-lg">
-            Technical Part
-          </span>
-        </motion.h2>
+        {/* Massive Typography */}
+        <div className="space-y-0 md:-space-y-4">
+          <div className="overflow-hidden">
+            <motion.h2 
+              initial={{ y: "100%" }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="text-6xl sm:text-7xl md:text-9xl lg:text-[11rem] xl:text-[13rem] font-black text-foreground uppercase tracking-tighter leading-[0.85] antialiased"
+            >
+              TECHNICAL
+            </motion.h2>
+          </div>
+          
+          <div className="overflow-hidden">
+            <motion.h2 
+              initial={{ y: "-100%" }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-6xl sm:text-7xl md:text-9xl lg:text-[11rem] xl:text-[13rem] font-black uppercase tracking-tighter leading-[0.85] antialiased"
+              style={{ WebkitTextStroke: '2px var(--color-foreground)', color: 'transparent' }}
+            >
+              SHOWCASE
+            </motion.h2>
+          </div>
+        </div>
 
-        {/* Bold Divider Line */}
         <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="h-1 w-32 md:w-48 bg-accent mx-auto"
-        />
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground/90 max-w-2xl mx-auto tracking-tight mt-6 md:mt-8"
+           initial={{ opacity: 0 }}
+           whileInView={{ opacity: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 1, delay: 0.8 }}
+           className="mt-12 md:mt-20 flex flex-col items-center"
         >
-          Understanding what makes 3D on the web tick.
-        </motion.p>
-      </div>
-
-      {/* Bold Bottom Arrow */}
-      <div className="absolute bottom-16 md:bottom-20 lg:bottom-24 left-1/2 -translate-x-1/2">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-5xl md:text-6xl font-black text-accent"
-        >
-          ↓
+          <div className="flex items-center gap-4 mb-4">
+             <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-accent" />
+             <p className="text-sm md:text-lg font-mono tracking-[0.2em] text-accent uppercase">
+               Architecture & Performance
+             </p>
+             <div className="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-accent" />
+          </div>
+          <p className="text-lg md:text-2xl font-medium text-foreground/60 max-w-2xl mx-auto tracking-tight">
+            Transitioning to the structural implementation details.
+          </p>
         </motion.div>
       </div>
+
+      {/* Animated Down Arrow / Progress Line */}
+      <motion.div
+        animate={{ height: ['0%', '100%', '0%'], top: ['0%', '0%', '100%'] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute right-8 md:right-12 w-[1px] bg-accent/40"
+      />
+      
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-12 text-accent/60"
+      >
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-[10px] font-black tracking-[0.3em] uppercase opacity-40">Scroll</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-accent to-transparent" />
+        </div>
+      </motion.div>
     </section>
   );
 }
