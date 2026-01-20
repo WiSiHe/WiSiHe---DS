@@ -12,7 +12,7 @@ export const SlideSources = ({ sources, variant = 'default' }: SlideSourcesProps
   return (
     <div
       className={cn(
-        'max-w-prose mx-auto w-full border-t border-border/30',
+        'max-w-6xl mx-auto w-full border-t border-border/30',
         variant === 'compact' ? 'mt-6 md:mt-8 pt-6 md:pt-8' : 'mt-12 pt-8'
       )}
     >
