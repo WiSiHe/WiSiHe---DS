@@ -18,6 +18,7 @@ interface TechnicalSlideContentProps {
   onSlideClick?: (index: number) => void;
   onNext?: () => void;
   onPrev?: () => void;
+  onAddBox?: () => void;
 }
 
 export function TechnicalSlideContent({
@@ -28,6 +29,7 @@ export function TechnicalSlideContent({
   onSlideClick,
   onNext,
   onPrev,
+  onAddBox,
 }: Readonly<TechnicalSlideContentProps>) {
   const {
     texture: showcaseTexture,
@@ -37,12 +39,13 @@ export function TechnicalSlideContent({
     onAutoRotateChange,
   } = showcaseControls;
 
+
+  const {title, description, mode, code, links} = currentSlideData;
   return (
     <article className="h-full flex flex-col relative">
       <TechnicalSlideHeader
         currentSlide={currentSlide}
         totalSlides={totalSlides}
-        title={currentSlideData.title}
         onSlideClick={onSlideClick}
         onNext={onNext}
         onPrev={onPrev}
@@ -51,10 +54,11 @@ export function TechnicalSlideContent({
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto pb-12 md:pb-16 lg:pb-20 px-4 md:px-6 lg:px-8">
         <div className="space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pt-6 md:pt-8">
-          <TechnicalSlideDescription description={currentSlideData.description} />
+          {title && <h2 className="text-5xl font-black text-foreground tracking-tighter leading-[0.9] max-w-3xl">{title}</h2>}
+          {description && <TechnicalSlideDescription description={description} />}
 
           {/* Interactive Controls - Show before code example for showcase mode */}
-          {currentSlideData.mode === 'showcase' && (
+          {mode === 'showcase' && (
             <ShowcaseControlsComponent
               autoRotate={autoRotate}
               onAutoRotateChange={onAutoRotateChange}
@@ -62,6 +66,21 @@ export function TechnicalSlideContent({
               onTextureChange={onTextureChange}
               textureOptions={textureOptions}
             />
+          )}
+
+          {mode === 'r3f-basics' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex justify-start"
+            >
+              <button
+                onClick={onAddBox}
+                className="px-4 py-2 bg-accent text-accent-white rounded-lg font-medium hover:bg-accent/90 transition-all shadow-lg active:scale-95 text-sm"
+              >
+                Add New Box (State Update)
+              </button>
+            </motion.div>
           )}
 
           {/* Code Example - Break out of prose width */}

@@ -16,6 +16,11 @@ export function TechnicalDeck() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showcaseTexture, setShowcaseTexture] = useState(DEFAULT_TEXTURE);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [boxCount, setBoxCount] = useState(1);
+
+  const handleAddBox = () => {
+    setBoxCount(prev => prev + 1);
+  };
 
   const currentSlideData = slides.length === 0 ? null : slides[currentSlide];
   const previousSlideData = slides.length === 0 || currentSlide === 0 ? undefined : slides[currentSlide - 1];
@@ -59,6 +64,7 @@ export function TechnicalDeck() {
           onSlideClick={handleSlideClick}
           onNext={handleNext}
           onPrev={handlePrev}
+          onAddBox={handleAddBox}
         />
       </div>
 
@@ -68,6 +74,7 @@ export function TechnicalDeck() {
           mode={currentSlideData.mode}
           showcaseTexture={showcaseTexture}
           autoRotate={autoRotate}
+          boxCount={boxCount}
         />
       </div>
     </div>

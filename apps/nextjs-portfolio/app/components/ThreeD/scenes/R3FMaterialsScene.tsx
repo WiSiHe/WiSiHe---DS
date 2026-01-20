@@ -1,37 +1,39 @@
 'use client';
 
-import { useMemo, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import * as THREE from 'three';
-import { COLORS, MATERIAL_PROPERTIES } from '../constants';
-import { createCheckerboardTexture } from '../utils/textureUtils';
+import { useTexture } from '@react-three/drei';
+import { COLORS } from '../constants';
 
 export const R3FMaterialsScene = forwardRef<THREE.Group>((props, ref) => {
-  const checkerboardTexture = useMemo(
-    () => createCheckerboardTexture({ color1: COLORS.purple, color2: '#6d28d9' }),
-    [],
-  );
+  // Using the requested earth texture
+  const texture = useTexture('/images/earth-texture.jpg');
 
   return (
     <group ref={ref}>
+      {/* Basic Material - No Lighting */}
       <mesh position={[-2, 0, 0]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshBasicMaterial color={COLORS.blue} />
       </mesh>
+
+      {/* Standard Material - Metallic */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
           color="gold"
-          metalness={MATERIAL_PROPERTIES.metallic.metalness}
-          roughness={MATERIAL_PROPERTIES.metallic.roughness}
+          metalness={0.8}
+          roughness={0.2}
         />
       </mesh>
+
+      {/* Textured Material (Sphere for Earth) */}
       <mesh position={[2, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
+        <sphereGeometry args={[0.8, 32, 32]} />
         <meshStandardMaterial
-          color={COLORS.purple}
-          metalness={MATERIAL_PROPERTIES.standard.metalness}
-          roughness={MATERIAL_PROPERTIES.standard.roughness}
-          map={checkerboardTexture}
+          map={texture}
+          metalness={0.2}
+          roughness={0.8}
         />
       </mesh>
     </group>

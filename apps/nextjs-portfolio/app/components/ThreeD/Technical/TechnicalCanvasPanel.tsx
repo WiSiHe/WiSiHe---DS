@@ -10,6 +10,7 @@ type TechnicalCanvasPanelProps = {
   mode: SlideMode;
   showcaseTexture: string;
   autoRotate: boolean;
+  boxCount: number;
   directionalLightPosition?: [number, number, number];
   directionalLightIntensity?: number;
 };
@@ -18,6 +19,7 @@ export function TechnicalCanvasPanel({
   mode,
   showcaseTexture,
   autoRotate,
+  boxCount,
   directionalLightPosition = [10, 10, 5],
   directionalLightIntensity = 1,
 }: Readonly<TechnicalCanvasPanelProps>) {
@@ -238,6 +240,7 @@ export function TechnicalCanvasPanel({
             directionalLightPosition={directionalLightPosition}
             directionalLightIntensity={directionalLightIntensity}
             isVisible={isVisible}
+            boxCount={boxCount}
           />
         </Canvas>
       </Suspense>
