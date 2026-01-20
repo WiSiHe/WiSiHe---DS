@@ -30,8 +30,8 @@
   "packageManager": "pnpm@10.23.0",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "lefthook",
       "@vercel/speed-insights",
+      "lefthook",
       "sharp"
     ],
     "peerDependencyRules": {
