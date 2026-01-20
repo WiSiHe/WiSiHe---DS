@@ -1,5 +1,4 @@
-'use client';
-
+import { Environment } from '@react-three/drei';
 import { DEFAULT_LIGHT_POSITION, DEFAULT_LIGHT_INTENSITY } from '../constants';
 import type { LightConfig } from '../types';
 
@@ -15,19 +14,15 @@ export function SceneLights({ lightConfig, mode }: SceneLightsProps) {
 
   return (
     <>
-      {/* Ambient light - slightly reduced for showcase for better contrast */}
-      <ambientLight intensity={isShowcase ? 0.4 : 0.5} />
-      
-      {/* Primary directional light - main light source */}
+      <Environment preset="city" />
+      <ambientLight intensity={isShowcase ? 0.3 : 0.4} />
       <directionalLight position={directionalPosition} intensity={directionalIntensity} />
       
-      {/* Rim light for showcase - adds depth and separation from background */}
       {isShowcase && (
         <directionalLight position={[-5, 5, -5]} intensity={0.6} />
       )}
       
-      {/* Fill light - subtle point light for overall illumination */}
-      <pointLight position={[-10, -10, -5]} intensity={0.5} />
+      <pointLight position={[-10, -10, -5]} intensity={0.3} />
     </>
   );
 }

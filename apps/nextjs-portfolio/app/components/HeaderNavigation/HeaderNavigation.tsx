@@ -37,7 +37,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
 
   return (
-    <header className="">
+    <header className="pointer-events-none">
       <nav
         aria-label="Main Navigation"
         className={cn(
@@ -51,6 +51,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.95 }}
+          className="pointer-events-auto"
         >
           <Link
             href="/"
@@ -59,14 +60,13 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           >
             <IconLogo
               color="currentColor"
-              className={cn('transition-all duration-300 text-foreground group-hover:text-accent')}
-              width={80}
-              height={80}
+              className={cn('transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20')}
+              size="100%"
             />
           </Link>
         </motion.div>
 
-        <div className="flex items-center gap-1 md:gap-2">
+        <div className="flex items-center gap-1 md:gap-2 pointer-events-auto">
           <motion.ul
             key="nav"
             variants={container}

@@ -27,6 +27,7 @@ interface PersistentSceneProps {
   directionalLightPosition?: [number, number, number];
   directionalLightIntensity?: number;
   isVisible?: boolean;
+  boxCount?: number;
 }
 
 export function PersistentScene({
@@ -36,11 +37,13 @@ export function PersistentScene({
   directionalLightPosition,
   directionalLightIntensity,
   isVisible = true,
+  boxCount = 1,
 }: PersistentSceneProps) {
+  // Use correct types for refs based on their respective scene root elements
   const showcaseRef = useRef<THREE.Group>(null);
   const threejsIntroRef = useRef<THREE.Group>(null);
   const r3fFirstSceneRef = useRef<THREE.Mesh>(null);
-  const r3fBasicsRef = useRef<THREE.Mesh>(null);
+  const r3fBasicsRef = useRef<THREE.Group>(null); // Matches R3FBasicsScene's group
   const r3fMaterialsRef = useRef<THREE.Group>(null);
   const r3fGeometriesRef = useRef<THREE.Group>(null);
   const r3fAnimationRef = useRef<THREE.Mesh>(null);
@@ -68,6 +71,14 @@ export function PersistentScene({
     },
   });
 
+  // Enable OrbitControls for intro slides and everything from R3F Basics onwards
+  // As requested, we introduce camera controls early to allow exploration
+  const enableOrbit = [
+    'intro', 'vertices', 'edges', 'faces', 
+    'r3f-basics', 'r3f-first-scene', 'r3f-geometries', 
+    'r3f-materials', 'r3f-animation', 'r3f-interaction', 'showcase'
+  ].includes(mode);
+
   return (
     <>
       <SceneLights lightConfig={lightConfig} mode={mode} />
@@ -79,14 +90,16 @@ export function PersistentScene({
       {mode === 'faces' && <FacesScene />}
       {mode === 'threejs-intro' && <ThreeJSIntroScene ref={threejsIntroRef} />}
       {mode === 'r3f-first-scene' && <R3FFirstScene ref={r3fFirstSceneRef} />}
-      {mode === 'r3f-basics' && <R3FBasicsScene ref={r3fBasicsRef} />}
+      {mode === 'r3f-basics' && <R3FBasicsScene ref={r3fBasicsRef} boxCount={boxCount} />}
       {mode === 'r3f-materials' && <R3FMaterialsScene ref={r3fMaterialsRef} />}
       {mode === 'r3f-geometries' && <R3FGeometriesScene ref={r3fGeometriesRef} />}
       {mode === 'r3f-animation' && <R3FAnimationScene ref={r3fAnimationRef} />}
       {mode === 'r3f-interaction' && <R3FInteractionScene ref={r3fInteractionRef} />}
       {mode === 'showcase' && <ShowcaseScene texturePath={showcaseTexture} ref={showcaseRef} />}
 
-      <OrbitControls makeDefault enableZoom={true} enablePan={true} />
+      {enableOrbit && (
+        <OrbitControls makeDefault enableZoom={true} enablePan={true} autoRotate={autoRotate} />
+      )}
     </>
   );
 }

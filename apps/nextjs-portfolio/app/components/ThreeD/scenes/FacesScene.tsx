@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { Edges } from '@react-three/drei';
 import * as THREE from 'three';
-import { BEER_CAN_GEOMETRY, COLORS, MATERIAL_PROPERTIES } from '../constants';
+import { BEER_CAN_GEOMETRY, COLORS } from '../constants';
 import { getCssVariableAsHex } from '../utils/colorUtils';
 
 export function FacesScene() {
@@ -17,23 +17,26 @@ export function FacesScene() {
   }, []);
 
   const edgesGeometry = useMemo(() => {
-    const geometry = new THREE.CylinderGeometry(
-      BEER_CAN_GEOMETRY.radiusTop,
-      BEER_CAN_GEOMETRY.radiusBottom,
-      BEER_CAN_GEOMETRY.height,
-      BEER_CAN_GEOMETRY.radialSegments,
-    );
-    return new THREE.EdgesGeometry(geometry);
-  }, []);
+    return new THREE.EdgesGeometry(canGeometry);
+  }, [canGeometry]);
+
+  const accentColor = getCssVariableAsHex('--color-accent', COLORS.teal);
 
   return (
     <mesh geometry={canGeometry}>
       <meshStandardMaterial
-        color={getCssVariableAsHex('--color-accent', COLORS.teal)}
-        metalness={MATERIAL_PROPERTIES.metallic.metalness}
-        roughness={MATERIAL_PROPERTIES.metallic.roughness}
+        color={accentColor}
+        metalness={0.1}
+        roughness={0.6}
+        envMapIntensity={0.5}
       />
-      <Edges geometry={edgesGeometry} color="#000000" threshold={0} />
+      <Edges 
+        geometry={edgesGeometry} 
+        color={accentColor} 
+        threshold={15} 
+        opacity={0.3} 
+        transparent 
+      />
     </mesh>
   );
 }

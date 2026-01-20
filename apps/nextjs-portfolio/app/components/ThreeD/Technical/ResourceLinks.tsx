@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
 
 interface Link {
   text: string;
@@ -29,20 +30,7 @@ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLi
             className="px-4 py-2 bg-surface-elevated text-accent border border-accent/30 rounded-lg font-medium hover:bg-accent/10 hover:border-accent/50 transition-all flex items-center gap-2"
           >
             <span>{link.text}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
+            <HiArrowTopRightOnSquare className="w-4 h-4" />
           </motion.a>
         ))}
       </div>
