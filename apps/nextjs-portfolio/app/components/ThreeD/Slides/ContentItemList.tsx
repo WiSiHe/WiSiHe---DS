@@ -108,7 +108,7 @@ export const ContentItemList = ({ items, slideDesign }: ContentItemListProps) =>
   return (
     <ul
       className={cn(
-        'max-w-prose mx-auto w-full list-none overflow-x-hidden px-4 md:px-6',
+        'max-w-6xl mx-auto w-full list-none overflow-x-hidden px-4 md:px-6',
         slideDesign === 'minimal'
           ? 'space-y-4 md:space-y-5'
           : slideDesign === 'hero'

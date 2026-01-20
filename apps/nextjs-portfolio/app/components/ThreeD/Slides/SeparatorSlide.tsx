@@ -22,7 +22,7 @@ export const SeparatorSlide = ({
   if (design === 'minimal') {
     return (
       <div className="w-full h-full flex items-center justify-center px-6 md:px-8 lg:px-12">
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-medium text-foreground/80 tracking-wide text-center max-w-prose">
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-medium text-foreground/80 tracking-wide text-center max-w-6xl">
           {slideData.title}
         </h2>
       </div>
@@ -38,7 +38,7 @@ export const SeparatorSlide = ({
         <div className="absolute top-0 left-0 w-full h-2 md:h-3 bg-accent" />
         <div className="absolute bottom-0 left-0 w-full h-2 md:h-3 bg-accent" />
 
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tighter text-center leading-none max-w-prose">
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tighter text-center leading-none max-w-6xl">
           {slideData.title}
         </h2>
       </div>
@@ -52,7 +52,7 @@ export const SeparatorSlide = ({
         {/* Radial gradient background */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent" />
 
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center max-w-prose">
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center max-w-6xl">
           {slideData.title}
         </h2>
 
@@ -71,7 +71,7 @@ export const SeparatorSlide = ({
 
         <div className="w-3 h-3 bg-accent rounded-full mb-10 md:mb-12" />
 
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground text-center relative z-10 max-w-prose">
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground text-center relative z-10 max-w-6xl">
           {slideData.title}
         </h2>
 
@@ -91,7 +91,7 @@ export const SeparatorSlide = ({
 
       <h2
         className={cn(
-          'text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center relative z-10 max-w-prose',
+          'text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center relative z-10 max-w-6xl',
         )}
       >
         {slideData.title}

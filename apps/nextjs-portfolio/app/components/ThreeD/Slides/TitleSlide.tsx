@@ -70,7 +70,7 @@ export const TitleSlide = ({
           </>
         )}
       </div>
-      <div className="max-w-prose mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto relative z-10">
         <h1 className={cn(getTitleClasses(), 'font-black mb-8 md:mb-10 text-foreground uppercase leading-[1.1] tracking-tight px-4 break-words overflow-wrap-anywhere')} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
           <span className="block mb-4 md:mb-6 text-foreground">
             {slideData.title.split(':')[0]}

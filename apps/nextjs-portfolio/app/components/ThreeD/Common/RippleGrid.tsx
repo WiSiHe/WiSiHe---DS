@@ -107,7 +107,7 @@ void main() {
     }
 
     float dist = length(uv);
-    float func = sin(pi * (iTime - dist));
+    float func = sin(pi * (iTime * 0.5 - dist));
     vec2 rippleUv = uv + uv * func * rippleIntensity;
 
     if (mouseInteraction && mouseInfluence > 0.0) {
@@ -131,7 +131,7 @@ void main() {
     );
 
     vec3 color = vec3(0.0);
-    color += exp(-gridThickness * smoothB.x * (0.8 + 0.5 * sin(pi * iTime)));
+    color += exp(-gridThickness * smoothB.x * (0.8 + 0.5 * sin(pi * iTime * 0.5)));
     color += exp(-gridThickness * smoothB.y);
     color += 0.5 * exp(-(gridThickness / 4.0) * sin(smoothB.x));
     color += 0.5 * exp(-(gridThickness / 3.0) * smoothB.y);

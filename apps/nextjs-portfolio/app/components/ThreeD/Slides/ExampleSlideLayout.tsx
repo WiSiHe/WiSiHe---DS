@@ -48,7 +48,7 @@ export const ExampleSlideLayout = ({
     <div className="w-full h-full flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10 overflow-hidden max-w-full">
       {/* Left Side - Example List */}
       <div className="flex-1 flex flex-col justify-center space-y-4 overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full">
-        <div className="max-w-prose mx-auto w-full">
+        <div className="max-w-6xl mx-auto w-full">
           <SlideHeader category={slideData.category} index={index} />
 
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-foreground uppercase leading-tight tracking-tight break-words">
@@ -81,7 +81,7 @@ export const ExampleSlideLayout = ({
         </div>
 
         {/* Example Buttons */}
-        <div className="max-w-prose mx-auto w-full space-y-2">
+        <div className="max-w-6xl mx-auto w-full space-y-2">
           {slideData.examples?.map((example, exampleIndex) => (
             <button
               key={exampleIndex}
