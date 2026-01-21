@@ -1,13 +1,11 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
-import { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
 import HeroImageSection from './components/HeroSection/HeroSection';
 import PaintingsSection from './components/PaintingsSection/PaintingsSection';
 import SkillsSection from './components/SkillsSection/SkillsSection';
-import ThreeDShowcase from './components/ThreeDShowcase/ThreeDShowcase';
 
 type Painting = NonNullable<NonNullable<HomePageQueryResult>['showcasePaintings']>[number];
 
@@ -29,7 +27,7 @@ const HeroSkeleton = () => (
 );
 
 const SectionSkeleton = () => (
-  <div className="max-w-screen-xl mx-auto px-4 py-20">
+  <div className="max-w-7xl mx-auto px-4 py-20">
     <div className="h-8 bg-surface-elevated animate-pulse rounded mb-4" />
     <div className="h-4 bg-surface-elevated animate-pulse rounded mb-8" />
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -75,7 +73,6 @@ export default async function Home() {
           </Suspense>
         </section>
 
-        <ThreeDShowcase />
       </div>
 
       {/* Paintings Section with distinct background */}
