@@ -118,7 +118,7 @@ export function Button({
         }),
       )}
       disabled={isLoading || isDisabled}
-      type={type === 'button' ? 'button' : 'submit'}
+      type={type}
       {...props}
     >
       {Icon && iconPosition === 'left' ? <Icon /> : null}

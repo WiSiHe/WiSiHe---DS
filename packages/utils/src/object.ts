@@ -4,7 +4,12 @@
  * @returns True if the value is a plain object
  */
 export function isObject(obj: unknown): obj is Record<string, unknown> {
-  return obj !== null && typeof obj === 'object';
+  if (obj === null || typeof obj !== 'object') {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(obj);
+  return prototype === Object.prototype || prototype === null;
 }
 
 interface EmptyObject {

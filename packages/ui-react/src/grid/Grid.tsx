@@ -80,9 +80,18 @@ export interface GridProps extends React.HTMLAttributes<HTMLDivElement>, Variant
   children?: React.ReactNode;
 }
 
-export function Grid({ className, children, ...props }: GridProps) {
+export function Grid({
+  className,
+  children,
+  columns,
+  rows,
+  gap,
+  justify,
+  align,
+  ...props
+}: GridProps) {
   return (
-    <div className={cn(grid(props), className)} {...props}>
+    <div className={cn(grid({ columns, rows, gap, justify, align }), className)} {...props}>
       {children}
     </div>
   );
