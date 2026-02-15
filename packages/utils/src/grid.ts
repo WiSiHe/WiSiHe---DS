@@ -57,6 +57,12 @@ export const TYPE_CLASSES = {
   container: 'tw-@container',
 };
 
+const hasOwn = <T extends object>(obj: T, key: PropertyKey): key is keyof T =>
+  Object.prototype.hasOwnProperty.call(obj, key);
+
+const resolveBreakpointValue = (breakpoint: Breakpoints): string =>
+  hasOwn(breakpointValues, breakpoint) ? breakpointValues[breakpoint] : breakpoint;
+
 /**
  * Generates CSS styles for responsive values.
  * @param values - The values to generate styles for
@@ -73,23 +79,24 @@ const generateStyles = (
 ): string => {
   if (typeof values === 'number') {
     return `${styleProperty}: ${scale[values]};`;
-  } else if (typeof values === 'object') {
-    return Object.entries(values)
-      .map(([breakpoint, value]) => {
-        const isContainerQuery = type === 'container';
-        const mediaType = isContainerQuery ? '@container' : '@media';
-        const breakpointValue = isContainerQuery
-          ? breakpoint
-          : breakpointValues[breakpoint as keyof typeof breakpointValues];
-        const query = isContainerQuery
-          ? `(min-width: ${breakpoint})`
-          : `(min-width: ${breakpointValue})`;
-
-        return `${mediaType} ${query} { ${styleProperty}: ${scale[value as number]}; }`;
-      })
-      .join(' ');
   }
-  return '';
+
+  if (typeof values !== 'object' || values === null) {
+    return '';
+  }
+
+  const ruleType = type === 'container' ? '@container' : '@media';
+  return Object.entries(values)
+    .map(([breakpoint, value]) => {
+      if (typeof value !== 'number') {
+        return '';
+      }
+
+      const minWidth = resolveBreakpointValue(breakpoint as Breakpoints);
+      return `${ruleType} (min-width: ${minWidth}) { ${styleProperty}: ${scale[value]}; }`;
+    })
+    .filter(Boolean)
+    .join(' ');
 };
 
 /**
