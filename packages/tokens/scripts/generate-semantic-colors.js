@@ -1,59 +1,62 @@
 import fs from 'fs';
 import path from 'path';
+import { loadLayeredTokens, replaceReferencesWithCssVars } from './lib/token-loader.js';
 
-// Read the tokens.json file
-const tokensPath = path.join(import.meta.dirname, '..', 'tokens.json');
-const tokens = JSON.parse(fs.readFileSync(tokensPath, 'utf8'));
+const { semanticLight, semanticDark } = loadLayeredTokens();
 
-// Generate semantic colors CSS
-function generateSemanticColors() {
-  const semantic = tokens.colors?.semantic;
-  if (!semantic) {
-    console.warn('⚠️  No semantic colors found in tokens.json');
-    return '';
+function getSemanticColors() {
+  const lightColors = semanticLight.semantic?.color ?? {};
+  const darkColors = semanticDark.semantic?.dark?.color ?? {};
+  return { lightColors, darkColors };
+}
+
+function createColorBlock(selector, colors, extraVariables = []) {
+  const entries = Object.entries(colors)
+    .filter(([, token]) => token && token.$value)
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  let output = `${selector} {\n`;
+  for (const [key, token] of entries) {
+    const cssValue = replaceReferencesWithCssVars(token.$value);
+    output += `  --${key}: ${cssValue};\n`;
   }
+
+  for (const [name, value] of extraVariables) {
+    output += `  ${name}: ${value};\n`;
+  }
+
+  output += `}\n`;
+  return output;
+}
+
+function generateSemanticColors() {
+  const { lightColors, darkColors } = getSemanticColors();
 
   let output = `/**
  * Do not edit directly, this file was auto-generated.
- * Semantic color system (theme-aware) generated from design tokens.
- * These colors change between light/dark mode.
+ * Semantic color system (theme-aware) generated from layered design tokens.
  */
 
 /* Light mode semantic colors */
-:root {
 `;
 
-  // Generate light mode colors
-  if (semantic.light) {
-    Object.entries(semantic.light).forEach(([key, token]) => {
-      if (token && token.$value) {
-        const varName = `--${key.replace(/-/g, '-')}`;
-        output += `  ${varName}: ${token.$value};\n`;
-      }
-    });
-  }
+  output += createColorBlock(':root', lightColors, [
+    ['--color-accent-rgb', '236, 72, 153'],
+    ['--color-foreground-rgb', '31, 31, 31'],
+  ]);
 
-  output += `}
-
+  output += `
 /* Dark mode semantic colors */
-.dark {
 `;
 
-  // Generate dark mode colors
-  if (semantic.dark) {
-    Object.entries(semantic.dark).forEach(([key, token]) => {
-      if (token && token.$value) {
-        const varName = `--${key.replace(/-/g, '-')}`;
-        output += `  ${varName}: ${token.$value};\n`;
-      }
-    });
-  }
+  output += createColorBlock('.dark', darkColors, [
+    ['--color-accent-rgb', '255, 99, 183'],
+    ['--color-foreground-rgb', '250, 250, 250'],
+  ]);
 
-  output += `}
-
-/* Map to Tailwind utilities */
+  output += `
+/* Map semantic tokens to Tailwind utilities */
 @theme inline {
-  /* Semantic colors (theme-aware) */
   --color-background: var(--background);
   --color-background-subtle: var(--background-subtle);
 
@@ -94,6 +97,11 @@ function generateSemanticColors() {
   --color-danger-subtle: var(--danger-subtle);
   --color-danger-text: var(--danger-text);
 
+  --color-error: var(--danger);
+  --color-error-contrast: var(--danger-contrast);
+  --color-error-subtle: var(--danger-subtle);
+  --color-error-text: var(--danger-text);
+
   --color-info: var(--info);
   --color-info-contrast: var(--info-contrast);
   --color-info-subtle: var(--info-subtle);
@@ -101,7 +109,7 @@ function generateSemanticColors() {
 
   --color-ring: var(--ring);
 
-  /* Legacy aliases (for backward compatibility) */
+  /* Legacy aliases */
   --color-primary: var(--accent);
   --color-primary-foreground: var(--accent-contrast);
   --color-secondary: var(--surface-hover);
@@ -116,7 +124,7 @@ function generateSemanticColors() {
   --color-destructive: var(--danger);
   --color-destructive-foreground: var(--danger-contrast);
 
-  /* Old custom names */
+  /* Backward compatibility aliases */
   --color-text-primary: var(--foreground);
   --color-text-secondary: var(--foreground-subtle);
   --color-text-tertiary: var(--foreground-muted);
@@ -129,16 +137,12 @@ function generateSemanticColors() {
   return output;
 }
 
-// Generate the semantic colors CSS
 const semanticColorsContent = generateSemanticColors();
-
-// Ensure the directory exists
 const outputDir = path.join(import.meta.dirname, '..', 'dist', 'css');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-// Write the semantic colors file
 const outputPath = path.join(outputDir, 'semantic-colors.css');
 fs.writeFileSync(outputPath, semanticColorsContent);
 
