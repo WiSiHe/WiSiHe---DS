@@ -61,9 +61,18 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement>, Variant
   children?: React.ReactNode;
 }
 
-export function Flex({ className, children, ...props }: FlexProps) {
+export function Flex({
+  className,
+  children,
+  direction,
+  wrap,
+  justify,
+  align,
+  gap,
+  ...props
+}: FlexProps) {
   return (
-    <div className={cn(flex(props), className)} {...props}>
+    <div className={cn(flex({ direction, wrap, justify, align, gap }), className)} {...props}>
       {children}
     </div>
   );

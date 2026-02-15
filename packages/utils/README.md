@@ -24,10 +24,6 @@ const firstItem = first([1, 2, 3]); // 1
 const isEmpty = isEmptyArray([]); // true
 ```
 
-const isEmpty = isEmptyArray([]); // true
-
-```
-
 ## API Reference
 
 ### String Utilities
@@ -76,4 +72,3 @@ const isEmpty = isEmptyArray([]); // true
 ## License
 
 MIT
-```
