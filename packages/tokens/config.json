@@ -1,5 +1,9 @@
 {
-  "source": ["tokens.json"],
+  "source": [
+    "tokens/primitives/**/*.json",
+    "tokens/semantic/light/**/*.json",
+    "tokens/component/**/*.json"
+  ],
   "platforms": {
     "css": {
       "transformGroup": "css",
@@ -7,17 +11,10 @@
       "files": [
         {
           "destination": "variables.css",
-          "format": "css/variables"
-        }
-      ]
-    },
-    "tailwind-v4": {
-      "transformGroup": "css",
-      "buildPath": "dist/tailwind/",
-      "files": [
-        {
-          "destination": "theme.css",
-          "format": "css/tailwind-v4-theme"
+          "format": "css/variables",
+          "options": {
+            "outputReferences": true
+          }
         }
       ]
     },

@@ -1,0 +1,28 @@
+{
+  "component": {
+    "input": {
+      "height": {
+        "sm": { "$value": "{dimension.control-sm}", "$type": "dimension" },
+        "md": { "$value": "{dimension.control-md}", "$type": "dimension" },
+        "lg": { "$value": "{dimension.control-lg}", "$type": "dimension" }
+      },
+      "padding": {
+        "sm": { "$value": "{spacing.sm} {spacing.md}", "$type": "spacing" },
+        "md": { "$value": "{spacing.md} {spacing.lg}", "$type": "spacing" },
+        "lg": { "$value": "{spacing.lg} {spacing.xl}", "$type": "spacing" }
+      },
+      "radius": {
+        "sm": { "$value": "{borderRadius.sm}", "$type": "borderRadius" },
+        "md": { "$value": "{borderRadius.lg}", "$type": "borderRadius" },
+        "lg": { "$value": "{borderRadius.xl}", "$type": "borderRadius" }
+      },
+      "color": {
+        "background": { "$value": "{semantic.color.surface}", "$type": "color" },
+        "foreground": { "$value": "{semantic.color.foreground}", "$type": "color" },
+        "placeholder": { "$value": "{semantic.color.foreground-muted}", "$type": "color" },
+        "border": { "$value": "{semantic.color.border}", "$type": "color" },
+        "border-focus": { "$value": "{semantic.color.ring}", "$type": "color" }
+      }
+    }
+  }
+}

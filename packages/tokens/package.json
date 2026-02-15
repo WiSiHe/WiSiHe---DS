@@ -12,6 +12,7 @@
   },
   "files": [
     "dist",
+    "tokens",
     "tokens.json"
   ],
   "scripts": {
