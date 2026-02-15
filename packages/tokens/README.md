@@ -24,6 +24,23 @@ tokens/
 2. **Semantic**: aliases to primitives (`semantic.color.background -> color.neutral.50`)
 3. **Component**: aliases to semantic + primitives (`component.button.variant.primary.background -> semantic.color.accent`)
 
+### Semantic naming model
+
+Semantic colors follow Designsystemet-style semantics:
+
+- **Scale**: `neutral`, `accent`, `success`, `warning`, `danger`, `info`, `brand-1..3`
+- **Group**: `background`, `surface`, `border`, `text`, `base`
+- **Variant**: `default`, `tinted`, `hover`, `active`, `contrast-*`
+
+Example: `semantic.color.scale.accent.base.hover`
+
+For developer experience in Tailwind, these are exposed through clean aliases such as:
+
+- `bg-background`, `bg-surface`, `bg-surface-hover`
+- `text-foreground`, `text-foreground-subtle`
+- `border-border`, `border-border-strong`
+- `bg-accent`, `text-accent-contrast`
+
 ## Build outputs
 
 `pnpm build` generates:

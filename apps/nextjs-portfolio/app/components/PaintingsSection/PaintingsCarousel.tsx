@@ -109,32 +109,32 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
         {/* Navigation buttons */}
         <div className="flex justify-end gap-2 mt-4">
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             aria-label="Scroll left"
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowLeft className="w-6 h-6 text-accent-contrast" />
           </button>
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label="Scroll right"
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowRight className="w-6 h-6 text-accent-contrast" />
           </button>
         </div>
       </motion.div>
 
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center justify-center gap-4 text-text-primary"
+        className="flex flex-col items-center justify-center gap-4 text-foreground"
       >
         <p>Like what you see?</p>
         <Link
           href="/paintings"
-          className="px-4 py-2 text-on-primary transition-all duration-300 rounded-full bg-primary hover:bg-primary-light"
+          className="px-4 py-2 text-accent-contrast transition-all duration-300 rounded-full bg-accent hover:bg-accent-hover"
         >
           Explore all paintings
         </Link>

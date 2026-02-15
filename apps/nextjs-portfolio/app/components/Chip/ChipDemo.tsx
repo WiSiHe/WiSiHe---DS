@@ -25,11 +25,11 @@ const ChipDemo = () => {
 
   return (
     <div className="p-8 space-y-8 bg-surface rounded-xl">
-      <h2 className="text-2xl font-bold text-text-primary mb-6">Chip Component Demo</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Chip Component Demo</h2>
 
       {/* Basic Variations */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Basic Variations</h3>
+        <h3 className="text-lg font-semibold text-foreground">Basic Variations</h3>
         <div className="flex flex-wrap gap-3">
           <Chip label="Default" />
           <Chip label="Primary" variation="primary" />
@@ -42,7 +42,7 @@ const ChipDemo = () => {
 
       {/* Outlined Chips */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Outlined Chips</h3>
+        <h3 className="text-lg font-semibold text-foreground">Outlined Chips</h3>
         <div className="flex flex-wrap gap-3">
           <Chip label="Outlined Default" outlined />
           <Chip label="Outlined Primary" variation="primary" outlined />
@@ -53,7 +53,7 @@ const ChipDemo = () => {
 
       {/* Interactive Chips */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Interactive Chips</h3>
+        <h3 className="text-lg font-semibold text-foreground">Interactive Chips</h3>
         <div className="flex flex-wrap gap-3">
           {['Design', 'Development', 'UI/UX', 'Frontend', 'Backend'].map(label => (
             <Chip
@@ -65,14 +65,14 @@ const ChipDemo = () => {
             />
           ))}
         </div>
-        <p className="text-sm text-text-secondary">
+        <p className="text-sm text-foreground-subtle">
           Selected: {selectedChips.length > 0 ? selectedChips.join(', ') : 'None'}
         </p>
       </section>
 
       {/* Chips with Icons */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Chips with Icons</h3>
+        <h3 className="text-lg font-semibold text-foreground">Chips with Icons</h3>
         <div className="flex flex-wrap gap-3">
           <Chip label="Favorite" Icon={IoHeart} variation="highlight" />
           <Chip label="Starred" Icon={IoStar} variation="primary" />
@@ -83,7 +83,7 @@ const ChipDemo = () => {
 
       {/* Removable Chips */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Removable Chips</h3>
+        <h3 className="text-lg font-semibold text-foreground">Removable Chips</h3>
         <div className="flex flex-wrap gap-3">
           {removableChips.map(label => (
             <Chip
@@ -96,13 +96,13 @@ const ChipDemo = () => {
           ))}
         </div>
         {removableChips.length === 0 && (
-          <p className="text-sm text-text-tertiary italic">All chips removed</p>
+          <p className="text-sm text-foreground-muted italic">All chips removed</p>
         )}
       </section>
 
       {/* Different Sizes */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Different Sizes</h3>
+        <h3 className="text-lg font-semibold text-foreground">Different Sizes</h3>
         <div className="flex flex-wrap items-center gap-3">
           <Chip label="Small" size="small" />
           <Chip label="Medium" size="medium" />
@@ -112,7 +112,7 @@ const ChipDemo = () => {
 
       {/* Disabled Chips */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Disabled Chips</h3>
+        <h3 className="text-lg font-semibold text-foreground">Disabled Chips</h3>
         <div className="flex flex-wrap gap-3">
           <Chip label="Disabled Default" disabled />
           <Chip label="Disabled Primary" variation="primary" disabled />
@@ -122,7 +122,7 @@ const ChipDemo = () => {
 
       {/* Non-interactive Chips */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Non-interactive Chips</h3>
+        <h3 className="text-lg font-semibold text-foreground">Non-interactive Chips</h3>
         <div className="flex flex-wrap gap-3">
           <Chip label="Read Only" interactive={false} />
           <Chip label="Static" interactive={false} variation="secondary" />
@@ -131,7 +131,7 @@ const ChipDemo = () => {
 
       {/* Complex Examples */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-text-primary">Complex Examples</h3>
+        <h3 className="text-lg font-semibold text-foreground">Complex Examples</h3>
         <div className="flex flex-wrap gap-3">
           <Chip
             label="Project Status"

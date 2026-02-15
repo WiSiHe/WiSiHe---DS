@@ -35,7 +35,7 @@ export default function EmbeddedVideo({ videoUrl }: EmbeddedVideoProps) {
     return (
       <section className="relative py-8 lg:py-20 ">
         <div className="max-w-screen-lg mx-auto aspect-video flex items-center justify-center">
-          <p className="text-text-secondary">Invalid video URL</p>
+          <p className="text-foreground-subtle">Invalid video URL</p>
         </div>
       </section>
     );
