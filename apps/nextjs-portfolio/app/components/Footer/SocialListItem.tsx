@@ -29,7 +29,7 @@ export const SocialListItem = ({ item }: { item: SocialLink }) => {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center h-10 gap-4 px-4 py-3 text-2xl text-text-primary transition-all duration-300 rounded-md bg-surface-elevated hover:bg-accent hover:text-on-primary hover:scale-105"
+      className="flex items-center h-10 gap-4 px-4 py-3 text-2xl text-foreground transition-all duration-300 rounded-md bg-surface-subtle hover:bg-accent hover:text-accent-contrast hover:scale-105"
       aria-label={`Follow me on ${platform}`}
     >
       <span className="shrink-0">{Icon}</span>

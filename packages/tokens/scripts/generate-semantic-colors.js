@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { loadLayeredTokens, replaceReferencesWithCssVars } from './lib/token-loader.js';
+import {
+  flattenTokenTree,
+  loadLayeredTokens,
+  replaceReferencesWithCssVars,
+} from './lib/token-loader.js';
 
 const { semanticLight, semanticDark } = loadLayeredTokens();
 
@@ -11,12 +15,16 @@ function getSemanticColors() {
 }
 
 function createColorBlock(selector, colors, extraVariables = []) {
-  const entries = Object.entries(colors)
-    .filter(([, token]) => token && token.$value)
-    .sort(([a], [b]) => a.localeCompare(b));
+  const entries = flattenTokenTree(colors)
+    .map(({ path: tokenPath, token }) => [tokenPath.join('-'), token])
+    .sort(([a], [b]) => String(a).localeCompare(String(b)));
 
   let output = `${selector} {\n`;
   for (const [key, token] of entries) {
+    if (!token || token.$value === undefined) {
+      continue;
+    }
+
     const cssValue = replaceReferencesWithCssVars(token.$value);
     output += `  --${key}: ${cssValue};\n`;
   }
@@ -59,9 +67,13 @@ function generateSemanticColors() {
 @theme inline {
   --color-background: var(--background);
   --color-background-subtle: var(--background-subtle);
+  --color-background-default: var(--background-default);
+  --color-background-tinted: var(--background-tinted);
 
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
+  --color-surface-default: var(--surface-default);
+  --color-surface-tinted: var(--surface-tinted);
   --color-surface-hover: var(--surface-hover);
   --color-surface-active: var(--surface-active);
 
@@ -109,6 +121,12 @@ function generateSemanticColors() {
 
   --color-ring: var(--ring);
 
+  /* Semantic solid aliases */
+  --color-base: var(--base-default);
+  --color-base-hover: var(--base-hover);
+  --color-base-active: var(--base-active);
+  --color-base-contrast: var(--base-contrast-default);
+
   /* Legacy aliases */
   --color-primary: var(--accent);
   --color-primary-foreground: var(--accent-contrast);
@@ -125,9 +143,6 @@ function generateSemanticColors() {
   --color-destructive-foreground: var(--danger-contrast);
 
   /* Backward compatibility aliases */
-  --color-text-primary: var(--foreground);
-  --color-text-secondary: var(--foreground-subtle);
-  --color-text-tertiary: var(--foreground-muted);
   --color-on-primary: var(--accent-contrast);
   --color-on-surface: var(--foreground);
   --color-surface-elevated: var(--surface-hover);

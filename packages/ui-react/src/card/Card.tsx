@@ -5,10 +5,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 const card = cva('rounded-lg border', {
   variants: {
     variant: {
-      default: ['bg-surface-pure', 'border-border-default', 'text-text-primary'],
-      elevated: ['bg-surface-elevated', 'border-border-default', 'text-text-primary', 'shadow-md'],
-      outlined: ['bg-transparent', 'border-border-default', 'text-text-primary'],
-      filled: ['bg-neutral-50', 'border-transparent', 'text-text-primary'],
+      default: ['bg-surface', 'border-border', 'text-foreground'],
+      elevated: ['bg-surface-subtle', 'border-border', 'text-foreground', 'shadow-md'],
+      outlined: ['bg-transparent', 'border-border', 'text-foreground'],
+      filled: ['bg-neutral-50', 'border-transparent', 'text-foreground'],
     },
     padding: {
       none: 'p-0',
@@ -93,7 +93,7 @@ export function CardTitle({ className, size, children, ...props }: CardTitleProp
   );
 }
 
-const cardDescription = cva('text-sm text-text-secondary', {
+const cardDescription = cva('text-sm text-foreground-subtle', {
   variants: {
     size: {
       sm: 'text-xs',

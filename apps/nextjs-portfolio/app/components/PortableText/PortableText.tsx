@@ -103,7 +103,7 @@ const PortableTextImage = ({ value }: { value: SanityImage }) => {
 // Code block component
 const PortableTextCode = ({ value }: { value: { code: string; language?: string } }) => {
   return (
-    <pre className="bg-surface-elevated text-foreground p-4 rounded-lg overflow-x-auto my-6 border border-border">
+    <pre className="bg-surface-subtle text-foreground p-4 rounded-lg overflow-x-auto my-6 border border-border">
       <code className={`language-${value.language || 'text'}`}>{value.code}</code>
     </pre>
   );
@@ -118,15 +118,15 @@ const PortableTextCallout = ({
   const getCalloutStyles = (type: string) => {
     switch (type) {
       case 'info':
-        return 'bg-accent/10 border-accent/20 text-accent-dark dark:bg-accent/20 dark:border-accent/30 dark:text-accent-light';
+        return 'bg-info-subtle border-info text-info-text';
       case 'warning':
-        return 'bg-accent-warm/10 border-accent-warm/20 text-accent-warm dark:bg-accent-warm/20 dark:border-accent-warm/30 dark:text-accent-warm';
+        return 'bg-warning-subtle border-warning text-warning-text';
       case 'success':
-        return 'bg-accent-success/10 border-accent-success/20 text-accent-success dark:bg-accent-success/20 dark:border-accent-success/30 dark:text-accent-success';
+        return 'bg-success-subtle border-success text-success-text';
       case 'error':
-        return 'bg-error/10 border-error/20 text-error dark:bg-error/20 dark:border-error/30 dark:text-error';
+        return 'bg-danger-subtle border-danger text-danger-text';
       default:
-        return 'bg-surface-elevated border-border text-text-secondary';
+        return 'bg-surface-subtle border-border text-foreground-subtle';
     }
   };
 
@@ -177,8 +177,8 @@ const PortableTextVideo = ({
 
   if (!videoId) {
     return (
-      <div className="my-6 p-4 bg-surface-elevated rounded-lg text-center border border-border">
-        <p className="text-text-secondary">Invalid video URL</p>
+      <div className="my-6 p-4 bg-surface-subtle rounded-lg text-center border border-border">
+        <p className="text-foreground-subtle">Invalid video URL</p>
       </div>
     );
   }
@@ -350,7 +350,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
         </h4>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground">
+        <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground">
           {children}
         </blockquote>
       ),

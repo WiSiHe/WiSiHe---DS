@@ -76,7 +76,7 @@ const SkillsSection = React.memo(function SkillsSection() {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative flex flex-col gap-8 py-20 text-text-primary"
+      className="relative flex flex-col gap-8 py-20 text-foreground"
     >
       <motion.div variants={itemVariants} className="z-10 pointer-events-none px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl font-bold mb-3">Skills</h2>

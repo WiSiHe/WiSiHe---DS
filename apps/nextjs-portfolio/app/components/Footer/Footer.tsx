@@ -22,9 +22,9 @@ const Footer = ({ socialLinks }: FooterProps) => {
   ];
 
   return (
-    <footer className="relative w-full overflow-hidden border-t-2 bg-surface border-primary">
+    <footer className="relative w-full overflow-hidden border-t-2 bg-surface border-accent">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface/50" />
-      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-text-primary sm:px-6 md:px-8 lg:px-12">
+      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-foreground sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -35,12 +35,12 @@ const Footer = ({ socialLinks }: FooterProps) => {
           >
             <h3 className="text-2xl font-bold sm:text-3xl">
               My name is{' '}
-              <span className="text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text animate-gradient drop-shadow-sm">
+              <span className="text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text animate-gradient drop-shadow-sm">
                 Henrik Wilhelm Sissener
               </span>
             </h3>
-            <p className="max-w-lg text-base leading-relaxed text-text-secondary sm:text-lg">
-              I&apos;m a <span className="font-medium text-primary">frontend developer</span>{' '}
+            <p className="max-w-lg text-base leading-relaxed text-foreground-subtle sm:text-lg">
+              I&apos;m a <span className="font-medium text-accent">frontend developer</span>{' '}
               specializing in React and Svelte. In my free time, I enjoy{' '}
               <span className="font-medium text-accent">drawing</span> and dabbling in{' '}
               <span className="font-medium text-accent">game development</span>.
@@ -54,7 +54,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text sm:text-3xl drop-shadow-sm">
               Explore
             </h3>
             <ul className="space-y-3">
@@ -68,7 +68,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
                 >
                   <Link
                     href={link.href}
-                    className="inline-block text-lg font-medium text-text-primary transition-all duration-300 hover:text-primary hover:translate-x-1"
+                    className="inline-block text-lg font-medium text-foreground transition-all duration-300 hover:text-accent hover:translate-x-1"
                   >
                     {link.name}
                   </Link>
@@ -84,7 +84,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text sm:text-3xl drop-shadow-sm">
               Connect
             </h3>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -111,7 +111,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="pt-8 mt-4 text-center border-t border-border"
         >
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm text-foreground-subtle">
             © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️ in Oslo
           </p>
         </motion.div>
