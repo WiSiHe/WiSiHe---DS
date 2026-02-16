@@ -76,7 +76,7 @@ export function TechnicalSlideContent({
             >
               <button
                 onClick={onAddBox}
-                className="px-4 py-2 bg-accent text-accent-white rounded-lg font-medium hover:bg-accent/90 transition-all shadow-lg active:scale-95 text-sm"
+                className="px-4 py-2 bg-accent text-accent-contrast rounded-lg font-medium hover:bg-accent-hover transition-all shadow-lg active:scale-95 text-sm"
               >
                 Add New Box (State Update)
               </button>
