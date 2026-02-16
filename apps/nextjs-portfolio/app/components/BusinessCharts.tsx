@@ -125,7 +125,7 @@ const MetricCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="bg-surface-elevated border border-border rounded-xl p-6 flex flex-col items-center text-center"
+      className="glass-panel rounded-xl p-6 flex flex-col items-center text-center"
     >
       <div className="mb-4" style={{ color }}>
         {getIcon()}
@@ -169,7 +169,7 @@ export default function BusinessCharts() {
   ];
 
   return (
-    <div className="w-full bg-surface-elevated text-foreground rounded-lg p-6 border border-border">
+    <div className="w-full glass-panel-strong text-foreground rounded-lg p-6">
       {/* Toggle Tabs */}
       <div className="flex gap-2 mb-6">
         <button

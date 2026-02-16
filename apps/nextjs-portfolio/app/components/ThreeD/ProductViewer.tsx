@@ -17,9 +17,9 @@ const ProductViewer = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 bg-surface border border-border-subtle rounded-[2.5rem] p-8 shadow-2xl">
+    <div className="flex flex-col lg:flex-row gap-8 glass-panel-strong rounded-[2.5rem] p-8 shadow-2xl">
       {/* 3D Canvas Area */}
-      <div className="flex-1 min-h-[400px] lg:min-h-[500px] relative bg-surface-subtle rounded-3xl overflow-hidden cursor-move">
+      <div className="flex-1 min-h-[400px] lg:min-h-[500px] relative glass-panel rounded-3xl overflow-hidden cursor-move">
         <Canvas shadows dpr={[1, 2]}>
           <PerspectiveCamera makeDefault position={[0, 0, 4]} fov={50} />
           
@@ -34,10 +34,10 @@ const ProductViewer = () => {
 
         {/* Overlay Badges */}
         <div className="absolute top-6 left-6 flex flex-col gap-2 pointer-events-none">
-          <span className="px-3 py-1 bg-accent-subtle border border-accent-border rounded-full text-[10px] font-bold uppercase tracking-widest text-accent-text">
+          <span className="px-3 py-1 glass-accent rounded-full text-[10px] font-bold uppercase tracking-widest">
             3D Interactive
           </span>
-          <span className="px-3 py-1 bg-surface border border-border rounded-full text-[10px] font-bold uppercase tracking-widest text-foreground-subtle">
+          <span className="px-3 py-1 glass-chip rounded-full text-[10px] font-bold uppercase tracking-widest text-foreground-subtle">
             Real-time RT
           </span>
         </div>
