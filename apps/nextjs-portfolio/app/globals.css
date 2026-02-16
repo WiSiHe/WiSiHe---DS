@@ -1,8 +1,8 @@
 @import 'tailwindcss';
-/* Import design tokens from @wisihe/tokens package */
-@import '../../../packages/tokens/dist/tailwind/theme.css';
-@import '../../../packages/tokens/dist/css/variables.css';
-@import '../../../packages/tokens/dist/css/semantic-colors.css';
+/* Import design tokens from package exports */
+@import '@wisihe/tokens/tailwind-v4';
+@import '@wisihe/tokens/css';
+@import '@wisihe/tokens/css/semantic';
 
 /* ============================================================================
    CUSTOM VARIANTS
@@ -22,10 +22,7 @@
 
   /* Layout */
   --aspect-portrait: 9 / 16;
-  --breakpoint-2xl: 96rem;
-  /* 1536px */
-  --radius: 0.5rem;
-  /* Default border radius */
+  --radius: var(--radius-lg);
 }
 
 /* ============================================================================
@@ -33,7 +30,6 @@
    ========================================================================= */
 
 @layer base {
-
   /* Reset border colors */
   *,
   ::after,
@@ -41,6 +37,14 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-border, currentColor);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
   }
 
   /* Typography scale */
@@ -60,37 +64,54 @@
   body {
     color: var(--color-foreground);
     background: var(--color-background);
-    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   }
 
-  /* Semantic fallback pairs prevent inherited color collisions. */
-  .bg-background,
-  .bg-surface,
-  .bg-surface-subtle,
-  .bg-surface-elevated {
-    color: var(--foreground);
+  a {
+    color: inherit;
   }
 
-  .bg-accent,
-  .bg-accent-hover,
-  .bg-accent-active {
-    color: var(--accent-contrast);
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 
-  .bg-success {
-    color: var(--success-contrast);
+  /* Semantic fallback pairs keep readable defaults when text color is omitted. */
+  :where(
+    .bg-background,
+    .bg-background-default,
+    .bg-background-subtle,
+    .bg-surface,
+    .bg-surface-subtle,
+    .bg-surface-elevated,
+    .bg-surface-hover,
+    .bg-surface-active,
+    .bg-card,
+    .bg-popover
+  ) {
+    color: var(--color-foreground);
   }
 
-  .bg-warning {
-    color: var(--warning-contrast);
+  :where(.bg-accent, .bg-accent-hover, .bg-accent-active) {
+    color: var(--color-accent-contrast);
   }
 
-  .bg-danger {
-    color: var(--danger-contrast);
+  :where(.bg-success) {
+    color: var(--color-success-contrast);
   }
 
-  .bg-info {
-    color: var(--info-contrast);
+  :where(.bg-warning) {
+    color: var(--color-warning-contrast);
+  }
+
+  :where(.bg-danger) {
+    color: var(--color-danger-contrast);
+  }
+
+  :where(.bg-info) {
+    color: var(--color-info-contrast);
   }
 
   main {
@@ -106,7 +127,7 @@
   h5,
   h6 {
     text-wrap: balance;
-    font-family: Oswald, Arial, Helvetica, sans-serif;
+    font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
   }
 
   p {
@@ -114,37 +135,22 @@
     text-wrap: pretty;
   }
 
-  /* Accessibility - Focus styles */
-  :focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-    border-radius: var(--radius);
-  }
-
-  /* Remove default focus styles for mouse users */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  /* Enhanced focus for interactive elements */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible,
-  [tabindex]:focus-visible {
+  /* Accessibility - focus rings use semantic ring token */
+  :where(button, a, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
     border-radius: var(--radius);
     transition: outline-color 0.2s ease;
   }
 
-  /* Enhanced focus for form elements */
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
+  :where(input, textarea, select):focus-visible {
     border-color: var(--color-ring);
     box-shadow: 0 0 0 1px var(--color-ring);
+  }
+
+  /* Remove focus ring for pointer interactions */
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 }
 
