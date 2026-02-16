@@ -109,7 +109,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                   <li>
                     <Link
                       href="/"
-                      className="text-white/70 hover:text-white hover:underline transition-colors backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full"
+                      className="text-white/70 hover:text-white hover:underline transition-colors bg-black/60 px-3 py-1 rounded-full"
                     >
                       Home
                     </Link>
@@ -118,13 +118,13 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                   <li>
                     <Link
                       href="/recipes"
-                      className="text-white/70 hover:text-white hover:underline transition-colors backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full"
+                      className="text-white/70 hover:text-white hover:underline transition-colors bg-black/60 px-3 py-1 rounded-full"
                     >
                       Recipes
                     </Link>
                   </li>
                   <li className="text-white/50">/</li>
-                  <li className="text-white/90 font-medium backdrop-blur-sm bg-black/20 px-3 py-1 rounded-full">
+                  <li className="text-white/90 font-medium bg-black/60 px-3 py-1 rounded-full">
                     {recipe.title}
                   </li>
                 </ol>

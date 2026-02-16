@@ -49,7 +49,7 @@ function generateSemanticColors() {
 `;
 
   output += createColorBlock(':root', lightColors, [
-    ['--color-accent-rgb', '236, 72, 153'],
+    ['--color-accent-rgb', '13, 148, 136'],
     ['--color-foreground-rgb', '31, 31, 31'],
   ]);
 
@@ -58,7 +58,7 @@ function generateSemanticColors() {
 `;
 
   output += createColorBlock('.dark', darkColors, [
-    ['--color-accent-rgb', '255, 99, 183'],
+    ['--color-accent-rgb', '244, 114, 182'],
     ['--color-foreground-rgb', '250, 250, 250'],
   ]);
 

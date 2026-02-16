@@ -18,9 +18,9 @@ export function CodeExampleWrapper({
 }: CodeExampleWrapperProps) {
   const codeBlock = (
     <div
-      className={cn('mb-8 rounded-xl overflow-hidden border border-border/50 bg-surface-elevated/50 shadow-xl', className)}
+      className={cn('mb-8 rounded-xl overflow-hidden border border-border bg-surface-elevated shadow-xl', className)}
     >
-      <div className="bg-surface-elevated/80 px-5 py-3 border-b border-border/50 flex items-center justify-between">
+      <div className="bg-surface-elevated px-5 py-3 border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-2 w-2 rounded-full bg-accent" />
           <span className="text-xs font-mono text-foreground/70 uppercase tracking-wider font-semibold">

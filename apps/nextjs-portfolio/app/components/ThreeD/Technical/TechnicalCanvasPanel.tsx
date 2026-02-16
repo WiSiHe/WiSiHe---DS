@@ -55,9 +55,9 @@ export function TechnicalCanvasPanel({
   }, [contextLost]);
 
   return (
-    <div 
+    <div
       ref={canvasContainerRef}
-      className="h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden"
+      className="h-full relative bg-linear-to-br from-surface-subtle via-background to-surface border-l border-border-subtle overflow-hidden"
     >
       {/* Subtle Grid Pattern */}
       <div
@@ -71,7 +71,7 @@ export function TechnicalCanvasPanel({
 
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}

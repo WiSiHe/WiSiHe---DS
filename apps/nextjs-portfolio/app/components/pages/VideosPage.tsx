@@ -157,7 +157,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/70"
             />
 
             <div className="fixed inset-0 flex items-center justify-center w-screen p-4 overflow-y-auto sm:p-6 md:p-10 lg:p-12">

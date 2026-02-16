@@ -31,7 +31,7 @@ function generateDarkModeTheme() {
     output += `  --${key}: ${cssValue};\n`;
   }
 
-  output += `  --color-accent-rgb: 255, 99, 183;
+  output += `  --color-accent-rgb: 244, 114, 182;
   --color-foreground-rgb: 250, 250, 250;
 }
 

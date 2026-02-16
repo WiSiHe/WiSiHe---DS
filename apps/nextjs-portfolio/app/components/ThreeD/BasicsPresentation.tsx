@@ -311,7 +311,7 @@ export default function BasicsPresentation() {
       <div className="relative z-30">
         {slides.map((slide, i) => (
           <section key={i} className="slide-trigger h-screen flex flex-col justify-center px-4 md:px-24">
-            <div className="slide-content max-w-xl bg-black/90 backdrop-blur-xl border border-[#00ff00]/20 p-8 md:p-12 shadow-[0_0_100px_rgba(0,255,0,0.05)] transform transition-all duration-700">
+            <div className="slide-content max-w-xl bg-black/95 border border-[#00ff00]/20 p-8 md:p-12 shadow-[0_0_100px_rgba(0,255,0,0.05)] transform transition-all duration-700">
               <div className="flex items-center gap-4 mb-6">
                  <div
                    className={cn(
