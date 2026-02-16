@@ -63,6 +63,36 @@
     font-family: Inter, Arial, Helvetica, sans-serif;
   }
 
+  /* Semantic fallback pairs prevent inherited color collisions. */
+  .bg-background,
+  .bg-surface,
+  .bg-surface-subtle,
+  .bg-surface-elevated {
+    color: var(--foreground);
+  }
+
+  .bg-accent,
+  .bg-accent-hover,
+  .bg-accent-active {
+    color: var(--accent-contrast);
+  }
+
+  .bg-success {
+    color: var(--success-contrast);
+  }
+
+  .bg-warning {
+    color: var(--warning-contrast);
+  }
+
+  .bg-danger {
+    color: var(--danger-contrast);
+  }
+
+  .bg-info {
+    color: var(--info-contrast);
+  }
+
   main {
     height: 100%;
     min-height: 100vh;

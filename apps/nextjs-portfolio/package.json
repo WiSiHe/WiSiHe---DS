@@ -3,9 +3,9 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "predev": "npm run typegen",
+    "predev": "pnpm --filter @wisihe/tokens build && npm run typegen",
     "dev": "next dev --turbo -p 1992",
-    "prebuild": "npm run typegen",
+    "prebuild": "pnpm --filter @wisihe/tokens build && npm run typegen",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
