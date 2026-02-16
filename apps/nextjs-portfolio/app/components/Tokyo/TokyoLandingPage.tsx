@@ -9,7 +9,7 @@ export const TokyoLandingPage = () => {
       <motion.article layout className="">
         <motion.div
           layoutId="tokyo-image"
-          className="relative w-full rounded-lg text-dark aspect-square overflow-clip"
+          className="relative w-full rounded-lg text-foreground aspect-square overflow-clip"
         >
           <Image
             src="https://w.wallhaven.cc/full/yj/wallhaven-yjmmvx.jpg"
@@ -19,10 +19,10 @@ export const TokyoLandingPage = () => {
           />
         </motion.div>
         <div className="flex flex-col items-center justify-center gap-4 text-center pt-7 ">
-          <motion.h1 className="text-5xl font-bold text-dark">
+          <motion.h1 className="text-5xl font-bold text-foreground">
             Lost in Tokyo
           </motion.h1>
-          <p className="text-balance text-dark">
+          <p className="text-balance text-foreground">
             Cras mattis consentetur purus sit amet fermentum. Maecenas sed diam
             eget rius varius blandit sit amet non magna.
           </p>

@@ -29,7 +29,7 @@ export const ScrollIndicator = ({
         animate={{ scaleY: progress / 100 }}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         style={{
-          boxShadow: '0 0 12px hsl(var(--accent) / 0.4)',
+          boxShadow: '0 0 12px rgba(var(--color-accent-rgb), 0.4)',
         }}
       />
 

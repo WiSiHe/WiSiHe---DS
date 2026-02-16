@@ -170,7 +170,7 @@ export function SourcesSection() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.02, x: 4 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-accent-foreground rounded-xl font-bold text-lg hover:shadow-xl shadow-lg shadow-accent/30 transition-all group/btn"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-accent-contrast rounded-xl font-bold text-lg hover:shadow-xl shadow-lg shadow-accent/30 transition-all group/btn"
               >
                 <span>View Workshop</span>
                 <svg

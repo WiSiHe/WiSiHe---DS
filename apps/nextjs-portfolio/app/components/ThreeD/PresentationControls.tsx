@@ -100,7 +100,7 @@ export function PresentationControls({
               <span className="text-xs font-bold text-foreground/60 group-hover:text-accent transition-colors uppercase tracking-wider pl-1">
                 Skip to Cool Part
               </span>
-              <div className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300 shadow-inner">
+              <div className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-contrast transition-all duration-300 shadow-inner">
                 <HiRocketLaunch className="w-4 h-4" />
               </div>
             </motion.button>

@@ -10,7 +10,7 @@ const RecipesPage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="bg-primary"
+        className="bg-accent"
       ></motion.div>
       <Button>Click me</Button>
     </div>

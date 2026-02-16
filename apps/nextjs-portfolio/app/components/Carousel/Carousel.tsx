@@ -117,20 +117,20 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         </div>
         <div className="flex justify-end gap-2">
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollLeft}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowLeft className="w-6 h-6 text-accent-contrast" />
           </button>
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollRight}
             disabled={!canScrollRight}
             aria-label="Scroll right"
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowRight className="w-6 h-6 text-accent-contrast" />
           </button>
         </div>
       </div>

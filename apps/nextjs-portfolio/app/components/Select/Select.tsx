@@ -22,21 +22,21 @@ type SelectProps = {
 export const Select = ({ label, options, value, onChange }: SelectProps) => {
   return (
     <div className="relative mt-4">
-      <label className="block mb-1 text-sm font-semibold text-dark">
+      <label className="block mb-1 text-sm font-semibold text-foreground">
         {label}
       </label>
       <Listbox value={value} onChange={onChange}>
         {({ open }) => (
           <div className="relative w-full">
             {/* --- Button --- */}
-            <ListboxButton className="relative flex items-center justify-between w-full px-3 py-2 text-left transition-colors border rounded-md shadow-xs cursor-pointer border-primary bg-tertiary hover:bg-primary/5 focus:outline-hidden focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1 text-dark">
+            <ListboxButton className="relative flex items-center justify-between w-full px-3 py-2 text-left transition-colors border rounded-md shadow-xs cursor-pointer border-border bg-surface hover:bg-surface-hover focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-1 text-foreground">
               <span className="block truncate">
                 {options.find((option) => option.value === value)?.label}
               </span>
               <div className="flex items-center pointer-events-none">
                 <IoChevronDownCircleOutline
                   className={cn(
-                    'w-4 h-4 text-primary transition-all',
+                    'w-4 h-4 text-foreground-subtle transition-all',
                     open && ' rotate-180'
                   )}
                   aria-hidden="true"
@@ -80,7 +80,7 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                     },
                   }}
                   // anchor="bottom"
-                  className="absolute z-10 w-full mt-1 overflow-auto origin-top rounded-md shadow-lg bg-tertiary max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-hidden sm:text-sm"
+                  className="absolute z-10 w-full mt-1 overflow-auto origin-top rounded-md shadow-lg bg-surface max-h-60 ring-1 ring-border-subtle focus:outline-hidden sm:text-sm"
                 >
                   {options.map((option) => (
                     <ListboxOption
@@ -89,8 +89,8 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                       className={({ selected, focus }) =>
                         cn(
                           'relative cursor-pointer flex gap-2 select-none py-2 px-4 transition-colors',
-                          focus && 'bg-primary/10',
-                          selected ? 'bg-primary/10 text-primary' : 'text-dark'
+                          focus && 'bg-surface-hover',
+                          selected ? 'bg-accent-subtle text-accent' : 'text-foreground'
                         )
                       }
                     >
@@ -101,7 +101,7 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
-                              className="flex items-center text-primary"
+                              className="flex items-center text-accent"
                             >
                               <IoCheckmarkCircleOutline
                                 className="w-4 h-4"
