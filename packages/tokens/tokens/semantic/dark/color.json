@@ -6,11 +6,11 @@
           "neutral": {
             "background": {
               "default": { "$value": "{color.neutral.950}", "$type": "color" },
-              "tinted": { "$value": "{color.neutral.900}", "$type": "color" }
+              "tinted": { "$value": "{color.brand-2.950}", "$type": "color" }
             },
             "surface": {
               "default": { "$value": "{color.neutral.900}", "$type": "color" },
-              "tinted": { "$value": "{color.neutral.800}", "$type": "color" },
+              "tinted": { "$value": "{color.brand-2.950}", "$type": "color" },
               "hover": { "$value": "{color.neutral.700}", "$type": "color" },
               "active": { "$value": "{color.neutral.600}", "$type": "color" }
             },

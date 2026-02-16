@@ -139,7 +139,7 @@ export const SlideMedia = ({
       <div
         ref={mainIframeRef.containerRef}
         className={cn(
-          'relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 bg-surface/50',
+          'relative w-full rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-surface',
           getAspectRatioClass(slideData.iframeAspectRatio)
         )}
       >
@@ -153,7 +153,7 @@ export const SlideMedia = ({
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-surface/30 min-h-[400px]">
+          <div className="w-full h-full flex items-center justify-center bg-surface-subtle min-h-[400px]">
             <div className="text-foreground/40 text-sm">Loading...</div>
           </div>
         )}
@@ -163,7 +163,7 @@ export const SlideMedia = ({
 
   if (slideData.metrics) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 bg-surface-elevated rounded-2xl border border-border overflow-hidden min-w-0">
         <Numbers metrics={slideData.metrics} />
       </div>
     );
@@ -179,7 +179,7 @@ export const SlideMedia = ({
 
   if (slideData.chartType) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 bg-surface-elevated rounded-2xl border border-border overflow-hidden min-w-0">
         {slideData.chartType === 'performance' && <PerformanceChart />}
         {slideData.chartType === 'business-impact' && <BusinessImpactChart />}
         {slideData.chartType === 'engagement' && <EngagementChart />}
@@ -201,7 +201,7 @@ export const SlideMedia = ({
     return (
       <div
         className={cn(
-          'relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50',
+          'relative rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface',
           getAspectRatioClass(slideData.imageAspectRatio)
         )}
       >

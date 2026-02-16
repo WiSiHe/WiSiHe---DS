@@ -122,7 +122,7 @@ const PaintingCard = ({
       >
         {filteredTags.map(tag => (
           <motion.li
-            className="px-2 py-0.5 text-xs text-accent-contrast uppercase rounded-md bg-accent backdrop-blur-sm shadow-sm"
+            className="px-2 py-0.5 text-xs text-accent-contrast uppercase rounded-md bg-accent shadow-sm"
             key={tag.name}
             variants={listItemVariants}
           >
@@ -150,7 +150,7 @@ const PaintingCard = ({
       >
         {imagesCount > 0 && (
           <motion.li
-            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent shadow-sm"
             variants={iconVariants}
           >
             <TbBoxMultiple className="w-4 h-4" />
@@ -158,7 +158,7 @@ const PaintingCard = ({
         )}
         {video && (
           <motion.li
-            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent shadow-sm"
             variants={iconVariants}
           >
             <BsYoutube className="w-4 h-4" />
@@ -166,7 +166,7 @@ const PaintingCard = ({
         )}
         {isNsfw && (
           <motion.li
-            className="p-2 text-xs text-accent-contrast rounded-full bg-accent backdrop-blur-sm shadow-sm"
+            className="p-2 text-xs text-accent-contrast rounded-full bg-accent shadow-sm"
             variants={iconVariants}
           >
             <FaExclamation className="w-4 h-4" />
@@ -208,7 +208,7 @@ const PaintingCard = ({
       {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full backdrop-blur-lg" />}
 
       <Link href={`/paintings/${slug}`} className="before:absolute before:inset-0 before:z-0">
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-accent backdrop-blur-xl shadow-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-accent shadow-lg">
           <motion.h2
             layoutId={`title-${title}`}
             className="text-base text-accent-contrast font-black capitalize lg:text-lg line-clamp-1 font-inter"

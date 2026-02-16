@@ -17,9 +17,9 @@ const ProductViewer = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 bg-surface border border-border/30 rounded-[2.5rem] p-8 shadow-2xl">
+    <div className="flex flex-col lg:flex-row gap-8 bg-surface border border-border-subtle rounded-[2.5rem] p-8 shadow-2xl">
       {/* 3D Canvas Area */}
-      <div className="flex-1 min-h-[400px] lg:min-h-[500px] relative bg-black/5 rounded-3xl overflow-hidden cursor-move">
+      <div className="flex-1 min-h-[400px] lg:min-h-[500px] relative bg-surface-subtle rounded-3xl overflow-hidden cursor-move">
         <Canvas shadows dpr={[1, 2]}>
           <PerspectiveCamera makeDefault position={[0, 0, 4]} fov={50} />
           
@@ -34,10 +34,10 @@ const ProductViewer = () => {
 
         {/* Overlay Badges */}
         <div className="absolute top-6 left-6 flex flex-col gap-2 pointer-events-none">
-          <span className="px-3 py-1 bg-accent-subtle backdrop-blur-md border border-accent-border rounded-full text-[10px] font-bold uppercase tracking-widest text-accent-text">
+          <span className="px-3 py-1 bg-accent-subtle border border-accent-border rounded-full text-[10px] font-bold uppercase tracking-widest text-accent-text">
             3D Interactive
           </span>
-          <span className="px-3 py-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-white/50">
+          <span className="px-3 py-1 bg-surface border border-border rounded-full text-[10px] font-bold uppercase tracking-widest text-foreground-subtle">
             Real-time RT
           </span>
         </div>
@@ -70,7 +70,7 @@ const ProductViewer = () => {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-border/30">
+          <div className="pt-6 border-t border-border-subtle">
             <div className="flex justify-between items-end mb-6">
               <div>
                 <span className="text-xs font-bold text-foreground/40 block">Price</span>
