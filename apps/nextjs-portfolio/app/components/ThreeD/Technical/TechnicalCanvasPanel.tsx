@@ -101,7 +101,7 @@ export function TechnicalCanvasPanel({
             <p className="text-sm text-foreground/80 mb-4">{contextError}</p>
             <button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors"
+              className="w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors"
             >
               Refresh Page
             </button>

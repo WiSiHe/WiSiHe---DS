@@ -8,9 +8,9 @@ import { businessStats } from '../data/stats';
 type ViewType = 'impact' | 'preference';
 
 const COLORS = {
-  positive: 'hsl(var(--accent))',
-  negative: '#ef4444',
-  neutral: 'rgba(255, 255, 255, 0.2)',
+  positive: 'var(--color-accent)',
+  negative: 'var(--color-danger)',
+  neutral: 'var(--color-foreground-muted)',
 };
 
 // Animated Number Component
@@ -176,8 +176,8 @@ export default function BusinessCharts() {
           onClick={() => setActiveView('impact')}
           className={`px-4 py-2 rounded-lg font-semibold transition-all ${
             activeView === 'impact'
-              ? 'bg-accent text-accent-foreground'
-              : 'bg-surface text-foreground/70 hover:bg-surface/80 hover:text-foreground'
+              ? 'bg-accent text-accent-contrast'
+              : 'bg-surface text-foreground-subtle hover:bg-surface-hover hover:text-foreground'
           }`}
         >
           Impact Metrics
@@ -186,8 +186,8 @@ export default function BusinessCharts() {
           onClick={() => setActiveView('preference')}
           className={`px-4 py-2 rounded-lg font-semibold transition-all ${
             activeView === 'preference'
-              ? 'bg-accent text-accent-foreground'
-              : 'bg-surface text-foreground/70 hover:bg-surface/80 hover:text-foreground'
+              ? 'bg-accent text-accent-contrast'
+              : 'bg-surface text-foreground-subtle hover:bg-surface-hover hover:text-foreground'
           }`}
         >
           User Preference

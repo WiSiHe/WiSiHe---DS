@@ -9,7 +9,7 @@ export const EngagementChart = () => {
       title: 'Session Time',
       value: 5,
       suffix: 'x',
-      color: 'hsl(var(--accent))',
+      color: 'var(--color-accent)',
       icon: 'up' as const,
     },
     {
@@ -17,7 +17,7 @@ export const EngagementChart = () => {
       value: 20,
       suffix: '%',
       prefix: '',
-      color: '#ef4444',
+      color: 'var(--color-danger)',
       icon: 'down' as const,
       subtitle: 'With 3D (vs 60% without)',
     },
@@ -25,7 +25,7 @@ export const EngagementChart = () => {
       title: 'Prefer 3D',
       value: 95,
       suffix: '%',
-      color: 'hsl(var(--accent))',
+      color: 'var(--color-accent)',
       icon: 'up' as const,
     },
   ];

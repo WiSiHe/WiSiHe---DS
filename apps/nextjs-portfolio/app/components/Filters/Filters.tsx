@@ -18,12 +18,12 @@ export const Filters = () => {
     <div className="flex flex-wrap items-center gap-2 py-4">
       <button
         onClick={openSidebar}
-        className="flex items-center gap-2 px-4 py-3 text-white border rounded-full cursor-pointer ring-primary bg-primary hover:bg-primary/90"
+        className="flex items-center gap-2 px-4 py-3 text-accent-contrast border rounded-full cursor-pointer border-accent bg-accent hover:bg-accent-hover"
       >
         <FaFilter />
         Filters & Sort
         {selectedFilters.length > 0 && (
-          <div className="flex items-center justify-center w-2 h-2 p-2 text-xs font-medium bg-white rounded-full shrink-0 text-dark">
+          <div className="flex items-center justify-center w-2 h-2 p-2 text-xs font-medium bg-background rounded-full shrink-0 text-foreground">
             {selectedFilters.length}
           </div>
         )}
@@ -39,7 +39,7 @@ export const Filters = () => {
             exit={{ opacity: 0, y: 40, transition: { delay: 0.5 } }}
             transition={{ type: 'spring' }}
             onClick={() => clearFilters(pathname, router)}
-            className="flex items-center gap-1 px-3 py-3 text-white border rounded-full cursor-pointer ring-primary hover:bg-primary/90"
+            className="flex items-center gap-1 px-3 py-3 text-foreground border border-border rounded-full cursor-pointer bg-surface hover:bg-surface-hover"
           >
             <IoClose />
             Clear Filters

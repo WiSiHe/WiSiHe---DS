@@ -48,10 +48,10 @@ export const Card = ({
         loading="lazy"
         quality={80}
       />
-      <motion.div className="absolute text-on-primary bottom-4 right-4">
+      <motion.div className="absolute text-accent-contrast bottom-4 right-4">
         <Link
           href={card.href}
-          className="flex gap-1 px-3 py-1 transition-all duration-300 rounded-full group-hover:scale-110 bg-accent hover:bg-accent/80"
+          className="flex gap-1 px-3 py-1 transition-all duration-300 rounded-full group-hover:scale-110 bg-accent hover:bg-accent-hover"
         >
           View <IconArrowRight />
         </Link>
@@ -66,7 +66,7 @@ export const Card = ({
             <motion.div
               variants={tagVariants}
               key={category.name}
-              className="font-sans text-xs text-left text-on-primary group md:text-base"
+              className="font-sans text-xs text-left text-accent-contrast group md:text-base"
             >
               <Chip label={category.name} />
             </motion.div>

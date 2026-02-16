@@ -87,7 +87,7 @@ const SkillsSection = React.memo(function SkillsSection() {
 
       <motion.div variants={itemVariants}>
         <Marquee
-          gradientColor="hsl(var(--surface))"
+          gradientColor="var(--color-surface)"
           autoFill
           gradient
           direction="left"
@@ -100,7 +100,7 @@ const SkillsSection = React.memo(function SkillsSection() {
 
       <motion.div variants={itemVariants}>
         <Marquee
-          gradientColor="hsl(var(--surface))"
+          gradientColor="var(--color-surface)"
           autoFill
           gradient
           direction="right"
