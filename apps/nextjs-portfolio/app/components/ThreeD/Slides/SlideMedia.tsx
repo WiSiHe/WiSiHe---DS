@@ -58,7 +58,7 @@ export const SlideMedia = ({
               </a>
               <div className="flex items-center gap-3 mb-3 flex-wrap">
                 {tool.category && (
-                  <span className="inline-block px-3 py-1 text-xs font-semibold text-accent bg-accent/10 rounded-full">
+                  <span className="inline-block px-3 py-1 text-xs font-semibold text-accent-text bg-accent-subtle rounded-full">
                     {tool.category}
                   </span>
                 )}
@@ -103,7 +103,7 @@ export const SlideMedia = ({
                   href={tool.workshopUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent border-2 border-accent/30 hover:border-accent/50 rounded-lg font-semibold text-sm transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent-subtle hover:bg-accent-surface text-accent-text border-2 border-accent-border rounded-lg font-semibold text-sm transition-all duration-200"
                 >
                   <svg
                     className="w-4 h-4"

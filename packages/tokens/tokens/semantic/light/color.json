@@ -49,13 +49,13 @@
             "strong": { "$value": "{color.accent.600}", "$type": "color" }
           },
           "text": {
-            "subtle": { "$value": "{color.accent.600}", "$type": "color" },
-            "default": { "$value": "{color.accent.700}", "$type": "color" }
+            "subtle": { "$value": "{color.accent.700}", "$type": "color" },
+            "default": { "$value": "{color.accent.800}", "$type": "color" }
           },
           "base": {
-            "default": { "$value": "{color.accent.500}", "$type": "color" },
-            "hover": { "$value": "{color.accent.600}", "$type": "color" },
-            "active": { "$value": "{color.accent.700}", "$type": "color" },
+            "default": { "$value": "{color.accent.600}", "$type": "color" },
+            "hover": { "$value": "{color.accent.700}", "$type": "color" },
+            "active": { "$value": "{color.accent.800}", "$type": "color" },
             "contrast": {
               "subtle": { "$value": "{color.neutral.100}", "$type": "color" },
               "default": { "$value": "{color.neutral.50}", "$type": "color" }

@@ -90,7 +90,7 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                         cn(
                           'relative cursor-pointer flex gap-2 select-none py-2 px-4 transition-colors',
                           focus && 'bg-surface-hover',
-                          selected ? 'bg-accent-subtle text-accent' : 'text-foreground'
+                          selected ? 'bg-accent-subtle text-accent-text' : 'text-foreground'
                         )
                       }
                     >
@@ -101,7 +101,7 @@ export const Select = ({ label, options, value, onChange }: SelectProps) => {
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
-                              className="flex items-center text-accent"
+                              className="flex items-center text-accent-text"
                             >
                               <IoCheckmarkCircleOutline
                                 className="w-4 h-4"

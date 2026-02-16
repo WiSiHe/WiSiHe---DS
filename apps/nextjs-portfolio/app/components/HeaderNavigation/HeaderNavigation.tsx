@@ -98,10 +98,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full',
+                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent focus-visible:text-accent-contrast focus-visible:ring-2 focus-visible:ring-ring flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full',
                       isActive
                         ? 'text-accent-contrast bg-accent border border-accent-border shadow-lg aspect-square justify-center p-2.5 md:px-4 md:py-2 md:aspect-auto'
-                        : 'text-foreground hover:bg-surface-hover hover:text-accent px-3 py-2.5 md:px-4 md:py-2',
+                        : 'text-foreground hover:bg-surface-hover hover:text-accent-text px-3 py-2.5 md:px-4 md:py-2',
                     )}
                   >
                     <span className="text-lg">{navIcon}</span>

@@ -92,7 +92,7 @@ const ProjectFilter = ({
                               <span className="font-medium text-foreground group-hover:text-accent transition-colors">
                                 {tag.name}
                               </span>
-                              <span className="text-xs text-accent-contrast bg-accent/20 group-hover:bg-accent/30 px-2 py-0.5 rounded-full font-medium transition-colors">
+                              <span className="text-xs text-accent-text bg-accent-subtle group-hover:bg-accent-surface px-2 py-0.5 rounded-full font-medium transition-colors">
                                 {tag.count}
                               </span>
                             </div>
