@@ -158,7 +158,7 @@ export default async function Paintings({
             <h1 className="font-semibold text-foreground text-3xl md:text-4xl mb-3">
               Digital Art Gallery
             </h1>
-            <p className="text-foreground-subtle text-base md:text-lg leading-relaxed">
+            <p className="text-foreground-subtle text-base md:text-lg max-w-prose text-pretty leading-relaxed">
               A curated collection of my digital paintings and artwork, exploring themes of
               imagination, storytelling, and visual creativity. Each piece represents a moment of
               artistic expression and digital craftsmanship.

@@ -49,15 +49,18 @@
 
   /* Typography scale */
   h1 {
-    @apply text-3xl xl:text-6xl;
+    font-size: clamp(1.875rem, 1.2rem + 2.5vw, 3.75rem);
+    line-height: 1.1;
   }
 
   h2 {
-    @apply text-2xl xl:text-5xl;
+    font-size: clamp(1.5rem, 1.05rem + 2vw, 3rem);
+    line-height: 1.15;
   }
 
   h3 {
-    @apply text-xl xl:text-4xl;
+    font-size: clamp(1.25rem, 0.95rem + 1.3vw, 2.25rem);
+    line-height: 1.2;
   }
 
   /* Base element styles */
@@ -127,12 +130,14 @@
   h5,
   h6 {
     text-wrap: balance;
+    overflow-wrap: anywhere;
     font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
   }
 
   p {
-    max-width: 65ch;
+    @apply max-w-prose leading-relaxed;
     text-wrap: pretty;
+    overflow-wrap: break-word;
   }
 
   /* Accessibility - focus rings use semantic ring token */
