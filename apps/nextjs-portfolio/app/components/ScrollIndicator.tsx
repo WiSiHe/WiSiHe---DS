@@ -40,7 +40,7 @@ export const ScrollIndicator = ({
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: -8, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="absolute left-5 top-1/2 -translate-y-1/2 bg-surface-elevated px-4 py-2.5 rounded-lg border border-border shadow-xl pointer-events-auto"
+          className="absolute left-5 top-1/2 -translate-y-1/2 glass-panel px-4 py-2.5 rounded-lg shadow-xl pointer-events-auto"
         >
           <div className="flex items-center gap-2">
             <div className="h-1.5 w-1.5 rounded-full bg-accent" />

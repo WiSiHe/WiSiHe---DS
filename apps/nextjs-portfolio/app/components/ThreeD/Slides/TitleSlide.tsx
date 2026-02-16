@@ -57,7 +57,7 @@ export const TitleSlide = ({
         </>
       )}
 
-      <div className="inline-flex items-center gap-3 mb-12 relative z-10 px-4 py-2.5 bg-surface-elevated rounded-full border border-border shadow-lg">
+      <div className="inline-flex items-center gap-3 mb-12 relative z-10 px-4 py-2.5 glass-chip rounded-full shadow-lg">
         <span className="px-4 py-1.5 text-xs font-mono text-foreground/60 uppercase tracking-wider">
           PRESENTATION
         </span>

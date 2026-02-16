@@ -58,7 +58,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
               <Link
                 key={project._id}
                 href={`projects/${project.slug}`}
-                className="group flex flex-col h-full bg-surface-subtle rounded-3xl overflow-hidden border border-border-subtle hover:border-accent-border transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5"
+                className="group flex flex-col h-full glass-panel rounded-3xl overflow-hidden border border-border-subtle hover:border-accent-border transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5"
               >
                 {/* Image Container */}
                 <div className="relative aspect-4/3 overflow-hidden">

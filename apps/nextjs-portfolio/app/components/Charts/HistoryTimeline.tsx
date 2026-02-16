@@ -118,7 +118,7 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
                 {/* Card Content */}
                 <motion.div
                   className={cn(
-                    "w-full bg-surface-elevated rounded-xl transition-all duration-700 relative overflow-hidden",
+                    "w-full glass-panel rounded-xl transition-all duration-700 relative overflow-hidden",
                     isActive ? "bg-surface shadow-[0_8px_30px_rgb(0,0,0,0.12)] scale-[1.02]" : "grayscale opacity-70"
                   )}
                   style={{

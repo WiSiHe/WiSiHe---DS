@@ -6,7 +6,7 @@ export function TechnicalDeckSkeleton() {
       {/* Left Content Panel Skeleton */}
       <article className="flex-1 lg:w-1/2 flex flex-col relative z-10">
         {/* Fixed Header Skeleton */}
-        <div className="sticky top-0 z-20 bg-background border-b border-border pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
+        <div className="sticky top-0 z-20 glass-panel border-b border-border pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div className="h-8 w-48 bg-surface-elevated rounded-full animate-pulse" />
             <div className="flex items-center gap-4">

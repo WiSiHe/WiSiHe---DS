@@ -55,10 +55,10 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
         >
           <div className="absolute inset-0 bg-accent blur-3xl opacity-20 group-hover:opacity-40 transition-opacity" />
           <div className="relative flex flex-col items-center">
-            <div className="p-4 md:p-6 rounded-2xl bg-surface-elevated border border-accent-border shadow-2xl flex items-center justify-center text-accent">
+            <div className="p-4 md:p-6 rounded-2xl glass-panel-strong shadow-2xl flex items-center justify-center text-accent">
               <HiCodeBracket className="w-10 h-10 md:w-14 md:h-14" />
             </div>
-            <div className="mt-4 px-6 py-1 bg-accent-subtle border border-accent-border text-accent-text text-[11px] font-black uppercase tracking-[0.4em] rounded-full">
+            <div className="mt-4 px-6 py-1 glass-accent text-[11px] font-black uppercase tracking-[0.4em] rounded-full">
               <DecryptedText 
                 text="SYSTEM READY" 
                 animateOn="view"

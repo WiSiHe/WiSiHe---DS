@@ -40,7 +40,7 @@ const ThemeToggle = () => {
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
-      <div className="flex items-center justify-center p-3 md:p-2 rounded-full bg-surface-elevated border border-border">
+      <div className="flex items-center justify-center p-3 md:p-2 rounded-full glass-panel">
         <div className="w-4 h-4" />
       </div>
     );
@@ -49,7 +49,7 @@ const ThemeToggle = () => {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full bg-surface-elevated border border-border text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent active:scale-95 shadow-lg"
+      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full glass-panel text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-lg"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}

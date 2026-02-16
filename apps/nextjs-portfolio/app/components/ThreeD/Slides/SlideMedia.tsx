@@ -139,7 +139,7 @@ export const SlideMedia = ({
       <div
         ref={mainIframeRef.containerRef}
         className={cn(
-          'relative w-full rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-surface',
+          'relative w-full rounded-xl overflow-hidden glass-panel shadow-lg hover:shadow-xl transition-all duration-300',
           getAspectRatioClass(slideData.iframeAspectRatio)
         )}
       >
@@ -163,7 +163,7 @@ export const SlideMedia = ({
 
   if (slideData.metrics) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated rounded-2xl border border-border overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 glass-panel rounded-2xl overflow-hidden min-w-0">
         <Numbers metrics={slideData.metrics} />
       </div>
     );
@@ -179,7 +179,7 @@ export const SlideMedia = ({
 
   if (slideData.chartType) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated rounded-2xl border border-border overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 glass-panel rounded-2xl overflow-hidden min-w-0">
         {slideData.chartType === 'performance' && <PerformanceChart />}
         {slideData.chartType === 'business-impact' && <BusinessImpactChart />}
         {slideData.chartType === 'engagement' && <EngagementChart />}
@@ -201,7 +201,7 @@ export const SlideMedia = ({
     return (
       <div
         className={cn(
-          'relative rounded-xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface',
+          'relative rounded-xl overflow-hidden glass-panel shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full',
           getAspectRatioClass(slideData.imageAspectRatio)
         )}
       >

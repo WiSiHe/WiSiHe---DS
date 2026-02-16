@@ -46,7 +46,7 @@ export function PresentationControls({
           className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 flex flex-col items-end gap-3 md:gap-4 pointer-events-none"
         >
           {/* Navigation Group - Minimal Vertical Toolbar */}
-          <div className="pointer-events-auto flex flex-col items-center bg-surface-elevated border border-border rounded-2xl p-1 shadow-2xl overflow-hidden ring-1 ring-border-subtle">
+          <div className="pointer-events-auto flex flex-col items-center glass-panel-strong rounded-2xl p-1 shadow-2xl overflow-hidden ring-1 ring-border-subtle">
             <motion.button
               onClick={onPrev}
               disabled={isFirstSlide}
@@ -95,7 +95,7 @@ export function PresentationControls({
               whileHover={{ scale: 1.02, x: -4 }}
               whileTap={{ scale: 0.98 }}
               onClick={onSkipToCoolPart}
-              className="group flex items-center gap-3 px-4 py-2 bg-surface-elevated border border-border rounded-2xl shadow-xl hover:shadow-accent/10 hover:border-accent-border transition-all duration-300 ring-1 ring-border-subtle"
+              className="group flex items-center gap-3 px-4 py-2 glass-panel rounded-2xl shadow-xl hover:shadow-accent/10 hover:border-accent-border transition-all duration-300 ring-1 ring-border-subtle"
             >
               <span className="text-xs font-bold text-foreground/60 group-hover:text-accent transition-colors uppercase tracking-wider pl-1">
                 Skip to Cool Part
@@ -110,7 +110,7 @@ export function PresentationControls({
               whileHover={{ scale: 1.02, x: -4 }}
               whileTap={{ scale: 0.98 }}
               onClick={onScrollToTop}
-              className="group flex items-center gap-3 px-4 py-2 bg-surface-elevated border border-border rounded-2xl shadow-xl hover:shadow-black/5 transition-all duration-300 ring-1 ring-border-subtle"
+              className="group flex items-center gap-3 px-4 py-2 glass-panel rounded-2xl shadow-xl hover:shadow-black/5 transition-all duration-300 ring-1 ring-border-subtle"
               aria-label="Scroll to top"
             >
               <span className="text-xs font-bold text-foreground/60 group-hover:text-foreground transition-colors uppercase tracking-wider pl-1 font-mono">
