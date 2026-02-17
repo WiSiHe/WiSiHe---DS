@@ -185,7 +185,53 @@
     transition: opacity 360ms ease;
   }
 
-  /* SVG Grain Filter Definition - Added via pseudo-element */
+  .grainient-layer {
+    position: absolute;
+    inset: -8%;
+    opacity: 0.8;
+    transform: scale(1.04);
+    filter: saturate(128%) contrast(108%);
+    transition:
+      opacity 360ms ease,
+      filter 360ms ease;
+  }
+
+  .grainient-container {
+    position: relative;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: hidden;
+  }
+
+  .grainient-canvas {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .grainient-vignette {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 46%, transparent 22%, rgb(0 0 0 / 0.18) 100%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.08) 0%, transparent 38%);
+    mix-blend-mode: soft-light;
+    opacity: 0.56;
+    transition: opacity 360ms ease;
+  }
+
+  .dark .grainient-layer {
+    opacity: 0.9;
+    filter: saturate(142%) contrast(115%) brightness(0.88);
+  }
+
+  .dark .grainient-vignette {
+    background:
+      radial-gradient(circle at 50% 44%, transparent 18%, rgb(0 0 0 / 0.48) 100%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.05) 0%, transparent 34%);
+    opacity: 0.76;
+  }
+
+  /* SVG grain layer to soften large gradient transitions. */
   .neon-backdrop::after {
     content: '';
     position: absolute;
@@ -403,6 +449,36 @@
     transition: background-color 320ms ease, backdrop-filter 320ms ease;
   }
 
+  :where(
+      .bg-surface,
+      .bg-surface-elevated,
+      .bg-card,
+      .bg-popover,
+      [class*='bg-surface/'],
+      [class*='bg-card/'],
+      [class*='bg-popover/']
+    ):not(
+      .glass-panel,
+      .glass-panel-strong,
+      .glass-chip,
+      .glass-accent,
+      .header-glass,
+      .header-glass-strong,
+      .glass-surface-off
+    ) {
+    background-color: color-mix(in oklab, var(--color-surface-elevated) 86%, transparent);
+    box-shadow:
+      0 8px 22px rgb(0 0 0 / 0.12),
+      0 0 0 1px color-mix(in oklab, var(--color-border) 76%, transparent),
+      0 0 28px rgba(var(--color-accent-rgb), 0.14);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    transition:
+      background-color 320ms ease,
+      box-shadow 360ms ease,
+      backdrop-filter 360ms ease;
+  }
+
   .dark .glass-panel {
     background-color: color-mix(in oklab, var(--color-surface) 96%, black 4%);
     border-color: color-mix(in oklab, var(--color-border) 90%, transparent);
@@ -448,6 +524,32 @@
       inset 0 0 30px rgba(var(--color-accent-rgb), 0.25);
     backdrop-filter: blur(24px) saturate(170%) brightness(0.9);
     -webkit-backdrop-filter: blur(24px) saturate(170%) brightness(0.9);
+  }
+
+  .dark :where(
+      .bg-surface,
+      .bg-surface-elevated,
+      .bg-card,
+      .bg-popover,
+      [class*='bg-surface/'],
+      [class*='bg-card/'],
+      [class*='bg-popover/']
+    ):not(
+      .glass-panel,
+      .glass-panel-strong,
+      .glass-chip,
+      .glass-accent,
+      .header-glass,
+      .header-glass-strong,
+      .glass-surface-off
+    ) {
+    background-color: color-mix(in oklab, var(--color-surface-elevated) 95%, black 5%);
+    box-shadow:
+      0 16px 42px rgb(0 0 0 / 0.42),
+      0 0 0 1px color-mix(in oklab, var(--color-border) 86%, transparent),
+      0 0 40px rgba(var(--color-accent-rgb), 0.24);
+    backdrop-filter: blur(22px) saturate(148%) brightness(0.82);
+    -webkit-backdrop-filter: blur(22px) saturate(148%) brightness(0.82);
   }
 
   .header-glass {
@@ -576,7 +678,11 @@
     .glass-accent,
     .glass-overlay,
     .header-glass,
-    .header-glass-strong {
+    .header-glass-strong,
+    .bg-surface,
+    .bg-surface-elevated,
+    .bg-card,
+    .bg-popover {
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
       background-color: color-mix(in oklab, var(--color-surface-elevated) 96%, transparent);
@@ -590,7 +696,11 @@
     .glass-chip,
     .glass-overlay,
     .header-glass,
-    .header-glass-strong {
+    .header-glass-strong,
+    .bg-surface,
+    .bg-surface-elevated,
+    .bg-card,
+    .bg-popover {
       background-color: var(--color-surface-elevated);
       border-color: var(--color-border);
     }
@@ -606,7 +716,11 @@
     .dark .glass-chip,
     .dark .glass-overlay,
     .dark .header-glass,
-    .dark .header-glass-strong {
+    .dark .header-glass-strong,
+    .dark .bg-surface,
+    .dark .bg-surface-elevated,
+    .dark .bg-card,
+    .dark .bg-popover {
       background-color: var(--color-neutral-900);
       border-color: var(--color-neutral-700);
     }
