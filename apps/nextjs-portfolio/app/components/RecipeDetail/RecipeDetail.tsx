@@ -109,7 +109,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                   <li>
                     <Link
                       href="/"
-                      className="text-white/70 hover:text-white hover:underline transition-colors bg-black/60 px-3 py-1 rounded-full"
+                      className="text-white/80 hover:text-white hover:underline transition-colors bg-black/65 backdrop-blur-lg px-3 py-1 rounded-full"
                     >
                       Home
                     </Link>
@@ -118,13 +118,13 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                   <li>
                     <Link
                       href="/recipes"
-                      className="text-white/70 hover:text-white hover:underline transition-colors bg-black/60 px-3 py-1 rounded-full"
+                      className="text-white/80 hover:text-white hover:underline transition-colors bg-black/65 backdrop-blur-lg px-3 py-1 rounded-full"
                     >
                       Recipes
                     </Link>
                   </li>
                   <li className="text-white/50">/</li>
-                  <li className="text-white/90 font-medium bg-black/60 px-3 py-1 rounded-full">
+                  <li className="text-white/95 font-medium bg-black/65 backdrop-blur-lg px-3 py-1 rounded-full">
                     {recipe.title}
                   </li>
                 </ol>
@@ -142,31 +142,31 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
               {/* Recipe Meta */}
               <div className="flex flex-wrap gap-3">
                 {prepTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-lg border border-white/35 shadow-lg text-white">
                     <FiClock className="w-4 h-4" />
                     <span className="text-sm font-medium">Prep: {prepTime} min</span>
                   </div>
                 )}
                 {cookingTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-lg border border-white/35 shadow-lg text-white">
                     <FiThermometer className="w-4 h-4" />
                     <span className="text-sm font-medium">Cook: {cookingTime} min</span>
                   </div>
                 )}
                 {totalTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-lg border border-white/35 shadow-lg text-white">
                     <FiClock className="w-4 h-4" />
                     <span className="text-sm font-medium">Total: {totalTime} min</span>
                   </div>
                 )}
                 {servings && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-lg border border-white/35 shadow-lg text-white">
                     <FiUsers className="w-4 h-4" />
                     <span className="text-sm font-medium">Serves: {servings}</span>
                   </div>
                 )}
                 {difficulty && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-white/30 shadow-lg text-white">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 backdrop-blur-lg border border-white/35 shadow-lg text-white">
                     <FiBarChart className="w-4 h-4" />
                     <span className="text-sm font-medium capitalize">{difficulty}</span>
                   </div>
