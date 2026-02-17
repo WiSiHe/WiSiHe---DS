@@ -24,18 +24,18 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
     <section className="bg-background py-24 md:py-32">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
         {/* Header Section */}
-        <div className="max-w-4xl mb-16 md:mb-24">
+        <div className="w-full max-w-4xl mb-16 md:mb-24">
           <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-8 text-foreground">
             Featured Projects
           </h2>
-          <div className="space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed max-w-3xl">
-            <p>
+          <div className="w-full max-w-3xl space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed">
+            <p className="max-w-none">
               I specialize in bridging the gap between design and engineering, creating digital
               experiences that are both visually stunning and technically robust. My work often
               revolves around high-performance web applications, interactive 3D environments, and
               scalable design systems.
             </p>
-            <p>
+            <p className="max-w-none">
               Here's a selection of projects where I've pushed the boundaries of what's possible on
               the web, combining creative front-end development with solid architectural
               foundations.
