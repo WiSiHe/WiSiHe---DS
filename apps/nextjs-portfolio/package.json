@@ -8,7 +8,7 @@
     "prebuild": "pnpm --filter @wisihe/tokens build && npm run typegen",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ignore-pattern .agent/**",
     "typegen": "cd ../sanity-studio && sanity typegen generate"
   },
   "dependencies": {
