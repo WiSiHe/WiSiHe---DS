@@ -135,9 +135,12 @@
   }
 
   p {
-    @apply w-full max-w-prose leading-relaxed;
+    max-inline-size: min(100%, 72ch);
+    line-height: 1.65;
     text-wrap: pretty;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: auto;
   }
 
   /* Accessibility - focus rings use semantic ring token */
@@ -214,23 +217,31 @@
   }
 
   .dark .glass-panel {
-    background-color: color-mix(in oklab, var(--color-surface) 92%, transparent);
-    border-color: color-mix(in oklab, var(--color-border) 85%, transparent);
+    background-color: color-mix(in oklab, var(--color-surface) 96%, black 4%);
+    border-color: color-mix(in oklab, var(--color-border) 90%, transparent);
+    backdrop-filter: blur(28px) saturate(150%) brightness(0.78);
+    -webkit-backdrop-filter: blur(28px) saturate(150%) brightness(0.78);
   }
 
   .dark .glass-panel-strong {
-    background-color: color-mix(in oklab, var(--color-surface-elevated) 96%, transparent);
-    border-color: color-mix(in oklab, var(--color-border) 88%, transparent);
+    background-color: color-mix(in oklab, var(--color-surface-elevated) 98%, black 2%);
+    border-color: color-mix(in oklab, var(--color-border) 92%, transparent);
+    backdrop-filter: blur(34px) saturate(155%) brightness(0.72);
+    -webkit-backdrop-filter: blur(34px) saturate(155%) brightness(0.72);
   }
 
   .dark .glass-chip {
-    background-color: color-mix(in oklab, var(--color-surface-elevated) 92%, transparent);
-    border-color: color-mix(in oklab, var(--color-border) 84%, transparent);
+    background-color: color-mix(in oklab, var(--color-surface-elevated) 95%, black 5%);
+    border-color: color-mix(in oklab, var(--color-border) 88%, transparent);
+    backdrop-filter: blur(20px) saturate(145%) brightness(0.8);
+    -webkit-backdrop-filter: blur(20px) saturate(145%) brightness(0.8);
   }
 
   .dark .glass-accent {
-    background-color: color-mix(in oklab, var(--color-accent-subtle) 90%, transparent);
-    border-color: color-mix(in oklab, var(--color-accent-border) 88%, transparent);
+    background-color: color-mix(in oklab, var(--color-accent-subtle) 94%, black 6%);
+    border-color: color-mix(in oklab, var(--color-accent-border) 90%, transparent);
+    backdrop-filter: blur(24px) saturate(155%) brightness(0.8);
+    -webkit-backdrop-filter: blur(24px) saturate(155%) brightness(0.8);
   }
 
   @supports not ((backdrop-filter: blur(1px))) {
