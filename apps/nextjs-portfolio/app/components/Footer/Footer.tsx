@@ -104,12 +104,47 @@ const Footer = ({ socialLinks }: FooterProps) => {
           </motion.nav>
         </div>
 
+        {process.env.NODE_ENV === 'development' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="pt-8 mt-12 border-t border-dashed border-accent/30"
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full bg-accent/10 text-accent border border-accent/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                Dev Navigation
+              </div>
+              <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+                {[
+                  { name: 'Contact', href: '/contact' },
+                  { name: 'Data', href: '/data' },
+                  { name: 'Recipes', href: '/recipes' },
+                  { name: 'Design System', href: '/design-system' },
+                ].map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-sm font-medium text-foreground-subtle hover:text-accent transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="pt-8 mt-4 text-center border-t border-border"
+          className="pt-8 mt-8 text-center border-t border-border"
         >
           <p className="text-sm text-foreground-subtle">
             © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️ in Oslo
