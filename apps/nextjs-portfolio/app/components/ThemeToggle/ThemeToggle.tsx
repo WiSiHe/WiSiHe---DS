@@ -37,6 +37,8 @@ const ThemeToggle = () => {
     return theme === 'dark' ? 'Light mode' : 'Dark mode';
   };
 
+  const isNeonActive = theme === 'dark' || (theme === 'system' && resolvedTheme === 'dark');
+
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
@@ -49,7 +51,8 @@ const ThemeToggle = () => {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="flex items-center justify-center cursor-pointer p-4 transition-all rounded-full header-glass text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-lg"
+      data-state={isNeonActive ? 'on' : 'off'}
+      className="flex items-center justify-center cursor-pointer p-4 rounded-full header-glass neon-interactive text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-lg"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
