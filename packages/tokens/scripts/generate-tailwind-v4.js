@@ -26,10 +26,26 @@ const namespaceMap = {
   component: 'component',
 };
 
+// Keep Tailwind's built-in sizing scale untouched.
+// We only export design-system values that don't replace core sizing utilities.
+const excludedSizingCategories = new Set([
+  'spacing',
+  'fontSizes',
+  'lineHeights',
+  'letterSpacing',
+  'borderRadius',
+  'breakpoints',
+  'dimension',
+]);
+
 function collectThemeVariables(tokenTree) {
   const lines = [];
 
   for (const [category, categoryTokens] of Object.entries(tokenTree)) {
+    if (excludedSizingCategories.has(category)) {
+      continue;
+    }
+
     if (!categoryTokens || typeof categoryTokens !== 'object') {
       continue;
     }
