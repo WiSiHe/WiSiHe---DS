@@ -29,13 +29,13 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
             Featured Projects
           </h2>
           <div className="w-full min-w-0 max-w-3xl space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed">
-            <p className="w-full max-w-[65ch] text-pretty [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
+            <p className="text-pretty whitespace-normal [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
               I specialize in bridging the gap between design and engineering, creating digital
               experiences that are both visually stunning and technically robust. My work often
               revolves around high-performance web applications, interactive 3D environments, and
               scalable design systems.
             </p>
-            <p className="w-full max-w-[65ch] text-pretty [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
+            <p className="text-pretty whitespace-normal [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
               Here's a selection of projects where I've pushed the boundaries of what's possible on
               the web, combining creative front-end development with solid architectural
               foundations.
