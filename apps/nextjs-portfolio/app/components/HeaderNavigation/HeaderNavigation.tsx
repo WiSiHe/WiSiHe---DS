@@ -56,7 +56,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="group relative flex items-center justify-center p-2 rounded-lg header-glass neon-interactive shadow-lg hover:border-accent-border hover:shadow-xl"
+            className="group relative flex items-center justify-center p-2 rounded-lg header-glass neon-interactive"
           >
             <IconLogo
               color="currentColor"
@@ -72,7 +72,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center text-foreground header-glass-strong shadow-xl p-1 overflow-clip rounded-full"
+            className="flex items-center text-foreground header-glass-strong p-1 overflow-clip rounded-full"
             style={{ isolation: 'isolate' }}
           >
             {navigationItems.map((item, i) => {
@@ -98,10 +98,10 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'neon-interactive gap-1 md:gap-2 focus-visible:bg-accent focus-visible:text-accent-contrast focus-visible:ring-2 focus-visible:ring-ring flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full',
+                      'transition-all gap-1 md:gap-2 flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full neon-interactive',
                       isActive
-                        ? '!text-accent-contrast !bg-accent border border-accent-border neon-active aspect-square justify-center p-2.5 md:px-4 md:py-2 md:aspect-auto'
-                        : '!text-foreground hover:bg-surface-hover hover:!text-accent-text px-3 py-2.5 md:px-4 md:py-2',
+                        ? 'neon-active glass-accent aspect-square justify-center p-2.5 md:px-4 md:py-2 md:aspect-auto text-accent-contrast'
+                        : 'text-foreground hover:bg-surface-hover px-3 py-2.5 md:px-4 md:py-2',
                     )}
                     aria-current={isActive ? 'page' : undefined}
                   >
