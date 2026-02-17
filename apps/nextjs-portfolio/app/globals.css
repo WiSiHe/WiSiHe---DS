@@ -185,6 +185,16 @@
     transition: opacity 360ms ease;
   }
 
+  .neon-backdrop--grain-only::before {
+    content: none;
+  }
+
+  .neon-backdrop--grain-only .grainient-layer,
+  .neon-backdrop--grain-only .grainient-vignette,
+  .neon-backdrop--grain-only .neon-blob {
+    display: none;
+  }
+
   .grainient-layer {
     position: absolute;
     inset: -8%;
