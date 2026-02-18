@@ -20,7 +20,7 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
           gridSize={12}
           gridThickness={20}
           rippleIntensity={0.08}
-          glowIntensity={0.2}
+          glowIntensity={0}
           mouseInteractionRadius={1.5}
         />
       </div>
@@ -45,7 +45,7 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
 
       {/* Content */}
       <div className="relative z-30 flex flex-col items-center px-6 text-center w-full max-w-7xl">
-        {/* Glowing Technical Badge */}
+      {/* Technical Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -53,7 +53,6 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
           transition={{ duration: 0.8, type: 'spring' }}
           className="group relative mb-8 md:mb-12"
         >
-          <div className="absolute inset-0 bg-accent blur-3xl opacity-20 group-hover:opacity-40 transition-opacity" />
           <div className="relative flex flex-col items-center">
             <div className="p-4 md:p-6 rounded-2xl glass-panel-strong shadow-2xl flex items-center justify-center text-accent">
               <HiCodeBracket className="w-10 h-10 md:w-14 md:h-14" />
@@ -105,11 +104,11 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
            className="mt-12 md:mt-20 flex flex-col items-center"
         >
           <div className="flex items-center gap-4 mb-4">
-             <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-accent" />
+             <div className="h-px w-12 md:w-24 bg-border" />
              <p className="text-sm md:text-lg font-mono tracking-[0.2em] text-accent uppercase">
                Architecture & Performance
              </p>
-             <div className="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-accent" />
+             <div className="h-px w-12 md:w-24 bg-border" />
           </div>
           <p className="text-lg md:text-2xl font-medium text-foreground/60 max-w-2xl mx-auto tracking-tight">
             Transitioning to the structural implementation details.
@@ -131,7 +130,7 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
       >
         <div className="flex flex-col items-center gap-2">
           <span className="text-[10px] font-black tracking-[0.3em] uppercase opacity-40">Scroll</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-accent to-transparent" />
+          <div className="w-[1px] h-12 bg-accent/50" />
         </div>
       </motion.div>
     </section>

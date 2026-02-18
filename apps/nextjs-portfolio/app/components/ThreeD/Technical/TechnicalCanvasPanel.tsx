@@ -57,16 +57,11 @@ export function TechnicalCanvasPanel({
   return (
     <div
       ref={canvasContainerRef}
-      className="h-full relative bg-linear-to-br from-surface-subtle via-background to-surface border-l border-border-subtle overflow-hidden"
+      className="h-full relative bg-surface border-l border-border-subtle overflow-hidden"
     >
-      {/* Subtle Grid Pattern */}
+      {/* Subtle overlay for depth */}
       <div
-        className="absolute inset-0 opacity-10 pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
-        }}
+        className="absolute inset-0 opacity-5 pointer-events-none z-0 bg-accent"
       />
 
       {/* Context Lost Error Message */}

@@ -348,7 +348,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       ref={containerRef}
       className="relative w-full h-dvh overflow-hidden flex items-center justify-center transition-colors duration-500"
       style={{
-        background: `radial-gradient(ellipse at center, var(--color-surface-subtle) 0%, var(--color-background) 50%, var(--color-surface) 100%)`,
+        backgroundColor: 'var(--color-background)',
       }}
     >
       {/* Loader */}

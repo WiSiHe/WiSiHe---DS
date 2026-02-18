@@ -22,8 +22,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
   ];
 
   return (
-    <footer className="relative w-full overflow-hidden border-t-2 bg-surface border-accent">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface/50" />
+    <footer className="relative w-full overflow-hidden border-t bg-surface border-border">
       <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-foreground sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <motion.div
@@ -35,7 +34,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
           >
             <h3 className="text-2xl font-bold sm:text-3xl">
               My name is{' '}
-              <span className="text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text animate-gradient drop-shadow-sm">
+              <span className="text-accent">
                 Henrik Wilhelm Sissener
               </span>
             </h3>
@@ -54,7 +53,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-accent sm:text-3xl">
               Explore
             </h3>
             <ul className="space-y-3">
@@ -84,7 +83,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-accent to-brand-2-500 bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-accent sm:text-3xl">
               Connect
             </h3>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
