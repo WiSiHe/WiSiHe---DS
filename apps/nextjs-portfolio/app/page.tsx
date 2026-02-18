@@ -61,8 +61,8 @@ export default async function Home() {
 
   return (
     <div className="bg-background">
-      {/* Hero & Projects Wrapper with Gradient */}
-      <div className="bg-linear-to-b from-transparent via-background to-surface-elevated">
+      {/* Hero & Projects Wrapper */}
+      <div className="bg-background">
         <Suspense fallback={<HeroSkeleton />}>
           <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
