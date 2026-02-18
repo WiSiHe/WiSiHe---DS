@@ -231,7 +231,7 @@ export default async function RecipePage({ params }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             href="/recipes"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               All Recipes
@@ -243,7 +243,7 @@ export default async function RecipePage({ params }: Props) {
 
           <Link
             href="/projects"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               Other Projects
@@ -255,7 +255,7 @@ export default async function RecipePage({ params }: Props) {
 
           <Link
             href="/paintings"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               Digital Art
@@ -267,7 +267,7 @@ export default async function RecipePage({ params }: Props) {
 
           <Link
             href="/videos"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               Video Content
@@ -277,7 +277,7 @@ export default async function RecipePage({ params }: Props) {
 
           <Link
             href="/contact"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               Get in Touch
@@ -287,7 +287,7 @@ export default async function RecipePage({ params }: Props) {
 
           <Link
             href="/"
-            className="group p-6 rounded-xl glass-panel shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
           >
             <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
               Home

@@ -1,7 +1,7 @@
 export default {
   source: [
     'tokens/primitives/**/*.json',
-    'tokens/semantic/light/**/*.json',
+    'tokens/semantic/**/*.json',
     'tokens/component/**/*.json',
   ],
   platforms: {

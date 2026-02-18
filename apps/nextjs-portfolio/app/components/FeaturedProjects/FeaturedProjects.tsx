@@ -5,6 +5,7 @@ import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowRight } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@wisihe/utils';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
@@ -27,13 +28,13 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
             Featured Projects
           </h2>
           <div className="w-full min-w-0 max-w-3xl space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed">
-            <p className="text-pretty whitespace-normal [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
+            <p className="text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]">
               I specialize in bridging the gap between design and engineering, creating digital
               experiences that are both visually stunning and technically robust. My work often
               revolves around high-performance web applications, interactive 3D environments, and
               scalable design systems.
             </p>
-            <p className="text-pretty whitespace-normal [overflow-wrap:normal] [word-break:normal] [hyphens:none]">
+            <p className="text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]">
               Here's a selection of projects where I've pushed the boundaries of what's possible on
               the web, combining creative front-end development with solid architectural
               foundations.
@@ -44,22 +45,21 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {displayedProjects.map(project => {
-            const imageUrl = urlForImage(project.image)
-              ?.height(800)
-              .width(1000)
-              .auto('format')
-              .quality(90)
-              .url();
             const year = project.projectStart ? new Date(project.projectStart).getFullYear() : null;
+            const imageUrl = project.image ? urlForImage(project.image)?.width(1000).height(800).quality(80).url() : null;
 
             return (
               <Link
-                key={project._id}
                 href={`projects/${project.slug}`}
-                className="group flex flex-col h-full rounded-3xl overflow-hidden card-surface card-surface-elevated card-interactive"
+                key={project._id}
+                className={cn(
+                  'relative group flex flex-col h-full overflow-hidden rounded-2xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
+                )}
               >
-                {/* Image Container */}
-                <div className="relative aspect-4/3 overflow-hidden">
+                <article
+                  className="flex flex-col h-full"
+                >
+                 <div className="relative aspect-square overflow-hidden">
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
@@ -73,27 +73,25 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                       No Image
                     </div>
                   )}
-                  {/* Subtle overlay */}
+                    {/* Subtle overlay */}
                   <div className="absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-
+                     
                 {/* Content */}
-                <div className="p-6 md:p-8 flex flex-col flex-grow">
+                <div className="p-6 md:p-8 flex flex-col grow">
                   <div className="flex items-center justify-between mb-4">
-                    {project.name && (
                       <span className="text-xs font-bold tracking-widest text-accent uppercase">
                         {project.name}
                       </span>
-                    )}
                     {year && <span className="text-xs font-mono text-foreground-muted">{year}</span>}
-                  </div>
+                  </div>  
 
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
                     {project.title}
                   </h3>
 
                   <p className="text-foreground-subtle text-sm md:text-base leading-relaxed mb-6 line-clamp-3">
-                    {project.seo?.description || project.description}
+                    {(project.seo?.description || project.description) ?? undefined}
                   </p>
 
                   <div className="mt-auto pt-6 flex items-center gap-2 text-accent font-semibold text-sm">
@@ -101,6 +99,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                     <IconArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
+                </article>
               </Link>
             );
           })}

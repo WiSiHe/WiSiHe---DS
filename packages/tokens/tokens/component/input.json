@@ -12,9 +12,9 @@
         "lg": { "$value": "{spacing.lg} {spacing.xl}", "$type": "spacing" }
       },
       "radius": {
-        "sm": { "$value": "{borderRadius.sm}", "$type": "borderRadius" },
-        "md": { "$value": "{borderRadius.lg}", "$type": "borderRadius" },
-        "lg": { "$value": "{borderRadius.xl}", "$type": "borderRadius" }
+        "sm": { "$value": "{semantic.size.radius.sm}", "$type": "borderRadius" },
+        "md": { "$value": "{semantic.size.radius.md}", "$type": "borderRadius" },
+        "lg": { "$value": "{semantic.size.radius.lg}", "$type": "borderRadius" }
       },
       "color": {
         "background": { "$value": "{semantic.color.surface}", "$type": "color" },

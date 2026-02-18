@@ -12,9 +12,9 @@
         "lg": { "$value": "{spacing.lg} {spacing.xl}", "$type": "spacing" }
       },
       "radius": {
-        "sm": { "$value": "{borderRadius.sm}", "$type": "borderRadius" },
-        "md": { "$value": "{borderRadius.lg}", "$type": "borderRadius" },
-        "lg": { "$value": "{borderRadius.xl}", "$type": "borderRadius" }
+        "sm": { "$value": "{semantic.size.radius.sm}", "$type": "borderRadius" },
+        "md": { "$value": "{semantic.size.radius.md}", "$type": "borderRadius" },
+        "lg": { "$value": "{semantic.size.radius.lg}", "$type": "borderRadius" }
       },
       "variant": {
         "primary": {
@@ -32,7 +32,7 @@
         "danger": {
           "background": { "$value": "{semantic.color.danger}", "$type": "color" },
           "foreground": { "$value": "{semantic.color.danger-contrast}", "$type": "color" },
-          "background-hover": { "$value": "{color.danger.700}", "$type": "color" }
+          "background-hover": { "$value": "{color.danger-primitive.700}", "$type": "color" }
         }
       }
     }

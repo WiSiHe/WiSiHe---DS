@@ -1,15 +1,12 @@
 'use client';
 
 import { RandomPaintingsQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, Variants } from 'motion/react';
-import { type PortableTextBlock } from 'next-sanity';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { Card } from '../Card/Card';
-import CustomPortableText from '../PortableText/PortableText';
+import PaintingCard from '../PaintingCard/PaintingCard';
 
 type PaintingsCarouselProps = {
   paintings: RandomPaintingsQueryResult;
@@ -81,14 +78,6 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
     },
   };
 
-  // Optimize image sizes for better performance
-  const data = paintings.map(painting => ({
-    categories: painting.tagsV2 || ['Art'],
-    title: painting.title || '',
-    href: `/paintings/${painting.slug}`,
-    src: urlForImage(painting.image)?.height(600).width(450).auto('format').quality(75).url() || '',
-  }));
-
   return (
     <motion.section
       initial="hidden"
@@ -100,8 +89,13 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
       <motion.div variants={itemVariants} className="relative">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4">
-            {data.map((card, index) => (
-              <Card card={card} index={index} key={index} />
+            {paintings.map((painting, index) => (
+              <div key={painting._id} className="w-96 shrink-0">
+                <PaintingCard
+                  paintingData={painting as any}
+                  shouldBeLazy={index < 2}
+                />
+              </div>
             ))}
           </div>
         </div>

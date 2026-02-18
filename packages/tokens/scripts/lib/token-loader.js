@@ -75,7 +75,33 @@ export function replaceReferencesWithCssVars(value) {
   }
 
   return value.replace(/\{([^}]+)\}/g, (_fullMatch, tokenPath) => {
-    const normalizedPath = String(tokenPath).trim().replace(/\./g, '-');
+    let pathStr = String(tokenPath).trim();
+    let isSemantic = false;
+
+    // Detect if this is a reference to a semantic token
+    // We append -val to ALL semantic tokens to allow for runtime switching (colors, radius, etc.)
+    if (pathStr.startsWith('semantic.')) {
+      isSemantic = true;
+      // Remove the specific semantic prefixes to unify under 'color' (or other root namespaces)
+      pathStr = pathStr
+        .replace(/^semantic\.dark\.color\./, 'color.')
+        .replace(/^semantic\.light\.color\./, 'color.')
+        .replace(/^semantic\.color\./, 'color.')
+        .replace(/^semantic\./, ''); // Fallback for other semantic tokens
+    }
+
+    let normalizedPath = pathStr.replace(/\./g, '-');
+    
+    // Explicitly fix double prefixes if they occur (e.g. from naive replacements)
+    if (normalizedPath.startsWith('color-color-')) {
+      normalizedPath = normalizedPath.replace('color-color-', 'color-');
+    }
+    
+    // Append -val suffix if it was a semantic reference, as these now use the private variable strategy
+    if (isSemantic) {
+      normalizedPath += '-val';
+    }
+    
     return `var(--${normalizedPath})`;
   });
 }

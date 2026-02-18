@@ -25,8 +25,8 @@ export function TechnicalNavigation({
         whileTap={!isFirstSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isFirstSlide
-            ? 'glass-panel text-foreground/30 cursor-not-allowed'
-            : 'glass-panel text-foreground border-2 border-border hover:border-accent-border hover:bg-surface'
+            ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
+            : 'bg-surface text-foreground border-2 border-border hover:border-accent-border hover:bg-surface-hover transition-colors'
         }`}
         aria-label="Previous slide"
         aria-disabled={isFirstSlide}
@@ -41,7 +41,7 @@ export function TechnicalNavigation({
         whileTap={!isLastSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isLastSlide
-            ? 'glass-panel text-foreground/30 cursor-not-allowed'
+            ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
             : 'bg-accent text-accent-contrast hover:bg-accent-hover shadow-lg shadow-accent/30'
         }`}
         aria-label="Next slide"
