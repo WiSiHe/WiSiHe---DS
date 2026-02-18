@@ -3,10 +3,8 @@
 import { HomePageQueryResult } from '@/sanity.types';
 import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowRight } from '@tabler/icons-react';
-import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import Chip from '../Chip/Chip';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
@@ -58,7 +56,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
               <Link
                 key={project._id}
                 href={`projects/${project.slug}`}
-                className="group flex flex-col h-full glass-panel rounded-3xl overflow-hidden border border-border-subtle hover:border-accent-border transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5"
+                className="group flex flex-col h-full rounded-3xl overflow-hidden card-surface card-surface-elevated card-interactive"
               >
                 {/* Image Container */}
                 <div className="relative aspect-4/3 overflow-hidden">
@@ -76,7 +74,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                     </div>
                   )}
                   {/* Subtle overlay */}
-                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 {/* Content */}
@@ -112,7 +110,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         <div className="mt-16 md:mt-24 flex justify-center">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 rounded-full font-bold hover:bg-accent hover:text-accent-contrast transition-all duration-300 hover:scale-105 group"
+            className="inline-flex items-center gap-3 bg-accent text-accent-contrast px-8 py-4 rounded-full border border-accent-border font-bold transition-all duration-300 hover:brightness-105 group"
           >
             Explore all projects
             <IconArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />

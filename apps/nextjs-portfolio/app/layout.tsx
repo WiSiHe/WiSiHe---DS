@@ -7,7 +7,6 @@ import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import HeaderNavigation from '@/app/components/HeaderNavigation';
-import NeonBackdrop from '@/app/components/NeonBackdrop';
 import { sanityFetch, SanityLive } from '@/sanity/lib/live';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
@@ -181,7 +180,6 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
       >
-        <NeonBackdrop />
         <div className="relative z-10">
           <ProgressBarProvider>
             <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50" />

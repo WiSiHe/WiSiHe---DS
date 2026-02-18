@@ -108,7 +108,7 @@ const PaintingCard = ({
   return (
     <motion.article
       className={cn(
-        'relative aspect-[3/4] within group overflow-hidden bg-surface-subtle text-foreground rounded-2xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background header-glass neon-interactive',
+        'relative aspect-[3/4] within group overflow-hidden rounded-2xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background glass-panel card-interactive',
       )}
       whileHover="hover"
       initial="rest"
@@ -205,10 +205,10 @@ const PaintingCard = ({
       </motion.div>
 
       {/* NSFW Overlay */}
-      {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full backdrop-blur-[24px] bg-black/40 z-10" />}
+      {isNsfw && !isNsfwUrl && <div className="absolute inset-0 w-full h-full bg-background/75 z-10" />}
 
       <Link href={`/paintings/${slug}`} className="before:absolute before:inset-0 before:z-0">
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out header-glass-strong border-t border-accent/20">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out glass-panel-strong border-t border-border/70">
           <motion.h2
             layoutId={`title-${title}`}
             className="text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter group-hover:text-accent transition-colors duration-300"

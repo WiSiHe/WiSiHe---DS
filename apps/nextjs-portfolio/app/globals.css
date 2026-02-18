@@ -128,13 +128,11 @@
     min-height: 100vh;
     min-height: 100dvh;
     background-color: var(--color-background);
-    background-color: color-mix(in oklab, var(--color-background) 80%, transparent);
     transition: background-color 360ms ease;
   }
 
   .dark main {
     background-color: var(--color-background);
-    background-color: color-mix(in oklab, var(--color-background) 84%, transparent);
   }
 
   h1,
@@ -176,38 +174,56 @@
 }
 
 @layer utilities {
-  .neon-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-    background: transparent;
+  .card-surface {
+    color: var(--color-foreground);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 6px 14px rgb(0 0 0 / 0.08);
   }
 
-  .neon-backdrop--grain-only::before {
-    content: none;
+  .card-surface-elevated {
+    background-color: var(--color-surface-elevated);
+    box-shadow: 0 10px 22px rgb(0 0 0 / 0.1);
   }
 
-  .neon-backdrop--grain-only .grainient-layer,
-  .neon-backdrop--grain-only .grainient-vignette,
-  .neon-backdrop--grain-only .neon-blob {
-    display: none;
+  .card-interactive {
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 200ms ease,
+      color 200ms ease,
+      transform 160ms ease;
   }
 
-  .neon-backdrop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.075;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    filter: contrast(116%) brightness(100%);
-    z-index: 1;
+  .card-interactive:hover,
+  .card-interactive:focus-visible {
+    border-color: var(--color-accent-border);
+    background-color: var(--color-surface-hover);
+    box-shadow:
+      0 0 0 1px var(--color-accent-border),
+      0 10px 20px rgb(0 0 0 / 0.1);
+    transform: translateY(-1px);
   }
 
-  .dark .neon-backdrop::after {
-    opacity: 0.1;
+  .dark .card-surface {
+    background-color: var(--color-surface);
+    border-color: color-mix(in oklab, var(--color-border) 92%, transparent);
+    box-shadow: 0 8px 18px rgb(0 0 0 / 0.24);
+  }
+
+  .dark .card-surface-elevated {
+    background-color: var(--color-surface-elevated);
+    border-color: color-mix(in oklab, var(--color-border) 94%, transparent);
+    box-shadow: 0 12px 24px rgb(0 0 0 / 0.32);
+  }
+
+  .dark .card-interactive:hover,
+  .dark .card-interactive:focus-visible {
+    border-color: var(--color-accent-border);
+    background-color: var(--color-surface-hover);
+    box-shadow:
+      0 0 0 1px var(--color-accent-border),
+      0 12px 24px rgb(0 0 0 / 0.24);
   }
 
   .glass-panel {
@@ -433,7 +449,6 @@
 
   :where([class*='bg-gradient-to-'], [class*='bg-linear-to-']) {
     background-image: none !important;
-    background-color: var(--tw-gradient-from, currentColor) !important;
   }
 
   :where(.text-transparent.bg-clip-text) {
