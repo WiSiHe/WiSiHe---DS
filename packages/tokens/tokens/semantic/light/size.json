@@ -1,0 +1,15 @@
+{
+  "semantic": {
+    "size": {
+      "radius": {
+        "sm": { "$value": "{borderRadius.sm}", "$type": "borderRadius" },
+        "md": { "$value": "{borderRadius.md}", "$type": "borderRadius" },
+        "lg": { "$value": "{borderRadius.lg}", "$type": "borderRadius" },
+        "xl": { "$value": "{borderRadius.xl}", "$type": "borderRadius" },
+        "2xl": { "$value": "{borderRadius.2xl}", "$type": "borderRadius" },
+        "3xl": { "$value": "{borderRadius.3xl}", "$type": "borderRadius" },
+        "full": { "$value": "{borderRadius.full}", "$type": "borderRadius" }
+      }
+    }
+  }
+}

@@ -66,7 +66,7 @@ export function TechnicalCanvasPanel({
 
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center glass-overlay">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}

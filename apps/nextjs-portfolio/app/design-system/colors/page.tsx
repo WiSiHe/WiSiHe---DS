@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'motion/react';
+import { FaCopy, FaCheck } from 'react-icons/fa';
 
 type ColorScale = {
   name: string;
@@ -25,177 +27,99 @@ const numericScales: ColorScale[] = [
     ],
   },
   {
-    name: 'Accent',
+    name: 'Neon Pink (Accent)',
     colors: [
-      { name: 'accent-50', value: 'var(--color-accent-50)' },
-      { name: 'accent-100', value: 'var(--color-accent-100)' },
-      { name: 'accent-200', value: 'var(--color-accent-200)' },
-      { name: 'accent-300', value: 'var(--color-accent-300)' },
-      { name: 'accent-400', value: 'var(--color-accent-400)' },
-      { name: 'accent-500', value: 'var(--color-accent-500)' },
-      { name: 'accent-600', value: 'var(--color-accent-600)' },
-      { name: 'accent-700', value: 'var(--color-accent-700)' },
-      { name: 'accent-800', value: 'var(--color-accent-800)' },
-      { name: 'accent-900', value: 'var(--color-accent-900)' },
-      { name: 'accent-950', value: 'var(--color-accent-950)' },
+      { name: 'neon-pink-50', value: 'var(--color-neon-pink-50)' },
+      { name: 'neon-pink-100', value: 'var(--color-neon-pink-100)' },
+      { name: 'neon-pink-200', value: 'var(--color-neon-pink-200)' },
+      { name: 'neon-pink-300', value: 'var(--color-neon-pink-300)' },
+      { name: 'neon-pink-400', value: 'var(--color-neon-pink-400)' },
+      { name: 'neon-pink-500', value: 'var(--color-neon-pink-500)' },
+      { name: 'neon-pink-600', value: 'var(--color-neon-pink-600)' },
+      { name: 'neon-pink-700', value: 'var(--color-neon-pink-700)' },
+      { name: 'neon-pink-800', value: 'var(--color-neon-pink-800)' },
+      { name: 'neon-pink-900', value: 'var(--color-neon-pink-900)' },
+      { name: 'neon-pink-950', value: 'var(--color-neon-pink-950)' },
     ],
   },
   {
-    name: 'Success',
+    name: 'Neon Yellow (Dark Mode Accent)',
     colors: [
-      { name: 'success-50', value: 'var(--color-success-50)' },
-      { name: 'success-100', value: 'var(--color-success-100)' },
-      { name: 'success-200', value: 'var(--color-success-200)' },
-      { name: 'success-300', value: 'var(--color-success-300)' },
-      { name: 'success-400', value: 'var(--color-success-400)' },
-      { name: 'success-500', value: 'var(--color-success-500)' },
-      { name: 'success-600', value: 'var(--color-success-600)' },
-      { name: 'success-700', value: 'var(--color-success-700)' },
-      { name: 'success-800', value: 'var(--color-success-800)' },
-      { name: 'success-900', value: 'var(--color-success-900)' },
-      { name: 'success-950', value: 'var(--color-success-950)' },
+      { name: 'neon-yellow-50', value: 'var(--color-neon-yellow-50)' },
+      { name: 'neon-yellow-100', value: 'var(--color-neon-yellow-100)' },
+      { name: 'neon-yellow-200', value: 'var(--color-neon-yellow-200)' },
+      { name: 'neon-yellow-300', value: 'var(--color-neon-yellow-300)' },
+      { name: 'neon-yellow-400', value: 'var(--color-neon-yellow-400)' },
+      { name: 'neon-yellow-500', value: 'var(--color-neon-yellow-500)' },
+      { name: 'neon-yellow-600', value: 'var(--color-neon-yellow-600)' },
+      { name: 'neon-yellow-700', value: 'var(--color-neon-yellow-700)' },
+      { name: 'neon-yellow-800', value: 'var(--color-neon-yellow-800)' },
+      { name: 'neon-yellow-900', value: 'var(--color-neon-yellow-900)' },
+      { name: 'neon-yellow-950', value: 'var(--color-neon-yellow-950)' },
     ],
   },
   {
-    name: 'Warning',
+    name: 'Neon Orange (Light Mode Accent)',
     colors: [
-      { name: 'warning-50', value: 'var(--color-warning-50)' },
-      { name: 'warning-100', value: 'var(--color-warning-100)' },
-      { name: 'warning-200', value: 'var(--color-warning-200)' },
-      { name: 'warning-300', value: 'var(--color-warning-300)' },
-      { name: 'warning-400', value: 'var(--color-warning-400)' },
-      { name: 'warning-500', value: 'var(--color-warning-500)' },
-      { name: 'warning-600', value: 'var(--color-warning-600)' },
-      { name: 'warning-700', value: 'var(--color-warning-700)' },
-      { name: 'warning-800', value: 'var(--color-warning-800)' },
-      { name: 'warning-900', value: 'var(--color-warning-900)' },
-      { name: 'warning-950', value: 'var(--color-warning-950)' },
+      { name: 'neon-orange-50', value: 'var(--color-neon-orange-50)' },
+      { name: 'neon-orange-100', value: 'var(--color-neon-orange-100)' },
+      { name: 'neon-orange-200', value: 'var(--color-neon-orange-200)' },
+      { name: 'neon-orange-300', value: 'var(--color-neon-orange-300)' },
+      { name: 'neon-orange-400', value: 'var(--color-neon-orange-400)' },
+      { name: 'neon-orange-500', value: 'var(--color-neon-orange-500)' },
+      { name: 'neon-orange-600', value: 'var(--color-neon-orange-600)' },
+      { name: 'neon-orange-700', value: 'var(--color-neon-orange-700)' },
+      { name: 'neon-orange-800', value: 'var(--color-neon-orange-800)' },
+      { name: 'neon-orange-900', value: 'var(--color-neon-orange-900)' },
+      { name: 'neon-orange-950', value: 'var(--color-neon-orange-950)' },
     ],
   },
   {
-    name: 'Danger',
+    name: 'Brand 1 (Blue)',
     colors: [
-      { name: 'danger-50', value: 'var(--color-danger-50)' },
-      { name: 'danger-100', value: 'var(--color-danger-100)' },
-      { name: 'danger-200', value: 'var(--color-danger-200)' },
-      { name: 'danger-300', value: 'var(--color-danger-300)' },
-      { name: 'danger-400', value: 'var(--color-danger-400)' },
-      { name: 'danger-500', value: 'var(--color-danger-500)' },
-      { name: 'danger-600', value: 'var(--color-danger-600)' },
-      { name: 'danger-700', value: 'var(--color-danger-700)' },
-      { name: 'danger-800', value: 'var(--color-danger-800)' },
-      { name: 'danger-900', value: 'var(--color-danger-900)' },
-      { name: 'danger-950', value: 'var(--color-danger-950)' },
-    ],
-  },
-  {
-    name: 'Info',
-    colors: [
-      { name: 'info-50', value: 'var(--color-info-50)' },
-      { name: 'info-100', value: 'var(--color-info-100)' },
-      { name: 'info-200', value: 'var(--color-info-200)' },
-      { name: 'info-300', value: 'var(--color-info-300)' },
-      { name: 'info-400', value: 'var(--color-info-400)' },
-      { name: 'info-500', value: 'var(--color-info-500)' },
-      { name: 'info-600', value: 'var(--color-info-600)' },
-      { name: 'info-700', value: 'var(--color-info-700)' },
-      { name: 'info-800', value: 'var(--color-info-800)' },
-      { name: 'info-900', value: 'var(--color-info-900)' },
-      { name: 'info-950', value: 'var(--color-info-950)' },
+      { name: 'brand-1-50', value: 'var(--color-brand-1-50)' },
+      { name: 'brand-1-100', value: 'var(--color-brand-1-100)' },
+      { name: 'brand-1-200', value: 'var(--color-brand-1-200)' },
+      { name: 'brand-1-300', value: 'var(--color-brand-1-300)' },
+      { name: 'brand-1-400', value: 'var(--color-brand-1-400)' },
+      { name: 'brand-1-500', value: 'var(--color-brand-1-500)' },
+      { name: 'brand-1-600', value: 'var(--color-brand-1-600)' },
+      { name: 'brand-1-700', value: 'var(--color-brand-1-700)' },
+      { name: 'brand-1-800', value: 'var(--color-brand-1-800)' },
+      { name: 'brand-1-900', value: 'var(--color-brand-1-900)' },
+      { name: 'brand-1-950', value: 'var(--color-brand-1-950)' },
     ],
   },
 ];
 
-const semanticColors = [
-  {
-    category: 'Background',
-    description: 'Main page backgrounds',
-    colors: [
-      { name: 'background', class: 'bg-background', var: 'var(--color-background)' },
-      { name: 'background-subtle', class: 'bg-background-subtle', var: 'var(--color-background-subtle)' },
-    ],
-  },
+const semanticGroups = [
   {
     category: 'Surface',
-    description: 'Cards, panels, elevated elements',
+    description: 'Backgrounds and containers.',
     colors: [
-      { name: 'surface', class: 'bg-surface', var: 'var(--color-surface)' },
-      { name: 'surface-subtle', class: 'bg-surface-subtle', var: 'var(--color-surface-subtle)' },
-      { name: 'surface-hover', class: 'bg-surface-hover', var: 'var(--color-surface-hover)' },
-      { name: 'surface-active', class: 'bg-surface-active', var: 'var(--color-surface-active)' },
-      { name: 'surface-elevated', class: 'bg-surface-elevated', var: 'var(--color-surface-elevated)' },
+      { name: 'background', class: 'bg-background', var: 'var(--color-background)', desc: 'Page base' },
+      { name: 'background-subtle', class: 'bg-background-subtle', var: 'var(--color-background-subtle)', desc: 'Secondary base' },
+      { name: 'surface', class: 'bg-surface', var: 'var(--color-surface)', desc: 'Card background' },
+      { name: 'surface-hover', class: 'bg-surface-hover', var: 'var(--color-surface-hover)', desc: 'Interactive surface' },
     ],
   },
   {
-    category: 'Border',
-    description: 'Borders and dividers',
+    category: 'Typography',
+    description: 'Content readability.',
     colors: [
-      { name: 'border', class: 'border-border', var: 'var(--color-border)' },
-      { name: 'border-subtle', class: 'border-border-subtle', var: 'var(--color-border-subtle)' },
-      { name: 'border-strong', class: 'border-border-strong', var: 'var(--color-border-strong)' },
-    ],
-  },
-  {
-    category: 'Foreground',
-    description: 'Text and icons',
-    colors: [
-      { name: 'foreground', class: 'text-foreground', var: 'var(--color-foreground)' },
-      { name: 'foreground-subtle', class: 'text-foreground-subtle', var: 'var(--color-foreground-subtle)' },
-      { name: 'foreground-muted', class: 'text-foreground-muted', var: 'var(--color-foreground-muted)' },
+      { name: 'foreground', class: 'text-foreground', bgClass: 'bg-foreground', var: 'var(--color-foreground)', desc: 'Primary text' },
+      { name: 'foreground-subtle', class: 'text-foreground-subtle', bgClass: 'bg-foreground-subtle', var: 'var(--color-foreground-subtle)', desc: 'Secondary text' },
+      { name: 'foreground-muted', class: 'text-foreground-muted', bgClass: 'bg-foreground-muted', var: 'var(--color-foreground-muted)', desc: 'Utility text' },
     ],
   },
   {
     category: 'Accent',
-    description: 'Primary brand color (Teal)',
+    description: 'Brand highlights.',
     colors: [
-      { name: 'accent', class: 'bg-accent', var: 'var(--color-accent)' },
-      { name: 'accent-hover', class: 'bg-accent-hover', var: 'var(--color-accent-hover)' },
-      { name: 'accent-active', class: 'bg-accent-active', var: 'var(--color-accent-active)' },
-      { name: 'accent-subtle', class: 'bg-accent-subtle', var: 'var(--color-accent-subtle)' },
-      { name: 'accent-contrast', class: 'bg-accent-contrast', var: 'var(--color-accent-contrast)' },
-      { name: 'accent-surface', class: 'bg-accent-surface', var: 'var(--color-accent-surface)' },
-      { name: 'accent-border', class: 'border-accent-border', var: 'var(--color-accent-border)' },
-      { name: 'accent-text', class: 'text-accent-text', var: 'var(--color-accent-text)' },
-    ],
-  },
-  {
-    category: 'Success',
-    description: 'Green for positive actions',
-    colors: [
-      { name: 'success', class: 'bg-success', var: 'var(--color-success)' },
-      { name: 'success-contrast', class: 'bg-success-contrast', var: 'var(--color-success-contrast)' },
-      { name: 'success-subtle', class: 'bg-success-subtle', var: 'var(--color-success-subtle)' },
-      { name: 'success-text', class: 'text-success-text', var: 'var(--color-success-text)' },
-    ],
-  },
-  {
-    category: 'Warning',
-    description: 'Orange for warnings',
-    colors: [
-      { name: 'warning', class: 'bg-warning', var: 'var(--color-warning)' },
-      { name: 'warning-contrast', class: 'bg-warning-contrast', var: 'var(--color-warning-contrast)' },
-      { name: 'warning-subtle', class: 'bg-warning-subtle', var: 'var(--color-warning-subtle)' },
-      { name: 'warning-text', class: 'text-warning-text', var: 'var(--color-warning-text)' },
-    ],
-  },
-  {
-    category: 'Danger',
-    description: 'Red for errors and destructive actions',
-    colors: [
-      { name: 'danger', class: 'bg-danger', var: 'var(--color-danger)' },
-      { name: 'danger-contrast', class: 'bg-danger-contrast', var: 'var(--color-danger-contrast)' },
-      { name: 'danger-subtle', class: 'bg-danger-subtle', var: 'var(--color-danger-subtle)' },
-      { name: 'danger-text', class: 'text-danger-text', var: 'var(--color-danger-text)' },
-    ],
-  },
-  {
-    category: 'Info',
-    description: 'Blue for informational messages',
-    colors: [
-      { name: 'info', class: 'bg-info', var: 'var(--color-info)' },
-      { name: 'info-contrast', class: 'bg-info-contrast', var: 'var(--color-info-contrast)' },
-      { name: 'info-subtle', class: 'bg-info-subtle', var: 'var(--color-info-subtle)' },
-      { name: 'info-text', class: 'text-info-text', var: 'var(--color-info-text)' },
+      { name: 'accent', class: 'bg-accent', var: 'var(--color-accent)', desc: 'Primary action' },
+      { name: 'accent-hover', class: 'bg-accent-hover', var: 'var(--color-accent-hover)', desc: 'Action hover' },
+      { name: 'accent-contrast', class: 'bg-accent-contrast', var: 'var(--color-accent-contrast)', desc: 'Text on accent' },
+      { name: 'accent-border', class: 'border-accent-border', bgClass: 'bg-accent-border', var: 'var(--color-accent-border)', desc: 'Focus/Highlight' },
     ],
   },
 ];
@@ -210,134 +134,50 @@ export default function ColorsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
+    <div className="min-h-screen bg-transparent py-12 px-4">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+           initial={{ opacity: 0, y: 10 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.5 }}
+           className="mb-12"
+        >
           <h1 className="text-4xl md:text-5xl font-bold font-serif text-foreground mb-4">
-            Color System
+            Colors
           </h1>
-          <p className="text-lg text-foreground-subtle max-w-3xl">
-            A comprehensive color system with semantic colors (theme-aware) and numeric scales
-            (fixed). Semantic colors adapt to light/dark mode, while numeric scales remain
-            consistent.
+          <p className="text-lg text-foreground-subtle max-w-2xl leading-relaxed">
+            The color system uses semantic tokens to ensure accessible contrast across themes, 
+            backed by a set of numeric primitive scales.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Semantic Colors Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold font-serif text-foreground mb-2">
-            Semantic Colors
-          </h2>
-          <p className="text-foreground-subtle mb-8">
-            Theme-aware colors that change between light and dark mode. Use these for UI elements.
-          </p>
-
+        {/* Semantic Section */}
+        <section className="mb-20">
+          <h2 className="text-2xl font-bold text-foreground mb-6 pb-2 border-b border-border">Semantic Tokens</h2>
+          
           <div className="space-y-12">
-            {semanticColors.map((group) => (
-              <div key={group.category} className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground mb-1">
-                    {group.category}
-                  </h3>
-                  <p className="text-sm text-foreground-muted">{group.description}</p>
+            {semanticGroups.map((group) => (
+              <div key={group.category}>
+                <div className="mb-4">
+                   <h3 className="text-lg font-bold text-foreground">{group.category}</h3>
+                   <p className="text-sm text-foreground-muted">{group.description}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {group.colors.map((color) => {
-                    const isTextColor = color.class.startsWith('text-');
-                    const isBorderColor = color.class.startsWith('border-');
-                    const displayClass = isTextColor
-                      ? color.class
-                      : isBorderColor
-                        ? `border-2 ${color.class}`
-                        : color.class;
-
-                    return (
-                      <div
-                        key={color.name}
-                        className="group relative bg-surface border border-border rounded-lg p-4 hover:border-accent transition-colors cursor-pointer"
-                        onClick={() => copyToClipboard(color.var, color.name)}
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="font-medium text-foreground text-sm mb-1">
-                              {color.name}
-                            </div>
-                            <div className="text-xs text-foreground-muted font-mono">
-                              {color.class}
-                            </div>
-                          </div>
-                          {copiedColor === color.name && (
-                            <span className="text-xs text-accent font-medium">Copied!</span>
-                          )}
-                        </div>
-
-                        {/* Color Swatch */}
-                        <div className="space-y-2">
-                          {isTextColor ? (
-                            <div className={`${displayClass} text-lg font-semibold py-2 px-3 rounded bg-surface-subtle`}>
-                              Sample Text
-                            </div>
-                          ) : isBorderColor ? (
-                            <div className={`${displayClass} h-12 rounded bg-surface`} />
-                          ) : (
-                            <div className={`${displayClass} h-12 rounded`} />
-                          )}
-                        </div>
-
-                        {/* CSS Variable */}
-                        <div className="mt-3 pt-3 border-t border-border-subtle">
-                          <div className="text-xs text-foreground-muted font-mono break-all">
-                            {color.var}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Numeric Scales Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold font-serif text-foreground mb-2">
-            Numeric Color Scales
-          </h2>
-          <p className="text-foreground-subtle mb-8">
-            Fixed colors that remain consistent across themes. Use for precise control and custom
-            designs.
-          </p>
-
-          <div className="space-y-12">
-            {numericScales.map((scale) => (
-              <div key={scale.name} className="space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">{scale.name} Scale</h3>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-2">
-                  {scale.colors.map((color) => (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {group.colors.map((color) => (
                     <div
                       key={color.name}
-                      className="group relative cursor-pointer"
-                      onClick={() => copyToClipboard(color.value, color.name)}
+                      onClick={() => copyToClipboard(color.var, color.name)}
+                      className="group cursor-pointer bg-surface border border-border rounded-lg p-3 hover:border-accent hover:shadow-sm transition-all duration-200"
                     >
-                      <div
-                        className="h-20 rounded-lg border border-border hover:border-accent transition-colors mb-2"
-                        style={{ backgroundColor: color.value }}
-                      />
-                      <div className="text-xs font-medium text-foreground mb-1">
-                        {color.name.split('-')[1]}
+                      <div className={`h-12 w-full rounded-md mb-3 border border-border/10 ${color.bgClass || color.class}`} />
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-bold text-sm text-foreground">{color.name}</span>
+                        {copiedColor === color.name && <FaCheck className="text-success w-3 h-3" />}
                       </div>
-                      <div className="text-xs text-foreground-muted font-mono truncate">
-                        {color.name}
+                      <div className="text-[10px] font-mono text-foreground-muted truncate">
+                        {color.var}
                       </div>
-                      {copiedColor === color.name && (
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs whitespace-nowrap">
-                          Copied!
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -346,167 +186,50 @@ export default function ColorsPage() {
           </div>
         </section>
 
-        {/* Usage Examples */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold font-serif text-foreground mb-2">
-            Usage Examples
-          </h2>
-          <p className="text-foreground-subtle mb-8">
-            Examples of how to use the color system in your components.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Buttons */}
-            <div className="bg-surface border border-border rounded-lg p-6 space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">Buttons</h3>
-              <div className="flex flex-wrap gap-3">
-                <button className="px-4 py-2 bg-accent text-accent-contrast rounded-lg font-medium hover:bg-accent-hover transition-colors">
-                  Primary
-                </button>
-                <button className="px-4 py-2 bg-surface border border-border text-foreground rounded-lg font-medium hover:bg-surface-hover transition-colors">
-                  Secondary
-                </button>
-                <button className="px-4 py-2 bg-success text-success-contrast rounded-lg font-medium hover:opacity-90 transition-opacity">
-                  Success
-                </button>
-                <button className="px-4 py-2 bg-danger text-danger-contrast rounded-lg font-medium hover:opacity-90 transition-opacity">
-                  Danger
-                </button>
-              </div>
-            </div>
-
-            {/* Cards */}
-            <div className="bg-surface border border-border rounded-lg p-6 space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">Cards</h3>
-              <div className="space-y-3">
-                <div className="bg-surface-subtle border border-border-subtle rounded-lg p-4">
-                  <div className="font-medium text-foreground mb-1">Card Title</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Card content with subtle background
-                  </div>
-                </div>
-                <div className="bg-accent-subtle border border-accent-border rounded-lg p-4">
-                  <div className="font-medium text-accent-text mb-1">Accent Card</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Card with accent background
-                  </div>
+        {/* Foundation Section */}
+        <section className="mb-20">
+          <h2 className="text-2xl font-bold text-foreground mb-6 pb-2 border-b border-border">Primitives</h2>
+          
+          <div className="space-y-8">
+            {numericScales.map((scale) => (
+              <div key={scale.name}>
+                <h3 className="text-sm font-bold text-foreground-subtle mb-3 uppercase tracking-wider">{scale.name}</h3>
+                <div className="grid grid-cols-6 md:grid-cols-11 gap-2">
+                  {scale.colors.map((color) => (
+                    <div
+                      key={color.name}
+                      className="group cursor-pointer"
+                      onClick={() => copyToClipboard(color.value, color.name)}
+                      title={color.name}
+                    >
+                      <div
+                        className="h-10 rounded-md border border-border/50 group-hover:border-accent group-hover:scale-110 transition-all duration-200 shadow-sm"
+                        style={{ backgroundColor: color.value }}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-
-            {/* Alerts */}
-            <div className="bg-surface border border-border rounded-lg p-6 space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">Alerts</h3>
-              <div className="space-y-3">
-                <div className="bg-success-subtle border border-success/30 rounded-lg p-4">
-                  <div className="font-medium text-success-text mb-1">Success</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Operation completed successfully
-                  </div>
-                </div>
-                <div className="bg-warning-subtle border border-warning/30 rounded-lg p-4">
-                  <div className="font-medium text-warning-text mb-1">Warning</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Please review before proceeding
-                  </div>
-                </div>
-                <div className="bg-danger-subtle border border-danger/30 rounded-lg p-4">
-                  <div className="font-medium text-danger-text mb-1">Error</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Something went wrong
-                  </div>
-                </div>
-                <div className="bg-info-subtle border border-info/30 rounded-lg p-4">
-                  <div className="font-medium text-info-text mb-1">Info</div>
-                  <div className="text-sm text-foreground-subtle">
-                    Here's some helpful information
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Text Hierarchy */}
-            <div className="bg-surface border border-border rounded-lg p-6 space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">Text Hierarchy</h3>
-              <div className="space-y-2">
-                <div className="text-foreground text-xl font-semibold">Primary Text</div>
-                <div className="text-foreground-subtle text-base">
-                  Secondary text for descriptions
-                </div>
-                <div className="text-foreground-muted text-sm">
-                  Muted text for less important information
-                </div>
-                <div className="text-accent font-medium">Accent colored text</div>
-                <div className="text-success font-medium">Success message</div>
-                <div className="text-danger font-medium">Error message</div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* CSS Variables Reference */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold font-serif text-foreground mb-2">
-            CSS Variables Reference
-          </h2>
-          <p className="text-foreground-subtle mb-8">
-            All available CSS variables for direct use in your styles.
-          </p>
-
-          <div className="bg-surface border border-border rounded-lg p-6 overflow-x-auto">
-            <pre className="text-sm text-foreground-muted font-mono">
-              <code>{`/* Semantic Colors (Theme-aware) */
---color-background
---color-background-subtle
---color-surface
---color-surface-subtle
---color-surface-hover
---color-surface-active
---color-surface-elevated
---color-border
---color-border-subtle
---color-border-strong
---color-foreground
---color-foreground-subtle
---color-foreground-muted
---color-accent
---color-accent-hover
---color-accent-active
---color-accent-subtle
---color-accent-contrast
---color-accent-surface
---color-accent-border
---color-accent-text
---color-success
---color-success-contrast
---color-success-subtle
---color-success-text
---color-warning
---color-warning-contrast
---color-warning-subtle
---color-warning-text
---color-danger
---color-danger-contrast
---color-danger-subtle
---color-danger-text
---color-info
---color-info-contrast
---color-info-subtle
---color-info-text
-
-/* Numeric Scales (Fixed) */
---color-neutral-50 through --color-neutral-950
---color-accent-50 through --color-accent-950
---color-success-50 through --color-success-950
---color-warning-50 through --color-warning-950
---color-danger-50 through --color-danger-950
---color-info-50 through --color-info-950`}</code>
-            </pre>
-          </div>
+        {/* Transparency */}
+        <section>
+          <h2 className="text-2xl font-bold text-foreground mb-6 pb-2 border-b border-border">Opacity</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[90, 75, 50, 25].map((opacity) => (
+                  <div key={opacity} className="flex flex-col gap-2">
+                    <div className="h-12 w-full rounded-md bg-accent relative overflow-hidden border border-border/10">
+                       <div className="absolute inset-0 bg-background/10" style={{ backdropFilter: `opacity(${100 - opacity}%)` }} /> {/* Simulation for visuals, simpler to just use class */}
+                       <div className={`absolute inset-0 bg-accent/${opacity}`} />
+                    </div>
+                    <code className="text-xs font-mono text-foreground-muted">/{opacity}</code>
+                  </div>
+                ))}
+            </div>
         </section>
       </div>
     </div>
   );
 }
-
-

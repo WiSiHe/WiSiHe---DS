@@ -31,7 +31,7 @@ const ProjectFilter = ({
   const availableTags = tags.filter(tag => !activeFilters.includes(tag.name));
 
   return (
-    <div className="bg-surface-elevated border border-border rounded-2xl p-4 shadow-sm">
+    <div className="bg-surface border border-border rounded-2xl p-4 shadow-sm">
       <div className="flex items-center justify-between gap-4 mb-4">
         <h3 className="font-medium text-sm text-foreground-subtle">Filter by tag:</h3>
         {activeFilters.length > 0 && (

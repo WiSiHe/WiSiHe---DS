@@ -1,10 +1,10 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { urlForImage } from '@/sanity/lib/utils';
-import { GetAllProjectsResult } from '@/sanity.types';
-import Chip from '../Chip/Chip';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
+import { GetAllProjectsResult } from '@/sanity.types';
+import { urlForImage } from '@/sanity/lib/utils';
+import Chip from '../Chip/Chip';
 
 type OngoingProjectCardProps = {
   project: GetAllProjectsResult['ongoingProjects'][0];
@@ -23,17 +23,24 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
     status,
     projectStart,
   } = project;
+
   const projectTitle = title ?? name;
-  const displayTags = tags?.slice(0, 3) || [];
-  const remainingTagsCount = (tags?.length || 0) - 3;
+  const startDate = projectStart ? new Date(projectStart).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }) : null;
+
+  const displayTags = (tags ?? []).slice(0, 3);
+  const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
 
   return (
     <motion.li key={project._id} layout className="relative w-full">
-      <motion.article className="group relative overflow-hidden rounded-xl card-surface card-surface-elevated card-interactive">
+      <motion.article className="group relative overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1">
         <Link href={`projects/${slug}`} className="block">
           <div className="flex flex-col lg:flex-row">
             {/* Image Section */}
-            <div className="relative w-full lg:w-80 lg:shrink-0 aspect-video lg:aspect-square overflow-hidden rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none">
+            <div className="relative w-full lg:w-80 lg:shrink-0 aspect-video lg:aspect-square overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none">
               <Image
                 src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
                 alt={image?.alt || projectTitle}
@@ -98,12 +105,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
                 <div className="flex items-center gap-2 text-foreground-muted text-sm pt-4 mt-4 border-t border-border/20 group-hover:border-accent/30 transition-colors duration-300">
                   <div className="w-2 h-2 bg-accent rounded-full group-hover:scale-125 transition-transform duration-300" />
                   <span>
-                    Started{' '}
-                    {new Date(projectStart).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
+                    Started {startDate}
                   </span>
                 </div>
               )}

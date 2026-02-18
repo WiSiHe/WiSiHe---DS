@@ -15,14 +15,14 @@ const namespaceMap = {
   fontWeights: 'font-weight',
   lineHeights: 'leading',
   letterSpacing: 'tracking',
-  borderRadius: 'radius',
+  borderRadius: 'borderRadius',
   shadows: 'shadow',
   opacity: 'opacity',
   zIndex: 'z-index',
   breakpoints: 'breakpoint',
   animation: 'animation',
   dimension: 'dimension',
-  semantic: 'semantic',
+  semantic: 'color',
   component: 'component',
 };
 
@@ -33,7 +33,6 @@ const excludedSizingCategories = new Set([
   'fontSizes',
   'lineHeights',
   'letterSpacing',
-  'borderRadius',
   'breakpoints',
   'dimension',
 ]);
@@ -54,10 +53,32 @@ function collectThemeVariables(tokenTree) {
     const flattenedTokens = flattenTokenTree(categoryTokens);
 
     for (const { path: tokenPath, token } of flattenedTokens) {
-      const variableName = `--${namespace}-${tokenPath.join('-')}`;
+      const joinedPath = tokenPath.join('-');
+      let variableName = joinedPath.startsWith(`${namespace}-`)
+        ? `--${joinedPath}`
+        : `--${namespace}-${joinedPath}`;
+      
       const rawValue = token.$value;
       const cssValue = replaceReferencesWithCssVars(rawValue);
-      lines.push(`  ${variableName}: ${cssValue};`);
+      
+      let finalValue = cssValue;
+
+      // For semantic colors, we map the public utility (e.g., --color-accent) 
+      // to the private runtime value (e.g., --color-accent-val) wrapped in color-mix().
+      // This ensures Tailwind sees it as a color (for opacity) while allowing runtime switching.
+      if (variableName.startsWith('--color-') && category === 'semantic' && token.$type === 'color') {
+         finalValue = `color-mix(in srgb, var(${variableName}-val), transparent 0%)`;
+      }
+      
+      lines.push(`  ${variableName}: ${finalValue};`);
+
+      // Alias semantic radius tokens to standard --radius-* variables
+      // This ensures utility classes like rounded-sm use the dynamic semantic value
+      if (category === 'semantic' && token.$type === 'borderRadius') {
+        const leafName = tokenPath[tokenPath.length - 1];
+        // Override the primitive definition (e.g., --radius-sm)
+        lines.push(`  --radius-${leafName}: var(--${joinedPath}-val);`);
+      }
     }
   }
 

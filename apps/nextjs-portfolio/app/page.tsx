@@ -76,8 +76,11 @@ export default async function Home() {
       </div>
 
       {/* Paintings Section with distinct background */}
+      {/* Paintings Section with distinct background */}
       <section className="bg-surface py-24 px-4 md:px-8">
-        <PaintingsSection paintingsDescription={paintingsDescription} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <PaintingsSection paintingsDescription={paintingsDescription} />
+        </Suspense>
       </section>
 
       <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>

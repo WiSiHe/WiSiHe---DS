@@ -36,7 +36,7 @@ export const Card = ({
       whileHover="hover"
       initial="rest"
       animate="rest"
-      className="rounded-3xl group pointer-events-auto card-surface card-surface-elevated card-interactive h-[30rem] md:h-[40rem] w-96 shrink-0 overflow-clip flex flex-col items-start justify-start relative"
+      className="rounded-2xl group pointer-events-auto bg-surface-elevated border border-border transition-all duration-300 hover:bg-surface-hover hover:border-accent-border hover:shadow-xl hover:-translate-y-1 shadow-lg h-[30rem] md:h-[40rem] w-96 shrink-0 overflow-clip flex flex-col items-start justify-start relative"
     >
       <BlurImage
         src={card.src}

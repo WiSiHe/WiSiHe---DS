@@ -4,26 +4,9 @@
 @import '@wisihe/tokens/css';
 @import '@wisihe/tokens/css/semantic';
 
-/* ============================================================================
-   CUSTOM VARIANTS
-   ========================================================================= */
-
-/* Custom variant for dark mode - eliminates need for dark: prefix */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* ============================================================================
-   THEME CONFIGURATION
-   ========================================================================= */
-
-@theme {
-  /* Typography */
-  --font-inter: 'Inter', sans-serif;
-  --font-oswald: 'Oswald', sans-serif;
-
-  /* Layout */
-  --aspect-portrait: 9 / 16;
-  --radius: var(--radius-lg);
-}
+/**
+ * Triggering recompile to fix opacity modifiers issue.
+ */
 
 /* ============================================================================
    BASE STYLES
@@ -37,14 +20,6 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-border, currentColor);
-  }
-
-  html {
-    color-scheme: light;
-  }
-
-  .dark {
-    color-scheme: dark;
   }
 
   /* Typography scale */
@@ -87,52 +62,12 @@
     font: inherit;
   }
 
-  /* Semantic fallback pairs keep readable defaults when text color is omitted. */
-  :where(
-    .bg-background,
-    .bg-background-default,
-    .bg-background-subtle,
-    .bg-surface,
-    .bg-surface-subtle,
-    .bg-surface-elevated,
-    .bg-surface-hover,
-    .bg-surface-active,
-    .bg-card,
-    .bg-popover
-  ) {
-    color: var(--color-foreground);
-  }
-
-  :where(.bg-accent, .bg-accent-hover, .bg-accent-active) {
-    color: var(--color-accent-contrast);
-  }
-
-  :where(.bg-success) {
-    color: var(--color-success-contrast);
-  }
-
-  :where(.bg-warning) {
-    color: var(--color-warning-contrast);
-  }
-
-  :where(.bg-danger) {
-    color: var(--color-danger-contrast);
-  }
-
-  :where(.bg-info) {
-    color: var(--color-info-contrast);
-  }
-
   main {
     height: 100%;
     min-height: 100vh;
     min-height: 100dvh;
     background-color: var(--color-background);
     transition: background-color 360ms ease;
-  }
-
-  .dark main {
-    background-color: var(--color-background);
   }
 
   h1,
@@ -174,301 +109,28 @@
 }
 
 @layer utilities {
-  .card-surface {
-    color: var(--color-foreground);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 6px 14px rgb(0 0 0 / 0.08);
+  /* Scroll indicator animation */
+  @keyframes scroll-indicator {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(1rem);
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
-  .card-surface-elevated {
-    background-color: var(--color-surface-elevated);
-    box-shadow: 0 10px 22px rgb(0 0 0 / 0.1);
+  .animate-scroll-indicator {
+    animation: scroll-indicator 2s ease-in-out infinite;
   }
 
-  .card-interactive {
-    transition:
-      background-color 200ms ease,
-      border-color 200ms ease,
-      box-shadow 200ms ease,
-      color 200ms ease,
-      transform 160ms ease;
-  }
-
-  .card-interactive:hover,
-  .card-interactive:focus-visible {
-    border-color: var(--color-accent-border);
-    background-color: var(--color-surface-hover);
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 10px 20px rgb(0 0 0 / 0.1);
-    transform: translateY(-1px);
-  }
-
-  .dark .card-surface {
-    background-color: var(--color-surface);
-    border-color: color-mix(in oklab, var(--color-border) 92%, transparent);
-    box-shadow: 0 8px 18px rgb(0 0 0 / 0.24);
-  }
-
-  .dark .card-surface-elevated {
-    background-color: var(--color-surface-elevated);
-    border-color: color-mix(in oklab, var(--color-border) 94%, transparent);
-    box-shadow: 0 12px 24px rgb(0 0 0 / 0.32);
-  }
-
-  .dark .card-interactive:hover,
-  .dark .card-interactive:focus-visible {
-    border-color: var(--color-accent-border);
-    background-color: var(--color-surface-hover);
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 12px 24px rgb(0 0 0 / 0.24);
-  }
-
-  .glass-panel {
-    color: var(--color-foreground);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 8px 20px rgb(0 0 0 / 0.08);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .glass-panel-strong {
-    color: var(--color-foreground);
-    background-color: var(--color-surface-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 12px 26px rgb(0 0 0 / 0.1);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .glass-chip {
-    color: var(--color-foreground);
-    background-color: var(--color-surface-subtle);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 10px rgb(0 0 0 / 0.06);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .glass-accent {
-    color: var(--color-accent-contrast);
-    background-color: var(--color-accent);
-    border: 1px solid var(--color-accent-border);
-    box-shadow: 0 8px 18px rgb(0 0 0 / 0.14);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .glass-overlay {
-    background-color: rgb(0 0 0 / 0.55);
-    transition: background-color 220ms ease;
-  }
-
-  :where(
-      .bg-surface,
-      .bg-surface-elevated,
-      .bg-card,
-      .bg-popover,
-      [class*='bg-surface/'],
-      [class*='bg-card/'],
-      [class*='bg-popover/']
-    ):not(
-      .glass-panel,
-      .glass-panel-strong,
-      .glass-chip,
-      .glass-accent,
-      .header-glass,
-      .header-glass-strong,
-      .glass-surface-off
-    ) {
-    background-color: var(--color-surface);
-    border: 1px solid color-mix(in oklab, var(--color-border) 90%, transparent);
-    box-shadow: 0 6px 14px rgb(0 0 0 / 0.06);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease;
-  }
-
-  .dark .glass-panel {
-    background-color: var(--color-surface);
-    border-color: color-mix(in oklab, var(--color-border) 92%, transparent);
-    box-shadow: 0 10px 24px rgb(0 0 0 / 0.28);
-  }
-
-  .dark .glass-panel-strong {
-    background-color: var(--color-surface-elevated);
-    border-color: color-mix(in oklab, var(--color-border) 94%, transparent);
-    box-shadow: 0 14px 30px rgb(0 0 0 / 0.34);
-  }
-
-  .dark .glass-chip {
-    background-color: var(--color-surface-subtle);
-    border-color: color-mix(in oklab, var(--color-border) 88%, transparent);
-    box-shadow: 0 8px 16px rgb(0 0 0 / 0.24);
-  }
-
-  .dark .glass-accent {
-    color: var(--color-accent-contrast);
-    background-color: var(--color-accent);
-    border-color: var(--color-accent-border);
-    box-shadow: 0 10px 22px rgb(0 0 0 / 0.3);
-  }
-
-  .dark :where(
-      .bg-surface,
-      .bg-surface-elevated,
-      .bg-card,
-      .bg-popover,
-      [class*='bg-surface/'],
-      [class*='bg-card/'],
-      [class*='bg-popover/']
-    ):not(
-      .glass-panel,
-      .glass-panel-strong,
-      .glass-chip,
-      .glass-accent,
-      .header-glass,
-      .header-glass-strong,
-      .glass-surface-off
-    ) {
-    background-color: var(--color-surface-elevated);
-    border: 1px solid color-mix(in oklab, var(--color-border) 90%, transparent);
-    box-shadow: 0 8px 18px rgb(0 0 0 / 0.22);
-  }
-
-  .header-glass {
-    color: var(--color-foreground);
-    background-color: var(--color-surface-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 8px 18px rgb(0 0 0 / 0.1);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .header-glass-strong {
-    color: var(--color-foreground);
-    background-color: var(--color-surface-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 10px 22px rgb(0 0 0 / 0.12);
-    transition:
-      background-color 220ms ease,
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      color 220ms ease;
-  }
-
-  .dark .header-glass {
-    background-color: var(--color-surface-elevated);
-    border-color: color-mix(in oklab, var(--color-border) 94%, transparent);
-    box-shadow: 0 10px 24px rgb(0 0 0 / 0.3);
-  }
-
-  .dark .header-glass-strong {
-    background-color: var(--color-surface-elevated);
-    border-color: color-mix(in oklab, var(--color-border) 96%, transparent);
-    box-shadow: 0 14px 28px rgb(0 0 0 / 0.36);
-  }
-
-  .neon-interactive {
-    transition:
-      color 180ms ease,
-      background-color 180ms ease,
-      border-color 180ms ease,
-      box-shadow 180ms ease,
-      transform 140ms ease;
-  }
-
-  .neon-interactive:hover,
-  .neon-interactive:focus-visible {
-    border-color: var(--color-accent-border);
-    background-color: var(--color-surface-hover);
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 6px 14px rgb(0 0 0 / 0.08);
-    transform: translateY(-1px);
-  }
-
-  .neon-active,
-  .neon-interactive[aria-current='page'],
-  .neon-interactive[aria-pressed='true'],
-  .neon-interactive[data-state='on'],
-  .neon-interactive[data-state='checked'],
-  .neon-interactive[aria-checked='true'] {
-    border-color: var(--color-accent-border);
-    background-color: var(--color-accent);
-    color: var(--color-accent-contrast);
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 6px 14px rgb(0 0 0 / 0.12);
-  }
-
-  :where(button, a, [role='button'], [role='switch']).bg-accent {
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 8px 16px rgb(0 0 0 / 0.12);
-    transition:
-      background-color 180ms ease,
-      border-color 180ms ease,
-      box-shadow 180ms ease,
-      transform 140ms ease;
-  }
-
-  :where(button, a, [role='button'], [role='switch']).bg-accent:hover,
-  :where(button, a, [role='button'], [role='switch']).bg-accent:focus-visible {
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 10px 20px rgb(0 0 0 / 0.16);
-    transform: translateY(-1px);
-  }
-
-  :where([role='switch'][aria-checked='true'], [data-state='checked'], [data-state='on']) {
-    border-color: var(--color-accent-border);
-    box-shadow:
-      0 0 0 1px var(--color-accent-border),
-      0 6px 12px rgb(0 0 0 / 0.1);
-  }
-
-  :where([class*='bg-gradient-to-'], [class*='bg-linear-to-']) {
-    background-image: none !important;
-  }
-
-  :where(.text-transparent.bg-clip-text) {
-    color: var(--color-accent) !important;
-    -webkit-text-fill-color: currentColor;
-    background-image: none !important;
-  }
-
-  :where([class*='drop-shadow']) {
-    filter: none !important;
-  }
-
-  :where([class*='backdrop-blur']) {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  .animate-gradient {
-    background-size: auto;
-    animation: none !important;
+  .splash-shown .loading-screen {
+    display: none !important;
   }
 }
 
@@ -500,43 +162,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-gradient,
-  .animate-scroll-indicator,
   .within {
     animation: none !important;
   }
-}
-
-/* ============================================================================
-   UTILITY CLASSES
-   ========================================================================= */
-
-.animate-gradient {
-  animation: none !important;
-}
-
-/* Scroll indicator animation */
-@keyframes scroll-indicator {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  50% {
-    transform: translateY(1rem);
-    opacity: 0.3;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-scroll-indicator {
-  animation: scroll-indicator 2s ease-in-out infinite;
-}
-
-.splash-shown .loading-screen {
-  display: none !important;
 }
