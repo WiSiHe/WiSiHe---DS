@@ -29,7 +29,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
 
   return (
     <motion.li key={project._id} layout className="relative w-full">
-      <motion.article className="group relative overflow-hidden bg-surface border border-border/30 rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-accent/50 hover:bg-surface-hover hover:-translate-y-1">
+      <motion.article className="group relative overflow-hidden rounded-xl card-surface card-surface-elevated card-interactive">
         <Link href={`projects/${slug}`} className="block">
           <div className="flex flex-col lg:flex-row">
             {/* Image Section */}
@@ -42,7 +42,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
                 sizes="(max-width: 1024px) 100vw, 320px"
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-background/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               {/* Status Badge - Overlaid on image */}
               {status && (
                 <div className="absolute top-4 right-4 z-10">

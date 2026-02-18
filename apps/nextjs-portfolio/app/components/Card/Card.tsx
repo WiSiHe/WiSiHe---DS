@@ -36,7 +36,7 @@ export const Card = ({
       whileHover="hover"
       initial="rest"
       animate="rest"
-      className="rounded-3xl group pointer-events-auto bg-surface h-[30rem] md:h-[40rem] w-96 shrink-0 overflow-clip flex flex-col items-start justify-start relative"
+      className="rounded-3xl group pointer-events-auto card-surface card-surface-elevated card-interactive h-[30rem] md:h-[40rem] w-96 shrink-0 overflow-clip flex flex-col items-start justify-start relative"
     >
       <BlurImage
         src={card.src}
@@ -56,9 +56,9 @@ export const Card = ({
           View <IconArrowRight />
         </Link>
       </motion.div>
-      <div className="absolute left-0 right-0 top-0 h-42 w-full pointer-events-none bg-linear-to-b from-black to-transparent" />
+      <div className="absolute left-0 right-0 top-0 h-42 w-full pointer-events-none bg-surface/85" />
       <div className="relative w-full p-8">
-        <motion.h3 className="max-w-xs font-sans text-xl font-black text-left md:text-3xl text-white text-balance">
+        <motion.h3 className="max-w-xs font-sans text-xl font-black text-left md:text-3xl text-foreground text-balance">
           {card.title}
         </motion.h3>
         <motion.div variants={tagsVariants} className="flex z-10 flex-wrap gap-2 pt-2">

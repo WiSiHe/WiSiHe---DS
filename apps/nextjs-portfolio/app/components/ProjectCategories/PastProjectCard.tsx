@@ -30,7 +30,7 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
     <motion.li
       key={project._id}
       layout
-      className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface border border-border/30 rounded-xl shadow-sm shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group transition-all duration-300 hover:shadow-2xl hover:border-accent/50 hover:bg-surface-hover hover:-translate-y-1"
+      className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden rounded-xl shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group card-surface card-interactive"
     >
       <motion.article className="w-full">
         <motion.div
@@ -54,7 +54,7 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 scale-105 group-hover:scale-115"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-background/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </motion.div>
         <div className="p-4">
           <Link

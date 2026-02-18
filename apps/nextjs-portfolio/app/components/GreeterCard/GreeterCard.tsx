@@ -55,7 +55,7 @@ const GreeterCard = (): JSX.Element => {
     <motion.div
       initial="initial"
       animate="animate"
-      className="relative flex flex-col justify-center h-full gap-6 p-6 rounded-xl bg-surface-subtle border border-border overflow-clip drop-shadow-xl"
+      className="relative flex flex-col justify-center h-full gap-6 p-6 rounded-xl overflow-clip card-surface card-surface-elevated"
     >
       <div className="z-10 flex flex-col items-start h-full text-foreground lg:justify-center lg:p-6">
         <h1 className="text-3xl font-black tracking-tight xl:text-6xl">
