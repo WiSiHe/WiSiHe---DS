@@ -28,10 +28,8 @@ export function GridBackground({
         className={cn(positionClass, 'inset-0 pointer-events-none z-0', className)}
         style={{
           opacity,
-          backgroundImage:
-            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
+          backgroundImage: 'none',
           backgroundSize: `${size}px ${size}px`,
-          backgroundPosition: '0 0',
         }}
         aria-hidden="true"
       />
@@ -40,10 +38,8 @@ export function GridBackground({
         className={cn(positionClass, 'inset-0 pointer-events-none z-0', className)}
         style={{
           opacity: secondaryOpacity,
-          backgroundImage:
-            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
+          backgroundImage: 'none',
           backgroundSize: `${secondarySize}px ${secondarySize}px`,
-          backgroundPosition: '0 0',
         }}
         aria-hidden="true"
       />

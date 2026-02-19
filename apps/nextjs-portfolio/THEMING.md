@@ -77,7 +77,7 @@ Uses `next-themes` for robust theme management:
 <div className="bg-background text-foreground">
 
 // Primary actions
-<button className="bg-primary text-primary-foreground">
+<button className="bg-accent text-accent-contrast">
 
 // Cards and surfaces
 <div className="bg-card text-card-foreground">
@@ -86,7 +86,7 @@ Uses `next-themes` for robust theme management:
 <div className="bg-muted text-muted-foreground">
 
 // Accents
-<div className="bg-accent text-accent-foreground">
+<div className="bg-accent text-accent-contrast">
 ```
 
 #### ✅ With Custom Dark Mode Variant
@@ -95,14 +95,14 @@ Thanks to `@custom-variant dark`, you can write:
 
 ```tsx
 // This automatically adapts to dark mode!
-<div className="bg-primary">
+<div className="bg-accent">
 ```
 
 Instead of:
 
 ```tsx
 // ❌ Old way - no longer needed!
-<div className="bg-primary dark:bg-primary-dark">
+<div className="bg-accent">
 ```
 
 ### Accessing Theme State
@@ -128,9 +128,9 @@ function ThemeToggle() {
 | Color                                | Purpose                             | Example Usage                            |
 | ------------------------------------ | ----------------------------------- | ---------------------------------------- |
 | `background` / `foreground`          | Page background and primary text    | `bg-background text-foreground`          |
-| `primary` / `primary-foreground`     | Primary actions and CTAs            | `bg-primary text-primary-foreground`     |
+| `accent` / `accent-contrast`         | Primary actions and CTAs            | `bg-accent text-accent-contrast`         |
 | `secondary` / `secondary-foreground` | Secondary actions                   | `bg-secondary text-secondary-foreground` |
-| `accent` / `accent-foreground`       | Highlights and interactive elements | `bg-accent text-accent-foreground`       |
+| `accent` / `accent-contrast`         | Highlights and interactive elements | `bg-accent text-accent-contrast`         |
 | `muted` / `muted-foreground`         | Subtle backgrounds, disabled states | `bg-muted text-muted-foreground`         |
 
 ### Surface Colors
@@ -200,7 +200,7 @@ To add a new color to the theme:
 
 ### ✅ DO
 
-- Use semantic color names (`bg-primary`, `bg-accent`)
+- Use semantic color names (`bg-accent`, `bg-surface`, `text-foreground`)
 - Follow the `background`/`foreground` naming pattern
 - Use OKLCH color space for new colors
 - Test colors in both light and dark modes
@@ -221,7 +221,7 @@ If you have existing code using the old color system:
 | ------------------------------------------- | ----------------- |
 | `bg-color-background`                       | `bg-background`   |
 | `text-color-foreground`                     | `text-foreground` |
-| `bg-color-primary`                          | `bg-primary`      |
+| `bg-color-primary`                          | `bg-accent`       |
 | `bg-color-accent dark:bg-color-accent-dark` | `bg-accent`       |
 | `border-color-border`                       | `border-border`   |
 
@@ -242,7 +242,7 @@ This is handled by `next-themes` automatically. Ensure `disableTransitionOnChang
 
 1. Check that the color is defined in both `:root` and `.dark`
 2. Verify the `@theme inline` mapping exists
-3. Ensure you're using the Tailwind class name (e.g., `bg-primary`, not `bg-color-primary`)
+3. Ensure you're using the Tailwind class name (e.g., `bg-accent`, not `bg-color-primary`)
 
 ### CSS warnings about `@custom-variant` or `@theme`
 

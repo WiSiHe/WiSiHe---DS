@@ -1,183 +1,95 @@
 # @wisihe/tokens
 
-Design tokens package for the WiSiHe Design System. This package uses Style Dictionary to generate design tokens from Figma (via Tokens Studio) and export them to multiple formats including CSS variables and Tailwind CSS configuration.
+Design tokens for the WiSiHe design system, built with **Style Dictionary** and organized as:
 
-## Features
+**primitives -> semantic -> component**
 
-- 🎨 **Figma Integration**: Tokens Studio for Figma as the single source of truth
-- 🔄 **Style Dictionary v5**: Industry-standard tool for design token management
-- 📦 **Multiple Output Formats**: CSS variables and Tailwind config
-- 🌙 **Dark Mode Support**: Separate dark theme generation
-- 🚀 **Automated Build**: One-command build from tokens.json to all outputs
+This structure makes the system more robust, easier to evolve, and safer for theming.
 
-## Installation
+## Architecture
 
-```bash
-pnpm add @wisihe/tokens
+Token sources live in `tokens/`:
+
+```text
+tokens/
+  primitives/      # raw scales (color, spacing, typography, effects)
+  semantic/light/  # role-based tokens for light mode
+  semantic/dark/   # role-based overrides for dark mode
+  component/       # component-level decisions (button, input, etc.)
 ```
+
+### Layer rules
+
+1. **Primitives**: raw values only (`color.neutral.500`, `spacing.md`, `borderRadius.lg`)
+2. **Semantic**: aliases to primitives (`semantic.color.background -> color.neutral.50`)
+3. **Component**: aliases to semantic + primitives (`component.button.variant.primary.background -> semantic.color.accent`)
+
+### Semantic naming model
+
+Semantic colors follow Designsystemet-style semantics:
+
+- **Scale**: `neutral`, `accent`, `success`, `warning`, `danger`, `info`, `brand-1..3`
+- **Group**: `background`, `surface`, `border`, `text`, `base`
+- **Variant**: `default`, `tinted`, `hover`, `active`, `contrast-*`
+
+Example: `semantic.color.scale.accent.base.hover`
+
+For developer experience in Tailwind, these are exposed through clean aliases such as:
+
+- `bg-background`, `bg-surface`, `bg-surface-hover`
+- `text-foreground`, `text-foreground-subtle`
+- `border-border`, `border-border-strong`
+- `bg-accent`, `text-accent-contrast`
+
+## Build outputs
+
+`pnpm build` generates:
+
+- `dist/css/variables.css` - core token variables from Style Dictionary
+- `dist/css/semantic-colors.css` - light/dark semantic variables + Tailwind semantic mappings
+- `dist/tailwind/config.js` - Tailwind v3 config output
+- `dist/tailwind/theme.css` - Tailwind v4 `@theme` variables
+- `dist/tailwind/theme-dark.css` - dark semantic override file
 
 ## Usage
 
-### CSS Variables
+### CSS variables
 
 ```css
-/* Import the generated CSS variables */
 @import '@wisihe/tokens/css';
+@import '@wisihe/tokens/css/semantic';
 
-/* Use the variables in your CSS */
 .button {
-  background-color: var(--color-primary-500);
-  padding: var(--size-spacing-md);
-  border-radius: var(--size-border-radius-md);
-}
-```
-
-### Tailwind CSS v3
-
-```javascript
-// tailwind.config.js
-import tokens from '@wisihe/tokens/tailwind';
-
-export default {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      ...tokens.theme.extend,
-    },
-  },
-};
-```
-
-### Tailwind CSS v4
-
-```css
-/* app.css */
-@import 'tailwindcss';
-@import '@wisihe/tokens/tailwind-v4';
-
-/* Your custom styles */
-.button {
-  @apply bg-color-primary-500 text-white px-spacing-md py-spacing-sm;
-}
-```
-
-Or use the theme variables directly:
-
-```css
-/* app.css */
-@import 'tailwindcss';
-@import '@wisihe/tokens/tailwind-v4';
-
-.custom-button {
-  background-color: var(--color-primary-500);
-  padding: var(--spacing-md);
+  background: var(--color-accent-500);
+  color: var(--color-foreground);
   border-radius: var(--radius-lg);
 }
 ```
 
-### Dark Mode
+### Tailwind v4
 
 ```css
-/* Import both light and dark themes */
 @import 'tailwindcss';
 @import '@wisihe/tokens/tailwind-v4';
+@import '@wisihe/tokens/css/semantic';
+```
+
+### Dark mode
+
+```css
 @import '@wisihe/tokens/tailwind-v4-dark';
-
-/* Dark mode will automatically apply when .dark class is present */
 ```
 
-### Raw Tokens
-
-You can access the raw `tokens.json` file directly:
-
-```javascript
-import tokens from '@wisihe/tokens/raw';
-
-console.log(tokens.core.colors.primary['500'].$value); // "#3b82f6"
-```
-
-## Token Structure
-
-The package includes the following token categories:
-
-### Colors
-
-- Primary colors (50-900 scale)
-- Secondary colors (50-900 scale)
-- Neutral colors (white, black, gray scale)
-
-### Spacing
-
-- Consistent spacing scale (xs, sm, md, lg, xl, 2xl, 3xl)
-- Border radius values
-
-### Typography
-
-- Font families (sans, mono)
-- Font sizes (xs to 4xl)
-- Font weights (light to bold)
-- Line heights (tight, normal, relaxed)
-
-### Effects
-
-- Box shadows (sm, md, lg, xl, 2xl, inner, none)
+Dark mode is applied via `.dark` semantic variable overrides.
 
 ## Development
 
-### Building Tokens
-
 ```bash
-# Build all token outputs
 pnpm build
-
-# Clean build directory
 pnpm clean
+pnpm lint
 ```
 
-### Workflow
+## Legacy raw export
 
-1. **Design in Figma**: Update your design tokens in Tokens Studio
-2. **Export**: Download `tokens.json` from Tokens Studio and replace the existing one
-3. **Build**: Run `pnpm build` to generate all outputs
-4. **Use**: Import the generated files in your projects
-
-### Token Format
-
-The package expects tokens in the Tokens Studio format:
-
-```json
-{
-  "core": {
-    "dimension": {
-      "xs": {
-        "$value": "4rem",
-        "$type": "dimension"
-      }
-    },
-    "colors": {
-      "primary": {
-        "500": {
-          "$value": "#3b82f6",
-          "$type": "color"
-        }
-      }
-    }
-  }
-}
-```
-
-## Output Formats
-
-- **CSS Variables**: `dist/css/variables.css`
-- **Tailwind v3 Config**: `dist/tailwind/config.js`
-- **Tailwind v4 Theme**: `dist/tailwind/theme.css`
-- **Tailwind v4 Dark Theme**: `dist/tailwind/theme-dark.css`
-
-## Contributing
-
-When adding new tokens:
-
-1. Follow the existing naming conventions
-2. Include proper descriptions
-3. Test all output formats
-4. Update documentation as needed
+`@wisihe/tokens/raw` still points to `tokens.json` for backwards compatibility.

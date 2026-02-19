@@ -19,12 +19,12 @@ const Footer = ({ socialLinks }: FooterProps) => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Videos', href: '/videos' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Design System', href: '/design-system' },
   ];
 
   return (
-    <footer className="relative w-full overflow-hidden border-t-2 bg-surface border-primary">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface/50" />
-      <div className="relative flex flex-col w-full max-w-screen-xl gap-12 px-4 py-16 mx-auto text-text-primary sm:px-6 md:px-8 lg:px-12">
+    <footer className="relative w-full overflow-hidden border-t bg-background border-border">
+      <div className="relative flex flex-col w-full max-w-7xl gap-12 px-4 py-16 mx-auto text-foreground sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -33,14 +33,14 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold sm:text-3xl">
+            <h3 className="text-2xl font-bold font-oswald sm:text-3xl">
               My name is{' '}
-              <span className="text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text animate-gradient drop-shadow-sm">
+              <span className="text-accent">
                 Henrik Wilhelm Sissener
               </span>
             </h3>
-            <p className="max-w-lg text-base leading-relaxed text-text-secondary sm:text-lg">
-              I&apos;m a <span className="font-medium text-primary">frontend developer</span>{' '}
+            <p className="max-w-lg leading-relaxed text-foreground-subtle sm:text-lg font-inter">
+              I&apos;m a <span className="font-medium text-accent">frontend developer</span>{' '}
               specializing in React and Svelte. In my free time, I enjoy{' '}
               <span className="font-medium text-accent">drawing</span> and dabbling in{' '}
               <span className="font-medium text-accent">game development</span>.
@@ -54,7 +54,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-accent sm:text-3xl">
               Explore
             </h3>
             <ul className="space-y-3">
@@ -68,7 +68,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
                 >
                   <Link
                     href={link.href}
-                    className="inline-block text-lg font-medium text-text-primary transition-all duration-300 hover:text-primary hover:translate-x-1"
+                    className="inline-block text-lg font-medium text-foreground transition-all duration-300 hover:text-accent hover:translate-x-1 font-inter"
                   >
                     {link.name}
                   </Link>
@@ -84,7 +84,7 @@ const Footer = ({ socialLinks }: FooterProps) => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text sm:text-3xl drop-shadow-sm">
+            <h3 className="text-2xl font-bold text-accent sm:text-3xl">
               Connect
             </h3>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -104,14 +104,49 @@ const Footer = ({ socialLinks }: FooterProps) => {
           </motion.nav>
         </div>
 
+        {process.env.NODE_ENV === 'development' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="pt-8 mt-12 border-t border-dashed border-accent/30"
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded-md bg-accent text-accent-contrast shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                Dev Navigation
+              </div>
+              <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+                {[
+                  { name: 'Contact', href: '/contact' },
+                  { name: 'Data', href: '/data' },
+                  { name: 'Recipes', href: '/recipes' },
+                  { name: 'Design System', href: '/design-system' },
+                ].map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-sm font-medium text-foreground-subtle hover:text-accent transition-colors font-inter"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="pt-8 mt-4 text-center border-t border-border"
+          className="pt-8 mt-8 text-center border-t border-border/20"
         >
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm text-foreground-subtle font-inter">
             © {new Date().getFullYear()} All Rights Reserved • Crafted with ❤️ in Oslo
           </p>
         </motion.div>

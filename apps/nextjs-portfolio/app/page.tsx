@@ -61,8 +61,8 @@ export default async function Home() {
 
   return (
     <div className="bg-background">
-      {/* Hero & Projects Wrapper with Gradient */}
-      <div className="bg-linear-to-b from-transparent via-background to-surface-elevated">
+      {/* Hero & Projects Wrapper */}
+      <div className="bg-background">
         <Suspense fallback={<HeroSkeleton />}>
           <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
@@ -76,8 +76,11 @@ export default async function Home() {
       </div>
 
       {/* Paintings Section with distinct background */}
+      {/* Paintings Section with distinct background */}
       <section className="bg-surface py-24 px-4 md:px-8">
-        <PaintingsSection paintingsDescription={paintingsDescription} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <PaintingsSection paintingsDescription={paintingsDescription} />
+        </Suspense>
       </section>
 
       <Suspense fallback={<div className="h-64 bg-surface-elevated animate-pulse" />}>

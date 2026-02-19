@@ -152,13 +152,13 @@ export default async function Paintings({
 
   return (
     <>
-      <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-7xl bg-background">
+      <div className="flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-7xl">
         <div className="w-full p-4">
           <div className="pb-4">
             <h1 className="font-semibold text-foreground text-3xl md:text-4xl mb-3">
               Digital Art Gallery
             </h1>
-            <p className="text-foreground-subtle text-base md:text-lg leading-relaxed">
+            <p className="text-foreground-subtle text-base md:text-lg max-w-prose text-pretty leading-relaxed">
               A curated collection of my digital paintings and artwork, exploring themes of
               imagination, storytelling, and visual creativity. Each piece represents a moment of
               artistic expression and digital craftsmanship.

@@ -56,7 +56,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           <Link
             href="/"
             aria-label="Navigate to the homepage"
-            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface-elevated border border-border shadow-lg hover:bg-surface-hover hover:border-accent hover:shadow-xl transition-all"
+            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105"
           >
             <IconLogo
               color="currentColor"
@@ -72,7 +72,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex items-center bg-surface-elevated border border-border shadow-xl p-1 overflow-clip rounded-full"
+            className="flex items-center text-foreground bg-surface border border-border overflow-clip rounded-full shadow-lg"
             style={{ isolation: 'isolate' }}
           >
             {navigationItems.map((item, i) => {
@@ -92,19 +92,20 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                 <motion.li
                   key={i}
                   variants={listItem}
-                  className="first:rounded-l-full first:rounded-r-sm last:rounded-r-full last:rounded-l-sm overflow-clip"
+                  className={cn("first:rounded-l-full first:rounded-r-none last:rounded-r-full last:rounded-l-none", "p-1")}
                 >
                   <Link
                     href={href}
                     aria-label={`Navigate to ${label}`}
                     className={cn(
-                      'transition-all gap-1 md:gap-2 focus-visible:bg-accent-surface focus-visible:text-accent flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full',
+                      'transition-all gap-1 md:gap-2 flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full border active:scale-95 justify-center px-3 py-2.5 md:px-4 md:py-2 min-w-10 md:min-w-0',
                       isActive
-                        ? 'text-accent-contrast bg-accent border border-accent-border shadow-lg aspect-square justify-center p-2.5 md:px-4 md:py-2 md:aspect-auto'
-                        : 'text-foreground hover:bg-surface-hover hover:text-accent px-3 py-2.5 md:px-4 md:py-2',
+                        ? 'bg-accent text-accent-contrast border-accent-border shadow-sm backdrop-blur-sm'
+                        : 'text-foreground-subtle bg-transparent border-transparent hover:bg-surface-hover hover:text-accent hover:border-border',
                     )}
+                    aria-current={isActive ? 'page' : undefined}
                   >
-                    <span className="text-lg">{navIcon}</span>
+                    <span className="text-lg leading-none">{navIcon}</span>
                     <strong className="hidden md:block not-sr-only">{label}</strong>
                   </Link>
                 </motion.li>

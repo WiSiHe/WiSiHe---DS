@@ -32,7 +32,6 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
     >
       <PHProvider client={posthog}>
         <PostHogPageView />

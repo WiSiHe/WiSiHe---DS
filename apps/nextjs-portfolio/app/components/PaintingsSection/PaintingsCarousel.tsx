@@ -1,15 +1,12 @@
 'use client';
 
 import { RandomPaintingsQueryResult } from '@/sanity.types';
-import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, Variants } from 'motion/react';
-import { type PortableTextBlock } from 'next-sanity';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { Card } from '../Card/Card';
-import CustomPortableText from '../PortableText/PortableText';
+import PaintingCard from '../PaintingCard/PaintingCard';
 
 type PaintingsCarouselProps = {
   paintings: RandomPaintingsQueryResult;
@@ -81,14 +78,6 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
     },
   };
 
-  // Optimize image sizes for better performance
-  const data = paintings.map(painting => ({
-    categories: painting.tagsV2 || ['Art'],
-    title: painting.title || '',
-    href: `/paintings/${painting.slug}`,
-    src: urlForImage(painting.image)?.height(600).width(450).auto('format').quality(75).url() || '',
-  }));
-
   return (
     <motion.section
       initial="hidden"
@@ -100,8 +89,13 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
       <motion.div variants={itemVariants} className="relative">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4">
-            {data.map((card, index) => (
-              <Card card={card} index={index} key={index} />
+            {paintings.map((painting, index) => (
+              <div key={painting._id} className="w-96 shrink-0">
+                <PaintingCard
+                  paintingData={painting as any}
+                  shouldBeLazy={index < 2}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -109,32 +103,32 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
         {/* Navigation buttons */}
         <div className="flex justify-end gap-2 mt-4">
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             aria-label="Scroll left"
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowLeft className="w-6 h-6 text-accent-contrast" />
           </button>
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-primary disabled:opacity-50 hover:bg-primary-light"
+            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label="Scroll right"
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-on-primary" />
+            <IconArrowNarrowRight className="w-6 h-6 text-accent-contrast" />
           </button>
         </div>
       </motion.div>
 
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center justify-center gap-4 text-text-primary"
+        className="flex flex-col items-center justify-center gap-4 text-foreground"
       >
         <p>Like what you see?</p>
         <Link
           href="/paintings"
-          className="px-4 py-2 text-on-primary transition-all duration-300 rounded-full bg-primary hover:bg-primary-light"
+          className="px-4 py-2 text-accent-contrast transition-all duration-300 rounded-full bg-accent hover:bg-accent-hover"
         >
           Explore all paintings
         </Link>

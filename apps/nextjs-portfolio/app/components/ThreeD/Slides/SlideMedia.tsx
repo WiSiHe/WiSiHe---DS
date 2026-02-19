@@ -58,7 +58,7 @@ export const SlideMedia = ({
               </a>
               <div className="flex items-center gap-3 mb-3 flex-wrap">
                 {tool.category && (
-                  <span className="inline-block px-3 py-1 text-xs font-semibold text-accent bg-accent/10 rounded-full">
+                  <span className="inline-block px-3 py-1 text-xs font-semibold text-accent-text bg-accent-subtle rounded-full">
                     {tool.category}
                   </span>
                 )}
@@ -103,7 +103,7 @@ export const SlideMedia = ({
                   href={tool.workshopUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent border-2 border-accent/30 hover:border-accent/50 rounded-lg font-semibold text-sm transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent-subtle hover:bg-accent-surface text-accent-text border-2 border-accent-border rounded-lg font-semibold text-sm transition-all duration-200"
                 >
                   <svg
                     className="w-4 h-4"
@@ -139,7 +139,7 @@ export const SlideMedia = ({
       <div
         ref={mainIframeRef.containerRef}
         className={cn(
-          'relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 bg-surface/50',
+          'relative w-full rounded-xl overflow-hidden bg-surface border border-border shadow-lg hover:shadow-xl transition-all duration-300',
           getAspectRatioClass(slideData.iframeAspectRatio)
         )}
       >
@@ -153,7 +153,7 @@ export const SlideMedia = ({
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-surface/30 min-h-[400px]">
+          <div className="w-full h-full flex items-center justify-center bg-surface-subtle min-h-[400px]">
             <div className="text-foreground/40 text-sm">Loading...</div>
           </div>
         )}
@@ -163,7 +163,7 @@ export const SlideMedia = ({
 
   if (slideData.metrics) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 bg-surface border border-border rounded-2xl overflow-hidden min-w-0">
         <Numbers metrics={slideData.metrics} />
       </div>
     );
@@ -179,7 +179,7 @@ export const SlideMedia = ({
 
   if (slideData.chartType) {
     return (
-      <div className="w-full max-w-full p-4 bg-surface-elevated/50 rounded-2xl border border-border/50 overflow-hidden min-w-0">
+      <div className="w-full max-w-full p-4 bg-surface border border-border rounded-2xl overflow-hidden min-w-0">
         {slideData.chartType === 'performance' && <PerformanceChart />}
         {slideData.chartType === 'business-impact' && <BusinessImpactChart />}
         {slideData.chartType === 'engagement' && <EngagementChart />}
@@ -201,7 +201,7 @@ export const SlideMedia = ({
     return (
       <div
         className={cn(
-          'relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50',
+          'relative rounded-xl overflow-hidden bg-surface border border-border shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full',
           getAspectRatioClass(slideData.imageAspectRatio)
         )}
       >

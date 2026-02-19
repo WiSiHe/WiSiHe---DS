@@ -43,7 +43,7 @@ export function ShowcaseControls({
           whileTap={{ scale: 0.98 }}
           className={`w-full flex items-center justify-center gap-2 px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
             autoRotate
-              ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
+              ? 'bg-accent text-accent-contrast shadow-lg shadow-accent/50'
               : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
           }`}
           style={{ touchAction: 'manipulation' }}
@@ -69,7 +69,7 @@ export function ShowcaseControls({
               whileTap={{ scale: 0.95 }}
               className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl font-semibold text-xs transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 showcaseTexture === texture.value
-                  ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/50'
+                  ? 'bg-accent text-accent-contrast shadow-lg shadow-accent/50'
                   : 'bg-surface-elevated text-foreground hover:bg-surface border-2 border-transparent hover:border-border/50'
               }`}
               style={{ touchAction: 'manipulation' }}

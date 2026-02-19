@@ -9,7 +9,7 @@ export const SlideHeader = ({ category, index }: SlideHeaderProps) => {
   return (
     <div className="flex items-center gap-3 mb-6 md:mb-8 flex-wrap">
       {category && (
-        <span className="px-4 py-1.5 text-xs font-bold text-accent bg-accent/10 rounded-full border border-accent/30 uppercase tracking-wider">
+        <span className="px-4 py-1.5 text-xs font-bold text-accent-text bg-accent-subtle rounded-full border border-accent-border uppercase tracking-wider">
           {category}
         </span>
       )}

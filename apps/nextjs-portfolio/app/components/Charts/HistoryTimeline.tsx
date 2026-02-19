@@ -118,7 +118,7 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
                 {/* Card Content */}
                 <motion.div
                   className={cn(
-                    "w-full bg-surface-elevated/50 rounded-xl transition-all duration-700 relative overflow-hidden",
+                    "w-full bg-surface border border-border rounded-xl transition-all duration-700 relative overflow-hidden",
                     isActive ? "bg-surface shadow-[0_8px_30px_rgb(0,0,0,0.12)] scale-[1.02]" : "grayscale opacity-70"
                   )}
                   style={{
@@ -136,7 +136,7 @@ export const HistoryTimeline = ({ activeIndex }: HistoryTimelineProps) => {
 
                   <div className="p-4 pl-6 flex items-center gap-4">
                     <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors bg-surface-elevated/80",
+                      "w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors bg-surface-elevated",
                       phase.iconColor,
                       isActive ? "opacity-100" : "opacity-50"
                     )}>

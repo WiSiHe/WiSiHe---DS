@@ -80,7 +80,7 @@ export const Modal = ({
       {open && (
         <Dialog open={open} onClose={onClose} className="relative z-50">
           <motion.div
-            className="fixed inset-0 bg-black/50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             initial="initial"
             animate="animate"
             exit="exit"

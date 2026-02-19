@@ -34,10 +34,10 @@ const buttonVariants: Variants = {
 const buttonClassNames = cn(
   'flex items-center justify-center text-foreground rounded-full p-4',
   'transition-all duration-200 ease-in-out',
-  'bg-surface shadow-sm hover:bg-accent hover:text-on-primary',
+  'bg-surface shadow-sm hover:bg-accent hover:text-accent-contrast',
   'ring-accent focus:outline-hidden focus-visible:ring-2',
-  'focus-visible:bg-accent focus-visible:text-on-primary',
-  'active:bg-accent-dark hover:ring-2',
+  'focus-visible:bg-accent focus-visible:text-accent-contrast',
+  'active:bg-accent-active hover:ring-2',
 );
 
 const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {

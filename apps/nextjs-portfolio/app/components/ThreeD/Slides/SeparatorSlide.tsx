@@ -45,12 +45,11 @@ export const SeparatorSlide = ({
     );
   }
 
-  // Design: hero - cinematic with gradient
+  // Design: hero - cinematic with solid accent
   if (design === 'hero') {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center relative px-6 md:px-8 lg:px-12">
-        {/* Radial gradient background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-accent/10" />
 
         <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground uppercase tracking-tight text-center max-w-6xl">
           {slideData.title}
@@ -83,11 +82,10 @@ export const SeparatorSlide = ({
   // Default design - clean with horizontal line
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative px-6 md:px-8 lg:px-12">
-      {/* Subtle gradient */}
-      <div className="absolute inset-0 bg-linear-to-b from-accent/5 via-transparent to-accent/5" />
+      <div className="absolute inset-0 bg-surface-subtle/30" />
 
       {/* Horizontal line */}
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute top-1/2 left-12 right-12 h-px bg-border" />
 
       <h2
         className={cn(

@@ -31,7 +31,7 @@ const ProjectFilter = ({
   const availableTags = tags.filter(tag => !activeFilters.includes(tag.name));
 
   return (
-    <div className="bg-surface-elevated border border-border rounded-2xl p-4 shadow-sm">
+    <div className="bg-surface border border-border rounded-2xl p-4 shadow-sm">
       <div className="flex items-center justify-between gap-4 mb-4">
         <h3 className="font-medium text-sm text-foreground-subtle">Filter by tag:</h3>
         {activeFilters.length > 0 && (
@@ -92,7 +92,7 @@ const ProjectFilter = ({
                               <span className="font-medium text-foreground group-hover:text-accent transition-colors">
                                 {tag.name}
                               </span>
-                              <span className="text-xs text-accent-contrast bg-accent/20 group-hover:bg-accent/30 px-2 py-0.5 rounded-full font-medium transition-colors">
+                              <span className="text-xs text-accent-text bg-accent-subtle group-hover:bg-accent-surface px-2 py-0.5 rounded-full font-medium transition-colors">
                                 {tag.count}
                               </span>
                             </div>

@@ -63,7 +63,7 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
         {code}
       </SyntaxHighlighter>
       {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 bg-surface-elevated/90 backdrop-blur-sm border border-border/50 rounded-lg px-2 py-1.5 shadow-lg">
+      <div className="absolute top-4 right-4 flex items-center gap-2 bg-accent text-accent-contrast rounded-lg px-2 py-1.5 shadow-sm">
         <button
           onClick={handleZoomOut}
           type="button"

@@ -108,12 +108,10 @@ export default function AboutPage() {
     <div ref={containerRef} className="bg-background text-foreground overflow-x-hidden">
       {/* 1. HERO SECTION */}
       <section ref={heroRef} className="relative h-screen flex flex-col items-center justify-center p-4 overflow-hidden border-b border-border/30">
-        <div className="hero-bg absolute inset-0 z-0 opacity-20 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] bg-[radial-gradient(circle,var(--color-accent-surface)_0%,transparent_70%)]" />
-        </div>
+        <div className="hero-bg absolute inset-0 z-0 opacity-10 pointer-events-none bg-accent/10" />
 
         <div className="z-10 text-center max-w-5xl">
-          <h1 className="hero-text text-6xl md:text-9xl font-black mb-6 bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/40 leading-none uppercase">
+          <h1 className="hero-text text-6xl md:text-9xl font-black mb-6 text-foreground leading-none uppercase">
             Story of <br /> WiSiHe
           </h1>
           <p className="hero-text text-xl md:text-3xl text-accent font-medium uppercase tracking-[0.2em] mb-12">
@@ -157,8 +155,8 @@ export default function AboutPage() {
             </div>
 
             <div className={`journey-image relative ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
-               <div className="absolute -inset-4 bg-accent/10 rounded-[3rem] blur-3xl opacity-50" />
-               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-border/50 shadow-2xl">
+               <div className="absolute -inset-3 rounded-[2.8rem] border-2 border-dashed border-accent/30" />
+               <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-border/50 shadow-xl">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -185,7 +183,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <a 
               href="/contact" 
-              className="px-12 py-5 bg-foreground text-background font-black rounded-full text-xl uppercase tracking-widest shadow-2xl hover:bg-accent hover:text-white transition-all transform hover:scale-110"
+              className="px-12 py-5 bg-accent text-accent-contrast font-black rounded-full text-xl uppercase tracking-widest border border-accent-border shadow-lg hover:brightness-105 transition-all"
             >
               Start a Conversation
             </a>
