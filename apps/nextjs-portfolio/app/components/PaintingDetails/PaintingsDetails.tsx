@@ -1,6 +1,7 @@
 'use client';
 import { PaintingQueryResult } from '@/sanity.types';
-import { patchPaintingViews, urlForImage } from '@/sanity/lib/utils';
+import { urlForImage } from '@/sanity/lib/utils';
+import { incrementPaintingView } from '@/app/actions';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
@@ -84,7 +85,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         !hasAddedView
       ) {
         setHasAddedView(true);
-        await patchPaintingViews(_id, viewerId);
+        await incrementPaintingView(_id, viewerId);
       }
     };
     void addView();
@@ -111,7 +112,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       case 'landscape':
         return { width: 1200, height: 675 }; // 16:9 aspect ratio, reduced for mobile
       case 'portrait':
-        return { width: 675, height: 1200 }; // 9:16 aspect ratio, reduced for mobile
+        return { width: 900, height: 1200 }; // 3:4 aspect ratio, reduced for mobile
       case 'square':
       default:
         return { width: 1200, height: 1200 }; // 1:1 aspect ratio, reduced for mobile
