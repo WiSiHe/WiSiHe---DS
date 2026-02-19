@@ -1,0 +1,55 @@
+{
+  "name": "@wisihe/ui-svelte",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "svelte": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "svelte-package --input src --output dist",
+    "dev": "svelte-package --input src --output dist --watch",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf .svelte-kit"
+  },
+  "dependencies": {
+    "@wisihe/tokens": "workspace:*",
+    "@wisihe/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@wisihe/eslint-config": "workspace:*",
+    "@wisihe/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "svelte": "^5.48.2",
+    "svelte-check": "^4.4.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0",
+    "tailwindcss": ">=3.4.18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
