@@ -114,7 +114,7 @@ const PresentationCallout = ({
   const getCalloutStyles = (type: string) => {
     switch (type) {
       case 'info':
-        return 'bg-accent/10 border-accent/30 text-accent';
+        return 'bg-accent-subtle border-accent-border text-accent-text';
       case 'warning':
         return 'bg-amber-500/10 border-amber-500/30 text-amber-500';
       case 'success':

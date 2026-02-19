@@ -1,5 +1,9 @@
 export default {
-  source: ['tokens.json'],
+  source: [
+    'tokens/primitives/**/*.json',
+    'tokens/semantic/**/*.json',
+    'tokens/component/**/*.json',
+  ],
   platforms: {
     css: {
       transformGroup: 'css',
@@ -8,6 +12,9 @@ export default {
         {
           destination: 'variables.css',
           format: 'css/variables',
+          options: {
+            outputReferences: true,
+          },
         },
       ],
     },

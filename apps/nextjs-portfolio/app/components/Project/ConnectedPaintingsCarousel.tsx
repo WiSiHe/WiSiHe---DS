@@ -114,7 +114,7 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
                       draggable={false}
                     />
                     {title && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/65 backdrop-blur-md text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity">
                         <p className="text-sm font-medium truncate">{title}</p>
                       </div>
                     )}

@@ -120,7 +120,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
                                 <span className="font-medium text-foreground group-hover:text-accent transition-colors">
                                   {tag.name}
                                 </span>
-                                <span className="text-xs text-accent-contrast bg-accent/20 group-hover:bg-accent/30 px-2 py-0.5 rounded-full font-medium transition-colors">
+                                <span className="text-xs text-accent-text bg-accent-subtle group-hover:bg-accent-surface px-2 py-0.5 rounded-full font-medium transition-colors">
                                   {tag.paintingsCount}
                                 </span>
                               </div>
@@ -176,7 +176,7 @@ const FilterManager = ({ tags, currentFilters }: FilterManagerProps) => {
         <AnimatePresence>
           {currentFilters.length >= 5 && (
             <motion.span
-              className="text-xs text-warning-contrast bg-warning/20 px-3 py-1.5 rounded-full border border-warning/30 shadow-sm"
+              className="text-xs text-warning-text bg-warning-subtle px-3 py-1.5 rounded-full border border-warning/30 shadow-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}

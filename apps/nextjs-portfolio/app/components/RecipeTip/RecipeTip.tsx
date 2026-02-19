@@ -27,7 +27,7 @@ export default function RecipeTipComponent({ tip, className = '' }: RecipeTipPro
         className,
       )}
     >
-      <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-accent/10 text-accent">
+      <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center bg-accent-subtle text-accent-text">
         <TbBasket className="w-5 h-5" />
       </div>
       <div className="flex-1 min-w-0">

@@ -34,14 +34,14 @@ export default function RecipeIngredients({ ingredientCategories }: RecipeIngred
   return (
     <div className="rounded-2xl shadow-lg p-6 bg-surface ring ring-border w-full min-w-72">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-4 text-text-primary">Ingredients</h2>
+        <h2 className="text-2xl font-bold mb-4 text-foreground">Ingredients</h2>
       </div>
       {ingredientCategories?.map((category, categoryIndex) => (
         <div key={categoryIndex} className="mb-8 last:mb-0">
           <h3
             className="text-lg font-semibold mb-4 pb-2"
             style={{
-              color: 'var(--color-text-primary)',
+              color: 'var(--color-foreground)',
               borderBottom: '1px solid var(--color-border)',
             }}
           >
@@ -67,15 +67,15 @@ export default function RecipeIngredients({ ingredientCategories }: RecipeIngred
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                    <span className="font-medium" style={{ color: 'var(--color-foreground)' }}>
                       {ingredient.ingredient}
                     </span>
-                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span className="text-sm" style={{ color: 'var(--color-foreground-subtle)' }}>
                       {ingredient.amount} {ingredient.unit}
                     </span>
                   </div>
                   {ingredient.notes && (
-                    <p className="text-sm mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                    <p className="text-sm mt-1" style={{ color: 'var(--color-foreground-muted)' }}>
                       {ingredient.notes}
                     </p>
                   )}

@@ -25,8 +25,8 @@ export function TechnicalNavigation({
         whileTap={!isFirstSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isFirstSlide
-            ? 'bg-surface-elevated/90 text-foreground/30 cursor-not-allowed'
-            : 'bg-surface-elevated/90 text-foreground border-2 border-border/50 hover:border-accent/50 hover:bg-surface/90'
+            ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
+            : 'bg-surface text-foreground border-2 border-border hover:border-accent-border hover:bg-surface-hover transition-colors'
         }`}
         aria-label="Previous slide"
         aria-disabled={isFirstSlide}
@@ -41,8 +41,8 @@ export function TechnicalNavigation({
         whileTap={!isLastSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
           isLastSlide
-            ? 'bg-surface-elevated/90 text-foreground/30 cursor-not-allowed'
-            : 'bg-accent/90 text-accent-foreground hover:opacity-90 shadow-lg shadow-accent/30'
+            ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
+            : 'bg-accent text-accent-contrast hover:bg-accent-hover shadow-lg shadow-accent/30'
         }`}
         aria-label="Next slide"
         aria-disabled={isLastSlide}

@@ -37,9 +37,9 @@ const NotFoundSection = () => {
     >
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center bg-surface-elevated p-8 md:p-12 rounded-lg shadow-xl mx-4 text-center text-text-primary max-w-lg"
+        className="flex flex-col items-center bg-surface-subtle p-8 md:p-12 rounded-lg shadow-xl mx-4 text-center text-foreground max-w-lg"
       >
-        <motion.div variants={itemVariants} className="text-xs text-text-primary">
+        <motion.div variants={itemVariants} className="text-xs text-foreground">
           <h1 className="text-4xl font-bold mb-2">404</h1>
           <h2 className="text-lg mb-2">
             <strong>Page Not Found</strong>
@@ -51,7 +51,7 @@ const NotFoundSection = () => {
         <motion.div variants={itemVariants} className="flex justify-center">
           <Link
             href="/paintings"
-            className="px-4 py-2 bg-surface-elevated rounded-full pointer-events-auto text-text-primary hover:bg-accent-light hover:text-on-primary"
+            className="px-4 py-2 bg-surface-subtle rounded-full pointer-events-auto text-foreground hover:bg-accent hover:text-accent-contrast"
           >
             <strong>Paintings</strong>
           </Link>

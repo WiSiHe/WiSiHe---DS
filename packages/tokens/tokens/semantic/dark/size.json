@@ -1,0 +1,17 @@
+{
+  "semantic": {
+    "dark": {
+      "size": {
+        "radius": {
+          "sm": { "$value": "0px", "$type": "borderRadius" },
+          "md": { "$value": "0px", "$type": "borderRadius" },
+          "lg": { "$value": "0px", "$type": "borderRadius" },
+          "xl": { "$value": "0px", "$type": "borderRadius" },
+          "2xl": { "$value": "0px", "$type": "borderRadius" },
+          "3xl": { "$value": "0px", "$type": "borderRadius" },
+          "full": { "$value": "0px", "$type": "borderRadius" }
+        }
+      }
+    }
+  }
+}

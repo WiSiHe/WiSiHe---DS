@@ -6,7 +6,7 @@ export function TechnicalDeckSkeleton() {
       {/* Left Content Panel Skeleton */}
       <article className="flex-1 lg:w-1/2 flex flex-col relative z-10">
         {/* Fixed Header Skeleton */}
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm border-b border-border/50 pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
+        <div className="sticky top-0 z-20 bg-surface border-b border-border pt-28 pb-4 px-8 md:pt-32 md:px-12 lg:pt-36 lg:px-16">
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div className="h-8 w-48 bg-surface-elevated rounded-full animate-pulse" />
             <div className="flex items-center gap-4">
@@ -46,7 +46,7 @@ export function TechnicalDeckSkeleton() {
       </article>
 
       {/* Right 3D Panel Skeleton */}
-      <div className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden">
+      <div className="flex-1 lg:w-1/2 h-full relative bg-linear-to-br from-surface-subtle via-background to-surface border-l border-border-subtle overflow-hidden">
         <div className="w-full h-full flex items-center justify-center">
           <div className="text-center space-y-4">
             <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />

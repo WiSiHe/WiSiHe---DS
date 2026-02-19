@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { urlForImage } from '@/sanity/lib/utils';
 import { GetAllProjectsResult } from '@/sanity.types';
+import { urlForImage } from '@/sanity/lib/utils';
 import Chip from '../Chip/Chip';
 
 type PastProjectCardProps = {
@@ -14,23 +14,26 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
   const {
     title,
     name,
-    seoDescription,
-    description,
     image,
     slug,
     tags,
     status,
     projectEnd,
   } = project;
+
   const projectTitle = title ?? name;
-  const displayTags = tags?.slice(0, 2) || [];
-  const remainingTagsCount = (tags?.length || 0) - 2;
+  const year = projectEnd ? new Date(projectEnd).getFullYear() : null;
+
+  const displayTags = (tags ?? []).slice(0, 3);
+  const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
+
+  const { seoDescription, description } = project;
 
   return (
     <motion.li
       key={project._id}
       layout
-      className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden bg-surface border border-border/30 rounded-xl shadow-sm shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group transition-all duration-300 hover:shadow-2xl hover:border-accent/50 hover:bg-surface-hover hover:-translate-y-1"
+      className="relative z-10 flex flex-col items-start justify-start w-full overflow-hidden rounded-2xl shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1"
     >
       <motion.article className="w-full">
         <motion.div
@@ -54,7 +57,7 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 scale-105 group-hover:scale-115"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-background/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </motion.div>
         <div className="p-4">
           <Link
@@ -71,16 +74,9 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
           <p className="line-clamp-3 text-foreground-subtle group-hover:text-foreground transition-colors duration-300">
             {seoDescription ?? description}
           </p>
-          {projectEnd && (
             <p className="text-sm text-foreground-muted mt-2 group-hover:text-foreground-subtle transition-colors duration-300">
-              Completed:{' '}
-              {new Date(projectEnd).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              Completed: {year}
             </p>
-          )}
         </div>
       </motion.article>
     </motion.li>

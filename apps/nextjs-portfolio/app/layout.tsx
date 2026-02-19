@@ -178,27 +178,29 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable}  ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
       >
-        <ProgressBarProvider>
-          <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50" />
-          <PostHogProvider>
-            {isDraftMode && (
-              <>
-                <DraftModeToast />
-                <VisualEditing />
-              </>
-            )}
-            <SanityLive onError={handleError} />
-            <HeaderNavigation />
-            <main id="main-content" className="bg-background">
-              {children}
-            </main>
-            <Footer socialLinks={socialLinks} />
-            <Analytics />
-            <SpeedInsights />
-          </PostHogProvider>
-        </ProgressBarProvider>
+        <div className="relative z-10">
+          <ProgressBarProvider>
+            <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50" />
+            <PostHogProvider>
+              {isDraftMode && (
+                <>
+                  <DraftModeToast />
+                  <VisualEditing />
+                </>
+              )}
+              <SanityLive onError={handleError} />
+              <HeaderNavigation />
+              <main id="main-content" className="bg-transparent">
+                {children}
+              </main>
+              <Footer socialLinks={socialLinks} />
+              <Analytics />
+              <SpeedInsights />
+            </PostHogProvider>
+          </ProgressBarProvider>
+        </div>
       </body>
     </html>
   );

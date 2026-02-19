@@ -132,7 +132,7 @@ export default async function ProjectPage(props: Props) {
     const { connectedVideo, connectedPaintings = [] } = project;
 
     return (
-      <div className="min-h-screen bg-background pt-32">
+      <div className="min-h-screen pt-32">
         {/* Hero Section with Project Image */}
         <section className="relative py-8 lg:py-12">
           <div className="max-w-7xl mx-auto px-4">

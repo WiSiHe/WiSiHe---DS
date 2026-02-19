@@ -27,7 +27,7 @@ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLi
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 bg-surface-elevated text-accent border border-accent/30 rounded-lg font-medium hover:bg-accent/10 hover:border-accent/50 transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-surface-elevated text-accent-text border border-accent/30 rounded-lg font-medium hover:bg-accent-subtle hover:border-accent-border transition-all flex items-center gap-2"
           >
             <span>{link.text}</span>
             <HiArrowTopRightOnSquare className="w-4 h-4" />

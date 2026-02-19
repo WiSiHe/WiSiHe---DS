@@ -55,23 +55,18 @@ export function TechnicalCanvasPanel({
   }, [contextLost]);
 
   return (
-    <div 
+    <div
       ref={canvasContainerRef}
-      className="h-full relative bg-linear-to-br from-surface/30 via-background to-surface/20 border-l border-border/30 overflow-hidden"
+      className="h-full relative bg-surface border-l border-border-subtle overflow-hidden"
     >
-      {/* Subtle Grid Pattern */}
+      {/* Subtle overlay for depth */}
       <div
-        className="absolute inset-0 opacity-10 pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
-        }}
+        className="absolute inset-0 opacity-5 pointer-events-none z-0 bg-accent"
       />
 
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -101,7 +96,7 @@ export function TechnicalCanvasPanel({
             <p className="text-sm text-foreground/80 mb-4">{contextError}</p>
             <button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors"
+              className="w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors"
             >
               Refresh Page
             </button>

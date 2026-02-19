@@ -74,7 +74,8 @@ export function getCssVariableAsHex(variableName: string, fallback: string = '#1
 }
 
 /**
- * Resolves CSS color values that may contain CSS variables (e.g., "hsl(var(--accent))")
+ * Resolves CSS color values that may contain CSS variables
+ * (e.g., "var(--color-accent)" or "hsl(var(--accent))")
  * to a color string (hex or rgba) that can be used in animations
  * @param cssColorValue - CSS color value that may contain CSS variables
  * @param fallback - Fallback hex color if conversion fails
@@ -98,7 +99,8 @@ export function resolveCssColorForAnimation(
     return cssColorValue.trim();
   }
 
-  // Handle CSS variable references like "hsl(var(--accent))" or "hsl(var(--foreground) / 0.2)"
+  // Handle CSS variable references like "var(--color-accent)"
+  // or legacy patterns like "hsl(var(--accent) / 0.2)"
   // Use a temporary element to get the computed color value
   try {
     const tempEl = document.createElement('div');

@@ -90,8 +90,8 @@ export const ExampleSlideLayout = ({
               className={cn(
                 'w-full text-left p-3 md:p-3.5 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 selectedExampleIndex === exampleIndex
-                  ? 'bg-accent/20 border-accent shadow-md shadow-accent/20'
-                  : 'bg-surface-elevated border-border hover:border-accent/50 hover:bg-surface'
+                  ? 'bg-accent text-accent-contrast border-accent-border shadow-md'
+                  : 'bg-surface border-border border hover:border-accent/50 hover:bg-surface-hover transition-colors'
               )}
               aria-label={`View ${example.name} example`}
               aria-pressed={selectedExampleIndex === exampleIndex}
@@ -131,7 +131,7 @@ export const ExampleSlideLayout = ({
             <>
               <div
                 className={cn(
-                  'relative rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full bg-surface/50',
+                  'relative rounded-xl overflow-hidden bg-surface border border-border shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full',
                   getAspectRatioClass(slideData.imageAspectRatio)
                 )}
               >
@@ -160,7 +160,7 @@ export const ExampleSlideLayout = ({
             <>
               <div
                 ref={exampleIframeRef.containerRef}
-                className="relative w-full rounded-xl overflow-hidden border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 max-h-[60vh] bg-surface/50"
+                className="relative w-full rounded-xl overflow-hidden bg-surface border border-border shadow-lg hover:shadow-xl transition-all duration-300 max-h-[60vh]"
               >
                 {exampleIframeRef.isVisible ? (
                   <iframe
@@ -172,7 +172,7 @@ export const ExampleSlideLayout = ({
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-surface/30">
+                  <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-surface-subtle">
                     <div className="text-foreground/40 text-sm">Loading...</div>
                   </div>
                 )}

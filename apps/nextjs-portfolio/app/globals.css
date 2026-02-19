@@ -1,39 +1,22 @@
 @import 'tailwindcss';
-/* Import design tokens from @wisihe/tokens package */
-@import '../../../packages/tokens/dist/tailwind/theme.css';
-@import '../../../packages/tokens/dist/css/variables.css';
-@import '../../../packages/tokens/dist/css/semantic-colors.css';
-
-/* ============================================================================
-   CUSTOM VARIANTS
-   ========================================================================= */
-
-/* Custom variant for dark mode - eliminates need for dark: prefix */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* ============================================================================
-   THEME CONFIGURATION
-   ========================================================================= */
+/* Import design tokens from package exports */
+@import '@wisihe/tokens/tailwind-v4';
+@import '@wisihe/tokens/css';
+@import '@wisihe/tokens/css/semantic';
 
 @theme {
-  /* Typography */
-  --font-inter: 'Inter', sans-serif;
-  --font-oswald: 'Oswald', sans-serif;
-
-  /* Layout */
-  --aspect-portrait: 9 / 16;
-  --breakpoint-2xl: 96rem;
-  /* 1536px */
-  --radius: 0.5rem;
-  /* Default border radius */
+  --aspect-portrait: 3 / 4;
 }
+
+/**
+ * Triggering recompile to fix opacity modifiers issue.
+ */
 
 /* ============================================================================
    BASE STYLES
    ========================================================================= */
 
 @layer base {
-
   /* Reset border colors */
   *,
   ::after,
@@ -45,28 +28,50 @@
 
   /* Typography scale */
   h1 {
-    @apply text-3xl xl:text-6xl;
+    font-size: clamp(1.875rem, 1.2rem + 2.5vw, 3.75rem);
+    line-height: 1.1;
   }
 
   h2 {
-    @apply text-2xl xl:text-5xl;
+    font-size: clamp(1.5rem, 1.05rem + 2vw, 3rem);
+    line-height: 1.15;
   }
 
   h3 {
-    @apply text-xl xl:text-4xl;
+    font-size: clamp(1.25rem, 0.95rem + 1.3vw, 2.25rem);
+    line-height: 1.2;
   }
 
   /* Base element styles */
   body {
     color: var(--color-foreground);
     background: var(--color-background);
-    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    transition:
+      background-color 360ms ease,
+      color 260ms ease;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 
   main {
     height: 100%;
     min-height: 100vh;
     min-height: 100dvh;
+    background-color: var(--color-background);
+    transition: background-color 360ms ease;
   }
 
   h1,
@@ -76,45 +81,60 @@
   h5,
   h6 {
     text-wrap: balance;
-    font-family: Oswald, Arial, Helvetica, sans-serif;
+    overflow-wrap: anywhere;
+    font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
   }
 
   p {
-    max-width: 65ch;
+    line-height: 1.65;
     text-wrap: pretty;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
 
-  /* Accessibility - Focus styles */
-  :focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-    border-radius: var(--radius);
-  }
-
-  /* Remove default focus styles for mouse users */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  /* Enhanced focus for interactive elements */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible,
-  [tabindex]:focus-visible {
+  /* Accessibility - focus rings use semantic ring token */
+  :where(button, a, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
     border-radius: var(--radius);
     transition: outline-color 0.2s ease;
   }
 
-  /* Enhanced focus for form elements */
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
+  :where(input, textarea, select):focus-visible {
     border-color: var(--color-ring);
     box-shadow: 0 0 0 1px var(--color-ring);
+  }
+
+  /* Remove focus ring for pointer interactions */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  /* Scroll indicator animation */
+  @keyframes scroll-indicator {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(1rem);
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-scroll-indicator {
+    animation: scroll-indicator 2s ease-in-out infinite;
+  }
+
+  .splash-shown .loading-screen {
+    display: none !important;
   }
 }
 
@@ -145,52 +165,8 @@
   }
 }
 
-/* Gradient animation */
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+@media (prefers-reduced-motion: reduce) {
+  .within {
+    animation: none !important;
   }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* ============================================================================
-   UTILITY CLASSES
-   ========================================================================= */
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 8s ease infinite;
-}
-
-/* Scroll indicator animation */
-@keyframes scroll-indicator {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  50% {
-    transform: translateY(1rem);
-    opacity: 0.3;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-scroll-indicator {
-  animation: scroll-indicator 2s ease-in-out infinite;
-}
-
-.splash-shown .loading-screen {
-  display: none !important;
 }
