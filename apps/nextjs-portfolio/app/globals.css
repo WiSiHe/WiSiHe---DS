@@ -4,6 +4,10 @@
 @import '@wisihe/tokens/css';
 @import '@wisihe/tokens/css/semantic';
 
+@theme {
+  --aspect-portrait: 3 / 4;
+}
+
 /**
  * Triggering recompile to fix opacity modifiers issue.
  */
