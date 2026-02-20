@@ -11,6 +11,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf storybook-static"
   },
   "dependencies": {
+    "@wisihe/tokens": "workspace:*",
     "@wisihe/ui-svelte": "workspace:*",
     "svelte": "^5.0.0"
   },
@@ -19,6 +20,7 @@
     "@storybook/addon-a11y": "^10.2.10",
     "@storybook/addon-docs": "^10.2.10",
     "@storybook/svelte-vite": "^10.2.10",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "eslint": "^9.39.2",
