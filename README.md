@@ -28,6 +28,7 @@ npx create-turbo@latest -e design-system
 - `pnpm build` - Build all packages, including the Storybook site
 - `pnpm dev` - Run all packages locally and preview with Storybook
 - `pnpm lint` - Lint all packages
+- `pnpm ci` - Run lint, typecheck, tests, and build in sequence
 - `pnpm changeset` - Generate a changeset
 - `pnpm clean` - Clean up all `node_modules` and `dist` folders (runs each package's clean script)
 
@@ -174,7 +175,7 @@ To generate your changelog, run `pnpm changeset` locally:
 When you push your code to GitHub, the [GitHub Action](https://github.com/changesets/action) will run the `release` script defined in the root `package.json`:
 
 ```bash
-turbo run build --filter=docs^... && changeset publish
+pnpm build:packages && changeset publish
 ```
 
 Turborepo runs the `build` script for all publishable packages (excluding docs) and publishes the packages to npm. By default, this example includes `acme` as the npm organization. To change this, do the following:

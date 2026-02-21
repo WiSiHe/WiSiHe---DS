@@ -3,7 +3,9 @@
   "name": "@wisihe/ds",
   "type": "module",
   "scripts": {
+    "build:packages": "turbo run build --filter=./packages/*",
     "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs --filter=!ui-svelte-docs --filter=!ui-vue-docs --filter=!ui-web-components-docs",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
@@ -15,7 +17,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --filter=docs^... && changeset publish"
+    "release": "pnpm build:packages && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
