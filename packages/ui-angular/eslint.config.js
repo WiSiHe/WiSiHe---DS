@@ -24,7 +24,7 @@ export default tseslint.config([
     languageOptions: {
       ecmaVersion: 2022,
       parserOptions: {
-        project: './tsconfig.lib.json',
+        project: './tsconfig.json',
       },
     },
   },
