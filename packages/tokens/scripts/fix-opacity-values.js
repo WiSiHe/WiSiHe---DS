@@ -6,8 +6,8 @@ const effectsPath = path.join(process.cwd(), 'tokens/primitives/effects.json');
 const effects = JSON.parse(fs.readFileSync(effectsPath, 'utf8'));
 
 if (effects.opacity) {
-  for (const [key, token] of Object.entries(effects.opacity)) {
-    let value = token.$value;
+  for (const [, token] of Object.entries(effects.opacity)) {
+    const value = token.$value;
     if (typeof value === 'string' && value.endsWith('%')) {
       const num = parseFloat(value) / 100;
       token.$value = num.toString();
