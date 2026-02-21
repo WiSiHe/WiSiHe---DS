@@ -1,0 +1,57 @@
+{
+  "name": "@wisihe/ui-angular",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/fesm2022/wisihe-ui-angular.mjs",
+  "module": "./dist/fesm2022/wisihe-ui-angular.mjs",
+  "source": "./src/public-api.ts",
+  "types": "./dist/public-api.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/public-api.ts",
+      "types": "./dist/public-api.d.ts",
+      "default": "./dist/fesm2022/wisihe-ui-angular.mjs"
+    }
+  },
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json",
+    "dev": "ng-packagr -p ng-package.json --watch",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf out-tsc"
+  },
+  "dependencies": {
+    "@wisihe/tokens": "workspace:*",
+    "@wisihe/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular/common": "^21.1.5",
+    "@angular/compiler": "^21.1.5",
+    "@angular/compiler-cli": "^21.1.5",
+    "@angular/core": "^21.1.5",
+    "@wisihe/eslint-config": "workspace:*",
+    "@wisihe/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "ng-packagr": "^21.1.0",
+    "rxjs": "^7.8.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^21.1.5",
+    "@angular/core": "^21.1.5",
+    "rxjs": "^7.8.2",
+    "tailwindcss": "^4.1.18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
