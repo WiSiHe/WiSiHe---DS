@@ -5,7 +5,7 @@
   "scripts": {
     "build:packages": "turbo run build --filter=./packages/*",
     "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs --filter=!ui-svelte-docs --filter=!ui-vue-docs --filter=!ui-web-components-docs",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build:packages",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
