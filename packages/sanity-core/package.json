@@ -1,0 +1,13 @@
+{
+  "name": "@wisihe/sanity-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@sanity/image-url": "^2.0.3"
+  }
+}
