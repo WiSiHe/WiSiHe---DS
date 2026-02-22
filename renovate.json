@@ -21,6 +21,25 @@
     },
     {
       "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["vue", "vue-tsc", "@vitejs/plugin-vue"],
+      "matchPackagePatterns": ["^@vue/"],
+      "groupName": "Vue dependencies",
+      "groupSlug": "vue"
+    },
+    {
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["svelte", "svelte-check", "@sveltejs/vite-plugin-svelte", "@sveltejs/package"],
+      "groupName": "Svelte dependencies",
+      "groupSlug": "svelte"
+    },
+    {
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackagePatterns": ["^@angular/"],
+      "groupName": "Angular dependencies",
+      "groupSlug": "angular"
+    },
+    {
+      "matchUpdateTypes": ["patch", "minor"],
       "matchDepTypes": ["dependencies"],
       "matchPackagePatterns": ["^@types/"],
       "groupName": "TypeScript types",
@@ -48,7 +67,6 @@
   "rangeStrategy": "bump",
   "prHourlyLimit": 2,
   "prConcurrentLimit": 10,
-  "repositories": ["."],
   "labels": ["dependencies", "renovate"],
   "schedule": ["before 4am on monday"],
   "timezone": "UTC",
