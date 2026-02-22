@@ -1,193 +1,76 @@
-# Turborepo Design System Starter
+# WiSiHe Design System
 
-This guide explains how to use a React design system starter powered by:
+A comprehensive, multi-framework design system powering WiSiHe applications.
 
-- 🏎 [Turborepo](https://turbo.build/repo) — High-performance build system for Monorepos
-- 🚀 [React](https://reactjs.org/) — JavaScript library for user interfaces
-- 🛠 [Tsup](https://github.com/egoist/tsup) — TypeScript bundler powered by esbuild
-- 📖 [Storybook](https://storybook.js.org/) — UI component environment powered by Vite
+Built with performance and cross-framework compatibility in mind, this monorepo uses [Turborepo](https://turbo.build/repo) and `pnpm` workspaces to manage a suite of UI components, design tokens, and applications.
 
-As well as a few others tools preconfigured:
+## 🚀 Ecosystem
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Changesets](https://github.com/changesets/changesets) for managing versioning and changelogs
-- [GitHub Actions](https://github.com/changesets/action) for fully automated package publishing
+This repository is organized into `apps` and `packages`. The design system is framework-agnostic at its core (using Design Tokens), with specific UI libraries tailored for various frontend frameworks.
 
-## Using this example
+### Packages (`/packages`)
 
-Run the following command:
+The building blocks of the design system:
+
+- **`@wisihe/tokens`**: The single source of truth for design tokens (colors, typography, spacing). Outputs CSS variables and Tailwind v4 themes via Style Dictionary.
+- **`@wisihe/ui-react`**: React component library built with Tailwind CSS, `cva`, and `radix-ui`. Bundled with `tsup`.
+- **`@wisihe/ui-vue`**: Vue 3 component library. Bundled with Vite and `vue-tsc`.
+- **`@wisihe/ui-svelte`**: Svelte 5 component library. Bundled with `@sveltejs/package`.
+- **`@wisihe/ui-angular`**: Angular component library. Bundled with `ng-packagr`.
+- **`@wisihe/ui-web-components`**: Framework-agnostic Web Components. Bundled with `tsup`.
+- **`@wisihe/utils`**: Shared utilities and class-merging helpers (`cn()`).
+- **Config Packages**: `@wisihe/eslint-config`, `@wisihe/typescript-config`, `@wisihe/constants`, `@wisihe/sanity-queries`.
+
+### Apps (`/apps`)
+
+Applications and documentation sites consuming the packages:
+
+- **`ui-docs`**: React Storybook documentation.
+- **`ui-vue-docs`**: Vue Storybook documentation.
+- **`ui-svelte-docs`**: Svelte Storybook documentation.
+- **`ui-web-components-docs`**: Web Components Storybook documentation.
+- **`nextjs-portfolio`**: Main Next.js application.
+- **`astro-portfolio`**: Alternate Astro.js portfolio.
+- **`sanity-studio`**: Sanity CMS studio for managing content.
+
+## 🛠 Getting Started
+
+### Prerequisites
+
+- Node.js `22.21.1` (see `.nvmrc`)
+- `pnpm` (latest)
+
+### Installation
+
+Install dependencies from the root:
 
 ```sh
-npx create-turbo@latest -e design-system
+pnpm install
 ```
 
 ### Useful Commands
 
-- `pnpm build` - Build all packages, including the Storybook site
-- `pnpm dev` - Run all packages locally and preview with Storybook
-- `pnpm lint` - Lint all packages
-- `pnpm run ci` - Run lint, typecheck, tests, and package builds in sequence
-- `pnpm changeset` - Generate a changeset
-- `pnpm clean` - Clean up all `node_modules` and `dist` folders (runs each package's clean script)
+- `pnpm dev` - Start all development servers (Next.js and Storybooks) concurrently.
+- `pnpm run ci` - Run the full CI pipeline locally (`lint`, `typecheck`, `test`, `build:packages`).
+- `pnpm build` - Build all apps and packages (excluding docs and sanity-studio).
+- `pnpm lint` - Run ESLint across the monorepo.
+- `pnpm typecheck` - Run TypeScript type checking and Svelte/Vue/Angular diagnostics.
+- `pnpm storybook` - Run the Storybook instances.
+- `pnpm clean` - Remove all `node_modules`, `dist`, and cache directories.
 
-## Turborepo
+## 📦 Versioning & Publishing
 
-[Turborepo](https://turbo.build/repo) is a high-performance build system for JavaScript and TypeScript codebases. It was designed after the workflows used by massive software engineering organizations to ship code at scale. Turborepo abstracts the complex configuration needed for monorepos and provides fast, incremental builds with zero-configuration remote caching.
+This repository uses [Changesets](https://github.com/changesets/changesets) for automated versioning and npm publishing.
 
-Using Turborepo simplifies managing your design system monorepo, as you can have a single lint, build, test, and release process for all packages. [Learn more](https://vercel.com/blog/monorepos-are-changing-how-teams-build-software) about how monorepos improve your development workflow.
+1. **Create a changeset:** Run `pnpm changeset` and answer the prompts to describe your changes and mark packages for major/minor/patch bumps.
+2. **Commit:** Commit the generated Markdown file in the `.changeset` directory.
+3. **Release:** When merged to the main branch, a GitHub Action will automatically open a "Version Packages" PR. Merging that PR publishes the packages to npm.
 
-## Apps & Packages
+## 🤝 Pre-commit Hooks
 
-This Turborepo includes the following packages and applications:
+We use [Lefthook](https://github.com/evilmartians/lefthook) to ensure code quality before commits. Upon running `git commit`, Lefthook will automatically run:
 
-- `apps/docs`: Component documentation site with Storybook
-- `packages/ui`: Core React components
-- `packages/utils`: Shared React utilities
-- `packages/typescript-config`: Shared `tsconfig.json`s used throughout the Turborepo
-- `packages/eslint-config`: ESLint preset
+1. `pnpm turbo typecheck`
+2. `pnpm turbo lint`
 
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/). Workspaces enables us to "hoist" dependencies that are shared between packages to the root `package.json`. This means smaller `node_modules` folders and a better local dev experience. To install a dependency for the entire monorepo, use the `-w` workspaces flag with `pnpm add`.
-
-This example sets up your `.gitignore` to exclude all generated files, other folders like `node_modules` used to store your dependencies.
-
-### Compilation
-
-To make the core library code work across all browsers, we need to compile the raw TypeScript and React code to plain JavaScript. We can accomplish this with `tsup`, which uses `esbuild` to greatly improve performance.
-
-Running `pnpm build` from the root of the Turborepo will run the `build` command defined in each package's `package.json` file. Turborepo runs each `build` in parallel and caches & hashes the output to speed up future builds.
-
-For `acme-core`, the `build` command is the following:
-
-```bash
-tsup src/index.tsx --format esm,cjs --dts --external react
-```
-
-`tsup` compiles `src/index.tsx`, which exports all of the components in the design system, into both ES Modules and CommonJS formats as well as their TypeScript types. The `package.json` for `acme-core` then instructs the consumer to select the correct format:
-
-```json:acme-core/package.json
-{
-  "name": "@acme/core",
-  "version": "0.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
-}
-```
-
-Run `pnpm build` to confirm compilation is working correctly. You should see a folder `acme-core/dist` which contains the compiled output.
-
-```bash
-acme-core
-└── dist
-    ├── index.d.ts  <-- Types
-    ├── index.js    <-- CommonJS version
-    └── index.mjs   <-- ES Modules version
-```
-
-## Components
-
-Each file inside of `acme-core/src` is a component inside our design system. For example:
-
-```tsx:acme-core/src/Button.tsx
-import * as React from 'react';
-
-export interface ButtonProps {
-  children: React.ReactNode;
-}
-
-export function Button(props: ButtonProps) {
-  return <button>{props.children}</button>;
-}
-
-Button.displayName = 'Button';
-```
-
-When adding a new file, ensure the component is also exported from the entry `index.tsx` file:
-
-```tsx:acme-core/src/index.tsx
-import * as React from "react";
-export { Button, type ButtonProps } from "./Button";
-// Add new component exports here
-```
-
-## Storybook
-
-Storybook provides us with an interactive UI playground for our components. This allows us to preview our components in the browser and instantly see changes when developing locally. This example preconfigures Storybook to:
-
-- Use Vite to bundle stories instantly (in milliseconds)
-- Automatically find any stories inside the `stories/` folder
-- Support using module path aliases like `@acme-core` for imports
-- Write MDX for component documentation pages
-
-For example, here's the included Story for our `Button` component:
-
-```js:apps/docs/stories/button.stories.mdx
-import { Button } from '@acme-core/src';
-import { Meta, Story, Preview, Props } from '@storybook/addon-docs/blocks';
-
-<Meta title="Components/Button" component={Button} />
-
-# Button
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc egestas nisi, euismod aliquam nisl nunc euismod.
-
-## Props
-
-<Props of={Box} />
-
-## Examples
-
-<Preview>
-  <Story name="Default">
-    <Button>Hello</Button>
-  </Story>
-</Preview>
-```
-
-This example includes a few helpful Storybook scripts:
-
-- `pnpm dev`: Starts Storybook in dev mode with hot reloading at `localhost:6006`
-- `pnpm build`: Builds the Storybook UI and generates the static HTML files
-- `pnpm preview-storybook`: Starts a local server to view the generated Storybook UI
-
-## Versioning & Publishing Packages
-
-This example uses [Changesets](https://github.com/changesets/changesets) to manage versions, create changelogs, and publish to npm. It's preconfigured so you can start publishing packages immediately.
-
-You'll need to create an `NPM_TOKEN` and `GITHUB_TOKEN` and add it to your GitHub repository settings to enable access to npm. It's also worth installing the [Changesets bot](https://github.com/apps/changeset-bot) on your repository.
-
-### Generating the Changelog
-
-To generate your changelog, run `pnpm changeset` locally:
-
-1. **Which packages would you like to include?** – This shows which packages and changed and which have remained the same. By default, no packages are included. Press `space` to select the packages you want to include in the `changeset`.
-1. **Which packages should have a major bump?** – Press `space` to select the packages you want to bump versions for.
-1. If doing the first major version, confirm you want to release.
-1. Write a summary for the changes.
-1. Confirm the changeset looks as expected.
-1. A new Markdown file will be created in the `changeset` folder with the summary and a list of the packages included.
-
-### Releasing
-
-When you push your code to GitHub, the [GitHub Action](https://github.com/changesets/action) will run the `release` script defined in the root `package.json`:
-
-```bash
-pnpm build:packages && changeset publish
-```
-
-Turborepo runs the `build` script for all publishable packages (excluding docs) and publishes the packages to npm. By default, this example includes `acme` as the npm organization. To change this, do the following:
-
-- Rename folders in `packages/*` to replace `acme` with your desired scope
-- Search and replace `acme` with your desired scope
-- Re-run `pnpm install`
-
-To publish packages to a private npm organization scope, **remove** the following from each of the `package.json`'s
-
-```diff
-- "publishConfig": {
--  "access": "public"
-- },
-```
+If any of these fail, the commit will be aborted.
