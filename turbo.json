@@ -11,15 +11,12 @@
     "lint": {
       "dependsOn": []
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": ["^typecheck", "^build"],
       "outputs": []
     },
     "test": {
-      "dependsOn": [],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "build-storybook": {
@@ -37,5 +34,6 @@
     "clean": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": ["NEXT_PUBLIC_*", "EXPERIMENTATION_CONFIG_ITEM_KEY", "STATSIG_SERVER_API_KEY", "PUBLIC_OPENAI_API_KEY"]
 }

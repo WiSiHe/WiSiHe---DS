@@ -9,9 +9,12 @@ export default defineCliConfig({
     autoUpdates: true,
   },
   typegen: {
-    path: '../nextjs-portfolio/sanity/**/*.{ts,tsx,js,jsx}',
+    path: [
+      '../nextjs-portfolio/sanity/**/*.{ts,tsx,js,jsx}',
+      '../../packages/sanity-queries/src/**/*.{ts,tsx,js,jsx}',
+    ],
     schema: './schema.json',
-    generates: '../nextjs-portfolio/sanity.types.ts',
+    generates: '../../packages/sanity-queries/src/sanity.types.ts',
     overloadClientMethods: true,
   },
 });

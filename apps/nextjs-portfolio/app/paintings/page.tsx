@@ -7,7 +7,7 @@ import {
   getAllPaintingsandTags,
 } from '@/sanity/lib/queries';
 import { Metadata } from 'next';
-import { GetPaginatedPaintingsResult } from '@/sanity.types';
+import { GetPaginatedPaintingsResult } from '@wisihe/sanity-queries';
 
 import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
 

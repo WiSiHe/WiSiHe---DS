@@ -20,31 +20,5 @@
       "entry": ["src/**/*.{ts,tsx}", "vite.config.ts", "vitest.shims.d.ts"]
     }
   },
-  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts"],
-  "ignoreDependencies": [
-    "@sanity/assist",
-    "@sanity/icons",
-    "@sanity/image-url",
-    "@sanity/studio-secrets",
-    "@sanity/ui",
-    "@sanity/vision",
-    "sanity-plugin-media",
-    "@amexiogroup/sanity-plugin-media-i18n",
-    "eslint-config-next",
-    "eslint",
-    "prettier",
-    "@vercel/style-guide",
-    "eslint-config-turbo",
-    "eslint-plugin-mdx",
-    "eslint-plugin-only-warn",
-    "eslint-plugin-storybook",
-    "postcss",
-    "tailwindcss",
-    "@wisihe/constants",
-    "@wisihe/eslint-config",
-    "@wisihe/tokens",
-    "@wisihe/typescript-config",
-    "@wisihe/ui-react",
-    "@wisihe/utils"
-  ]
+  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts", "**/.svelte-kit/**"]
 }

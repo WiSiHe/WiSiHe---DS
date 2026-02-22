@@ -1,6 +1,6 @@
 'use client';
 
-import { HomePageQueryResult } from '@/sanity.types';
+import { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowRight } from '@tabler/icons-react';
 import Image from 'next/image';

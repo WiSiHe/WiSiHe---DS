@@ -1,5 +1,5 @@
 'use client';
-import { ProjectQueryResult } from '@/sanity.types';
+import { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { motion } from 'motion/react';
 import Image from 'next/image';

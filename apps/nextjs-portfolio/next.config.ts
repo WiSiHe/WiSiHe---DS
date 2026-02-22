@@ -42,6 +42,14 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons']
   },
 
+  transpilePackages: [
+    '@wisihe/utils',
+    '@wisihe/ui-react',
+    '@wisihe/constants',
+    '@wisihe/sanity-queries',
+    '@wisihe/tokens',
+  ],
+
   poweredByHeader: false,
 
   async redirects() {
@@ -50,10 +58,10 @@ const nextConfig: NextConfig = {
 
       return redirects
         .filter(
-          (redirect): redirect is { source: string; destination: string; permanent: boolean } =>
+          (redirect: any): redirect is { source: string; destination: string; permanent: boolean } =>
             Boolean(redirect.source && redirect.destination),
         )
-        .map(redirect => ({
+        .map((redirect: any) => ({
           source: redirect.source!,
           destination: redirect.destination!,
           permanent: redirect.permanent ?? false,

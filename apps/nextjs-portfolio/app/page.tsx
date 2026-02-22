@@ -1,4 +1,4 @@
-import { HomePageQueryResult } from '@/sanity.types';
+import { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
 import { Suspense } from 'react';

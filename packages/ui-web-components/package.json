@@ -28,7 +28,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
-    "@wisihe/tokens": "workspace:*"
+    "@wisihe/tokens": "workspace:*",
+    "lit": "3.3.2"
   },
   "devDependencies": {
     "@wisihe/eslint-config": "workspace:*",

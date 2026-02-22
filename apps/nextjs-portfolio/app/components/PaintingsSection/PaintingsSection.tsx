@@ -2,7 +2,7 @@ import { sanityFetch } from '@/sanity/lib/live';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
 import { PortableText, PortableTextBlock } from 'next-sanity';
 import PaintingsCarousel from './PaintingsCarousel';
-import { RandomPaintingsQueryResult, BlockContent } from '@/sanity.types';
+import { RandomPaintingsQueryResult, BlockContent } from '@wisihe/sanity-queries';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {

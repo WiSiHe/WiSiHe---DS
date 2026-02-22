@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import '@wisihe/tokens/tailwind-v4';
-@import '@wisihe/tokens/css';
-@import '@wisihe/tokens/css/semantic';
+@import '@wisihe/tokens/tailwind-v4-dark' layer(theme);
+@import '@wisihe/tokens/css/semantic' layer(theme);
 
 /* Ensure Tailwind scans the component package classes. */
 @source "../../../packages/ui-svelte/src/**/*.svelte";

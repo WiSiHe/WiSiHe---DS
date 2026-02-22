@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import PaintingCard from '../PaintingCard/PaintingCard';
-import { GetPaginatedPaintingsResult } from '@/sanity.types';
+import { GetPaginatedPaintingsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { FaArrowLeft, FaArrowRight, FaStepBackward, FaStepForward } from 'react-icons/fa';
 

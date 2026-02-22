@@ -1,6 +1,6 @@
 'use client';
 
-import { GetAllProjectsResult } from '@/sanity.types';
+import { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { useState } from 'react';
 import ProjectFilter from './ProjectFilter';
 import OngoingProjectCard from './OngoingProjectCard';
