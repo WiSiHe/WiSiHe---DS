@@ -15,15 +15,17 @@
     "@wisihe/ui-web-components": "workspace:*"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^4.1.3",
+    "@chromatic-com/storybook": "^5.0.1",
     "@storybook/addon-a11y": "^10.2.10",
     "@storybook/addon-docs": "^10.2.10",
+    "@storybook/addon-themes": "^10.2.10",
     "@storybook/web-components-vite": "^10.2.10",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "eslint": "^9.39.2",
     "eslint-plugin-storybook": "^10.2.10",
     "storybook": "^10.2.10",
+    "storybook-addon-tag-badges": "^3.0.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",
     "vite": "^7.3.1"

@@ -1,4 +1,4 @@
-import { createImageUrlBuilder } from '@sanity/image-url';
+import createImageUrlBuilder from '@sanity/image-url';
 import { dataset, projectId } from '@/sanity/lib/api';
 import { client } from './client';
 
@@ -37,8 +37,8 @@ export type Link = {
 };
 
 const imageBuilder = createImageUrlBuilder({
-  projectId: projectId || '',
-  dataset: dataset || '',
+  projectId,
+  dataset,
 });
 
 interface SanityImageSource {

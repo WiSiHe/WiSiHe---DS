@@ -1,6 +1,6 @@
 'use client';
 
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { GetAllPaintingsandTagsResult } from '@wisihe/sanity-queries';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';

@@ -1,5 +1,5 @@
 'use client';
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { GetAllPaintingsandTagsResult } from '@wisihe/sanity-queries';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense, useMemo } from 'react';

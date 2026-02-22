@@ -3,11 +3,23 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "./css": "./dist/css/variables.css",
-    "./css/semantic": "./dist/css/semantic-colors.css",
+    "./css": {
+      "style": "./dist/css/variables.css",
+      "default": "./dist/css/variables.css"
+    },
+    "./css/semantic": {
+      "style": "./dist/css/semantic-colors.css",
+      "default": "./dist/css/semantic-colors.css"
+    },
     "./tailwind": "./dist/tailwind/config.js",
-    "./tailwind-v4": "./dist/tailwind/theme.css",
-    "./tailwind-v4-dark": "./dist/tailwind/theme-dark.css",
+    "./tailwind-v4": {
+      "style": "./dist/tailwind/theme.css",
+      "default": "./dist/tailwind/theme.css"
+    },
+    "./tailwind-v4-dark": {
+      "style": "./dist/tailwind/theme-dark.css",
+      "default": "./dist/tailwind/theme-dark.css"
+    },
     "./raw": "./tokens.json"
   },
   "files": [
