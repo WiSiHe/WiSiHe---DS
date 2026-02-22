@@ -17,29 +17,29 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/assist": "^5.0.3",
+    "@sanity/assist": "^5.0.4",
     "@sanity/cli": "5.3.1",
     "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
     "@sanity/studio-secrets": "^3.0.3",
     "@sanity/ui": "^3.1.11",
-    "@sanity/vision": "^5.10.0",
-    "@sanity/image-url": "^1.1.0",
-    "openai": "^6.16.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "@sanity/vision": "^5.11.0",
+    "openai": "^6.22.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-icons": "^5.5.0",
-    "react-is": "^19.2.3",
-    "sanity": "^5.10.0",
+    "react-is": "^19.2.4",
+    "sanity": "^5.11.0",
     "sanity-plugin-media": "^4.1.1",
-    "styled-components": "^6.3.6"
+    "styled-components": "^6.3.11"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@types/node": "^25.0.8",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.2",
-    "prettier": "^3.8.0",
+    "eslint": "^9.39.3",
+    "prettier": "^3.8.1",
     "typescript": "^5.9.3"
   }
 }

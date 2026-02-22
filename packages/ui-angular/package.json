@@ -32,10 +32,10 @@
     "@angular/core": "^21.1.5",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "ng-packagr": "^21.1.0",
     "rxjs": "^7.8.2",
-    "tailwindcss": "^4.1.18",
+    "tailwindcss": "^4.2.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",
     "vitest": "^3.2.4"
