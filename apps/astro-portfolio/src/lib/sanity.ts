@@ -1,8 +1,8 @@
 import { createClient } from '@sanity/client';
-import builder from '@sanity/image-url';
+import { createSanityImageBuilder, getAstroSanityConfig } from '@wisihe/sanity-core';
 
-const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || import.meta.env.SANITY_PROJECT_ID;
-const dataset = import.meta.env.PUBLIC_SANITY_DATASET || import.meta.env.SANITY_DATASET;
+const sanityConfig = getAstroSanityConfig(import.meta.env);
+const { projectId, dataset, apiVersion } = sanityConfig;
 
 if (!projectId) {
   console.error('Sanity Project ID is missing. Please check your .env.local file.');
@@ -12,10 +12,15 @@ if (!projectId) {
 export const client = createClient({
   projectId,
   dataset,
-  apiVersion: '2024-01-01',
+  apiVersion,
   useCdn: false,
 });
 
+const imageBuilder = createSanityImageBuilder({
+  projectId: projectId || '',
+  dataset: dataset || '',
+});
+
 export default function imageUrl(source: string) {
-  return builder(client).image(source);
+  return imageBuilder.image(source);
 }

@@ -1,6 +1,6 @@
-import imageUrlBuilder from '@sanity/image-url'
+import { createSanityImageBuilder } from '@wisihe/sanity-core'
 
-const builder = imageUrlBuilder({
+const builder = createSanityImageBuilder({
   // eslint-disable-next-line no-undef
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || '',
   // eslint-disable-next-line no-undef
