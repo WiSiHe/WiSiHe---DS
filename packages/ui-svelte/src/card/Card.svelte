@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { CardProps } from './types';
   import { cva } from 'class-variance-authority';
   import { cn } from '@wisihe/utils';
-  import type { HTMLAttributes } from 'svelte/elements';
 
   const card = cva('rounded-lg border text-foreground', {
     variants: {
@@ -24,15 +24,13 @@
     },
   });
 
-  export type CardVariant = 'default' | 'elevated' | 'outlined' | 'filled';
-  export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
-
-  export type CardProps = HTMLAttributes<HTMLDivElement> & {
-    variant?: CardVariant;
-    padding?: CardPadding;
-  };
-
-  let { variant = 'default', padding = 'md', class: className, children, ...rest }: CardProps = $props();
+  let {
+    variant = 'default',
+    padding = 'md',
+    class: className,
+    children,
+    ...rest
+  }: CardProps = $props();
 </script>
 
 <div class={cn(card({ variant, padding }), className)} {...rest}>

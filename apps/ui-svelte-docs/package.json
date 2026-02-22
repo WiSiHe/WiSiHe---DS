@@ -22,6 +22,8 @@
     "@storybook/addon-themes": "^10.2.10",
     "@storybook/svelte-vite": "^10.2.10",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "25.3.0",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "eslint": "^9.39.2",

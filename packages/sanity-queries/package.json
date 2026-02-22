@@ -8,6 +8,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@sanity/client": "^7.14.0",
     "groq": "^5.11.0"
   }
 }

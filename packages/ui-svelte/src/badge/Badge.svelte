@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { BadgeProps } from './types';
   import { cva } from 'class-variance-authority';
   import { cn } from '@wisihe/utils';
-  import type { HTMLAttributes } from 'svelte/elements';
 
   const badge = cva(
     'inline-flex items-center rounded-full border font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
@@ -28,15 +28,13 @@
     },
   );
 
-  export type BadgeVariant = 'default' | 'secondary' | 'success' | 'warning' | 'danger' | 'outline';
-  export type BadgeSize = 'sm' | 'md' | 'lg';
-
-  export type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
-    variant?: BadgeVariant;
-    size?: BadgeSize;
-  };
-
-  let { variant = 'default', size = 'md', class: className, children, ...rest }: BadgeProps = $props();
+  let {
+    variant = 'default',
+    size = 'md',
+    class: className,
+    children,
+    ...rest
+  }: BadgeProps = $props();
 </script>
 
 <span class={cn(badge({ variant, size }), className)} {...rest}>

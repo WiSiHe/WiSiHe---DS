@@ -1,5 +1,5 @@
 'use client';
-import { PaintingQueryResult } from '@/sanity.types';
+import { PaintingQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { incrementPaintingView } from '@/app/actions';
 import { cn } from '@wisihe/utils';

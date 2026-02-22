@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectQueryResult } from '@/sanity.types';
+import { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { isNotEmptyArray } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';

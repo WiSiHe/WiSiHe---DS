@@ -1,6 +1,6 @@
 'use client';
 
-import { GetAllVideosResult } from '@/sanity.types';
+import { GetAllVideosResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 import { motion, AnimatePresence } from 'motion/react';

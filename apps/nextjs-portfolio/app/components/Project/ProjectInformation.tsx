@@ -1,5 +1,5 @@
 'use client';
-import { ProjectQueryResult } from '@/sanity.types';
+import { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { motion } from 'motion/react';
 import { PortableTextBlock } from 'next-sanity';
 import CustomPortableText from '../PortableText/PortableText';

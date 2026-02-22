@@ -5,7 +5,7 @@ import {
   ProjectImage,
   ProjectInformation,
 } from '@/app/components/Project';
-import { ProjectQueryResult } from '@/sanity.types';
+import { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';

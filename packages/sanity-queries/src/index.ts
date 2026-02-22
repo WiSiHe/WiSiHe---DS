@@ -675,3 +675,4 @@ export const allPresentationsQuery = defineQuery(`
     }
   }
 `);
+export * from './sanity.types';

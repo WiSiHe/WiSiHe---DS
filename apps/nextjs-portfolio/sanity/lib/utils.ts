@@ -1,4 +1,4 @@
-import { createSanityImageBuilder } from '@wisihe/sanity-core';
+import createImageUrlBuilder from '@sanity/image-url';
 import { dataset, projectId } from '@/sanity/lib/api';
 import { client } from './client';
 
@@ -36,7 +36,7 @@ export type Link = {
   openInNewTab?: boolean;
 };
 
-const imageBuilder = createSanityImageBuilder({
+const imageBuilder = createImageUrlBuilder({
   projectId,
   dataset,
 });

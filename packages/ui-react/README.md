@@ -200,6 +200,48 @@ This package exports its uncompiled TypeScript source code. If you prefer to com
 
 For example, in a Vite project, you might not need extra configuration if it supports `source` field resolution, or you can alias the package to `src/index.tsx`.
 
+## Development Guidelines
+
+To maintain consistency and scalability across the `@wisihe/ui-react` package, please adhere to the following structural and architectural guidelines when creating or modifying components.
+
+### 1. Folder Structure & Atomic Classification
+
+Every component should reside in its own dedicated directory within `src/`, named in `kebab-case` or lowercase.
+
+\`\`\`text
+src/
+└── [component-name]/
+├── [ComponentName].tsx # The main component implementation
+├── [ComponentName].stories.tsx # Storybook documentation and examples
+└── index.ts # (Optional) specific structural exports if it's a deeply composed tree
+\`\`\`
+
+Components should be conceptually organized and exported using **Atomic Design** principles:
+
+- **Atoms**: Pure, foundational building blocks (e.g. `Button`, `Badge`, `Spinner`, `Skeleton`)
+- **Layout**: Invisible structural containers (e.g. `Flex`, `Grid`)
+- **Molecules**: Combinations of atoms functioning together (e.g. `Card` and its subcomponents)
+- **Organisms**: Complex, distinct sections of an interface (built from molecules/atoms)
+
+### 2. File Naming Rules
+
+- **Component Files:** Must use `PascalCase` (e.g., `Button.tsx`, `Card.tsx`).
+- **Storybook Titles:** The Story meta `title` string must categorize the component by its atomic level (e.g., `title: 'Atoms/Button'`, `title: 'Molecules/Card'`, `title: 'Layout/Flex'`).
+- **Component Name:** The React function component and its `displayName` must match the file's `PascalCase` name.
+
+### 3. Prop Types & Exports
+
+- Every component must export its props interface.
+- Name the interface `[ComponentName]Props` (e.g., `ButtonProps`, `SkeletonProps`).
+- Inherit standard HTML attributes correctly using standard React Interfaces (e.g., `extends React.HTMLAttributes<HTMLDivElement>`).
+- Export all publicly consumable components and their prop types from the root `src/index.tsx` file.
+
+### 4. Styling Conventions
+
+- **Tailwind:** Utilize Tailwind CSS classes for structure and layout. Use the `cn()` utility from `@wisihe/utils` to merge `className` props safely.
+- **Design Tokens:** Strictly depend on design system tokens for colors, spacing, and styling rather than arbitrary hex values.
+- **Variants:** For multi-variant components (e.g., standard/outline/ghost variants or different sizes), use `class-variance-authority` (cva) to type-safely define and export variants.
+
 ## Development
 
 ```bash

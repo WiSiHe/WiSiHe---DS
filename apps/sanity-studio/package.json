@@ -10,7 +10,8 @@
     "prebuild": "npm run extract-types",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "extract-types": "sanity schema extract --enforce-required-fields"
+    "extract-types": "sanity schema extract --enforce-required-fields",
+    "typegen": "sanity typegen generate"
   },
   "keywords": [
     "sanity"
@@ -22,7 +23,7 @@
     "@sanity/studio-secrets": "^3.0.3",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^5.10.0",
-    "@wisihe/sanity-core": "workspace:*",
+    "@sanity/image-url": "^1.1.0",
     "openai": "^6.16.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

@@ -6,7 +6,7 @@ import {
   getFilteredPaintingsCount,
 } from '@/sanity/lib/queries';
 import { NextRequest, NextResponse } from 'next/server';
-import { GetPaginatedPaintingsResult } from '@/sanity.types';
+import { GetPaginatedPaintingsResult } from '@wisihe/sanity-queries';
 
 export async function GET(request: NextRequest) {
   try {
