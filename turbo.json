@@ -16,7 +16,7 @@
       "outputs": []
     },
     "test": {
-      "dependsOn": [],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "build-storybook": {
