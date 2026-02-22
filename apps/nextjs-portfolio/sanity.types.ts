@@ -906,7 +906,7 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ../nextjs-portfolio/sanity/lib/queries.ts
+// Source: ../../packages/sanity-queries/src/index.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
 export type SettingsQueryResult = {
