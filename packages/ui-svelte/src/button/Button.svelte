@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { ButtonProps } from './types';
   import { cva } from 'class-variance-authority';
   import { cn } from '@wisihe/utils';
-  import type { HTMLButtonAttributes } from 'svelte/elements';
 
   const button = cva(
     'inline-flex items-center justify-center gap-2 rounded-sm border font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-60',
@@ -28,16 +28,6 @@
       },
     },
   );
-
-  export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-  export type ButtonSize = 'sm' | 'md' | 'lg';
-
-  export type ButtonProps = HTMLButtonAttributes & {
-    variant?: ButtonVariant;
-    size?: ButtonSize;
-    loading?: boolean;
-    fullWidth?: boolean;
-  };
 
   let {
     variant = 'primary',

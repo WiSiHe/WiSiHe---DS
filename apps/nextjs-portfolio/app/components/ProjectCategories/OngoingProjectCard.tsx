@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
-import { GetAllProjectsResult } from '@/sanity.types';
+import { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import Chip from '../Chip/Chip';
 

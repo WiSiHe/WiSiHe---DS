@@ -3,11 +3,28 @@
  * Importing other npm packages here could lead to needlessly increasing the client bundle size, or end up in a server-only function that don't need it.
  */
 
-import { getNextSanityConfig } from '@wisihe/sanity-core';
+export function assertValue<T>(v: T | undefined, errorMessage: string): T {
+  if (v === undefined) {
+    throw new Error(errorMessage);
+  }
+  return v;
+}
 
-const sanityConfig = getNextSanityConfig(
-  process.env as Record<string, string | undefined>,
+export const dataset = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_DATASET,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET',
 );
 
-export const { dataset, projectId, apiVersion, studioUrl, readToken, writeToken } =
-  sanityConfig;
+export const projectId = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID',
+);
+
+export const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-28';
+
+export const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3333';
+
+export const readToken = process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN;
+
+export const writeToken = process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN;
+

@@ -1,5 +1,5 @@
 'use client';
-import { SettingsQueryResult } from '@/sanity.types';
+import { SettingsQueryResult } from '@wisihe/sanity-queries';
 import { SocialListItem } from './SocialListItem';
 import { motion } from 'motion/react';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { StackProps } from './types';
   import { cva } from 'class-variance-authority';
   import { cn } from '@wisihe/utils';
-  import type { HTMLAttributes } from 'svelte/elements';
 
   const stack = cva('flex', {
     variants: {
@@ -40,19 +40,6 @@
       wrap: false,
     },
   });
-
-  export type StackDirection = 'row' | 'column';
-  export type StackGap = 'none' | 'sm' | 'md' | 'lg';
-  export type StackAlign = 'start' | 'center' | 'end' | 'stretch';
-  export type StackJustify = 'start' | 'center' | 'end' | 'between';
-
-  export type StackProps = HTMLAttributes<HTMLDivElement> & {
-    direction?: StackDirection;
-    gap?: StackGap;
-    align?: StackAlign;
-    justify?: StackJustify;
-    wrap?: boolean;
-  };
 
   let {
     direction = 'column',

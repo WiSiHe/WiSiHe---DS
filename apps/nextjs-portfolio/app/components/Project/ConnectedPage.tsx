@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectQueryResult } from '@/sanity.types';
+import { ProjectQueryResult } from '@wisihe/sanity-queries';
 
 type ConnectedPageProps = {
   project: NonNullable<ProjectQueryResult>;

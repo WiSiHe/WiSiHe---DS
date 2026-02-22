@@ -1,3 +1,4 @@
+// --- Atoms ---
 export { default as Button } from './button/Button.vue';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './button/Button.types';
 

@@ -8,7 +8,7 @@ import { BsYoutube } from 'react-icons/bs';
 import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
 import { TbBoxMultiple } from 'react-icons/tb';
 
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { GetAllPaintingsandTagsResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { cn } from '@wisihe/utils';
 

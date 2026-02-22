@@ -21,6 +21,8 @@
     "@storybook/addon-docs": "^10.2.10",
     "@storybook/addon-themes": "^10.2.10",
     "@storybook/vue3-vite": "^10.2.10",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "25.3.0",
     "@vitejs/plugin-vue": "^6.0.4",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",

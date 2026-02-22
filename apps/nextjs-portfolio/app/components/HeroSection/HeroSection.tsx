@@ -1,6 +1,6 @@
 'use client';
 
-import { HomePageQueryResult } from '@/sanity.types';
+import { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';

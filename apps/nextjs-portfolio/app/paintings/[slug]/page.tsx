@@ -1,5 +1,5 @@
 import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
-import { PaintingQueryResult } from '@/sanity.types';
+import { PaintingQueryResult } from '@wisihe/sanity-queries';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';

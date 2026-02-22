@@ -12,13 +12,15 @@ describe('web components registration', () => {
     expect(customElements.get('wisihe-badge')).toBeDefined();
   });
 
-  it('renders a loading danger button', () => {
+  it('renders a loading danger button', async () => {
     const element = document.createElement('wisihe-button');
     element.textContent = 'Delete';
     element.setAttribute('variant', 'danger');
     element.setAttribute('size', 'lg');
     element.setAttribute('loading', '');
     document.body.appendChild(element);
+
+    await element.updateComplete;
 
     const button = element.shadowRoot?.querySelector('button');
     expect(button).toBeTruthy();
@@ -30,12 +32,14 @@ describe('web components registration', () => {
     element.remove();
   });
 
-  it('renders a success badge', () => {
+  it('renders a success badge', async () => {
     const element = document.createElement('wisihe-badge');
     element.textContent = 'Success';
     element.setAttribute('variant', 'success');
     element.setAttribute('size', 'sm');
     document.body.appendChild(element);
+
+    await element.updateComplete;
 
     const badge = element.shadowRoot?.querySelector('span');
     expect(badge).toBeTruthy();

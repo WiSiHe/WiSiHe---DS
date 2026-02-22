@@ -1,6 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllPaintingsandTags } from '@/sanity/lib/queries';
-import { GetAllPaintingsandTagsResult } from '@/sanity.types';
+import { GetAllPaintingsandTagsResult } from '@wisihe/sanity-queries';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

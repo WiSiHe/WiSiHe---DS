@@ -14,7 +14,7 @@ export default defineCliConfig({
       '../../packages/sanity-queries/src/**/*.{ts,tsx,js,jsx}',
     ],
     schema: './schema.json',
-    generates: '../nextjs-portfolio/sanity.types.ts',
+    generates: '../../packages/sanity-queries/src/sanity.types.ts',
     overloadClientMethods: true,
   },
 });

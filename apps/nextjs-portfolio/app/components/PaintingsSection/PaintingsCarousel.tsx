@@ -1,6 +1,6 @@
 'use client';
 
-import { RandomPaintingsQueryResult } from '@/sanity.types';
+import { RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, Variants } from 'motion/react';
