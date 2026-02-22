@@ -8,7 +8,13 @@ const __dirname = dirname(__filename);
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: ['@chromatic-com/storybook', '@storybook/addon-docs', '@storybook/addon-a11y'],
+  addons: [
+    '@chromatic-com/storybook',
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y',
+    '@storybook/addon-themes',
+    'storybook-addon-tag-badges',
+  ],
   framework: {
     name: '@storybook/vue3-vite',
     options: {},
