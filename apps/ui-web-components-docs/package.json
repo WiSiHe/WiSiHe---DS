@@ -22,7 +22,7 @@
     "@storybook/web-components-vite": "^10.2.10",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "eslint-plugin-storybook": "^10.2.10",
     "storybook": "^10.2.10",
     "storybook-addon-tag-badges": "^3.0.6",

@@ -34,7 +34,7 @@
   "devDependencies": {
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "jsdom": "^28.1.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",

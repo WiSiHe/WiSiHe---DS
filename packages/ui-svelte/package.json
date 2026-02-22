@@ -39,9 +39,9 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.2",
-    "svelte": "^5.48.2",
-    "svelte-check": "^4.4.1",
+    "eslint": "^9.39.3",
+    "svelte": "^5.53.2",
+    "svelte-check": "^4.4.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0"
   },
