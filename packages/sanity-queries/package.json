@@ -8,6 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "next-sanity": "^12.1.0"
+    "groq": "^5.11.0"
   }
 }
