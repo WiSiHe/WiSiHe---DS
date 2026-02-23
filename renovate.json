@@ -28,7 +28,12 @@
     },
     {
       "matchUpdateTypes": ["patch", "minor"],
-      "matchPackageNames": ["svelte", "svelte-check", "@sveltejs/vite-plugin-svelte", "@sveltejs/package"],
+      "matchPackageNames": [
+        "svelte",
+        "svelte-check",
+        "@sveltejs/vite-plugin-svelte",
+        "@sveltejs/package"
+      ],
       "groupName": "Svelte dependencies",
       "groupSlug": "svelte"
     },

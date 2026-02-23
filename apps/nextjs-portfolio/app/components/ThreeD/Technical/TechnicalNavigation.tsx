@@ -16,11 +16,11 @@ export function TechnicalNavigation({
   isLastSlide,
 }: TechnicalNavigationProps) {
   return (
-    <div className="absolute bottom-8 right-8 z-50 flex gap-4">
+    <div className='absolute bottom-8 right-8 z-50 flex gap-4'>
       <motion.button
         onClick={onPrevious}
         disabled={isFirstSlide}
-        type="button"
+        type='button'
         whileHover={!isFirstSlide ? { scale: 1.05 } : {}}
         whileTap={!isFirstSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
@@ -28,15 +28,15 @@ export function TechnicalNavigation({
             ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
             : 'bg-surface text-foreground border-2 border-border hover:border-accent-border hover:bg-surface-hover transition-colors'
         }`}
-        aria-label="Previous slide"
+        aria-label='Previous slide'
         aria-disabled={isFirstSlide}
       >
-        <span aria-hidden="true">←</span> Previous
+        <span aria-hidden='true'>←</span> Previous
       </motion.button>
       <motion.button
         onClick={onNext}
         disabled={isLastSlide}
-        type="button"
+        type='button'
         whileHover={!isLastSlide ? { scale: 1.05 } : {}}
         whileTap={!isLastSlide ? { scale: 0.95 } : {}}
         className={`px-8 py-4 rounded-xl font-bold text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
@@ -44,10 +44,10 @@ export function TechnicalNavigation({
             ? 'bg-surface border border-border text-foreground/30 cursor-not-allowed'
             : 'bg-accent text-accent-contrast hover:bg-accent-hover shadow-lg shadow-accent/30'
         }`}
-        aria-label="Next slide"
+        aria-label='Next slide'
         aria-disabled={isLastSlide}
       >
-        Next <span aria-hidden="true">→</span>
+        Next <span aria-hidden='true'>→</span>
       </motion.button>
     </div>
   );

@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useTheme } from '../../../providers';
-import { motion } from 'motion/react';
 
 interface CodeHighlighterProps {
   language: string;
@@ -44,7 +43,7 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
   };
 
   return (
-    <div className="relative">
+    <div className='relative'>
       <SyntaxHighlighter
         language={language}
         style={style}
@@ -56,59 +55,70 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
           background: 'transparent',
           minWidth: 'fit-content',
         }}
-        PreTag="div"
+        PreTag='div'
         wrapLines={false}
         wrapLongLines={true}
       >
         {code}
       </SyntaxHighlighter>
       {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 bg-accent text-accent-contrast rounded-lg px-2 py-1.5 shadow-sm">
+      <div className='absolute top-4 right-4 flex items-center gap-2 bg-accent text-accent-contrast rounded-lg px-2 py-1.5 shadow-sm'>
         <button
           onClick={handleZoomOut}
-          type="button"
+          type='button'
           disabled={!canZoomOut}
           className={`p-1.5 rounded transition-all ${
             canZoomOut
               ? 'text-foreground hover:bg-surface cursor-pointer'
               : 'text-foreground/30 cursor-not-allowed'
           }`}
-          aria-label="Decrease code font size"
+          aria-label='Decrease code font size'
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
             strokeWidth={2}
-            stroke="currentColor"
-            className="w-4 h-4"
+            stroke='currentColor'
+            className='w-4 h-4'
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM13.5 10.5H6" />
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM13.5 10.5H6'
+            />
           </svg>
         </button>
-        <span className="text-xs font-mono text-foreground/70 min-w-[3rem] text-center" aria-live="polite">
+        <span
+          className='text-xs font-mono text-foreground/70 min-w-[3rem] text-center'
+          aria-live='polite'
+        >
           {Math.round(currentFontSize * 100)}%
         </span>
         <button
           onClick={handleZoomIn}
-          type="button"
+          type='button'
           disabled={!canZoomIn}
           className={`p-1.5 rounded transition-all ${
             canZoomIn
               ? 'text-foreground hover:bg-surface cursor-pointer'
               : 'text-foreground/30 cursor-not-allowed'
           }`}
-          aria-label="Increase code font size"
+          aria-label='Increase code font size'
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
             strokeWidth={2}
-            stroke="currentColor"
-            className="w-4 h-4"
+            stroke='currentColor'
+            className='w-4 h-4'
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6'
+            />
           </svg>
         </button>
       </div>

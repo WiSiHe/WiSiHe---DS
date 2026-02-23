@@ -1,8 +1,8 @@
+import type { BlockContent, RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
+import { PortableText, type PortableTextBlock } from 'next-sanity';
 import { sanityFetch } from '@/sanity/lib/live';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
-import { PortableText, PortableTextBlock } from 'next-sanity';
 import PaintingsCarousel from './PaintingsCarousel';
-import { RandomPaintingsQueryResult, BlockContent } from '@wisihe/sanity-queries';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -14,8 +14,11 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-const PaintingsSection = async ({ paintingsDescription }: { paintingsDescription: BlockContent }) => {
-
+const PaintingsSection = async ({
+  paintingsDescription,
+}: {
+  paintingsDescription: BlockContent;
+}) => {
   const { data: allPaintings }: { data: RandomPaintingsQueryResult } = await sanityFetch({
     query: randomPaintingsQuery,
   });
@@ -29,12 +32,10 @@ const PaintingsSection = async ({ paintingsDescription }: { paintingsDescription
 
   return (
     <>
-    <div className="mb-12 px-4">
-      <PortableText value={paintingsDescription as PortableTextBlock[]} />
-    </div>
-      <PaintingsCarousel 
-        paintings={shuffledPaintings} 
-      />
+      <div className='mb-12 px-4'>
+        <PortableText value={paintingsDescription as PortableTextBlock[]} />
+      </div>
+      <PaintingsCarousel paintings={shuffledPaintings} />
     </>
   );
 };

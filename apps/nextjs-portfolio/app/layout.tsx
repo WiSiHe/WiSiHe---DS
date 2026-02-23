@@ -1,23 +1,21 @@
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import { draftMode } from 'next/headers';
+import { VisualEditing } from 'next-sanity/visual-editing';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
-
-import { SpeedInsights } from '@vercel/speed-insights/next';
-
 import HeaderNavigation from '@/app/components/HeaderNavigation';
-import { sanityFetch, SanityLive } from '@/sanity/lib/live';
+import { SanityLive, sanityFetch } from '@/sanity/lib/live';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
-import { VisualEditing } from 'next-sanity/visual-editing';
-import { draftMode } from 'next/headers';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
 import './globals.css';
+import type React from 'react';
 import { PostHogProvider } from './providers';
-import React from 'react';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -156,22 +154,22 @@ export default async function RootLayout({
   const { socialLinks } = settings;
 
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang='en' className='scroll-smooth' suppressHydrationWarning>
       <head>
         {process.env.NODE_ENV === 'development' && (
-          <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />
+          <script crossOrigin='anonymous' src='//unpkg.com/react-scan/dist/auto.global.js' />
         )}
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="mask-icon" href="/wisihe.svg" color="oklch(65% 0.15 180)" />
+        <link rel='manifest' href='/manifest.json' />
+        <link rel='mask-icon' href='/wisihe.svg' color='oklch(65% 0.15 180)' />
 
         <script
-          type="application/ld+json"
+          type='application/ld+json'
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd),
           }}
         />
         <script
-          type="application/ld+json"
+          type='application/ld+json'
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLdSite),
           }}
@@ -180,9 +178,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
       >
-        <div className="relative z-10">
+        <div className='relative z-10'>
           <ProgressBarProvider>
-            <ProgressBar className="fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50" />
+            <ProgressBar className='fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50' />
             <PostHogProvider>
               {isDraftMode && (
                 <>
@@ -192,7 +190,7 @@ export default async function RootLayout({
               )}
               <SanityLive onError={handleError} />
               <HeaderNavigation />
-              <main id="main-content" className="bg-transparent">
+              <main id='main-content' className='bg-transparent'>
                 {children}
               </main>
               <Footer socialLinks={socialLinks} />

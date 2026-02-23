@@ -34,12 +34,9 @@
     "styled-components": "^6.3.11"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^6.0.0",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",
     "@wisihe/typescript-config": "workspace:*",
-    "eslint": "^9.39.3",
-    "prettier": "^3.8.1",
     "typescript": "^5.9.3"
   }
 }

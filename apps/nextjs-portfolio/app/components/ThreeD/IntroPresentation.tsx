@@ -1,15 +1,15 @@
 'use client';
 
+import { AnimatePresence, motion } from 'motion/react';
 import React, { useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { presentationSlides as fallbackSlides } from '../../three-d/presentationSlides';
+import type { PresentationSlide } from '../../three-d/types';
 import { ScrollIndicator } from '../ScrollIndicator';
+import { GridBackground } from './GridBackground';
+import { usePresentationLogic } from './hooks/usePresentationLogic';
+import { ContentSlide } from './Slides/ContentSlide';
 import { SeparatorSlide } from './Slides/SeparatorSlide';
 import { TitleSlide } from './Slides/TitleSlide';
-import { ContentSlide } from './Slides/ContentSlide';
-import { presentationSlides as fallbackSlides } from '../../three-d/presentationSlides';
-import { GridBackground } from './GridBackground';
-import type { PresentationSlide } from '../../three-d/types';
-import { usePresentationLogic } from './hooks/usePresentationLogic';
 
 export const IntroPresentation = React.memo(function IntroPresentation({
   mainRef,
@@ -119,6 +119,10 @@ export const IntroPresentation = React.memo(function IntroPresentation({
     isTechnicalSectionVisible,
     isScrolled,
     onPresentationStateChange,
+    handleNextSlide,
+    handlePrevSlide,
+    handleScrollToTop,
+    handleSkipToCoolPart,
     // Note: handlers are stable from usePresentationLogic, but we don't need them in deps
     // since we only update when the actual state values change
   ]);
@@ -128,7 +132,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
       <ScrollIndicator currentSlide={currentSlide} totalSlides={presentationSlides.length} />
 
       {/* Optimized: Use initial={false} to prevent initial animation on mount */}
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode='wait' initial={false}>
         {categoryTransitionContent && (
           <motion.div
             key={categoryTransitionContent}
@@ -136,14 +140,14 @@ export const IntroPresentation = React.memo(function IntroPresentation({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed top-16 md:top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+            className='fixed top-16 md:top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none'
           >
-            <div className="flex items-center gap-3 px-6 py-2.5 bg-surface-elevated border border-border rounded-full shadow-2xl">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+            <div className='flex items-center gap-3 px-6 py-2.5 bg-surface-elevated border border-border rounded-full shadow-2xl'>
+              <span className='relative flex h-2 w-2'>
+                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75'></span>
+                <span className='relative inline-flex rounded-full h-2 w-2 bg-accent'></span>
               </span>
-              <span className="text-sm font-medium text-foreground/90 uppercase tracking-widest text-[10px]">
+              <span className='text-sm font-medium text-foreground/90 uppercase tracking-widest text-[10px]'>
                 {categoryTransitionContent}
               </span>
             </div>
@@ -151,7 +155,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
         )}
       </AnimatePresence>
 
-      <div aria-live="polite" aria-atomic="true" className="sr-only">
+      <div aria-live='polite' aria-atomic='true' className='sr-only'>
         {presentationSlides[currentSlide]?.title && (
           <span>
             Slide {currentSlide + 1} of {presentationSlides.length}:{' '}
@@ -160,7 +164,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
         )}
       </div>
 
-      <div ref={containerRef} className="w-full bg-background text-foreground relative">
+      <div ref={containerRef} className='w-full bg-background text-foreground relative'>
         {/* Single fixed GridBackground instance shared across all slides */}
         <GridBackground fixed />
 
@@ -177,7 +181,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
               ref={el => {
                 slideRefs.current[index] = el;
               }}
-              className="h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 shrink-0 overflow-hidden max-w-full"
+              className='h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 shrink-0 overflow-hidden max-w-full'
               style={{
                 // Performance optimizations: content-visibility for off-screen slides
                 contentVisibility: isNearViewport ? 'visible' : 'auto',
@@ -187,7 +191,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
                 willChange: isNearViewport ? 'scroll-position' : 'auto',
               }}
             >
-              <div className="w-full max-w-full flex items-center justify-center overflow-hidden">
+              <div className='w-full max-w-full flex items-center justify-center overflow-hidden'>
                 {slideData.type === 'separator' && (
                   <SeparatorSlide slideData={slideData} index={index} />
                 )}

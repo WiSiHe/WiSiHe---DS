@@ -26,7 +26,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Houston, we're coding 3D! 🚀",
-    description: 'Does Three.js have to be rocket science in 2026? Learn 3D web development with Three.js and React Three Fiber in this comprehensive interactive tutorial.',
+    description:
+      'Does Three.js have to be rocket science in 2026? Learn 3D web development with Three.js and React Three Fiber in this comprehensive interactive tutorial.',
     type: 'website',
     url: 'https://www.wisihe.no/three-d',
     siteName: 'WiSiHe',
@@ -69,10 +70,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ThreeDLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ThreeDLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

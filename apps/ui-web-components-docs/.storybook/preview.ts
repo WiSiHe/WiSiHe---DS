@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/web-components-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview } from '@storybook/web-components-vite';
 import { registerWisiheWebComponents } from '@wisihe/ui-web-components';
 import '../src/styles.css';
 

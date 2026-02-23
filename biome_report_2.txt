@@ -1,0 +1,3502 @@
+apps/astro-portfolio/src/components/BaseHead.astro:16:16 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable description is unused.
+  
+    14 │ const _canonicalURL = new URL(Astro.url.pathname, Astro.site);
+    15 │ 
+  > 16 │ const { title, description, image = FallbackImage } = Astro.props;
+       │                ^^^^^^^^^^^
+    17 │ ---
+    18 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/components/BaseHead.astro:16:29 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable image is unused.
+  
+    14 │ const _canonicalURL = new URL(Astro.url.pathname, Astro.site);
+    15 │ 
+  > 16 │ const { title, description, image = FallbackImage } = Astro.props;
+       │                             ^^^^^
+    17 │ ---
+    18 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/components/BaseHead.astro:16:9 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable title is unused.
+  
+    14 │ const _canonicalURL = new URL(Astro.url.pathname, Astro.site);
+    15 │ 
+  > 16 │ const { title, description, image = FallbackImage } = Astro.props;
+       │         ^^^^^
+    17 │ ---
+    18 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/components/FormattedDate.astro:6:9 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable date is unused.
+  
+    4 │ }
+    5 │ 
+  > 6 │ const { date } = Astro.props;
+      │         ^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/components/HeaderLink.astro:6:36 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable props is unused.
+  
+    4 │ type Props = HTMLAttributes<'a'>;
+    5 │ 
+  > 6 │ const { href, class: className, ...props } = Astro.props;
+      │                                    ^^^^^
+    7 │ const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+    8 │ const subpath = pathname.match(/[^/]+/g);
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/layouts/BlogPost.astro:6:9 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━
+
+  ! This variable title is unused.
+  
+    4 │ type Props = CollectionEntry<'blog'>['data'];
+    5 │ 
+  > 6 │ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+      │         ^^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/layouts/BlogPost.astro:6:16 lint/correctness/noUnusedVariables ━━━━━━━━━━━━
+
+  ! This variable description is unused.
+  
+    4 │ type Props = CollectionEntry<'blog'>['data'];
+    5 │ 
+  > 6 │ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+      │                ^^^^^^^^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/layouts/BlogPost.astro:6:29 lint/correctness/noUnusedVariables ━━━━━━━━━━━━
+
+  ! This variable pubDate is unused.
+  
+    4 │ type Props = CollectionEntry<'blog'>['data'];
+    5 │ 
+  > 6 │ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+      │                             ^^^^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/layouts/BlogPost.astro:6:38 lint/correctness/noUnusedVariables ━━━━━━━━━━━━
+
+  ! This variable updatedDate is unused.
+  
+    4 │ type Props = CollectionEntry<'blog'>['data'];
+    5 │ 
+  > 6 │ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+      │                                      ^^^^^^^^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/layouts/BlogPost.astro:6:51 lint/correctness/noUnusedVariables ━━━━━━━━━━━━
+
+  ! This variable heroImage is unused.
+  
+    4 │ type Props = CollectionEntry<'blog'>['data'];
+    5 │ 
+  > 6 │ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+      │                                                   ^^^^^^^^^
+    7 │ ---
+    8 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/pages/blog/[...slug].astro:14:9 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable Content is unused.
+  
+    13 │ const post = Astro.props;
+  > 14 │ const { Content } = await render(post);
+       │         ^^^^^^^
+    15 │ ---
+    16 │ 
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/pages/paintings/[...slug].astro:16:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    14 │     }
+    15 │   }`);
+  > 16 │   return paintings.map((painting: any) => ({
+       │                                   ^^^
+    17 │     params: { slug: painting.slug.current },
+    18 │     props: { painting },
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/astro-portfolio/src/pages/paintings/[...slug].astro:23:9 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable width is unused.
+  
+    22 │ const { painting } = Astro.props;
+  > 23 │ const { width, height } = painting.image?.asset?.metadata?.dimensions || {
+       │         ^^^^^
+    24 │   width: 800,
+    25 │   height: 600,
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/pages/paintings/[...slug].astro:23:16 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable height is unused.
+  
+    22 │ const { painting } = Astro.props;
+  > 23 │ const { width, height } = painting.image?.asset?.metadata?.dimensions || {
+       │                ^^^^^^
+    24 │   width: 800,
+    25 │   height: 600,
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/nextjs-portfolio/app/components/ContentCard/ContentCard.tsx:14:10 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    12 │   subtitle?: string;
+    13 │   description?: string;
+  > 14 │   image: any;
+       │          ^^^
+    15 │   href: string;
+    16 │   tags?: { name: string }[];
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:126:13 lint/performance/noImgElement ━━━━━━━━━━
+
+  ! Don't use <img> element.
+  
+    124 │         <section className='relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8'>
+    125 │           <div className='relative w-full'>
+  > 126 │             <motion.img
+        │             ^^^^^^^^^^^
+  > 127 │               initial={{ scale: 0.5, opacity: 0 }}
+         ...
+  > 146 │               aria-hidden='true'
+  > 147 │             />
+        │             ^^
+    148 │ 
+    149 │             <div className={cn('relative', aspectRatioStyle)}>
+  
+  i Using the <img> can lead to slower LCP and higher bandwidth. Consider using <Image /> from next/image to automatically optimize images.
+  
+
+apps/nextjs-portfolio/app/components/PaintingsSection/PaintingsCarousel.tsx:94:57 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    92 │             {paintings.map((painting, index) => (
+    93 │               <div key={painting._id} className='w-96 shrink-0'>
+  > 94 │                 <PaintingCard paintingData={painting as any} shouldBeLazy={index < 2} />
+       │                                                         ^^^
+    95 │               </div>
+    96 │             ))}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/app/components/ResolvedLink/ResolvedLink.tsx:9:9 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     7 │ interface ResolvedLinkProps {
+     8 │   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   > 9 │   link: any;
+       │         ^^^
+    10 │   children: React.ReactNode;
+    11 │   className?: string;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/BasicsPresentation.tsx:16:36 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    14 │ }
+    15 │ 
+  > 16 │ const PresentationModel = ({ step, progress }: { step: number; progress: number }) => {
+       │                                    ^^^^^^^^
+    17 │   const groupRef = useRef<THREE.Group>(null);
+    18 │   const { camera } = useThree();
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Common/RippleGrid.tsx:39:30 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    37 │   const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
+    38 │   const mouseInfluenceRef = useRef(0);
+  > 39 │   const uniformsRef = useRef<any>(null);
+       │                              ^^^
+    40 │ 
+    41 │   useEffect(() => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ContentSlide.tsx:28:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    26 │   slideData,
+    27 │   index,
+  > 28 │   shouldAnimate,
+       │   ^^^^^^^^^^^^^
+    29 │   slideDirection,
+    30 │   currentHistorySlideIndex,
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ContentSlide.tsx:29:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    27 │   index,
+    28 │   shouldAnimate,
+  > 29 │   slideDirection,
+       │   ^^^^^^^^^^^^^^
+    30 │   currentHistorySlideIndex,
+    31 │ }: ContentSlideProps) => {
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SeparatorSlide.tsx:15:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    13 │ export const SeparatorSlide = ({
+    14 │   slideData,
+  > 15 │   index,
+       │   ^^^^^
+    16 │   shouldAnimate,
+    17 │   slideDirection,
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SeparatorSlide.tsx:16:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    14 │   slideData,
+    15 │   index,
+  > 16 │   shouldAnimate,
+       │   ^^^^^^^^^^^^^
+    17 │   slideDirection,
+    18 │ }: SeparatorSlideProps) => {
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SeparatorSlide.tsx:17:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    15 │   index,
+    16 │   shouldAnimate,
+  > 17 │   slideDirection,
+       │   ^^^^^^^^^^^^^^
+    18 │ }: SeparatorSlideProps) => {
+    19 │   const design = slideData.slideDesign || 'default';
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/TitleSlide.tsx:15:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    13 │ export const TitleSlide = ({
+    14 │   slideData,
+  > 15 │   index,
+       │   ^^^^^
+    16 │   shouldAnimate,
+    17 │   slideDirection,
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/TitleSlide.tsx:16:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    14 │   slideData,
+    15 │   index,
+  > 16 │   shouldAnimate,
+       │   ^^^^^^^^^^^^^
+    17 │   slideDirection,
+    18 │ }: TitleSlideProps) => {
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/TitleSlide.tsx:17:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    15 │   index,
+    16 │   shouldAnimate,
+  > 17 │   slideDirection,
+       │   ^^^^^^^^^^^^^^
+    18 │ }: TitleSlideProps) => {
+    19 │   const slideDesign = slideData.slideDesign || 'default';
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/CodeExampleWrapper.tsx:15:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    13 │ export function CodeExampleWrapper({
+    14 │   code,
+  > 15 │   shouldAnimate,
+       │   ^^^^^^^^^^^^^
+    16 │   currentSlide,
+    17 │   className = '',
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/CodeExampleWrapper.tsx:16:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    14 │   code,
+    15 │   shouldAnimate,
+  > 16 │   currentSlide,
+       │   ^^^^^^^^^^^^
+    17 │   className = '',
+    18 │ }: CodeExampleWrapperProps) {
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/ResourceLinks.tsx:17:40 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    15 │ }
+    16 │ 
+  > 17 │ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLinksProps) {
+       │                                        ^^^^^^^^^^^^^
+    18 │   const linksContent = (
+    19 │     <div className='mb-8 space-y-3'>
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/ResourceLinks.tsx:17:55 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    15 │ }
+    16 │ 
+  > 17 │ export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLinksProps) {
+       │                                                       ^^^^^^^^^^^^
+    18 │   const linksContent = (
+    19 │     <div className='mb-8 space-y-3'>
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalCanvasPanel.tsx:137:29 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━
+
+  ! This parameter is unused.
+  
+    135 │           dpr={1}
+    136 │           className='w-full h-full'
+  > 137 │           onCreated={({ gl, scene }) => {
+        │                             ^^^^^
+    138 │             // Handle WebGL context loss
+    139 │             const canvas = gl.domElement;
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideContent.tsx:42:37 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable code is unused.
+  
+    40 │   } = showcaseControls;
+    41 │ 
+  > 42 │   const { title, description, mode, code, links } = currentSlideData;
+       │                                     ^^^^
+    43 │   return (
+    44 │     <article className='h-full flex flex-col relative'>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideContent.tsx:42:43 lint/correctness/noUnusedVariables ━━━━━━━━━━
+
+  ! This variable links is unused.
+  
+    40 │   } = showcaseControls;
+    41 │ 
+  > 42 │   const { title, description, mode, code, links } = currentSlideData;
+       │                                           ^^^^^
+    43 │   return (
+    44 │     <article className='h-full flex flex-col relative'>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/scenes/R3FBasicsScene.tsx:16:35 lint/style/noNonNullAssertion ━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    14 │   color: string;
+    15 │ }) {
+  > 16 │   const mesh = useRef<THREE.Mesh>(null!);
+       │                                   ^^^^^
+    17 │   const [active, setActive] = useState(false);
+    18 │ 
+  
+
+apps/nextjs-portfolio/app/components/icons/IconLogo.tsx:97:26 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    95 │     return (
+    96 │       <MotionSvg
+  > 97 │         {...(svgProps as any)}
+       │                          ^^^
+    98 │         {...motionProps}
+    99 │         initial={motionProps?.initial || { opacity: 0, scale: 0.8 }}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/app/three-d/types.ts:90:32 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    88 │   currentEra?: string; // Used for history timeline to indicate which era is active
+    89 │   customComponent?: string;
+  > 90 │   customProps?: Record<string, any>;
+       │                                ^^^
+    91 │   // Design and organization
+    92 │   slideDesign?: 'default' | 'centered' | 'split' | 'full-width' | 'minimal' | 'hero' | 'bold';
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/hooks/useOutsideClick.ts:6:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export const useOutsideClick = (ref: React.RefObject<HTMLDivElement>, callback: Function) => {
+    5 │   useEffect(() => {
+  > 6 │     const listener = (event: any) => {
+      │                              ^^^
+    7 │       if (!ref.current || ref.current.contains(event.target)) {
+    8 │         return;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/hooks/useOutsideClick.ts:4:81 lint/complexity/noBannedTypes ━━━━━━━━━━━━━━━━━━
+
+  ! Don't use 'Function' as a type.
+  
+    2 │ import { useEffect } from 'react';
+    3 │ 
+  > 4 │ export const useOutsideClick = (ref: React.RefObject<HTMLDivElement>, callback: Function) => {
+      │                                                                                 ^^^^^^^^
+    5 │   useEffect(() => {
+    6 │     const listener = (event: any) => {
+  
+  i The 'Function' type is unsafe and accepts any arbitrary function or "function-like" value.
+    Explicitly defining the function's shape helps prevent mismatching argument types and return values.
+    If a generic "catch-all" callback type is required, consider using a "top type" like '(...args: never) => unknown' instead.
+  
+  i If that's really what you want, use an inline disable comment.
+  
+
+apps/nextjs-portfolio/hooks/useTransitionProgress.ts:18:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    16 │    * the progress bar during the transition.
+    17 │    */
+  > 18 │   const withProgress = <T extends (...args: any[]) => any>(fn: T): T => {
+       │                                             ^^^
+    19 │     return ((...args: Parameters<T>) => {
+    20 │       return new Promise<ReturnType<T>>((resolve, reject) => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/hooks/useTransitionProgress.ts:18:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    16 │    * the progress bar during the transition.
+    17 │    */
+  > 18 │   const withProgress = <T extends (...args: any[]) => any>(fn: T): T => {
+       │                                                       ^^^
+    19 │     return ((...args: Parameters<T>) => {
+    20 │       return new Promise<ReturnType<T>>((resolve, reject) => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/next.config.ts:62:23 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    60 │         .filter(
+    61 │           (
+  > 62 │             redirect: any,
+       │                       ^^^
+    63 │           ): redirect is { source: string; destination: string; permanent: boolean } =>
+    64 │             Boolean(redirect.source && redirect.destination),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/next.config.ts:66:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    64 │             Boolean(redirect.source && redirect.destination),
+    65 │         )
+  > 66 │         .map((redirect: any) => ({
+       │                         ^^^
+    67 │           source: redirect.source!,
+    68 │           destination: redirect.destination!,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/next.config.ts:67:19 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    65 │         )
+    66 │         .map((redirect: any) => ({
+  > 67 │           source: redirect.source!,
+       │                   ^^^^^^^^^^^^^^^^
+    68 │           destination: redirect.destination!,
+    69 │           permanent: redirect.permanent ?? false,
+  
+
+apps/nextjs-portfolio/next.config.ts:68:24 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    66 │         .map((redirect: any) => ({
+    67 │           source: redirect.source!,
+  > 68 │           destination: redirect.destination!,
+       │                        ^^^^^^^^^^^^^^^^^^^^^
+    69 │           permanent: redirect.permanent ?? false,
+    70 │         }));
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:77:23 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    75 │     // Filter out slides that are not published (status !== 'published')
+    76 │     return data.slides
+  > 77 │       .filter((slide: any) => !slide.status || slide.status === 'published')
+       │                       ^^^
+    78 │       .map((slide: any) => {
+    79 │         // Determine the type based on _type field
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:78:20 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    76 │     return data.slides
+    77 │       .filter((slide: any) => !slide.status || slide.status === 'published')
+  > 78 │       .map((slide: any) => {
+       │                    ^^^
+    79 │         // Determine the type based on _type field
+    80 │         let type: 'title' | 'content' | 'separator' = 'content';
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:90:38 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    89 │         // Extract media based on mediaType
+  > 90 │         const extractMedia = (media: any) => {
+       │                                      ^^^
+    91 │           if (!media || media.mediaType === 'none') return {};
+    92 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:94:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    93 │           const mediaType = media.mediaType;
+  > 94 │           const result: any = {};
+       │                         ^^^
+    95 │ 
+    96 │           if (mediaType === 'image') {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:147:26 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    146 │         // Base fields common to all slide types
+  > 147 │         const baseSlide: any = {
+        │                          ^^^
+    148 │           title: slide.title || '',
+    149 │           subtitle: slide.subtitle,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:163:50 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    161 │             content: slide.content || null,
+    162 │             ...mediaData,
+  > 163 │             sources: slide.sources?.map((source: any) => ({
+        │                                                  ^^^
+    164 │               text: source.text || '',
+    165 │               url: source.url,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:167:44 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    165 │               url: source.url,
+    166 │             })) as Source[] | undefined,
+  > 167 │             tools: slide.tools?.map((tool: any) => ({
+        │                                            ^^^
+    168 │               name: tool.name || '',
+    169 │               description: tool.description || '',
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/sanity/lib/fetchPresentations.ts:175:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    173 │               nerdLevel: tool.nerdLevel,
+    174 │             })) as Tool[] | undefined,
+  > 175 │             examples: slide.examples?.map((example: any) => ({
+        │                                                     ^^^
+    176 │               name: example.name || '',
+    177 │               description: example.description || '',
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/store/useFilterModalStore.ts:11:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     9 │   toggleFilter: (filter: string, pathname: string, router: any) => void;
+    10 │   setSort: (sort: string, pathname: string, router: any) => void;
+  > 11 │   clearFilters: (pathname: string, router: any) => void;
+       │                                            ^^^
+    12 │ }
+    13 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/store/useFilterModalStore.ts:9:60 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     7 │   openSidebar: () => void;
+     8 │   closeSidebar: () => void;
+   > 9 │   toggleFilter: (filter: string, pathname: string, router: any) => void;
+       │                                                            ^^^
+    10 │   setSort: (sort: string, pathname: string, router: any) => void;
+    11 │   clearFilters: (pathname: string, router: any) => void;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/nextjs-portfolio/store/useFilterModalStore.ts:10:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     8 │   closeSidebar: () => void;
+     9 │   toggleFilter: (filter: string, pathname: string, router: any) => void;
+  > 10 │   setSort: (sort: string, pathname: string, router: any) => void;
+       │                                                     ^^^
+    11 │   clearFilters: (pathname: string, router: any) => void;
+    12 │ }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:89:18 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    88 │     return tags
+  > 89 │       .map((tag: any) => {
+       │                  ^^^
+    90 │         if (typeof tag === 'string') return tag;
+    91 │         if (tag && typeof tag === 'object' && tag.name) return tag.name;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:70:54 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    69 │   // Function to extract plain text from blockContent
+  > 70 │   const extractTextFromBlockContent = (blockContent: any): string => {
+       │                                                      ^^^
+    71 │     if (!blockContent || !Array.isArray(blockContent)) return '';
+    72 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:74:20 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    73 │     return blockContent
+  > 74 │       .map((block: any) => {
+       │                    ^^^
+    75 │         if (block._type === 'block' && block.children) {
+    76 │           return block.children.map((child: any) => child.text || '').join('');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:76:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    74 │       .map((block: any) => {
+    75 │         if (block._type === 'block' && block.children) {
+  > 76 │           return block.children.map((child: any) => child.text || '').join('');
+       │                                             ^^^
+    77 │         }
+    78 │         return '';
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:85:34 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │   // Function to extract tag names from tags array
+  > 85 │   const extractTagNames = (tags: any): string => {
+       │                                  ^^^
+    86 │     if (!tags || !Array.isArray(tags)) return '';
+    87 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/sanity.config.ts:58:8 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    56 │     // Development tools (only in dev mode)
+    57 │     ...(isDevelopment ? [visionTool()] : []),
+  > 58 │   ] as any, // Type assertion needed due to Sanity plugin type limitations
+       │        ^^^
+    59 │ 
+    60 │   schema: {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/schemas/presentation.tsx:147:90 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    145 │       image: 'image',
+    146 │     },
+  > 147 │     prepare({ name, description, image }: { name?: string; description?: string; image?: any }) {
+        │                                                                                          ^^^
+    148 │       return {
+    149 │         title: name || 'Example',
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/schemas/presentation.tsx:443:15 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    441 │     }: {
+    442 │       mediaType?: string;
+  > 443 │       image?: any;
+        │               ^^^
+    444 │       chartType?: string;
+    445 │       componentName?: string;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/schemas/presentation.tsx:446:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    444 │       chartType?: string;
+    445 │       componentName?: string;
+  > 446 │       metrics?: any[];
+        │                 ^^^
+    447 │     }) {
+    448 │       const titles: Record<string, string> = {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/schemas/presentation.tsx:820:21 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    818 │       title?: string;
+    819 │       description?: string;
+  > 820 │       slidesCount?: any[];
+        │                     ^^^
+    821 │     }) {
+    822 │       const count = Array.isArray(slidesCount) ? slidesCount.length : 0;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/schemas/singletons/settings.tsx:57:49 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    55 │           validation: rule => {
+    56 │             return rule.custom((alt, context) => {
+  > 57 │               if ((context.document?.ogImage as any)?.asset?._ref && !alt) {
+       │                                                 ^^^
+    58 │                 return 'Alt text is required when an Open Graph image is provided.';
+    59 │               }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/structure/index.ts:117:28 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    115 │             .items(
+    116 │               (S.documentTypeListItems() as any[]).filter(
+  > 117 │                 (listItem: any) => !handledSchemaTypes.includes(listItem.getId() as string),
+        │                            ^^^
+    118 │               ),
+    119 │             ),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/structure/index.ts:59:64 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    57 │     .title(item.title)
+    58 │     .icon(() => item.icon)
+  > 59 │     .child(S.document().schemaType(item.schemaType).documentId(item.documentId!));
+       │                                                                ^^^^^^^^^^^^^^^^
+    60 │ 
+    61 │ const createDocumentListItem = (S: StructureBuilder, item: DocumentItem) =>
+  
+
+apps/sanity-studio/structure/index.ts:116:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    114 │             .title('Other Documents')
+    115 │             .items(
+  > 116 │               (S.documentTypeListItems() as any[]).filter(
+        │                                             ^^^
+    117 │                 (listItem: any) => !handledSchemaTypes.includes(listItem.getId() as string),
+    118 │               ),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+apps/sanity-studio/utils/image.ts:11:32 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    10 │ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 11 │ export function urlFor(source: any) {
+       │                                ^^^
+    12 │   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    13 │   return builder.image(source);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages/ui-svelte/src/badge/Badge.svelte:35:6 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━━━
+
+  ! This variable rest is unused.
+  
+    33 │   class: className,
+    34 │   children,
+  > 35 │   ...rest
+       │      ^^^^
+    36 │ }: BadgeProps = $props();
+    37 │ </script>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+packages/ui-svelte/src/button/Button.svelte:40:6 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━
+
+  ! This variable rest is unused.
+  
+    38 │   type = 'button',
+    39 │   children,
+  > 40 │   ...rest
+       │      ^^^^
+    41 │ }: ButtonProps = $props();
+    42 │ </script>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+packages/ui-svelte/src/card/Card.svelte:31:6 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━━━━━
+
+  ! This variable rest is unused.
+  
+    29 │   class: className,
+    30 │   children,
+  > 31 │   ...rest
+       │      ^^^^
+    32 │ }: CardProps = $props();
+    33 │ </script>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+packages/ui-svelte/src/env.d.ts:4:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    2 │   import type { Component } from 'svelte';
+    3 │   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 4 │   const component: Component<any, any>;
+      │                              ^^^
+    5 │   export default component;
+    6 │ }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages/ui-svelte/src/env.d.ts:4:35 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    2 │   import type { Component } from 'svelte';
+    3 │   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 4 │   const component: Component<any, any>;
+      │                                   ^^^
+    5 │   export default component;
+    6 │ }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages/ui-svelte/src/stack/Stack.svelte:51:6 lint/correctness/noUnusedVariables ━━━━━━━━━━━━━━━━━━
+
+  ! This variable rest is unused.
+  
+    49 │   class: className,
+    50 │   children,
+  > 51 │   ...rest
+       │      ^^^^
+    52 │ }: StackProps = $props();
+    53 │ </script>
+  
+  i Unused variables are often the result of typos, incomplete refactors, or other sources of bugs.
+  
+
+apps/astro-portfolio/src/components/TestReact.tsx:17:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    15 │       <h3>React Component</h3>
+    16 │       <p>Count: {count}</p>
+  > 17 │       <button
+       │       ^^^^^^^
+  > 18 │         onClick={() => setCount(count + 1)}
+  > 19 │         style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}
+  > 20 │       >
+       │       ^
+    21 │         Increment
+    22 │       </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Charts/EngagementChart.tsx:46:17 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    44 │             <div className='mb-2' style={{ color: metric.color }}>
+    45 │               {metric.icon === 'up' ? (
+  > 46 │                 <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    47 │                   <path
+    48 │                     strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/Charts/EngagementChart.tsx:55:17 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    53 │                 </svg>
+    54 │               ) : (
+  > 55 │                 <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    56 │                   <path
+    57 │                     strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/Charts/MetricCard.tsx:28:9 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    26 │     if (icon === 'up') {
+    27 │       return (
+  > 28 │         <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    29 │           <path
+    30 │             strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/Charts/MetricCard.tsx:39:9 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    37 │     } else {
+    38 │       return (
+  > 39 │         <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    40 │           <path
+    41 │             strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/Chip/Chip.tsx:198:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    197 │       {removable && onRemove && (
+  > 198 │         <button
+        │         ^^^^^^^
+  > 199 │           onClick={handleRemove}
+  > 200 │           className={removeButtonClassName}
+  > 201 │           aria-label={`Remove ${label}`}
+  > 202 │           disabled={disabled}
+  > 203 │         >
+        │         ^
+    204 │           <IoClose className='w-full h-full' />
+    205 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ContentCard/ContentCard.tsx:251:17 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    249 │               >
+    250 │                 View Project
+  > 251 │                 <svg
+        │                 ^^^^
+  > 252 │                   className='w-5 h-5 transition-transform duration-200 group-hover/content:translate-x-1.5'
+  > 253 │                   fill='none'
+  > 254 │                   viewBox='0 0 24 24'
+  > 255 │                   stroke='currentColor'
+  > 256 │                 >
+        │                 ^
+    257 │                   <path
+    258 │                     strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ContentCard/ContentCard.tsx:136:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    134 │           {sideIcons.map((icon, i) => (
+    135 │             <motion.li
+  > 136 │               key={i}
+        │                    ^
+    137 │               className='p-1 text-xs bg-accent text-accent-contrast rounded-md shadow-sm'
+    138 │               variants={iconVariants}
+  
+  i This is the source of the key value.
+  
+    132 │           variants={iconsListVariants}
+    133 │         >
+  > 134 │           {sideIcons.map((icon, i) => (
+        │                                 ^
+    135 │             <motion.li
+    136 │               key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/Filters/FilterManager.tsx:63:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    61 │         <h3 className='font-medium text-sm text-foreground-subtle'>Filters:</h3>
+    62 │         {currentFilters.length > 0 && (
+  > 63 │           <button
+       │           ^^^^^^^
+  > 64 │             onClick={clearAllFilters}
+  > 65 │             className='text-accent hover:text-accent-hover hover:underline transition-colors duration-200 text-sm'
+  > 66 │           >
+       │           ^
+    67 │             Clear all
+    68 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Filters/FilterSideBar.tsx:81:17 lint/a11y/noLabelWithoutControl ━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    79 │               {/* Filter Chips */}
+    80 │               <div className='mb-6'>
+  > 81 │                 <label className='block mb-2 text-sm font-semibold text-foreground'>Filters</label>
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    82 │                 <div className='flex flex-wrap gap-3'>
+    83 │                   {tags.map(({ _id, name, paintingsCount }) => {
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+apps/nextjs-portfolio/app/components/Filters/FilterSideBar.tsx:61:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    59 │               <div className='flex items-center justify-between mb-4 text-foreground'>
+    60 │                 <DialogTitle className='text-lg font-semibold'>Filter Paintings</DialogTitle>
+  > 61 │                 <button
+       │                 ^^^^^^^
+  > 62 │                   onClick={closeSidebar}
+  > 63 │                   className='p-3 text-foreground-muted hover:text-foreground'
+  > 64 │                 >
+       │                 ^
+    65 │                   <IoClose size={24} />
+    66 │                 </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Filters/FilterSideBar.tsx:107:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    105 │               {/* Actions */}
+    106 │               <div className='flex justify-between'>
+  > 107 │                 <button
+        │                 ^^^^^^^
+  > 108 │                   onClick={() => clearFilters(pathname, router)}
+  > 109 │                   className='px-3 py-2 rounded-lg cursor-pointer text-foreground border border-border hover:bg-surface-hover'
+  > 110 │                 >
+        │                 ^
+    111 │                   Clear Filters
+    112 │                 </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Filters/Filters.tsx:18:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    16 │   return (
+    17 │     <div className='flex flex-wrap items-center gap-2 py-4'>
+  > 18 │       <button
+       │       ^^^^^^^
+  > 19 │         onClick={openSidebar}
+  > 20 │         className='flex items-center gap-2 px-4 py-3 text-accent-contrast border rounded-full cursor-pointer border-accent bg-accent hover:bg-accent-hover'
+  > 21 │       >
+       │       ^
+    22 │         <FaFilter />
+    23 │         Filters & Sort
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Filters/Filters.tsx:67:17 lint/a11y/useButtonType ━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    65 │                 key={filter}
+    66 │               >
+  > 67 │                 <button onClick={() => toggleFilter(filter, pathname, router)}>
+       │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    68 │                   <Chip label={filter} selected Icon={() => <IoClose />} />
+    69 │                 </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/GreeterCard/GreeterCard.tsx:70:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    68 │           {roles.map(({ icon: Icon, label }, index) => (
+    69 │             <motion.li
+  > 70 │               key={index}
+       │                    ^^^^^
+    71 │               variants={itemVariants}
+    72 │               className='flex items-center gap-3 p-2 transition-colors rounded-lg group'
+  
+  i This is the source of the key value.
+  
+    66 │           className='flex flex-col w-full gap-2 text-lg xl:text-2xl'
+    67 │         >
+  > 68 │           {roles.map(({ icon: Icon, label }, index) => (
+       │                                              ^^^^^
+    69 │             <motion.li
+    70 │               key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/HeaderNavigation/HeaderNavigation.tsx:93:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    91 │               return (
+    92 │                 <motion.li
+  > 93 │                   key={i}
+       │                        ^
+    94 │                   variants={listItem}
+    95 │                   className={cn(
+  
+  i This is the source of the key value.
+  
+    76 │             style={{ isolation: 'isolate' }}
+    77 │           >
+  > 78 │             {navigationItems.map((item, i) => {
+       │                                         ^
+    79 │               const isActive = pathName?.includes(item.href);
+    80 │               const { href, label } = item;
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/HeroSection/HeroSection.tsx:106:15 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    104 │           // On tablet: 7 images
+    105 │           // On desktop: 8 images
+  > 106 │           let visibleImages;
+        │               ^^^^^^^^^^^^^
+    107 │           if (isMobile) {
+    108 │             visibleImages = Array.from(images).slice(0, 12);
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+apps/nextjs-portfolio/app/components/MeasurementToggle/MeasurementToggle.tsx:33:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    31 │       <div className='flex gap-1'>
+    32 │         {measurementModes.map(({ value, label, icon }) => (
+  > 33 │           <button
+       │           ^^^^^^^
+  > 34 │             key={value}
+        ...
+  > 40 │             }`}
+  > 41 │           >
+       │           ^
+    42 │             <span className='mr-1'>{icon}</span>
+    43 │             {label}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaginatedPaintingGrid/PaginatedPaintingGrid.tsx:160:15 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    158 │               </Link>
+    159 │             ) : (
+  > 160 │               <span
+        │               ^^^^^
+  > 161 │                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+  > 162 │                 aria-label='Previous page'
+  > 163 │               >
+        │               ^
+    164 │                 <FaArrowLeft />
+    165 │               </span>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+apps/nextjs-portfolio/app/components/PaginatedPaintingGrid/PaginatedPaintingGrid.tsx:182:15 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    180 │               </Link>
+    181 │             ) : (
+  > 182 │               <span
+        │               ^^^^^
+  > 183 │                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+  > 184 │                 aria-label='Next page'
+  > 185 │               >
+        │               ^
+    186 │                 <FaArrowRight />
+    187 │               </span>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+apps/nextjs-portfolio/app/components/PaginatedPaintingGrid/PaginatedPaintingGrid.tsx:200:15 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    198 │               </Link>
+    199 │             ) : (
+  > 200 │               <span
+        │               ^^^^^
+  > 201 │                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+  > 202 │                 aria-label='Last page'
+  > 203 │               >
+        │               ^
+    204 │                 <FaStepForward />
+    205 │               </span>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+apps/nextjs-portfolio/app/components/PaginatedPaintingGrid/PaginatedPaintingGrid.tsx:142:15 lint/a11y/useAriaPropsSupportedByRole ━━━━━━━━━━
+
+  × The ARIA attribute 'aria-label' is not supported by this element.
+  
+    140 │               </Link>
+    141 │             ) : (
+  > 142 │               <span
+        │               ^^^^^
+  > 143 │                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+  > 144 │                 aria-label='First page'
+  > 145 │               >
+        │               ^
+    146 │                 <FaStepBackward />
+    147 │               </span>
+  
+  i Ensure that ARIA attributes are valid for the role of the element.
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:205:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    203 │             <div className='z-10 flex items-center justify-center w-full gap-2.5 pt-6'>
+    204 │               {allImages.map((_, index) => (
+  > 205 │                 <button
+        │                 ^^^^^^^
+  > 206 │                   key={index}
+         ...
+  > 214 │                   aria-label={`Go to image ${index + 1}`}
+  > 215 │                 />
+        │                 ^^
+    216 │               ))}
+    217 │             </div>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:92:33 lint/correctness/noInvalidUseBeforeDeclaration ━━━━━━━━━━
+
+  × This variable is used before its declaration.
+  
+    90 │     };
+    91 │     void addView();
+  > 92 │   }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
+       │                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    93 │ 
+    94 │   const generateOrRetrieveViewerId = (): string => {
+  
+  i The variable is declared here:
+  
+    92 │   }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
+    93 │ 
+  > 94 │   const generateOrRetrieveViewerId = (): string => {
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    95 │     try {
+    96 │       let viewerId = localStorage.getItem('viewerId');
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:92:33 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━
+
+  × generateOrRetrieveViewerId changes on every re-render and should not be used as a hook dependency.
+  
+    90 │     };
+    91 │     void addView();
+  > 92 │   }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
+       │                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    93 │ 
+    94 │   const generateOrRetrieveViewerId = (): string => {
+  
+  i To fix this, wrap the definition of generateOrRetrieveViewerId in its own useCallback() hook.
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:164:33 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    163 │                     return (
+  > 164 │                       <div key={index} className='relative flex-[0_0_100%] w-full h-full min-w-0'>
+        │                                 ^^^^^
+    165 │                         <div className='w-full h-full relative'>
+    166 │                           <Image
+  
+  i This is the source of the key value.
+  
+    150 │               <div className='overflow-hidden rounded-3xl w-full h-full shadow-2xl' ref={emblaRef}>
+    151 │                 <div className='flex w-full h-full'>
+  > 152 │                   {allImages.map((img, index) => {
+        │                                        ^^^^^
+    153 │                     const { width, height } = getImageDimensions(format);
+    154 │                     const imageUrl =
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:183:19 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    181 │               {allImages.length > 1 && (
+    182 │                 <>
+  > 183 │                   <button
+        │                   ^^^^^^^
+  > 184 │                     onClick={scrollPrev}
+  > 185 │                     className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
+  > 186 │                     aria-label='Previous image'
+  > 187 │                   >
+        │                   ^
+    188 │                     <IoChevronBack className='w-6 h-6' />
+    189 │                   </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:190:19 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    188 │                     <IoChevronBack className='w-6 h-6' />
+    189 │                   </button>
+  > 190 │                   <button
+        │                   ^^^^^^^
+  > 191 │                     onClick={scrollNext}
+  > 192 │                     className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
+  > 193 │                     aria-label='Next image'
+  > 194 │                   >
+        │                   ^
+    195 │                     <IoChevronForward className='w-6 h-6' />
+    196 │                   </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaintingDetails/PaintingsDetails.tsx:206:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    204 │               {allImages.map((_, index) => (
+    205 │                 <button
+  > 206 │                   key={index}
+        │                        ^^^^^
+    207 │                   onClick={() => emblaApi?.scrollTo(index)}
+    208 │                   className={cn(
+  
+  i This is the source of the key value.
+  
+    202 │           {allImages.length > 1 && (
+    203 │             <div className='z-10 flex items-center justify-center w-full gap-2.5 pt-6'>
+  > 204 │               {allImages.map((_, index) => (
+        │                                  ^^^^^
+    205 │                 <button
+    206 │                   key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/PaintingGrid/PaintingGrid.tsx:66:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    64 │           No paintings match your filters.
+    65 │           <br />
+  > 66 │           <button onClick={clearFilters} className='clear-filters-button'>
+       │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    67 │             Clear Filters
+    68 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaintingsSection/PaintingsCarousel.tsx:110:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    108 │             <IconArrowNarrowLeft className='w-6 h-6 text-accent-contrast' />
+    109 │           </button>
+  > 110 │           <button
+        │           ^^^^^^^
+  > 111 │             className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
+  > 112 │             onClick={scrollNext}
+  > 113 │             disabled={!canScrollNext}
+  > 114 │             aria-label='Scroll right'
+  > 115 │           >
+        │           ^
+    116 │             <IconArrowNarrowRight className='w-6 h-6 text-accent-contrast' />
+    117 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PaintingsSection/PaintingsCarousel.tsx:102:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    100 │         {/* Navigation buttons */}
+    101 │         <div className='flex justify-end gap-2 mt-4'>
+  > 102 │           <button
+        │           ^^^^^^^
+  > 103 │             className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
+  > 104 │             onClick={scrollPrev}
+  > 105 │             disabled={!canScrollPrev}
+  > 106 │             aria-label='Scroll left'
+  > 107 │           >
+        │           ^
+    108 │             <IconArrowNarrowLeft className='w-6 h-6 text-accent-contrast' />
+    109 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/PortableText/PortableText.tsx:303:15 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    301 │               aria-label='Link to heading'
+    302 │             >
+  > 303 │               <svg
+        │               ^^^^
+  > 304 │                 xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 308 │                 stroke='currentColor'
+  > 309 │               >
+        │               ^
+    310 │                 <path
+    311 │                   strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/PortableText/PortableText.tsx:334:15 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    332 │               aria-label='Link to heading'
+    333 │             >
+  > 334 │               <svg
+        │               ^^^^
+  > 335 │                 xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 339 │                 stroke='currentColor'
+  > 340 │               >
+        │               ^
+    341 │                 <path
+    342 │                   strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/PortableText/PortableText.tsx:241:15 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    239 │               aria-label='Link to heading'
+    240 │             >
+  > 241 │               <svg
+        │               ^^^^
+  > 242 │                 xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 246 │                 stroke='currentColor'
+  > 247 │               >
+        │               ^
+    248 │                 <path
+    249 │                   strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/PortableText/PortableText.tsx:272:15 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    270 │               aria-label='Link to heading'
+    271 │             >
+  > 272 │               <svg
+        │               ^^^^
+  > 273 │                 xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 277 │                 stroke='currentColor'
+  > 278 │               >
+        │               ^
+    279 │                 <path
+    280 │                   strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/Project/ConnectedPaintingsCarousel.tsx:130:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    128 │         {/* Navigation buttons */}
+    129 │         <div className='flex justify-between items-center mt-4'>
+  > 130 │           <button
+        │           ^^^^^^^
+  > 131 │             className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
+  > 132 │             onClick={scrollPrev}
+  > 133 │             disabled={!canScrollPrev}
+  > 134 │             aria-label='Scroll to previous painting'
+  > 135 │           >
+        │           ^
+    136 │             <IconArrowNarrowLeft className='w-6 h-6' />
+    137 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ConnectedPaintingsCarousel.tsx:143:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    141 │             <div className='flex gap-2'>
+    142 │               {scrollSnaps.map((_, index) => (
+  > 143 │                 <button
+        │                 ^^^^^^^
+  > 144 │                   key={index}
+         ...
+  > 151 │                   aria-label={`Go to slide ${index + 1}`}
+  > 152 │                 />
+        │                 ^^
+    153 │               ))}
+    154 │             </div>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ConnectedPaintingsCarousel.tsx:144:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    142 │               {scrollSnaps.map((_, index) => (
+    143 │                 <button
+  > 144 │                   key={index}
+        │                        ^^^^^
+    145 │                   className={`w-2 h-2 rounded-full transition-colors ${
+    146 │                     index === selectedIndex
+  
+  i This is the source of the key value.
+  
+    140 │           {scrollSnaps.length > 1 && (
+    141 │             <div className='flex gap-2'>
+  > 142 │               {scrollSnaps.map((_, index) => (
+        │                                    ^^^^^
+    143 │                 <button
+    144 │                   key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/Project/ConnectedPaintingsCarousel.tsx:157:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    155 │           )}
+    156 │ 
+  > 157 │           <button
+        │           ^^^^^^^
+  > 158 │             className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
+  > 159 │             onClick={scrollNext}
+  > 160 │             disabled={!canScrollNext}
+  > 161 │             aria-label='Scroll to next painting'
+  > 162 │           >
+        │           ^
+    163 │             <IconArrowNarrowRight className='w-6 h-6' />
+    164 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:95:19 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+     93 │               return (
+     94 │                 <div key={extraImage._key} className='relative flex-[0_0_100%] min-w-0'>
+   > 95 │                   <div
+        │                   ^^^^
+   > 96 │                     className='relative aspect-video cursor-pointer'
+   > 97 │                     onClick={() => handleImageClick(index)}
+   > 98 │                   >
+        │                   ^
+     99 │                     <Image
+    100 │                       src={urlForImage(extraImage)?.width(1200).fit('max')?.url() || ''}
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:144:13 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    142 │             )}
+    143 │ 
+  > 144 │             <button
+        │             ^^^^^^^
+  > 145 │               className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
+  > 146 │               onClick={scrollNext}
+  > 147 │               disabled={!canScrollNext}
+  > 148 │               aria-label='Next image'
+  > 149 │             >
+        │             ^
+    150 │               <IconArrowNarrowRight className='w-6 h-6' />
+    151 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:95:19 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+     93 │               return (
+     94 │                 <div key={extraImage._key} className='relative flex-[0_0_100%] min-w-0'>
+   > 95 │                   <div
+        │                   ^^^^
+   > 96 │                     className='relative aspect-video cursor-pointer'
+   > 97 │                     onClick={() => handleImageClick(index)}
+   > 98 │                   >
+        │                   ^
+     99 │                     <Image
+    100 │                       src={urlForImage(extraImage)?.width(1200).fit('max')?.url() || ''}
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:117:13 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    115 │         {images.length > 1 && (
+    116 │           <div className='flex justify-between items-center mt-4'>
+  > 117 │             <button
+        │             ^^^^^^^
+  > 118 │               className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
+  > 119 │               onClick={scrollPrev}
+  > 120 │               disabled={!canScrollPrev}
+  > 121 │               aria-label='Previous image'
+  > 122 │             >
+        │             ^
+    123 │               <IconArrowNarrowLeft className='w-6 h-6' />
+    124 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:130:19 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    128 │               <div className='flex gap-2'>
+    129 │                 {scrollSnaps.map((_, index) => (
+  > 130 │                   <button
+        │                   ^^^^^^^
+  > 131 │                     key={index}
+         ...
+  > 138 │                     aria-label={`Go to slide ${index + 1}`}
+  > 139 │                   />
+        │                   ^^
+    140 │                 ))}
+    141 │               </div>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ExtraImagesGrid.tsx:131:26 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    129 │                 {scrollSnaps.map((_, index) => (
+    130 │                   <button
+  > 131 │                     key={index}
+        │                          ^^^^^
+    132 │                     className={`w-2 h-2 rounded-full transition-colors ${
+    133 │                       index === selectedIndex
+  
+  i This is the source of the key value.
+  
+    127 │             {scrollSnaps.length > 1 && (
+    128 │               <div className='flex gap-2'>
+  > 129 │                 {scrollSnaps.map((_, index) => (
+        │                                      ^^^^^
+    130 │                   <button
+    131 │                     key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/Project/ImageModal.tsx:84:7 lint/a11y/useButtonType ━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    82 │     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md'>
+    83 │       {/* Close button */}
+  > 84 │       <button
+       │       ^^^^^^^
+  > 85 │         onClick={onClose}
+  > 86 │         className='absolute top-4 right-4 z-10 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+  > 87 │         aria-label='Close modal'
+  > 88 │       >
+       │       ^
+    89 │         <FaTimes className='h-6 w-6' />
+    90 │       </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ImageModal.tsx:95:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+     93 │       {images.length > 1 && (
+     94 │         <>
+   > 95 │           <button
+        │           ^^^^^^^
+   > 96 │             onClick={goToPrevious}
+   > 97 │             className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+   > 98 │             aria-label='Previous image'
+   > 99 │           >
+        │           ^
+    100 │             <FaChevronLeft className='h-6 w-6' />
+    101 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ImageModal.tsx:103:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    101 │           </button>
+    102 │ 
+  > 103 │           <button
+        │           ^^^^^^^
+  > 104 │             onClick={goToNext}
+  > 105 │             className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+  > 106 │             aria-label='Next image'
+  > 107 │           >
+        │           ^
+    108 │             <FaChevronRight className='h-6 w-6' />
+    109 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ProjectImage.tsx:64:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    62 │       {hasMultipleImages && (
+    63 │         <>
+  > 64 │           <button
+       │           ^^^^^^^
+  > 65 │             className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg'
+  > 66 │             onClick={scrollPrev}
+  > 67 │             disabled={!prevBtnEnabled}
+  > 68 │             aria-label='Previous image'
+  > 69 │           >
+       │           ^
+    70 │             <FaChevronLeft className='h-5 w-5' />
+    71 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ProjectImage.tsx:73:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    71 │           </button>
+    72 │ 
+  > 73 │           <button
+       │           ^^^^^^^
+  > 74 │             className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg'
+  > 75 │             onClick={scrollNext}
+  > 76 │             disabled={!nextBtnEnabled}
+  > 77 │             aria-label='Next image'
+  > 78 │           >
+       │           ^
+    79 │             <FaChevronRight className='h-5 w-5' />
+    80 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/Project/ProjectImage.tsx:105:38 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    104 │                 return (
+  > 105 │                   <div key={`image-${index}`} className='relative flex-[0_0_100%] min-w-0 h-full'>
+        │                                      ^^^^^
+    106 │                     <div className='relative w-full h-full'>
+    107 │                       <Image
+  
+  i This is the source of the key value.
+  
+     99 │           <div className='overflow-hidden h-full' ref={emblaRef}>
+    100 │             <div className='flex h-full'>
+  > 101 │               {allImages.map((img, index) => {
+        │                                    ^^^^^
+    102 │                 if (!img) return null;
+    103 │ 
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ProjectCategories/ProjectCategories.tsx:61:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    59 │             No projects found with the selected filters.
+    60 │           </p>
+  > 61 │           <button
+       │           ^^^^^^^
+  > 62 │             onClick={clearAllFilters}
+  > 63 │             className='text-accent hover:text-accent-hover hover:underline transition-colors duration-200'
+  > 64 │           >
+       │           ^
+    65 │             Clear filters
+    66 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ProjectCategories/ProjectFilter.tsx:38:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    36 │         <h3 className='font-medium text-sm text-foreground-subtle'>Filter by tag:</h3>
+    37 │         {activeFilters.length > 0 && (
+  > 38 │           <button
+       │           ^^^^^^^
+  > 39 │             onClick={onClearAll}
+  > 40 │             className='text-sm text-accent hover:text-accent-hover hover:underline transition-colors duration-200'
+  > 41 │           >
+       │           ^
+    42 │             Clear all ({activeFilters.length})
+    43 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/RecipeDetail/RecipeDetail.tsx:311:53 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    309 │                 <div className='grid gap-6 md:grid-cols-2'>
+    310 │                   {tips?.map((tip, index) => {
+  > 311 │                     return <RecipeTipComponent key={index} tip={tip} />;
+        │                                                     ^^^^^
+    312 │                   })}
+    313 │                 </div>
+  
+  i This is the source of the key value.
+  
+    308 │                 </div>
+    309 │                 <div className='grid gap-6 md:grid-cols-2'>
+  > 310 │                   {tips?.map((tip, index) => {
+        │                                    ^^^^^
+    311 │                     return <RecipeTipComponent key={index} tip={tip} />;
+    312 │                   })}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/RecipeDetail/RecipeDetail.tsx:328:28 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    326 │                   {tags.map((tag, index) => (
+    327 │                     <Link
+  > 328 │                       key={index}
+        │                            ^^^^^
+    329 │                       href={`/recipes?tag=${tag.name}`}
+    330 │                       className='flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-surface border border-border/30 shadow-sm hover:shadow-md hover:border-accent/30 hover:bg-accent-surface transition-all duration-200 text-foreground-subtle hover:text-foreground'
+  
+  i This is the source of the key value.
+  
+    324 │                 </h3>
+    325 │                 <div className='flex flex-wrap justify-center gap-3'>
+  > 326 │                   {tags.map((tag, index) => (
+        │                                   ^^^^^
+    327 │                     <Link
+    328 │                       key={index}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/RecipeIngredients/RecipeIngredients.tsx:40:19 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    38 │       </div>
+    39 │       {ingredientCategories?.map((category, categoryIndex) => (
+  > 40 │         <div key={categoryIndex} className='mb-8 last:mb-0'>
+       │                   ^^^^^^^^^^^^^
+    41 │           <h3
+    42 │             className='text-lg font-semibold mb-4 pb-2'
+  
+  i This is the source of the key value.
+  
+    37 │         <h2 className='text-2xl font-bold mb-4 text-foreground'>Ingredients</h2>
+    38 │       </div>
+  > 39 │       {ingredientCategories?.map((category, categoryIndex) => (
+       │                                             ^^^^^^^^^^^^^
+    40 │         <div key={categoryIndex} className='mb-8 last:mb-0'>
+    41 │           <h3
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/RecipeIngredients/RecipeIngredients.tsx:52:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    50 │           <ul className='space-y-4'>
+    51 │             {category.ingredients.map((ingredient, ingredientIndex) => (
+  > 52 │               <li key={ingredientIndex} className='flex items-start gap-4'>
+       │                        ^^^^^^^^^^^^^^^
+    53 │                 {ingredient.photo ? (
+    54 │                   <div className='flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden'>
+  
+  i This is the source of the key value.
+  
+    49 │           </h3>
+    50 │           <ul className='space-y-4'>
+  > 51 │             {category.ingredients.map((ingredient, ingredientIndex) => (
+       │                                                    ^^^^^^^^^^^^^^^
+    52 │               <li key={ingredientIndex} className='flex items-start gap-4'>
+    53 │                 {ingredient.photo ? (
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/RecipeInstructions/RecipeInstructions.tsx:108:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    106 │           return (
+    107 │             <div
+  > 108 │               key={index}
+        │                    ^^^^^
+    109 │               className={`group relative flex gap-6 transition-all duration-300 ${
+    110 │                 isCompleted ? 'opacity-60' : ''
+  
+  i This is the source of the key value.
+  
+    102 │       <div className='space-y-8'>
+  > 103 │         {instructions.map((instruction, index) => {
+        │                                         ^^^^^
+    104 │           const isCompleted = completedSteps.has(index);
+    105 │ 
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/RecipeInstructions/RecipeInstructions.tsx:120:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    118 │               <div className='shrink-0'>
+    119 │                 {/* Step Number - Clickable */}
+  > 120 │                 <button
+        │                 ^^^^^^^
+  > 121 │                   onClick={() => toggleStep(index)}
+         ...
+  > 127 │                   aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
+  > 128 │                 >
+        │                 ^
+    129 │                   {isCompleted ? <FiCheck className='w-5 h-5' /> : <span>{index + 1}</span>}
+    130 │                 </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/RecipeInstructions/RecipeInstructions.tsx:172:13 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    170 │               </p>
+    171 │             </div>
+  > 172 │             <button
+        │             ^^^^^^^
+  > 173 │               onClick={() => setCompletedSteps(new Set())}
+  > 174 │               className='px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md bg-surface-hover border border-border/30 text-foreground-subtle hover:text-foreground hover:bg-surface-active'
+  > 175 │             >
+        │             ^
+    176 │               Reset
+    177 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ScrollIndicator.tsx:17:5 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    16 │   return (
+  > 17 │     <div
+       │     ^^^^
+  > 18 │       className='hidden md:block fixed left-0 top-0 h-full w-1.5 z-40 pointer-events-none'
+  > 19 │       onMouseEnter={() => setIsHovered(true)}
+  > 20 │       onMouseLeave={() => setIsHovered(false)}
+  > 21 │     >
+       │     ^
+    22 │       {/* Background Track */}
+    23 │       <div className='absolute inset-0 bg-surface-subtle rounded-r-full' />
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/components/Select/Select.tsx:18:7 lint/a11y/noLabelWithoutControl ━━━━━━━━━━
+
+  × A form label must be associated with an input.
+  
+    16 │   return (
+    17 │     <div className='relative mt-4'>
+  > 18 │       <label className='block mb-1 text-sm font-semibold text-foreground'>{label}</label>
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    19 │       <Listbox value={value} onChange={onChange}>
+    20 │         {({ open }) => (
+  
+  i Consider adding a `for` or `htmlFor` attribute to the label element or moving the input element to inside the label element.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/BasicsPresentation.tsx:94:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    92 │             [0, -1.2, 0],
+    93 │           ].map((p, i) => (
+  > 94 │             <mesh key={i} position={p as [number, number, number]}>
+       │                        ^
+    95 │               <sphereGeometry args={[0.08, 16, 16]} />
+    96 │               <meshBasicMaterial color='#ffffff' />
+  
+  i This is the source of the key value.
+  
+    91 │             [0, 1.2, 0],
+    92 │             [0, -1.2, 0],
+  > 93 │           ].map((p, i) => (
+       │                     ^
+    94 │             <mesh key={i} position={p as [number, number, number]}>
+    95 │               <sphereGeometry args={[0.08, 16, 16]} />
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/BasicsPresentation.tsx:346:18 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    344 │         {slides.map((slide, i) => (
+    345 │           <section
+  > 346 │             key={i}
+        │                  ^
+    347 │             className='slide-trigger h-screen flex flex-col justify-center px-4 md:px-24'
+    348 │           >
+  
+  i This is the source of the key value.
+  
+    342 │       {/* Scroll Triggers - z-index above sticky 3D */}
+    343 │       <div className='relative z-30'>
+  > 344 │         {slides.map((slide, i) => (
+        │                             ^
+    345 │           <section
+    346 │             key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/BasicsPresentation.tsx:326:27 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    324 │             <div className='text-[10px] bg-black/80 p-4 border border-[#00ff00]/20'>
+    325 │               {['COMPILING...', 'LINKING...', 'READY'].map((t, i) => (
+  > 326 │                 <div key={i} className={cn(i === 2 && 'text-white', i !== 2 && 'opacity-40')}>
+        │                           ^
+    327 │                   {t}
+    328 │                 </div>
+  
+  i This is the source of the key value.
+  
+    323 │           <div className='flex justify-between items-end'>
+    324 │             <div className='text-[10px] bg-black/80 p-4 border border-[#00ff00]/20'>
+  > 325 │               {['COMPILING...', 'LINKING...', 'READY'].map((t, i) => (
+        │                                                                ^
+    326 │                 <div key={i} className={cn(i === 2 && 'text-white', i !== 2 && 'opacity-40')}>
+    327 │                   {t}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Common/DecryptedText.tsx:209:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    208 │           return (
+  > 209 │             <span key={index} className={isRevealedOrDone ? className : encryptedClassName}>
+        │                        ^^^^^
+    210 │               {char}
+    211 │             </span>
+  
+  i This is the source of the key value.
+  
+    204 │       <span aria-hidden='true'>
+  > 205 │         {displayText.split('').map((char, index) => {
+        │                                           ^^^^^
+    206 │           const isRevealedOrDone = revealedIndices.has(index) || !isScrambling || !isHovering;
+    207 │ 
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/ProductViewer.tsx:68:17 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    66 │             <div className='flex gap-3'>
+    67 │               {colors.map(c => (
+  > 68 │                 <button
+       │                 ^^^^^^^
+  > 69 │                   key={c.hex}
+        ...
+  > 77 │                   aria-label={`Select ${c.name} color`}
+  > 78 │                 />
+       │                 ^^
+    79 │               ))}
+    80 │             </div>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/ProductViewer.tsx:91:13 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    89 │               <span className='text-foreground/40 text-[10px] font-bold italic'>Ready to ship</span>
+    90 │             </div>
+  > 91 │             <button className='w-full py-4 bg-foreground text-background font-bold rounded-2xl hover:bg-accent hover:text-accent-contrast transition-all shadow-xl uppercase tracking-widest text-xs'>
+       │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    92 │               Customize & Buy
+    93 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ContentItemList.tsx:86:24 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    84 │               .map((child, childIndex) => (
+    85 │                 <ContentItemRenderer
+  > 86 │                   key={childIndex}
+       │                        ^^^^^^^^^^
+    87 │                   contentItem={child}
+    88 │                   index={childIndex}
+  
+  i This is the source of the key value.
+  
+    82 │                 return child.text?.trim() !== '';
+    83 │               })
+  > 84 │               .map((child, childIndex) => (
+       │                            ^^^^^^^^^^
+    85 │                 <ContentItemRenderer
+    86 │                   key={childIndex}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ContentItemList.tsx:120:35 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    118 │     >
+    119 │       {filteredItems.map((item, itemIndex) => (
+  > 120 │         <ContentItemRenderer key={itemIndex} contentItem={item} index={itemIndex} />
+        │                                   ^^^^^^^^^
+    121 │       ))}
+    122 │     </ul>
+  
+  i This is the source of the key value.
+  
+    117 │       )}
+    118 │     >
+  > 119 │       {filteredItems.map((item, itemIndex) => (
+        │                                 ^^^^^^^^^
+    120 │         <ContentItemRenderer key={itemIndex} contentItem={item} index={itemIndex} />
+    121 │       ))}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ExampleSlideLayout.tsx:26:5 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    25 │   const ExternalLinkIcon = () => (
+  > 26 │     <svg
+       │     ^^^^
+  > 27 │       width='16'
+        ...
+  > 35 │       className='group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform'
+  > 36 │     >
+       │     ^
+    37 │       <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
+    38 │       <polyline points='15 3 21 3 21 9' />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/ExampleSlideLayout.tsx:83:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    81 │           {slideData.examples?.map((example, exampleIndex) => (
+    82 │             <button
+  > 83 │               key={exampleIndex}
+       │                    ^^^^^^^^^^^^
+    84 │               onClick={() => setSelectedExampleIndex(exampleIndex)}
+    85 │               type='button'
+  
+  i This is the source of the key value.
+  
+    79 │         {/* Example Buttons */}
+    80 │         <div className='max-w-6xl mx-auto w-full space-y-2'>
+  > 81 │           {slideData.examples?.map((example, exampleIndex) => (
+       │                                              ^^^^^^^^^^^^
+    82 │             <button
+    83 │               key={exampleIndex}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SlideMedia.tsx:106:19 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    104 │                   className='inline-flex items-center gap-2 px-4 py-2 bg-accent-subtle hover:bg-accent-surface text-accent-text border-2 border-accent-border rounded-lg font-semibold text-sm transition-all duration-200'
+    105 │                 >
+  > 106 │                   <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    107 │                     <path
+    108 │                       strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SlideMedia.tsx:44:19 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    42 │                     {tool.name}
+    43 │                   </h3>
+  > 44 │                   <svg
+       │                   ^^^^
+  > 45 │                     className='w-5 h-5 text-foreground/50 group-hover:text-accent transition-colors'
+  > 46 │                     fill='none'
+  > 47 │                     stroke='currentColor'
+  > 48 │                     viewBox='0 0 24 24'
+  > 49 │                   >
+       │                   ^
+    50 │                     <path
+    51 │                       strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Slides/SlideSources.tsx:24:20 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    22 │       <ul className='space-y-2'>
+    23 │         {sources.map((source, sourceIndex) => (
+  > 24 │           <li key={sourceIndex} className='text-sm text-foreground/50 flex items-start'>
+       │                    ^^^^^^^^^^^
+    25 │             <span className='mr-2 text-accent'>•</span>
+    26 │             {source.url ? (
+  
+  i This is the source of the key value.
+  
+    21 │       </p>
+    22 │       <ul className='space-y-2'>
+  > 23 │         {sources.map((source, sourceIndex) => (
+       │                               ^^^^^^^^^^^
+    24 │           <li key={sourceIndex} className='text-sm text-foreground/50 flex items-start'>
+    25 │             <span className='mr-2 text-accent'>•</span>
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/SourcesSection.tsx:180:17 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    178 │               >
+    179 │                 <span>View Workshop</span>
+  > 180 │                 <svg
+        │                 ^^^^
+  > 181 │                   xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 186 │                   className='w-5 h-5 transition-transform group-hover/btn:translate-x-1'
+  > 187 │                 >
+        │                 ^
+    188 │                   <path
+    189 │                     strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/SourcesSection.tsx:244:23 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    242 │                     <div className='mt-4 flex items-center gap-2 text-accent opacity-0 group-hover:opacity-100 transition-opacity'>
+    243 │                       <span className='text-sm font-semibold'>Visit site</span>
+  > 244 │                       <svg
+        │                       ^^^^
+  > 245 │                         xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 250 │                         className='w-4 h-4'
+  > 251 │                       >
+        │                       ^
+    252 │                         <path
+    253 │                           strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/SourcesSection.tsx:399:21 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    397 │                 >
+    398 │                   <div className='mt-0.5 shrink-0'>
+  > 399 │                     <svg
+        │                     ^^^^
+  > 400 │                       xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 405 │                       className='w-5 h-5 text-foreground/40 group-hover:text-accent transition-colors'
+  > 406 │                     >
+        │                     ^
+    407 │                       <path
+    408 │                         strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/StructuredData.tsx:128:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    126 │       <script
+    127 │         type='application/ld+json'
+  > 128 │         dangerouslySetInnerHTML={{
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    129 │           __html: JSON.stringify(webPageSchema),
+    130 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/StructuredData.tsx:134:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    132 │       <script
+    133 │         type='application/ld+json'
+  > 134 │         dangerouslySetInnerHTML={{
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    135 │           __html: JSON.stringify(howToSchema),
+    136 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/StructuredData.tsx:140:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    138 │       <script
+    139 │         type='application/ld+json'
+  > 140 │         dangerouslySetInnerHTML={{
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    141 │           __html: JSON.stringify(articleSchema),
+    142 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/CodeHighlighter.tsx:77:11 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    75 │           aria-label='Decrease code font size'
+    76 │         >
+  > 77 │           <svg
+       │           ^^^^
+  > 78 │             xmlns='http://www.w3.org/2000/svg'
+        ...
+  > 83 │             className='w-4 h-4'
+  > 84 │           >
+       │           ^
+    85 │             <path
+    86 │               strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/CodeHighlighter.tsx:109:11 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    107 │           aria-label='Increase code font size'
+    108 │         >
+  > 109 │           <svg
+        │           ^^^^
+  > 110 │             xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 115 │             className='w-4 h-4'
+  > 116 │           >
+        │           ^
+    117 │             <path
+    118 │               strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/ResourceLinks.tsx:24:18 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    22 │         {links.map((link, linkIndex) => (
+    23 │           <motion.a
+  > 24 │             key={linkIndex}
+       │                  ^^^^^^^^^
+    25 │             href={link.url}
+    26 │             target='_blank'
+  
+  i This is the source of the key value.
+  
+    20 │       <h3 className='text-lg font-bold text-foreground mb-3'>Resources:</h3>
+    21 │       <div className='flex flex-wrap gap-3'>
+  > 22 │         {links.map((link, linkIndex) => (
+       │                           ^^^^^^^^^
+    23 │           <motion.a
+    24 │             key={linkIndex}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalCanvasPanel.tsx:95:13 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+     93 │             </div>
+     94 │             <p className='text-sm text-foreground/80 mb-4'>{contextError}</p>
+   > 95 │             <button
+        │             ^^^^^^^
+   > 96 │               onClick={() => window.location.reload()}
+   > 97 │               className='w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors'
+   > 98 │             >
+        │             ^
+     99 │               Refresh Page
+    100 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalCanvasPanel.tsx:75:17 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    73 │             <div className='flex items-center gap-3 mb-4'>
+    74 │               <div className='w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center'>
+  > 75 │                 <svg
+       │                 ^^^^
+  > 76 │                   className='w-6 h-6 text-red-500'
+  > 77 │                   fill='none'
+  > 78 │                   stroke='currentColor'
+  > 79 │                   viewBox='0 0 24 24'
+  > 80 │                 >
+       │                 ^
+    81 │                   <path
+    82 │                     strokeLinecap='round'
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideContent.tsx:80:15 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    78 │               className='flex justify-start'
+    79 │             >
+  > 80 │               <button
+       │               ^^^^^^^
+  > 81 │                 onClick={onAddBox}
+  > 82 │                 className='px-4 py-2 bg-accent text-accent-contrast rounded-lg font-medium hover:bg-accent-hover transition-all shadow-lg active:scale-95 text-sm'
+  > 83 │               >
+       │               ^
+    84 │                 Add New Box (State Update)
+    85 │               </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideHeader.tsx:26:11 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    24 │       <div className='flex items-center justify-between gap-8 max-w-5xl'>
+    25 │         <div className='flex items-center gap-4'>
+  > 26 │           <button
+       │           ^^^^^^^
+  > 27 │             onClick={onPrev}
+  > 28 │             disabled={currentSlide === 0}
+  > 29 │             className='p-2 -ml-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'
+  > 30 │             aria-label='Previous Slide'
+  > 31 │           >
+       │           ^
+    32 │             <HiChevronLeft className='h-6 w-6' />
+    33 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideHeader.tsx:51:9 lint/a11y/useButtonType ━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    49 │         />
+    50 │ 
+  > 51 │         <button
+       │         ^^^^^^^
+  > 52 │           onClick={onNext}
+  > 53 │           disabled={currentSlide === totalSlides - 1}
+  > 54 │           className='p-2 -mr-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'
+  > 55 │           aria-label='Next Slide'
+  > 56 │         >
+       │         ^
+    57 │           <HiChevronRight className='h-6 w-6' />
+    58 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/Technical/TechnicalSlideIndicators.tsx:25:18 lint/suspicious/noArrayIndexKey ━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    23 │         return (
+    24 │           <button
+  > 25 │             key={index}
+       │                  ^^^^^
+    26 │             onClick={() => onSlideClick?.(index)}
+    27 │             type='button'
+  
+  i This is the source of the key value.
+  
+    17 │   return (
+    18 │     <div className='flex gap-1 w-full max-w-2xl mx-auto h-1.5 group/nav'>
+  > 19 │       {Array.from({ length: totalSlides }).map((_, index) => {
+       │                                                    ^^^^^
+    20 │         const isActive = index === currentSlide;
+    21 │         const isPast = index < currentSlide;
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/hooks/usePresentationLogic.ts:183:17 lint/suspicious/useIterableCallbackReturn ━━━━━━━━━━
+
+  × This callback passed to forEach() iterable method should not return a value.
+  
+    182 │     return () => {
+  > 183 │       observers.forEach(observer => observer.disconnect());
+        │                 ^^^^^^^
+    184 │       if (categoryTransitionTimeout) {
+    185 │         clearTimeout(categoryTransitionTimeout);
+  
+  i Either remove this return or remove the returned value.
+  
+    182 │     return () => {
+  > 183 │       observers.forEach(observer => observer.disconnect());
+        │                                     ^^^^^^^^^^^^^^^^^^^^^
+    184 │       if (categoryTransitionTimeout) {
+    185 │         clearTimeout(categoryTransitionTimeout);
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/scenes/R3FBasicsScene.tsx:25:5 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    24 │   return (
+  > 25 │     <mesh
+       │     ^^^^^
+  > 26 │       position={position}
+        ...
+  > 32 │       }}
+  > 33 │     >
+       │     ^
+    34 │       <boxGeometry args={[1, 1, 1]} />
+    35 │       <meshStandardMaterial color={color} />
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/components/ThreeD/scenes/R3FInteractionScene.tsx:13:5 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    12 │   return (
+  > 13 │     <mesh
+       │     ^^^^^
+  > 14 │       ref={ref}
+        ...
+  > 31 │       }}
+  > 32 │     >
+       │     ^
+    33 │       <boxGeometry args={[1, 1, 1]} />
+    34 │       {/* Color changes based on hover state */}
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/components/icons/IconLogo.tsx:110:10 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    108 │   }
+    109 │ 
+  > 110 │   return <svg {...svgProps}>{paths}</svg>;
+        │          ^^^^^^^^^^^^^^^^^^^
+    111 │ };
+    112 │ 
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/pages/VideosPage.tsx:105:17 lint/a11y/useSemanticElements ━━━━━━━━━━
+
+  × The elements with this role can be changed to the following elements:
+    <button>
+  
+    103 │                   }
+    104 │                 }}
+  > 105 │                 role='button'
+        │                 ^^^^^^^^^^^^^
+    106 │                 tabIndex={0}
+    107 │                 className={cn(
+  
+  i For examples and more information, see WAI-ARIA Roles
+  
+
+apps/nextjs-portfolio/app/components/pages/VideosPage.tsx:191:21 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    189 │                     aria-label='Close video'
+    190 │                   >
+  > 191 │                     <svg
+        │                     ^^^^
+  > 192 │                       xmlns='http://www.w3.org/2000/svg'
+         ...
+  > 200 │                       strokeLinejoin='round'
+  > 201 │                     >
+        │                     ^
+    202 │                       <line x1='18' y1='6' x2='6' y2='18'></line>
+    203 │                       <line x1='6' y1='6' x2='18' y2='18'></line>
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+apps/nextjs-portfolio/app/components/pages/VideosPage.tsx:44:6 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━
+
+  × handleClose changes on every re-render and should not be used as a hook dependency.
+  
+    42 │       }
+    43 │     },
+  > 44 │     [handleClose],
+       │      ^^^^^^^^^^^
+    45 │   );
+    46 │ 
+  
+  i To fix this, wrap the definition of handleClose in its own useCallback() hook.
+  
+
+apps/nextjs-portfolio/app/components/pages/VideosPage.tsx:186:19 lint/a11y/useButtonType ━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    184 │               >
+    185 │                 <div className='absolute z-20 flex items-center justify-center left-4 right-4 -top-16'>
+  > 186 │                   <button
+        │                   ^^^^^^^
+  > 187 │                     onClick={() => setIsOpen(false)}
+  > 188 │                     className='flex gap-2 px-4 py-2 rounded-lg text-accent-contrast transition-all duration-200 cursor-pointer bg-accent hover:bg-accent-hover shadow-lg'
+  > 189 │                     aria-label='Close video'
+  > 190 │                   >
+        │                   ^
+    191 │                     <svg
+    192 │                       xmlns='http://www.w3.org/2000/svg'
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+apps/nextjs-portfolio/app/design-system/colors/page.tsx:222:21 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    220 │                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+    221 │                   {group.colors.map(color => (
+  > 222 │                     <div
+        │                     ^^^^
+  > 223 │                       key={color.name}
+  > 224 │                       onClick={() => copyToClipboard(color.var, color.name)}
+  > 225 │                       className='group cursor-pointer bg-surface border border-border rounded-lg p-3 hover:border-accent hover:shadow-sm transition-all duration-200'
+  > 226 │                     >
+        │                     ^
+    227 │                       <div
+    228 │                         className={`h-12 w-full rounded-md mb-3 border border-border/10 ${color.bgClass || color.class}`}
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+apps/nextjs-portfolio/app/design-system/colors/page.tsx:259:21 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    257 │                 <div className='grid grid-cols-6 md:grid-cols-11 gap-2'>
+    258 │                   {scale.colors.map(color => (
+  > 259 │                     <div
+        │                     ^^^^
+  > 260 │                       key={color.name}
+  > 261 │                       className='group cursor-pointer'
+  > 262 │                       onClick={() => copyToClipboard(color.value, color.name)}
+  > 263 │                       title={color.name}
+  > 264 │                     >
+        │                     ^
+    265 │                       <div
+    266 │                         className='h-10 rounded-md border border-border/50 group-hover:border-accent group-hover:scale-110 transition-all duration-200 shadow-sm'
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+apps/nextjs-portfolio/app/design-system/colors/page.tsx:222:21 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    220 │                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+    221 │                   {group.colors.map(color => (
+  > 222 │                     <div
+        │                     ^^^^
+  > 223 │                       key={color.name}
+  > 224 │                       onClick={() => copyToClipboard(color.var, color.name)}
+  > 225 │                       className='group cursor-pointer bg-surface border border-border rounded-lg p-3 hover:border-accent hover:shadow-sm transition-all duration-200'
+  > 226 │                     >
+        │                     ^
+    227 │                       <div
+    228 │                         className={`h-12 w-full rounded-md mb-3 border border-border/10 ${color.bgClass || color.class}`}
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/design-system/colors/page.tsx:259:21 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    257 │                 <div className='grid grid-cols-6 md:grid-cols-11 gap-2'>
+    258 │                   {scale.colors.map(color => (
+  > 259 │                     <div
+        │                     ^^^^
+  > 260 │                       key={color.name}
+  > 261 │                       className='group cursor-pointer'
+  > 262 │                       onClick={() => copyToClipboard(color.value, color.name)}
+  > 263 │                       title={color.name}
+  > 264 │                     >
+        │                     ^
+    265 │                       <div
+    266 │                         className='h-10 rounded-md border border-border/50 group-hover:border-accent group-hover:scale-110 transition-all duration-200 shadow-sm'
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/design-system/typography/page.tsx:171:17 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    169 │             <div className='space-y-1'>
+    170 │               {fontWeights.map(weight => (
+  > 171 │                 <div
+        │                 ^^^^
+  > 172 │                   key={weight.name}
+  > 173 │                   className='p-3 py-4 flex items-center justify-between border-b border-border/50 hover:bg-surface-hover/50 group transition-colors cursor-pointer'
+  > 174 │                   onClick={() => copyToClipboard(weight.class)}
+  > 175 │                 >
+        │                 ^
+    176 │                   <div className='flex items-baseline gap-4'>
+    177 │                     <span className={`${weight.class} text-2xl text-foreground`}>Inter</span>
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/design-system/typography/page.tsx:149:17 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    147 │             <div className='space-y-1'>
+    148 │               {fontSizes.reverse().map(size => (
+  > 149 │                 <div
+        │                 ^^^^
+  > 150 │                   key={size.name}
+  > 151 │                   className='p-3 py-4 flex items-baseline justify-between border-b border-border/50 hover:bg-surface-hover/50 group transition-colors cursor-pointer'
+  > 152 │                   onClick={() => copyToClipboard(`text-${size.name}`)}
+  > 153 │                 >
+        │                 ^
+    154 │                   <div className='flex items-baseline gap-4'>
+    155 │                     <code className='w-16 text-xs text-foreground-muted'>text-{size.name}</code>
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+apps/nextjs-portfolio/app/design-system/typography/page.tsx:149:17 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    147 │             <div className='space-y-1'>
+    148 │               {fontSizes.reverse().map(size => (
+  > 149 │                 <div
+        │                 ^^^^
+  > 150 │                   key={size.name}
+  > 151 │                   className='p-3 py-4 flex items-baseline justify-between border-b border-border/50 hover:bg-surface-hover/50 group transition-colors cursor-pointer'
+  > 152 │                   onClick={() => copyToClipboard(`text-${size.name}`)}
+  > 153 │                 >
+        │                 ^
+    154 │                   <div className='flex items-baseline gap-4'>
+    155 │                     <code className='w-16 text-xs text-foreground-muted'>text-{size.name}</code>
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+apps/nextjs-portfolio/app/design-system/typography/page.tsx:171:17 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    169 │             <div className='space-y-1'>
+    170 │               {fontWeights.map(weight => (
+  > 171 │                 <div
+        │                 ^^^^
+  > 172 │                   key={weight.name}
+  > 173 │                   className='p-3 py-4 flex items-center justify-between border-b border-border/50 hover:bg-surface-hover/50 group transition-colors cursor-pointer'
+  > 174 │                   onClick={() => copyToClipboard(weight.class)}
+  > 175 │                 >
+        │                 ^
+    176 │                   <div className='flex items-baseline gap-4'>
+    177 │                     <span className={`${weight.class} text-2xl text-foreground`}>Inter</span>
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+apps/nextjs-portfolio/app/layout.tsx:167:11 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    165 │         <script
+    166 │           type='application/ld+json'
+  > 167 │           dangerouslySetInnerHTML={{
+        │           ^^^^^^^^^^^^^^^^^^^^^^^
+    168 │             __html: JSON.stringify(jsonLd),
+    169 │           }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/layout.tsx:173:11 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    171 │         <script
+    172 │           type='application/ld+json'
+  > 173 │           dangerouslySetInnerHTML={{
+        │           ^^^^^^^^^^^^^^^^^^^^^^^
+    174 │             __html: JSON.stringify(jsonLdSite),
+    175 │           }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/paintings/[slug]/page.tsx:100:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+     98 │       <script
+     99 │         type='application/ld+json'
+  > 100 │         dangerouslySetInnerHTML={{
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    101 │           __html: JSON.stringify(structuredData),
+    102 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/paintings/page.tsx:103:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    101 │   const countQuery = filters.length > 0 ? getFilteredPaintingsCount : getPaintingsCount;
+    102 │ 
+  > 103 │   let result;
+        │       ^^^^^^
+    104 │   let countResult;
+    105 │ 
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+apps/nextjs-portfolio/app/paintings/page.tsx:104:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    103 │   let result;
+  > 104 │   let countResult;
+        │       ^^^^^^^^^^^
+    105 │ 
+    106 │   if (filters.length > 0) {
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+apps/nextjs-portfolio/app/recipes/[slug]/page.tsx:216:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    214 │       <script
+    215 │         type='application/ld+json'
+  > 216 │         dangerouslySetInnerHTML={{
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    217 │           __html: JSON.stringify(structuredData),
+    218 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/recipes/page.tsx:81:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    79 │       <script
+    80 │         type='application/ld+json'
+  > 81 │         dangerouslySetInnerHTML={{
+       │         ^^^^^^^^^^^^^^^^^^^^^^^
+    82 │           __html: JSON.stringify({
+    83 │             '@context': 'https://schema.org',
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/app/videos/page.tsx:82:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    80 │       <script
+    81 │         type='application/ld+json'
+  > 82 │         dangerouslySetInnerHTML={{
+       │         ^^^^^^^^^^^^^^^^^^^^^^^
+    83 │           __html: JSON.stringify(structuredData),
+    84 │         }}
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+apps/nextjs-portfolio/store/useFilterModalStore.ts:27:22 lint/suspicious/useIterableCallbackReturn ━━━━━━━━━━
+
+  × This callback passed to forEach() iterable method should not return a value.
+  
+    26 │       const params = new URLSearchParams();
+  > 27 │       updatedFilters.forEach(f => params.append('filter', f));
+       │                      ^^^^^^^
+    28 │       params.set('sort', state.selectedSort);
+    29 │ 
+  
+  i Either remove this return or remove the returned value.
+  
+    26 │       const params = new URLSearchParams();
+  > 27 │       updatedFilters.forEach(f => params.append('filter', f));
+       │                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    28 │       params.set('sort', state.selectedSort);
+    29 │ 
+  
+
+apps/nextjs-portfolio/store/useFilterModalStore.ts:37:29 lint/suspicious/useIterableCallbackReturn ━━━━━━━━━━
+
+  × This callback passed to forEach() iterable method should not return a value.
+  
+    35 │     set(state => {
+    36 │       const params = new URLSearchParams();
+  > 37 │       state.selectedFilters.forEach(f => params.append('filter', f));
+       │                             ^^^^^^^
+    38 │       params.set('sort', sort);
+    39 │ 
+  
+  i Either remove this return or remove the returned value.
+  
+    35 │     set(state => {
+    36 │       const params = new URLSearchParams();
+  > 37 │       state.selectedFilters.forEach(f => params.append('filter', f));
+       │                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    38 │       params.set('sort', sort);
+    39 │ 
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:67:31 lint/correctness/useHookAtTopLevel ━━━━━━━━━━
+
+  × This hook is being called conditionally, but all hooks must be called in the exact same order in every component render.
+  
+    66 │   // Get the image value if imageField is specified
+  > 67 │   const image = imageField ? (useFormValue([imageField]) as string) : null;
+       │                               ^^^^^^^^^^^^
+    68 │ 
+    69 │   // Function to extract plain text from blockContent
+  
+  i For React to preserve state between calls, hooks needs to be called unconditionally and always in the same order.
+  
+  i See https://react.dev/reference/rules/rules-of-hooks
+  
+
+apps/sanity-studio/components/GenericAIGenerator.tsx:102:26 lint/correctness/useHookAtTopLevel ━━━━━━━━━━
+
+  × This hook is being called from a nested function, but all hooks must be called unconditionally from the top-level component.
+  
+    100 │   if (fieldDependencies) {
+    101 │     Object.entries(fieldDependencies).forEach(([fieldPath, variableName]) => {
+  > 102 │       const fieldValue = useFormValue(fieldPath.split('.'));
+        │                          ^^^^^^^^^^^^
+    103 │ 
+    104 │       // Special handling for different field types
+  
+  i For React to preserve state between calls, hooks needs to be called unconditionally and always in the same order.
+  
+  i See https://react.dev/reference/rules/rules-of-hooks
+  
+
+apps/ui-docs/src/index.css:4:2 lint/correctness/noInvalidPositionAtImportRule ━━━━━━━━━━━━━━━━━━━━━━
+
+  × This @import is in the wrong position.
+  
+    2 │ @source "../../../packages/ui-react/src";
+    3 │ 
+  > 4 │ @import "@wisihe/tokens/tailwind-v4";
+      │  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ @import "@wisihe/tokens/tailwind-v4-dark" layer(theme);
+    6 │ @import "@wisihe/tokens/css/semantic" layer(theme);
+  
+  i Any @import rules must precede all other valid at-rules and style rules in a stylesheet (ignoring @charset and @layer), or else the @import rule is invalid.
+  
+  i Consider moving import position.
+  
+
+apps/ui-docs/src/index.css:5:2 lint/correctness/noInvalidPositionAtImportRule ━━━━━━━━━━━━━━━━━━━━━━
+
+  × This @import is in the wrong position.
+  
+    4 │ @import "@wisihe/tokens/tailwind-v4";
+  > 5 │ @import "@wisihe/tokens/tailwind-v4-dark" layer(theme);
+      │  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    6 │ @import "@wisihe/tokens/css/semantic" layer(theme);
+    7 │ 
+  
+  i Any @import rules must precede all other valid at-rules and style rules in a stylesheet (ignoring @charset and @layer), or else the @import rule is invalid.
+  
+  i Consider moving import position.
+  
+
+apps/ui-docs/src/index.css:6:2 lint/correctness/noInvalidPositionAtImportRule ━━━━━━━━━━━━━━━━━━━━━━
+
+  × This @import is in the wrong position.
+  
+    4 │ @import "@wisihe/tokens/tailwind-v4";
+    5 │ @import "@wisihe/tokens/tailwind-v4-dark" layer(theme);
+  > 6 │ @import "@wisihe/tokens/css/semantic" layer(theme);
+      │  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    7 │ 
+  
+  i Any @import rules must precede all other valid at-rules and style rules in a stylesheet (ignoring @charset and @layer), or else the @import rule is invalid.
+  
+  i Consider moving import position.
+  
+
+packages/ui-react/src/button/Button.tsx:7:5 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+     5 │ function LoadingIcon(): React.ReactElement {
+     6 │   return (
+   > 7 │     <svg
+       │     ^^^^
+   > 8 │       className='animate-spin size-5'
+        ...
+  > 12 │       xmlns='http://www.w3.org/2000/svg'
+  > 13 │     >
+       │     ^
+    14 │       <g id='SVGRepo_bgCarrier' strokeWidth='0' />
+    15 │       <g id='SVGRepo_tracerCarrier' strokeLinecap='round' strokeLinejoin='round' />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+packages/ui-react/src/spinner/Spinner.tsx:37:5 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    35 │ export function Spinner({ className, size, color, children, ...props }: SpinnerProps) {
+    36 │   return (
+  > 37 │     <svg
+       │     ^^^^
+  > 38 │       className={cn(spinner({ size, color }), className)}
+        ...
+  > 43 │       {...props}
+  > 44 │     >
+       │     ^
+    45 │       <g id='SVGRepo_bgCarrier' strokeWidth='0' />
+    46 │       <g id='SVGRepo_tracerCarrier' strokeLinecap='round' strokeLinejoin='round' />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+Checked 409 files in 124ms. No fixes applied.
+Found 124 errors.
+Found 78 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

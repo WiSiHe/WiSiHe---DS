@@ -20,5 +20,10 @@
       "entry": ["src/**/*.{ts,tsx}", "vite.config.ts", "vitest.shims.d.ts"]
     }
   },
-  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts", "**/.svelte-kit/**"]
+  "ignore": [
+    "**/*.config.{js,ts,mjs}",
+    "**/sanity.types.ts",
+    "**/vitest.shims.d.ts",
+    "**/.svelte-kit/**"
+  ]
 }

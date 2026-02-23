@@ -2,11 +2,11 @@ pre-commit:
   parallel: true
   commands:
     typecheck:
-      glob: '*.{ts,tsx,js,jsx}'
+      glob: "*.{ts,tsx,js,jsx}"
       run: pnpm turbo typecheck
-      fail_text: '❌ TypeScript type checking failed. Please fix the errors and try again.'
+      fail_text: "❌ TypeScript type checking failed. Please fix the errors and try again."
 
     lint:
-      glob: '*.{js,jsx,ts,tsx,svelte,vue}'
-      run: pnpm turbo lint
-      fail_text: '❌ Linting failed. Please fix the errors and try again.'
+      glob: "*.{js,jsx,ts,tsx,json,svelte,vue}"
+      run: pnpm biome check --write {staged_files}
+      fail_text: "❌ Biome check failed. Please fix the errors and try again."

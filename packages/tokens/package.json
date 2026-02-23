@@ -29,12 +29,9 @@
   ],
   "scripts": {
     "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js && node scripts/generate-semantic-colors.js",
-    "clean": "rm -rf dist",
-    "lint": "eslint . --max-warnings 0"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "@wisihe/eslint-config": "workspace:*",
-    "eslint": "^9.39.3",
     "style-dictionary": "5.1.1"
   }
 }

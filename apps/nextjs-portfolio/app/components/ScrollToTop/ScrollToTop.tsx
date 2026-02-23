@@ -1,8 +1,8 @@
 'use client';
-import useScrollPosition from '@/hooks/useScrollPosition';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion, Variants } from 'motion/react';
+import { AnimatePresence, motion, type Variants } from 'motion/react';
 import { IoArrowUpSharp } from 'react-icons/io5';
+import useScrollPosition from '@/hooks/useScrollPosition';
 
 type ScrollToTopButtonProps = {
   isFixed?: boolean;
@@ -58,16 +58,16 @@ const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
       {isVisible && (
         <motion.div
           variants={buttonVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
+          initial='hidden'
+          animate='visible'
+          exit='hidden'
           className={cn('shrink-0', isFixed && 'fixed bottom-8 right-8 z-10')}
         >
           <motion.button
             onClick={handleClick}
             whileHover={{ scale: 1.1 }}
             className={buttonClassNames}
-            aria-label="Scroll to top"
+            aria-label='Scroll to top'
           >
             <IoArrowUpSharp />
           </motion.button>

@@ -27,4 +27,3 @@ export const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://lo
 export const readToken = process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN;
 
 export const writeToken = process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN;
-

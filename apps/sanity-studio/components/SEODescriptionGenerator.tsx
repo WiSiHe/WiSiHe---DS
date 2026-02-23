@@ -1,32 +1,32 @@
-import React from 'react'
-import {set, StringInputProps, unset, useFormValue} from 'sanity'
-import {Button, Card, TextArea, Text} from '@sanity/ui'
-import {useState} from 'react'
-import OpenAI from 'openai'
-import {OPENAI_API_KEY} from '../environment'
+import { Button, Card, Text, TextArea } from '@sanity/ui';
+import OpenAI from 'openai';
+import type React from 'react';
+import { useState } from 'react';
+import { type StringInputProps, set, unset, useFormValue } from 'sanity';
+import { OPENAI_API_KEY } from '../environment';
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY, // This is the default and can be omitted
   dangerouslyAllowBrowser: true, // This is the default and can be omitted
-})
+});
 
 const SEODescriptionGenerator = (props: StringInputProps) => {
-  const {value, onChange} = props
+  const { value, onChange } = props;
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Access the 'description' field value
-  const description = useFormValue(['description'])
+  const description = useFormValue(['description']);
 
   const handleChangeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const response = e.target.value
-    onChange(response ? set(response) : unset())
-  }
+    const response = e.target.value;
+    onChange(response ? set(response) : unset());
+  };
 
   const handleGenerateDescription = async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
       const params: OpenAI.Chat.ChatCompletionCreateParams = {
@@ -39,32 +39,32 @@ const SEODescriptionGenerator = (props: StringInputProps) => {
               ((description as string) || ''),
           },
         ],
-      }
+      };
       const chatCompletion: OpenAI.Chat.ChatCompletion =
-        await client.chat.completions.create(params)
+        await client.chat.completions.create(params);
 
-      const feedback = chatCompletion.choices[0].message.content?.trim() || ''
+      const feedback = chatCompletion.choices[0].message.content?.trim() || '';
 
-      const seoDescription = feedback.replace(/"/g, '')
+      const seoDescription = feedback.replace(/"/g, '');
 
       // Update the value with the generated SEO description
-      onChange(set(seoDescription))
+      onChange(set(seoDescription));
     } catch (err: unknown) {
-      console.error('Error generating SEO description:', err)
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      console.error('Error generating SEO description:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <Card padding={4} tone="transparent" border>
+    <Card padding={4} tone='transparent' border>
       <Card paddingBottom={2}>
         <TextArea
           value={value || ''}
           onChange={handleChangeDescription}
           rows={3}
-          placeholder="Enter your description here..."
+          placeholder='Enter your description here...'
         />
       </Card>
       <Card paddingBottom={2}>
@@ -75,16 +75,16 @@ const SEODescriptionGenerator = (props: StringInputProps) => {
       <Button
         text={isLoading ? 'Generating...' : 'Generate SEO Description'}
         disabled={isLoading || !description}
-        tone="primary"
+        tone='primary'
         onClick={() => void handleGenerateDescription()}
       />
       {error && (
-        <Text size={1} weight="medium" color="danger" style={{marginTop: '0.5rem'}}>
+        <Text size={1} weight='medium' color='danger' style={{ marginTop: '0.5rem' }}>
           {error}
         </Text>
       )}
     </Card>
-  )
-}
+  );
+};
 
-export default SEODescriptionGenerator
+export default SEODescriptionGenerator;

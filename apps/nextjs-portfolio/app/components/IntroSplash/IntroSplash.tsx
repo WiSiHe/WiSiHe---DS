@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 const slides = [
   {
@@ -92,15 +92,15 @@ export default function IntroSplash() {
     <AnimatePresence>
       {showSplash && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-dark"
+          className='fixed inset-0 z-50 flex items-center justify-center bg-dark'
           initial={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 1000 }}
         >
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode='popLayout'>
             {currentSlide && (
               <motion.div
                 key={currentSlide.id}
-                className="absolute inset-0 flex items-center justify-center scale-105"
+                className='absolute inset-0 flex items-center justify-center scale-105'
                 style={{
                   backgroundImage: `url(${currentSlide.background})`,
                   backgroundSize: 'cover',
@@ -111,10 +111,10 @@ export default function IntroSplash() {
                 exit={currentSlide.animation.exit}
                 transition={{ type: 'spring', duration: 1.5 }}
               >
-                <div className="fixed inset-0 flex items-center justify-center p-4">
+                <div className='fixed inset-0 flex items-center justify-center p-4'>
                   {/* <div className="relative flex items-center justify-center p-6 bg-black rounded-lg shadow-lg bg-opacity-70"> */}
                   <motion.div
-                    className="text-2xl font-bold text-center text-white sm:text-3xl"
+                    className='text-2xl font-bold text-center text-white sm:text-3xl'
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

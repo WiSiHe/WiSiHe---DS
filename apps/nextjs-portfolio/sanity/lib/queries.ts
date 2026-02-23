@@ -1,5 +1,6 @@
-import { client } from './client';
 import { generateStaticSlugs } from '@wisihe/sanity-queries';
+import { client } from './client';
+
 export * from '@wisihe/sanity-queries';
 
 export async function getStaticSlugs(type: string) {

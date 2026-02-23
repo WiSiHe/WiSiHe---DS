@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Badge, Stack } from '@wisihe/ui-svelte';
 </script>
 
 <Stack gap="sm" class="w-[320px] rounded-md border border-border bg-surface p-4">

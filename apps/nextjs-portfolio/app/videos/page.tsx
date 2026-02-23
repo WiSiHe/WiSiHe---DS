@@ -1,8 +1,8 @@
+import { isEmptyObject } from '@wisihe/utils';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllVideos } from '@/sanity/lib/queries';
-import { isEmptyObject } from '@wisihe/utils';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { VideosPage } from '../components/pages/VideosPage';
 
 export const metadata: Metadata = {
@@ -78,15 +78,15 @@ export default async function Videos() {
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(structuredData),
         }}
       />
-      <section className="w-full min-h-screen p-4 pt-32 mx-auto max-w-7xl">
-        <div className="w-full pb-6">
-          <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">Videos</h1>
-          <p className="text-base md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed">
+      <section className='w-full min-h-screen p-4 pt-32 mx-auto max-w-7xl'>
+        <div className='w-full pb-6'>
+          <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>Videos</h1>
+          <p className='text-base md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed'>
             From timelapse drawings to game development and animations — a showcase of my digital
             creations in motion
           </p>

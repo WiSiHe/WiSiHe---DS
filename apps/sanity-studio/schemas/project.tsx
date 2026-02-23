@@ -5,8 +5,8 @@ import { defineField, defineType } from 'sanity';
 import ImageAltTextGenerator from '../components/ImageAltGenerator';
 import { redirectType } from './redirectType';
 import { seoType } from './seoType';
-import { tag } from './tag';
 import { socialType } from './socialType';
+import { tag } from './tag';
 
 export default defineType({
   name: 'project',

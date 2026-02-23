@@ -2,6 +2,7 @@
 
 import { Button } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
+
 const RecipesPage = () => {
   return (
     <div>
@@ -10,7 +11,7 @@ const RecipesPage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="bg-accent"
+        className='bg-accent'
       ></motion.div>
       <Button>Click me</Button>
     </div>

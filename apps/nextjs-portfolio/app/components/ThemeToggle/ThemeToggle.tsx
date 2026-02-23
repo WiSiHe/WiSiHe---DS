@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
-import { FaMoon, FaSun, FaDesktop } from 'react-icons/fa';
+import { FaDesktop, FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from '../../providers';
 
 const ThemeToggle = () => {
@@ -21,8 +21,8 @@ const ThemeToggle = () => {
   };
 
   const getIcon = () => {
-    if (!mounted) return <div className="w-4 h-4" />;
-    
+    if (!mounted) return <div className='w-4 h-4' />;
+
     // When in system mode, show the icon for what it *is* or what it *will be*?
     // Usually it's best to show current mode or system icon.
     if (theme === 'system') return <FaDesktop />;
@@ -38,8 +38,8 @@ const ThemeToggle = () => {
 
   if (!mounted) {
     return (
-      <div className="w-[50px] h-[50px] p-4 flex items-center justify-center rounded-full border border-border bg-surface shadow-md">
-        <div className="w-5 h-5" />
+      <div className='w-[50px] h-[50px] p-4 flex items-center justify-center rounded-full border border-border bg-surface shadow-md'>
+        <div className='w-5 h-5' />
       </div>
     );
   }
@@ -48,19 +48,19 @@ const ThemeToggle = () => {
     <motion.button
       onClick={cycleTheme}
       data-state={isDarkActive ? 'dark' : 'light'}
-      className="flex items-center justify-center cursor-pointer p-4 rounded-full border border-border bg-surface text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-md transition-all duration-300 pointer-events-auto"
+      className='flex items-center justify-center cursor-pointer p-4 rounded-full border border-border bg-surface text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-md transition-all duration-300 pointer-events-auto'
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={getLabel()}
     >
-      <div className="flex items-center justify-center w-5 h-5 overflow-hidden">
+      <div className='flex items-center justify-center w-5 h-5 overflow-hidden'>
         <motion.div
           key={mounted ? theme : 'unmounted'}
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.2 }}
-          className="text-lg"
+          className='text-lg'
         >
           {getIcon()}
         </motion.div>

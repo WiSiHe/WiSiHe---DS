@@ -1,9 +1,7 @@
 'use client';
-import { ProjectQueryResult } from '@wisihe/sanity-queries';
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { motion } from 'motion/react';
-import { PortableTextBlock } from 'next-sanity';
-import CustomPortableText from '../PortableText/PortableText';
-
+import type { PortableTextBlock } from 'next-sanity';
 import {
   FaCalendarAlt as IconCalendar,
   FaTimesCircle as IconCancel,
@@ -13,8 +11,8 @@ import {
   FaPauseCircle as IconPause,
   FaQuestionCircle as IconQuestion,
 } from 'react-icons/fa';
-
 import Chip from '../Chip/Chip';
+import CustomPortableText from '../PortableText/PortableText';
 
 type ProjectInformationProps = {
   project: ProjectQueryResult;
@@ -58,29 +56,29 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   };
 
   return (
-    <motion.div layout className="space-y-6">
+    <motion.div layout className='space-y-6'>
       <motion.h1
-        className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight"
+        className='text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight'
         layoutId={`title-${projectTitle}`}
       >
         {projectTitle}
       </motion.h1>
 
-      <div className="flex flex-wrap gap-2">
+      <div className='flex flex-wrap gap-2'>
         {/* Status chip */}
-        <Chip variation="secondary" label={statusConfig.label} Icon={statusConfig.icon} />
+        <Chip variation='secondary' label={statusConfig.label} Icon={statusConfig.icon} />
 
         {/* Project dates */}
         {projectStart && (
           <Chip
-            variation="tertiary"
+            variation='tertiary'
             label={`Started ${formatDate(projectStart)}`}
             Icon={IconCalendar}
           />
         )}
         {projectEnd && (
           <Chip
-            variation="tertiary"
+            variation='tertiary'
             label={`Ended ${formatDate(projectEnd)}`}
             Icon={IconCalendar}
           />
@@ -88,15 +86,15 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
 
         {/* Tags */}
         {tags.map(tag => (
-          <Chip key={tag.name} variation="primary" label={tag.name} />
+          <Chip key={tag.name} variation='primary' label={tag.name} />
         ))}
       </div>
 
       {projectContent && (
-        <div className="prose prose-lg max-w-none">
+        <div className='prose prose-lg max-w-none'>
           <CustomPortableText
             value={projectContent}
-            className="text-foreground-subtle leading-relaxed"
+            className='text-foreground-subtle leading-relaxed'
           />
         </div>
       )}

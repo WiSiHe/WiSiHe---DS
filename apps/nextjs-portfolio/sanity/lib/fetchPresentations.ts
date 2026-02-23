@@ -1,6 +1,6 @@
+import type { Example, PresentationSlide, Source, Tool } from '@/app/three-d/types';
 import { sanityFetch } from './live';
 import { presentationQuery } from './queries';
-import type { PresentationSlide, Source, Tool, Example } from '@/app/three-d/types';
 
 // Type for the raw Sanity presentation response
 interface SanityPresentationResponse {
@@ -11,11 +11,13 @@ interface SanityPresentationResponse {
     content?: unknown;
     media?: {
       mediaType?: string;
-      image?: { 
-        asset?: { _ref?: string; _type?: string; url?: string };
-        alt?: string;
-        url?: string;
-      } | string;
+      image?:
+        | {
+            asset?: { _ref?: string; _type?: string; url?: string };
+            alt?: string;
+            url?: string;
+          }
+        | string;
       imageAspectRatio?: string;
       videoUrl?: string;
       iframeUrl?: string;

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion, HTMLMotionProps } from 'motion/react';
+import { type HTMLMotionProps, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 
 interface DecryptedTextProps extends HTMLMotionProps<'span'> {
   text: string;
@@ -68,7 +68,7 @@ export default function DecryptedText({
     };
 
     const availableChars = useOriginalCharsOnly
-      ? Array.from(new Set(text.split(''))).filter((char) => char !== ' ')
+      ? Array.from(new Set(text.split(''))).filter(char => char !== ' ')
       : characters.split('');
 
     const shuffleText = (originalText: string, currentRevealed: Set<number>): string => {
@@ -80,7 +80,7 @@ export default function DecryptedText({
           isRevealed: currentRevealed.has(i),
         }));
 
-        const nonSpaceChars = positions.filter((p) => !p.isSpace && !p.isRevealed).map((p) => p.char);
+        const nonSpaceChars = positions.filter(p => !p.isSpace && !p.isRevealed).map(p => p.char);
 
         for (let i = nonSpaceChars.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -89,7 +89,7 @@ export default function DecryptedText({
 
         let charIndex = 0;
         return positions
-          .map((p) => {
+          .map(p => {
             if (p.isSpace) return ' ';
             if (p.isRevealed) return originalText[p.index];
             return nonSpaceChars[charIndex++];
@@ -110,7 +110,7 @@ export default function DecryptedText({
     if (isHovering) {
       setIsScrambling(true);
       interval = setInterval(() => {
-        setRevealedIndices((prevRevealed) => {
+        setRevealedIndices(prevRevealed => {
           if (sequential) {
             if (prevRevealed.size < text.length) {
               const nextIndex = getNextIndex(prevRevealed);
@@ -159,7 +159,7 @@ export default function DecryptedText({
     if (animateOn !== 'view' && animateOn !== 'both') return;
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting && !hasAnimated) {
           setIsHovering(true);
           setHasAnimated(true);
@@ -199,9 +199,9 @@ export default function DecryptedText({
       {...hoverProps}
       {...props}
     >
-      <span className="sr-only">{displayText}</span>
+      <span className='sr-only'>{displayText}</span>
 
-      <span aria-hidden="true">
+      <span aria-hidden='true'>
         {displayText.split('').map((char, index) => {
           const isRevealedOrDone = revealedIndices.has(index) || !isScrambling || !isHovering;
 

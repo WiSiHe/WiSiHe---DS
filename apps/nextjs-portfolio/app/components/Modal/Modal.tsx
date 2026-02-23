@@ -1,13 +1,8 @@
 'use client';
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from '@headlessui/react';
-import { motion, AnimatePresence } from 'motion/react';
+import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import type { ReactNode } from 'react';
 
 const modalVariants = {
   overlay: {
@@ -22,22 +17,19 @@ const modalVariants = {
   },
 };
 
-const modalPanelStyles = cva(
-  'fixed inset-0 z-50 flex items-center justify-center p-4',
-  {
-    variants: {
-      size: {
-        sm: 'max-w-sm w-full',
-        md: 'max-w-md w-full',
-        lg: 'max-w-lg w-full',
-        xl: 'max-w-xl w-full',
-      },
+const modalPanelStyles = cva('fixed inset-0 z-50 flex items-center justify-center p-4', {
+  variants: {
+    size: {
+      sm: 'max-w-sm w-full',
+      md: 'max-w-md w-full',
+      lg: 'max-w-lg w-full',
+      xl: 'max-w-xl w-full',
     },
-    defaultVariants: {
-      size: 'md',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+});
 
 const modalContentStyles = cva('bg-white rounded-lg shadow-lg p-6 w-full', {
   variants: {
@@ -78,32 +70,28 @@ export const Modal = ({
   return (
     <AnimatePresence>
       {open && (
-        <Dialog open={open} onClose={onClose} className="relative z-50">
+        <Dialog open={open} onClose={onClose} className='relative z-50'>
           <motion.div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            initial="initial"
-            animate="animate"
-            exit="exit"
+            className='fixed inset-0 bg-black/60 backdrop-blur-sm'
+            initial='initial'
+            animate='animate'
+            exit='exit'
             variants={modalVariants.overlay}
           />
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4">
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex items-center justify-center min-h-full p-4'>
               <motion.div
                 className={`${modalPanelStyles({ size })} ${panelClassName}`}
-                initial="initial"
-                animate="animate"
-                exit="exit"
+                initial='initial'
+                animate='animate'
+                exit='exit'
                 variants={modalVariants.panel}
               >
                 <DialogPanel className={`${modalContentStyles()}`}>
-                  <DialogTitle
-                    className={`${modalTitleStyles()} ${titleClassName}`}
-                  >
+                  <DialogTitle className={`${modalTitleStyles()} ${titleClassName}`}>
                     {title}
                   </DialogTitle>
-                  <Description
-                    className={`${modalDescriptionStyles()} ${descriptionClassName}`}
-                  >
+                  <Description className={`${modalDescriptionStyles()} ${descriptionClassName}`}>
                     {description}
                   </Description>
                   {children}

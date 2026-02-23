@@ -1,8 +1,8 @@
+import { isEmptyObject } from '@wisihe/utils';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllProjects } from '@/sanity/lib/queries';
-import { isEmptyObject } from '@wisihe/utils';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import ProjectCategories from '../components/ProjectCategories/ProjectCategories';
 
 export const metadata: Metadata = {
@@ -47,10 +47,10 @@ export default async function ProjectsPage() {
   const { ongoingProjects, pastProjects, tags } = data;
 
   return (
-    <div className="w-full min-h-screen p-4 pt-32 mx-auto max-w-7xl">
-      <div className="w-full pb-6">
-        <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">Projects</h1>
-        <p className="md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed">
+    <div className='w-full min-h-screen p-4 pt-32 mx-auto max-w-7xl'>
+      <div className='w-full pb-6'>
+        <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>Projects</h1>
+        <p className='md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed'>
           A gallery of some of my projects, both creative and technical.
         </p>
       </div>

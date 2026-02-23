@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
 import { Edges } from '@react-three/drei';
+import { useMemo } from 'react';
 import * as THREE from 'three';
 import { BEER_CAN_GEOMETRY, COLORS } from '../constants';
 

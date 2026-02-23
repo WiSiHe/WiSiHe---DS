@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from 'sanity';
 
 export const socialType = defineType({
   name: 'social',
@@ -18,4 +18,4 @@ export const socialType = defineType({
       rows: 2,
     }),
   ],
-})
+});

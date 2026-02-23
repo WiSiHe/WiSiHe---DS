@@ -1,5 +1,5 @@
-import {HomeIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { HomeIcon } from '@sanity/icons';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export default defineType({
   name: 'home',
@@ -15,7 +15,7 @@ export default defineType({
       description: 'This field is the title of your personal website.',
       title: 'Title',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'overview',
@@ -57,7 +57,7 @@ export default defineType({
           type: 'block',
         }),
       ],
-      validation: (rule) => rule.max(155).required(),
+      validation: rule => rule.max(155).required(),
     }),
     defineField({
       name: 'paintingsTitle',
@@ -70,7 +70,7 @@ export default defineType({
       title: 'Paintings description',
       description: 'This is the description that will appear on your paintings page.',
       type: 'blockContent',
-      validation: (rule) => rule.max(155).required(),
+      validation: rule => rule.max(155).required(),
     }),
     defineField({
       name: 'showcasePaintings',
@@ -80,7 +80,7 @@ export default defineType({
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [{type: 'painting'}],
+          to: [{ type: 'painting' }],
         }),
       ],
     }),
@@ -135,7 +135,7 @@ export default defineType({
           type: 'block',
         }),
       ],
-      validation: (rule) => rule.max(155).required(),
+      validation: rule => rule.max(155).required(),
     }),
     defineField({
       name: 'projectsTitle',
@@ -151,7 +151,7 @@ export default defineType({
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [{type: 'project'}],
+          to: [{ type: 'project' }],
         }),
       ],
     }),
@@ -160,14 +160,14 @@ export default defineType({
     select: {
       title: 'title',
     },
-    prepare({title = ''}: {title: string}) {
-      const subtitle = 'Home'
-      const titleB = title || 'Home'
+    prepare({ title = '' }: { title: string }) {
+      const subtitle = 'Home';
+      const titleB = title || 'Home';
 
       return {
         title: titleB,
         subtitle,
-      }
+      };
     },
   },
-})
+});

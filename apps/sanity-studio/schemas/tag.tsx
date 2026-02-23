@@ -59,7 +59,7 @@ export const tag = defineType({
             }}
             characterLimit={150}
             rows={3}
-            placeholder="Enter a description for this tag or use AI to generate one..."
+            placeholder='Enter a description for this tag or use AI to generate one...'
           />
         ),
       },

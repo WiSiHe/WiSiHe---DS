@@ -1,13 +1,13 @@
-import {ImageIcon} from '@sanity/icons'
+import { ImageIcon } from '@sanity/icons';
 // import ImageAltTextGenerator from 'components/sanity/ImageAltTextGenerator'
 // import ImageDescriptionGenerator from 'components/sanity/ImageDescriptionGenerator'
 // import SEODescriptionGenerator from 'components/sanity/SEODescriptionGenerator'
 
-import {FaWeibo} from 'react-icons/fa'
+import { FaWeibo } from 'react-icons/fa';
 
-import {defineField, defineType} from 'sanity'
-import GenericAIGenerator from '../components/GenericAIGenerator'
-import ViewsArray from '../components/ViewsArray'
+import { defineField, defineType } from 'sanity';
+import GenericAIGenerator from '../components/GenericAIGenerator';
+import ViewsArray from '../components/ViewsArray';
 
 export default defineType({
   name: 'painting',
@@ -47,7 +47,7 @@ export default defineType({
       type: 'string',
       group: 'seo',
       description: 'Title of the painting',
-      validation: (rule) =>
+      validation: rule =>
         rule.required().max(50).min(5).warning('Title should be between 5 and 50 characters'),
     }),
 
@@ -62,7 +62,7 @@ export default defineType({
         maxLength: 96,
         isUnique: (value, context) => context.defaultIsUnique(value, context),
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'image',
@@ -74,17 +74,17 @@ export default defineType({
         {
           name: 'alt',
           type: 'string',
-          validation: (Rule) => Rule.required(),
+          validation: Rule => Rule.required(),
           group: ['AI', 'seo'],
           components: {
-            input: (props) => (
+            input: props => (
               <GenericAIGenerator
                 {...props}
-                prompt="You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less."
-                imageField="image"
+                prompt='You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less.'
+                imageField='image'
                 characterLimit={92}
-                buttonText="Generate Alt Text"
-                placeholder="Alt text here..."
+                buttonText='Generate Alt Text'
+                placeholder='Alt text here...'
               />
             ),
           },
@@ -94,7 +94,7 @@ export default defineType({
         hotspot: true,
         metadata: ['lqip', 'palette'],
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
 
     defineField({
@@ -103,7 +103,7 @@ export default defineType({
       type: 'text',
       group: ['AI'],
       components: {
-        input: (props) => (
+        input: props => (
           <GenericAIGenerator
             {...props}
             prompt={` You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.
@@ -114,14 +114,14 @@ Requirements:
 - Be objective and descriptive
 - Write in clear, flowing paragraphs
 - Focus on visual elements and artistic choices`}
-            imageField="image"
+            imageField='image'
             rows={6}
-            placeholder="Description will appear here..."
+            placeholder='Description will appear here...'
           />
         ),
       },
       description: 'Description of the painting',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'seoDescription',
@@ -130,16 +130,16 @@ Requirements:
       group: ['seo', 'AI'],
       description: 'This description will be used in the meta description for SEO purposes',
       components: {
-        input: (props) => (
+        input: props => (
           <GenericAIGenerator
             {...props}
-            prompt="You are an AI SEO expert writer. Re-write the following text into a good SEO description in 122 characters or less, it should never exceed 122: {description}"
+            prompt='You are an AI SEO expert writer. Re-write the following text into a good SEO description in 122 characters or less, it should never exceed 122: {description}'
             fieldDependencies={{
               description: 'description',
             }}
             characterLimit={122}
             rows={3}
-            placeholder="Enter your description here..."
+            placeholder='Enter your description here...'
           />
         ),
       },
@@ -161,29 +161,29 @@ Requirements:
               name: 'title',
               type: 'string',
               description: 'Title of the image',
-              validation: (Rule) => Rule.required(),
+              validation: Rule => Rule.required(),
             },
             {
               name: 'alt',
               type: 'string',
               description: 'Alt text for the image',
-              validation: (Rule) => Rule.required(),
+              validation: Rule => Rule.required(),
               group: ['AI', 'seo'],
               components: {
-                input: (props) => (
+                input: props => (
                   <GenericAIGenerator
                     {...props}
-                    prompt="You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less. "
-                    imageField="image"
+                    prompt='You are an AI SEO expert writer, write a good alt text for this image in 96 characters or less. '
+                    imageField='image'
                     characterLimit={92}
-                    buttonText="Generate Alt Text"
-                    placeholder="Alt text here..."
+                    buttonText='Generate Alt Text'
+                    placeholder='Alt text here...'
                   />
                 ),
               },
             },
           ],
-          options: {hotspot: true},
+          options: { hotspot: true },
         },
       ],
       description: 'Additional images of the painting',
@@ -205,7 +205,7 @@ Requirements:
       type: 'string',
       initialValue: 'square',
       description: 'Aspect ratio of the painting',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
       options: {
         list: ['square', 'landscape', 'portrait'],
       },
@@ -249,11 +249,11 @@ Requirements:
               viewerId: 'viewerId',
               timestamp: 'timestamp',
             },
-            prepare({viewerId, timestamp}: {viewerId: string; timestamp: string}) {
+            prepare({ viewerId, timestamp }: { viewerId: string; timestamp: string }) {
               return {
                 title: viewerId,
                 subtitle: new Date(timestamp).toLocaleString(),
-              }
+              };
             },
           },
         },
@@ -306,18 +306,18 @@ Requirements:
       title: 'Painted At',
       type: 'datetime',
       description: 'Date when the painting was painted',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'tagsV2',
       title: 'Tags',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'tag'}}],
+      of: [{ type: 'reference', to: { type: 'tag' } }],
       description: 'Tags for the painting',
       options: {
         layout: 'list',
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
   ],
-})
+});
