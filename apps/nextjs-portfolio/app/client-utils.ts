@@ -1,7 +1,7 @@
 'use client';
 
-import { toast } from 'sonner';
 import { isCorsOriginError } from 'next-sanity/live';
+import { toast } from 'sonner';
 
 export function handleError(error: unknown) {
   if (isCorsOriginError(error)) {

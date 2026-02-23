@@ -1,7 +1,6 @@
 'use client';
 
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
 import type { SlideMode } from '../../../three-d/types';
 import { ANIMATION_SPEEDS } from '../constants';
 import type { SceneRef } from '../types';
@@ -22,11 +21,16 @@ interface UseSceneAnimationProps {
   };
 }
 
-export function useSceneAnimation({ mode, autoRotate, isVisible = true, refs }: UseSceneAnimationProps) {
+export function useSceneAnimation({
+  mode,
+  autoRotate,
+  isVisible = true,
+  refs,
+}: UseSceneAnimationProps) {
   // Pause animations when not visible
   useFrame(state => {
     if (!isVisible) return;
-    
+
     const elapsedTime = state.clock.elapsedTime;
 
     if (mode === 'showcase' && refs.showcase?.current && autoRotate) {

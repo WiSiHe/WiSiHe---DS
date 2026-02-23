@@ -1,5 +1,5 @@
 import { cn } from '@wisihe/utils';
-import Image, { ImageProps } from 'next/image';
+import Image, { type ImageProps } from 'next/image';
 import { useState } from 'react';
 
 export const BlurImage = ({
@@ -21,7 +21,7 @@ export const BlurImage = ({
       width={width}
       height={height}
       loading={loading}
-      decoding="async"
+      decoding='async'
       blurDataURL={typeof src === 'string' ? src : undefined}
       alt={alt ? alt : 'Background of a beautiful view'}
       quality={quality}

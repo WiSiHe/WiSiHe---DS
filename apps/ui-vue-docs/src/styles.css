@@ -1,7 +1,7 @@
-@import 'tailwindcss';
-@import '@wisihe/tokens/tailwind-v4';
-@import '@wisihe/tokens/tailwind-v4-dark' layer(theme);
-@import '@wisihe/tokens/css/semantic' layer(theme);
+@import "tailwindcss";
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/tailwind-v4-dark" layer(theme);
+@import "@wisihe/tokens/css/semantic" layer(theme);
 
 /* Ensure Tailwind scans the component package classes. */
 @source "../../../packages/ui-vue/src/**/*.vue";
@@ -11,7 +11,13 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      sans-serif;
     padding: 1rem;
   }
 }

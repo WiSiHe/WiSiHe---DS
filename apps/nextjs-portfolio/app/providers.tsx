@@ -1,8 +1,9 @@
 'use client';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
-import React, { useEffect } from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import type React from 'react';
+import { useEffect } from 'react';
 import PostHogPageView from './components/PostHogPageView/PostHogPageView';
 
 // eslint-disable-next-line no-undef
@@ -28,11 +29,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-    >
+    <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
       <PHProvider client={posthog}>
         <PostHogPageView />
         {children}

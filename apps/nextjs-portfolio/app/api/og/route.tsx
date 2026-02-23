@@ -1,9 +1,9 @@
-import { client } from '@/sanity/lib/client';
-import { OG_IMAGE_QUERY } from '@/sanity/lib/queries';
-import { urlForImage } from '@/sanity/lib/utils';
 import { isEmptyObject, isNotEmptyObject } from '@wisihe/utils';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
+import { client } from '@/sanity/lib/client';
+import { OG_IMAGE_QUERY } from '@/sanity/lib/queries';
+import { urlForImage } from '@/sanity/lib/utils';
 
 interface PaletteColor {
   background?: string;
@@ -24,7 +24,7 @@ async function loadGoogleFont(font: string, text: string) {
 
   if (resource) {
     const response = await fetch(resource[1]);
-    if (response.status == 200) {
+    if (response.status === 200) {
       return await response.arrayBuffer();
     }
   }
@@ -70,37 +70,36 @@ export async function GET(request: Request) {
   const text = title || '';
 
   return new ImageResponse(
-    (
-      <div tw="flex w-full h-full relative">
-        {/* Content container */}
-        <div tw="flex flex-row w-full h-full relative">
-          {/* Text content */}
+    <div tw='flex w-full h-full relative'>
+      {/* Content container */}
+      <div tw='flex flex-row w-full h-full relative'>
+        {/* Text content */}
 
-          {data.image && (
-            <div tw="flex w-full h-full overflow-hidden">
-              {image ? (
-                <img
-                  src={urlForImage(image)?.width(1200).height(630).url()}
-                  alt=""
-                  tw="w-full h-full object-cover"
-                />
-              ) : null}
-            </div>
-          )}
-          <div
-            tw="absolute inset-0 mix-blend-overlay opacity-50"
-            style={{
-              background: `linear-gradient(135deg, ${vibrantBackground} 0%, ${darkVibrantBackground} 100%)`,
-            }}
-          />
-          <div tw="absolute z-10  right-4 bottom-4 flex items-center justify-center px-10">
-            <h1 tw="text-7xl tracking-tight leading-none text-white leading-tight">
-              <strong>#{text}</strong>
-            </h1>
+        {data.image && (
+          <div tw='flex w-full h-full overflow-hidden'>
+            {image ? (
+              /* biome-ignore lint/performance/noImgElement: Required for next/og */
+              <img
+                src={urlForImage(image)?.width(1200).height(630).url()}
+                alt=''
+                tw='w-full h-full object-cover'
+              />
+            ) : null}
           </div>
+        )}
+        <div
+          tw='absolute inset-0 mix-blend-overlay opacity-50'
+          style={{
+            background: `linear-gradient(135deg, ${vibrantBackground} 0%, ${darkVibrantBackground} 100%)`,
+          }}
+        />
+        <div tw='absolute z-10  right-4 bottom-4 flex items-center justify-center px-10'>
+          <h1 tw='text-7xl tracking-tight leading-none text-white leading-tight'>
+            <strong>#{text}</strong>
+          </h1>
         </div>
       </div>
-    ),
+    </div>,
     {
       width: 1200,
       height: 630,

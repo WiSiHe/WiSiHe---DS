@@ -55,7 +55,7 @@ export const presentationSlides: PresentationSlide[] = [
       'This interactive presentation was created for a workshop at the Awwwards Conference in Amsterdam.',
       'The goal was to demystify 3D on the web and show developers how accessible it has become with modern tools.',
       'During the workshop, Bruno Simon (creator of Three.js Journey) led a session on shaders using pure Three.js.',
-      'This presentation itself serves as a live example of what\'s possible with React Three Fiber and modern web 3D.',
+      "This presentation itself serves as a live example of what's possible with React Three Fiber and modern web 3D.",
     ],
     type: 'content',
     iframe: 'https://workshop-shaders.vercel.app/',
@@ -281,43 +281,50 @@ export const presentationSlides: PresentationSlide[] = [
     tools: [
       {
         name: 'Blender',
-        description: 'Free and open-source 3D creation suite for modeling, animation, rendering, and more.',
+        description:
+          'Free and open-source 3D creation suite for modeling, animation, rendering, and more.',
         url: 'https://www.blender.org/',
         category: '3D Modeling',
         nerdLevel: 3,
       },
       {
         name: 'Spline',
-        description: 'Web-based 3D design tool for creating interactive 3D experiences without code. Perfect for those who don\'t want to learn Three.js - build an interactive rocketship and publish it online in less than 40 minutes!',
+        description:
+          "Web-based 3D design tool for creating interactive 3D experiences without code. Perfect for those who don't want to learn Three.js - build an interactive rocketship and publish it online in less than 40 minutes!",
         url: 'https://spline.design/',
         category: '3D Design',
-        workshopUrl: 'https://thenorthalliance.notion.site/Spline-Workshop-1b2cf2f6604a8079876bd7b025269ed5',
+        workshopUrl:
+          'https://thenorthalliance.notion.site/Spline-Workshop-1b2cf2f6604a8079876bd7b025269ed5',
         nerdLevel: 1,
       },
       {
         name: 'Three.js',
-        description: 'JavaScript 3D library that makes WebGL accessible. The industry standard for web 3D.',
+        description:
+          'JavaScript 3D library that makes WebGL accessible. The industry standard for web 3D.',
         url: 'https://threejs.org/',
         category: 'Library',
         nerdLevel: 4,
       },
       {
         name: 'React Three Fiber',
-        description: 'React renderer for Three.js. Declarative 3D in React with hooks and components.',
+        description:
+          'React renderer for Three.js. Declarative 3D in React with hooks and components.',
         url: 'https://docs.pmnd.rs/react-three-fiber',
         category: 'Library',
         nerdLevel: 4,
       },
       {
         name: '@react-three/drei',
-        description: 'Useful helpers for React Three Fiber. Pre-built components, controls, and utilities.',
+        description:
+          'Useful helpers for React Three Fiber. Pre-built components, controls, and utilities.',
         url: 'https://github.com/pmndrs/drei',
         category: 'Library',
         nerdLevel: 3,
       },
       {
         name: 'WebGL / WebGPU',
-        description: 'Low-level graphics APIs that power 3D on the web. Hardware-accelerated rendering.',
+        description:
+          'Low-level graphics APIs that power 3D on the web. Hardware-accelerated rendering.',
         url: 'https://www.khronos.org/webgl/',
         category: 'API',
         nerdLevel: 5,
@@ -431,7 +438,7 @@ export const presentationSlides: PresentationSlide[] = [
       'Accessibility: 3D interfaces can be challenging for screen readers and keyboard navigation.',
       'Performance: Not all devices can handle complex 3D scenes smoothly, especially older or low-end devices.',
       'Motion Sensitivity: Some users may experience motion sickness or discomfort with 3D animations and camera movements.',
-      'Progressive Enhancement: Always provide fallbacks for users who can\'t or don\'t want 3D experiences.',
+      "Progressive Enhancement: Always provide fallbacks for users who can't or don't want 3D experiences.",
       'SEO: 3D content is harder for search engines to index and understand compared to traditional HTML content.',
       'Development Complexity: 3D projects often require more specialized knowledge and longer development cycles.',
     ],
@@ -448,14 +455,15 @@ export const presentationSlides: PresentationSlide[] = [
     title: 'Real-World Success Stories',
     subtitle: '3D in Action',
     content: [
-      'These industry leaders prove that 3D isn\'t just a gimmick—it\'s a powerful tool that drives real business results.',
+      "These industry leaders prove that 3D isn't just a gimmick—it's a powerful tool that drives real business results.",
     ],
     type: 'content',
     category: 'Examples',
     examples: [
       {
         name: 'IKEA Place',
-        description: 'AR furniture placement transforms shopping by letting customers visualize products in their actual homes.',
+        description:
+          'AR furniture placement transforms shopping by letting customers visualize products in their actual homes.',
         // TODO: Replace Giphy placeholder with actual screenshot of IKEA Place app
         // Image should be: Screenshot of IKEA Place AR interface showing furniture placement
         image: 'https://media.giphy.com/media/3o7aD2saX2qRlZe8I0/giphy.gif',
@@ -463,7 +471,8 @@ export const presentationSlides: PresentationSlide[] = [
       },
       {
         name: 'Nike',
-        description: '3D shoe customization and virtual try-on create engaging experiences that reduce returns and increase satisfaction.',
+        description:
+          '3D shoe customization and virtual try-on create engaging experiences that reduce returns and increase satisfaction.',
         // TODO: Replace Giphy placeholder with actual screenshot of Nike 3D customization
         // Image should be: Screenshot of Nike's 3D shoe configurator or virtual try-on
         image: 'https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif',
@@ -471,7 +480,8 @@ export const presentationSlides: PresentationSlide[] = [
       },
       {
         name: 'Warby Parker',
-        description: 'Virtual try-on for glasses eliminates guesswork, helping customers find the perfect fit from home.',
+        description:
+          'Virtual try-on for glasses eliminates guesswork, helping customers find the perfect fit from home.',
         // TODO: Replace Giphy placeholder with actual screenshot of Warby Parker virtual try-on
         // Image should be: Screenshot of Warby Parker's virtual try-on interface
         image: 'https://media.giphy.com/media/l0HlNQ03f4h1x8s2k/giphy.gif',
@@ -479,7 +489,8 @@ export const presentationSlides: PresentationSlide[] = [
       },
       {
         name: 'BMW',
-        description: 'Interactive 3D car configurators let customers customize every detail, creating emotional connection before purchase.',
+        description:
+          'Interactive 3D car configurators let customers customize every detail, creating emotional connection before purchase.',
         // TODO: Replace Giphy placeholder with actual screenshot of BMW car configurator
         // Image should be: Screenshot of BMW's 3D car configurator interface
         image: 'https://media.giphy.com/media/3o7aD2saX2qRlZe8I0/giphy.gif',
@@ -511,8 +522,8 @@ export const presentationSlides: PresentationSlide[] = [
     content: [
       'Bruno Simon, creator of Three.js Journey, led a workshop on shaders at the Awwwards Conference.',
       'This interactive demo showcases advanced shader techniques using pure Three.js (not React Three Fiber).',
-      'It demonstrates the flexibility of the Three.js ecosystem and what\'s possible with shaders.',
-      'Bruno\'s portfolio is a stunning example of what can be built with Three.js and creative development.',
+      "It demonstrates the flexibility of the Three.js ecosystem and what's possible with shaders.",
+      "Bruno's portfolio is a stunning example of what can be built with Three.js and creative development.",
     ],
     type: 'content',
     category: 'Examples',
@@ -537,4 +548,3 @@ export const presentationSlides: PresentationSlide[] = [
     category: 'Conclusion',
   },
 ];
-

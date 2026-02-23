@@ -1,4 +1,4 @@
-import { DEFAULT_LIGHT_POSITION, DEFAULT_LIGHT_INTENSITY } from './index';
+import { DEFAULT_LIGHT_INTENSITY, DEFAULT_LIGHT_POSITION } from './index';
 
 // Scene configuration constants
 export const SCENE_CONFIG = {

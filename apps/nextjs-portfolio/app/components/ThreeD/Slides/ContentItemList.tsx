@@ -34,16 +34,16 @@ const ContentItemRenderer = ({
       key={`${index}-${level}`}
       className={cn('flex items-start gap-4 min-w-0', isNested ? 'pl-6 md:pl-8' : 'group')}
     >
-      <div className="shrink-0 mt-2">
+      <div className='shrink-0 mt-2'>
         {isNested ? (
           // Sub-bullet: smaller dash (no hover effects)
-          <div className="w-3 h-0.5 bg-accent/70" />
+          <div className='w-3 h-0.5 bg-accent/70' />
         ) : (
           // Main bullet: accent-colored dot (with hover effects)
-          <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200" />
+          <div className='w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200' />
         )}
       </div>
-      <div className="flex-1">
+      <div className='flex-1'>
         {url ? (
           // Render as link
           <a
@@ -54,7 +54,7 @@ const ContentItemRenderer = ({
               'leading-relaxed transition-colors break-words inline-block',
               isNested
                 ? 'text-base md:text-lg lg:text-xl text-accent'
-                : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline'
+                : 'text-lg md:text-xl lg:text-2xl text-accent hover:text-accent/80 hover:underline',
             )}
           >
             {cleanText}
@@ -66,14 +66,14 @@ const ContentItemRenderer = ({
               'leading-relaxed break-words',
               isNested
                 ? 'text-base md:text-lg lg:text-xl text-foreground/80'
-                : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors'
+                : 'text-lg md:text-xl lg:text-2xl text-foreground/90 group-hover:text-foreground transition-colors',
             )}
           >
             {cleanText}
           </span>
         )}
         {children && children.length > 0 && (
-          <ul className="mt-3 space-y-3 list-none">
+          <ul className='mt-3 space-y-3 list-none'>
             {children
               .filter(child => {
                 if (typeof child === 'string') {
@@ -113,7 +113,7 @@ export const ContentItemList = ({ items, slideDesign }: ContentItemListProps) =>
           ? 'space-y-4 md:space-y-5'
           : slideDesign === 'hero'
             ? 'space-y-6 md:space-y-8'
-            : 'space-y-5 md:space-y-6'
+            : 'space-y-5 md:space-y-6',
       )}
     >
       {filteredItems.map((item, itemIndex) => (

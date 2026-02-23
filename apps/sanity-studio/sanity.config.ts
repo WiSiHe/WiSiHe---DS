@@ -1,13 +1,13 @@
 /* global process */
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import { presentationTool } from 'sanity/presentation';
 
+import { assist } from '@sanity/assist';
+import { visionTool } from '@sanity/vision';
+import { defineConfig } from 'sanity';
+import { presentationTool } from 'sanity/presentation';
+import { structureTool } from 'sanity/structure';
+import { media } from 'sanity-plugin-media';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
-import { assist } from '@sanity/assist';
-import { media } from 'sanity-plugin-media';
-import { visionTool } from '@sanity/vision';
 
 export const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
 export const dataset = process.env.SANITY_STUDIO_DATASET;

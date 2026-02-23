@@ -1,6 +1,5 @@
 // Preload the beer can model
-import { useGLTF } from '@react-three/drei';
-import { useTexture } from '@react-three/drei';
+import { useGLTF, useTexture } from '@react-three/drei';
 import { TEXTURE_OPTIONS } from '../constants';
 
 // Preload the beer can model
@@ -19,19 +18,19 @@ if (typeof globalThis.window !== 'undefined') {
   });
 }
 
-// Export all scenes
-export { PersistentScene } from './PersistentScene';
-export { SceneLights } from './SceneLights';
 export { BeerCanScene } from './BeerCanScene';
-export { IntroScene } from './IntroScene';
-export { VerticesScene } from './VerticesScene';
 export { EdgesScene } from './EdgesScene';
 export { FacesScene } from './FacesScene';
-export { ThreeJSIntroScene } from './ThreeJSIntroScene';
-export { R3FFirstScene } from './R3FFirstScene';
-export { R3FBasicsScene } from './R3FBasicsScene';
-export { R3FMaterialsScene } from './R3FMaterialsScene';
-export { R3FGeometriesScene } from './R3FGeometriesScene';
+export { IntroScene } from './IntroScene';
+// Export all scenes
+export { PersistentScene } from './PersistentScene';
 export { R3FAnimationScene } from './R3FAnimationScene';
+export { R3FBasicsScene } from './R3FBasicsScene';
+export { R3FFirstScene } from './R3FFirstScene';
+export { R3FGeometriesScene } from './R3FGeometriesScene';
 export { R3FInteractionScene } from './R3FInteractionScene';
+export { R3FMaterialsScene } from './R3FMaterialsScene';
+export { SceneLights } from './SceneLights';
 export { ShowcaseScene } from './ShowcaseScene';
+export { ThreeJSIntroScene } from './ThreeJSIntroScene';
+export { VerticesScene } from './VerticesScene';

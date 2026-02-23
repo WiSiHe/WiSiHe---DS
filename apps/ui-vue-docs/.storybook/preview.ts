@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/vue3-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview } from '@storybook/vue3-vite';
 import '../src/styles.css';
 
 const preview: Preview = {

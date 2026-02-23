@@ -1,7 +1,6 @@
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 import type { StorybookConfig } from '@storybook/react-vite';
-
-import { join, dirname } from 'path';
-import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 
@@ -14,8 +13,8 @@ function getAbsolutePath(value: string): string {
 }
 const config: StorybookConfig = {
   stories: [
-    getAbsolutePath('@wisihe/ui-react') + '/src/**/*.mdx',
-    getAbsolutePath('@wisihe/ui-react') + '/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'
+    `${getAbsolutePath('@wisihe/ui-react')}/src/**/*.mdx`,
+    `${getAbsolutePath('@wisihe/ui-react')}/src/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
   ],
   addons: [
     getAbsolutePath('@chromatic-com/storybook'),

@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/svelte-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview } from '@storybook/svelte-vite';
 import '../src/styles.css';
 
 const preview: Preview = {

@@ -2,12 +2,17 @@
 
 import { cn } from '@wisihe/utils';
 import type { PresentationSlide } from '../../../three-d/types';
-import { getLayoutClasses, getContentClasses, getMediaContainerClasses, type SlideDesign } from './utils';
-import { SlideHeader } from './SlideHeader';
-import { SlideContent } from './SlideContent';
-import { SlideSources } from './SlideSources';
-import { SlideMedia } from './SlideMedia';
 import { ExampleSlideLayout } from './ExampleSlideLayout';
+import { SlideContent } from './SlideContent';
+import { SlideHeader } from './SlideHeader';
+import { SlideMedia } from './SlideMedia';
+import { SlideSources } from './SlideSources';
+import {
+  getContentClasses,
+  getLayoutClasses,
+  getMediaContainerClasses,
+  type SlideDesign,
+} from './utils';
 
 interface ContentSlideProps {
   slideData: PresentationSlide;
@@ -29,13 +34,7 @@ export const ContentSlide = ({
 
   // If examples exist, use interactive example selection layout
   if (slideData.examples && slideData.examples.length > 0) {
-    return (
-      <ExampleSlideLayout
-        slideData={slideData}
-        index={index}
-        slideDesign={slideDesign}
-      />
-    );
+    return <ExampleSlideLayout slideData={slideData} index={index} slideDesign={slideDesign} />;
   }
 
   // Default layout for non-example slides
@@ -44,14 +43,14 @@ export const ContentSlide = ({
       className={cn(
         'w-full h-full overflow-hidden max-w-full',
         getLayoutClasses(slideDesign),
-        'p-6 md:p-8 lg:p-12 xl:p-16'
+        'p-6 md:p-8 lg:p-12 xl:p-16',
       )}
     >
       {/* Content Section */}
       <article
         className={cn(
           getContentClasses(slideDesign),
-          'overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2'
+          'overflow-y-auto max-h-full overflow-x-hidden min-w-0 max-w-full px-2',
         )}
       >
         <SlideHeader category={slideData.category} index={index} />
@@ -63,7 +62,10 @@ export const ContentSlide = ({
 
       {/* Media Section */}
       <div
-        className={cn(getMediaContainerClasses(slideDesign), slideDesign === 'full-width' && 'order-first')}
+        className={cn(
+          getMediaContainerClasses(slideDesign),
+          slideDesign === 'full-width' && 'order-first',
+        )}
       >
         <SlideMedia
           slideData={slideData}

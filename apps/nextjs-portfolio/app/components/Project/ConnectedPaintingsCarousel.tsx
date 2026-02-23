@@ -1,13 +1,13 @@
 'use client';
 
-import { ProjectQueryResult } from '@wisihe/sanity-queries';
-import { urlForImage } from '@/sanity/lib/utils';
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { isNotEmptyArray } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
+import { useCallback, useEffect, useState } from 'react';
+import { urlForImage } from '@/sanity/lib/utils';
 
 interface ConnectedPaintingsCarouselProps {
   paintings: NonNullable<ProjectQueryResult>['connectedPaintings'];
@@ -68,7 +68,7 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
     };
   }, [emblaApi, onSelect, onInit]);
 
-  const handleLinkClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLinkClick = useCallback((_e: React.MouseEvent<HTMLAnchorElement>) => {
     // Allow normal link navigation - no lightbox
     // Event propagation is already stopped in onPointerDown, so clicks work correctly
   }, []);
@@ -82,12 +82,12 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
   if (!isNotEmptyArray(paintings)) return null;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold font-serif text-foreground">Connected Paintings</h2>
+    <div className='space-y-4'>
+      <h2 className='text-xl font-semibold font-serif text-foreground'>Connected Paintings</h2>
 
-      <div className="relative">
-        <div className="overflow-hidden rounded-xl border border-border/20" ref={emblaRef}>
-          <div className="flex gap-4">
+      <div className='relative'>
+        <div className='overflow-hidden rounded-xl border border-border/20' ref={emblaRef}>
+          <div className='flex gap-4'>
             {paintings.map(painting => {
               const { image, slug, title } = painting;
               if (!image || !slug) return null;
@@ -95,27 +95,27 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
               return (
                 <div
                   key={`${slug}-${title}`}
-                  className="flex-[0_0_auto] min-w-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
+                  className='flex-[0_0_auto] min-w-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4'
                 >
                   <Link
                     href={`/paintings/${slug}`}
-                    className="relative aspect-square group transition-transform hover:scale-105 block rounded-xl overflow-hidden"
+                    className='relative aspect-square group transition-transform hover:scale-105 block rounded-xl overflow-hidden'
                     onClick={handleLinkClick}
                     onPointerDown={handleLinkPointerDown}
-                    onMouseDown={(e) => e.stopPropagation()}
+                    onMouseDown={e => e.stopPropagation()}
                   >
                     <Image
                       src={urlForImage(image)?.width(400).fit('max')?.url() || ''}
                       alt={title || 'Connected painting'}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover transition-opacity group-hover:opacity-90 pointer-events-none"
-                      loading="lazy"
+                      sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                      className='object-cover transition-opacity group-hover:opacity-90 pointer-events-none'
+                      loading='lazy'
                       draggable={false}
                     />
                     {title && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/65 backdrop-blur-md text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                        <p className="text-sm font-medium truncate">{title}</p>
+                      <div className='absolute bottom-0 left-0 right-0 bg-black/65 backdrop-blur-md text-white p-2 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity'>
+                        <p className='text-sm font-medium truncate'>{title}</p>
                       </div>
                     )}
                   </Link>
@@ -126,19 +126,19 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex justify-between items-center mt-4">
+        <div className='flex justify-between items-center mt-4'>
           <button
-            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+            className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            aria-label="Scroll to previous painting"
+            aria-label='Scroll to previous painting'
           >
-            <IconArrowNarrowLeft className="w-6 h-6" />
+            <IconArrowNarrowLeft className='w-6 h-6' />
           </button>
 
           {/* Dots navigation */}
           {scrollSnaps.length > 1 && (
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               {scrollSnaps.map((_, index) => (
                 <button
                   key={index}
@@ -155,12 +155,12 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
           )}
 
           <button
-            className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+            className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
             onClick={scrollNext}
             disabled={!canScrollNext}
-            aria-label="Scroll to next painting"
+            aria-label='Scroll to next painting'
           >
-            <IconArrowNarrowRight className="w-6 h-6" />
+            <IconArrowNarrowRight className='w-6 h-6' />
           </button>
         </div>
       </div>

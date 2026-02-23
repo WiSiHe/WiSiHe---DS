@@ -7,8 +7,7 @@
     "dev": "next dev --turbo -p 1992",
     "prebuild": "pnpm --filter @wisihe/tokens build && pnpm --filter sanity-studio typegen",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --ignore-pattern .agent/**"
+    "start": "next start"
   },
   "dependencies": {
     "@flags-sdk/statsig": "^0.2.5",
@@ -63,8 +62,6 @@
     "@types/react-dom": "19.2.3",
     "@types/reveal.js": "^5.2.2",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9.39.3",
-    "eslint-config-next": "16.0.7",
     "postcss": "^8.5.6",
     "shadcn": "^3.8.5",
     "tailwindcss": "^4.2.0",

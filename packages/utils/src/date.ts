@@ -10,7 +10,7 @@ export function formatDate(date: string): string {
 
   const dateObj = new Date(date);
 
-  if (isNaN(dateObj.getTime())) {
+  if (Number.isNaN(dateObj.getTime())) {
     return 'Invalid Date';
   }
 

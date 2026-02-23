@@ -1,11 +1,17 @@
-@import '@wisihe/tokens/css';
-@import '@wisihe/tokens/css/semantic';
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
 
 @layer base {
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      sans-serif;
     padding: 1rem;
   }
 }

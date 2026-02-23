@@ -1,6 +1,7 @@
 // app/sitemap.ts
-import { getStaticSlugs } from '@/sanity/lib/queries';
+
 import type { MetadataRoute } from 'next';
+import { getStaticSlugs } from '@/sanity/lib/queries';
 
 type SanityDocument = {
   slug: string;

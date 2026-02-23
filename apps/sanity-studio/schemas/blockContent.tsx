@@ -1,4 +1,4 @@
-import { defineType, defineArrayMember, defineField, ValidationContext } from 'sanity';
+import { defineArrayMember, defineField, defineType, type ValidationContext } from 'sanity';
 
 /**
  * This is the schema definition for the rich text fields used for

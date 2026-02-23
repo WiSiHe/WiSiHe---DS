@@ -13,22 +13,22 @@ export const SlideSources = ({ sources, variant = 'default' }: SlideSourcesProps
     <div
       className={cn(
         'max-w-6xl mx-auto w-full border-t border-border/30',
-        variant === 'compact' ? 'mt-6 md:mt-8 pt-6 md:pt-8' : 'mt-12 pt-8'
+        variant === 'compact' ? 'mt-6 md:mt-8 pt-6 md:pt-8' : 'mt-12 pt-8',
       )}
     >
-      <p className="text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider">
+      <p className='text-sm font-semibold text-foreground/60 mb-4 uppercase tracking-wider'>
         Sources:
       </p>
-      <ul className="space-y-2">
+      <ul className='space-y-2'>
         {sources.map((source, sourceIndex) => (
-          <li key={sourceIndex} className="text-sm text-foreground/50 flex items-start">
-            <span className="mr-2 text-accent">•</span>
+          <li key={sourceIndex} className='text-sm text-foreground/50 flex items-start'>
+            <span className='mr-2 text-accent'>•</span>
             {source.url ? (
               <a
                 href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:underline transition-colors"
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-accent hover:underline transition-colors'
               >
                 {source.text}
               </a>

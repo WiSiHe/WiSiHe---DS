@@ -1,11 +1,11 @@
 'use client';
 
-import { HomePageQueryResult } from '@wisihe/sanity-queries';
-import { urlForImage } from '@/sanity/lib/utils';
 import { IconArrowRight } from '@tabler/icons-react';
+import type { HomePageQueryResult } from '@wisihe/sanity-queries';
+import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { cn } from '@wisihe/utils';
+import { urlForImage } from '@/sanity/lib/utils';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
@@ -20,21 +20,21 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
   const displayedProjects = showcaseProjects.slice(0, 3);
 
   return (
-    <section className="bg-background py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+    <section className='bg-background py-24 md:py-32'>
+      <div className='max-w-7xl mx-auto px-4 md:px-8 lg:px-12'>
         {/* Header Section */}
-        <div className="w-full max-w-4xl mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-8 text-foreground">
+        <div className='w-full max-w-4xl mb-16 md:mb-24'>
+          <h2 className='text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-serif mb-8 text-foreground'>
             Featured Projects
           </h2>
-          <div className="w-full min-w-0 max-w-3xl space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed">
-            <p className="text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]">
+          <div className='w-full min-w-0 max-w-3xl space-y-6 text-lg md:text-xl text-foreground-subtle leading-relaxed'>
+            <p className='text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]'>
               I specialize in bridging the gap between design and engineering, creating digital
               experiences that are both visually stunning and technically robust. My work often
               revolves around high-performance web applications, interactive 3D environments, and
               scalable design systems.
             </p>
-            <p className="text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]">
+            <p className='text-pretty whitespace-normal wrap-normal [word-break:normal] [hyphens:none]'>
               Here's a selection of projects where I've pushed the boundaries of what's possible on
               the web, combining creative front-end development with solid architectural
               foundations.
@@ -43,10 +43,12 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12'>
           {displayedProjects.map(project => {
             const year = project.projectStart ? new Date(project.projectStart).getFullYear() : null;
-            const imageUrl = project.image ? urlForImage(project.image)?.width(1000).height(800).quality(80).url() : null;
+            const imageUrl = project.image
+              ? urlForImage(project.image)?.width(1000).height(800).quality(80).url()
+              : null;
 
             return (
               <Link
@@ -56,49 +58,49 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
                   'relative group flex flex-col h-full overflow-hidden rounded-2xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
                 )}
               >
-                <article
-                  className="flex flex-col h-full"
-                >
-                 <div className="relative aspect-square overflow-hidden">
-                  {imageUrl ? (
-                    <Image
-                      src={imageUrl}
-                      alt={project.seo?.title || project.title || 'Project Image'}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-surface flex items-center justify-center text-foreground-muted">
-                      No Image
-                    </div>
-                  )}
+                <article className='flex flex-col h-full'>
+                  <div className='relative aspect-square overflow-hidden'>
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={project.seo?.title || project.title || 'Project Image'}
+                        fill
+                        className='object-cover transition-transform duration-500 group-hover:scale-105'
+                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                      />
+                    ) : (
+                      <div className='w-full h-full bg-surface flex items-center justify-center text-foreground-muted'>
+                        No Image
+                      </div>
+                    )}
                     {/* Subtle overlay */}
-                  <div className="absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-                     
-                {/* Content */}
-                <div className="p-6 md:p-8 flex flex-col grow">
-                  <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-bold tracking-widest text-accent uppercase">
+                    <div className='absolute inset-0 bg-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+                  </div>
+
+                  {/* Content */}
+                  <div className='p-6 md:p-8 flex flex-col grow'>
+                    <div className='flex items-center justify-between mb-4'>
+                      <span className='text-xs font-bold tracking-widest text-accent uppercase'>
                         {project.name}
                       </span>
-                    {year && <span className="text-xs font-mono text-foreground-muted">{year}</span>}
-                  </div>  
+                      {year && (
+                        <span className='text-xs font-mono text-foreground-muted'>{year}</span>
+                      )}
+                    </div>
 
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
-                    {project.title}
-                  </h3>
+                    <h3 className='text-2xl font-bold mb-4 group-hover:text-accent transition-colors'>
+                      {project.title}
+                    </h3>
 
-                  <p className="text-foreground-subtle text-sm md:text-base leading-relaxed mb-6 line-clamp-3">
-                    {(project.seo?.description || project.description) ?? undefined}
-                  </p>
+                    <p className='text-foreground-subtle text-sm md:text-base leading-relaxed mb-6 line-clamp-3'>
+                      {(project.seo?.description || project.description) ?? undefined}
+                    </p>
 
-                  <div className="mt-auto pt-6 flex items-center gap-2 text-accent font-semibold text-sm">
-                    View Case Study
-                    <IconArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    <div className='mt-auto pt-6 flex items-center gap-2 text-accent font-semibold text-sm'>
+                      View Case Study
+                      <IconArrowRight className='w-4 h-4 transition-transform group-hover:translate-x-1' />
+                    </div>
                   </div>
-                </div>
                 </article>
               </Link>
             );
@@ -106,13 +108,13 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         </div>
 
         {/* Global CTA */}
-        <div className="mt-16 md:mt-24 flex justify-center">
+        <div className='mt-16 md:mt-24 flex justify-center'>
           <Link
-            href="/projects"
-            className="inline-flex items-center gap-3 bg-accent text-accent-contrast px-8 py-4 rounded-full border border-accent-border font-bold transition-all duration-300 hover:brightness-105 group"
+            href='/projects'
+            className='inline-flex items-center gap-3 bg-accent text-accent-contrast px-8 py-4 rounded-full border border-accent-border font-bold transition-all duration-300 hover:brightness-105 group'
           >
             Explore all projects
-            <IconArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            <IconArrowRight className='w-5 h-5 transition-transform group-hover:translate-x-1' />
           </Link>
         </div>
       </div>

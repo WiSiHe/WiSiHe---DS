@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { cva } from 'class-variance-authority';
 import { cn } from '@wisihe/utils';
+import { cva } from 'class-variance-authority';
 
 const badge = cva(
   'inline-flex items-center rounded-full border font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',

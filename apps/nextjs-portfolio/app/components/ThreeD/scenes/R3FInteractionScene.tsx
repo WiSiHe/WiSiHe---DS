@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, forwardRef } from 'react';
-import * as THREE from 'three';
+import { forwardRef, useState } from 'react';
+import type * as THREE from 'three';
 
-export const R3FInteractionScene = forwardRef<THREE.Mesh>((props, ref) => {
+export const R3FInteractionScene = forwardRef<THREE.Mesh>((_props, ref) => {
   // Standard React state for interaction
   // These trigger a re-render when changed
   const [hovered, setHover] = useState(false);

@@ -1,6 +1,6 @@
-import React from 'react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type React from 'react';
 
 const card = cva('rounded-lg border', {
   variants: {

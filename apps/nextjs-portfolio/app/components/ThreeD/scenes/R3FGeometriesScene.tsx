@@ -1,10 +1,10 @@
 'use client';
 
 import { forwardRef } from 'react';
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import { COLORS } from '../constants';
 
-export const R3FGeometriesScene = forwardRef<THREE.Group>((props, ref) => {
+export const R3FGeometriesScene = forwardRef<THREE.Group>((_props, ref) => {
   return (
     <group ref={ref}>
       <mesh position={[-2.5, 0, 0]}>

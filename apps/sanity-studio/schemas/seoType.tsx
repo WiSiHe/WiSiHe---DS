@@ -33,11 +33,11 @@ export const seoType = defineType({
             }}
             characterLimit={160}
             rows={3}
-            placeholder="AI-generated SEO description will appear here..."
+            placeholder='AI-generated SEO description will appear here...'
             transformResponse={response => {
               // Ensure the response is within character limits
               const cleaned = response.replace(/"/g, '').trim();
-              return cleaned.length > 160 ? cleaned.substring(0, 157) + '...' : cleaned;
+              return cleaned.length > 160 ? `${cleaned.substring(0, 157)}...` : cleaned;
             }}
           />
         ),

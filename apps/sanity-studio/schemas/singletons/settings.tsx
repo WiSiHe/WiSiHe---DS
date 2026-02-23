@@ -1,5 +1,5 @@
-import {CogIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { CogIcon } from '@sanity/icons';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export default defineType({
   name: 'settings',
@@ -14,7 +14,7 @@ export default defineType({
         'The title of your website. Appears in browser tabs and as the primary title for search engines.',
       title: 'Website Title',
       type: 'string',
-      validation: (rule) =>
+      validation: rule =>
         rule
           .required()
           .max(60)
@@ -28,7 +28,7 @@ export default defineType({
         'Used for the meta description tag. Essential for SEO and appears in search engine results.',
       title: 'Meta Description',
       type: 'text',
-      validation: (rule) =>
+      validation: rule =>
         rule
           .required()
           .max(160)
@@ -52,13 +52,13 @@ export default defineType({
             'Describes the image for accessibility and SEO. This is crucial for users with visual impairments.',
           title: 'Alt Text',
           type: 'string',
-          validation: (rule) => {
+          validation: rule => {
             return rule.custom((alt, context) => {
               if ((context.document?.ogImage as any)?.asset?._ref && !alt) {
-                return 'Alt text is required when an Open Graph image is provided.'
+                return 'Alt text is required when an Open Graph image is provided.';
               }
-              return true
-            })
+              return true;
+            });
           },
         }),
       ],
@@ -77,8 +77,8 @@ export default defineType({
           description: 'The card type, e.g., "summary" or "summary_large_image".',
           options: {
             list: [
-              {title: 'Summary', value: 'summary'},
-              {title: 'Summary with Large Image', value: 'summary_large_image'},
+              { title: 'Summary', value: 'summary' },
+              { title: 'Summary with Large Image', value: 'summary_large_image' },
             ],
             layout: 'radio',
           },
@@ -119,8 +119,8 @@ export default defineType({
       description:
         'A list of keywords to improve search engine visibility. Separate keywords with commas.',
       type: 'array',
-      of: [defineArrayMember({type: 'string'})],
-      validation: (rule) =>
+      of: [defineArrayMember({ type: 'string' })],
+      validation: rule =>
         rule
           .unique()
           .max(15)
@@ -134,7 +134,7 @@ export default defineType({
       title: 'Metadata Base URL',
       description:
         'Base URL for generating canonical and structured metadata. Typically your website’s domain.',
-      validation: (rule) =>
+      validation: rule =>
         rule.uri({
           allowRelative: false,
           scheme: ['http', 'https'],
@@ -154,22 +154,22 @@ export default defineType({
           title: 'Type',
           type: 'string',
           description: 'The type of structured data (e.g., "Website", "Organization", "Person").',
-          validation: (rule) => rule.required(),
+          validation: rule => rule.required(),
         }),
         defineField({
           name: 'data',
           title: 'JSON-LD Data',
           type: 'text',
           description: 'Paste valid JSON-LD code here. Use a generator or write manually.',
-          validation: (rule) => {
-            return rule.custom((data) => {
+          validation: rule => {
+            return rule.custom(data => {
               try {
-                JSON.parse(data)
-                return true
+                JSON.parse(data);
+                return true;
               } catch {
-                return 'Invalid JSON format.'
+                return 'Invalid JSON format.';
               }
-            })
+            });
           },
         }),
       ],
@@ -191,9 +191,9 @@ export default defineType({
               name: 'platform',
               title: 'Platform',
               type: 'string',
-              validation: (rule) => rule.required(),
+              validation: rule => rule.required(),
             },
-            {name: 'url', title: 'URL', type: 'url', validation: (rule) => rule.required()},
+            { name: 'url', title: 'URL', type: 'url', validation: rule => rule.required() },
           ],
         }),
       ],
@@ -204,7 +204,7 @@ export default defineType({
     prepare() {
       return {
         title: 'Settings',
-      }
+      };
     },
   },
-})
+});

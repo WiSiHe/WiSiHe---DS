@@ -1,24 +1,24 @@
-import React from 'react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type React from 'react';
 
 function LoadingIcon(): React.ReactElement {
   return (
     <svg
-      className="animate-spin size-5"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
+      className='animate-spin size-5'
+      fill='none'
+      stroke='currentColor'
+      viewBox='0 0 24 24'
+      xmlns='http://www.w3.org/2000/svg'
     >
-      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
-      <g id="SVGRepo_iconCarrier">
+      <g id='SVGRepo_bgCarrier' strokeWidth='0' />
+      <g id='SVGRepo_tracerCarrier' strokeLinecap='round' strokeLinejoin='round' />
+      <g id='SVGRepo_iconCarrier'>
         <path
-          d="M20.0001 12C20.0001 13.3811 19.6425 14.7386 18.9623 15.9405C18.282 17.1424 17.3022 18.1477 16.1182 18.8587C14.9341 19.5696 13.5862 19.9619 12.2056 19.9974C10.825 20.0328 9.45873 19.7103 8.23975 19.0612"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="3.55556"
+          d='M20.0001 12C20.0001 13.3811 19.6425 14.7386 18.9623 15.9405C18.282 17.1424 17.3022 18.1477 16.1182 18.8587C14.9341 19.5696 13.5862 19.9619 12.2056 19.9974C10.825 20.0328 9.45873 19.7103 8.23975 19.0612'
+          stroke='currentColor'
+          strokeLinecap='round'
+          strokeWidth='3.55556'
         />
       </g>
     </svg>
@@ -35,18 +35,8 @@ const button = cva('button', {
         'hover:bg-accent-hover',
         'stroke-accent-contrast',
       ],
-      secondary: [
-        'bg-surface',
-        'text-foreground',
-        'border-border',
-        'hover:bg-surface-hover',
-      ],
-      tertiary: [
-        'bg-transparent',
-        'text-accent',
-        'border-transparent',
-        'hover:bg-accent-subtle',
-      ],
+      secondary: ['bg-surface', 'text-foreground', 'border-border', 'hover:bg-surface-hover'],
+      tertiary: ['bg-transparent', 'text-accent', 'border-transparent', 'hover:bg-accent-subtle'],
       destructive: [
         'bg-danger',
         'text-danger-contrast',

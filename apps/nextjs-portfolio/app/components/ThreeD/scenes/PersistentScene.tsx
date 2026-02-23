@@ -1,24 +1,24 @@
 'use client';
 
-import { useRef } from 'react';
 import { OrbitControls } from '@react-three/drei';
-import * as THREE from 'three';
+import { useRef } from 'react';
+import type * as THREE from 'three';
 import type { SlideMode } from '../../../three-d/types';
-import { SceneLights } from './SceneLights';
 import { useSceneAnimation } from '../hooks/useSceneAnimation';
-import { IntroScene } from './IntroScene';
-import { VerticesScene } from './VerticesScene';
+import type { LightConfig } from '../types';
 import { EdgesScene } from './EdgesScene';
 import { FacesScene } from './FacesScene';
-import { ThreeJSIntroScene } from './ThreeJSIntroScene';
-import { R3FFirstScene } from './R3FFirstScene';
-import { R3FBasicsScene } from './R3FBasicsScene';
-import { R3FMaterialsScene } from './R3FMaterialsScene';
-import { R3FGeometriesScene } from './R3FGeometriesScene';
+import { IntroScene } from './IntroScene';
 import { R3FAnimationScene } from './R3FAnimationScene';
+import { R3FBasicsScene } from './R3FBasicsScene';
+import { R3FFirstScene } from './R3FFirstScene';
+import { R3FGeometriesScene } from './R3FGeometriesScene';
 import { R3FInteractionScene } from './R3FInteractionScene';
+import { R3FMaterialsScene } from './R3FMaterialsScene';
+import { SceneLights } from './SceneLights';
 import { ShowcaseScene } from './ShowcaseScene';
-import type { LightConfig } from '../types';
+import { ThreeJSIntroScene } from './ThreeJSIntroScene';
+import { VerticesScene } from './VerticesScene';
 
 interface PersistentSceneProps {
   mode: SlideMode;
@@ -74,9 +74,17 @@ export function PersistentScene({
   // Enable OrbitControls for intro slides and everything from R3F Basics onwards
   // As requested, we introduce camera controls early to allow exploration
   const enableOrbit = [
-    'intro', 'vertices', 'edges', 'faces', 
-    'r3f-basics', 'r3f-first-scene', 'r3f-geometries', 
-    'r3f-materials', 'r3f-animation', 'r3f-interaction', 'showcase'
+    'intro',
+    'vertices',
+    'edges',
+    'faces',
+    'r3f-basics',
+    'r3f-first-scene',
+    'r3f-geometries',
+    'r3f-materials',
+    'r3f-animation',
+    'r3f-interaction',
+    'showcase',
   ].includes(mode);
 
   return (

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Hook to lazy load iframes based on visibility
 export const useLazyIframe = () => {
@@ -7,7 +7,7 @@ export const useLazyIframe = () => {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -15,7 +15,7 @@ export const useLazyIframe = () => {
           // Keep observing to unload if far off-screen (optional optimization)
         }
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { threshold: 0.1, rootMargin: '50px' },
     );
 
     observer.observe(containerRef.current);

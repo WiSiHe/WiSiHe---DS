@@ -1,6 +1,6 @@
-import React from 'react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type React from 'react';
 
 const skeletonVariants = cva('bg-surface-hover', {
   variants: {
@@ -25,12 +25,7 @@ export interface SkeletonProps
     VariantProps<typeof skeletonVariants> {}
 
 export function Skeleton({ className, variant, animation, ...props }: SkeletonProps) {
-  return (
-    <div
-      className={cn(skeletonVariants({ variant, animation }), className)}
-      {...props}
-    />
-  );
+  return <div className={cn(skeletonVariants({ variant, animation }), className)} {...props} />;
 }
 
 Skeleton.displayName = 'Skeleton';

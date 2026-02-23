@@ -21,11 +21,7 @@ export function VerticesScene() {
 
   return (
     <points geometry={pointsGeometry}>
-      <pointsMaterial 
-        size={0.05} 
-        color={COLORS.green} 
-        sizeAttenuation 
-      />
+      <pointsMaterial size={0.05} color={COLORS.green} sizeAttenuation />
     </points>
   );
 }
