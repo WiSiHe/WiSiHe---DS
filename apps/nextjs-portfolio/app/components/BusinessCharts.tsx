@@ -345,7 +345,7 @@ export default function BusinessCharts() {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className='flex justify-center gap-6 mt-4'>
-                  {preferenceData.map(entry => (
+                  {preferenceData.map((entry, index) => (
                     <div key={entry.name} className='flex items-center gap-2'>
                       <div
                         className='w-4 h-4 rounded-full'

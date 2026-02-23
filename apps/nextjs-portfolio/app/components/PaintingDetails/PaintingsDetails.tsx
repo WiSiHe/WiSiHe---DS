@@ -74,6 +74,21 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     day: 'numeric',
   });
 
+  const generateOrRetrieveViewerId = useCallback((): string => {
+    try {
+      let viewerId = localStorage.getItem('viewerId');
+      if (!viewerId) {
+        viewerId = crypto.randomUUID();
+        localStorage.setItem('viewerId', viewerId);
+      }
+      return viewerId;
+    } catch (error) {
+      console.error('Failed to access localStorage:', error);
+      // Fallback if localStorage fails
+      return crypto.randomUUID();
+    }
+  }, []);
+
   // On mount, patch painting views
   useEffect(() => {
     const addView = async () => {
@@ -90,21 +105,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     };
     void addView();
   }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
-
-  const generateOrRetrieveViewerId = (): string => {
-    try {
-      let viewerId = localStorage.getItem('viewerId');
-      if (!viewerId) {
-        viewerId = crypto.randomUUID();
-        localStorage.setItem('viewerId', viewerId);
-      }
-      return viewerId;
-    } catch (error) {
-      console.error('Failed to access localStorage:', error);
-      // Fallback if localStorage fails
-      return crypto.randomUUID();
-    }
-  };
 
   // Adjust width and height based on format
   const getImageDimensions = (format: string) => {
@@ -161,7 +161,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                         .url() ?? '';
 
                     return (
-                      <div key={index} className='relative flex-[0_0_100%] w-full h-full min-w-0'>
+                      <div
+                        key={imageUrl || index}
+                        className='relative flex-[0_0_100%] w-full h-full min-w-0'
+                      >
                         <div className='w-full h-full relative'>
                           <Image
                             src={imageUrl}
@@ -181,6 +184,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               {allImages.length > 1 && (
                 <>
                   <button
+                    type='button'
                     onClick={scrollPrev}
                     className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Previous image'
@@ -188,6 +192,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                     <IoChevronBack className='w-6 h-6' />
                   </button>
                   <button
+                    type='button'
                     onClick={scrollNext}
                     className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Next image'
@@ -201,9 +206,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
           {allImages.length > 1 && (
             <div className='z-10 flex items-center justify-center w-full gap-2.5 pt-6'>
-              {allImages.map((_, index) => (
+              {allImages.map((img, index) => (
                 <button
-                  key={index}
+                  key={`${allImages[0]?.asset._ref}-${index}`}
+                  type='button'
                   onClick={() => emblaApi?.scrollTo(index)}
                   className={cn(
                     'w-2.5 h-2.5 rounded-full transition-all duration-200',
