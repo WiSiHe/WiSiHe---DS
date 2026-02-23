@@ -208,7 +208,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             <div className='z-10 flex items-center justify-center w-full gap-2.5 pt-6'>
               {allImages.map((img, index) => (
                 <button
-                  key={`${allImages[0]?.asset._ref}-${index}`}
+                  key={`${img?.asset?._ref ?? index}`}
                   type='button'
                   onClick={() => emblaApi?.scrollTo(index)}
                   className={cn(
