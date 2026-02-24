@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/performance/noImgElement: Necessary for motion.img which doesn't support Next.js Image component easily for this specific transition */
 'use client';
 import type { PaintingQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
@@ -186,7 +187,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   <button
                     type='button'
                     onClick={scrollPrev}
-                    className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
+                    className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Previous image'
                   >
                     <IoChevronBack className='w-6 h-6' />
@@ -194,7 +195,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   <button
                     type='button'
                     onClick={scrollNext}
-                    className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover transition-all duration-200 text-foreground shadow-xl hover:scale-110'
+                    className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Next image'
                   >
                     <IoChevronForward className='w-6 h-6' />
@@ -212,7 +213,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   type='button'
                   onClick={() => emblaApi?.scrollTo(index)}
                   className={cn(
-                    'w-2.5 h-2.5 rounded-full transition-all duration-200',
+                    'w-2.5 h-2.5 rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none',
                     index === selectedIndex
                       ? 'bg-accent scale-125 shadow-lg shadow-accent/50'
                       : 'bg-surface-hover hover:bg-surface-active border border-border-subtle',
@@ -232,7 +233,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             animate={{ scale: 1, x: 0 }}
             exit={{ scale: 0.9, x: -20 }}
             transition={{ type: 'spring' }}
-            className='w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-surface-elevated lg:border lg:border-border p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab'
+            className='w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-surface lg:border lg:border-border p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab'
           >
             <div className={cn('pt-2 flex flex-col gap-4')}>
               <motion.h1
@@ -246,13 +247,13 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   {/* Example Chip usage */}
                   <Chip
                     outlined
-                    Icon={() => <BsClockFill className='size-4' />}
+                    Icon={() => <BsClockFill className='size-4' title='Painting date' />}
                     label={formattedPaintedAt}
                     size='small'
                   />
                   <Chip
                     outlined
-                    Icon={() => <BsEye className='size-4' />}
+                    Icon={() => <BsEye className='size-4' title='View count' />}
                     label='Views:'
                     additionalText={viewsCount?.toString() ?? '0'}
                     // size="small"
@@ -287,9 +288,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                       href={redbubbleUrl}
                       target='_blank'
                       rel='noreferrer'
-                      className='px-4 py-2.5 mt-2 flex rounded-lg bg-accent hover:bg-accent-hover font-semibold text-accent-contrast justify-center items-center gap-2 w-fit transition-colors shadow-lg hover:shadow-xl'
+                      className='px-4 py-2.5 mt-2 flex rounded-lg bg-accent hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none font-semibold text-accent-contrast justify-center items-center gap-2 w-fit transition-colors shadow-lg hover:shadow-xl'
                     >
-                      <BiLogoRedbubble className='inline' /> Go to store <BiRightArrow />
+                      <BiLogoRedbubble className='inline' title='Redbubble logo' /> Go to store{' '}
+                      <BiRightArrow />
                     </a>
                   </div>
                 </motion.div>
