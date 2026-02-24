@@ -110,6 +110,11 @@
   :focus:not(:focus-visible) {
     outline: none;
   }
+
+  /* Dark mode overrides for broken token mappings */
+  :root.dark {
+    --color-surface-elevated: var(--semantic-dark-color-surface-tinted);
+  }
 }
 
 @layer utilities {
