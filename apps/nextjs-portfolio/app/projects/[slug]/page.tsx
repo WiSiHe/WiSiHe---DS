@@ -1,3 +1,8 @@
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
+import { isNotEmptyObject } from '@wisihe/utils';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import {
   ConnectedPage,
   ConnectedPaintingsCarousel,
@@ -5,24 +10,19 @@ import {
   ProjectImage,
   ProjectInformation,
 } from '@/app/components/Project';
-import { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import { isNotEmptyObject } from '@wisihe/utils';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 // Loading component for Suspense boundaries
 function ProjectSectionSkeleton() {
   return (
-    <div className="animate-pulse space-y-4">
-      <div className="h-96 bg-surface-subtle rounded-xl border border-border/20" />
-      <div className="space-y-3">
-        <div className="h-4 bg-surface-subtle rounded w-3/4" />
-        <div className="h-4 bg-surface-subtle rounded w-1/2" />
-        <div className="h-4 bg-surface-subtle rounded w-5/6" />
+    <div className='animate-pulse space-y-4'>
+      <div className='h-96 bg-surface-subtle rounded-xl border border-border/20' />
+      <div className='space-y-3'>
+        <div className='h-4 bg-surface-subtle rounded w-3/4' />
+        <div className='h-4 bg-surface-subtle rounded w-1/2' />
+        <div className='h-4 bg-surface-subtle rounded w-5/6' />
       </div>
     </div>
   );
@@ -132,10 +132,10 @@ export default async function ProjectPage(props: Props) {
     const { connectedVideo, connectedPaintings = [] } = project;
 
     return (
-      <div className="min-h-screen pt-32">
+      <div className='min-h-screen pt-32'>
         {/* Hero Section with Project Image */}
-        <section className="relative py-8 lg:py-12">
-          <div className="max-w-7xl mx-auto px-4">
+        <section className='relative py-8 lg:py-12'>
+          <div className='max-w-7xl mx-auto px-4'>
             <Suspense fallback={<ProjectSectionSkeleton />}>
               <ProjectImage project={project} />
             </Suspense>
@@ -143,17 +143,17 @@ export default async function ProjectPage(props: Props) {
         </section>
 
         {/* Main Content Grid */}
-        <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className='max-w-7xl mx-auto px-4 py-8 lg:py-12'>
+          <div className='grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12'>
             {/* Project Information */}
-            <section className="lg:col-span-6">
+            <section className='lg:col-span-6'>
               <Suspense fallback={<ProjectSectionSkeleton />}>
                 <ProjectInformation project={project} />
               </Suspense>
             </section>
 
             {/* Connected Content */}
-            <section className="lg:col-span-6 space-y-8">
+            <section className='lg:col-span-6 space-y-8'>
               <Suspense fallback={<ProjectSectionSkeleton />}>
                 <ConnectedPaintingsCarousel paintings={connectedPaintings} />
               </Suspense>

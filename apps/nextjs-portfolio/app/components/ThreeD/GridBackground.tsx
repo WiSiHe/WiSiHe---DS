@@ -31,7 +31,7 @@ export function GridBackground({
           backgroundImage: 'none',
           backgroundSize: `${size}px ${size}px`,
         }}
-        aria-hidden="true"
+        aria-hidden='true'
       />
       {/* Secondary Grid Pattern for Depth */}
       <div
@@ -41,7 +41,7 @@ export function GridBackground({
           backgroundImage: 'none',
           backgroundSize: `${secondarySize}px ${secondarySize}px`,
         }}
-        aria-hidden="true"
+        aria-hidden='true'
       />
     </>
   );

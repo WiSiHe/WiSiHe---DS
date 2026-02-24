@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function isPlainObject(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -91,17 +91,17 @@ export function replaceReferencesWithCssVars(value) {
     }
 
     let normalizedPath = pathStr.replace(/\./g, '-');
-    
+
     // Explicitly fix double prefixes if they occur (e.g. from naive replacements)
     if (normalizedPath.startsWith('color-color-')) {
       normalizedPath = normalizedPath.replace('color-color-', 'color-');
     }
-    
+
     // Append -val suffix if it was a semantic reference, as these now use the private variable strategy
     if (isSemantic) {
       normalizedPath += '-val';
     }
-    
+
     return `var(--${normalizedPath})`;
   });
 }
@@ -114,7 +114,7 @@ export function flattenTokenTree(node, pathParts = []) {
   }
 
   for (const [key, value] of Object.entries(node)) {
-    if (isPlainObject(value) && Object.prototype.hasOwnProperty.call(value, '$value')) {
+    if (isPlainObject(value) && Object.hasOwn(value, '$value')) {
       flattened.push({
         path: [...pathParts, key],
         token: value,

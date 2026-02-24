@@ -1,30 +1,30 @@
-import {defineField, defineType, SanityDocumentLike} from 'sanity'
-import {LinkIcon} from '@sanity/icons'
+import { LinkIcon } from '@sanity/icons';
+import { defineField, defineType, type SanityDocumentLike } from 'sanity';
 
 function isValidInternalPath(value: string | undefined) {
   if (!value) {
-    return true // Allow empty values since it's not required
+    return true; // Allow empty values since it's not required
   } else if (!value.startsWith('/')) {
-    return 'Internal paths must start with /'
+    return 'Internal paths must start with /';
   } else if (/[^a-zA-Z0-9\-_/:]/.test(value)) {
-    return 'Source path contains invalid characters'
+    return 'Source path contains invalid characters';
   } else if (/:[^/]+:/.test(value)) {
-    return 'Parameters can only contain one : directly after /'
-  } else if (value.split('/').some((part) => part.includes(':') && !part.startsWith(':'))) {
-    return 'The : character can only appear directly after /'
+    return 'Parameters can only contain one : directly after /';
+  } else if (value.split('/').some(part => part.includes(':') && !part.startsWith(':'))) {
+    return 'The : character can only appear directly after /';
   }
-  return true
+  return true;
 }
 
 function isValidUrl(value: string | undefined) {
   if (!value) {
-    return true // Allow empty values since it's not required
+    return true; // Allow empty values since it's not required
   }
   try {
-    new URL(value)
-    return true
+    new URL(value);
+    return true;
   } catch {
-    return 'Invalid URL'
+    return 'Invalid URL';
   }
 }
 
@@ -35,35 +35,35 @@ export const redirectType = defineType({
   icon: LinkIcon,
   // @ts-expect-error
   group: 'redirect',
-  validation: (Rule) =>
+  validation: Rule =>
     Rule.custom((doc: SanityDocumentLike | undefined) => {
-      if (doc && doc.source && doc.destination && doc.source === doc.destination) {
-        return ['source', 'destination'].map((field) => ({
+      if (doc?.source && doc.destination && doc.source === doc.destination) {
+        return ['source', 'destination'].map(field => ({
           message: 'Source and destination cannot be the same',
           path: [field],
-        }))
+        }));
       }
 
-      return true
+      return true;
     }),
   fields: [
     defineField({
       name: 'source',
       type: 'string',
-      validation: (Rule) => Rule.custom(isValidInternalPath),
+      validation: Rule => Rule.custom(isValidInternalPath),
     }),
     defineField({
       name: 'destination',
       type: 'string',
-      validation: (Rule) =>
+      validation: Rule =>
         Rule.custom((value: string | undefined) => {
-          const urlValidation = isValidUrl(value)
-          const pathValidation = isValidInternalPath(value)
+          const urlValidation = isValidUrl(value);
+          const pathValidation = isValidInternalPath(value);
 
           if (urlValidation === true || pathValidation === true) {
-            return true
+            return true;
           }
-          return typeof urlValidation === 'boolean' ? urlValidation : pathValidation
+          return typeof urlValidation === 'boolean' ? urlValidation : pathValidation;
         }),
     }),
     defineField({
@@ -79,4 +79,4 @@ export const redirectType = defineType({
       initialValue: false,
     }),
   ],
-})
+});

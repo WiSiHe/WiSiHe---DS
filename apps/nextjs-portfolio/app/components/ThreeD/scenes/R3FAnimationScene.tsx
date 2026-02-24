@@ -1,17 +1,17 @@
 'use client';
 
-import { useRef, forwardRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { forwardRef, useRef } from 'react';
+import type * as THREE from 'three';
 
-export const R3FAnimationScene = forwardRef<THREE.Mesh>((props, ref) => {
+export const R3FAnimationScene = forwardRef<THREE.Mesh>((_props, ref) => {
   const internalRef = useRef<THREE.Mesh>(null);
   const meshRef = (ref as React.RefObject<THREE.Mesh>) || internalRef;
 
   // The useFrame hook runs on every single frame render
   // state: contains clock, mouse, viewport, etc.
   // delta: time since last frame (for smooth animation regardless of framerate)
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     // Check if ref is attached
     if (meshRef.current) {
       // Rotate the mesh slightly every frame
@@ -24,7 +24,7 @@ export const R3FAnimationScene = forwardRef<THREE.Mesh>((props, ref) => {
   return (
     <mesh ref={meshRef}>
       <boxGeometry args={[2, 2, 2]} />
-      <meshStandardMaterial color="orange" />
+      <meshStandardMaterial color='orange' />
     </mesh>
   );
 });

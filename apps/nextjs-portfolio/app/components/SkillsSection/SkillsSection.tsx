@@ -1,7 +1,7 @@
 'use client';
 
+import { motion, type Variants } from 'motion/react';
 import React, { useMemo } from 'react';
-import { motion, Variants } from 'motion/react';
 import Marquee from 'react-fast-marquee';
 import Chip from '../Chip/Chip';
 
@@ -57,7 +57,7 @@ const SkillsSection = React.memo(function SkillsSection() {
   const professionalChips = useMemo(
     () =>
       professionalSkills.map(skill => (
-        <Chip key={skill} label={skill} className="ml-2 pointer-events-none" interactive={false} />
+        <Chip key={skill} label={skill} className='ml-2 pointer-events-none' interactive={false} />
       )),
     [],
   );
@@ -65,32 +65,32 @@ const SkillsSection = React.memo(function SkillsSection() {
   const creativeChips = useMemo(
     () =>
       creativeSkills.map(skill => (
-        <Chip key={skill} label={skill} className="ml-2 pointer-events-none" interactive={false} />
+        <Chip key={skill} label={skill} className='ml-2 pointer-events-none' interactive={false} />
       )),
     [],
   );
 
   return (
     <motion.section
-      initial="hidden"
-      whileInView="visible"
+      initial='hidden'
+      whileInView='visible'
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative flex flex-col gap-8 py-20 text-foreground"
+      className='relative flex flex-col gap-8 py-20 text-foreground'
     >
-      <motion.div variants={itemVariants} className="z-10 pointer-events-none px-4 md:px-8">
-        <h2 className="text-4xl md:text-5xl font-bold mb-3">Skills</h2>
-        <p className="text-lg text-foreground-subtle">
+      <motion.div variants={itemVariants} className='z-10 pointer-events-none px-4 md:px-8'>
+        <h2 className='text-4xl md:text-5xl font-bold mb-3'>Skills</h2>
+        <p className='text-lg text-foreground-subtle'>
           Here are some of the skills I have acquired over the years.
         </p>
       </motion.div>
 
       <motion.div variants={itemVariants}>
         <Marquee
-          gradientColor="var(--color-surface)"
+          gradientColor='var(--color-surface)'
           autoFill
           gradient
-          direction="left"
+          direction='left'
           speed={8}
           pauseOnHover={false}
         >
@@ -100,10 +100,10 @@ const SkillsSection = React.memo(function SkillsSection() {
 
       <motion.div variants={itemVariants}>
         <Marquee
-          gradientColor="var(--color-surface)"
+          gradientColor='var(--color-surface)'
           autoFill
           gradient
-          direction="right"
+          direction='right'
           speed={8}
           pauseOnHover={false}
         >

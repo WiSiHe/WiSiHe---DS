@@ -1,8 +1,8 @@
 'use client';
-import { urlForImage } from '@/sanity/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
+import { urlForImage } from '@/sanity/lib/utils';
 
 type ImageModalProps = {
   images: Array<
@@ -79,14 +79,14 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md'>
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75"
-        aria-label="Close modal"
+        className='absolute top-4 right-4 z-10 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+        aria-label='Close modal'
       >
-        <FaTimes className="h-6 w-6" />
+        <FaTimes className='h-6 w-6' />
       </button>
 
       {/* Navigation buttons */}
@@ -94,43 +94,43 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75"
-            aria-label="Previous image"
+            className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+            aria-label='Previous image'
           >
-            <FaChevronLeft className="h-6 w-6" />
+            <FaChevronLeft className='h-6 w-6' />
           </button>
 
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75"
-            aria-label="Next image"
+            className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
+            aria-label='Next image'
           >
-            <FaChevronRight className="h-6 w-6" />
+            <FaChevronRight className='h-6 w-6' />
           </button>
         </>
       )}
 
       {/* Image counter */}
       {images.length > 1 && (
-        <div className="absolute top-4 left-4 z-10 rounded-full bg-black/60 backdrop-blur-lg px-3 py-1 text-white">
+        <div className='absolute top-4 left-4 z-10 rounded-full bg-black/60 backdrop-blur-lg px-3 py-1 text-white'>
           {currentIndex + 1} / {images.length}
         </div>
       )}
 
       {/* Main image */}
-      <div className="relative max-h-[90vh] max-w-[90vw] p-4">
+      <div className='relative max-h-[90vh] max-w-[90vw] p-4'>
         <Image
           src={urlForImage(currentImage)?.width(1200).fit('max')?.url() || ''}
           alt={`Project image ${currentIndex + 1}`}
           width={1200}
           height={800}
-          className="max-h-full max-w-full object-contain"
+          className='max-h-full max-w-full object-contain'
           priority
         />
       </div>
 
       {/* Click outside to close */}
-      <div className="absolute inset-0 -z-10" onClick={onClose} aria-hidden="true" />
+      <div className='absolute inset-0 -z-10' onClick={onClose} aria-hidden='true' />
     </div>
   );
 };

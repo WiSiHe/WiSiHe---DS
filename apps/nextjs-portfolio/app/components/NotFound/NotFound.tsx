@@ -1,6 +1,6 @@
 'use client';
+import { motion, type Variants } from 'motion/react';
 import Link from 'next/link';
-import { motion, Variants } from 'motion/react';
 
 const NotFoundSection = () => {
   const containerVariants: Variants = {
@@ -29,29 +29,29 @@ const NotFoundSection = () => {
 
   return (
     <motion.section
-      initial="hidden"
-      whileInView="visible"
+      initial='hidden'
+      whileInView='visible'
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative flex items-center justify-center w-full min-h-screen bg-surface"
+      className='relative flex items-center justify-center w-full min-h-screen bg-surface'
     >
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center bg-surface-subtle p-8 md:p-12 rounded-lg shadow-xl mx-4 text-center text-foreground max-w-lg"
+        className='flex flex-col items-center bg-surface-subtle p-8 md:p-12 rounded-lg shadow-xl mx-4 text-center text-foreground max-w-lg'
       >
-        <motion.div variants={itemVariants} className="text-xs text-foreground">
-          <h1 className="text-4xl font-bold mb-2">404</h1>
-          <h2 className="text-lg mb-2">
+        <motion.div variants={itemVariants} className='text-xs text-foreground'>
+          <h1 className='text-4xl font-bold mb-2'>404</h1>
+          <h2 className='text-lg mb-2'>
             <strong>Page Not Found</strong>
           </h2>
-          <div className="pb-4">
+          <div className='pb-4'>
             The page you&apos;re looking for doesn&apos;t exist. But hey, while you&apos;re here...
           </div>
         </motion.div>
-        <motion.div variants={itemVariants} className="flex justify-center">
+        <motion.div variants={itemVariants} className='flex justify-center'>
           <Link
-            href="/paintings"
-            className="px-4 py-2 bg-surface-subtle rounded-full pointer-events-auto text-foreground hover:bg-accent hover:text-accent-contrast"
+            href='/paintings'
+            className='px-4 py-2 bg-surface-subtle rounded-full pointer-events-auto text-foreground hover:bg-accent hover:text-accent-contrast'
           >
             <strong>Paintings</strong>
           </Link>

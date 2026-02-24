@@ -1,9 +1,9 @@
 'use client';
 
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
-import React, { createContext, useEffect, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import type { JSX } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 interface CarouselProps {
   items: JSX.Element[];
@@ -83,15 +83,15 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   return (
     <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
-      <div className="relative w-full">
+      <div className='relative w-full'>
         <div
-          className="flex w-full overflow-x-scroll overscroll-x-auto py-10 scroll-smooth [scrollbar-width:none]"
+          className='flex w-full overflow-x-scroll overscroll-x-auto py-10 scroll-smooth [scrollbar-width:none]'
           ref={carouselRef}
           onScroll={checkScrollability}
         >
-          <div className="absolute right-0 z-10 h-auto w-[5%] overflow-hidden bg-gradient-to-l from-black/50 via-transparent to-transparent" />
+          <div className='absolute right-0 z-10 h-auto w-[5%] overflow-hidden bg-linear-to-l from-black/50 via-transparent to-transparent' />
 
-          <div className="flex flex-row justify-start gap-4 pl-4 pointer-events-auto">
+          <div className='flex flex-row justify-start gap-4 pl-4 pointer-events-auto'>
             {items.map((item, index) => (
               <motion.div
                 initial={{
@@ -107,30 +107,33 @@ const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
                     ease: 'easeOut',
                   },
                 }}
+                /* biome-ignore lint/suspicious/noArrayIndexKey: opaque items */
                 key={`card-${index}`}
-                className="last:pr-[5%] overflow-clip rounded-3xl"
+                className='last:pr-[5%] overflow-clip rounded-3xl'
               >
                 {item}
               </motion.div>
             ))}
           </div>
         </div>
-        <div className="flex justify-end gap-2">
+        <div className='flex justify-end gap-2'>
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
+            type='button'
+            className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
             onClick={scrollLeft}
             disabled={!canScrollLeft}
-            aria-label="Scroll left"
+            aria-label='Scroll left'
           >
-            <IconArrowNarrowLeft className="w-6 h-6 text-accent-contrast" />
+            <IconArrowNarrowLeft className='w-6 h-6 text-accent-contrast' />
           </button>
           <button
-            className="relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover"
+            type='button'
+            className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
             onClick={scrollRight}
             disabled={!canScrollRight}
-            aria-label="Scroll right"
+            aria-label='Scroll right'
           >
-            <IconArrowNarrowRight className="w-6 h-6 text-accent-contrast" />
+            <IconArrowNarrowRight className='w-6 h-6 text-accent-contrast' />
           </button>
         </div>
       </div>

@@ -5,8 +5,8 @@
  * Styled for slide presentations with larger text and accent colors
  */
 
-import { PortableText, type PortableTextComponents, type PortableTextBlock } from 'next-sanity';
 import Image from 'next/image';
+import { PortableText, type PortableTextBlock, type PortableTextComponents } from 'next-sanity';
 import { urlForImage } from '@/sanity/lib/utils';
 import ResolvedLink from '../ResolvedLink/ResolvedLink';
 
@@ -73,24 +73,24 @@ const PresentationImage = ({ value }: { value: SanityImage }) => {
   const hasLqip = value.lqip && value.lqip.length > 0;
 
   return (
-    <figure className="my-6">
-      <div className="relative w-full overflow-hidden rounded-lg">
+    <figure className='my-6'>
+      <div className='relative w-full overflow-hidden rounded-lg'>
         <Image
           src={imageUrl || ''}
           alt={alt}
           width={1200}
           height={800}
-          className="w-full h-auto object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          className='w-full h-auto object-cover'
+          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px'
           priority={false}
-          loading="lazy"
+          loading='lazy'
           placeholder={hasLqip ? 'blur' : 'empty'}
           blurDataURL={hasLqip ? value.lqip || undefined : undefined}
           quality={80}
         />
       </div>
       {caption && (
-        <figcaption className="mt-2 text-sm text-center text-foreground/60">{caption}</figcaption>
+        <figcaption className='mt-2 text-sm text-center text-foreground/60'>{caption}</figcaption>
       )}
     </figure>
   );
@@ -99,7 +99,7 @@ const PresentationImage = ({ value }: { value: SanityImage }) => {
 // Code block component for presentations
 const PresentationCode = ({ value }: { value: { code: string; language?: string } }) => {
   return (
-    <pre className="bg-surface-elevated text-foreground p-4 rounded-lg overflow-x-auto my-4 border border-border text-base md:text-lg">
+    <pre className='bg-surface-elevated text-foreground p-4 rounded-lg overflow-x-auto my-4 border border-border text-base md:text-lg'>
       <code className={`language-${value.language || 'text'}`}>{value.code}</code>
     </pre>
   );
@@ -128,8 +128,8 @@ const PresentationCallout = ({
 
   return (
     <div className={`border-l-4 p-4 my-4 rounded-r-lg ${getCalloutStyles(value.type)}`}>
-      {value.title && <h4 className="font-bold mb-2 text-lg">{value.title}</h4>}
-      <div className="text-base">
+      {value.title && <h4 className='font-bold mb-2 text-lg'>{value.title}</h4>}
+      <div className='text-base'>
         <PortableText value={value.content} />
       </div>
     </div>
@@ -164,25 +164,25 @@ const PresentationVideo = ({
 
   if (!videoId) {
     return (
-      <div className="my-4 p-4 bg-surface-elevated rounded-lg text-center border border-border">
-        <p className="text-foreground/60">Invalid video URL</p>
+      <div className='my-4 p-4 bg-surface-elevated rounded-lg text-center border border-border'>
+        <p className='text-foreground/60'>Invalid video URL</p>
       </div>
     );
   }
 
   return (
-    <figure className="my-4">
-      <div className="aspect-video w-full">
+    <figure className='my-4'>
+      <div className='aspect-video w-full'>
         <iframe
           src={`https://www.youtube.com/embed/${videoId}`}
-          className="w-full h-full rounded-lg"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          className='w-full h-full rounded-lg'
+          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
           title={value.title || 'Embedded video'}
         />
       </div>
       {value.caption && (
-        <figcaption className="mt-2 text-sm text-center text-foreground/60">
+        <figcaption className='mt-2 text-sm text-center text-foreground/60'>
           {value.caption}
         </figcaption>
       )}
@@ -263,7 +263,7 @@ export default function PresentationPortableText({
         </h4>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-accent pl-4 my-4 italic text-foreground/80">
+        <blockquote className='border-l-4 border-accent pl-4 my-4 italic text-foreground/80'>
           {children}
         </blockquote>
       ),
@@ -281,14 +281,14 @@ export default function PresentationPortableText({
     },
     listItem: {
       bullet: ({ children }) => (
-        <li className="flex items-start gap-3 group">
-          <span className="shrink-0 mt-2.5">
-            <span className="block w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200" />
+        <li className='flex items-start gap-3 group'>
+          <span className='shrink-0 mt-2.5'>
+            <span className='block w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform duration-200' />
           </span>
-          <span className="flex-1 text-foreground/90 leading-relaxed">{children}</span>
+          <span className='flex-1 text-foreground/90 leading-relaxed'>{children}</span>
         </li>
       ),
-      number: ({ children }) => <li className="text-foreground/90 leading-relaxed">{children}</li>,
+      number: ({ children }) => <li className='text-foreground/90 leading-relaxed'>{children}</li>,
     },
     marks: {
       link: ({ children, value }) => {
@@ -296,22 +296,22 @@ export default function PresentationPortableText({
         return (
           <ResolvedLink
             link={linkValue}
-            className="text-accent hover:text-accent/80 hover:underline transition-colors font-medium"
+            className='text-accent hover:text-accent/80 hover:underline transition-colors font-medium'
           >
             {children}
           </ResolvedLink>
         );
       },
-      strong: ({ children }) => <strong className="font-bold text-foreground">{children}</strong>,
-      em: ({ children }) => <em className="italic">{children}</em>,
+      strong: ({ children }) => <strong className='font-bold text-foreground'>{children}</strong>,
+      em: ({ children }) => <em className='italic'>{children}</em>,
       code: ({ children }) => (
-        <code className="bg-surface-elevated px-1.5 py-0.5 rounded text-sm font-mono text-accent border border-border">
+        <code className='bg-surface-elevated px-1.5 py-0.5 rounded text-sm font-mono text-accent border border-border'>
           {children}
         </code>
       ),
-      underline: ({ children }) => <u className="underline decoration-accent">{children}</u>,
+      underline: ({ children }) => <u className='underline decoration-accent'>{children}</u>,
       'strike-through': ({ children }) => (
-        <del className="line-through text-foreground/60">{children}</del>
+        <del className='line-through text-foreground/60'>{children}</del>
       ),
     },
   };

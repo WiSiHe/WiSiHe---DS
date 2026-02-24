@@ -1,5 +1,5 @@
-import {DocumentVideoIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+import { DocumentVideoIcon } from '@sanity/icons';
+import { defineField, defineType } from 'sanity';
 
 // import tagType from './tag'
 // import VideoDescriptionGenerator from 'components/sanity/VideoDescriptionGenerator'
@@ -25,7 +25,7 @@ export default defineType({
       title: 'Title',
       type: 'string',
       description: 'Title of the video',
-      validation: (rule) =>
+      validation: rule =>
         rule.required().max(50).min(5).warning('Title should be between 5 and 50 characters'),
     }),
 
@@ -38,7 +38,7 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'description',
@@ -47,14 +47,14 @@ export default defineType({
       //   components: {
       //     input: VideoDescriptionGenerator,
       //   },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'videoUrl',
       title: 'Video URL',
       type: 'string',
       description: 'The URL of the video',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'featured',
@@ -71,29 +71,29 @@ export default defineType({
         {
           name: 'alt',
           type: 'string',
-          validation: (Rule) => Rule.required(),
+          validation: Rule => Rule.required(),
         },
       ],
       options: {
         hotspot: true,
         metadata: ['lqip', 'palette'],
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'linkedPainting',
       title: 'Linked Painting',
       type: 'reference',
-      to: [{type: 'painting'}],
+      to: [{ type: 'painting' }],
       description: 'The painting that is linked to this video',
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'tag'}}],
+      of: [{ type: 'reference', to: { type: 'tag' } }],
       description: 'Tags for the video',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
   ],
   preview: {
@@ -103,4 +103,4 @@ export default defineType({
       media: 'thumbnail',
     },
   },
-})
+});

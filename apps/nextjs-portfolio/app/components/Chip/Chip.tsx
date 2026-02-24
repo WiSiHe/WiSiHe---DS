@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
-import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@wisihe/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+import React, { useCallback, useMemo } from 'react';
 import { IoClose } from 'react-icons/io5';
 
 const chipStyles = cva(
@@ -96,29 +96,38 @@ const Chip = ({
   ...props
 }: ChipProps) => {
   // Memoize click handler
-  const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
-    if (disabled || !interactive) return;
-    onClick?.(e as React.MouseEvent<HTMLDivElement>);
-  }, [disabled, interactive, onClick]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+      if (disabled || !interactive) return;
+      onClick?.(e as React.MouseEvent<HTMLDivElement>);
+    },
+    [disabled, interactive, onClick],
+  );
 
   // Memoize keyboard handler
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
-    if (disabled || !interactive) return;
-    // Support Enter and Space keys for activation
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      // Create a synthetic click event
-      const syntheticEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-      onClick?.(syntheticEvent as unknown as React.MouseEvent<HTMLDivElement>);
-    }
-  }, [disabled, interactive, onClick]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
+      if (disabled || !interactive) return;
+      // Support Enter and Space keys for activation
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        // Create a synthetic click event
+        const syntheticEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+        onClick?.(syntheticEvent as unknown as React.MouseEvent<HTMLDivElement>);
+      }
+    },
+    [disabled, interactive, onClick],
+  );
 
   // Memoize remove handler
-  const handleRemove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    if (disabled) return;
-    onRemove?.();
-  }, [disabled, onRemove]);
+  const handleRemove = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      if (disabled) return;
+      onRemove?.();
+    },
+    [disabled, onRemove],
+  );
 
   // Memoize className computation
   const baseClassName = useMemo(
@@ -165,37 +174,41 @@ const Chip = ({
   );
 
   // Render icon component
-  const iconElement = Icon && iconProps ? React.createElement(Icon, iconProps as React.ComponentProps<typeof Icon>) : null;
+  const iconElement =
+    Icon && iconProps
+      ? React.createElement(Icon, iconProps as React.ComponentProps<typeof Icon>)
+      : null;
 
   // Shared content
   const content = (
     <>
       {/* Optimized: Only render gradient overlay for interactive chips to reduce DOM nodes */}
       {interactive && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+        <div className='absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none' />
       )}
 
       {iconElement}
 
-      <span className="relative z-10 font-medium">
+      <span className='relative z-10 font-medium'>
         {label}
-        {additionalText && <span className="ml-1 opacity-75">{additionalText}</span>}
+        {additionalText && <span className='ml-1 opacity-75'>{additionalText}</span>}
       </span>
 
       {removable && onRemove && (
         <button
+          type='button'
           onClick={handleRemove}
           className={removeButtonClassName}
           aria-label={`Remove ${label}`}
           disabled={disabled}
         >
-          <IoClose className="w-full h-full" />
+          <IoClose className='w-full h-full' />
         </button>
       )}
 
       {removable && !onRemove && (
         <div className={cn('relative z-10 ml-1 rounded-full p-0.5', iconSizeClasses[size])}>
-          <IoClose className="w-full h-full opacity-30" />
+          <IoClose className='w-full h-full opacity-30' />
         </div>
       )}
     </>
@@ -204,7 +217,7 @@ const Chip = ({
   if (interactive) {
     return (
       <button
-        type="button"
+        type='button'
         className={baseClassName}
         onClick={handleClick}
         onKeyDown={handleKeyDown}

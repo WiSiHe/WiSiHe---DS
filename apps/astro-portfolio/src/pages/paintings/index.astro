@@ -1,12 +1,8 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { allPaintingsQuery } from '@wisihe/sanity-queries';
-import imageUrl, { client } from '../../lib/sanity';
+import { client } from '../../lib/sanity';
 
-const paintings = await client.fetch(allPaintingsQuery);
+const _paintings = await client.fetch(allPaintingsQuery);
 ---
 
 <!doctype html>

@@ -1,48 +1,38 @@
 'use client';
 
+import { cn } from '@wisihe/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@wisihe/utils';
-import { navItems } from './constants';
 import DesignSystemSidebar from './components/DesignSystemSidebar';
+import { navItems } from './constants';
 
-export default function DesignSystemLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DesignSystemLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-accent selection:text-accent-contrast">
+    <div className='flex flex-col min-h-screen bg-background text-foreground selection:bg-accent selection:text-accent-contrast'>
       {/* Mobile Navigation (Sticky) */}
       {/* Mobile Navigation (Floating Bottom) */}
-      <div className="lg:hidden fixed bottom-6 inset-x-0 z-50 flex justify-center pointer-events-none">
-        <div className="bg-surface/80 backdrop-blur-2xl border border-border/50 shadow-2xl rounded-full p-1.5 flex items-center gap-1 pointer-events-auto">
-          {navItems.map((item) => {
-             const isActive = pathname === item.href;
-             return (
+      <div className='lg:hidden fixed bottom-6 inset-x-0 z-50 flex justify-center pointer-events-none'>
+        <div className='bg-surface/80 backdrop-blur-2xl border border-border/50 shadow-2xl rounded-full p-1.5 flex items-center gap-1 pointer-events-auto'>
+          {navItems.map(item => {
+            const isActive = pathname === item.href;
+            return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300",
-                  isActive 
-                    ? "text-accent-contrast shadow-lg" 
-                    : "text-foreground-subtle hover:text-foreground hover:bg-surface-hover",
-                  item.disabled && "opacity-40 cursor-not-allowed pointer-events-none grayscale"
+                  'relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300',
+                  isActive
+                    ? 'text-accent-contrast shadow-lg'
+                    : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
+                  item.disabled && 'opacity-40 cursor-not-allowed pointer-events-none grayscale',
                 )}
                 aria-label={item.name}
               >
-                {isActive && (
-                  <div 
-                    className="absolute inset-0 bg-accent rounded-full z-0"
-                  />
-                )}
-                <span className="relative z-10 text-lg">
-                  {item.icon}
-                </span>
-                
+                {isActive && <div className='absolute inset-0 bg-accent rounded-full z-0' />}
+                <span className='relative z-10 text-lg'>{item.icon}</span>
+
                 {/* Active Label Tooltip style? No, just keep it clean icons for now */}
               </Link>
             );
@@ -50,15 +40,13 @@ export default function DesignSystemLayout({
         </div>
       </div>
 
-      <div className="flex w-full max-w-7xl mx-auto px-6 py-12 pb-24 lg:pb-12 gap-12">
+      <div className='flex w-full max-w-7xl mx-auto px-6 py-12 pb-24 lg:pb-12 gap-12'>
         {/* Sidebar - Desktop Sticky */}
         <DesignSystemSidebar />
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0">
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {children}
-          </div>
+        <main className='flex-1 min-w-0'>
+          <div className='animate-in fade-in slide-in-from-bottom-4 duration-500'>{children}</div>
         </main>
       </div>
     </div>

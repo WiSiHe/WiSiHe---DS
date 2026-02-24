@@ -1,8 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 /* Import design tokens from package exports */
-@import '@wisihe/tokens/tailwind-v4';
-@import '@wisihe/tokens/css';
-@import '@wisihe/tokens/css/semantic';
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
 
 @theme {
   --aspect-portrait: 3 / 4;
@@ -110,6 +110,11 @@
   :focus:not(:focus-visible) {
     outline: none;
   }
+
+  /* Dark mode overrides for broken token mappings */
+  :root.dark {
+    --color-surface-elevated: var(--semantic-dark-color-surface-tinted);
+  }
 }
 
 @layer utilities {
@@ -134,7 +139,7 @@
   }
 
   .splash-shown .loading-screen {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -167,6 +172,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .within {
-    animation: none !important;
+    animation: none;
   }
 }

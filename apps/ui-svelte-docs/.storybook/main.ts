@@ -1,6 +1,6 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/svelte-vite';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 const __filename = fileURLToPath(import.meta.url);

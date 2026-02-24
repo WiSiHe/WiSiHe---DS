@@ -62,9 +62,7 @@ export function getCssVariableAsHex(variableName: string, fallback: string = '#1
     return fallback;
   }
 
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(variableName)
-    .trim();
+  const value = getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 
   if (!value) {
     return fallback;

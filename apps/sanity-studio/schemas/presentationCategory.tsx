@@ -59,7 +59,9 @@ export default defineType({
               borderRadius: '4px',
             }}
           />
-        ) : TagIcon,
+        ) : (
+          TagIcon
+        ),
       };
     },
   },

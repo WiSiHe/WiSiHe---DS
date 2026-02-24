@@ -1,12 +1,12 @@
 'use client';
 
-import { HomePageQueryResult } from '@wisihe/sanity-queries';
-import { urlForImage } from '@/sanity/lib/utils';
 import { useGSAP } from '@gsap/react';
+import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { urlForImage } from '@/sanity/lib/utils';
 
 gsap.registerPlugin(useGSAP);
 
@@ -346,7 +346,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh overflow-hidden flex items-center justify-center transition-colors duration-500"
+      className='relative w-full h-dvh overflow-hidden flex items-center justify-center transition-colors duration-500'
       style={{
         backgroundColor: 'var(--color-background)',
       }}
@@ -354,9 +354,9 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       {/* Loader */}
       <div
         ref={loaderRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] flex items-center justify-center pointer-events-none"
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] flex items-center justify-center pointer-events-none'
       >
-        <div className="text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl">
+        <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
           {progress}%
         </div>
       </div>
@@ -364,24 +364,24 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       {/* Central Text Content */}
       <div
         ref={textRef}
-        className="relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none"
+        className='relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none'
       >
-        <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-foreground-subtle">
+        <p className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-foreground-subtle'>
           My name is
         </p>
-        <h1 className="text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground">
+        <h1 className='text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground'>
           Henrik
         </h1>
-        <p className="text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-foreground-subtle">
+        <p className='text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-foreground-subtle'>
           I&apos;m a design engineer, painter and a maker.
           <br />
           Explore my work.
         </p>
 
-        <div className="mt-8 pointer-events-auto opacity-0">
+        <div className='mt-8 pointer-events-auto opacity-0'>
           <Link
-            href="/paintings"
-            className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg"
+            href='/paintings'
+            className='inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg'
           >
             View Gallery
           </Link>
@@ -389,7 +389,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       </div>
 
       {/* Floating Images Container */}
-      <div ref={imagesRef} className="absolute inset-0 pointer-events-none">
+      <div ref={imagesRef} className='absolute inset-0 pointer-events-none'>
         {paintings?.map((painting, index) => {
           const { image, altText, slug } = painting;
           if (!image) return null;
@@ -432,14 +432,14 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               // Initial state: centered
               className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-1 ${size} ${aspectRatio} ${visibilityClass} pointer-events-auto group opacity-0 will-change-transform`}
             >
-              <div className="relative w-full h-full">
+              <div className='relative w-full h-full'>
                 <Image
                   src={imageUrl}
                   alt={altText || 'Painting'}
                   fill
                   priority={isPriority}
-                  className="object-cover rounded-lg shadow-2xl"
-                  sizes="(max-width: 768px) 40vw, 30vw"
+                  className='object-cover rounded-lg shadow-2xl'
+                  sizes='(max-width: 768px) 40vw, 30vw'
                 />
               </div>
             </Link>
@@ -449,12 +449,12 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
       {/* Scroll Indicator - Bottom with high z-index */}
       {showScrollIndicator && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none transition-opacity duration-500">
-          <span className="text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse">
+        <div className='absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none transition-opacity duration-500'>
+          <span className='text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse'>
             Scroll
           </span>
-          <div className="w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden">
-            <div className="w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator" />
+          <div className='w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden'>
+            <div className='w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator' />
           </div>
         </div>
       )}

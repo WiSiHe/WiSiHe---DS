@@ -1,12 +1,6 @@
 import { createClient } from 'next-sanity';
 
-import {
-  apiVersion,
-  dataset,
-  projectId,
-  studioUrl,
-  writeToken,
-} from './api';
+import { apiVersion, dataset, projectId, studioUrl, writeToken } from './api';
 
 export const client = createClient({
   projectId,
@@ -18,7 +12,7 @@ export const client = createClient({
   stega: {
     studioUrl,
     // logger: console,
-    filter: (props) => {
+    filter: props => {
       if (props.sourcePath.at(-1) === 'title') {
         return true;
       }

@@ -1,6 +1,5 @@
-
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const effectsPath = path.join(process.cwd(), 'tokens/primitives/effects.json');
 const effects = JSON.parse(fs.readFileSync(effectsPath, 'utf8'));
@@ -17,5 +16,5 @@ if (effects.opacity) {
   }
 }
 
-fs.writeFileSync(effectsPath, JSON.stringify(effects, null, 2) + '\n');
+fs.writeFileSync(effectsPath, `${JSON.stringify(effects, null, 2)}\n`);
 console.log('Converted opacity values to decimals.');

@@ -1,7 +1,7 @@
 'use server';
 
-import { client } from '@/sanity/lib/client';
 import { draftMode } from 'next/headers';
+import { client } from '@/sanity/lib/client';
 
 export async function incrementPaintingView(paintingId: string, viewerId: string) {
   try {

@@ -1,4 +1,4 @@
-import type { ContentItem, SlideContent, PortableTextBlockLike } from '../../../three-d/types';
+import type { ContentItem, PortableTextBlockLike, SlideContent } from '../../../three-d/types';
 
 // Type guard to check if content is Portable Text (from Sanity) vs ContentItem[] (static fallback)
 export function isPortableText(content: SlideContent): content is PortableTextBlockLike[] {

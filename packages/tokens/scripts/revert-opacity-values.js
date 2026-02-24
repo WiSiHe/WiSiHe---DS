@@ -1,6 +1,5 @@
-
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const effectsPath = path.join(process.cwd(), 'tokens/primitives/effects.json');
 const effects = JSON.parse(fs.readFileSync(effectsPath, 'utf8'));
@@ -11,12 +10,12 @@ if (effects.opacity) {
     // If it's a decimal string like "0.95" or "0.5", convert to percentage
     if (typeof value === 'string' && !value.endsWith('%')) {
       const num = parseFloat(value);
-      if (!isNaN(num) && num <= 1) {
+      if (!Number.isNaN(num) && num <= 1) {
         token.$value = `${num * 100}%`;
       }
     }
   }
 }
 
-fs.writeFileSync(effectsPath, JSON.stringify(effects, null, 2) + '\n');
+fs.writeFileSync(effectsPath, `${JSON.stringify(effects, null, 2)}\n`);
 console.log('Reverted opacity values to percentages.');

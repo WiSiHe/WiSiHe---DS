@@ -1,16 +1,14 @@
 'use client';
 
-import { motion, Variants } from 'motion/react';
-import { usePathname } from 'next/navigation';
-import { type JSX } from 'react';
-import { FaBrush, FaCube, FaFolder, FaMailBulk, FaTv, FaUser } from 'react-icons/fa';
-
-import Link from '../ProgressLink';
-
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import { motion, type Variants } from 'motion/react';
+import { usePathname } from 'next/navigation';
+import type { JSX } from 'react';
+import { FaBrush, FaCube, FaFolder, FaMailBulk, FaTv, FaUser } from 'react-icons/fa';
 import IconLogo from '../icons/IconLogo';
+import Link from '../ProgressLink';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 const container: Variants = {
   hidden: { opacity: 0 },
@@ -37,9 +35,9 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
 
   return (
-    <header className="pointer-events-none">
+    <header className='pointer-events-none'>
       <nav
-        aria-label="Main Navigation"
+        aria-label='Main Navigation'
         className={cn(
           'z-20 flex items-start justify-between',
           isAbsolute ? 'fixed top-4 left-4 right-4' : 'relative',
@@ -51,28 +49,30 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.95 }}
-          className="pointer-events-auto"
+          className='pointer-events-auto'
         >
           <Link
-            href="/"
-            aria-label="Navigate to the homepage"
-            className="group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105"
+            href='/'
+            aria-label='Navigate to the homepage'
+            className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
           >
             <IconLogo
-              color="currentColor"
-              className={cn('transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20')}
-              size="100%"
+              color='currentColor'
+              className={cn(
+                'transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20',
+              )}
+              size='100%'
             />
           </Link>
         </motion.div>
 
-        <div className="flex items-center gap-1 md:gap-2 pointer-events-auto">
+        <div className='flex items-center gap-1 md:gap-2 pointer-events-auto'>
           <motion.ul
-            key="nav"
+            key='nav'
             variants={container}
-            initial="hidden"
-            animate="show"
-            className="flex items-center text-foreground bg-surface border border-border overflow-clip rounded-full shadow-lg"
+            initial='hidden'
+            animate='show'
+            className='flex items-center text-foreground bg-surface border border-border overflow-clip rounded-full shadow-lg'
             style={{ isolation: 'isolate' }}
           >
             {navigationItems.map((item, i) => {
@@ -90,9 +90,12 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
 
               return (
                 <motion.li
-                  key={i}
+                  key={href}
                   variants={listItem}
-                  className={cn("first:rounded-l-full first:rounded-r-none last:rounded-r-full last:rounded-l-none", "p-1")}
+                  className={cn(
+                    'first:rounded-l-full first:rounded-r-none last:rounded-r-full last:rounded-l-none',
+                    'p-1',
+                  )}
                 >
                   <Link
                     href={href}
@@ -105,8 +108,8 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
                     )}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <span className="text-lg leading-none">{navIcon}</span>
-                    <strong className="hidden md:block not-sr-only">{label}</strong>
+                    <span className='text-lg leading-none'>{navIcon}</span>
+                    <strong className='hidden md:block not-sr-only'>{label}</strong>
                   </Link>
                 </motion.li>
               );

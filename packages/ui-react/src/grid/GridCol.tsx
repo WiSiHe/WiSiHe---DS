@@ -1,7 +1,8 @@
 // GridCol.tsx
-import React from 'react';
+
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type React from 'react';
 
 const gridCol = cva('', {
   variants: {

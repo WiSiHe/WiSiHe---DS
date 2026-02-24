@@ -1,11 +1,11 @@
 'use client';
-import { ProjectQueryResult } from '@wisihe/sanity-queries';
-import { urlForImage } from '@/sanity/lib/utils';
-import { isNotEmptyArray } from '@wisihe/utils';
-import Image from 'next/image';
-import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useState } from 'react';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
+import { isNotEmptyArray } from '@wisihe/utils';
+import useEmblaCarousel from 'embla-carousel-react';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
+import { urlForImage } from '@/sanity/lib/utils';
 import ImageModal from './ImageModal';
 
 type ExtraImagesGridProps = {
@@ -81,31 +81,28 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
   if (!isNotEmptyArray(images)) return null;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold font-serif text-foreground">Additional Images</h2>
+    <div className='space-y-4'>
+      <h2 className='text-xl font-semibold font-serif text-foreground'>Additional Images</h2>
 
-      <div className="relative">
-        <div className="overflow-hidden rounded-xl border border-border/20" ref={emblaRef}>
-          <div className="flex">
+      <div className='relative'>
+        <div className='overflow-hidden rounded-xl border border-border/20' ref={emblaRef}>
+          <div className='flex'>
             {images.map((extraImage, index) => {
               if (!extraImage) return null;
 
               return (
-                <div
-                  key={extraImage._key}
-                  className="relative flex-[0_0_100%] min-w-0"
-                >
+                <div key={extraImage._key} className='relative flex-[0_0_100%] min-w-0'>
                   <div
-                    className="relative aspect-video cursor-pointer"
+                    className='relative aspect-video cursor-pointer'
                     onClick={() => handleImageClick(index)}
                   >
                     <Image
                       src={urlForImage(extraImage)?.width(1200).fit('max')?.url() || ''}
                       alt={`Project extra image ${index + 1}`}
                       fill
-                      className="object-cover"
+                      className='object-cover'
                       loading={index === 0 ? 'eager' : 'lazy'}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1200px"
+                      sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1200px'
                     />
                   </div>
                 </div>
@@ -116,19 +113,19 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
 
         {/* Navigation buttons */}
         {images.length > 1 && (
-          <div className="flex justify-between items-center mt-4">
+          <div className='flex justify-between items-center mt-4'>
             <button
-              className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+              className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              aria-label="Previous image"
+              aria-label='Previous image'
             >
-              <IconArrowNarrowLeft className="w-6 h-6" />
+              <IconArrowNarrowLeft className='w-6 h-6' />
             </button>
 
             {/* Dots navigation */}
             {scrollSnaps.length > 1 && (
-              <div className="flex gap-2">
+              <div className='flex gap-2'>
                 {scrollSnaps.map((_, index) => (
                   <button
                     key={index}
@@ -145,12 +142,12 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
             )}
 
             <button
-              className="flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg"
+              className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
               onClick={scrollNext}
               disabled={!canScrollNext}
-              aria-label="Next image"
+              aria-label='Next image'
             >
-              <IconArrowNarrowRight className="w-6 h-6" />
+              <IconArrowNarrowRight className='w-6 h-6' />
             </button>
           </div>
         )}

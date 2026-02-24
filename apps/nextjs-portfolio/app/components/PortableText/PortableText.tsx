@@ -8,11 +8,11 @@
  *
  */
 
-import { PortableText, type PortableTextComponents, type PortableTextBlock } from 'next-sanity';
 import Image from 'next/image';
+import { PortableText, type PortableTextBlock, type PortableTextComponents } from 'next-sanity';
 import { urlForImage } from '@/sanity/lib/utils';
-import ResolvedLink from '../ResolvedLink/ResolvedLink';
 import RecipeTipComponent from '../RecipeTip/RecipeTip';
+import ResolvedLink from '../ResolvedLink/ResolvedLink';
 
 // Type for link mark definitions from Sanity
 type LinkMark = {
@@ -75,24 +75,24 @@ const PortableTextImage = ({ value }: { value: SanityImage }) => {
   const hasLqip = value.lqip && value.lqip.length > 0;
 
   return (
-    <figure className="my-8">
-      <div className="relative w-full overflow-hidden rounded-lg">
+    <figure className='my-8'>
+      <div className='relative w-full overflow-hidden rounded-lg'>
         <Image
           src={imageUrl || ''}
           alt={alt}
           width={1200}
           height={800}
-          className="w-full h-auto object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          className='w-full h-auto object-cover'
+          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px'
           priority={false}
-          loading="lazy"
+          loading='lazy'
           placeholder={hasLqip ? 'blur' : 'empty'}
           blurDataURL={hasLqip ? value.lqip || undefined : undefined}
           quality={80}
         />
       </div>
       {caption && (
-        <figcaption className="mt-2 text-sm text-center text-muted-foreground">
+        <figcaption className='mt-2 text-sm text-center text-muted-foreground'>
           {caption}
         </figcaption>
       )}
@@ -103,7 +103,7 @@ const PortableTextImage = ({ value }: { value: SanityImage }) => {
 // Code block component
 const PortableTextCode = ({ value }: { value: { code: string; language?: string } }) => {
   return (
-    <pre className="bg-surface-subtle text-foreground p-4 rounded-lg overflow-x-auto my-6 border border-border">
+    <pre className='bg-surface-subtle text-foreground p-4 rounded-lg overflow-x-auto my-6 border border-border'>
       <code className={`language-${value.language || 'text'}`}>{value.code}</code>
     </pre>
   );
@@ -132,8 +132,8 @@ const PortableTextCallout = ({
 
   return (
     <div className={`border-l-4 p-4 my-6 ${getCalloutStyles(value.type)}`}>
-      {value.title && <h4 className="font-semibold mb-2">{value.title}</h4>}
-      <div className="prose prose-sm max-w-none">
+      {value.title && <h4 className='font-semibold mb-2'>{value.title}</h4>}
+      <div className='prose prose-sm max-w-none'>
         <PortableText value={value.content} />
       </div>
     </div>
@@ -177,25 +177,25 @@ const PortableTextVideo = ({
 
   if (!videoId) {
     return (
-      <div className="my-6 p-4 bg-surface-subtle rounded-lg text-center border border-border">
-        <p className="text-foreground-subtle">Invalid video URL</p>
+      <div className='my-6 p-4 bg-surface-subtle rounded-lg text-center border border-border'>
+        <p className='text-foreground-subtle'>Invalid video URL</p>
       </div>
     );
   }
 
   return (
-    <figure className="my-6">
-      <div className="aspect-video w-full">
+    <figure className='my-6'>
+      <div className='aspect-video w-full'>
         <iframe
           src={`https://www.youtube.com/embed/${videoId}`}
-          className="w-full h-full rounded-lg"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          className='w-full h-full rounded-lg'
+          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
           title={value.title || 'Embedded video'}
         />
       </div>
       {value.caption && (
-        <figcaption className="mt-2 text-sm text-center text-muted-foreground">
+        <figcaption className='mt-2 text-sm text-center text-muted-foreground'>
           {value.caption}
         </figcaption>
       )}
@@ -228,28 +228,28 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       h1: ({ children, value }) => (
         <h1
           id={value?._key ? `heading-${value._key}` : undefined}
-          className="relative group scroll-mt-20"
+          className='relative group scroll-mt-20'
           key={value?._key}
         >
           {children}
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className="absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
-              aria-label="Link to heading"
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              aria-label='Link to heading'
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                className='w-4 h-4'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                   strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                  d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
                 />
               </svg>
             </a>
@@ -259,28 +259,28 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       h2: ({ children, value }) => (
         <h2
           id={value?._key ? `heading-${value._key}` : undefined}
-          className="relative group scroll-mt-20"
+          className='relative group scroll-mt-20'
           key={value?._key}
         >
           {children}
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className="absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
-              aria-label="Link to heading"
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              aria-label='Link to heading'
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                className='w-4 h-4'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                   strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                  d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
                 />
               </svg>
             </a>
@@ -290,28 +290,28 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       h3: ({ children, value }) => (
         <h3
           id={value?._key ? `heading-${value._key}` : undefined}
-          className="relative group scroll-mt-20"
+          className='relative group scroll-mt-20'
           key={value?._key}
         >
           {children}
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className="absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
-              aria-label="Link to heading"
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              aria-label='Link to heading'
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                className='w-4 h-4'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                   strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                  d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
                 />
               </svg>
             </a>
@@ -321,28 +321,28 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       h4: ({ children, value }) => (
         <h4
           id={value?._key ? `heading-${value._key}` : undefined}
-          className="relative group scroll-mt-20"
+          className='relative group scroll-mt-20'
           key={value?._key}
         >
           {children}
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className="absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
-              aria-label="Link to heading"
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              aria-label='Link to heading'
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns='http://www.w3.org/2000/svg'
+                className='w-4 h-4'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                   strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                  d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
                 />
               </svg>
             </a>
@@ -350,34 +350,34 @@ export default function CustomPortableText({ className, value }: CustomPortableT
         </h4>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-accent pl-4 italic text-muted-foreground">
+        <blockquote className='border-l-4 border-accent pl-4 italic text-muted-foreground'>
           {children}
         </blockquote>
       ),
-      normal: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
+      normal: ({ children }) => <p className='mb-4 leading-relaxed'>{children}</p>,
     },
     list: {
       bullet: ({ children }) => (
-        <ul className="list-disc list-inside mb-4 space-y-2">{children}</ul>
+        <ul className='list-disc list-inside mb-4 space-y-2'>{children}</ul>
       ),
       number: ({ children }) => (
-        <ol className="list-decimal list-inside mb-4 space-y-2">{children}</ol>
+        <ol className='list-decimal list-inside mb-4 space-y-2'>{children}</ol>
       ),
     },
-    listItem: ({ children }) => <li className="leading-relaxed">{children}</li>,
+    listItem: ({ children }) => <li className='leading-relaxed'>{children}</li>,
     marks: {
       link: ({ children, value }) => {
         // Properly type the link value
         const linkValue = value as LinkMark;
         return <ResolvedLink link={linkValue}>{children}</ResolvedLink>;
       },
-      strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
-      em: ({ children }) => <em className="italic">{children}</em>,
+      strong: ({ children }) => <strong className='font-semibold'>{children}</strong>,
+      em: ({ children }) => <em className='italic'>{children}</em>,
       code: ({ children }) => (
-        <code className="bg-muted px-1 py-0.5 rounded text-sm font-mono">{children}</code>
+        <code className='bg-muted px-1 py-0.5 rounded text-sm font-mono'>{children}</code>
       ),
-      underline: ({ children }) => <u className="underline">{children}</u>,
-      'strike-through': ({ children }) => <del className="line-through">{children}</del>,
+      underline: ({ children }) => <u className='underline'>{children}</u>,
+      'strike-through': ({ children }) => <del className='line-through'>{children}</del>,
     },
   };
 

@@ -1,12 +1,12 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import type { PortableTextBlock } from 'next-sanity';
+import { client } from '@/sanity/lib/client';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getRecipe, getRecipeSlugs } from '@/sanity/lib/queries';
-import { client } from '@/sanity/lib/client';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import { PortableTextBlock } from 'next-sanity';
 import { urlForImage } from '@/sanity/lib/utils';
 import RecipeDetail from '../../components/RecipeDetail/RecipeDetail';
-import Link from 'next/link';
 
 interface RecipeIngredient {
   ingredient: string;
@@ -212,7 +212,7 @@ export default async function RecipePage({ params }: Props) {
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(structuredData),
         }}
@@ -220,79 +220,79 @@ export default async function RecipePage({ params }: Props) {
       <RecipeDetail recipe={{ ...recipe, tags: limitedTags }} />
 
       {/* Additional internal links section for SEO */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-background">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-foreground">Explore More</h2>
-          <p className="text-lg text-foreground-subtle">
+      <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-background'>
+        <div className='text-center mb-12'>
+          <h2 className='text-3xl font-bold mb-4 text-foreground'>Explore More</h2>
+          <p className='text-lg text-foreground-subtle'>
             Discover other delicious recipes and cooking inspiration
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           <Link
-            href="/recipes"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/recipes'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               All Recipes
             </h3>
-            <p className="text-foreground-subtle">
+            <p className='text-foreground-subtle'>
               Browse our complete collection of delicious recipes
             </p>
           </Link>
 
           <Link
-            href="/projects"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/projects'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               Other Projects
             </h3>
-            <p className="text-foreground-subtle">
+            <p className='text-foreground-subtle'>
               Check out our other creative projects and artwork
             </p>
           </Link>
 
           <Link
-            href="/paintings"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/paintings'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               Digital Art
             </h3>
-            <p className="text-foreground-subtle">
+            <p className='text-foreground-subtle'>
               Explore our collection of digital paintings and artwork
             </p>
           </Link>
 
           <Link
-            href="/videos"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/videos'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               Video Content
             </h3>
-            <p className="text-foreground-subtle">Watch our latest videos and creative content</p>
+            <p className='text-foreground-subtle'>Watch our latest videos and creative content</p>
           </Link>
 
           <Link
-            href="/contact"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/contact'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               Get in Touch
             </h3>
-            <p className="text-foreground-subtle">Have questions about our recipes? Contact us!</p>
+            <p className='text-foreground-subtle'>Have questions about our recipes? Contact us!</p>
           </Link>
 
           <Link
-            href="/"
-            className="group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline"
+            href='/'
+            className='group p-6 rounded-xl bg-surface border border-border shadow-lg hover:shadow-xl hover:border-accent-border transition-all duration-200 block no-underline'
           >
-            <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors">
+            <h3 className='text-xl font-semibold mb-3 text-foreground group-hover:text-accent transition-colors'>
               Home
             </h3>
-            <p className="text-foreground-subtle">
+            <p className='text-foreground-subtle'>
               Return to our homepage and explore everything we offer
             </p>
           </Link>

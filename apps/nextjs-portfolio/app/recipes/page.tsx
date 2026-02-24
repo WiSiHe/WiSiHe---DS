@@ -1,10 +1,10 @@
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FiBarChart, FiThermometer, FiUsers } from 'react-icons/fi';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllRecipes } from '@/sanity/lib/queries';
-import Link from 'next/link';
-import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
-import { Metadata } from 'next';
-import { FiThermometer, FiUsers, FiBarChart } from 'react-icons/fi';
 
 interface Recipe {
   _id: string;
@@ -77,7 +77,7 @@ export default async function RecipesPage() {
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
@@ -107,60 +107,60 @@ export default async function RecipesPage() {
           }),
         }}
       />
-      <div className="w-full min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl">
-        <div className="w-full pb-6">
-          <h1 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-3">
+      <div className='w-full min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl'>
+        <div className='w-full pb-6'>
+          <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>
             Recipes
           </h1>
-          <p className="text-base md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed">
+          <p className='text-base md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed'>
             A collection of recipes I&apos;ve tried and enjoyed.
           </p>
         </div>
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
           {recipes?.map((recipe: Recipe) => (
             <li key={recipe._id}>
-              <article className="group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl border border-border/30 bg-surface hover:border-accent/30">
+              <article className='group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl border border-border/30 bg-surface hover:border-accent/30'>
                 {recipe.mainImage && (
-                  <div className="aspect-video overflow-hidden relative">
+                  <div className='aspect-video overflow-hidden relative'>
                     <Image
                       src={urlForImage(recipe.mainImage)?.url() || ''}
                       alt={recipe.mainImage.alt}
                       width={640}
                       height={360}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
                     />
                   </div>
                 )}
-                <div className="p-5 flex flex-col gap-3">
+                <div className='p-5 flex flex-col gap-3'>
                   <Link
                     href={`/recipes/${recipe.slug}`}
-                    className="before:absolute before:inset-0 before:z-0"
+                    className='before:absolute before:inset-0 before:z-0'
                   >
-                    <h2 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
+                    <h2 className='text-lg font-semibold text-foreground group-hover:text-accent transition-colors'>
                       {recipe.title}
                     </h2>
                   </Link>
                   {recipe.description && (
-                    <p className="text-sm text-foreground-subtle line-clamp-2">
+                    <p className='text-sm text-foreground-subtle line-clamp-2'>
                       {recipe.description}
                     </p>
                   )}
-                  <div className="flex flex-wrap gap-4 text-xs text-foreground-muted">
+                  <div className='flex flex-wrap gap-4 text-xs text-foreground-muted'>
                     {recipe.cookingTime && (
-                      <span className="flex items-center gap-1.5">
-                        <FiThermometer className="w-3.5 h-3.5 text-accent" />
+                      <span className='flex items-center gap-1.5'>
+                        <FiThermometer className='w-3.5 h-3.5 text-accent' />
                         {recipe.cookingTime} min
                       </span>
                     )}
                     {recipe.servings && (
-                      <span className="flex items-center gap-1.5">
-                        <FiUsers className="w-3.5 h-3.5 text-success" />
+                      <span className='flex items-center gap-1.5'>
+                        <FiUsers className='w-3.5 h-3.5 text-success' />
                         {recipe.servings} servings
                       </span>
                     )}
                     {recipe.difficulty && (
-                      <span className="flex items-center gap-1.5">
-                        <FiBarChart className="w-3.5 h-3.5 text-info" />
+                      <span className='flex items-center gap-1.5'>
+                        <FiBarChart className='w-3.5 h-3.5 text-info' />
                         {recipe.difficulty}
                       </span>
                     )}

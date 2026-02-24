@@ -1,6 +1,5 @@
 import { PresentationIcon } from '@sanity/icons';
-import { defineField, defineType, ValidationContext } from 'sanity';
-import blockContent from './blockContent';
+import { defineField, defineType, type ValidationContext } from 'sanity';
 import { tag } from './tag';
 
 // Source object type (inline)
@@ -417,7 +416,7 @@ const mediaType = defineType({
             try {
               JSON.parse(value);
               return true;
-            } catch (e) {
+            } catch (_e) {
               return 'Must be valid JSON';
             }
           }

@@ -1,10 +1,10 @@
+import type { PaintingQueryResult } from '@wisihe/sanity-queries';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
-import { PaintingQueryResult } from '@wisihe/sanity-queries';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
-import { Metadata, ResolvingMetadata } from 'next';
-import { notFound } from 'next/navigation';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -96,7 +96,7 @@ export default async function PaintingPage(props: Props) {
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(structuredData),
         }}

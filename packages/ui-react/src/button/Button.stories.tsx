@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
 
-// badges 
+// badges
 // https://storybook.js.org/addons/storybook-addon-tag-badges
 // tags = 'new' | 'alpha, beta, rc, experimental' | 'deprecated' | 'outdated' | 'danger' | 'code-only' | 'version:*, v:*'
 

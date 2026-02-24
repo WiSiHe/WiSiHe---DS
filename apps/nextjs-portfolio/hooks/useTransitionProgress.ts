@@ -1,7 +1,7 @@
 'use client';
 
-import { useProgress } from 'react-transition-progress';
 import { startTransition } from 'react';
+import { useProgress } from 'react-transition-progress';
 
 /**
  * Custom hook that provides a convenient way to trigger progress bars
