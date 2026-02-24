@@ -1,11 +1,11 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import PaintingCard from '../PaintingCard/PaintingCard';
-import { GetPaginatedPaintingsResult } from '@wisihe/sanity-queries';
+import type { GetPaginatedPaintingsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { FaArrowLeft, FaArrowRight, FaStepBackward, FaStepForward } from 'react-icons/fa';
+import PaintingCard from '../PaintingCard/PaintingCard';
 
 type ApiResponse = {
   paintings: GetPaginatedPaintingsResult;
@@ -79,7 +79,7 @@ const PaginatedPaintingGrid = ({
   useEffect(() => {
     const pageParam = searchParams.get('page');
     const filterParam = searchParams.get('filter') || '';
-    const pageNumber = pageParam ? parseInt(pageParam) : 1;
+    const pageNumber = pageParam ? parseInt(pageParam, 10) : 1;
 
     // Check if filter changed
     if (filterParam !== currentFilter) {
@@ -112,11 +112,11 @@ const PaginatedPaintingGrid = ({
 
   return (
     <>
-      <div className="grid w-full h-full grid-cols-12 gap-2">
+      <div className='grid w-full h-full grid-cols-12 gap-2'>
         {paintings.map((painting, index) => (
           <div
             key={painting._id}
-            className="relative col-span-full sm:col-span-6 md:col-span-4 lg:col-span-3"
+            className='relative col-span-full sm:col-span-6 md:col-span-4 lg:col-span-3'
           >
             <PaintingCard
               paintingData={painting}
@@ -127,21 +127,21 @@ const PaginatedPaintingGrid = ({
       </div>
 
       {pagination.totalPages > 1 && (
-        <div className="flex justify-center w-full items-center mt-8 mb-4">
-          <div className="flex items-center space-x-2">
+        <div className='flex justify-center w-full items-center mt-8 mb-4'>
+          <div className='flex items-center space-x-2'>
             {/* First Page Link */}
             {pagination.page > 1 ? (
               <Link
                 href={buildPageUrl(1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
-                aria-label="First page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors'
+                aria-label='First page'
               >
                 <FaStepBackward />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
-                aria-label="First page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                aria-label='First page'
               >
                 <FaStepBackward />
               </span>
@@ -151,21 +151,21 @@ const PaginatedPaintingGrid = ({
             {pagination.page > 1 ? (
               <Link
                 href={buildPageUrl(pagination.page - 1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
-                aria-label="Previous page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors'
+                aria-label='Previous page'
               >
                 <FaArrowLeft />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
-                aria-label="Previous page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                aria-label='Previous page'
               >
                 <FaArrowLeft />
               </span>
             )}
 
-            <span className="px-4 py-2 text-sm text-foreground">
+            <span className='px-4 py-2 text-sm text-foreground'>
               Page {pagination.page} of {pagination.totalPages}
             </span>
 
@@ -173,15 +173,15 @@ const PaginatedPaintingGrid = ({
             {pagination.page < pagination.totalPages ? (
               <Link
                 href={buildPageUrl(pagination.page + 1)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
-                aria-label="Next page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors'
+                aria-label='Next page'
               >
                 <FaArrowRight />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
-                aria-label="Next page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                aria-label='Next page'
               >
                 <FaArrowRight />
               </span>
@@ -191,15 +191,15 @@ const PaginatedPaintingGrid = ({
             {pagination.page < pagination.totalPages ? (
               <Link
                 href={buildPageUrl(pagination.totalPages)}
-                className="px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
-                aria-label="Last page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-accent text-accent-contrast hover:bg-accent-hover transition-colors'
+                aria-label='Last page'
               >
                 <FaStepForward />
               </Link>
             ) : (
               <span
-                className="px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed"
-                aria-label="Last page"
+                className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                aria-label='Last page'
               >
                 <FaStepForward />
               </span>
@@ -210,8 +210,8 @@ const PaginatedPaintingGrid = ({
 
       {/* Browse All Pages Navigation */}
       {pagination.totalPages > 3 && (
-        <nav aria-label="All painting pages" className="mt-6 flex justify-center">
-          <div className="flex flex-wrap items-center gap-1.5">
+        <nav aria-label='All painting pages' className='mt-6 flex justify-center'>
+          <div className='flex flex-wrap items-center gap-1.5'>
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(pageNum => (
               <Link
                 key={pageNum}

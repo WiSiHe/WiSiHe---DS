@@ -1,4 +1,4 @@
-import { FaHome, FaPalette, FaFont, FaBullhorn, FaLayerGroup } from 'react-icons/fa';
+import { FaBullhorn, FaFont, FaHome, FaLayerGroup, FaPalette } from 'react-icons/fa';
 
 export const navItems = [
   { name: 'Introduction', href: '/design-system', icon: <FaHome /> },

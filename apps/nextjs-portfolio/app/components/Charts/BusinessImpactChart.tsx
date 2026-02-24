@@ -47,8 +47,8 @@ export const BusinessImpactChart = () => {
   ];
 
   return (
-    <div className="w-full min-w-0 overflow-hidden max-w-full py-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className='w-full min-w-0 overflow-hidden max-w-full py-4'>
+      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
         {metrics.map((metric, index) => (
           <MetricCard
             key={metric.title}
@@ -66,5 +66,3 @@ export const BusinessImpactChart = () => {
     </div>
   );
 };
-
-

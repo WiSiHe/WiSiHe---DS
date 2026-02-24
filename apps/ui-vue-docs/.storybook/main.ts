@@ -1,6 +1,6 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/vue3-vite';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
 import vue from '@vitejs/plugin-vue';
 
 const __filename = fileURLToPath(import.meta.url);

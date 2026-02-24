@@ -1,17 +1,17 @@
 // add flags.ts
-import { statsigAdapter, type StatsigUser } from "@flags-sdk/statsig";
-import { flag, dedupe } from "flags/next";
-import type { Identify } from "flags";
+import { type StatsigUser, statsigAdapter } from '@flags-sdk/statsig';
+import type { Identify } from 'flags';
+import { dedupe, flag } from 'flags/next';
 
 export const identify = dedupe(() => ({
-  customIDs: { stableID: "1234" },
+  customIDs: { stableID: '1234' },
   // add any additional user properties you collect here
 })) satisfies Identify<StatsigUser>;
 
 export const createFeatureGate = (key: string) =>
   flag<boolean, StatsigUser>({
     key,
-    adapter: statsigAdapter.featureGate((gate) => gate.value, {
+    adapter: statsigAdapter.featureGate(gate => gate.value, {
       exposureLogging: true,
     }),
     identify,

@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   flattenTokenTree,
   loadLayeredTokens,
@@ -54,22 +54,26 @@ function collectThemeVariables(tokenTree) {
 
     for (const { path: tokenPath, token } of flattenedTokens) {
       const joinedPath = tokenPath.join('-');
-      let variableName = joinedPath.startsWith(`${namespace}-`)
+      const variableName = joinedPath.startsWith(`${namespace}-`)
         ? `--${joinedPath}`
         : `--${namespace}-${joinedPath}`;
-      
+
       const rawValue = token.$value;
       const cssValue = replaceReferencesWithCssVars(rawValue);
-      
+
       let finalValue = cssValue;
 
-      // For semantic colors, we map the public utility (e.g., --color-accent) 
+      // For semantic colors, we map the public utility (e.g., --color-accent)
       // to the private runtime value (e.g., --color-accent-val) wrapped in color-mix().
       // This ensures Tailwind sees it as a color (for opacity) while allowing runtime switching.
-      if (variableName.startsWith('--color-') && category === 'semantic' && token.$type === 'color') {
-         finalValue = `color-mix(in srgb, var(${variableName}-val), transparent 0%)`;
+      if (
+        variableName.startsWith('--color-') &&
+        category === 'semantic' &&
+        token.$type === 'color'
+      ) {
+        finalValue = `color-mix(in srgb, var(${variableName}-val), transparent 0%)`;
       }
-      
+
       lines.push(`  ${variableName}: ${finalValue};`);
 
       // Alias semantic radius tokens to standard --radius-* variables

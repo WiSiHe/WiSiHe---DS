@@ -1,9 +1,9 @@
 'use client';
 
 import { forwardRef } from 'react';
-import * as THREE from 'three';
+import type * as THREE from 'three';
 
-export const R3FFirstScene = forwardRef<THREE.Mesh>((props, ref) => {
+export const R3FFirstScene = forwardRef<THREE.Mesh>((_props, ref) => {
   return (
     <>
       <mesh ref={ref}>
@@ -11,7 +11,7 @@ export const R3FFirstScene = forwardRef<THREE.Mesh>((props, ref) => {
         <meshStandardMaterial />
       </mesh>
       <ambientLight intensity={0.1} />
-      <directionalLight position={[0, 0, 5]} color="red" intensity={0.8} />
+      <directionalLight position={[0, 0, 5]} color='red' intensity={0.8} />
     </>
   );
 });

@@ -1,10 +1,10 @@
 'use client';
 
 import { forwardRef } from 'react';
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import { COLORS, MATERIAL_PROPERTIES } from '../constants';
 
-export const ThreeJSIntroScene = forwardRef<THREE.Group>((props, ref) => {
+export const ThreeJSIntroScene = forwardRef<THREE.Group>((_props, ref) => {
   return (
     <group ref={ref}>
       <mesh position={[-2, 0, 0]}>

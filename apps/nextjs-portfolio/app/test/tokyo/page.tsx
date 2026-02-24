@@ -1,5 +1,5 @@
+import type { Metadata } from 'next';
 import TokyoPage from '@/app/components/Tokyo/TokyoPage';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   robots: 'noindex, nofollow',

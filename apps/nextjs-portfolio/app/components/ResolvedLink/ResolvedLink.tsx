@@ -1,8 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { linkResolver } from '@/sanity/lib/utils';
-import Link from 'next/link';
 
 interface ResolvedLinkProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,8 +1,8 @@
 'use client';
 
-import NextLink from 'next/link';
+import type NextLink from 'next/link';
+import type { ComponentProps } from 'react';
 import { Link as ProgressLink } from 'react-transition-progress/next';
-import { type ComponentProps } from 'react';
 
 /**
  * A Link component that combines Next.js Link with react-transition-progress

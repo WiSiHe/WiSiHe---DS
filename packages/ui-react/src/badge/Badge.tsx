@@ -1,6 +1,6 @@
-import React from 'react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type React from 'react';
 
 const badge = cva(
   'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
@@ -37,13 +37,13 @@ const badge = cva(
           'text-warning-contrast',
           'hover:bg-warning-text',
         ],
-        accent: ['border-transparent', 'bg-accent', 'text-accent-contrast', 'hover:bg-accent-hover'],
-        outline: [
-          'border-border',
-          'bg-transparent',
-          'text-foreground',
-          'hover:bg-surface-hover',
+        accent: [
+          'border-transparent',
+          'bg-accent',
+          'text-accent-contrast',
+          'hover:bg-accent-hover',
         ],
+        outline: ['border-border', 'bg-transparent', 'text-foreground', 'hover:bg-surface-hover'],
         'accent-warm': [
           'border-transparent',
           'bg-accent-warm-500',

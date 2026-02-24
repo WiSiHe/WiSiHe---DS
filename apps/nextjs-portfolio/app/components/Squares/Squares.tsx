@@ -1,5 +1,6 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import type React from 'react';
+import { useEffect, useRef } from 'react';
 
 type CanvasStrokeStyle = string | CanvasGradient | CanvasPattern;
 
@@ -152,7 +153,7 @@ const Squares: React.FC<SquaresProps> = ({
     };
   }, [direction, speed, borderColor, hoverFillColor, squareSize, backgroundColor]);
 
-  return <canvas ref={canvasRef} className="block w-full h-full border-none"></canvas>;
+  return <canvas ref={canvasRef} className='block w-full h-full border-none'></canvas>;
 };
 
 export default Squares;

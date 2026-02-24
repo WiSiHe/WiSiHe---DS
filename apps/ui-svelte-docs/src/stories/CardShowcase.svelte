@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Badge, Button, Card, Stack } from '@wisihe/ui-svelte';
 </script>
 
 <Card variant="elevated" class="w-[420px]">

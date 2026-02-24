@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons']
+    optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons'],
   },
 
   transpilePackages: [
@@ -58,7 +58,9 @@ const nextConfig: NextConfig = {
 
       return redirects
         .filter(
-          (redirect: any): redirect is { source: string; destination: string; permanent: boolean } =>
+          (
+            redirect: any,
+          ): redirect is { source: string; destination: string; permanent: boolean } =>
             Boolean(redirect.source && redirect.destination),
         )
         .map((redirect: any) => ({

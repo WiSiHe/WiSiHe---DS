@@ -95,21 +95,23 @@ export function ThreeDSlideDeckClient({
       <StructuredData />
       <main
         ref={mainRef}
-        className="w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden"
-        style={{
-          scrollBehavior: 'smooth',
-          // Performance optimizations for smooth scrolling
-          willChange: 'scroll-position',
-          // Prevent scroll chaining to improve performance
-          overscrollBehavior: 'contain',
-          // Use GPU acceleration for scrolling
-          transform: 'translateZ(0)',
-          // Smooth scrolling on iOS
-          WebkitOverflowScrolling: 'touch',
-        } as React.CSSProperties}
+        className='w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden'
+        style={
+          {
+            scrollBehavior: 'smooth',
+            // Performance optimizations for smooth scrolling
+            willChange: 'scroll-position',
+            // Prevent scroll chaining to improve performance
+            overscrollBehavior: 'contain',
+            // Use GPU acceleration for scrolling
+            transform: 'translateZ(0)',
+            // Smooth scrolling on iOS
+            WebkitOverflowScrolling: 'touch',
+          } as React.CSSProperties
+        }
       >
         {/* Hero Section */}
-        <section className="snap-start shrink-0 h-screen w-full relative">
+        <section className='snap-start shrink-0 h-screen w-full relative'>
           <ThreeDHero />
         </section>
 
@@ -128,7 +130,7 @@ export function ThreeDSlideDeckClient({
         {/* Technical Deck */}
         <div
           ref={technicalDeckRef}
-          className="snap-start shrink-0 h-screen w-full relative"
+          className='snap-start shrink-0 h-screen w-full relative'
           style={{
             // Performance optimizations for the technical deck container
             contentVisibility: shouldLoadTechnical ? 'visible' : 'auto',
@@ -140,7 +142,7 @@ export function ThreeDSlideDeckClient({
         </div>
 
         {/* Sources Section */}
-        <div className="snap-start shrink-0 min-h-screen w-full relative">
+        <div className='snap-start shrink-0 min-h-screen w-full relative'>
           <SourcesSection />
         </div>
       </main>

@@ -13,7 +13,10 @@
     "description": "Everything in 3D starts with a Point or 'Vertex'. A vertex defines a position in 3D space using X (width), Y (height), and Z (depth) coordinates. They are the scaffolding for all complex shapes.",
     "mode": "vertices",
     "links": [
-      { "text": "Three.js BufferGeometry Documentation", "url": "https://threejs.org/docs/#api/en/core/BufferGeometry" }
+      {
+        "text": "Three.js BufferGeometry Documentation",
+        "url": "https://threejs.org/docs/#api/en/core/BufferGeometry"
+      }
     ]
   },
   {
@@ -31,9 +34,7 @@
     "description": "Understanding the core 'Three.js' engine is vital. It requires manual setup of the Scene (world), Camera (eyes), and Renderer (painter), alongside a recursive Animation Loop to keep the frame updating.",
     "mode": "threejs-intro",
     "code": "import * as THREE from 'three';\n\n// 1. Create a container (Scene)\nconst scene = new THREE.Scene();\n\n// 2. Create a Perspective Camera\nconst camera = new THREE.PerspectiveCamera(75, w/h, 0.1, 1000);\n\n// 3. Create & size the Renderer\nconst renderer = new THREE.WebGLRenderer();\nrenderer.setSize(w, h);\n\n// 4. Geometry + Material = Mesh\nconst mesh = new THREE.Mesh(\n  new THREE.BoxGeometry(1, 1, 1),\n  new THREE.MeshStandardMaterial({ color: 0x3b82f6 })\n);\nscene.add(mesh);\n\n// 5. The Render Loop (60fps)\nfunction animate() {\n  requestAnimationFrame(animate);\n  mesh.rotation.y += 0.005; // Slow & smooth rotation\n  renderer.render(scene, camera);\n}\nanimate();",
-    "links": [
-      { "text": "Three.js API Reference", "url": "https://threejs.org/docs/" }
-    ]
+    "links": [{ "text": "Three.js API Reference", "url": "https://threejs.org/docs/" }]
   },
   {
     "title": "R3F: Declarative 3D",
@@ -41,7 +42,10 @@
     "mode": "r3f-basics",
     "code": "import React, { useRef, useState } from 'react';\nimport { Canvas, useFrame } from '@react-three/fiber';\nimport { OrbitControls } from '@react-three/drei';\n\nfunction Box({ position, color }) {\n  const mesh = useRef();\n  const [active, setActive] = useState(false);\n  \n  // Rotation logic inside the loop\n  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.0025));\n\n  return (\n    <mesh\n      position={position}\n      ref={mesh}\n      scale={active ? 1.5 : 1}\n      onClick={() => setActive(!active)}\n    >\n      <boxGeometry args={[1, 1, 1]} />\n      <meshStandardMaterial color={color} />\n    </mesh>\n  );\n}\n\nexport default function App() {\n  const [count, setCount] = useState(1);\n\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <button onClick={() => setCount(c => c + 1)}>Add Box (State Update)</button>\n\n      <Canvas>\n        <OrbitControls />\n        <ambientLight />\n        <pointLight position={[10, 10, 10]} />\n        \n        {[...Array(count)].map((_, i) => (\n          <Box key={i} position={[i * 1.5 - 1.5, i * 0.5, 0]} color=\"hotpink\" />\n        ))}\n      </Canvas>\n    </div>\n  );\n}",
     "links": [
-      { "text": "R3F Getting Started Guide", "url": "https://docs.pmnd.rs/react-three-fiber/getting-started/introduction" }
+      {
+        "text": "R3F Getting Started Guide",
+        "url": "https://docs.pmnd.rs/react-three-fiber/getting-started/introduction"
+      }
     ]
   },
   {
@@ -50,8 +54,14 @@
     "mode": "r3f-first-scene",
     "code": "import { Canvas } from '@react-three/fiber';\nimport { OrbitControls } from '@react-three/drei';\n\nexport default function Scene() {\n  return (\n    <Canvas>\n      {/* Soft overall light */}\n      <ambientLight intensity={0.5} />\n      {/* Key light from a specific position */}\n      <directionalLight position={[10, 10, 5]} intensity={1} />\n\n      {/* Add mouse/touch control for the camera */}\n      <OrbitControls />\n\n      <mesh>\n        <boxGeometry args={[2, 2, 2]} />\n        <meshStandardMaterial color=\"orange\" />\n      </mesh>\n    </Canvas>\n  );\n}",
     "links": [
-      { "text": "Three.js - AmbientLight Documentation", "url": "https://threejs.org/docs/#api/en/lights/AmbientLight" },
-      { "text": "pmndrs/drei - OrbitControls Documentation", "url": "https://github.com/pmndrs/drei#orbitcontrols" }
+      {
+        "text": "Three.js - AmbientLight Documentation",
+        "url": "https://threejs.org/docs/#api/en/lights/AmbientLight"
+      },
+      {
+        "text": "pmndrs/drei - OrbitControls Documentation",
+        "url": "https://github.com/pmndrs/drei#orbitcontrols"
+      }
     ]
   },
   {
@@ -60,7 +70,10 @@
     "mode": "r3f-geometries",
     "code": "import { Canvas } from '@react-three/fiber';\nimport { OrbitControls } from '@react-three/drei';\n\nexport default function Geometries() {\n  return (\n    <Canvas>\n      <OrbitControls />\n      <group>\n        {/* Sphere: [radius, widthSegments, heightSegments] */}\n        <mesh position={[-2, 0, 0]}>\n          <sphereGeometry args={[0.7, 32, 32]} />\n          <meshStandardMaterial color=\"blue\" />\n        </mesh>\n\n        {/* Torus: [radius, tube, radialSegments, tubularSegments] */}\n        <mesh position={[2, 0, 0]}>\n          <torusGeometry args={[0.5, 0.2, 16, 100]} />\n          <meshStandardMaterial color=\"purple\" />\n        </mesh>\n      </group>\n    </Canvas>\n  );\n}",
     "links": [
-      { "text": "Three.js - Built-in Geometries Reference", "url": "https://threejs.org/docs/#api/en/geometries/BoxGeometry" }
+      {
+        "text": "Three.js - Built-in Geometries Reference",
+        "url": "https://threejs.org/docs/#api/en/geometries/BoxGeometry"
+      }
     ]
   },
   {
@@ -69,8 +82,14 @@
     "mode": "r3f-materials",
     "code": "import React, { Suspense } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport { useTexture, OrbitControls } from '@react-three/drei';\n\nfunction MaterialShowcase() {\n  const texture = useTexture('/images/earth-texture.jpg');\n\n  return (\n    <group>\n      {/* 1. Basic: Constant color, unlit */}\n      <mesh position={[-2, 0, 0]}>\n        <boxGeometry args={[1, 1, 1]} />\n        <meshBasicMaterial color=\"#3b82f6\" />\n      </mesh>\n\n      {/* 2. Standard: Metallic/Roughness workflow (PBR) */}\n      <mesh position={[0, 0, 0]}>\n        <boxGeometry args={[1, 1, 1]} />\n        <meshStandardMaterial color=\"gold\" metalness={0.8} roughness={0.2} />\n      </mesh>\n\n      {/* 3. Textured: Spherical projection of an image */}\n      <mesh position={[2, 0, 0]}>\n        <sphereGeometry args={[0.8, 32, 32]} />\n        <meshStandardMaterial map={texture} roughness={0.8} />\n      </mesh>\n    </group>\n  );\n}\n\nexport default function App() {\n  return (\n    <Canvas>\n      <OrbitControls />\n      <ambientLight intensity={0.5} />\n      <Suspense fallback={null}>\n        <MaterialShowcase />\n      </Suspense>\n    </Canvas>\n  );\n}",
     "links": [
-      { "text": "pmndrs/drei - useTexture Hook", "url": "https://github.com/pmndrs/drei#usetexture" },
-      { "text": "Three.js - MeshStandardMaterial Documentation", "url": "https://threejs.org/docs/#api/en/materials/MeshStandardMaterial" }
+      {
+        "text": "pmndrs/drei - useTexture Hook",
+        "url": "https://github.com/pmndrs/drei#usetexture"
+      },
+      {
+        "text": "Three.js - MeshStandardMaterial Documentation",
+        "url": "https://threejs.org/docs/#api/en/materials/MeshStandardMaterial"
+      }
     ]
   },
   {
@@ -79,7 +98,10 @@
     "mode": "r3f-animation",
     "code": "import { useRef } from 'react';\nimport { Canvas, useFrame } from '@react-three/fiber';\nimport { OrbitControls } from '@react-three/drei';\n\nfunction AnimatedBox() {\n  const meshRef = useRef();\n\n  // 'delta' ensures rotation is independent of frame rate\n  useFrame((state, delta) => {\n    meshRef.current.rotation.x += delta * 0.2;\n  });\n\n  return (\n    <mesh ref={meshRef}>\n      <boxGeometry args={[2, 2, 2]} />\n      <meshStandardMaterial color=\"orange\" />\n    </mesh>\n  );\n}\n\nexport default () => (\n  <Canvas>\n    <OrbitControls />\n    <AnimatedBox />\n  </Canvas>\n);",
     "links": [
-      { "text": "R3F - useFrame Hook Documentation", "url": "https://docs.pmnd.rs/react-three-fiber/api/hooks#useframe" }
+      {
+        "text": "R3F - useFrame Hook Documentation",
+        "url": "https://docs.pmnd.rs/react-three-fiber/api/hooks#useframe"
+      }
     ]
   },
   {
@@ -88,7 +110,10 @@
     "mode": "r3f-interaction",
     "code": "import { useState } from 'react';\nimport { Canvas } from '@react-three/fiber';\nimport { OrbitControls } from '@react-three/drei';\n\nfunction InteractiveBox() {\n  const [active, setActive] = useState(false);\n\n  return (\n    <mesh\n      scale={active ? 1.5 : 1}\n      onClick={() => setActive(!active)}\n    >\n      <boxGeometry args={[2, 2, 2]} />\n      <meshStandardMaterial color={active ? 'hotpink' : 'orange'} />\n    </mesh>\n  );\n}\n\nexport default () => (\n  <Canvas>\n    <OrbitControls />\n    <InteractiveBox />\n  </Canvas>\n);",
     "links": [
-      { "text": "R3F - Interaction & Events Guide", "url": "https://docs.pmnd.rs/react-three-fiber/concepts/events" }
+      {
+        "text": "R3F - Interaction & Events Guide",
+        "url": "https://docs.pmnd.rs/react-three-fiber/concepts/events"
+      }
     ]
   },
   {
@@ -97,7 +122,10 @@
     "mode": "showcase",
     "code": "import { Canvas } from '@react-three/fiber';\nimport { OrbitControls, Environment, useGLTF, useTexture } from '@react-three/drei';\n\nfunction CustomModel({ texturePath }) {\n  // 1. Load the custom 3D model (GLTF/GLB)\n  const { scene } = useGLTF('/beer2.gltf');\n  \n  // 2. Load the dynamic texture\n  const texture = useTexture(texturePath || '/Regular - texture.jpg');\n  \n  // 3. Apply texture to proper material (simple traversal)\n  scene.traverse((child) => {\n    if (child.isMesh && child.name === 'Can') {\n      child.material.map = texture;\n    }\n  });\n\n  return <primitive object={scene} />;\n}\n\nexport default function FinalScene() {\n  return (\n    <Canvas>\n      <OrbitControls autoRotate />\n      <Environment preset=\"city\" />\n      <CustomModel />\n    </Canvas>\n  );\n}",
     "links": [
-      { "text": "pmndrs/drei - Staging & Scene Helpers", "url": "https://github.com/pmndrs/drei#staging" }
+      {
+        "text": "pmndrs/drei - Staging & Scene Helpers",
+        "url": "https://github.com/pmndrs/drei#staging"
+      }
     ]
   }
 ]

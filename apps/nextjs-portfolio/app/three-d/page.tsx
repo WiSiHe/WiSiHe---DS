@@ -1,6 +1,6 @@
-import { ThreeDSlideDeckClient } from './ThreeDSlideDeckClient';
 import { fetchPresentationSlides } from '@/sanity/lib/fetchPresentations';
 import { presentationSlides as fallbackSlides } from './presentationSlides';
+import { ThreeDSlideDeckClient } from './ThreeDSlideDeckClient';
 
 // The slug of the presentation in Sanity for the 3D page
 const PRESENTATION_SLUG = 'houston-we-re-coding-3d';

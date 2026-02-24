@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { Renderer, Program, Triangle, Mesh } from 'ogl';
+import { Mesh, Program, Renderer, Triangle } from 'ogl';
+import { useEffect, useRef } from 'react';
 
 type Props = {
   enableRainbow?: boolean;
@@ -227,8 +227,10 @@ void main() {
       uniforms.iTime.value = t * 0.001;
 
       const lerpFactor = 0.1;
-      mousePositionRef.current.x += (targetMouseRef.current.x - mousePositionRef.current.x) * lerpFactor;
-      mousePositionRef.current.y += (targetMouseRef.current.y - mousePositionRef.current.y) * lerpFactor;
+      mousePositionRef.current.x +=
+        (targetMouseRef.current.x - mousePositionRef.current.x) * lerpFactor;
+      mousePositionRef.current.y +=
+        (targetMouseRef.current.y - mousePositionRef.current.y) * lerpFactor;
 
       const currentInfluence = uniforms.mouseInfluence.value;
       const targetInfluence = mouseInfluenceRef.current;
@@ -255,7 +257,20 @@ void main() {
         containerRef.current.removeChild(gl.canvas);
       }
     };
-  }, []);
+  }, [
+    enableRainbow,
+    fadeDistance,
+    glowIntensity,
+    gridColor,
+    gridRotation,
+    gridSize,
+    gridThickness,
+    mouseInteraction,
+    mouseInteractionRadius,
+    opacity,
+    rippleIntensity,
+    vignetteStrength,
+  ]);
 
   useEffect(() => {
     if (!uniformsRef.current) return;
@@ -299,10 +314,7 @@ void main() {
   ]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full relative overflow-hidden [&_canvas]:block"
-    />
+    <div ref={containerRef} className='w-full h-full relative overflow-hidden [&_canvas]:block' />
   );
 };
 

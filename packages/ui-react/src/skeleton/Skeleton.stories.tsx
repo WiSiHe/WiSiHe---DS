@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Skeleton } from './Skeleton';
 
@@ -47,15 +46,15 @@ export const Rectangular: Story = {
 
 export const CardSkeleton: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 p-4 border border-border rounded-xl w-[300px]">
-      <div className="flex items-center gap-4">
-        <Skeleton variant="circular" />
-        <div className="flex flex-col gap-2 flex-1">
-          <Skeleton variant="text" />
-          <Skeleton variant="text" className="w-2/3" />
+    <div className='flex flex-col gap-4 p-4 border border-border rounded-xl w-[300px]'>
+      <div className='flex items-center gap-4'>
+        <Skeleton variant='circular' />
+        <div className='flex flex-col gap-2 flex-1'>
+          <Skeleton variant='text' />
+          <Skeleton variant='text' className='w-2/3' />
         </div>
       </div>
-      <Skeleton variant="rectangular" className="h-[150px] mt-2" />
+      <Skeleton variant='rectangular' className='h-[150px] mt-2' />
     </div>
   ),
 };

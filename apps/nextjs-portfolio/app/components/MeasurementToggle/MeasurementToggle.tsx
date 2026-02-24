@@ -26,12 +26,13 @@ export default function MeasurementToggle({
   };
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
-      <span className="text-sm font-medium text-gray-700">Units:</span>
-      <div className="flex gap-1">
+    <div className='flex items-center gap-2 p-2 bg-gray-100 rounded-lg'>
+      <span className='text-sm font-medium text-gray-700'>Units:</span>
+      <div className='flex gap-1'>
         {measurementModes.map(({ value, label, icon }) => (
           <button
             key={value}
+            type='button'
             onClick={() => handleModeChange(value)}
             className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
               activeMode === value
@@ -39,7 +40,7 @@ export default function MeasurementToggle({
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             }`}
           >
-            <span className="mr-1">{icon}</span>
+            <span className='mr-1'>{icon}</span>
             {label}
           </button>
         ))}

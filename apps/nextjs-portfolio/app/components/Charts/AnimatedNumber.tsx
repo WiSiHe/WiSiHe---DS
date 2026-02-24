@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const AnimatedNumber = ({
   value,
@@ -28,7 +28,7 @@ export const AnimatedNumber = ({
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / (duration * 1000), 1);
 
-      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const easeOut = 1 - (1 - progress) ** 3;
       const current = startValue + (endValue - startValue) * easeOut;
 
       setDisplayValue(current);
@@ -47,15 +47,13 @@ export const AnimatedNumber = ({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [value, duration]);
+  }, [value, duration, displayValue]);
 
   return (
-    <span className="tabular-nums">
+    <span className='tabular-nums'>
       {prefix}
       {displayValue.toFixed(decimals)}
       {suffix}
     </span>
   );
 };
-
-

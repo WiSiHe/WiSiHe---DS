@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Badge } from '@wisihe/ui-svelte';
 </script>
 
 <div class="flex flex-wrap items-center gap-2">

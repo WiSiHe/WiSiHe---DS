@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   flattenTokenTree,
   loadLayeredTokens,
@@ -64,7 +64,7 @@ function generateSemanticColors() {
 
   // Output only standard CSS variables for runtime switching
   // The @theme definition is handled by generate-tailwind-v4.js
-  
+
   return output;
 }
 
@@ -78,4 +78,3 @@ const outputPath = path.join(outputDir, 'semantic-colors.css');
 fs.writeFileSync(outputPath, semanticColorsContent);
 
 console.log('✅ Semantic colors generated:', outputPath);
-

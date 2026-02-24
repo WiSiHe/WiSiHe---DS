@@ -22,7 +22,7 @@ export function Numbers({ metrics }: NumbersProps) {
   // Helper to get color for metric
   const getMetricColor = (metric: Metric): string => {
     if (metric.color) return metric.color;
-    
+
     const valueType = getValueType(metric.value);
     if (valueType === 'positive') return '#22c55e'; // green
     if (valueType === 'negative') return '#ef4444'; // red
@@ -30,12 +30,12 @@ export function Numbers({ metrics }: NumbersProps) {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-8">
-      <div className="w-full max-w-6xl">
+    <div className='w-full h-full flex items-center justify-center p-8'>
+      <div className='w-full max-w-6xl'>
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {metrics.map((metric, index) => {
-            const valueType = getValueType(metric.value);
+            const _valueType = getValueType(metric.value);
             const color = getMetricColor(metric);
 
             return (
@@ -44,30 +44,25 @@ export function Numbers({ metrics }: NumbersProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
-                className="bg-surface-elevated rounded-xl p-6 border border-border/50 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
+                className='bg-surface-elevated rounded-xl p-6 border border-border/50 hover:border-accent/50 transition-all duration-300 hover:shadow-lg'
               >
                 {/* Label */}
-                <div className="mb-3">
-                  <h3 className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
+                <div className='mb-3'>
+                  <h3 className='text-sm font-semibold text-foreground/70 uppercase tracking-wider'>
                     {metric.label}
                   </h3>
                 </div>
 
                 {/* Value */}
-                <div className="mb-3">
-                  <span
-                    className="text-4xl md:text-5xl font-black"
-                    style={{ color }}
-                  >
+                <div className='mb-3'>
+                  <span className='text-4xl md:text-5xl font-black' style={{ color }}>
                     {metric.value}
                   </span>
                 </div>
 
                 {/* Description */}
                 {metric.description && (
-                  <p className="text-sm text-foreground/60 leading-relaxed">
-                    {metric.description}
-                  </p>
+                  <p className='text-sm text-foreground/60 leading-relaxed'>{metric.description}</p>
                 )}
               </motion.div>
             );

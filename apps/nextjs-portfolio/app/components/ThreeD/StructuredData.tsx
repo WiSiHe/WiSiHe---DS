@@ -118,31 +118,25 @@ export function StructuredData() {
       '@type': 'WebPage',
       '@id': 'https://www.wisihe.no/three-d',
     },
-    keywords: [
-      'Three.js',
-      'React Three Fiber',
-      'WebGL',
-      '3D web development',
-      'interactive 3D',
-    ],
+    keywords: ['Three.js', 'React Three Fiber', 'WebGL', '3D web development', 'interactive 3D'],
   };
 
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(webPageSchema),
         }}
       />
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(howToSchema),
         }}
       />
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(articleSchema),
         }}

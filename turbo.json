@@ -35,5 +35,10 @@
       "cache": false
     }
   },
-  "globalEnv": ["NEXT_PUBLIC_*", "EXPERIMENTATION_CONFIG_ITEM_KEY", "STATSIG_SERVER_API_KEY", "PUBLIC_OPENAI_API_KEY"]
+  "globalEnv": [
+    "NEXT_PUBLIC_*",
+    "EXPERIMENTATION_CONFIG_ITEM_KEY",
+    "STATSIG_SERVER_API_KEY",
+    "PUBLIC_OPENAI_API_KEY"
+  ]
 }

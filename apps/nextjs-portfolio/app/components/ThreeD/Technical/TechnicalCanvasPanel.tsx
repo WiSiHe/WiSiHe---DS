@@ -1,10 +1,10 @@
 'use client';
 
-import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion } from 'motion/react';
-import { PersistentScene } from '../scenes';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import type { SlideMode } from '../../../three-d/types';
+import { PersistentScene } from '../scenes';
 
 type TechnicalCanvasPanelProps = {
   mode: SlideMode;
@@ -36,7 +36,7 @@ export function TechnicalCanvasPanel({
       ([entry]) => {
         setIsVisible(entry.isIntersecting && entry.intersectionRatio > 0.1);
       },
-      { threshold: [0, 0.1, 0.5, 1], rootMargin: '50px' }
+      { threshold: [0, 0.1, 0.5, 1], rootMargin: '50px' },
     );
 
     observer.observe(canvasContainerRef.current);
@@ -57,46 +57,44 @@ export function TechnicalCanvasPanel({
   return (
     <div
       ref={canvasContainerRef}
-      className="h-full relative bg-surface border-l border-border-subtle overflow-hidden"
+      className='h-full relative bg-surface border-l border-border-subtle overflow-hidden'
     >
       {/* Subtle overlay for depth */}
-      <div
-        className="absolute inset-0 opacity-5 pointer-events-none z-0 bg-accent"
-      />
+      <div className='absolute inset-0 opacity-5 pointer-events-none z-0 bg-accent' />
 
       {/* Context Lost Error Message */}
       {contextLost && contextError && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm">
+        <div className='absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm'>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface-elevated border-2 border-red-500/50 rounded-xl p-6 max-w-md mx-4 shadow-2xl"
+            className='bg-surface-elevated border-2 border-red-500/50 rounded-xl p-6 max-w-md mx-4 shadow-2xl'
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+            <div className='flex items-center gap-3 mb-4'>
+              <div className='w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center'>
                 <svg
-                  className="w-6 h-6 text-red-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  className='w-6 h-6 text-red-500'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
                     strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
                   />
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-foreground">WebGL Context Lost</h3>
-                <p className="text-sm text-foreground/70">Attempting to restore...</p>
+                <h3 className='text-lg font-bold text-foreground'>WebGL Context Lost</h3>
+                <p className='text-sm text-foreground/70'>Attempting to restore...</p>
               </div>
             </div>
-            <p className="text-sm text-foreground/80 mb-4">{contextError}</p>
+            <p className='text-sm text-foreground/80 mb-4'>{contextError}</p>
             <button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors"
+              className='w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors'
             >
               Refresh Page
             </button>
@@ -106,14 +104,14 @@ export function TechnicalCanvasPanel({
 
       <Suspense
         fallback={
-          <div className="w-full h-full flex items-center justify-center">
+          <div className='w-full h-full flex items-center justify-center'>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center space-y-4"
+              className='text-center space-y-4'
             >
-              <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
-              <div className="text-foreground/60 font-medium">Loading 3D Scene...</div>
+              <div className='w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto' />
+              <div className='text-foreground/60 font-medium'>Loading 3D Scene...</div>
             </motion.div>
           </div>
         }
@@ -135,7 +133,7 @@ export function TechnicalCanvasPanel({
             depth: true,
           }}
           dpr={1}
-          className="w-full h-full"
+          className='w-full h-full'
           onCreated={({ gl, scene }) => {
             // Handle WebGL context loss
             const canvas = gl.domElement;
@@ -148,7 +146,9 @@ export function TechnicalCanvasPanel({
 
               // Log comprehensive resource info
               if ('memory' in performance) {
-                const mem = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+                const mem = (
+                  performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }
+                ).memory;
                 const memoryInfo = {
                   used: `${(mem.usedJSHeapSize / 1048576).toFixed(2)} MB`,
                   total: `${(mem.totalJSHeapSize / 1048576).toFixed(2)} MB`,
@@ -159,16 +159,21 @@ export function TechnicalCanvasPanel({
                 // Warn if memory usage is high
                 const usagePercent = (mem.usedJSHeapSize / mem.totalJSHeapSize) * 100;
                 if (usagePercent > 80) {
-                  console.warn(`High memory usage: ${usagePercent.toFixed(1)}% - this may cause context loss`);
+                  console.warn(
+                    `High memory usage: ${usagePercent.toFixed(1)}% - this may cause context loss`,
+                  );
                 }
               }
 
               // Log WebGL info
-              const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
+              const webglContext =
+                gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
               if (webglContext) {
                 try {
                   const maxTextureSize = webglContext.getParameter(webglContext.MAX_TEXTURE_SIZE);
-                  const maxCombinedTextureImageUnits = webglContext.getParameter(webglContext.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+                  const maxCombinedTextureImageUnits = webglContext.getParameter(
+                    webglContext.MAX_COMBINED_TEXTURE_IMAGE_UNITS,
+                  );
                   console.warn('WebGL limits:', {
                     maxTextureSize,
                     maxCombinedTextureImageUnits,
@@ -204,7 +209,8 @@ export function TechnicalCanvasPanel({
 
             // Set resource limits to prevent context loss
             // Get WebGL context to check extensions
-            const webglContext = gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
+            const webglContext =
+              gl.getContext() || canvas.getContext('webgl') || canvas.getContext('webgl2');
             if (webglContext && 'getSupportedExtensions' in webglContext) {
               try {
                 const extensions = webglContext.getSupportedExtensions();

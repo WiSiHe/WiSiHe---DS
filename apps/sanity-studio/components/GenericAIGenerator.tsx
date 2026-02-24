@@ -1,19 +1,19 @@
-import React from 'react';
-import { Button, Card, Text, TextArea, Flex, Badge, Spinner } from '@sanity/ui';
-import { useEffect, useState } from 'react';
-import { set, StringInputProps, unset, useFormValue } from 'sanity';
-import { urlFor } from '../utils/image';
-import OpenAI from 'openai';
-import { OPENAI_API_KEY } from '../environment';
-import { WiStars } from 'react-icons/wi';
 import {
   ApiIcon,
-  DocumentIcon,
-  WarningOutlineIcon,
   CheckmarkCircleIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  DocumentIcon,
+  WarningOutlineIcon,
 } from '@sanity/icons';
+import { Badge, Button, Card, Flex, Spinner, Text, TextArea } from '@sanity/ui';
+import OpenAI from 'openai';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { WiStars } from 'react-icons/wi';
+import { type StringInputProps, set, unset, useFormValue } from 'sanity';
+import { OPENAI_API_KEY } from '../environment';
+import { urlFor } from '../utils/image';
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
@@ -223,16 +223,16 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
   }, [image, imageField, fieldDependencies]);
 
   return (
-    <Card padding={4} tone="transparent" border radius={2} shadow={1}>
+    <Card padding={4} tone='transparent' border radius={2} shadow={1}>
       {/* Header with AI badge */}
-      <Flex align="center" gap={2} paddingBottom={3}>
+      <Flex align='center' gap={2} paddingBottom={3}>
         <ApiIcon />
-        <Text size={1} weight="semibold">
+        <Text size={1} weight='semibold'>
           AI Content Generator
         </Text>
         {isLoading && (
-          <Badge tone="primary" padding={2}>
-            <Flex align="center" gap={1}>
+          <Badge tone='primary' padding={2}>
+            <Flex align='center' gap={1}>
               <Spinner />
               <Text size={0}>Generating...</Text>
             </Flex>
@@ -241,16 +241,16 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       </Flex>
 
       {/* Collapsible prompt editor */}
-      <Card paddingBottom={3} tone="transparent">
+      <Card paddingBottom={3} tone='transparent'>
         <Button
-          mode="bleed"
+          mode='bleed'
           onClick={() => setShowPromptEditor(!showPromptEditor)}
           icon={showPromptEditor ? ChevronUpIcon : ChevronDownIcon}
           text={showPromptEditor ? 'Hide prompt editor' : 'Customize prompt'}
           style={{ width: '100%', justifyContent: 'flex-start' }}
         />
         {showPromptEditor && (
-          <Card paddingTop={2} tone="transparent">
+          <Card paddingTop={2} tone='transparent'>
             <TextArea
               value={customPrompt}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -265,7 +265,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
                 fontSize: '12px',
               }}
             />
-            <Card paddingTop={1} tone="transparent">
+            <Card paddingTop={1} tone='transparent'>
               <Text size={0} muted>
                 Current prompt: {finalPrompt}
               </Text>
@@ -275,8 +275,8 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       </Card>
 
       {/* Character counter */}
-      <Card paddingBottom={2} tone="transparent">
-        <Flex align="center" gap={1}>
+      <Card paddingBottom={2} tone='transparent'>
+        <Flex align='center' gap={1}>
           <DocumentIcon />
           <Text size={1} muted>
             {value ? value.length : 0} {characterLimit ? `/ ${characterLimit}` : ''} characters
@@ -290,8 +290,8 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
           const value = dependencyValues[key];
           return !value || (typeof value === 'string' && value.trim() === '');
         }) && (
-          <Card paddingBottom={2} tone="transparent">
-            <Flex align="center" gap={1}>
+          <Card paddingBottom={2} tone='transparent'>
+            <Flex align='center' gap={1}>
               <WarningOutlineIcon />
               <Text size={1} muted>
                 Fill in the required fields first to generate content
@@ -301,7 +301,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
         )}
 
       {/* Text area */}
-      <Card tone="transparent" paddingBottom={3}>
+      <Card tone='transparent' paddingBottom={3}>
         <TextArea
           value={value || ''}
           onChange={handleChangeContent}
@@ -316,7 +316,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       </Card>
 
       {/* Generate button and status */}
-      <Card tone="transparent">
+      <Card tone='transparent'>
         <Button
           disabled={
             isLoading ||
@@ -328,23 +328,23 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
               }))
           }
           loading={isLoading}
-          tone="primary"
+          tone='primary'
           onClick={() => void handleAIGeneration()}
           icon={isLoading ? undefined : WiStars}
           text={isLoading ? 'Generating...' : 'Generate'}
         />
 
         {error && (
-          <Flex align="center" gap={1} paddingTop={2}>
+          <Flex align='center' gap={1} paddingTop={2}>
             <WarningOutlineIcon />
-            <Text size={1} weight="medium" style={{ color: 'var(--card-danger-fg-color)' }}>
+            <Text size={1} weight='medium' style={{ color: 'var(--card-danger-fg-color)' }}>
               {error}
             </Text>
           </Flex>
         )}
 
         {value && !isLoading && !error && (
-          <Flex align="center" gap={1} paddingTop={2}>
+          <Flex align='center' gap={1} paddingTop={2}>
             <CheckmarkCircleIcon />
             <Text size={1} style={{ color: 'var(--card-success-fg-color)' }}>
               Content generated successfully

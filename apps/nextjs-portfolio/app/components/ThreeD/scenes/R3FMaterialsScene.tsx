@@ -1,11 +1,11 @@
 'use client';
 
-import { forwardRef } from 'react';
-import * as THREE from 'three';
 import { useTexture } from '@react-three/drei';
+import { forwardRef } from 'react';
+import type * as THREE from 'three';
 import { COLORS } from '../constants';
 
-export const R3FMaterialsScene = forwardRef<THREE.Group>((props, ref) => {
+export const R3FMaterialsScene = forwardRef<THREE.Group>((_props, ref) => {
   // Using the requested earth texture
   const texture = useTexture('/images/earth-texture.jpg');
 
@@ -20,21 +20,13 @@ export const R3FMaterialsScene = forwardRef<THREE.Group>((props, ref) => {
       {/* Standard Material - Metallic */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          color="gold"
-          metalness={0.8}
-          roughness={0.2}
-        />
+        <meshStandardMaterial color='gold' metalness={0.8} roughness={0.2} />
       </mesh>
 
       {/* Textured Material (Sphere for Earth) */}
       <mesh position={[2, 0, 0]}>
         <sphereGeometry args={[0.8, 32, 32]} />
-        <meshStandardMaterial
-          map={texture}
-          metalness={0.2}
-          roughness={0.8}
-        />
+        <meshStandardMaterial map={texture} metalness={0.2} roughness={0.8} />
       </mesh>
     </group>
   );

@@ -63,9 +63,7 @@ const createDocumentListItem = (S: StructureBuilder, item: DocumentItem) =>
     .title(item.title)
     .icon(() => item.icon)
     .child(
-      S.documentTypeList(item.schemaType)
-        .title(item.title)
-        .filter(`_type == "${item.schemaType}"`),
+      S.documentTypeList(item.schemaType).title(item.title).filter(`_type == "${item.schemaType}"`),
     );
 
 const createCategoryItem = (S: StructureBuilder, category: CategoryItem) =>
@@ -75,14 +73,14 @@ const createCategoryItem = (S: StructureBuilder, category: CategoryItem) =>
     .child(
       S.list()
         .title(category.title)
-        .items(category.items.map((item) => createDocumentListItem(S, item))),
+        .items(category.items.map(item => createDocumentListItem(S, item))),
     );
 
 // All schema types that are handled explicitly (for the "Other Documents" filter)
 const handledSchemaTypes = [
   'home',
   'settings',
-  ...categories.flatMap((cat) => cat.items.map((item) => item.schemaType)),
+  ...categories.flatMap(cat => cat.items.map(item => item.schemaType)),
 ];
 
 // Main structure builder
@@ -97,13 +95,13 @@ export const structure = (S: StructureBuilder) =>
         .child(
           S.list()
             .title('Site Configuration')
-            .items(singletons.map((item) => createSingletonItem(S, item))),
+            .items(singletons.map(item => createSingletonItem(S, item))),
         ),
 
       S.divider(),
 
       // Dynamic categories
-      ...categories.map((category) => createCategoryItem(S, category)),
+      ...categories.map(category => createCategoryItem(S, category)),
 
       S.divider(),
 

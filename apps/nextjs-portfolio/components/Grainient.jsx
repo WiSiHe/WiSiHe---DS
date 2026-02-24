@@ -1,7 +1,7 @@
 'use client';
 
+import { Mesh, Program, Renderer, Triangle } from 'ogl';
 import { useEffect, useRef } from 'react';
-import { Renderer, Program, Mesh, Triangle } from 'ogl';
 
 const clampRgbValue = value => Math.max(0, Math.min(255, value));
 
@@ -174,7 +174,7 @@ const Grainient = ({
   color1 = '#FF9FFC',
   color2 = '#5227FF',
   color3 = '#B19EEF',
-  className = ''
+  className = '',
 }) => {
   const containerRef = useRef(null);
 
@@ -187,14 +187,14 @@ const Grainient = ({
         webgl: 2,
         alpha: true,
         antialias: false,
-        dpr: Math.min(window.devicePixelRatio || 1, 2)
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
       });
     } catch {
       try {
         renderer = new Renderer({
           alpha: true,
           antialias: false,
-          dpr: Math.min(window.devicePixelRatio || 1, 2)
+          dpr: Math.min(window.devicePixelRatio || 1, 2),
         });
       } catch {
         return undefined;
@@ -237,8 +237,8 @@ const Grainient = ({
         uZoom: { value: zoom },
         uColor1: { value: new Float32Array(colorToRgb(color1)) },
         uColor2: { value: new Float32Array(colorToRgb(color2)) },
-        uColor3: { value: new Float32Array(colorToRgb(color3)) }
-      }
+        uColor3: { value: new Float32Array(colorToRgb(color3)) },
+      },
     });
 
     const mesh = new Mesh(gl, { geometry, program });
@@ -297,7 +297,7 @@ const Grainient = ({
     zoom,
     color1,
     color2,
-    color3
+    color3,
   ]);
 
   return <div ref={containerRef} className={`grainient-container ${className}`.trim()} />;

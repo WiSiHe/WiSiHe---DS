@@ -22,18 +22,14 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint . --max-warnings 0",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@wisihe/eslint-config": "workspace:*",
     "@wisihe/typescript-config": "workspace:*",
     "clsx": "^2.1.1",
-    "eslint": "^9.39.3",
     "tailwind-merge": "^2.6.1",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0"
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"

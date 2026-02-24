@@ -1,7 +1,7 @@
-import { defineType, defineField } from 'sanity';
-import { seoType } from './seoType';
 import { FaWeibo } from 'react-icons/fa';
+import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { seoType } from './seoType';
 
 export default defineType({
   name: 'recipe',
@@ -60,10 +60,10 @@ export default defineType({
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt="Write a compelling recipe description that highlights what makes this dish special. Include key flavors, textures, and what diners can expect. Make it appetizing and under 200 characters."
+            prompt='Write a compelling recipe description that highlights what makes this dish special. Include key flavors, textures, and what diners can expect. Make it appetizing and under 200 characters.'
             characterLimit={200}
             rows={3}
-            placeholder="Enter or generate a recipe description..."
+            placeholder='Enter or generate a recipe description...'
           />
         ),
       },
@@ -86,11 +86,11 @@ export default defineType({
             input: props => (
               <GenericAIGenerator
                 {...props}
-                prompt="Write alt text for this recipe image. Describe the food, presentation, colors, and any notable visual elements. Focus on accessibility and make it descriptive for screen readers. Keep it concise and under 125 characters."
-                imageField="mainImage"
+                prompt='Write alt text for this recipe image. Describe the food, presentation, colors, and any notable visual elements. Focus on accessibility and make it descriptive for screen readers. Keep it concise and under 125 characters.'
+                imageField='mainImage'
                 characterLimit={122}
                 rows={2}
-                placeholder="Enter or generate alt text for the main image..."
+                placeholder='Enter or generate alt text for the main image...'
               />
             ),
           },
@@ -118,11 +118,11 @@ export default defineType({
                 input: props => (
                   <GenericAIGenerator
                     {...props}
-                    prompt="Write alt text for this recipe image. Describe the food, presentation, colors, and visual elements. Focus on accessibility for screen readers. Keep it under 120 characters."
-                    imageField="."
+                    prompt='Write alt text for this recipe image. Describe the food, presentation, colors, and visual elements. Focus on accessibility for screen readers. Keep it under 120 characters.'
+                    imageField='.'
                     characterLimit={120}
                     rows={2}
-                    placeholder="Enter or generate alt text for image..."
+                    placeholder='Enter or generate alt text for image...'
                   />
                 ),
               },
@@ -137,10 +137,10 @@ export default defineType({
                   <GenericAIGenerator
                     {...props}
                     prompt="Write an engaging caption for this recipe image. Explain what's shown and why it's relevant to the recipe. Keep it conversational, informative, and under 80 characters."
-                    imageField="."
+                    imageField='.'
                     characterLimit={80}
                     rows={2}
-                    placeholder="Enter or generate a caption..."
+                    placeholder='Enter or generate a caption...'
                   />
                 ),
               },
@@ -196,11 +196,11 @@ export default defineType({
                             input: props => (
                               <GenericAIGenerator
                                 {...props}
-                                prompt="Write alt text for this ingredient image. Include the ingredient name, appearance, color, texture, and distinctive features. Keep it concise and accessible for screen readers."
-                                imageField="photo"
+                                prompt='Write alt text for this ingredient image. Include the ingredient name, appearance, color, texture, and distinctive features. Keep it concise and accessible for screen readers.'
+                                imageField='photo'
                                 characterLimit={100}
                                 rows={2}
-                                placeholder="Enter or generate alt text for ingredient..."
+                                placeholder='Enter or generate alt text for ingredient...'
                               />
                             ),
                           },
@@ -301,7 +301,7 @@ export default defineType({
                     }}
                     characterLimit={300}
                     rows={3}
-                    placeholder="Enter or generate cooking tip content..."
+                    placeholder='Enter or generate cooking tip content...'
                   />
                 ),
               },
