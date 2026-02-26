@@ -675,4 +675,30 @@ export const allPresentationsQuery = defineQuery(`
     }
   }
 `);
+export const getPaginatedProjects = defineQuery(`
+  *[_type == "project" && defined(slug.current)]
+  | order(projectStart desc, _updatedAt desc) [$start...$end] {
+    _id,
+    "slug": slug.current,
+    title,
+    description,
+    seoDescription,
+    projectType,
+    projectStart,
+    projectEnd,
+    status,
+    content,
+    name,
+    "tags": tags[]->{name},
+    image {
+      ...,
+      "lqip": asset->metadata.lqip
+    }
+  }
+`);
+
+export const getProjectsCount = defineQuery(`
+  count(*[_type == "project" && defined(slug.current)])
+`);
+
 export * from './sanity.types';

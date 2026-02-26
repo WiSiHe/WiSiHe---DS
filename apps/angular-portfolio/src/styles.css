@@ -1,0 +1,22 @@
+@import "tailwindcss";
+/* Import design tokens from package exports */
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
+
+@layer base {
+  /* Reset border colors */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+
+  body {
+    color: var(--color-foreground);
+    background: var(--color-background);
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  }
+}

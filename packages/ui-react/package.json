@@ -39,8 +39,11 @@
     "access": "public"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
+    "@tabler/icons-react": "^3.37.1",
     "@wisihe/tokens": "workspace:*",
-    "class-variance-authority": "^0.7.1"
+    "class-variance-authority": "^0.7.1",
+    "motion": "^12.34.3"
   },
   "peerDependencies": {
     "tailwindcss": ">=3.4.18"

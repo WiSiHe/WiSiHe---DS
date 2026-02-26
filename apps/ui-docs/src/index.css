@@ -2,5 +2,5 @@
 @source "../../../packages/ui-react/src";
 
 @import "@wisihe/tokens/tailwind-v4";
-@import "@wisihe/tokens/tailwind-v4-dark" layer(theme);
-@import "@wisihe/tokens/css/semantic" layer(theme);
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";

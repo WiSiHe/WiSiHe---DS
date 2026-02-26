@@ -11,19 +11,24 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "extract-types": "sanity schema extract --enforce-required-fields",
-    "typegen": "sanity typegen generate"
+    "typegen": "sanity typegen generate",
+    "sync-algolia": "tsx scripts/sync-algolia.ts"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
     "@sanity/assist": "^5.0.4",
+    "@sanity/blueprints": "0.12.2",
     "@sanity/cli": "5.3.1",
+    "@sanity/client": "^7.15.0",
+    "@sanity/functions": "1.2.0",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/studio-secrets": "^3.0.3",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^5.11.0",
+    "algoliasearch": "5.49.1",
     "openai": "^6.22.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -37,6 +42,8 @@
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",
     "@wisihe/typescript-config": "workspace:*",
+    "dotenv": "17.3.1",
+    "tsx": "4.21.0",
     "typescript": "^5.9.3"
   }
 }
