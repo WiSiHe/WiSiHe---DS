@@ -6,11 +6,7 @@ import { PaintingCard } from './PaintingCard';
 const DEMO_IMG = 'https://images.unsplash.com/photo-1578301978069-1b52e12f8bf6?w=600&q=80';
 
 const DemoImage = ({ src = DEMO_IMG }: { src?: string }) => (
-  <img
-    src={src}
-    alt="Demo painting"
-    className="object-cover w-full h-full absolute inset-0"
-  />
+  <img src={src} alt='Demo painting' className='object-cover w-full h-full absolute inset-0' />
 );
 
 const meta: Meta<typeof PaintingCard> = {
@@ -19,8 +15,8 @@ const meta: Meta<typeof PaintingCard> = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   decorators: [
-    (Story) => (
-      <div className="w-64">
+    Story => (
+      <div className='w-64'>
         <Story />
       </div>
     ),
@@ -32,7 +28,7 @@ type Story = StoryObj<typeof PaintingCard>;
 
 export const Default: Story = {
   args: {
-    title: 'Duckie\'s Kingdom',
+    title: "Duckie's Kingdom",
     href: '/paintings/duckies-kingdom',
     image: <DemoImage />,
     tags: ['Fantasy', 'Conceptart'],
@@ -46,9 +42,9 @@ export const WithBadges: Story = {
     image: <DemoImage />,
     tags: ['Store', 'Landscape'],
     badges: [
-      { key: 'store', icon: <IconShoppingCart className="w-4 h-4" />, label: 'Available for sale' },
-      { key: 'video', icon: <IconVideo className="w-4 h-4" />, label: 'Has video' },
-      { key: 'multi', icon: <IconStack2 className="w-4 h-4" />, label: 'Multiple images' },
+      { key: 'store', icon: <IconShoppingCart className='w-4 h-4' />, label: 'Available for sale' },
+      { key: 'video', icon: <IconVideo className='w-4 h-4' />, label: 'Has video' },
+      { key: 'multi', icon: <IconStack2 className='w-4 h-4' />, label: 'Multiple images' },
     ],
   },
 };
@@ -63,7 +59,7 @@ export const NSFW_Blurred: Story = {
     isNsfw: true,
     isNsfwVisible: false,
     badges: [
-      { key: 'nsfw', icon: <IconAlertTriangle className="w-4 h-4" />, label: 'NSFW content' },
+      { key: 'nsfw', icon: <IconAlertTriangle className='w-4 h-4' />, label: 'NSFW content' },
     ],
   },
 };
@@ -78,7 +74,7 @@ export const NSFW_Visible: Story = {
     isNsfw: true,
     isNsfwVisible: true,
     badges: [
-      { key: 'nsfw', icon: <IconAlertTriangle className="w-4 h-4" />, label: 'NSFW content' },
+      { key: 'nsfw', icon: <IconAlertTriangle className='w-4 h-4' />, label: 'NSFW content' },
     ],
   },
 };

@@ -6,46 +6,43 @@ import type * as React from 'react';
 // Variants
 // ---------------------------------------------------------------------------
 
-const iconBadge = cva(
-  'inline-flex items-center justify-center shrink-0 transition-colors',
-  {
-    variants: {
-      variant: {
-        /** Default accent colour */
-        accent: 'bg-accent text-accent-contrast',
-        /** Subtle surface — useful for secondary indicators */
-        surface: 'bg-surface-elevated text-foreground',
-        /** Transparent with a border */
-        outline: 'border border-border bg-transparent text-foreground',
-        success: 'bg-success text-success-contrast',
-        danger:  'bg-danger text-danger-contrast',
-        warning: 'bg-warning text-warning-contrast',
-      },
-      size: {
-        sm: 'p-1 [&>svg]:w-3 [&>svg]:h-3',
-        md: 'p-2 [&>svg]:w-4 [&>svg]:h-4',
-        lg: 'p-3 [&>svg]:w-5 [&>svg]:h-5',
-      },
-      shape: {
-        /** Slightly rounded — default for card badges */
-        square: 'rounded-md',
-        /** Fully rounded */
-        circle: 'rounded-full',
-      },
-      shadow: {
-        none: '',
-        sm:   'shadow-sm',
-        md:   'shadow-md',
-      },
+const iconBadge = cva('inline-flex items-center justify-center shrink-0 transition-colors', {
+  variants: {
+    variant: {
+      /** Default accent colour */
+      accent: 'bg-accent text-accent-contrast',
+      /** Subtle surface — useful for secondary indicators */
+      surface: 'bg-surface-elevated text-foreground',
+      /** Transparent with a border */
+      outline: 'border border-border bg-transparent text-foreground',
+      success: 'bg-success text-success-contrast',
+      danger: 'bg-danger text-danger-contrast',
+      warning: 'bg-warning text-warning-contrast',
     },
-    defaultVariants: {
-      variant: 'accent',
-      size:    'md',
-      shape:   'square',
-      shadow:  'sm',
+    size: {
+      sm: 'p-1 [&>svg]:w-3 [&>svg]:h-3',
+      md: 'p-2 [&>svg]:w-4 [&>svg]:h-4',
+      lg: 'p-3 [&>svg]:w-5 [&>svg]:h-5',
+    },
+    shape: {
+      /** Slightly rounded — default for card badges */
+      square: 'rounded-md',
+      /** Fully rounded */
+      circle: 'rounded-full',
+    },
+    shadow: {
+      none: '',
+      sm: 'shadow-sm',
+      md: 'shadow-md',
     },
   },
-);
+  defaultVariants: {
+    variant: 'accent',
+    size: 'md',
+    shape: 'square',
+    shadow: 'sm',
+  },
+});
 
 // ---------------------------------------------------------------------------
 // Types
@@ -85,7 +82,7 @@ export function IconBadge({
 }: IconBadgeProps) {
   return (
     <span
-      role="img"
+      role='img'
       aria-label={label}
       className={cn(iconBadge({ variant, size, shape, shadow }), className)}
       {...props}

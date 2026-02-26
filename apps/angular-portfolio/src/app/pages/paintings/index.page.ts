@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { from } from 'rxjs';
 import { SanityService } from '../../services/sanity.service';
 
@@ -43,7 +43,7 @@ import { SanityService } from '../../services/sanity.service';
 })
 export default class PaintingsIndex {
   public sanityService = inject(SanityService); // Changed to public so the template can hit urlFor
-  
+
   // Use toSignal with an Observable created from the Promise
   paintings = toSignal(from(this.sanityService.getPaintings(1, 12)));
 }

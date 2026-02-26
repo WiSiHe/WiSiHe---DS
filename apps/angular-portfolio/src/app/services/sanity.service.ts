@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
-import { getPaginatedPaintings, getPaintingsCount, paintingQuery, projectQuery, getPaginatedProjects, getProjectsCount } from '@wisihe/sanity-queries';
+import {
+  getPaginatedPaintings,
+  getPaginatedProjects,
+  getPaintingsCount,
+  getProjectsCount,
+  paintingQuery,
+  projectQuery,
+} from '@wisihe/sanity-queries';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SanityService {
   private client = createClient({
@@ -24,17 +31,17 @@ export class SanityService {
   async getPaintings(page: number = 1, limit: number = 12) {
     const start = (page - 1) * limit;
     const end = start + limit;
-    
+
     const [data, totalCount] = await Promise.all([
       this.client.fetch(getPaginatedPaintings, { start, end }),
-      this.client.fetch(getPaintingsCount)
+      this.client.fetch(getPaintingsCount),
     ]);
-    
+
     return {
       data,
       totalCount,
       totalPages: Math.ceil((totalCount as number) / limit),
-      currentPage: page
+      currentPage: page,
     };
   }
 
@@ -45,17 +52,17 @@ export class SanityService {
   async getProjects(page: number = 1, limit: number = 12) {
     const start = (page - 1) * limit;
     const end = start + limit;
-    
+
     const [data, totalCount] = await Promise.all([
       this.client.fetch(getPaginatedProjects, { start, end }),
-      this.client.fetch(getProjectsCount)
+      this.client.fetch(getProjectsCount),
     ]);
-    
+
     return {
       data,
       totalCount,
       totalPages: Math.ceil((totalCount as number) / limit),
-      currentPage: page
+      currentPage: page,
     };
   }
 

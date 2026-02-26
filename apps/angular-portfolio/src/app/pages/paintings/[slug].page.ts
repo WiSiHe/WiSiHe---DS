@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { from } from 'rxjs';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { SanityService } from '../../services/sanity.service';
 
 @Component({
@@ -81,7 +81,7 @@ export default class PaintingDetailPage {
   // Extract the slug from the URL, then switchMap it into a rigorous Sanity document fetch!
   painting = toSignal(
     this.route.paramMap.pipe(
-      switchMap(params => from(this.sanityService.getPainting(params.get('slug') || '')))
-    )
+      switchMap(params => from(this.sanityService.getPainting(params.get('slug') || ''))),
+    ),
   );
 }

@@ -24,37 +24,37 @@ const iconsListVariants: Variants = {
 // ---------------------------------------------------------------------------
 function ImagePlaceholder() {
   return (
-    <div className="relative w-full h-full bg-linear-to-br from-surface-subtle via-surface to-surface-elevated flex items-center justify-center overflow-hidden">
+    <div className='relative w-full h-full bg-linear-to-br from-surface-subtle via-surface to-surface-elevated flex items-center justify-center overflow-hidden'>
       {/* Grid overlay */}
       <svg
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full opacity-10"
-        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden='true'
+        className='absolute inset-0 w-full h-full opacity-10'
+        xmlns='http://www.w3.org/2000/svg'
       >
         <defs>
-          <pattern id="pc-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="currentColor" strokeWidth="0.5" />
+          <pattern id='pc-grid' width='24' height='24' patternUnits='userSpaceOnUse'>
+            <path d='M 24 0 L 0 0 0 24' fill='none' stroke='currentColor' strokeWidth='0.5' />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#pc-grid)" />
+        <rect width='100%' height='100%' fill='url(#pc-grid)' />
       </svg>
       {/* Soft glowing blobs */}
-      <div className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-accent/20 blur-2xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-accent/10 blur-xl" />
+      <div className='absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-accent/20 blur-2xl' />
+      <div className='absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-accent/10 blur-xl' />
       {/* Palette icon */}
       <svg
-        aria-hidden="true"
-        className="relative z-10 w-12 h-12 text-foreground-muted opacity-40"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+        aria-hidden='true'
+        className='relative z-10 w-12 h-12 text-foreground-muted opacity-40'
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        stroke='currentColor'
         strokeWidth={1}
       >
         <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z"
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z'
         />
       </svg>
     </div>
@@ -144,9 +144,9 @@ export function PaintingCard({
         'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
         className,
       )}
-      whileHover="hover"
-      initial="rest"
-      animate="rest"
+      whileHover='hover'
+      initial='rest'
+      animate='rest'
       layout
     >
       {/* ------------------------------------------------------------------ */}
@@ -154,10 +154,10 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {tags.length > 0 && (
         <motion.ul
-          className="absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2"
+          className='absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2'
           variants={listVariants}
         >
-          {tags.map((tag) => (
+          {tags.map(tag => (
             <PaintingCardTag key={tag} label={tag} />
           ))}
         </motion.ul>
@@ -167,7 +167,7 @@ export function PaintingCard({
       {/* Pinned badge                                                        */}
       {/* ------------------------------------------------------------------ */}
       {pinnedBadge && (
-        <div className="absolute z-20 right-2 top-2">
+        <div className='absolute z-20 right-2 top-2'>
           <PaintingCardBadgeItem icon={pinnedBadge.icon} label={pinnedBadge.label} pinned />
         </div>
       )}
@@ -183,7 +183,7 @@ export function PaintingCard({
           )}
           variants={iconsListVariants}
         >
-          {animatedBadges.map((badge) => (
+          {animatedBadges.map(badge => (
             <PaintingCardBadgeItem key={badge.key} icon={badge.icon} label={badge.label} />
           ))}
         </motion.ul>
@@ -193,7 +193,7 @@ export function PaintingCard({
       {/* Image container                                                    */}
       {/* ------------------------------------------------------------------ */}
       <motion.div
-        className="relative w-full h-full"
+        className='relative w-full h-full'
         layoutId={`image-${title}`}
         variants={{
           rest: { scale: 1 },
@@ -209,8 +209,8 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {showBlur && (
         <div
-          className="absolute inset-0 w-full h-full bg-background/60 backdrop-blur-xl z-10"
-          aria-hidden="true"
+          className='absolute inset-0 w-full h-full bg-background/60 backdrop-blur-xl z-10'
+          aria-hidden='true'
         />
       )}
 
@@ -219,13 +219,13 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       <LinkEl
         href={href}
-        className="before:absolute before:inset-0 before:z-0"
+        className='before:absolute before:inset-0 before:z-0'
         aria-label={`View painting: ${title}`}
       >
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0">
+        <div className='absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0'>
           <motion.h2
             layoutId={`title-${title}`}
-            className="text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter group-hover:text-accent transition-colors duration-300"
+            className='text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter group-hover:text-accent transition-colors duration-300'
           >
             {title}
           </motion.h2>

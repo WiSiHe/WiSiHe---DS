@@ -11,7 +11,9 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
 const dataset = process.env.SANITY_STUDIO_DATASET;
 
 if (!projectId || !dataset) {
-  console.error('Missing SANITY_STUDIO_PROJECT_ID or SANITY_STUDIO_DATASET in environment variables.');
+  console.error(
+    'Missing SANITY_STUDIO_PROJECT_ID or SANITY_STUDIO_DATASET in environment variables.',
+  );
   process.exit(1);
 }
 
@@ -20,7 +22,9 @@ const sanityClient = createClient({
   dataset: dataset,
   useCdn: false, // We want the latest published data
   apiVersion: '2024-08-22',
-  token: process.env.SANITY_API_READ_TOKEN || 'skCs2t9p0R75ZmajnywXA2winKSYN35rM0tl5ixgrCHp44UUzOKtltufSi9luU4VwuGDxbQZuteL1fagl6w1AbjrcMoI05EMB0e1vdo483D2ankiiZw5J1tSce1hdwA3k6hEG5Qm7W1R0JDXGVWDuN7RXsVKCrKRxNA1PiKH7CcN4uYxQpbN'
+  token:
+    process.env.SANITY_API_READ_TOKEN ||
+    'skCs2t9p0R75ZmajnywXA2winKSYN35rM0tl5ixgrCHp44UUzOKtltufSi9luU4VwuGDxbQZuteL1fagl6w1AbjrcMoI05EMB0e1vdo483D2ankiiZw5J1tSce1hdwA3k6hEG5Qm7W1R0JDXGVWDuN7RXsVKCrKRxNA1PiKH7CcN4uYxQpbN',
 });
 
 // 2. Initialize Algolia Client
@@ -69,7 +73,7 @@ async function syncToAlgolia() {
       } else if (Array.isArray(doc.views)) {
         popularity = doc.views.length;
       }
-      
+
       const createdAtDate = doc._createdAt ? new Date(doc._createdAt).getTime() : 0;
 
       return {

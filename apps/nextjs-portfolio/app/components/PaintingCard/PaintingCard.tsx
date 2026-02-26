@@ -10,7 +10,6 @@ import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
 import { TbBoxMultiple } from 'react-icons/tb';
 import { urlForImage } from '@/sanity/lib/utils';
 
-
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
@@ -37,14 +36,14 @@ const PaintingCardAdapter = ({
   const { tagsV2 } = paintingData;
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];
-  const cleanedTags = filteredTags.map((t) => cleanTagName(t.name));
+  const cleanedTags = filteredTags.map(t => cleanTagName(t.name));
 
   const hasStore = cleanedTags.includes('Store');
   const isNsfw = cleanedTags.includes('NSFW');
 
   // Build the resolved image src
   const imageSrc = image
-    ? urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url() ?? imageUrl
+    ? (urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url() ?? imageUrl)
     : imageUrl;
 
   // Build the image ReactNode that will be passed to the generic card
@@ -53,29 +52,41 @@ const PaintingCardAdapter = ({
       src={imageSrc}
       alt={title || 'Painting'}
       fill
-      sizes="(min-width: 1040px) 20vw, 50vw"
+      sizes='(min-width: 1040px) 20vw, 50vw'
       priority={shouldBeLazy}
       fetchPriority={shouldBeLazy ? 'high' : 'auto'}
       placeholder={image?.lqip ? 'blur' : 'empty'}
       blurDataURL={image?.lqip ?? undefined}
       quality={80}
-      className="object-cover w-full h-full"
+      className='object-cover w-full h-full'
     />
   ) : undefined;
 
   // Build the badges array
   const badges: PaintingCardBadge[] = [];
   if (hasStore) {
-    badges.push({ key: 'store', icon: <FaShoppingCart className="w-4 h-4" />, label: 'Available for sale' });
+    badges.push({
+      key: 'store',
+      icon: <FaShoppingCart className='w-4 h-4' />,
+      label: 'Available for sale',
+    });
   }
   if (Number(imagesCount) > 0) {
-    badges.push({ key: 'multi', icon: <TbBoxMultiple className="w-4 h-4" />, label: 'Multiple images' });
+    badges.push({
+      key: 'multi',
+      icon: <TbBoxMultiple className='w-4 h-4' />,
+      label: 'Multiple images',
+    });
   }
   if (video) {
-    badges.push({ key: 'video', icon: <BsYoutube className="w-4 h-4" />, label: 'Has video' });
+    badges.push({ key: 'video', icon: <BsYoutube className='w-4 h-4' />, label: 'Has video' });
   }
   if (isNsfw) {
-    badges.push({ key: 'nsfw', icon: <FaExclamation className="w-4 h-4" />, label: 'NSFW content' });
+    badges.push({
+      key: 'nsfw',
+      icon: <FaExclamation className='w-4 h-4' />,
+      label: 'NSFW content',
+    });
   }
 
   const normalized = typeof slug === 'string' ? slug : (slug?.current ?? '');
