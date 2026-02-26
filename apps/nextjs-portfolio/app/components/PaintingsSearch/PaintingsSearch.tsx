@@ -19,25 +19,16 @@ import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
 import CustomSortBy from './CustomSortBy';
 
-export default function PaintingsSearch() {
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+// ---------------------------------------------------------------------------
+// Defined OUTSIDE the parent component so React never creates a new identity
+// on re-render (which would unmount/remount Algolia widgets and reset filters)
+// ---------------------------------------------------------------------------
+type FiltersSidebarProps = {
+  sortItems: React.ComponentProps<typeof CustomSortBy>['items'];
+};
 
-  const sortItems = [
-    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
-    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
-    {
-      label: 'Oldest',
-      value: `${indexName}_oldest`,
-      icon: <IoHourglassOutline className='w-4 h-4' />,
-    },
-    {
-      label: 'Most Viewed',
-      value: `${indexName}_views`,
-      icon: <IoEyeOutline className='w-4 h-4' />,
-    },
-  ];
-
-  const FiltersSidebar = () => (
+function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
+  return (
     <>
       <div className='flex flex-col gap-2'>
         <h3 className='font-semibold text-foreground text-sm uppercase tracking-wider'>Search</h3>
@@ -68,6 +59,25 @@ export default function PaintingsSearch() {
       </div>
     </>
   );
+}
+
+export default function PaintingsSearch() {
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
+  const sortItems = [
+    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
+    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
+    {
+      label: 'Oldest',
+      value: `${indexName}_oldest`,
+      icon: <IoHourglassOutline className='w-4 h-4' />,
+    },
+    {
+      label: 'Most Viewed',
+      value: `${indexName}_views`,
+      icon: <IoEyeOutline className='w-4 h-4' />,
+    },
+  ];
 
   return (
     <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
@@ -114,7 +124,7 @@ export default function PaintingsSearch() {
               </div>
 
               <div className='flex flex-col gap-8 pb-10'>
-                <FiltersSidebar />
+                <FiltersSidebar sortItems={sortItems} />
               </div>
             </DialogPanel>
           </div>
@@ -122,7 +132,7 @@ export default function PaintingsSearch() {
 
         {/* Desktop Sidebar Filters */}
         <div className='hidden md:flex w-64 shrink-0 flex-col gap-8'>
-          <FiltersSidebar />
+          <FiltersSidebar sortItems={sortItems} />
         </div>
 
         {/* Main Content Area */}

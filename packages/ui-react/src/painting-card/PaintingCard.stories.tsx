@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { IconAlertTriangle, IconShoppingCart, IconStack2, IconVideo } from '@tabler/icons-react';
 import { PaintingCard } from './PaintingCard';
 
-// Frida Kahlo-inspired vivid painting — works well at 3:4 aspect ratio
-const DEMO_IMG = 'https://images.unsplash.com/photo-1578301978069-1b52e12f8bf6?w=600&q=80';
+// picsum.photos works from any origin (no referrer policy) — id 1103 is a colourful abstract
+const DEMO_IMG = 'https://picsum.photos/id/1103/600/800';
 
 const DemoImage = ({ src = DEMO_IMG }: { src?: string }) => (
   <img src={src} alt='Demo painting' className='object-cover w-full h-full absolute inset-0' />
