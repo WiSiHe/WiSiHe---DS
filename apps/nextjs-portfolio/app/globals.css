@@ -4,6 +4,8 @@
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 
+@source "../../../packages/ui-react/src";
+
 @theme {
   --aspect-portrait: 3 / 4;
 }

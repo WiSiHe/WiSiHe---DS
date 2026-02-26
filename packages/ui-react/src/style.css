@@ -1,2 +1,4 @@
-@import "@wisihe/tokens/css";
 @import "tailwindcss";
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";

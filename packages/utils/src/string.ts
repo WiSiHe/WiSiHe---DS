@@ -29,3 +29,17 @@ export const slugify = (str: string): string => {
     .replace(/[^\w ]+/g, '')
     .replace(/ +/g, '-');
 };
+
+/**
+ * Strips invisible characters and Unicode diacritics from a tag name so it
+ * can be safely compared/displayed.
+ * Handles Sanity-encoded special characters and zero-width spaces.
+ */
+export function cleanTagName(name: string): string {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+    .replace(/[^\w\s-]/g, '') // Remove everything except letters, numbers, spaces, hyphens
+    .trim();
+}

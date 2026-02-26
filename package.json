@@ -10,7 +10,7 @@
     "dev:studio": "turbo run dev --filter=sanity-studio...",
     "dev:astro": "turbo run dev --filter=apps-astro-portfolio...",
     "dev:react": "turbo run dev --filter=@wisihe/ui-react... --filter=ui-docs...",
-    "dev:angular": "turbo run dev --filter=@wisihe/ui-angular...",
+    "dev:angular": "turbo run dev --filter=angular-portfolio... --filter=@wisihe/ui-angular...",
     "dev:vue": "turbo run dev --filter=@wisihe/ui-vue... --filter=ui-vue-docs...",
     "dev:svelte": "turbo run dev --filter=@wisihe/ui-svelte... --filter=ui-svelte-docs...",
     "dev:web-components": "turbo run dev --filter=@wisihe/ui-web-components... --filter=ui-web-components-docs...",

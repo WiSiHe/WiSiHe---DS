@@ -1808,6 +1808,54 @@ export type PresentationQueryResult = null;
 // Query: *[_type == "presentation"] | order(_createdAt desc) {    _id,    title,    description,    "slug": slug.current,    "slidesCount": count(slides),    tags[]->{      _id,      name    }  }
 export type AllPresentationsQueryResult = Array<never>;
 
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: getPaginatedProjects
+// Query: *[_type == "project" && defined(slug.current)]  | order(projectStart desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    description,    seoDescription,    projectType,    projectStart,    projectEnd,    status,    content,    name,    "tags": tags[]->{name},    image {      ...,      "lqip": asset->metadata.lqip    }  }
+export type GetPaginatedProjectsResult = Array<{
+  _id: string;
+  slug: string;
+  title: null;
+  description: null;
+  seoDescription: null;
+  projectType: "art" | "design" | "development" | "gameDevelopment" | "other";
+  projectStart: string | null;
+  projectEnd: string | null;
+  status:
+    | "abandoned"
+    | "cancelled"
+    | "completed"
+    | "inProgress"
+    | "notStarted"
+    | "onHold"
+    | "planned"
+    | "unknown"
+    | null;
+  content: BlockContent | null;
+  name: string;
+  tags: Array<{
+    name: string;
+  }>;
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    lqip: string | null;
+  } | null;
+}>;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: getProjectsCount
+// Query: count(*[_type == "project" && defined(slug.current)])
+export type GetProjectsCountResult = number;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -1842,5 +1890,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "painting" && defined(slug.current) && defined(image)] | order(_createdAt desc) [0...50] {\n    _id,\n    title,\n    "slug": slug.current,\n    tagsV2[]->{name},\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': RandomPaintingsQueryResult;
     '\n  *[_type == "presentation" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      name\n    },\n    slides[] {\n      _type,\n      status,\n      _type == "contentSlide" => {\n        title,\n        subtitle,\n        content,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        },\n        category->{\n          _id,\n          name,\n          description,\n          color\n        },\n        sources[] {\n          text,\n          url\n        },\n        tools[] {\n          name,\n          description,\n          url,\n          category,\n          workshopUrl,\n          nerdLevel\n        },\n        examples[] {\n          name,\n          description,\n          image {\n            ...,\n            "url": asset->url,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          iframe,\n          url\n        }\n      },\n      _type == "titleSlide" => {\n        title,\n        subtitle,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        }\n      },\n      _type == "separatorSlide" => {\n        title,\n        slideDesign,\n        category->{\n          _id,\n          name,\n          description,\n          color\n        }\n      }\n    }\n  }\n': PresentationQueryResult;
     '\n  *[_type == "presentation"] | order(_createdAt desc) {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "slidesCount": count(slides),\n    tags[]->{\n      _id,\n      name\n    }\n  }\n': AllPresentationsQueryResult;
+    '\n  *[_type == "project" && defined(slug.current)]\n  | order(projectStart desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    seoDescription,\n    projectType,\n    projectStart,\n    projectEnd,\n    status,\n    content,\n    name,\n    "tags": tags[]->{name},\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': GetPaginatedProjectsResult;
+    '\n  count(*[_type == "project" && defined(slug.current)])\n': GetProjectsCountResult;
   }
 }
