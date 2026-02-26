@@ -1,8 +1,8 @@
 'use client';
 
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { Button } from '@wisihe/ui-react';
-import { useState } from 'react';
+import { cn } from '@wisihe/utils';
+import { useEffect, useState } from 'react';
 import {
   IoClose,
   IoEyeOutline,
@@ -20,8 +20,8 @@ import CustomSearchBox from './CustomSearchBox';
 import CustomSortBy from './CustomSortBy';
 
 // ---------------------------------------------------------------------------
-// Defined OUTSIDE the parent component so React never creates a new identity
-// on re-render (which would unmount/remount Algolia widgets and reset filters)
+// FiltersSidebar — defined OUTSIDE the parent so React never creates a new
+// component identity on re-render (which would reset Algolia widget state).
 // ---------------------------------------------------------------------------
 type FiltersSidebarProps = {
   sortItems: React.ComponentProps<typeof CustomSortBy>['items'];
@@ -61,31 +61,33 @@ function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
 export default function PaintingsSearch() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
+  // Lock body scroll while drawer is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileFiltersOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileFiltersOpen]);
+
   const sortItems = [
-    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
-    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
-    {
-      label: 'Oldest',
-      value: `${indexName}_oldest`,
-      icon: <IoHourglassOutline className='w-4 h-4' />,
-    },
-    {
-      label: 'Most Viewed',
-      value: `${indexName}_views`,
-      icon: <IoEyeOutline className='w-4 h-4' />,
-    },
+    { label: 'Featured',    value: indexName,              icon: <IoStarOutline    className='w-4 h-4' /> },
+    { label: 'Newest',      value: `${indexName}_newest`,  icon: <IoTimeOutline    className='w-4 h-4' /> },
+    { label: 'Oldest',      value: `${indexName}_oldest`,  icon: <IoHourglassOutline className='w-4 h-4' /> },
+    { label: 'Most Viewed', value: `${indexName}_views`,   icon: <IoEyeOutline     className='w-4 h-4' /> },
   ];
 
   return (
     <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
-      {/* Only show paintings (exclude projects) */}
       <Configure hitsPerPage={12} filters='_type:painting' />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
-        {/* Mobile Filter Toggle */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Mobile — Filter toggle button                                    */}
+        {/* ---------------------------------------------------------------- */}
         <div className='md:hidden w-full'>
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
@@ -93,59 +95,86 @@ export default function PaintingsSearch() {
             className='w-full justify-center'
             Icon={IoFilterOutline}
           >
-            Filters & Search
+            Filters &amp; Search
           </Button>
         </div>
 
-        {/* Mobile Filters Drawer */}
-        <Dialog
-          open={isMobileFiltersOpen}
-          onClose={() => setIsMobileFiltersOpen(false)}
-          className='relative z-50 md:hidden'
-        >
-          <DialogBackdrop
-            transition
-            className='fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300 ease-out data-closed:opacity-0'
+        {/* ---------------------------------------------------------------- */}
+        {/* Mobile — Always-mounted slide-up drawer                         */}
+        {/*                                                                  */}
+        {/* IMPORTANT: We do NOT use HeadlessUI <Dialog> here because it    */}
+        {/* unmounts its children on close, which destroys the Algolia      */}
+        {/* widgets and clears all active refinements.                       */}
+        {/*                                                                  */}
+        {/* Instead we keep the panel always in the DOM and animate it with  */}
+        {/* a CSS transform, so widgets are never unmounted.                 */}
+        {/* ---------------------------------------------------------------- */}
+        <div className='md:hidden'>
+          {/* Backdrop — click to close */}
+          <div
+            aria-hidden='true'
+            onClick={() => setIsMobileFiltersOpen(false)}
+            className={cn(
+              'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm',
+              'transition-opacity duration-300',
+              isMobileFiltersOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+            )}
           />
-          <div className='fixed inset-0 flex justify-center items-end'>
-            <DialogPanel
-              transition
-              className='w-full bg-background max-h-[90dvh] flex flex-col overflow-y-auto border-t border-border shadow-2xl p-6 gap-6 rounded-t-3xl transition-transform duration-300 ease-out data-closed:translate-y-full'
-            >
-              <div className='flex items-center justify-between pb-2 border-b border-border/50'>
-                <h2 className='text-xl font-bold text-foreground'>Filters & Search</h2>
-                <button
-                  type='button'
-                  onClick={() => setIsMobileFiltersOpen(false)}
-                  className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors'
-                >
-                  <IoClose className='w-6 h-6' />
-                </button>
-              </div>
 
-              <div className='flex flex-col gap-8 pb-10'>
-                <FiltersSidebar sortItems={sortItems} />
-              </div>
-            </DialogPanel>
+          {/* Drawer panel — always mounted, slides in/out */}
+          <div
+            role='dialog'
+            aria-modal='true'
+            aria-label='Filters & Search'
+            aria-hidden={!isMobileFiltersOpen}
+            className={cn(
+              'fixed inset-x-0 bottom-0 z-50',
+              'w-full bg-background max-h-[90dvh] flex flex-col overflow-y-auto',
+              'border-t border-border shadow-2xl p-6 gap-6 rounded-t-3xl',
+              'transition-transform duration-300 ease-out',
+              isMobileFiltersOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none',
+            )}
+          >
+            {/* Header */}
+            <div className='flex items-center justify-between pb-2 border-b border-border/50'>
+              <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>
+              <button
+                type='button'
+                onClick={() => setIsMobileFiltersOpen(false)}
+                className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors'
+                aria-label='Close filters'
+              >
+                <IoClose className='w-6 h-6' />
+              </button>
+            </div>
+
+            {/* Filters content */}
+            <div className='flex flex-col gap-8 pb-10'>
+              <FiltersSidebar sortItems={sortItems} />
+            </div>
           </div>
-        </Dialog>
+        </div>
 
-        {/* Desktop Sidebar Filters */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Desktop — Sidebar (always visible, always mounted)              */}
+        {/* ---------------------------------------------------------------- */}
         <div className='hidden md:flex w-64 shrink-0 flex-col gap-8'>
           <FiltersSidebar sortItems={sortItems} />
         </div>
 
-        {/* Main Content Area */}
+        {/* ---------------------------------------------------------------- */}
+        {/* Main content                                                     */}
+        {/* ---------------------------------------------------------------- */}
         <div className='grow flex flex-col min-w-0'>
           <CustomHits />
 
           <div className='mt-12 flex justify-center w-full'>
             <Pagination
               classNames={{
-                root: 'flex justify-center',
-                list: 'flex items-center gap-1.5',
-                item: 'flex items-center',
-                link: 'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
+                root:         'flex justify-center',
+                list:         'flex items-center gap-1.5',
+                item:         'flex items-center',
+                link:         'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
                 selectedItem: 'bg-accent/10 border-accent text-accent font-semibold',
                 disabledItem: 'opacity-50 cursor-not-allowed pointer-events-none',
               }}
