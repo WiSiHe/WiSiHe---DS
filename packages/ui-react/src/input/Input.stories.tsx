@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { IconMail, IconSearch } from '@tabler/icons-react';
 import { Input } from './Input';
-import { IconSearch, IconMail } from '@tabler/icons-react';
 
 const meta = {
   title: 'Atoms/Input',
@@ -40,7 +40,7 @@ export const WithIcons: Story = {
   args: {
     placeholder: 'Search...',
     type: 'search',
-    leftIcon: <IconSearch className="w-5 h-5" />,
-    rightIcon: <IconMail className="w-5 h-5" />,
+    leftIcon: <IconSearch className='w-5 h-5' />,
+    rightIcon: <IconMail className='w-5 h-5' />,
   },
 };

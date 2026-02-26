@@ -1,8 +1,8 @@
 /// <reference types="vitest" />
 
-import { defineConfig } from 'vite';
 import analog from '@analogjs/platform';
 import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -18,13 +18,10 @@ export default defineConfig(({ mode }) => ({
       '@wisihe/sanity-queries',
       '@wisihe/tokens',
       '@wisihe/ui-angular',
-      '@wisihe/utils'
-    ]
+      '@wisihe/utils',
+    ],
   },
-  plugins: [
-    analog(),
-    tailwindcss()
-  ],
+  plugins: [analog(), tailwindcss()],
   test: {
     globals: true,
     environment: 'jsdom',

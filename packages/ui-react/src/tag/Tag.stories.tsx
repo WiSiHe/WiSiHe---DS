@@ -25,32 +25,32 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
-      <Tag variant="accent">Accent</Tag>
-      <Tag variant="surface">Surface</Tag>
-      <Tag variant="outline">Outline</Tag>
-      <Tag variant="success">Success</Tag>
-      <Tag variant="warning">Warning</Tag>
-      <Tag variant="danger">Danger</Tag>
+    <div className='flex flex-wrap gap-2'>
+      <Tag variant='accent'>Accent</Tag>
+      <Tag variant='surface'>Surface</Tag>
+      <Tag variant='outline'>Outline</Tag>
+      <Tag variant='success'>Success</Tag>
+      <Tag variant='warning'>Warning</Tag>
+      <Tag variant='danger'>Danger</Tag>
     </div>
   ),
 };
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
-      <Tag size="sm">Small</Tag>
-      <Tag size="md">Medium</Tag>
-      <Tag size="lg">Large</Tag>
+    <div className='flex items-center gap-2'>
+      <Tag size='sm'>Small</Tag>
+      <Tag size='md'>Medium</Tag>
+      <Tag size='lg'>Large</Tag>
     </div>
   ),
 };
 
 export const AllShapes: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
-      <Tag shape="square">Square</Tag>
-      <Tag shape="pill">Pill</Tag>
+    <div className='flex items-center gap-2'>
+      <Tag shape='square'>Square</Tag>
+      <Tag shape='pill'>Pill</Tag>
     </div>
   ),
 };
@@ -58,8 +58,8 @@ export const AllShapes: Story = {
 export const PaintingLabels: Story = {
   name: 'Real-world: Painting labels',
   render: () => (
-    <div className="flex flex-wrap gap-1">
-      {['Conceptart', 'Fantasy', 'Store', 'NSFW', 'Landscape', 'Portrait'].map((t) => (
+    <div className='flex flex-wrap gap-1'>
+      {['Conceptart', 'Fantasy', 'Store', 'NSFW', 'Landscape', 'Portrait'].map(t => (
         <Tag key={t}>{t}</Tag>
       ))}
     </div>

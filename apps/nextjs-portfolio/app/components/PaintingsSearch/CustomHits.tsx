@@ -41,7 +41,11 @@ export default function CustomHits() {
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className='relative col-span-6 md:col-span-4 lg:col-span-4'
             >
-              <PaintingCard paintingData={adaptedPaintingData as any} shouldBeLazy={index < 4} isNsfwFilterActive={isNsfwFilterActive} />
+              <PaintingCard
+                paintingData={adaptedPaintingData as any}
+                shouldBeLazy={index < 4}
+                isNsfwFilterActive={isNsfwFilterActive}
+              />
             </motion.div>
           );
         })}

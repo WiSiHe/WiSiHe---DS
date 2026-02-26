@@ -15,7 +15,8 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: 'hover:border-border',
-        filled: 'bg-muted border-transparent hover:bg-muted/80 focus-visible:bg-background focus-visible:border-ring',
+        filled:
+          'bg-muted border-transparent hover:bg-muted/80 focus-visible:bg-background focus-visible:border-ring',
       },
       inputSize: {
         default: 'h-10',
@@ -27,20 +28,31 @@ const inputVariants = cva(
       variant: 'default',
       inputSize: 'default',
     },
-  }
+  },
 );
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'ref' | 'size'>, VariantProps<typeof inputVariants> {
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'ref' | 'size'>,
+    VariantProps<typeof inputVariants> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   ref?: React.Ref<HTMLInputElement>;
 }
 
-export function Input({ className, type, variant, inputSize, leftIcon, rightIcon, ref, ...props }: InputProps) {
+export function Input({
+  className,
+  type,
+  variant,
+  inputSize,
+  leftIcon,
+  rightIcon,
+  ref,
+  ...props
+}: InputProps) {
   return (
-    <div className="relative w-full">
+    <div className='relative w-full'>
       {leftIcon && (
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none">
+        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none'>
           {leftIcon}
         </div>
       )}
@@ -48,15 +60,15 @@ export function Input({ className, type, variant, inputSize, leftIcon, rightIcon
         type={type}
         className={cn(
           inputVariants({ variant, inputSize, className }),
-          leftIcon && "pl-9",
-          rightIcon && "pr-9"
+          leftIcon && 'pl-9',
+          rightIcon && 'pr-9',
         )}
         ref={ref}
         suppressHydrationWarning
         {...props}
       />
       {rightIcon && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted">
+        <div className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted'>
           {rightIcon}
         </div>
       )}

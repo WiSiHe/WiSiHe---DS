@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Select } from './Select';
 import { IconPhoto } from '@tabler/icons-react';
 import * as React from 'react';
+import { Select } from './Select';
 
 const meta = {
   title: 'Atoms/Select',
@@ -28,32 +28,51 @@ import type { SelectOption } from './Select';
 export const Default: Story = {
   args: {
     value: null,
-    onChange: () => {}
+    onChange: () => {},
   },
-  render: (args) => {
+  render: args => {
     const [value, setValue] = React.useState<SelectOption | null>(null);
-    return <div className="w-64"><Select {...args} value={value} onChange={setValue} /></div>;
-  }
+    return (
+      <div className='w-64'>
+        <Select {...args} value={value} onChange={setValue} />
+      </div>
+    );
+  },
 };
 
 export const WithIcon: Story = {
   args: {
     value: null,
-    onChange: () => {}
+    onChange: () => {},
   },
-  render: (args) => {
+  render: args => {
     const [value, setValue] = React.useState<SelectOption | null>(null);
-    return <div className="w-64"><Select {...args} value={value} onChange={setValue} icon={<IconPhoto className="w-5 h-5" />} /></div>;
-  }
+    return (
+      <div className='w-64'>
+        <Select
+          {...args}
+          value={value}
+          onChange={setValue}
+          icon={<IconPhoto className='w-5 h-5' />}
+        />
+      </div>
+    );
+  },
 };
 
 export const Preselected: Story = {
   args: {
     value: null,
-    onChange: () => {}
+    onChange: () => {},
   },
-  render: (args) => {
-    const [value, setValue] = React.useState<SelectOption | null>(args.options ? args.options[1] : null);
-    return <div className="w-64"><Select {...args} value={value} onChange={setValue} /></div>;
-  }
+  render: args => {
+    const [value, setValue] = React.useState<SelectOption | null>(
+      args.options ? args.options[1] : null,
+    );
+    return (
+      <div className='w-64'>
+        <Select {...args} value={value} onChange={setValue} />
+      </div>
+    );
+  },
 };

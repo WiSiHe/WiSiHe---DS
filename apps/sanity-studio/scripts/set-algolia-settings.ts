@@ -20,33 +20,33 @@ async function setSettings() {
         replicas: [
           `virtual(${INDEX}_newest)`,
           `virtual(${INDEX}_oldest)`,
-          `virtual(${INDEX}_views)`
-        ]
-      }
+          `virtual(${INDEX}_views)`,
+        ],
+      },
     });
 
     // Replica for Newest (createdAt desc)
     await client.setSettings({
       indexName: `${INDEX}_newest`,
       indexSettings: {
-        customRanking: ['desc(createdAt)']
-      }
+        customRanking: ['desc(createdAt)'],
+      },
     });
 
     // Replica for Oldest (createdAt asc)
     await client.setSettings({
       indexName: `${INDEX}_oldest`,
       indexSettings: {
-        customRanking: ['asc(createdAt)']
-      }
+        customRanking: ['asc(createdAt)'],
+      },
     });
 
     // Replica for Most Viewed (views desc)
     await client.setSettings({
       indexName: `${INDEX}_views`,
       indexSettings: {
-        customRanking: ['desc(views)']
-      }
+        customRanking: ['desc(views)'],
+      },
     });
 
     console.log('Algolia index settings and replicas updated successfully!');

@@ -26,7 +26,16 @@ export function PaintingCardBadgeItem({
   shape,
   shadow,
 }: PaintingCardBadgeItemProps) {
-  const badge = <IconBadge icon={icon} label={label} variant={variant} size={size} shape={shape} shadow={shadow} />;
+  const badge = (
+    <IconBadge
+      icon={icon}
+      label={label}
+      variant={variant}
+      size={size}
+      shape={shape}
+      shadow={shadow}
+    />
+  );
 
   if (pinned) {
     return badge;
@@ -35,7 +44,7 @@ export function PaintingCardBadgeItem({
   return (
     <motion.li
       variants={{
-        rest:  { opacity: 0, x: 50 },
+        rest: { opacity: 0, x: 50 },
         hover: { opacity: 1, x: 0 },
       }}
     >

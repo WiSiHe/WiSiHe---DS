@@ -1,10 +1,9 @@
-import { Component, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { RouterLink } from "@angular/router";
-import { toSignal } from "@angular/core/rxjs-interop";
-import { from } from "rxjs";
-import { SanityService } from "../../services/sanity.service";
-
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { from } from 'rxjs';
+import { SanityService } from '../../services/sanity.service';
 
 @Component({
   selector: 'app-projects-index',
@@ -42,9 +41,8 @@ import { SanityService } from "../../services/sanity.service";
     </div>
   `,
 })
-
 export default class ProjectsIndex {
-    public sanityService = inject(SanityService);   
-    
-    projects = toSignal(from(this.sanityService.getProjects(1, 12)));
+  public sanityService = inject(SanityService);
+
+  projects = toSignal(from(this.sanityService.getProjects(1, 12)));
 }
