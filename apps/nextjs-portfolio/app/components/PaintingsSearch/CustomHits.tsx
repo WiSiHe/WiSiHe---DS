@@ -25,9 +25,11 @@ export default function CustomHits() {
     <motion.div layout className='grid w-full h-full grid-cols-12 gap-2 mt-6'>
       <AnimatePresence mode='popLayout'>
         {items.map((hit, index: number) => {
+          const rawSlug = hit.slug as string | { current?: string } | undefined;
           const adaptedPaintingData = {
             ...hit,
             _id: hit.objectID,
+            slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
             tagsV2: hit.tags ? (hit.tags as string[]).map((t: string) => ({ name: t })) : [],
           };
 

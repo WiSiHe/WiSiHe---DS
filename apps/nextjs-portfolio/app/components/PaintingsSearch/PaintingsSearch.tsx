@@ -11,13 +11,35 @@ import {
   IoStarOutline,
   IoTimeOutline,
 } from 'react-icons/io5';
-import { Configure, Pagination } from 'react-instantsearch';
+import { Configure, Pagination, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { indexName, searchClient } from './AlgoliaClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
 import CustomSortBy from './CustomSortBy';
+
+// ---------------------------------------------------------------------------
+// HitStats — shows "Showing X–Y of Z paintings"
+// ---------------------------------------------------------------------------
+function HitStats() {
+  const { nbHits, page, hitsPerPage } = useStats();
+  if (nbHits === 0 || hitsPerPage === undefined) return null;
+
+  const from = page * hitsPerPage + 1;
+  const to = Math.min((page + 1) * hitsPerPage, nbHits);
+
+  return (
+    <p className='text-sm text-foreground-subtle'>
+      Showing{' '}
+      <span className='font-medium text-foreground'>
+        {from}–{to}
+      </span>{' '}
+      of{' '}
+      <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
+    </p>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // FiltersSidebar — defined OUTSIDE the parent so React never creates a new
@@ -46,9 +68,7 @@ function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
         </h3>
         <CustomRefinementList
           attribute='tags'
-          limit={10}
-          showMoreLimit={40}
-          showMore={true}
+          limit={50}
           transformItems={items => {
             const filtered = items.filter(item => item.count >= 5 || item.isRefined);
             const storeItem = filtered.find(item => item.label.toLowerCase() === 'store');
@@ -70,14 +90,24 @@ export default function PaintingsSearch() {
   // Lock body scroll while drawer is open
   useEffect(() => {
     document.body.style.overflow = isMobileFiltersOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured',    value: indexName,              icon: <IoStarOutline    className='w-4 h-4' /> },
-    { label: 'Newest',      value: `${indexName}_newest`,  icon: <IoTimeOutline    className='w-4 h-4' /> },
-    { label: 'Oldest',      value: `${indexName}_oldest`,  icon: <IoHourglassOutline className='w-4 h-4' /> },
-    { label: 'Most Viewed', value: `${indexName}_views`,   icon: <IoEyeOutline     className='w-4 h-4' /> },
+    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
+    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
+    {
+      label: 'Oldest',
+      value: `${indexName}_oldest`,
+      icon: <IoHourglassOutline className='w-4 h-4' />,
+    },
+    {
+      label: 'Most Viewed',
+      value: `${indexName}_views`,
+      icon: <IoEyeOutline className='w-4 h-4' />,
+    },
   ];
 
   return (
@@ -117,7 +147,9 @@ export default function PaintingsSearch() {
             className={cn(
               'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm',
               'transition-opacity duration-300',
-              isMobileFiltersOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+              isMobileFiltersOpen
+                ? 'opacity-100 pointer-events-auto'
+                : 'opacity-0 pointer-events-none',
             )}
           />
 
@@ -166,15 +198,16 @@ export default function PaintingsSearch() {
         {/* Main content                                                     */}
         {/* ---------------------------------------------------------------- */}
         <div className='grow flex flex-col min-w-0'>
+          <HitStats />
           <CustomHits />
 
           <div className='mt-12 flex justify-center w-full'>
             <Pagination
               classNames={{
-                root:         'flex justify-center',
-                list:         'flex items-center gap-1.5',
-                item:         'flex items-center',
-                link:         'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
+                root: 'flex justify-center',
+                list: 'flex items-center gap-1.5',
+                item: 'flex items-center',
+                link: 'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
                 selectedItem: 'bg-accent/10 border-accent text-accent font-semibold',
                 disabledItem: 'opacity-50 cursor-not-allowed pointer-events-none',
               }}

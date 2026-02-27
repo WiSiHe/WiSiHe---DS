@@ -29,22 +29,36 @@ export interface CheckboxProps
   extends Omit<React.ComponentProps<typeof HeadlessCheckbox>, 'className'>,
     VariantProps<typeof checkboxVariants> {
   className?: string;
+  label?: string;
+  labelClassName?: string;
 }
 
-export function Checkbox({ className, variant, inputSize, ...props }: CheckboxProps) {
-  return (
+export function Checkbox({ className, variant, inputSize, label, labelClassName, ...props }: CheckboxProps) {
+  const checkbox = (
     <HeadlessCheckbox
       className={cn(
         checkboxVariants({ variant, inputSize }),
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         className,
       )}
+      aria-label={label ?? props['aria-label']}
       {...props}
     >
       <IconCheck
-        className='size-full text-accent-contrast opacity-0 transition-opacity duration-200 group-data-checked:opacity-100 p-[1px]'
+        className='size-full text-accent-contrast opacity-0 transition-opacity duration-200 group-data-checked:opacity-100 p-px'
         strokeWidth={3}
       />
     </HeadlessCheckbox>
   );
+
+  if (label) {
+    return (
+      <span className={cn('flex items-center gap-2 cursor-pointer select-none', labelClassName)}>
+        {checkbox}
+        <span>{label}</span>
+      </span>
+    );
+  }
+
+  return checkbox;
 }
