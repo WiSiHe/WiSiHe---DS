@@ -35,7 +35,8 @@ export const WithDescription: Story = {
   parameters: {
     docs: {
       description: {
-        story: '`description` renders above the field to set user expectations before they start typing.',
+        story:
+          '`description` renders above the field to set user expectations before they start typing.',
       },
     },
   },
@@ -76,6 +77,8 @@ export const HiddenLabel: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } } },
+  parameters: {
+    docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } },
+  },
   args: { label: 'Disabled', disabled: true, placeholder: 'Disabled textarea' },
 };

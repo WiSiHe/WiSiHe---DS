@@ -82,10 +82,7 @@ export function Input({
     <div className='flex flex-col gap-1.5 w-full'>
       <label
         htmlFor={inputId}
-        className={cn(
-          'text-sm font-medium leading-none text-foreground',
-          hideLabel && 'sr-only',
-        )}
+        className={cn('text-sm font-medium leading-none text-foreground', hideLabel && 'sr-only')}
       >
         {label}
       </label>
@@ -113,9 +110,8 @@ export function Input({
           )}
           ref={ref}
           aria-describedby={
-            [errorMessage && errorId, description && descriptionId]
-              .filter(Boolean)
-              .join(' ') || undefined
+            [errorMessage && errorId, description && descriptionId].filter(Boolean).join(' ') ||
+            undefined
           }
           aria-invalid={errorMessage ? true : undefined}
           suppressHydrationWarning

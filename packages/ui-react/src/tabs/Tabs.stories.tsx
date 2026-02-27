@@ -35,12 +35,18 @@ export const Underline: Story = {
     <div className='w-96'>
       <Tabs variant='underline'>
         <TabBar variant='underline'>
-          {TABS.map(t => <TabItem key={t} variant='underline'>{t}</TabItem>)}
+          {TABS.map(t => (
+            <TabItem key={t} variant='underline'>
+              {t}
+            </TabItem>
+          ))}
         </TabBar>
         <TabContent>
           {TABS.map(t => (
             <TabPanel key={t}>
-              <p className='text-sm text-muted-foreground'>Content for <strong>{t}</strong></p>
+              <p className='text-sm text-muted-foreground'>
+                Content for <strong>{t}</strong>
+              </p>
             </TabPanel>
           ))}
         </TabContent>
@@ -63,12 +69,18 @@ export const Pill: Story = {
     <div className='w-96'>
       <Tabs variant='pill'>
         <TabBar variant='pill'>
-          {TABS.map(t => <TabItem key={t} variant='pill'>{t}</TabItem>)}
+          {TABS.map(t => (
+            <TabItem key={t} variant='pill'>
+              {t}
+            </TabItem>
+          ))}
         </TabBar>
         <TabContent>
           {TABS.map(t => (
             <TabPanel key={t}>
-              <p className='text-sm text-muted-foreground'>Content for <strong>{t}</strong></p>
+              <p className='text-sm text-muted-foreground'>
+                Content for <strong>{t}</strong>
+              </p>
             </TabPanel>
           ))}
         </TabContent>

@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  Popover as HeadlessPopover,
-  PopoverButton,
-  PopoverPanel,
-} from '@headlessui/react';
+import { Popover as HeadlessPopover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
 import type * as React from 'react';
 
@@ -45,7 +41,10 @@ export function PopoverContent({ className, ...props }: PopoverContentProps) {
 
 // ── Item helper ───────────────────────────────────────────────────────────────
 
-export function PopoverItem({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function PopoverItem({
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       type='button'

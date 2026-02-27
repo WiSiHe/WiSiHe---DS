@@ -68,9 +68,7 @@ export function Combobox<T extends string | number = string>({
   const filteredOptions =
     query === ''
       ? options
-      : options.filter(opt =>
-          opt.label.toLowerCase().includes(query.toLowerCase()),
-        );
+      : options.filter(opt => opt.label.toLowerCase().includes(query.toLowerCase()));
 
   const hasError = !!errorMessage;
 
@@ -79,10 +77,7 @@ export function Combobox<T extends string | number = string>({
       <label
         id={labelId}
         htmlFor={`${generatedId}-input`}
-        className={cn(
-          'text-sm font-medium leading-none text-foreground',
-          hideLabel && 'sr-only',
-        )}
+        className={cn('text-sm font-medium leading-none text-foreground', hideLabel && 'sr-only')}
       >
         {label}
       </label>
@@ -104,15 +99,12 @@ export function Combobox<T extends string | number = string>({
             id={`${generatedId}-input`}
             aria-labelledby={labelId}
             aria-describedby={
-              [hasError && errorId, description && descriptionId]
-                .filter(Boolean)
-                .join(' ') || undefined
+              [hasError && errorId, description && descriptionId].filter(Boolean).join(' ') ||
+              undefined
             }
             aria-invalid={hasError || undefined}
             displayValue={(val: T | null) =>
-              val !== null
-                ? (options.find(o => o.value === val)?.label ?? '')
-                : ''
+              val !== null ? (options.find(o => o.value === val)?.label ?? '') : ''
             }
             onChange={handleQueryChange}
             placeholder={placeholder}
