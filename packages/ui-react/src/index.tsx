@@ -1,5 +1,3 @@
-// --- Layout ---
-
 // --- Atoms ---
 export { Badge, type BadgeProps } from './badge/Badge';
 export { Button, type ButtonProps } from './button/Button';
@@ -19,6 +17,17 @@ export {
   type CardTitleProps,
 } from './card/Card';
 export { Checkbox, type CheckboxProps } from './checkbox/Checkbox';
+export { Combobox, type ComboboxItem, type ComboboxProps } from './combobox/Combobox';
+export {
+  Dialog,
+  DialogBody,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  type DialogProps,
+  DialogTitle,
+} from './dialog/Dialog';
+// --- Layout ---
 export { Flex, type FlexProps } from './flex/Flex';
 export { Grid, type GridProps } from './grid/Grid';
 export { IconBadge, type IconBadgeProps } from './icon-badge/IconBadge';
@@ -29,7 +38,29 @@ export {
   type PaintingCardBadge,
   type PaintingCardProps,
 } from './painting-card/PaintingCard';
+export {
+  Popover,
+  PopoverButton,
+  PopoverContent,
+  type PopoverContentProps,
+  PopoverItem,
+} from './popover/Popover';
 export { Select, type SelectOption, type SelectProps } from './select/Select';
 export { Skeleton, type SkeletonProps } from './skeleton/Skeleton';
 export { Spinner, type SpinnerProps } from './spinner/Spinner';
+export {
+  Switch,
+  SwitchField,
+  type SwitchFieldProps,
+  type SwitchProps,
+} from './switch/Switch';
+export {
+  TabBar,
+  TabContent,
+  TabItem,
+  TabPanel,
+  Tabs,
+  type TabsVariant,
+} from './tabs/Tabs';
 export { Tag, type TagProps } from './tag/Tag';
+export { Textarea, type TextareaProps } from './textarea/Textarea';

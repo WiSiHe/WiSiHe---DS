@@ -3,7 +3,7 @@ import { IconAlertTriangle, IconShoppingCart, IconStack2, IconVideo } from '@tab
 import { PaintingCard } from './PaintingCard';
 
 // picsum.photos works from any origin (no referrer policy) — id 1103 is a colourful abstract
-const DEMO_IMG = 'https://picsum.photos/id/1103/600/800';
+const DEMO_IMG = 'https://www.wisihe.no/images/cute.jpg';
 
 const DemoImage = ({ src = DEMO_IMG }: { src?: string }) => (
   <img src={src} alt='Demo painting' className='object-cover w-full h-full absolute inset-0' />
