@@ -35,8 +35,7 @@ function HitStats() {
       <span className='font-medium text-foreground'>
         {from}–{to}
       </span>{' '}
-      of{' '}
-      <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
+      of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
     </p>
   );
 }

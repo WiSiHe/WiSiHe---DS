@@ -46,11 +46,7 @@ export interface DialogProps
 
 export function Dialog({ size, showClose, children, className, ...props }: DialogProps) {
   return (
-    <HeadlessDialog
-      transition
-      className='relative z-50 focus:outline-none'
-      {...props}
-    >
+    <HeadlessDialog transition className='relative z-50 focus:outline-none' {...props}>
       {/* Backdrop */}
       <DialogBackdrop
         transition
@@ -84,21 +80,13 @@ export function Dialog({ size, showClose, children, className, ...props }: Dialo
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 export function DialogHeader({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('flex flex-col gap-1.5 px-6 pt-6 pb-4', className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('flex flex-col gap-1.5 px-6 pt-6 pb-4', className)}>{children}</div>;
 }
 
 export { DialogTitle, DialogDescription };
 
 export function DialogBody({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('px-6 pb-4 text-sm text-foreground', className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn('px-6 pb-4 text-sm text-foreground', className)}>{children}</div>;
 }
 
 export function DialogFooter({ className, children }: React.HTMLAttributes<HTMLDivElement>) {

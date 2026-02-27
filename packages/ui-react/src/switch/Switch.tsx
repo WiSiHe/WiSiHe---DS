@@ -97,9 +97,7 @@ export function SwitchField({ label, description, size, className, ...props }: S
           {label}
         </Label>
         {description && (
-          <Description className='text-xs text-muted-foreground'>
-            {description}
-          </Description>
+          <Description className='text-xs text-muted-foreground'>{description}</Description>
         )}
       </div>
     </Field>

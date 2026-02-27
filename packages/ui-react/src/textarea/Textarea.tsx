@@ -66,10 +66,7 @@ export function Textarea({
     <div className='flex flex-col gap-1.5 w-full'>
       <label
         htmlFor={textareaId}
-        className={cn(
-          'text-sm font-medium leading-none text-foreground',
-          hideLabel && 'sr-only',
-        )}
+        className={cn('text-sm font-medium leading-none text-foreground', hideLabel && 'sr-only')}
       >
         {label}
       </label>
@@ -86,9 +83,8 @@ export function Textarea({
         className={cn(textareaVariants({ variant, state }), className)}
         ref={ref}
         aria-describedby={
-          [errorMessage && errorId, description && descriptionId]
-            .filter(Boolean)
-            .join(' ') || undefined
+          [errorMessage && errorId, description && descriptionId].filter(Boolean).join(' ') ||
+          undefined
         }
         aria-invalid={errorMessage ? true : undefined}
         {...props}

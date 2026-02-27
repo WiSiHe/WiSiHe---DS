@@ -61,7 +61,9 @@ export const Small: Story = {
 };
 
 export const Large: Story = {
-  parameters: { docs: { description: { story: '`size="lg"` — larger toggle for touch-friendly UIs.' } } },
+  parameters: {
+    docs: { description: { story: '`size="lg"` — larger toggle for touch-friendly UIs.' } },
+  },
   args: { label: 'Large toggle', size: 'lg', defaultChecked: false },
 };
 
@@ -79,6 +81,8 @@ export const BareToggle: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } } },
+  parameters: {
+    docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } },
+  },
   args: { label: 'Disabled toggle', disabled: true },
 };

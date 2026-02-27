@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-} from '@headlessui/react';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
 import { cva } from 'class-variance-authority';
 import type * as React from 'react';

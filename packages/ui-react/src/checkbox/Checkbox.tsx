@@ -33,7 +33,14 @@ export interface CheckboxProps
   labelClassName?: string;
 }
 
-export function Checkbox({ className, variant, inputSize, label, labelClassName, ...props }: CheckboxProps) {
+export function Checkbox({
+  className,
+  variant,
+  inputSize,
+  label,
+  labelClassName,
+  ...props
+}: CheckboxProps) {
   const checkbox = (
     <HeadlessCheckbox
       className={cn(

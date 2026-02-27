@@ -59,7 +59,9 @@ function ComboboxDemo(props: { description?: string; errorMessage?: string; disa
 }
 
 export const Default: Story = {
-  parameters: { docs: { description: { story: 'Type to filter options. Click or press Enter to select.' } } },
+  parameters: {
+    docs: { description: { story: 'Type to filter options. Click or press Enter to select.' } },
+  },
   render: () => <ComboboxDemo />,
 };
 
@@ -67,7 +69,8 @@ export const WithDescription: Story = {
   parameters: {
     docs: {
       description: {
-        story: '`description` renders above the input and is wired to `aria-describedby` automatically.',
+        story:
+          '`description` renders above the input and is wired to `aria-describedby` automatically.',
       },
     },
   },
@@ -87,6 +90,8 @@ export const WithError: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } } },
+  parameters: {
+    docs: { description: { story: 'Disabled state — not interactive, reduced opacity.' } },
+  },
   render: () => <ComboboxDemo disabled />,
 };

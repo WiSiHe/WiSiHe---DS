@@ -72,7 +72,9 @@ export const Default: Story = {
 
 export const Small: Story = {
   parameters: {
-    docs: { description: { story: '`size="sm"` — compact dialog, ideal for quick confirmations.' } },
+    docs: {
+      description: { story: '`size="sm"` — compact dialog, ideal for quick confirmations.' },
+    },
   },
   args: { open: false },
   render: () => <DialogDemo size='sm' />,
