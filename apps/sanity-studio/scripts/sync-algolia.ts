@@ -1,7 +1,7 @@
+import path from 'node:path';
 import { createClient } from '@sanity/client';
 import { algoliasearch } from 'algoliasearch';
 import * as dotenv from 'dotenv';
-import path from 'path';
 
 // Load .env.local specifically
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });

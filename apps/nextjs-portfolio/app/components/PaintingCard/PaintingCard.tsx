@@ -32,6 +32,7 @@ const PaintingCardAdapter = ({
 }: PaintingCardAdapterProps) => {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Sanity result shape varies by query
   const { image, title = '', video = '', imagesCount = 0, slug, imageUrl } = paintingData as any;
   const { tagsV2 } = paintingData;
 

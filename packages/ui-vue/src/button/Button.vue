@@ -38,6 +38,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   type: 'button',
 });
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const classes = computed(() =>
   button({
     variant: props.variant,
@@ -46,6 +47,7 @@ const classes = computed(() =>
   }),
 );
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const isDisabled = computed(() => props.disabled || props.loading);
 </script>
 

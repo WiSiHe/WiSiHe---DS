@@ -82,6 +82,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md'>
       {/* Close button */}
       <button
+        type='button'
         onClick={onClose}
         className='absolute top-4 right-4 z-10 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
         aria-label='Close modal'
@@ -93,6 +94,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
       {images.length > 1 && (
         <>
           <button
+            type='button'
             onClick={goToPrevious}
             className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
             aria-label='Previous image'
@@ -101,6 +103,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
           </button>
 
           <button
+            type='button'
             onClick={goToNext}
             className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
             aria-label='Next image'

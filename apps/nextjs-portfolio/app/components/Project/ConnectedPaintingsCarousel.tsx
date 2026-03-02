@@ -128,6 +128,7 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
         {/* Navigation buttons */}
         <div className='flex justify-between items-center mt-4'>
           <button
+            type='button'
             className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
             onClick={scrollPrev}
             disabled={!canScrollPrev}
@@ -141,6 +142,8 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
             <div className='flex gap-2'>
               {scrollSnaps.map((_, index) => (
                 <button
+                  type='button'
+                  // biome-ignore lint/suspicious/noArrayIndexKey: scroll snaps have no other stable identifier
                   key={index}
                   className={`w-2 h-2 rounded-full transition-colors ${
                     index === selectedIndex
@@ -155,6 +158,7 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
           )}
 
           <button
+            type='button'
             className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
             onClick={scrollNext}
             disabled={!canScrollNext}

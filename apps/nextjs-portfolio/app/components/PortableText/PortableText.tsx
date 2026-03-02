@@ -244,7 +244,10 @@ export default function CustomPortableText({ className, value }: CustomPortableT
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
+                aria-label='Link to heading'
+                role='img'
               >
+                <title>Link to heading</title>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -275,7 +278,10 @@ export default function CustomPortableText({ className, value }: CustomPortableT
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
+                aria-label='Link to heading'
+                role='img'
               >
+                <title>Link to heading</title>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -306,7 +312,10 @@ export default function CustomPortableText({ className, value }: CustomPortableT
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
+                aria-label='Link to heading'
+                role='img'
               >
+                <title>Link to heading</title>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -337,7 +346,10 @@ export default function CustomPortableText({ className, value }: CustomPortableT
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
+                aria-label='Link to heading'
+                role='img'
               >
+                <title>Link to heading</title>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'

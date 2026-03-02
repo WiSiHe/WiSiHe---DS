@@ -92,9 +92,11 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
 
               return (
                 <div key={extraImage._key} className='relative flex-[0_0_100%] min-w-0'>
-                  <div
-                    className='relative aspect-video cursor-pointer'
+                  <button
+                    type='button'
+                    className='relative aspect-video cursor-pointer w-full p-0 border-0 bg-transparent'
                     onClick={() => handleImageClick(index)}
+                    aria-label={`Open image ${index + 1}`}
                   >
                     <Image
                       src={urlForImage(extraImage)?.width(1200).fit('max')?.url() || ''}
@@ -104,7 +106,7 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
                       loading={index === 0 ? 'eager' : 'lazy'}
                       sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1200px'
                     />
-                  </div>
+                  </button>
                 </div>
               );
             })}
@@ -115,6 +117,7 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
         {images.length > 1 && (
           <div className='flex justify-between items-center mt-4'>
             <button
+              type='button'
               className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
               onClick={scrollPrev}
               disabled={!canScrollPrev}
@@ -128,6 +131,8 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
               <div className='flex gap-2'>
                 {scrollSnaps.map((_, index) => (
                   <button
+                    type='button'
+                    // biome-ignore lint/suspicious/noArrayIndexKey: scroll snaps have no other stable identifier
                     key={index}
                     className={`w-2 h-2 rounded-full transition-colors ${
                       index === selectedIndex
@@ -142,6 +147,7 @@ const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
             )}
 
             <button
+              type='button'
               className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
               onClick={scrollNext}
               disabled={!canScrollNext}

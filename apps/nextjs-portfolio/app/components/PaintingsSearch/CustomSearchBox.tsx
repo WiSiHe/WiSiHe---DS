@@ -10,6 +10,7 @@ export default function CustomSearchBox(props: Parameters<typeof useSearchBox>[0
   const [inputValue, setInputValue] = React.useState(query);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally only depends on query to avoid sync loop
   React.useEffect(() => {
     if (query !== inputValue) setInputValue(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps

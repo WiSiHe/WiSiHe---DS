@@ -1,8 +1,10 @@
 <script lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: used in template below
 import { cn } from '@wisihe/utils';
 import { cva } from 'class-variance-authority';
 import type { BadgeProps } from './types';
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template below
 const badge = cva(
   'inline-flex items-center rounded-full border font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
   {
@@ -33,6 +35,7 @@ let {
   size = 'md',
   class: className,
   children,
+  // biome-ignore lint/correctness/noUnusedVariables: used in template below
   ...rest
 }: BadgeProps = $props();
 </script>
