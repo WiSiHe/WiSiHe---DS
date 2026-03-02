@@ -42,11 +42,10 @@ const PaintingCardAdapter = ({
   const hasStore = cleanedTags.includes('Store');
   const isNsfw = cleanedTags.includes('NSFW');
 
-  // Build the resolved image src
+  // urlForImage needs asset._ref — the Algolia sync now stores it correctly.
   const imageSrc = image
-    ? (urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url() ??
-      (paintingData as any).imageUrl)
-    : (paintingData as any).imageUrl;
+    ? urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url()
+    : null;
 
   // Build the image ReactNode that will be passed to the generic card
   const imageNode = imageSrc ? (
@@ -91,7 +90,7 @@ const PaintingCardAdapter = ({
     });
   }
 
-  const normalized = typeof slug === 'string' ? slug : (slug?.current ?? '');
+  const normalized = slug ?? '';
 
   return (
     <PaintingCard

@@ -53,8 +53,26 @@ const query = `
     slug,
     views,
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
-    "image": coalesce(image{..., asset->}, mainImage{..., asset->}),
-    "imageUrl": coalesce(image.asset->url, mainImage.asset->url)
+    // Preserve asset._ref so urlForImage works on the client.
+    // Only dereference lqip from metadata (needed for blur placeholders).
+    "image": coalesce(
+      image{
+        ...,
+        "asset": {
+          "_ref": asset._ref,
+          "_type": "reference",
+          "lqip": asset->metadata.lqip
+        }
+      },
+      mainImage{
+        ...,
+        "asset": {
+          "_ref": asset._ref,
+          "_type": "reference",
+          "lqip": asset->metadata.lqip
+        }
+      }
+    )
   }
 `;
 
@@ -86,7 +104,6 @@ async function syncToAlgolia() {
         slug: doc.slug,
         tags: doc.tags,
         image: doc.image || null,
-        imageUrl: doc.imageUrl || null,
         views: popularity,
         createdAt: createdAtDate,
       };

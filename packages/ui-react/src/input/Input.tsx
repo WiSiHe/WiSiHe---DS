@@ -2,19 +2,19 @@ import { Input as HeadlessInput } from '@headlessui/react';
 import { cn } from '@wisihe/utils';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import type * as React from 'react';
+import * as React from 'react';
 
 const inputVariants = cva(
   [
-    'flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground',
+    'flex w-full rounded-md border bg-background px-3 py-2 text-sm text-foreground',
     'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0',
     'disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
   ],
   {
     variants: {
       variant: {
-        default: 'hover:border-border',
+        default: '',
         filled:
           'bg-muted border-transparent hover:bg-muted/80 focus-visible:bg-background focus-visible:border-ring',
       },
@@ -23,17 +23,34 @@ const inputVariants = cva(
         sm: 'h-8 px-2 text-xs',
         lg: 'h-12 px-4 text-base',
       },
+      state: {
+        default: 'border-input hover:border-border focus-visible:ring-ring',
+        error:
+          'border-error-500 bg-error-50 hover:border-error-600 focus-visible:ring-error-500/30',
+      },
     },
     defaultVariants: {
       variant: 'default',
       inputSize: 'default',
+      state: 'default',
     },
   },
 );
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'ref' | 'size'>,
-    VariantProps<typeof inputVariants> {
+    Omit<VariantProps<typeof inputVariants>, 'state'> {
+  /**
+   * Always required for accessibility.
+   * Pass `hideLabel` to visually hide it while keeping it available to screen readers.
+   */
+  label: string;
+  /** Hides the label visually (still readable by screen readers) */
+  hideLabel?: boolean;
+  /** Optional helper text shown between the label and input */
+  description?: string;
+  /** Error message shown below the input; also applies error border/bg styling */
+  errorMessage?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   ref?: React.Ref<HTMLInputElement>;
@@ -46,31 +63,71 @@ export function Input({
   inputSize,
   leftIcon,
   rightIcon,
+  label,
+  hideLabel,
+  description,
+  errorMessage,
+  id,
   ref,
   ...props
 }: InputProps) {
+  const generatedId = React.useId();
+  const inputId = id ?? generatedId;
+  const descriptionId = `${inputId}-description`;
+  const errorId = `${inputId}-error`;
+
+  const state = errorMessage ? 'error' : 'default';
+
   return (
-    <div className='relative w-full'>
-      {leftIcon && (
-        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none'>
-          {leftIcon}
-        </div>
+    <div className='flex flex-col gap-1.5 w-full'>
+      <label
+        htmlFor={inputId}
+        className={cn('text-sm font-medium leading-none text-foreground', hideLabel && 'sr-only')}
+      >
+        {label}
+      </label>
+
+      {description && (
+        <p id={descriptionId} className='text-xs text-muted-foreground'>
+          {description}
+        </p>
       )}
-      <HeadlessInput
-        type={type}
-        className={cn(
-          inputVariants({ variant, inputSize, className }),
-          leftIcon && 'pl-9',
-          rightIcon && 'pr-9',
+
+      <div className='relative w-full'>
+        {leftIcon && (
+          <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none'>
+            {leftIcon}
+          </div>
         )}
-        ref={ref}
-        suppressHydrationWarning
-        {...props}
-      />
-      {rightIcon && (
-        <div className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted'>
-          {rightIcon}
-        </div>
+        <HeadlessInput
+          id={inputId}
+          type={type}
+          className={cn(
+            inputVariants({ variant, inputSize, state }),
+            leftIcon && 'pl-9',
+            rightIcon && 'pr-9',
+            className,
+          )}
+          ref={ref}
+          aria-describedby={
+            [errorMessage && errorId, description && descriptionId].filter(Boolean).join(' ') ||
+            undefined
+          }
+          aria-invalid={errorMessage ? true : undefined}
+          suppressHydrationWarning
+          {...props}
+        />
+        {rightIcon && (
+          <div className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none'>
+            {rightIcon}
+          </div>
+        )}
+      </div>
+
+      {errorMessage && (
+        <p id={errorId} role='alert' className='text-xs font-medium text-error-700'>
+          {errorMessage}
+        </p>
       )}
     </div>
   );
