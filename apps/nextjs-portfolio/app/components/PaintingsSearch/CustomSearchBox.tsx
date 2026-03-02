@@ -19,6 +19,8 @@ export default function CustomSearchBox(props: Parameters<typeof useSearchBox>[0
   return (
     <Input
       ref={inputRef}
+      label="Search paintings"
+      hideLabel
       value={inputValue}
       onChange={e => {
         setInputValue(e.target.value);
