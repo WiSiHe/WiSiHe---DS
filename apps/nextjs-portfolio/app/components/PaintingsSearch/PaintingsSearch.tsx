@@ -11,13 +11,34 @@ import {
   IoStarOutline,
   IoTimeOutline,
 } from 'react-icons/io5';
-import { Configure, Pagination } from 'react-instantsearch';
+import { Configure, Pagination, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { indexName, searchClient } from './AlgoliaClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
 import CustomSortBy from './CustomSortBy';
+
+// ---------------------------------------------------------------------------
+// HitStats — shows "Showing X–Y of Z paintings"
+// ---------------------------------------------------------------------------
+function HitStats() {
+  const { nbHits, page, hitsPerPage } = useStats();
+  if (nbHits === 0 || hitsPerPage === undefined) return null;
+
+  const from = page * hitsPerPage + 1;
+  const to = Math.min((page + 1) * hitsPerPage, nbHits);
+
+  return (
+    <p className='text-sm text-foreground-subtle'>
+      Showing{' '}
+      <span className='font-medium text-foreground'>
+        {from}–{to}
+      </span>{' '}
+      of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
+    </p>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // FiltersSidebar — defined OUTSIDE the parent so React never creates a new
@@ -46,9 +67,7 @@ function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
         </h3>
         <CustomRefinementList
           attribute='tags'
-          limit={10}
-          showMoreLimit={40}
-          showMore={true}
+          limit={50}
           transformItems={items => {
             const filtered = items.filter(item => item.count >= 5 || item.isRefined);
             const storeItem = filtered.find(item => item.label.toLowerCase() === 'store');
@@ -178,6 +197,7 @@ export default function PaintingsSearch() {
         {/* Main content                                                     */}
         {/* ---------------------------------------------------------------- */}
         <div className='grow flex flex-col min-w-0'>
+          <HitStats />
           <CustomHits />
 
           <div className='mt-12 flex justify-center w-full'>
