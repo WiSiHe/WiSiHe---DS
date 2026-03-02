@@ -43,7 +43,15 @@ export const EngagementChart = () => {
           >
             <div className='mb-2' style={{ color: metric.color }}>
               {metric.icon === 'up' ? (
-                <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <svg
+                  className='w-6 h-6'
+                  aria-label='Trending up'
+                  role='img'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <title>Trending up</title>
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
@@ -52,7 +60,15 @@ export const EngagementChart = () => {
                   />
                 </svg>
               ) : (
-                <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <svg
+                  className='w-6 h-6'
+                  aria-label='Trending down'
+                  role='img'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <title>Trending down</title>
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'

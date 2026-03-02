@@ -44,6 +44,7 @@ export default function CustomHits() {
               className='relative col-span-6 md:col-span-4 lg:col-span-4'
             >
               <PaintingCard
+                // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
                 paintingData={adaptedPaintingData as any}
                 shouldBeLazy={index < 4}
                 isNsfwFilterActive={isNsfwFilterActive}

@@ -63,7 +63,7 @@ const PaintingGrid = ({ paintings }: PaintingGridProps) => {
         <p className='no-results-message'>
           No paintings match your filters.
           <br />
-          <button onClick={clearFilters} className='clear-filters-button'>
+          <button type='button' onClick={clearFilters} className='clear-filters-button'>
             Clear Filters
           </button>
         </p>

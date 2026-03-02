@@ -75,7 +75,7 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
             className='flex items-center text-foreground bg-surface border border-border overflow-clip rounded-full shadow-lg'
             style={{ isolation: 'isolate' }}
           >
-            {navigationItems.map((item, i) => {
+            {navigationItems.map(item => {
               const isActive = pathName?.includes(item.href);
               const { href, label } = item;
 

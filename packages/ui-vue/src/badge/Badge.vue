@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<BadgeProps>(), {
   size: 'md',
 });
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const classes = computed(() =>
   badge({
     variant: props.variant,
