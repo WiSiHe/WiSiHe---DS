@@ -56,6 +56,7 @@ const createSingletonItem = (S: StructureBuilder, item: DocumentItem) =>
   S.listItem()
     .title(item.title)
     .icon(() => item.icon)
+    // biome-ignore lint/style/noNonNullAssertion: documentId is guaranteed for singletons
     .child(S.document().schemaType(item.schemaType).documentId(item.documentId!));
 
 const createDocumentListItem = (S: StructureBuilder, item: DocumentItem) =>
@@ -113,7 +114,9 @@ export const structure = (S: StructureBuilder) =>
           S.list()
             .title('Other Documents')
             .items(
+              // biome-ignore lint/suspicious/noExplicitAny: S.documentTypeListItems() type is complex
               (S.documentTypeListItems() as any[]).filter(
+                // biome-ignore lint/suspicious/noExplicitAny: listItem type is complex
                 (listItem: any) => !handledSchemaTypes.includes(listItem.getId() as string),
               ),
             ),

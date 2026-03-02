@@ -308,6 +308,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 </div>
                 <div className='grid gap-6 md:grid-cols-2'>
                   {tips?.map((tip, index) => {
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Tips list is static
                     return <RecipeTipComponent key={index} tip={tip} />;
                   })}
                 </div>
@@ -323,9 +324,9 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                   Tags
                 </h3>
                 <div className='flex flex-wrap justify-center gap-3'>
-                  {tags.map((tag, index) => (
+                  {tags.map(tag => (
                     <Link
-                      key={index}
+                      key={tag.name}
                       href={`/recipes?tag=${tag.name}`}
                       className='flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-surface border border-border/30 shadow-sm hover:shadow-md hover:border-accent/30 hover:bg-accent-surface transition-all duration-200 text-foreground-subtle hover:text-foreground'
                     >
