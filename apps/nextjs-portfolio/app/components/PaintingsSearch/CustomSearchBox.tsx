@@ -19,7 +19,7 @@ export default function CustomSearchBox(props: Parameters<typeof useSearchBox>[0
   return (
     <Input
       ref={inputRef}
-      label="Search paintings"
+      label='Search paintings'
       hideLabel
       value={inputValue}
       onChange={e => {
