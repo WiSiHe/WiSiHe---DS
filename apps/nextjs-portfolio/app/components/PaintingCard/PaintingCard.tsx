@@ -33,7 +33,7 @@ const PaintingCardAdapter = ({
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
   // biome-ignore lint/suspicious/noExplicitAny: Sanity result shape varies by query
-  const { image, title = '', video = '', imagesCount = 0, slug, imageUrl } = paintingData as any;
+  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData as any;
   const { tagsV2 } = paintingData;
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];
@@ -44,8 +44,9 @@ const PaintingCardAdapter = ({
 
   // Build the resolved image src
   const imageSrc = image
-    ? (urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url() ?? imageUrl)
-    : imageUrl;
+    ? (urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url() ??
+      (paintingData as any).imageUrl)
+    : (paintingData as any).imageUrl;
 
   // Build the image ReactNode that will be passed to the generic card
   const imageNode = imageSrc ? (

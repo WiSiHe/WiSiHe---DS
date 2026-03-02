@@ -40,6 +40,7 @@ export function Spinner({ className, size, color, children, ...props }: SpinnerP
       stroke='currentColor'
       viewBox='0 0 24 24'
       xmlns='http://www.w3.org/2000/svg'
+      aria-hidden='true'
       {...props}
     >
       <g id='SVGRepo_bgCarrier' strokeWidth='0' />

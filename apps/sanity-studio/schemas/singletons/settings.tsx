@@ -54,6 +54,7 @@ export default defineType({
           type: 'string',
           validation: rule => {
             return rule.custom((alt, context) => {
+              // biome-ignore lint/suspicious/noExplicitAny: Sanity context type is not fully typed
               if ((context.document?.ogImage as any)?.asset?._ref && !alt) {
                 return 'Alt text is required when an Open Graph image is provided.';
               }

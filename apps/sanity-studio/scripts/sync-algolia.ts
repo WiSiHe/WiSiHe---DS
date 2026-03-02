@@ -65,6 +65,7 @@ async function syncToAlgolia() {
     console.log(`Found ${documents.length} documents. Preparing for Algolia...`);
 
     // 4. Map Sanity data to Algolia objects
+    // biome-ignore lint/suspicious/noExplicitAny: Document type is dynamic from Sanity query
     const objects = documents.map((doc: any) => {
       // Safely count views if it's an array or number
       let popularity = 0;
