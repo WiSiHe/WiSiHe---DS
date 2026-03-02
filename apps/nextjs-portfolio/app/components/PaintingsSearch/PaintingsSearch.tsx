@@ -70,14 +70,24 @@ export default function PaintingsSearch() {
   // Lock body scroll while drawer is open
   useEffect(() => {
     document.body.style.overflow = isMobileFiltersOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured',    value: indexName,              icon: <IoStarOutline    className='w-4 h-4' /> },
-    { label: 'Newest',      value: `${indexName}_newest`,  icon: <IoTimeOutline    className='w-4 h-4' /> },
-    { label: 'Oldest',      value: `${indexName}_oldest`,  icon: <IoHourglassOutline className='w-4 h-4' /> },
-    { label: 'Most Viewed', value: `${indexName}_views`,   icon: <IoEyeOutline     className='w-4 h-4' /> },
+    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
+    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
+    {
+      label: 'Oldest',
+      value: `${indexName}_oldest`,
+      icon: <IoHourglassOutline className='w-4 h-4' />,
+    },
+    {
+      label: 'Most Viewed',
+      value: `${indexName}_views`,
+      icon: <IoEyeOutline className='w-4 h-4' />,
+    },
   ];
 
   return (
@@ -117,7 +127,9 @@ export default function PaintingsSearch() {
             className={cn(
               'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm',
               'transition-opacity duration-300',
-              isMobileFiltersOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+              isMobileFiltersOpen
+                ? 'opacity-100 pointer-events-auto'
+                : 'opacity-0 pointer-events-none',
             )}
           />
 
@@ -171,10 +183,10 @@ export default function PaintingsSearch() {
           <div className='mt-12 flex justify-center w-full'>
             <Pagination
               classNames={{
-                root:         'flex justify-center',
-                list:         'flex items-center gap-1.5',
-                item:         'flex items-center',
-                link:         'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
+                root: 'flex justify-center',
+                list: 'flex items-center gap-1.5',
+                item: 'flex items-center',
+                link: 'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
                 selectedItem: 'bg-accent/10 border-accent text-accent font-semibold',
                 disabledItem: 'opacity-50 cursor-not-allowed pointer-events-none',
               }}

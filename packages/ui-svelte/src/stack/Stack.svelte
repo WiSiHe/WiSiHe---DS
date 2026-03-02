@@ -1,8 +1,10 @@
 <script lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: used in template
 import { cn } from '@wisihe/utils';
 import { cva } from 'class-variance-authority';
 import type { StackProps } from './types';
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const stack = cva('flex', {
   variants: {
     direction: {
@@ -49,6 +51,7 @@ let {
   wrap = false,
   class: className,
   children,
+  // biome-ignore lint/correctness/noUnusedVariables: used in template spread
   ...rest
 }: StackProps = $props();
 </script>
