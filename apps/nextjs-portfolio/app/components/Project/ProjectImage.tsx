@@ -62,6 +62,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
       {hasMultipleImages && (
         <>
           <button
+            type='button'
             className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg'
             onClick={scrollPrev}
             disabled={!prevBtnEnabled}
@@ -71,6 +72,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
           </button>
 
           <button
+            type='button'
             className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-surface border border-border/30 p-3 text-foreground transition-all hover:bg-accent hover:text-accent-contrast disabled:opacity-50 disabled:cursor-not-allowed shadow-lg'
             onClick={scrollNext}
             disabled={!nextBtnEnabled}
@@ -102,6 +104,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
                 if (!img) return null;
 
                 return (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Carousel item order does not change
                   <div key={`image-${index}`} className='relative flex-[0_0_100%] min-w-0 h-full'>
                     <div className='relative w-full h-full'>
                       <Image

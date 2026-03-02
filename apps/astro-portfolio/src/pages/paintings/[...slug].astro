@@ -13,6 +13,7 @@ export async function getStaticPaths() {
       }
     }
   }`);
+  // biome-ignore lint/suspicious/noExplicitAny: untyped Sanity GROQ response
   return paintings.map((painting: any) => ({
     params: { slug: painting.slug.current },
     props: { painting },
@@ -20,7 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { painting } = Astro.props;
-const { width, height } = painting.image?.asset?.metadata?.dimensions || {
+const { width: _width, height: _height } = painting.image?.asset?.metadata?.dimensions || {
   width: 800,
   height: 600,
 };
@@ -83,9 +84,9 @@ const { width, height } = painting.image?.asset?.metadata?.dimensions || {
             src={imageUrl(painting.image).width(1200).url()}
             alt={painting.title}
             class="painting-image"
-            width={width}
-            height={height}
-            style={`--aspect-ratio: ${width} / ${height}`}
+            width={_width}
+            height={_height}
+            style={`--aspect-ratio: ${_width} / ${_height}`}
             transition:name={`image-${painting.slug.current}`}
           />
         )

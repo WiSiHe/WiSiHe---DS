@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import {
   getPaginatedPaintings,
   getPaginatedProjects,
@@ -15,16 +16,16 @@ import {
 })
 export class SanityService {
   private client = createClient({
-    projectId: import.meta.env['VITE_SANITY_PROJECT_ID'],
-    dataset: import.meta.env['VITE_SANITY_DATASET'],
-    apiVersion: import.meta.env['VITE_SANITY_API_VERSION'],
+    projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+    dataset: import.meta.env.VITE_SANITY_DATASET,
+    apiVersion: import.meta.env.VITE_SANITY_API_VERSION,
     useCdn: true,
     perspective: 'published',
   });
 
   private builder = imageUrlBuilder(this.client);
 
-  urlFor(source: any) {
+  urlFor(source: SanityImageSource) {
     return this.builder.image(source);
   }
 

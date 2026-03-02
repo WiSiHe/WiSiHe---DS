@@ -1,7 +1,7 @@
+import path from 'node:path';
 import { createClient } from '@sanity/client';
 import { algoliasearch } from 'algoliasearch';
 import * as dotenv from 'dotenv';
-import path from 'path';
 
 // Load .env.local specifically
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
@@ -83,6 +83,7 @@ async function syncToAlgolia() {
     console.log(`Found ${documents.length} documents. Preparing for Algolia...`);
 
     // 4. Map Sanity data to Algolia objects
+    // biome-ignore lint/suspicious/noExplicitAny: Document type is dynamic from Sanity query
     const objects = documents.map((doc: any) => {
       // Safely count views if it's an array or number
       let popularity = 0;

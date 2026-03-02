@@ -79,7 +79,7 @@ export const FilterSideBar = ({ tags }: FilterSideBarProps) => {
 
               {/* Filter Chips */}
               <div className='mb-6'>
-                <label className='block mb-2 text-sm font-semibold text-foreground'>Filters</label>
+                <p className='block mb-2 text-sm font-semibold text-foreground'>Filters</p>
                 <div className='flex flex-wrap gap-3'>
                   {tags.map(({ _id, name, paintingsCount }) => {
                     const filterValue = name.toLowerCase();

@@ -59,6 +59,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             No projects found with the selected filters.
           </p>
           <button
+            type='button'
             onClick={clearAllFilters}
             className='text-accent hover:text-accent-hover hover:underline transition-colors duration-200'
           >

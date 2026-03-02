@@ -30,12 +30,13 @@ export const Default: Story = {
     return (
       <div className='flex items-center gap-3'>
         <Checkbox {...args} checked={enabled} onChange={setEnabled} />
-        <span
-          className='text-sm font-medium text-foreground cursor-pointer'
+        <button
+          type='button'
+          className='text-sm font-medium text-foreground cursor-pointer bg-transparent border-0 p-0 text-left'
           onClick={() => setEnabled(!enabled)}
         >
           Accept terms and conditions
-        </span>
+        </button>
       </div>
     );
   },
