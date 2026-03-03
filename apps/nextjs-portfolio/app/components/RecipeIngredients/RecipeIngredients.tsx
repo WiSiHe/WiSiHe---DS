@@ -37,6 +37,7 @@ export default function RecipeIngredients({ ingredientCategories }: RecipeIngred
         <h2 className='text-2xl font-bold mb-4 text-foreground'>Ingredients</h2>
       </div>
       {ingredientCategories?.map((category, categoryIndex) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: Recipe categories are static
         <div key={categoryIndex} className='mb-8 last:mb-0'>
           <h3
             className='text-lg font-semibold mb-4 pb-2'
@@ -49,6 +50,7 @@ export default function RecipeIngredients({ ingredientCategories }: RecipeIngred
           </h3>
           <ul className='space-y-4'>
             {category.ingredients.map((ingredient, ingredientIndex) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: Recipe ingredients within a category are static
               <li key={ingredientIndex} className='flex items-start gap-4'>
                 {ingredient.photo ? (
                   <div className='flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden'>

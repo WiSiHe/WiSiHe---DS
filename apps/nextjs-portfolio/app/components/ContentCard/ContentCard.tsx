@@ -139,6 +139,7 @@ const ContentCard = ({
         >
           {sideIcons.map((icon, i) => (
             <motion.li
+              // biome-ignore lint/suspicious/noArrayIndexKey: no stable key for icon ReactNodes
               key={`icon-${i}`}
               className='p-1 text-xs bg-accent text-accent-contrast rounded-md shadow-sm'
               variants={iconVariants}

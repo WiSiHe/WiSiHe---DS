@@ -36,6 +36,7 @@ const ProjectFilter = ({
         <h3 className='font-medium text-sm text-foreground-subtle'>Filter by tag:</h3>
         {activeFilters.length > 0 && (
           <button
+            type='button'
             onClick={onClearAll}
             className='text-sm text-accent hover:text-accent-hover hover:underline transition-colors duration-200'
           >

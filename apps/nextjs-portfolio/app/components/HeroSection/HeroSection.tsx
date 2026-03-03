@@ -103,7 +103,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
           // On mobile: 12 images (6 above, 6 below text)
           // On tablet: 7 images
           // On desktop: 8 images
-          let visibleImages;
+          let visibleImages: Element[];
           if (isMobile) {
             visibleImages = Array.from(images).slice(0, 12);
           } else if (isTablet) {

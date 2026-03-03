@@ -91,6 +91,7 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
           <div className='flex gap-4'>
             {paintings.map((painting, index) => (
               <div key={painting._id} className='w-96 shrink-0'>
+                {/* biome-ignore lint/suspicious/noExplicitAny: RandomPaintingsQueryResult shape differs from GetAllPaintingsandTagsResult */}
                 <PaintingCard paintingData={painting as any} shouldBeLazy={index < 2} />
               </div>
             ))}

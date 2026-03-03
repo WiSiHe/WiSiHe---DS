@@ -32,7 +32,8 @@ const PaintingCardAdapter = ({
 }: PaintingCardAdapterProps) => {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
-  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData;
+  // biome-ignore lint/suspicious/noExplicitAny: Sanity result shape varies by query
+  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData as any;
   const { tagsV2 } = paintingData;
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];

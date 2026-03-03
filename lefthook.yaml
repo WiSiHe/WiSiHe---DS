@@ -7,6 +7,6 @@ pre-commit:
       fail_text: "❌ TypeScript type checking failed. Please fix the errors and try again."
 
     lint:
-      glob: "*.{js,jsx,ts,tsx,json,svelte,vue}"
+      glob: "*.{js,jsx,ts,tsx,json,svelte,vue,css}"
       run: pnpm biome check --write {staged_files}
       fail_text: "❌ Biome check failed. Please fix the errors and try again."

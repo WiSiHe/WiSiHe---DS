@@ -1,8 +1,10 @@
 <script lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: used in template below
 import { cn } from '@wisihe/utils';
 import { cva } from 'class-variance-authority';
 import type { ButtonProps } from './types';
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template below
 const button = cva(
   'inline-flex items-center justify-center gap-2 rounded-sm border font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-60',
   {
@@ -38,6 +40,7 @@ let {
   disabled = false,
   type = 'button',
   children,
+  // biome-ignore lint/correctness/noUnusedVariables: used in template below
   ...rest
 }: ButtonProps = $props();
 </script>
