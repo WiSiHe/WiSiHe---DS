@@ -141,6 +141,7 @@ const PaginatedPaintingGrid = ({
             ) : (
               <span
                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                role='img'
                 aria-label='First page'
               >
                 <FaStepBackward />
@@ -159,6 +160,7 @@ const PaginatedPaintingGrid = ({
             ) : (
               <span
                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                role='img'
                 aria-label='Previous page'
               >
                 <FaArrowLeft />
@@ -181,6 +183,7 @@ const PaginatedPaintingGrid = ({
             ) : (
               <span
                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                role='img'
                 aria-label='Next page'
               >
                 <FaArrowRight />
@@ -199,6 +202,7 @@ const PaginatedPaintingGrid = ({
             ) : (
               <span
                 className='px-4 py-2 rounded flex items-center gap-2 bg-surface-hover/50 text-foreground-muted cursor-not-allowed'
+                role='img'
                 aria-label='Last page'
               >
                 <FaStepForward />

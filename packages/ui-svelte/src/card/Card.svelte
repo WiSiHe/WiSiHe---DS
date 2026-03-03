@@ -1,8 +1,10 @@
 <script lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: used in template
 import { cn } from '@wisihe/utils';
 import { cva } from 'class-variance-authority';
 import type { CardProps } from './types';
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const card = cva('rounded-lg border text-foreground', {
   variants: {
     variant: {
@@ -29,6 +31,7 @@ let {
   padding = 'md',
   class: className,
   children,
+  // biome-ignore lint/correctness/noUnusedVariables: used in template spread
   ...rest
 }: CardProps = $props();
 </script>
