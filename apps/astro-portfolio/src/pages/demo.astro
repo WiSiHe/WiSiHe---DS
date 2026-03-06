@@ -1,57 +1,90 @@
 ---
-import { client } from '../lib/sanity';
+import { client } from "../lib/sanity";
+import imageUrl from "../lib/sanity";
+import TestReact from "../components/TestReact";
+import TestSvelte from "../components/TestSvelte.svelte";
 
-let _sanityStatus = 'Not connected';
-let _sanityData = null;
-let _painting = null;
+let sanityStatus = "Not connected";
+let sanityData = null;
+let painting = null;
 
 try {
   // Attempt to fetch a single document to test connection
   // This might fail if projectId is not set, which is expected
-  _sanityData = await client.fetch('*[0]');
-  _sanityStatus = 'Connected (found data)';
+  sanityData = await client.fetch("*[0]");
+  sanityStatus = "Connected (found data)";
 
   // Fetch a painting
-  _painting = await client.fetch('*[_type == "painting"][0]');
+  painting = await client.fetch('*[_type == "painting"][0]');
 } catch (error) {
-  _sanityStatus = `Connection failed (expected if no Project ID): ${error.message}`;
-  console.error('Sanity connection error:', error);
+  const e = error as Error;
+  sanityStatus = `Connection failed (expected if no Project ID): ${e.message}`;
+  console.error("Sanity connection error:", e);
 }
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro + React + Svelte + Sanity</title>
-	</head>
-	<body style="font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem;">
-		<h1>Astro Integration Demo</h1>
-    
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro + React + Svelte + Sanity</title>
+  </head>
+  <body
+    style="font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem;"
+  >
+    <h1>Astro Integration Demo</h1>
+
     <section>
       <h2>Sanity Status</h2>
-      <p><strong>Project ID:</strong> {import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'Using Default/Placeholder'}</p>
-      <p><strong>Dataset:</strong> {import.meta.env.PUBLIC_SANITY_DATASET || 'Using Default/Placeholder'}</p>
-      <pre style="background: #f4f4f4; padding: 1rem; border-radius: 4px;">{sanityStatus}</pre>
-      {sanityData && <details><summary>Raw Data</summary><pre>{JSON.stringify(sanityData, null, 2)}</pre></details>}
+      <p>
+        <strong>Project ID:</strong>
+        {
+          import.meta.env.PUBLIC_SANITY_PROJECT_ID ||
+            "Using Default/Placeholder"
+        }
+      </p>
+      <p>
+        <strong>Dataset:</strong>
+        {import.meta.env.PUBLIC_SANITY_DATASET || "Using Default/Placeholder"}
+      </p>
+      <pre
+        style="background: #f4f4f4; padding: 1rem; border-radius: 4px;">{sanityStatus}</pre>
+      {
+        sanityData && (
+          <details>
+            <>
+              <summary>Raw Data</summary>
+              <pre>{JSON.stringify(sanityData, null, 2)}</pre>
+            </>
+          </details>
+        )
+      }
     </section>
 
     <section>
       <h2>Sanity Painting</h2>
-      {painting ? (
-        <div>
-          <h3>{painting.title}</h3>
-          {painting.image && <img src={imageUrl(painting.image).width(400).url()} alt={painting.title} style="max-width: 100%; height: auto;" />}
-          <details>
-            <summary>Painting Data</summary>
-            <pre>{JSON.stringify(painting, null, 2)}</pre>
-          </details>
-        </div>
-      ) : (
-        <p>No painting found (or not connected).</p>
-      )}
+      {
+        painting ? (
+          <div>
+            <h3>{painting.title}</h3>
+            {painting.image && (
+              <img
+                src={imageUrl(painting.image).width(400).url()}
+                alt={painting.title}
+                style="max-width: 100%; height: auto;"
+              />
+            )}
+            <details>
+              <summary>Painting Data</summary>
+              <pre>{JSON.stringify(painting, null, 2)}</pre>
+            </details>
+          </div>
+        ) : (
+          <p>No painting found (or not connected).</p>
+        )
+      }
     </section>
 
     <section>
@@ -65,5 +98,5 @@ try {
       <!-- client:load tells Astro to hydrate this component on the client -->
       <TestSvelte client:load />
     </section>
-	</body>
+  </body>
 </html>

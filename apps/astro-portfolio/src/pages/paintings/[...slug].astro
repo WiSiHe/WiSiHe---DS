@@ -1,5 +1,5 @@
 ---
-import { client } from '../../lib/sanity';
+import { client } from "../../lib/sanity";
 
 export async function getStaticPaths() {
   const paintings = await client.fetch(`*[_type == "painting"]{
@@ -21,16 +21,24 @@ export async function getStaticPaths() {
 }
 
 const { painting } = Astro.props;
-const { width: _width, height: _height } = painting.image?.asset?.metadata?.dimensions || {
+const { width, height } = painting.image?.asset?.metadata?.dimensions || {
   width: 800,
   height: 600,
 };
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import imageUrl from "../../lib/sanity";
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={`${painting.title} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+    <BaseHead
+      title={`${painting.title} | ${SITE_TITLE}`}
+      description={SITE_DESCRIPTION}
+    />
     <style>
       .painting-container {
         max-width: 800px;
@@ -84,9 +92,9 @@ const { width: _width, height: _height } = painting.image?.asset?.metadata?.dime
             src={imageUrl(painting.image).width(1200).url()}
             alt={painting.title}
             class="painting-image"
-            width={_width}
-            height={_height}
-            style={`--aspect-ratio: ${_width} / ${_height}`}
+            width={width}
+            height={height}
+            style={`--aspect-ratio: ${width} / ${height}`}
             transition:name={`image-${painting.slug.current}`}
           />
         )
@@ -103,7 +111,11 @@ const { width: _width, height: _height } = painting.image?.asset?.metadata?.dime
           )
         }
 
-        {painting.description && <p class="description">{painting.description}</p>}
+        {
+          painting.description && (
+            <p class="description">{painting.description}</p>
+          )
+        }
       </div>
     </main>
     <Footer />
