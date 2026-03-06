@@ -1,26 +1,33 @@
 ---
+export const prerender = false;
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=600, stale-while-revalidate=30",
+);
+
 import { client } from "../../lib/sanity";
 
-export async function getStaticPaths() {
-  const paintings = await client.fetch(`*[_type == "painting"]{
-    ...,
-    image {
-      asset->{
-        _id,
-        metadata {
-          dimensions
-        }
+const { slug } = Astro.params;
+
+const painting = await client.fetch(
+  `*[_type == "painting" && slug.current == $slug][0]{
+  ...,
+  image {
+    asset->{
+      _id,
+      metadata {
+        dimensions
       }
     }
-  }`);
-  // biome-ignore lint/suspicious/noExplicitAny: untyped Sanity GROQ response
-  return paintings.map((painting: any) => ({
-    params: { slug: painting.slug.current },
-    props: { painting },
-  }));
+  }
+}`,
+  { slug },
+);
+
+if (!painting) {
+  return Astro.redirect("/404");
 }
 
-const { painting } = Astro.props;
 const { width, height } = painting.image?.asset?.metadata?.dimensions || {
   width: 800,
   height: 600,
