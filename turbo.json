@@ -3,25 +3,44 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "env": ["EXPERIMENTATION_CONFIG_ITEM_KEY", "STATSIG_SERVER_API_KEY"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "env": [
+        "EXPERIMENTATION_CONFIG_ITEM_KEY",
+        "STATSIG_SERVER_API_KEY"
+      ]
     },
     "lint": {
       "dependsOn": []
     },
     "typecheck": {
-      "dependsOn": ["^typecheck", "^build"],
+      "dependsOn": [
+        "^typecheck",
+        "^build"
+      ],
       "outputs": []
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": []
     },
     "build-storybook": {
       "dependsOn": [],
-      "outputs": ["storybook-static/**"]
+      "outputs": [
+        "storybook-static/**"
+      ]
     },
     "storybook": {
       "cache": false,
@@ -37,8 +56,12 @@
   },
   "globalEnv": [
     "NEXT_PUBLIC_*",
+    "PUBLIC_*",
     "EXPERIMENTATION_CONFIG_ITEM_KEY",
     "STATSIG_SERVER_API_KEY",
-    "PUBLIC_OPENAI_API_KEY"
+    "PUBLIC_OPENAI_API_KEY",
+    "FIREBASE_PROJECT_ID",
+    "FIREBASE_CLIENT_EMAIL",
+    "FIREBASE_PRIVATE_KEY"
   ]
 }
