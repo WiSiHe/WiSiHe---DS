@@ -24,6 +24,10 @@ export default defineConfig({
     remotePatterns: [{ protocol: 'https' }],
   },
 
+  security: {
+    checkOrigin: false,
+  },
+
   adapter: vercel({
     webAnalytics: { enabled: true },
     imageService: true,
