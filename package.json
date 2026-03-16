@@ -28,7 +28,7 @@
     "release": "pnpm build:packages && changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.4",
+    "@biomejs/biome": "2.4.7",
     "@changesets/cli": "^2.29.8",
     "knip": "5.70.2",
     "lefthook": "1.13.6",
