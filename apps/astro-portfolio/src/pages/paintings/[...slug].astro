@@ -1,11 +1,8 @@
 ---
 export const prerender = false;
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, s-maxage=600, stale-while-revalidate=30",
-);
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=30');
 
-import { client } from "../../lib/sanity";
+import { client } from '../../lib/sanity';
 
 const { slug } = Astro.params;
 
@@ -25,20 +22,21 @@ const painting = await client.fetch(
 );
 
 if (!painting) {
-  return Astro.redirect("/404");
+  return Astro.redirect('/404');
 }
 
 const { width, height } = painting.image?.asset?.metadata?.dimensions || {
   width: 800,
   height: 600,
 };
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import TestReact from "../../components/TestReact.tsx";
-import TestSvelte from "../../components/TestSvelte.svelte";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
-import imageUrl from "../../lib/sanity";
+
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import TestReact from '../../components/TestReact.tsx';
+import TestSvelte from '../../components/TestSvelte.svelte';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import imageUrl from '../../lib/sanity';
 ---
 
 <!doctype html>
