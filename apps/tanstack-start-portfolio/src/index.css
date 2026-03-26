@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap");
 
 /* Import workspace tokens and tailwind */
 @import "tailwindcss";
@@ -45,7 +45,12 @@
       color 260ms ease;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     text-wrap: balance;
     overflow-wrap: anywhere;
     font-family: var(--font-oswald), system-ui, sans-serif;
@@ -92,8 +97,8 @@
 }
 
 :root {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', var(--font-sans);
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-heading: "Outfit", var(--font-sans);
 
   /* Map to @wisihe/tokens */
   --bg: var(--semantic-dark-color-background-default);
@@ -129,7 +134,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.2;
@@ -190,7 +200,8 @@ nav {
   opacity: 0.8;
 }
 
-.nav-link:hover, .nav-link-active {
+.nav-link:hover,
+.nav-link-active {
   opacity: 1;
   color: var(--accent);
 }
