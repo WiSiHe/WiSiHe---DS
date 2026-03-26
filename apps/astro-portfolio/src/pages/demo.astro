@@ -1,25 +1,24 @@
 ---
-import { client } from "../lib/sanity";
-import imageUrl from "../lib/sanity";
-import TestReact from "../components/TestReact";
-import TestSvelte from "../components/TestSvelte.svelte";
+import TestReact from '../components/TestReact';
+import TestSvelte from '../components/TestSvelte.svelte';
+import imageUrl, { client } from '../lib/sanity';
 
-let sanityStatus = "Not connected";
+let sanityStatus = 'Not connected';
 let sanityData = null;
 let painting = null;
 
 try {
   // Attempt to fetch a single document to test connection
   // This might fail if projectId is not set, which is expected
-  sanityData = await client.fetch("*[0]");
-  sanityStatus = "Connected (found data)";
+  sanityData = await client.fetch('*[0]');
+  sanityStatus = 'Connected (found data)';
 
   // Fetch a painting
   painting = await client.fetch('*[_type == "painting"][0]');
 } catch (error) {
   const e = error as Error;
   sanityStatus = `Connection failed (expected if no Project ID): ${e.message}`;
-  console.error("Sanity connection error:", e);
+  console.error('Sanity connection error:', e);
 }
 ---
 
