@@ -12,126 +12,169 @@
  * ---------------------------------------------------------------------------------
  */
 
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
 // Source: schema.json
-export type Recipe = {
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type Image1 = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type Seo1 = {
+  title?: string;
+  description?: string;
+  image?: Image1;
+  noIndex?: boolean;
+};
+
+export type TagReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "tag";
+};
+
+export type Presentation = {
   _id: string;
-  _type: "recipe";
+  _type: "presentation";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title: string;
   slug: Slug;
   description?: string;
-  mainImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  additionalImages?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
-  ingredientCategories?: Array<{
-    categoryName: string;
-    ingredients?: Array<{
-      ingredient: string;
-      photo?: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string;
-        _type: "image";
-      };
-      amount: string;
-      unit: string;
-      isDiscrete?: boolean;
-      notes?: string;
+  tags?: Array<
+    {
       _key: string;
-    }>;
-    _key: string;
-  }>;
-  instructions?: Array<{
-    title?: string;
-    content: BlockContent;
-    _key: string;
-  }>;
-  tips?: Array<{
-    title?: string;
-    content: string;
-    icon?: string;
-    _key: string;
-  }>;
-  cookingTime?: number;
-  prepTime?: number;
-  totalTime?: number;
-  servings?: number;
-  difficulty?: "easy" | "medium" | "hard";
-  tags?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
-  publishedAt?: string;
-  seo?: {
-    title?: string;
-    description?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    noIndex?: boolean;
+    } & TagReference
+  >;
+  slides: Array<
+    | ({
+        _key: string;
+      } & ContentSlide)
+    | ({
+        _key: string;
+      } & TitleSlide)
+    | ({
+        _key: string;
+      } & SeparatorSlide)
+  >;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type PresentationCategoryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "presentationCategory";
+};
+
+export type SeparatorSlide = {
+  _type: "separatorSlide";
+  status?: "published" | "draft" | "hidden";
+  title: string;
+  category?: PresentationCategoryReference;
+  slideDesign?: "default" | "minimal" | "bold";
+};
+
+export type TitleSlide = {
+  _type: "titleSlide";
+  status?: "published" | "draft" | "hidden";
+  title: string;
+  subtitle?: string;
+  media?: PresentationMedia;
+  slideDesign?: "default" | "centered" | "hero" | "minimal";
+};
+
+export type PresentationMedia = {
+  _type: "presentationMedia";
+  mediaType?:
+    | "none"
+    | "image"
+    | "video"
+    | "iframe"
+    | "numbers"
+    | "graph"
+    | "custom";
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
   };
+  imageAspectRatio?: "video" | "square" | "portrait" | "landscape" | "auto";
+  videoUrl?: string;
+  iframeUrl?: string;
+  iframeAspectRatio?: "video" | "square" | "portrait" | "landscape" | "auto";
+  metrics?: Array<
+    {
+      _key: string;
+    } & PresentationMetric
+  >;
+  chartType?:
+    | "performance"
+    | "business-impact"
+    | "engagement"
+    | "history-timeline";
+  componentName?: string;
+  componentProps?: string;
 };
 
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
+export type ContentSlide = {
+  _type: "contentSlide";
+  status?: "published" | "draft" | "hidden";
+  title: string;
+  subtitle?: string;
+  content?: BlockContent;
+  media?: PresentationMedia;
+  slideDesign?: "default" | "centered" | "split" | "full-width" | "minimal";
+  category?: PresentationCategoryReference;
+  sources?: Array<
+    {
+      _key: string;
+    } & PresentationSource
+  >;
+  tools?: Array<
+    {
+      _key: string;
+    } & PresentationTool
+  >;
+  examples?: Array<
+    {
+      _key: string;
+    } & PresentationExample
+  >;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
+export type PaintingReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "painting";
+};
+
+export type ProjectReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "project";
 };
 
 export type BlockContent = Array<
@@ -148,18 +191,8 @@ export type BlockContent = Array<
         linkType?: "href" | "slug" | "painting" | "project";
         href?: string;
         slug?: string;
-        painting?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "painting";
-        };
-        project?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "project";
-        };
+        painting?: PaintingReference;
+        project?: ProjectReference;
         openInNewTab?: boolean;
         _type: "link";
         _key: string;
@@ -169,12 +202,7 @@ export type BlockContent = Array<
       _key: string;
     }
   | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -246,10 +274,150 @@ export type BlockContent = Array<
     }
 >;
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type PresentationMetric = {
+  _type: "presentationMetric";
+  label: string;
+  value: string;
+  description?: string;
+  color?: "#22c55e" | "#ef4444" | "#3b82f6" | "#a855f7" | "#f97316" | "#14b8a6";
+};
+
+export type PresentationExample = {
+  _type: "presentationExample";
+  name: string;
+  description: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  iframe?: string;
+  url?: string;
+};
+
+export type PresentationTool = {
+  _type: "presentationTool";
+  name: string;
+  description: string;
+  url: string;
+  category?: string;
+  workshopUrl?: string;
+  nerdLevel?: number;
+};
+
+export type PresentationSource = {
+  _type: "presentationSource";
+  text: string;
+  url?: string;
+};
+
+export type PresentationCategory = {
+  _id: string;
+  _type: "presentationCategory";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  description?: string;
+  color?:
+    | "#ef4444"
+    | "#f97316"
+    | "#eab308"
+    | "#22c55e"
+    | "#3b82f6"
+    | "#a855f7"
+    | "#ec4899"
+    | "#14b8a6";
+};
+
+export type Recipe = {
+  _id: string;
+  _type: "recipe";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  additionalImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  ingredientCategories?: Array<{
+    categoryName: string;
+    ingredients?: Array<{
+      ingredient: string;
+      photo?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string;
+        _type: "image";
+      };
+      amount: string;
+      unit: string;
+      isDiscrete?: boolean;
+      notes?: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  instructions?: Array<{
+    title?: string;
+    content: BlockContent;
+    _key: string;
+  }>;
+  tips?: Array<{
+    title?: string;
+    content: string;
+    icon?: string;
+    _key: string;
+  }>;
+  cookingTime?: number;
+  prepTime?: number;
+  totalTime?: number;
+  servings?: number;
+  difficulty?: "easy" | "medium" | "hard";
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  publishedAt?: string;
+  seo?: Seo1;
 };
 
 export type Social = {
@@ -274,18 +442,7 @@ export type Seo = {
   _type: "seo";
   title?: string;
   description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  image?: Image1;
   noIndex?: boolean;
 };
 
@@ -297,19 +454,12 @@ export type Tag = {
   _rev: string;
   name: string;
   description: string;
-  parent?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "tag";
-  };
-  children?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
+  parent?: TagReference;
+  children?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
   color?:
     | "#ef4444"
     | "#f97316"
@@ -335,12 +485,7 @@ export type Settings = {
   title: string;
   description: string;
   ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -351,12 +496,7 @@ export type Settings = {
     twitterCard?: "summary" | "summary_large_image";
     twitterUsername?: string;
     twitterImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -404,13 +544,11 @@ export type Home = {
   }>;
   paintingsTitle?: string;
   paintingsDescription: BlockContent;
-  showcasePaintings?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
-  }>;
+  showcasePaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
   projectsDescription: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -437,13 +575,18 @@ export type Home = {
     _key: string;
   }>;
   projectsTitle?: string;
-  showcaseProjects?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "project";
-  }>;
+  showcaseProjects?: Array<
+    {
+      _key: string;
+    } & ProjectReference
+  >;
+};
+
+export type VideoReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "video";
 };
 
 export type Project = {
@@ -468,12 +611,7 @@ export type Project = {
   projectEnd?: string;
   content?: BlockContent;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -481,56 +619,26 @@ export type Project = {
     _type: "image";
   };
   extraImages?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
     _key: string;
   }>;
-  connectedPaintings?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "painting";
-  }>;
-  connectedVideo?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "video";
-  };
+  connectedPaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
+  connectedVideo?: VideoReference;
   connectedPage?: string;
-  tags: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
-  seo?: {
-    title?: string;
-    description?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    noIndex?: boolean;
-  };
+  tags: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  seo?: Seo1;
   redirect?: {
     source?: string;
     destination?: string;
@@ -555,31 +663,19 @@ export type Video = {
   videoUrl: string;
   featured?: boolean;
   thumbnail: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt: string;
     _type: "image";
   };
-  linkedPainting?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "painting";
-  };
-  tags: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
+  linkedPainting?: PaintingReference;
+  tags: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
 };
 
 export type Painting = {
@@ -591,12 +687,7 @@ export type Painting = {
   title: string;
   slug: Slug;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -606,12 +697,7 @@ export type Painting = {
   description: string;
   seoDescription?: string;
   images?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -636,13 +722,11 @@ export type Painting = {
   instagramUrl?: string;
   twitterUrl?: string;
   paintedAt: string;
-  tagsV2: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
+  tagsV2: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
 };
 
 export type MediaTag = {
@@ -692,14 +776,16 @@ export type SanityAssistOutputField = {
   path?: string;
 };
 
+export type AssistInstructionContextReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+};
+
 export type SanityAssistInstructionContext = {
   _type: "sanity.assist.instruction.context";
-  reference: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
-  };
+  reference: AssistInstructionContextReference;
 };
 
 export type AssistInstructionContext = {
@@ -822,6 +908,7 @@ export type SanityImageMetadata = {
   palette?: SanityImagePalette;
   lqip?: string;
   blurHash?: string;
+  thumbHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
 };
@@ -837,14 +924,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
 };
 
@@ -866,14 +953,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -886,17 +973,35 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
-  | Recipe
+  | SanityImageAssetReference
+  | Image1
+  | Seo1
+  | TagReference
+  | Presentation
+  | Slug
+  | PresentationCategoryReference
+  | SeparatorSlide
+  | TitleSlide
+  | PresentationMedia
+  | ContentSlide
+  | PaintingReference
+  | ProjectReference
+  | BlockContent
   | SanityImageCrop
   | SanityImageHotspot
-  | BlockContent
-  | Slug
+  | PresentationMetric
+  | PresentationExample
+  | PresentationTool
+  | PresentationSource
+  | PresentationCategory
+  | Recipe
   | Social
   | Redirect
   | Seo
   | Tag
   | Settings
   | Home
+  | VideoReference
   | Project
   | Video
   | Painting
@@ -906,6 +1011,7 @@ export type AllSanitySchemaTypes =
   | SanityAssistSchemaTypeAnnotations
   | SanityAssistOutputType
   | SanityAssistOutputField
+  | AssistInstructionContextReference
   | SanityAssistInstructionContext
   | AssistInstructionContext
   | SanityAssistInstructionUserInput
@@ -922,8 +1028,6 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 
-export declare const internalGroqTypeReferenceTo: unique symbol;
-
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
@@ -936,12 +1040,7 @@ export type SettingsQueryResult = {
   title: string;
   description: string;
   ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -952,12 +1051,7 @@ export type SettingsQueryResult = {
     twitterCard?: "summary_large_image" | "summary";
     twitterUsername?: string;
     twitterImage?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -996,12 +1090,7 @@ export type AllPaintingsQueryResult = Array<{
   title: string;
   slug: Slug;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1045,12 +1134,7 @@ export type PaintingQueryResult = {
   society6Url: string | null;
   inPrintUrl: string | null;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1062,12 +1146,7 @@ export type PaintingQueryResult = {
   };
   images:
     | Array<{
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -1111,12 +1190,7 @@ export type ProjectQueryResult = {
   projectEnd?: string;
   content?: BlockContent;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1125,12 +1199,7 @@ export type ProjectQueryResult = {
     lqip: string | null;
   } | null;
   extraImages?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1143,12 +1212,7 @@ export type ProjectQueryResult = {
         slug: string;
         format: "landscape" | "portrait" | "square";
         image: {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
+          asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
@@ -1167,18 +1231,7 @@ export type ProjectQueryResult = {
   seo: {
     title: string | "";
     description: string | "";
-    image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    } | null;
+    image: Image1 | null;
     noIndex: boolean | false;
   };
   redirect?: {
@@ -1237,12 +1290,7 @@ export type HomePageQueryResult = {
       name: string;
     }>;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1299,18 +1347,7 @@ export type HomePageQueryResult = {
     seo: {
       title: string | "";
       description: string | "";
-      image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-      } | null;
+      image: Image1 | null;
       noIndex: boolean | false;
     };
     name: string;
@@ -1319,12 +1356,7 @@ export type HomePageQueryResult = {
     }>;
     slug: string;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1352,12 +1384,7 @@ export type GetAllPaintingsandTagsResult = {
     imagesCount: number | 0;
     isForSale: false | true;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1390,12 +1417,7 @@ export type GetPaginatedPaintingsResult = Array<{
   imagesCount: number | 0;
   isForSale: false | true;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1427,12 +1449,7 @@ export type GetFilteredPaginatedPaintingsResult = Array<{
   imagesCount: number | 0;
   isForSale: false | true;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1477,12 +1494,7 @@ export type GetAllProjectsResult = {
       name: string;
     }>;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1516,12 +1528,7 @@ export type GetAllProjectsResult = {
       name: string;
     }>;
     image: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1554,12 +1561,7 @@ export type GetAllVideosResult = {
       slug: string;
       title: string;
       image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -1572,12 +1574,7 @@ export type GetAllVideosResult = {
       name: string;
     }>;
     thumbnail: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -1624,12 +1621,7 @@ export type OG_IMAGE_QUERY_RESULT =
   | {
       title: string;
       image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -1641,12 +1633,7 @@ export type OG_IMAGE_QUERY_RESULT =
   | {
       title: null;
       image: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -1671,12 +1658,7 @@ export type GetAllRecipesResult = Array<{
   title: string;
   description: string | null;
   mainImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1705,12 +1687,7 @@ export type GetRecipeResult = {
   title: string;
   description: string | null;
   mainImage: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1724,12 +1701,7 @@ export type GetRecipeResult = {
     ingredients: Array<{
       ingredient: string;
       photo: {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -1782,12 +1754,7 @@ export type RandomPaintingsQueryResult = Array<{
     name: string;
   }>;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1801,12 +1768,2582 @@ export type RandomPaintingsQueryResult = Array<{
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: presentationQuery
 // Query: *[_type == "presentation" && slug.current == $slug][0] {    _id,    title,    description,    "slug": slug.current,    tags[]->{      _id,      name    },    slides[] {      _type,      status,      _type == "contentSlide" => {        title,        subtitle,        content,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        },        category->{          _id,          name,          description,          color        },        sources[] {          text,          url        },        tools[] {          name,          description,          url,          category,          workshopUrl,          nerdLevel        },        examples[] {          name,          description,          image {            ...,            "url": asset->url,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          iframe,          url        }      },      _type == "titleSlide" => {        title,        subtitle,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        }      },      _type == "separatorSlide" => {        title,        slideDesign,        category->{          _id,          name,          description,          color        }      }    }  }
-export type PresentationQueryResult = null;
+export type PresentationQueryResult = {
+  _id: string;
+  title: string;
+  description: string | null;
+  slug: string;
+  tags: Array<{
+    _id: string;
+    name: string;
+  }> | null;
+  slides: Array<
+    | {
+        _type: "contentSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string;
+        subtitle: string | null;
+        content: BlockContent | null;
+        slideDesign:
+          | "centered"
+          | "default"
+          | "full-width"
+          | "minimal"
+          | "split"
+          | null;
+        media:
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+            }
+          | null;
+        category: {
+          _id: string;
+          name: string;
+          description: string | null;
+          color:
+            | "#14b8a6"
+            | "#22c55e"
+            | "#3b82f6"
+            | "#a855f7"
+            | "#eab308"
+            | "#ec4899"
+            | "#ef4444"
+            | "#f97316"
+            | null;
+        } | null;
+        sources: Array<{
+          text: string;
+          url: string | null;
+        }> | null;
+        tools: Array<{
+          name: string;
+          description: string;
+          url: string;
+          category: string | null;
+          workshopUrl: string | null;
+          nerdLevel: number | null;
+        }> | null;
+        examples: Array<{
+          name: string;
+          description: string;
+          image: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            url: string | null;
+            lqip: string | null;
+            aspectRatio: number | null;
+          } | null;
+          iframe: string | null;
+          url: string | null;
+        }> | null;
+      }
+    | {
+        _type: "separatorSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string;
+        slideDesign: "bold" | "default" | "minimal" | null;
+        category: {
+          _id: string;
+          name: string;
+          description: string | null;
+          color:
+            | "#14b8a6"
+            | "#22c55e"
+            | "#3b82f6"
+            | "#a855f7"
+            | "#eab308"
+            | "#ec4899"
+            | "#ef4444"
+            | "#f97316"
+            | null;
+        } | null;
+      }
+    | {
+        _type: "titleSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string;
+        subtitle: string | null;
+        slideDesign: "centered" | "default" | "hero" | "minimal" | null;
+        media:
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string;
+                value: string;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+            }
+          | null;
+      }
+  >;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: allPresentationsQuery
 // Query: *[_type == "presentation"] | order(_createdAt desc) {    _id,    title,    description,    "slug": slug.current,    "slidesCount": count(slides),    tags[]->{      _id,      name    }  }
-export type AllPresentationsQueryResult = Array<never>;
+export type AllPresentationsQueryResult = Array<{
+  _id: string;
+  title: string;
+  description: string | null;
+  slug: string;
+  slidesCount: number;
+  tags: Array<{
+    _id: string;
+    name: string;
+  }> | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPaginatedProjects
@@ -1836,12 +4373,7 @@ export type GetPaginatedProjectsResult = Array<{
     name: string;
   }>;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
