@@ -1,8 +1,11 @@
 'use client';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
+import { Button } from '@wisihe/ui-react';
+import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import type { PortableTextBlock } from 'next-sanity';
 import { useCallback, useEffect, useState } from 'react';
+import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import {
   FaCalendarAlt as IconCalendar,
   FaTimesCircle as IconCancel,
@@ -12,10 +15,7 @@ import {
   FaPauseCircle as IconPause,
   FaQuestionCircle as IconQuestion,
 } from 'react-icons/fa';
-import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
-import { incrementProjectView, incrementProjectLike, removeProjectLike } from '@/app/actions';
-import { Button } from '@wisihe/ui-react';
-import { cn } from '@wisihe/utils';
+import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@/app/actions';
 import Chip from '../Chip/Chip';
 import CustomPortableText from '../PortableText/PortableText';
 
@@ -40,16 +40,16 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     return null;
   }
 
-  const { 
-    _id, 
-    name, 
-    status = 'unknown', 
-    projectStart, 
-    projectEnd, 
-    tags = [], 
-    viewsCount, 
-    likesCount, 
-    views = [] 
+  const {
+    _id,
+    name,
+    status = 'unknown',
+    projectStart,
+    projectEnd,
+    tags = [],
+    viewsCount,
+    likesCount,
+    views = [],
   } = project;
 
   const projectContent = project.content as PortableTextBlock[];
@@ -181,26 +181,30 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         {projectTitle}
       </motion.h1>
 
-      <div className="flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium">
-        <span className="flex items-center gap-1.5" title="Project Status">
-          <StatusIcon className="w-3.5 h-3.5" /> {statusConfig.label}
+      <div className='flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium'>
+        <span className='flex items-center gap-1.5' title='Project Status'>
+          <StatusIcon className='w-3.5 h-3.5' /> {statusConfig.label}
         </span>
         {projectStart && (
-          <span className="flex items-center gap-1.5" title="Project Start Date">
-            <IconCalendar className="w-3.5 h-3.5" /> Started {formatDate(projectStart)}
+          <span className='flex items-center gap-1.5' title='Project Start Date'>
+            <IconCalendar className='w-3.5 h-3.5' /> Started {formatDate(projectStart)}
           </span>
         )}
         {projectEnd && (
-          <span className="flex items-center gap-1.5" title="Project End Date">
-            <IconCalendar className="w-3.5 h-3.5" /> Ended {formatDate(projectEnd)}
+          <span className='flex items-center gap-1.5' title='Project End Date'>
+            <IconCalendar className='w-3.5 h-3.5' /> Ended {formatDate(projectEnd)}
           </span>
         )}
-        <span className="flex items-center gap-1.5" title="View count">
-          <BsEye className="w-4 h-4" /> {viewsCount?.toString() ?? '0'} Views
+        <span className='flex items-center gap-1.5' title='View count'>
+          <BsEye className='w-4 h-4' /> {viewsCount?.toString() ?? '0'} Views
         </span>
-        <span className="flex items-center gap-1.5" title="Like count">
-          <span className={cn(hasLikedLocal ? "text-red-500" : "")}>
-            {hasLikedLocal ? <BsHeartFill className="w-3.5 h-3.5" /> : <BsHeart className="w-3.5 h-3.5" />}
+        <span className='flex items-center gap-1.5' title='Like count'>
+          <span className={cn(hasLikedLocal ? 'text-red-500' : '')}>
+            {hasLikedLocal ? (
+              <BsHeartFill className='w-3.5 h-3.5' />
+            ) : (
+              <BsHeart className='w-3.5 h-3.5' />
+            )}
           </span>
           {localLikesCount} Likes
         </span>
@@ -214,19 +218,24 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         </div>
       )}
 
-      <div className="flex items-center flex-wrap gap-3 mt-1">
-        <Button 
-          onClick={handleLike} 
-          variant="secondary"
-          className={cn("gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors", hasLikedLocal ? "text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20" : "")}
+      <div className='flex items-center flex-wrap gap-3 mt-1'>
+        <Button
+          onClick={handleLike}
+          variant='secondary'
+          className={cn(
+            'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
+            hasLikedLocal
+              ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
+              : '',
+          )}
         >
           {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
           {hasLikedLocal ? 'Liked' : 'Like'}
         </Button>
-        <Button 
-          onClick={handleShare} 
-          variant="secondary"
-          className="gap-2 w-fit rounded-full px-4 shadow-sm"
+        <Button
+          onClick={handleShare}
+          variant='secondary'
+          className='gap-2 w-fit rounded-full px-4 shadow-sm'
         >
           <BsShare className='w-4 h-4' />
           {shareText}

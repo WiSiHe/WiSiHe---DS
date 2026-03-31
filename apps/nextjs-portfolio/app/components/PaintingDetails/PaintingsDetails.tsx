@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/performance/noImgElement: Necessary for motion.img which doesn't support Next.js Image component easily for this specific transition */
 'use client';
 import type { PaintingQueryResult } from '@wisihe/sanity-queries';
+import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
@@ -10,9 +11,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
 import { BsClockFill, BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { incrementPaintingView, incrementPaintingLike, removePaintingLike } from '@/app/actions';
+import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { urlForImage } from '@/sanity/lib/utils';
-import { Button } from '@wisihe/ui-react';
 import Chip from '../Chip/Chip';
 
 type PaintingDetailProps = {
@@ -318,16 +318,20 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               </motion.h1>
 
               {/* Information Row */}
-              <div className="flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium">
-                <span className="flex items-center gap-1.5" title="Painting date">
-                  <BsClockFill className="w-3.5 h-3.5" /> {formattedPaintedAt}
+              <div className='flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium'>
+                <span className='flex items-center gap-1.5' title='Painting date'>
+                  <BsClockFill className='w-3.5 h-3.5' /> {formattedPaintedAt}
                 </span>
-                <span className="flex items-center gap-1.5" title="View count">
-                  <BsEye className="w-4 h-4" /> {viewsCount?.toString() ?? '0'} Views
+                <span className='flex items-center gap-1.5' title='View count'>
+                  <BsEye className='w-4 h-4' /> {viewsCount?.toString() ?? '0'} Views
                 </span>
-                <span className="flex items-center gap-1.5" title="Like count">
-                  <span className={cn(hasLikedLocal ? "text-red-500" : "")}>
-                    {hasLikedLocal ? <BsHeartFill className="w-3.5 h-3.5" /> : <BsHeart className="w-3.5 h-3.5" />}
+                <span className='flex items-center gap-1.5' title='Like count'>
+                  <span className={cn(hasLikedLocal ? 'text-red-500' : '')}>
+                    {hasLikedLocal ? (
+                      <BsHeartFill className='w-3.5 h-3.5' />
+                    ) : (
+                      <BsHeart className='w-3.5 h-3.5' />
+                    )}
                   </span>
                   {localLikesCount} Likes
                 </span>
@@ -349,19 +353,28 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               )}
 
               {/* Actions */}
-              <div className="flex items-center flex-wrap gap-3 mt-1">
-                <Button 
-                  onClick={handleLike} 
-                  variant="secondary"
-                  className={cn("gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors", hasLikedLocal ? "text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20" : "")}
+              <div className='flex items-center flex-wrap gap-3 mt-1'>
+                <Button
+                  onClick={handleLike}
+                  variant='secondary'
+                  className={cn(
+                    'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
+                    hasLikedLocal
+                      ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
+                      : '',
+                  )}
                 >
-                  {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
+                  {hasLikedLocal ? (
+                    <BsHeartFill className='w-4 h-4' />
+                  ) : (
+                    <BsHeart className='w-4 h-4' />
+                  )}
                   {hasLikedLocal ? 'Liked' : 'Like'}
                 </Button>
-                <Button 
-                  onClick={handleShare} 
-                  variant="secondary"
-                  className="gap-2 w-fit rounded-full px-4 shadow-sm"
+                <Button
+                  onClick={handleShare}
+                  variant='secondary'
+                  className='gap-2 w-fit rounded-full px-4 shadow-sm'
                 >
                   <BsShare className='w-4 h-4' />
                   {shareText}
