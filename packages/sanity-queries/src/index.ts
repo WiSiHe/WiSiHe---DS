@@ -132,6 +132,9 @@ export const projectQuery = defineQuery(`
   *[_type == "project" && slug.current == $slug][0] {
     ...,
     "slug": slug.current,
+    "likesCount": count(likes),
+    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),
+    "viewsCount": count(views),
     tags[]->{
       "name": coalesce(name, "")
     },
