@@ -430,7 +430,7 @@ const ScrollStack = ({
 
   return (
     <div className={containerClassName} ref={scrollerRef} style={containerStyles}>
-      <div className='scroll-stack-inner relative mx-auto w-full max-w-5xl px-4 pb-[min(14rem,40vh)] pt-[6vh] md:px-8 md:pb-[min(18rem,46vh)] md:pt-[8vh] lg:px-12'>
+      <div className='scroll-stack-inner relative w-full'>
         {children}
         <div className='scroll-stack-end h-px w-full' aria-hidden />
       </div>

@@ -5,6 +5,7 @@ import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
@@ -447,17 +448,27 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         })}
       </div>
 
-      {/* Scroll Indicator - Bottom with high z-index */}
-      {showScrollIndicator && (
-        <div className='absolute bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none transition-opacity duration-500'>
-          <span className='text-xs font-medium text-foreground-subtle uppercase tracking-wider animate-pulse'>
-            Scroll
-          </span>
-          <div className='w-6 h-10 border-2 border-foreground-subtle rounded-full flex items-start justify-center p-2 overflow-hidden'>
-            <div className='w-1.5 h-1.5 bg-foreground-subtle rounded-full animate-scroll-indicator' />
-          </div>
-        </div>
-      )}
+      {/* Sits above fixed bottom nav (see HeaderNavigation) */}
+      <AnimatePresence>
+        {showScrollIndicator && (
+          <motion.div
+            key='scroll-indicator'
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className='absolute bottom-[calc(6.25rem+env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2.5 rounded-2xl border border-border bg-surface/95 px-4 py-3 shadow-lg backdrop-blur-md pointer-events-none ring-1 ring-black/5 dark:ring-white/10'
+            aria-hidden
+          >
+            <span className='text-xs font-semibold uppercase tracking-wider text-foreground drop-shadow-sm'>
+              Scroll
+            </span>
+            <div className='flex h-10 w-6 items-start justify-center overflow-hidden rounded-full border-2 border-foreground/70 p-2 dark:border-foreground/80'>
+              <div className='h-1.5 w-1.5 animate-scroll-indicator rounded-full bg-foreground' />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

@@ -37,7 +37,7 @@ const PaintingsSection = async ({
     <>
       <div className='mb-4 px-4 max-w-7xl mx-auto'>
         <div className='max-w-prose'>
-        <PortableText value={paintingsDescription as PortableTextBlock[]} />
+          <PortableText value={paintingsDescription as PortableTextBlock[]} />
         </div>
       </div>
       <PaintingsCarousel paintings={featuredPaintings} />
