@@ -9,6 +9,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect, useRef } from 'react';
 
+import { setGlobalLenis } from '@/app/lib/lenis-registry';
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll() {
@@ -31,6 +33,8 @@ export default function SmoothScroll() {
           lerp: 0.085,
         });
 
+        setGlobalLenis(lenis);
+
         lenis.on('scroll', () => {
           ScrollTrigger.update();
         });
@@ -42,12 +46,14 @@ export default function SmoothScroll() {
         gsap.ticker.lagSmoothing(0);
 
         if (cancelledRef.current) {
+          setGlobalLenis(null);
           gsap.ticker.remove(onTick);
           lenis.destroy();
           return;
         }
 
         cleanup = () => {
+          setGlobalLenis(null);
           gsap.ticker.remove(onTick);
           lenis.destroy();
         };
