@@ -52,9 +52,7 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
   const previewSources = collectPreviewSources(project);
 
   return (
-    <ScrollStackItem
-      itemClassName='pointer-events-auto my-0 flex min-h-[min(360px,68svh)] w-full flex-col overflow-hidden rounded-2xl bg-surface p-0 shadow-lg drop-shadow-xl md:min-h-[min(440px,50svh)]'
-    >
+    <ScrollStackItem itemClassName='pointer-events-auto my-0 flex min-h-[min(360px,68svh)] w-full flex-col overflow-hidden rounded-2xl bg-surface p-0 shadow-lg drop-shadow-xl md:min-h-[min(440px,50svh)]'>
       <article
         className='flex min-h-0 flex-1 gap-3 p-5 md:gap-5 md:p-6 lg:p-7'
         aria-labelledby={titleId}
@@ -126,10 +124,7 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
                 <Image
                   src={heroUrl}
                   alt={
-                    project.seo?.title ||
-                    project.title ||
-                    project.name ||
-                    'Project preview image'
+                    project.seo?.title || project.title || project.name || 'Project preview image'
                   }
                   fill
                   className='object-cover'
