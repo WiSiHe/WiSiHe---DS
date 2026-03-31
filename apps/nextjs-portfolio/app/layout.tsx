@@ -15,6 +15,7 @@ import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
 import './globals.css';
 import type React from 'react';
+import SmoothScroll from './components/SmoothScroll';
 import { PostHogProvider } from './providers';
 
 const geistSans = localFont({
@@ -154,7 +155,7 @@ export default async function RootLayout({
   const { socialLinks } = settings;
 
   return (
-    <html lang='en' className='scroll-smooth' suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <head>
         {process.env.NODE_ENV === 'development' && (
           <script crossOrigin='anonymous' src='//unpkg.com/react-scan/dist/auto.global.js' />
@@ -182,6 +183,7 @@ export default async function RootLayout({
           <ProgressBarProvider>
             <ProgressBar className='fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50' />
             <PostHogProvider>
+              <SmoothScroll />
               {isDraftMode && (
                 <>
                   <DraftModeToast />

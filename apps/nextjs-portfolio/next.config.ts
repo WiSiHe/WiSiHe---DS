@@ -48,6 +48,7 @@ const nextConfig: NextConfig = {
     '@wisihe/constants',
     '@wisihe/sanity-queries',
     '@wisihe/tokens',
+    'lenis',
   ],
 
   poweredByHeader: false,
