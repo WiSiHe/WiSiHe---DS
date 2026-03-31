@@ -7,16 +7,9 @@
  * Document scroll uses global Lenis (`@/app/lib/lenis-registry`).
  */
 
-import Lenis from 'lenis';
-import {
-  type CSSProperties,
-  type ReactNode,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-} from 'react';
-
 import gsap from 'gsap';
+import Lenis from 'lenis';
+import { type CSSProperties, type ReactNode, useCallback, useLayoutEffect, useRef } from 'react';
 
 import { getDocumentScrollTop } from '@/app/lib/lenis-registry';
 
@@ -25,10 +18,7 @@ export type ScrollStackItemProps = {
   itemClassName?: string;
 };
 
-export const ScrollStackItem = ({
-  children,
-  itemClassName = '',
-}: ScrollStackItemProps) => (
+export const ScrollStackItem = ({ children, itemClassName = '' }: ScrollStackItemProps) => (
   <div className='scroll-stack-card relative box-border w-full'>
     <div
       className={`scroll-stack-card-surface box-border w-full origin-top will-change-transform ${itemClassName}`.trim()}
@@ -158,9 +148,7 @@ const ScrollStack = ({
 
     if (!inner) return;
 
-    const endElementTop = endElement
-      ? getLayoutDocumentTop(endElement, inner, scrollTop)
-      : 0;
+    const endElementTop = endElement ? getLayoutDocumentTop(endElement, inner, scrollTop) : 0;
 
     let topCardIndex = 0;
 
@@ -277,7 +265,7 @@ const ScrollStack = ({
     if (useWindowScroll) {
       const lenis = new Lenis({
         duration: 1.2,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        easing: t => Math.min(1, 1.001 - 2 ** (-10 * t)),
         smoothWheel: true,
         touchMultiplier: 2,
         infinite: false,
@@ -309,7 +297,7 @@ const ScrollStack = ({
       wrapper: scroller,
       content: innerEl as HTMLElement,
       duration: 1.2,
-      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: t => Math.min(1, 1.001 - 2 ** (-10 * t)),
       smoothWheel: true,
       touchMultiplier: 2,
       infinite: false,
