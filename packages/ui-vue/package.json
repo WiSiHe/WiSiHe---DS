@@ -33,16 +33,16 @@
     "class-variance-authority": "^0.7.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.4",
+    "@vitejs/plugin-vue": "^6.0.5",
     "@vue/test-utils": "^2.4.6",
     "@wisihe/typescript-config": "workspace:*",
     "jsdom": "^28.1.0",
-    "tailwindcss": "^4.2.1",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vitest": "^3.2.4",
-    "vue": "^3.5.29",
-    "vue-tsc": "^3.2.5"
+    "vue": "^3.5.31",
+    "vue-tsc": "^3.2.6"
   },
   "peerDependencies": {
     "tailwindcss": ">=3.4.19",
