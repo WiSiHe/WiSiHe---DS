@@ -84,7 +84,8 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
       whileInView='visible'
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className=''
+      className='md:hidden'
+      aria-label='Featured paintings carousel'
     >
       <motion.div variants={itemVariants} className='relative'>
         <div className='overflow-hidden' ref={emblaRef}>

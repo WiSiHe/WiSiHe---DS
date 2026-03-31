@@ -3,6 +3,7 @@ import { PortableText, type PortableTextBlock } from 'next-sanity';
 import { sanityFetch } from '@/sanity/lib/live';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
 import PaintingsCarousel from './PaintingsCarousel';
+import PaintingsDesktopShowcase from './PaintingsDesktopShowcase';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -36,6 +37,7 @@ const PaintingsSection = async ({
         <PortableText value={paintingsDescription as PortableTextBlock[]} />
       </div>
       <PaintingsCarousel paintings={shuffledPaintings} />
+      <PaintingsDesktopShowcase paintings={shuffledPaintings} />
     </>
   );
 };
