@@ -3,9 +3,9 @@
 import { useGSAP } from '@gsap/react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
