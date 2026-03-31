@@ -35,7 +35,11 @@ type HeroPaintingSvgHoverProps = {
   title?: string | null;
 };
 
-export function HeroPaintingSvgHover({ accentColor, secondaryColor, title }: HeroPaintingSvgHoverProps) {
+export function HeroPaintingSvgHover({
+  accentColor,
+  secondaryColor,
+  title,
+}: HeroPaintingSvgHoverProps) {
   return (
     <>
       <div data-hero-svg className='pointer-events-none absolute inset-0 z-[2]' aria-hidden>

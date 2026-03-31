@@ -10,10 +10,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
 import {
-  HeroPaintingSvgHover,
   HERO_BRUSH_STROKE_WIDTH_HOVER,
   HERO_BRUSH_STROKE_WIDTH_REST,
   HERO_STROKE_ACCENTS,
+  HeroPaintingSvgHover,
 } from './HeroPaintingSvgHover';
 
 gsap.registerPlugin(useGSAP);
@@ -526,21 +526,19 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             >
               <div className='h-full w-full rounded-lg shadow-2xl'>
                 <div className='relative isolate h-full w-full overflow-hidden rounded-lg'>
-                <Image
-                  src={imageUrl}
-                  alt={altText || 'Painting'}
-                  fill
-                  priority={isPriority}
-                  className='object-cover'
-                  sizes='(max-width: 768px) 40vw, 30vw'
-                />
-                <HeroPaintingSvgHover
-                  accentColor={HERO_STROKE_ACCENTS[index % HERO_STROKE_ACCENTS.length]}
-                  secondaryColor={
-                    HERO_STROKE_ACCENTS[(index + 4) % HERO_STROKE_ACCENTS.length]
-                  }
-                  title={title}
-                />
+                  <Image
+                    src={imageUrl}
+                    alt={altText || 'Painting'}
+                    fill
+                    priority={isPriority}
+                    className='object-cover'
+                    sizes='(max-width: 768px) 40vw, 30vw'
+                  />
+                  <HeroPaintingSvgHover
+                    accentColor={HERO_STROKE_ACCENTS[index % HERO_STROKE_ACCENTS.length]}
+                    secondaryColor={HERO_STROKE_ACCENTS[(index + 4) % HERO_STROKE_ACCENTS.length]}
+                    title={title}
+                  />
                 </div>
               </div>
             </Link>
