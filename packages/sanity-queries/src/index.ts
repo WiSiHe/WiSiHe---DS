@@ -1,5 +1,7 @@
 import { defineQuery } from 'groq';
 
+export * from './sanity.types';
+
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
 const postFields = /* groq */ `

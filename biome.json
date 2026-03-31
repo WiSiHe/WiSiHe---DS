@@ -65,6 +65,17 @@
   },
   "overrides": [
     {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": [
         "**/node_modules/**",
         "**/dist/**",

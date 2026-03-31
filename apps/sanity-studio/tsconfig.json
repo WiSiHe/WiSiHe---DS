@@ -1,5 +1,8 @@
 {
   "extends": "@wisihe/typescript-config/sanity.json",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "env.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

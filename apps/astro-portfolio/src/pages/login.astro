@@ -1,21 +1,20 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import { adminAuth } from "../lib/firebase/server";
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { adminAuth } from '../lib/firebase/server';
 
 // If already logged in, redirect to paintings
-if (Astro.cookies.has("session")) {
-    const sessionCookie = Astro.cookies.get("session")?.value || "";
-    try {
-        const decodedCookie =
-            await adminAuth.verifySessionCookie(sessionCookie);
-        if (decodedCookie) {
-            return Astro.redirect("/paintings");
-        }
-    } catch (err) {
-        // Cookie is invalid, ignore and show login form
+if (Astro.cookies.has('session')) {
+  const sessionCookie = Astro.cookies.get('session')?.value || '';
+  try {
+    const decodedCookie = await adminAuth.verifySessionCookie(sessionCookie);
+    if (decodedCookie) {
+      return Astro.redirect('/paintings');
     }
+  } catch (err) {
+    // Cookie is invalid, ignore and show login form
+  }
 }
 ---
 
