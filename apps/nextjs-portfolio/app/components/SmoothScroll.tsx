@@ -5,9 +5,9 @@
  * Lenis is loaded dynamically so SSR / Turbopack never evaluate browser-only code at import time.
  */
 
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
