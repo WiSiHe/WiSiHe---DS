@@ -9,7 +9,6 @@ import SkillsSection from './components/SkillsSection/SkillsSection';
 
 type Painting = NonNullable<NonNullable<HomePageQueryResult>['showcasePaintings']>[number];
 
-// Fisher-Yates shuffle algorithm
 function shuffleArray(array: Painting[]): Painting[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -19,7 +18,6 @@ function shuffleArray(array: Painting[]): Painting[] {
   return shuffled;
 }
 
-// Loading skeleton components
 const HeroSkeleton = () => (
   <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>
     <div className='w-full h-96 bg-surface-elevated animate-pulse rounded-2xl' />
@@ -61,7 +59,6 @@ export default async function Home() {
 
   return (
     <div className='bg-background'>
-      {/* Hero & Projects Wrapper */}
       <div className='bg-background'>
         <Suspense fallback={<HeroSkeleton />}>
           <HeroImageSection paintings={shuffledHeroPaintings} />
@@ -74,8 +71,6 @@ export default async function Home() {
         </section>
       </div>
 
-      {/* Paintings Section with distinct background */}
-      {/* Paintings Section with distinct background */}
       <section className='bg-surface py-24 px-4 md:px-8'>
         <Suspense fallback={<SectionSkeleton />}>
           <PaintingsSection paintingsDescription={paintingsDescription} />

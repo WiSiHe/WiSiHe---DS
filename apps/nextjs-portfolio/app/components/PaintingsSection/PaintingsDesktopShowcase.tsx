@@ -12,17 +12,39 @@ type PaintingsDesktopShowcaseProps = {
   paintings: RandomPaintingsQueryResult;
 };
 
+/**
+ * Logical height for masonry packing (`Masonry` uses `height / 2` as the rendered row height).
+ * Uses Sanity `aspectRatio` (width ÷ height): portraits get taller tiles, landscapes shorter,
+ * with a stable per-id jitter and occasional “hero” emphasis so the grid feels less uniform.
+ */
+function masonryLogicalHeight(
+  aspectRatio: number | null | undefined,
+  id: string,
+  index: number,
+): number {
+  const ar =
+    typeof aspectRatio === 'number' && Number.isFinite(aspectRatio) && aspectRatio > 0.05
+      ? aspectRatio
+      : 1;
+  /** Taller when image is portrait-ish, shorter when landscape-ish */
+  const tallness = 1 / ar;
+  let salt = 0;
+  for (let i = 0; i < id.length; i++) {
+    salt = (salt * 31 + id.charCodeAt(i)) | 0;
+  }
+  const jitter = 0.92 + (Math.abs(salt) % 17) / 100;
+  const hero = index % 6 === 0 ? 1.14 : index % 4 === 1 ? 0.9 : 1;
+  const base = 340;
+  const spread = 420;
+  return Math.round(base + tallness * spread * jitter * hero);
+}
+
 const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) => {
   const items = useMemo<MasonryItem[]>(() => {
     if (!paintings?.length) return [];
     const out: MasonryItem[] = [];
     paintings.forEach((p, index) => {
-      const ar =
-        typeof p.image?.aspectRatio === 'number' && Number.isFinite(p.image.aspectRatio)
-          ? p.image.aspectRatio
-          : 1;
-      const base = 320 + (index % 5) * 48;
-      const height = Math.round(base * (ar >= 1 ? 1 : 1.12));
+      const height = masonryLogicalHeight(p.image?.aspectRatio ?? null, p._id, index);
       const img = p.image
         ? urlForImage(p.image)?.width(900).height(1200).quality(85).auto('format').url()
         : null;
