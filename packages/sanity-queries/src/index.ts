@@ -515,8 +515,14 @@ export const getRecipeSlugs = defineQuery(`
   {"slug": slug.current}
 `);
 
+/** Home / featured paintings pool: newest first, capped; excludes NSFW-tagged works (same tag name as `PaintingCard` / `cleanTagName` + `'NSFW'`). */
 export const randomPaintingsQuery = defineQuery(`
-  *[_type == "painting" && defined(slug.current) && defined(image)] | order(_createdAt desc) [0...50] {
+  *[
+    _type == "painting" &&
+    defined(slug.current) &&
+    defined(image) &&
+    !("NSFW" in coalesce(tagsV2[]->name, []))
+  ] | order(_createdAt desc) [0...50] {
     _id,
     title,
     "slug": slug.current,
