@@ -8,10 +8,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
-import { BsClockFill, BsEye } from 'react-icons/bs';
+import { BsClockFill, BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { incrementPaintingView } from '@/app/actions';
+import { incrementPaintingView, incrementPaintingLike, removePaintingLike } from '@/app/actions';
 import { urlForImage } from '@/sanity/lib/utils';
+import { Button } from '@wisihe/ui-react';
 import Chip from '../Chip/Chip';
 
 type PaintingDetailProps = {
@@ -31,6 +32,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     tagsV2 = [],
     paintedAt,
     viewsCount,
+    likesCount,
     image,
     images = [],
     video,
@@ -90,6 +92,78 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     }
   }, []);
 
+  const [localLikesCount, setLocalLikesCount] = useState<number>(likesCount ?? 0);
+  const [hasLikedLocal, setHasLikedLocal] = useState(false);
+  const [shareText, setShareText] = useState('Share');
+
+  // Check if liked previously
+  useEffect(() => {
+    try {
+      const likedPaintings = JSON.parse(localStorage.getItem('likedPaintings') || '{}');
+      if (likedPaintings[_id]) {
+        setHasLikedLocal(true);
+      }
+    } catch (err) {
+      console.error('Failed to parse likedPaintings from localStorage', err);
+    }
+  }, [_id]);
+
+  const handleLike = async () => {
+    const likerId = generateOrRetrieveViewerId();
+
+    if (hasLikedLocal) {
+      // Optimistic update
+      setLocalLikesCount(prev => Math.max(0, prev - 1));
+      setHasLikedLocal(false);
+
+      try {
+        const likedPaintings = JSON.parse(localStorage.getItem('likedPaintings') || '{}');
+        delete likedPaintings[_id];
+        localStorage.setItem('likedPaintings', JSON.stringify(likedPaintings));
+      } catch (err) {
+        console.error('Failed to update likedPaintings in localStorage', err);
+      }
+
+      await removePaintingLike(_id, likerId);
+    } else {
+      // Optimistic update
+      setLocalLikesCount(prev => prev + 1);
+      setHasLikedLocal(true);
+
+      try {
+        const likedPaintings = JSON.parse(localStorage.getItem('likedPaintings') || '{}');
+        likedPaintings[_id] = true;
+        localStorage.setItem('likedPaintings', JSON.stringify(likedPaintings));
+      } catch (err) {
+        console.error('Failed to update likedPaintings in localStorage', err);
+      }
+
+      await incrementPaintingLike(_id, likerId);
+    }
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          url: url,
+        });
+      } catch (err) {
+        console.error('Error sharing natively', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareText('Copied!');
+        setTimeout(() => setShareText('Share'), 2500);
+      } catch (err) {
+        console.error('Failed to copy to clipboard', err);
+      }
+    }
+  };
+
   // On mount, patch painting views
   useEffect(() => {
     const addView = async () => {
@@ -107,15 +181,15 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     void addView();
   }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
 
-  // Adjust width and height based on format
+  // Provide higher max bounds to allow next/image to serve crisp retina images
   const getImageDimensions = (format: string) => {
     switch (format) {
       case 'landscape':
-        return { width: 1200, height: 675 }; // 16:9 aspect ratio, reduced for mobile
+        return { width: 2400, height: 1350 };
       case 'portrait':
-        return { width: 900, height: 1200 }; // 3:4 aspect ratio, reduced for mobile
+        return { width: 1600, height: 2133 };
       default:
-        return { width: 1200, height: 1200 }; // 1:1 aspect ratio, reduced for mobile
+        return { width: 2000, height: 2000 };
     }
   };
 
@@ -158,7 +232,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                         .height(height)
                         .fit('max')
                         .format('webp')
-                        .quality(80)
+                        .quality(90) // Increased quality for crispness
                         .url() ?? '';
 
                     return (
@@ -173,7 +247,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                             priority={index === 0}
                             fill
                             className='object-cover h-full w-full'
-                            sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 1024px'
+                            sizes='(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 66vw'
                           />
                         </div>
                       </div>
@@ -242,22 +316,26 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               >
                 {title}
               </motion.h1>
+
+              {/* Information Row */}
+              <div className="flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium">
+                <span className="flex items-center gap-1.5" title="Painting date">
+                  <BsClockFill className="w-3.5 h-3.5" /> {formattedPaintedAt}
+                </span>
+                <span className="flex items-center gap-1.5" title="View count">
+                  <BsEye className="w-4 h-4" /> {viewsCount?.toString() ?? '0'} Views
+                </span>
+                <span className="flex items-center gap-1.5" title="Like count">
+                  <span className={cn(hasLikedLocal ? "text-red-500" : "")}>
+                    {hasLikedLocal ? <BsHeartFill className="w-3.5 h-3.5" /> : <BsHeart className="w-3.5 h-3.5" />}
+                  </span>
+                  {localLikesCount} Likes
+                </span>
+              </div>
+
+              {/* Taxonomy (Tags) */}
               {tagsV2.length > 0 && (
-                <div className='flex flex-wrap gap-2'>
-                  {/* Example Chip usage */}
-                  <Chip
-                    outlined
-                    Icon={() => <BsClockFill className='size-4' title='Painting date' />}
-                    label={formattedPaintedAt}
-                    size='small'
-                  />
-                  <Chip
-                    outlined
-                    Icon={() => <BsEye className='size-4' title='View count' />}
-                    label='Views:'
-                    additionalText={viewsCount?.toString() ?? '0'}
-                    // size="small"
-                  />
+                <div className='flex flex-wrap gap-2 mt-1'>
                   {tagsV2.map(tag => {
                     const { name } = tag;
                     if (!name) return null;
@@ -269,6 +347,27 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   })}
                 </div>
               )}
+
+              {/* Actions */}
+              <div className="flex items-center flex-wrap gap-3 mt-1">
+                <Button 
+                  onClick={handleLike} 
+                  variant="secondary"
+                  className={cn("gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors", hasLikedLocal ? "text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20" : "")}
+                >
+                  {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
+                  {hasLikedLocal ? 'Liked' : 'Like'}
+                </Button>
+                <Button 
+                  onClick={handleShare} 
+                  variant="secondary"
+                  className="gap-2 w-fit rounded-full px-4 shadow-sm"
+                >
+                  <BsShare className='w-4 h-4' />
+                  {shareText}
+                </Button>
+              </div>
+
               {redbubbleUrl && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
