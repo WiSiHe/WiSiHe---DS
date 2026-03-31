@@ -47,7 +47,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     projectStart,
     projectEnd,
     tags = [],
-    viewsCount,
+    viewsCount = 0,
     likesCount,
     views = [],
   } = project;
