@@ -6,10 +6,27 @@ import gsap from 'gsap';
 import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
+import {
+  HeroPaintingSvgHover,
+  HERO_BRUSH_STROKE_WIDTH_HOVER,
+  HERO_BRUSH_STROKE_WIDTH_REST,
+  HERO_STROKE_ACCENTS,
+} from './HeroPaintingSvgHover';
+
 gsap.registerPlugin(useGSAP);
+
+function initHeroSvgStrokePaths(root: HTMLElement | null) {
+  if (!root) return;
+  const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
+  paths.forEach(path => {
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = `${len}`;
+    path.style.strokeDashoffset = `${len}`;
+  });
+}
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
@@ -56,6 +73,18 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   const [progress, setProgress] = useState(0);
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const svgHoverTlsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
+
+  useLayoutEffect(() => {
+    initHeroSvgStrokePaths(containerRef.current);
+  }, [paintings]);
+
+  useEffect(() => {
+    return () => {
+      svgHoverTlsRef.current.forEach(tl => tl.kill());
+      svgHoverTlsRef.current.clear();
+    };
+  }, []);
 
   // Hide scroll indicator after user scrolls
   useEffect(() => {
@@ -297,18 +326,53 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     const imageElements = imagesRef.current?.children;
     if (!imageElements) return;
 
+    const link = imageElements[index] as HTMLElement;
+
     // Determine which position set to use based on window width
     const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
     const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
     const baseScale = positions[index % positions.length].scale;
 
-    gsap.to(imageElements[index], {
-      scale: baseScale * 1.2,
-      zIndex: 20,
-      duration: 0.5,
-      ease: 'power2.out',
-      overwrite: 'auto',
+    svgHoverTlsRef.current.get(index)?.kill();
+    const tl = gsap.timeline();
+    svgHoverTlsRef.current.set(index, tl);
+
+    const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
+    paths.forEach(path => {
+      const len = path.getTotalLength();
+      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+      tl.to(
+        path,
+        {
+          strokeDashoffset: 0,
+          attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_HOVER },
+          duration: 1.5,
+          ease: 'power2.out',
+        },
+        0,
+      );
     });
+
+    const titleEl = link.querySelector('[data-hero-title]');
+    if (titleEl) {
+      tl.fromTo(
+        titleEl,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+        0.25,
+      );
+    }
+
+    tl.to(
+      link,
+      {
+        scale: baseScale * 1.2,
+        zIndex: 20,
+        duration: 0.5,
+        ease: 'power2.out',
+      },
+      0,
+    );
   });
 
   const handleMouseLeave = contextSafe(() => {
@@ -329,6 +393,33 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
 
       // Only reset if this image was hovered (zIndex > 1)
       if (typeof currentZ === 'number' && currentZ > 1) {
+        svgHoverTlsRef.current.get(i)?.kill();
+        svgHoverTlsRef.current.delete(i);
+
+        const link = img as HTMLElement;
+        const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
+        paths.forEach(path => {
+          const len = path.getTotalLength();
+          gsap.to(path, {
+            strokeDashoffset: len,
+            attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_REST },
+            duration: 1,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          });
+        });
+
+        const titleEl = link.querySelector('[data-hero-title]');
+        if (titleEl) {
+          gsap.to(titleEl, {
+            opacity: 0,
+            y: 6,
+            duration: 0.35,
+            ease: 'power2.in',
+            overwrite: 'auto',
+          });
+        }
+
         gsap.to(img, {
           scale: baseScale,
           zIndex: 1,
@@ -347,7 +438,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className='relative w-full h-dvh overflow-hidden flex items-center justify-center transition-colors duration-500'
+      className='relative flex h-dvh w-full items-center justify-center overflow-hidden transition-colors duration-500'
       style={{
         backgroundColor: 'var(--color-background)',
       }}
@@ -392,7 +483,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       {/* Floating Images Container */}
       <div ref={imagesRef} className='absolute inset-0 pointer-events-none'>
         {paintings?.map((painting, index) => {
-          const { image, altText, slug } = painting;
+          const { image, altText, slug, title } = painting;
           if (!image) return null;
 
           const imageUrl = urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
@@ -433,15 +524,24 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
               // Initial state: centered
               className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-1 ${size} ${aspectRatio} ${visibilityClass} pointer-events-auto group opacity-0 will-change-transform`}
             >
-              <div className='relative w-full h-full'>
+              <div className='h-full w-full rounded-lg shadow-2xl'>
+                <div className='relative isolate h-full w-full overflow-hidden rounded-lg'>
                 <Image
                   src={imageUrl}
                   alt={altText || 'Painting'}
                   fill
                   priority={isPriority}
-                  className='object-cover rounded-lg shadow-2xl'
+                  className='object-cover'
                   sizes='(max-width: 768px) 40vw, 30vw'
                 />
+                <HeroPaintingSvgHover
+                  accentColor={HERO_STROKE_ACCENTS[index % HERO_STROKE_ACCENTS.length]}
+                  secondaryColor={
+                    HERO_STROKE_ACCENTS[(index + 4) % HERO_STROKE_ACCENTS.length]
+                  }
+                  title={title}
+                />
+                </div>
               </div>
             </Link>
           );
