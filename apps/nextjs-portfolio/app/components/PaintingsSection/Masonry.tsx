@@ -8,13 +8,7 @@
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export type MasonryItem = {
   id: string;
