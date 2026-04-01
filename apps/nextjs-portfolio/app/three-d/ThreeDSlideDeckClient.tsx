@@ -25,7 +25,7 @@ const TechnicalDeck = dynamic(
 export function ThreeDSlideDeckClient({
   slides,
 }: Readonly<{ slides: PresentationSlide[] | null }>) {
-  const mainRef = useRef<HTMLElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
   const technicalDeckRef = useRef<HTMLDivElement>(null);
   const technicalSeparatorRef = useRef<HTMLElement>(null);
   const [shouldLoadTechnical, setShouldLoadTechnical] = useState(false);
@@ -93,7 +93,7 @@ export function ThreeDSlideDeckClient({
   return (
     <>
       <StructuredData />
-      <main
+      <div
         ref={mainRef}
         className='w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden'
         style={
@@ -145,9 +145,9 @@ export function ThreeDSlideDeckClient({
         <div className='snap-start shrink-0 min-h-screen w-full relative'>
           <SourcesSection />
         </div>
-      </main>
+      </div>
 
-      {/* Presentation Controls - rendered outside main to avoid transform containing block issues */}
+      {/* Presentation Controls — outside scroll container to avoid transform containing block issues */}
       {presentationState && (
         <PresentationControls
           currentSlide={presentationState.currentSlide}

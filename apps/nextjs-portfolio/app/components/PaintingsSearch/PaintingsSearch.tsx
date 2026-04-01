@@ -157,7 +157,8 @@ export default function PaintingsSearch() {
             role='dialog'
             aria-modal='true'
             aria-label='Filters & Search'
-            aria-hidden={!isMobileFiltersOpen}
+            // When closed, keep widgets mounted but non-interactive (aria-hidden + focusables fails axe)
+            inert={!isMobileFiltersOpen}
             className={cn(
               'fixed inset-x-0 bottom-0 z-50',
               'w-full bg-background max-h-[90dvh] flex flex-col overflow-y-auto',

@@ -13,7 +13,7 @@ export function IntroPresentationOnly({ slides }: IntroPresentationOnlyProps) {
   const technicalDeckRef = useRef<HTMLDivElement>(null);
 
   return (
-    <main
+    <div
       className='w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden max-w-full'
       style={{ scrollBehavior: 'smooth' }}
     >
@@ -21,6 +21,6 @@ export function IntroPresentationOnly({ slides }: IntroPresentationOnlyProps) {
       <div className='snap-start h-screen shrink-0'>
         <IntroPresentation technicalDeckRef={technicalDeckRef} slides={slides} />
       </div>
-    </main>
+    </div>
   );
 }

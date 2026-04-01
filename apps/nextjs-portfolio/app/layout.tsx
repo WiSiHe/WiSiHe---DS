@@ -149,7 +149,15 @@ export default async function RootLayout({
   });
 
   if (!settings) {
-    return <div>Settings not found</div>;
+    return (
+      <html lang='en' suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
+        >
+          <main id='main-content'>Settings not found</main>
+        </body>
+      </html>
+    );
   }
 
   const { socialLinks } = settings;
