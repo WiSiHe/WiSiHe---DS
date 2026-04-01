@@ -1,0 +1,17 @@
+---
+description: React Compiler (no manual memo), component structure in apps and packages
+globs: apps/**/*.{tsx,ts},packages/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Component structure
+
+- Prefer small, focused components. When a file grows large (hundreds of lines), extract subcomponents, hooks, or helpers into colocated files in the same folder.
+- Keep the default export readable: orchestration at the top level, details in named subcomponents or `use*` hooks.
+- Reuse shared UI from workspace packages (e.g. `@wisihe/ui-react`) before duplicating markup.
+
+## React Compiler
+
+This repo uses the **React Compiler**. Do **not** add manual memoization in app code: avoid `useMemo`, `useCallback`, and `memo` / `React.memo` unless the user explicitly asks or there is a documented exception. Write straightforward components and hooks; let the compiler optimize. Details: root `AI_RULES.md`.
+
+See canonical patterns in existing sections under `apps/*/app/components/` or `apps/*/src/components/`.

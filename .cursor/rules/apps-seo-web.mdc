@@ -1,0 +1,28 @@
+---
+description: SEO metadata and semantic page structure across app frameworks
+globs: apps/**/*.{tsx,ts,astro}
+alwaysApply: false
+---
+
+# SEO and semantic structure
+
+## Metadata by stack
+
+- **Next.js App Router**: Use `metadata` or `async generateMetadata` per route: `title`, `description`, `metadataBase`, Open Graph/Twitter, `alternates.canonical` when applicable. Keep titles unique per route; avoid empty or duplicate descriptions. See @apps/nextjs-portfolio/app/layout.tsx for site-wide defaults and Sanity-driven settings.
+- **Astro**: Set `<title>` and meta description via layout or frontmatter; use `@astrojs/sitemap` / RSS where the project already configures them.
+- **TanStack Start / others**: Use that framework’s head/meta APIs for title, description, and share images.
+
+## HTML and URLs
+
+- Clear outline: `h1` for the main page topic when appropriate, then `h2` / `h3` without skipping levels.
+- Use landmarks (`main`, `nav`, `header`, `footer`) once per page pattern; avoid multiple `main` unless documented by the framework.
+- Prefer stable, human-readable URLs and slugs for new routes.
+
+```tsx
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Page title',
+  description: 'Unique, concise summary for search and social previews.',
+};
+```

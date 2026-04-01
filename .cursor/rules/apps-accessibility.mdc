@@ -1,0 +1,25 @@
+---
+description: Accessibility (a11y) for interactive UI and content in apps
+globs: apps/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Accessibility
+
+- Use semantic HTML: `button` for actions (not `div` + `onClick`); `nav`, `main`, `header`, `footer` where appropriate.
+- Preserve heading order: one logical primary heading per view when it matters; do not skip levels (`h1` → `h2` → `h3`).
+- Interactive controls must be keyboard reachable; keep focus visible. If removing default outline, provide an equivalent focus style.
+- Forms: associate `<label>` with controls, or use `aria-label` / `aria-labelledby` when a visible label is not possible.
+- Images: `alt=""` for decorative images; short descriptive `alt` for meaningful content.
+- Do not rely on color alone; add text, icons, or patterns for state and errors.
+- For heavy animation or motion, respect `prefers-reduced-motion` and match patterns already used in the codebase.
+
+```tsx
+// ❌ BAD
+<div onClick={onClick} className="cursor-pointer">Click</div>
+
+// ✅ GOOD
+<button type="button" onClick={onClick} className="...">
+  Click
+</button>
+```
