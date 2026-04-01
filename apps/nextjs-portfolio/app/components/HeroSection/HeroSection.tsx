@@ -534,10 +534,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                     className='object-cover'
                     sizes='(max-width: 768px) 40vw, 30vw'
                   />
-                  <HeroPaintingSvgHover
-                    {...getHeroStrokeColors(index)}
-                    title={title}
-                  />
+                  <HeroPaintingSvgHover {...getHeroStrokeColors(index)} title={title} />
                 </div>
               </div>
             </Link>

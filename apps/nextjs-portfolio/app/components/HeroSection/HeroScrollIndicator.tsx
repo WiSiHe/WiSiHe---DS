@@ -25,7 +25,7 @@ export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) 
           aria-hidden
         >
           <motion.div
-            className="relative"
+            className='relative'
             animate={
               reduceMotion
                 ? undefined
@@ -39,10 +39,7 @@ export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) 
               ease: [0.45, 0, 0.55, 1],
             }}
           >
-            <div
-              aria-hidden
-              className='pointer-events-none absolute inset-0 rounded-2xl'
-            />
+            <div aria-hidden className='pointer-events-none absolute inset-0 rounded-2xl' />
 
             <div className='relative flex h-11 w-7 items-start justify-center overflow-hidden rounded-full border-2 border-foreground/55 bg-linear-to-b from-foreground/6 to-transparent p-2 dark:border-foreground/70'>
               <motion.div
