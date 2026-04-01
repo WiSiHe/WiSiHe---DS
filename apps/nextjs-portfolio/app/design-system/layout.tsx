@@ -44,10 +44,10 @@ export default function DesignSystemLayout({ children }: { children: React.React
         {/* Sidebar - Desktop Sticky */}
         <DesignSystemSidebar />
 
-        {/* Main Content */}
-        <main className='flex-1 min-w-0'>
+        {/* Primary content (document landmark is root layout <main>) */}
+        <div className='flex-1 min-w-0'>
           <div className='animate-in fade-in slide-in-from-bottom-4 duration-500'>{children}</div>
-        </main>
+        </div>
       </div>
     </div>
   );
