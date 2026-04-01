@@ -3,18 +3,18 @@
 import { useGSAP } from '@gsap/react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
-import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
 import {
+  getHeroStrokeColors,
   HERO_BRUSH_STROKE_WIDTH_HOVER,
   HERO_BRUSH_STROKE_WIDTH_REST,
-  HERO_STROKE_ACCENTS,
   HeroPaintingSvgHover,
 } from './HeroPaintingSvgHover';
+import HeroScrollIndicator from './HeroScrollIndicator';
 
 gsap.registerPlugin(useGSAP);
 
@@ -438,15 +438,12 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className='relative flex h-dvh w-full items-center justify-center overflow-hidden transition-colors duration-500'
-      style={{
-        backgroundColor: 'var(--color-background)',
-      }}
+      className='relative flex h-dvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle'
     >
       {/* Loader */}
       <div
         ref={loaderRef}
-        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] flex items-center justify-center pointer-events-none'
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center pointer-events-none'
       >
         <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
           {progress}%
@@ -481,7 +478,10 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
       </div>
 
       {/* Floating Images Container */}
-      <div ref={imagesRef} className='absolute inset-0 pointer-events-none'>
+      <div
+        ref={imagesRef}
+        className='absolute inset-0 pointer-events-none max-w-[1776px] mx-auto pt-10'
+      >
         {paintings?.map((painting, index) => {
           const { image, altText, slug, title } = painting;
           if (!image) return null;
@@ -535,8 +535,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
                     sizes='(max-width: 768px) 40vw, 30vw'
                   />
                   <HeroPaintingSvgHover
-                    accentColor={HERO_STROKE_ACCENTS[index % HERO_STROKE_ACCENTS.length]}
-                    secondaryColor={HERO_STROKE_ACCENTS[(index + 4) % HERO_STROKE_ACCENTS.length]}
+                    {...getHeroStrokeColors(index)}
                     title={title}
                   />
                 </div>
@@ -546,27 +545,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
         })}
       </div>
 
-      {/* Sits above fixed bottom nav (see HeaderNavigation) */}
-      <AnimatePresence>
-        {showScrollIndicator && (
-          <motion.div
-            key='scroll-indicator'
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className='absolute bottom-[calc(6.25rem+env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2.5 rounded-2xl border border-border bg-surface/95 px-4 py-3 shadow-lg backdrop-blur-md pointer-events-none ring-1 ring-black/5 dark:ring-white/10'
-            aria-hidden
-          >
-            <span className='text-xs font-semibold uppercase tracking-wider text-foreground drop-shadow-sm'>
-              Scroll
-            </span>
-            <div className='flex h-10 w-6 items-start justify-center overflow-hidden rounded-full border-2 border-foreground/70 p-2 dark:border-foreground/80'>
-              <div className='h-1.5 w-1.5 animate-scroll-indicator rounded-full bg-foreground' />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <HeroScrollIndicator show={showScrollIndicator} />
     </section>
   );
 };

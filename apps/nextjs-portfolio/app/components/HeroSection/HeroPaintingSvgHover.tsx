@@ -17,17 +17,67 @@ export const HERO_BRUSH_STROKE_WIDTH_REST = 200;
 /** Peak stroke width on hover (matches example script). */
 export const HERO_BRUSH_STROKE_WIDTH_HOVER = 700;
 
-/** Accent strokes cycled by painting index. */
-export const HERO_STROKE_ACCENTS = [
-  '#FE5E41',
-  '#e67339',
-  '#eb3828',
-  '#ff7722',
-  '#6E44FF',
-  '#3d2fa9',
-  '#5f7c98',
-  '#a66363',
+/**
+ * Stroke colors for hero SVG hover — hex values taken from `@wisihe/tokens` primitives
+ * (`packages/tokens/tokens/primitives/color.json`). Each pair crosses two families for contrast.
+ * Large set so carousel indices rarely repeat nearby.
+ */
+export const HERO_STROKE_COLOR_PAIRS: ReadonlyArray<{ accent: string; secondary: string }> = [
+  { accent: '#ff4400', secondary: '#8b5cf6' }, // neon-orange.500 + brand-2.500
+  { accent: '#ff007f', secondary: '#14b8a6' }, // neon-pink.500 + brand-3.500
+  { accent: '#3b82f6', secondary: '#ff7442' }, // brand-1.500 + neon-orange.400
+  { accent: '#7c3aed', secondary: '#eab308' }, // brand-2.600 + neon-yellow.500
+  { accent: '#14b8a6', secondary: '#ec4899' }, // brand-3.500 + accent-legacy.500
+  { accent: '#10b981', secondary: '#ff54b0' }, // success-primitive.500 + neon-pink.400
+  { accent: '#d97706', secondary: '#60a5fa' }, // warning-primitive.600 + brand-1.400
+  { accent: '#ef4444', secondary: '#2dd4bf' }, // danger-primitive.500 + brand-3.400
+  { accent: '#e02e00', secondary: '#93c5fd' }, // neon-orange.600 + brand-1.300
+  { accent: '#a78bfa', secondary: '#ff4400' }, // brand-2.400 + neon-orange.500
+  { accent: '#facc15', secondary: '#0f766e' }, // neon-yellow.400 + brand-3.700
+  { accent: '#f472b6', secondary: '#2563eb' }, // accent-legacy.400 + brand-1.600
+  { accent: '#ff54b0', secondary: '#059669' }, // neon-pink.400 + success-primitive.600
+  { accent: '#c4b5fd', secondary: '#e02e00' }, // brand-2.300 + neon-orange.600
+  { accent: '#99f6e4', secondary: '#db2777' }, // brand-3.200 + accent-legacy.600
+  { accent: '#fde047', secondary: '#7c3aed' }, // neon-yellow.300 + brand-2.600
+  { accent: '#ff91cc', secondary: '#1d4ed8' }, // neon-pink.300 + brand-1.700
+  { accent: '#ffa379', secondary: '#5b21b6' }, // neon-orange.300 + brand-2.800
+  { accent: '#5eead4', secondary: '#f87171' }, // brand-3.300 + danger-primitive.400
+  { accent: '#fbbf24', secondary: '#6d28d9' }, // warning-primitive.400 + brand-2.700
+  { accent: '#6ee7b7', secondary: '#be185d' }, // success-primitive.300 + accent-legacy.700
+  { accent: '#fca5a5', secondary: '#0d9488' }, // danger-primitive.300 + brand-3.600
+  { accent: '#bfdbfe', secondary: '#b5005a' }, // brand-1.200 + neon-pink.700
+  { accent: '#f9a8d4', secondary: '#115e59' }, // accent-legacy.300 + brand-3.800
+  { accent: '#ca8a04', secondary: '#1e40af' }, // neon-yellow.600 + brand-1.800
+  { accent: '#fecaca', secondary: '#047857' }, // danger-primitive.200 + success-primitive.700
+  { accent: '#ede9fe', secondary: '#b82000' }, // brand-2.100 + neon-orange.700
+  { accent: '#ccfbf1', secondary: '#831843' }, // brand-3.100 + accent-legacy.900
+  { accent: '#fcd34d', secondary: '#4c1d95' }, // warning-primitive.300 + brand-2.900
+  { accent: '#34d399', secondary: '#ff007f' }, // success-primitive.400 + neon-pink.500
+  { accent: '#60a5fa', secondary: '#941b06' }, // brand-1.400 + neon-orange.800
+  { accent: '#a78bfa', secondary: '#ca8a04' }, // brand-2.400 + neon-yellow.600
+  { accent: '#2dd4bf', secondary: '#b91c1c' }, // brand-3.400 + danger-primitive.700
+  { accent: '#fef08a', secondary: '#6d28d9' }, // neon-yellow.200 + brand-2.700
+  { accent: '#fbcfe8', secondary: '#0f766e' }, // accent-legacy.200 + brand-3.700
+  { accent: '#ffbee0', secondary: '#1e3a8a' }, // neon-pink.200 + brand-1.900
+  { accent: '#ffccaa', secondary: '#9d174d' }, // neon-orange.200 + accent-legacy.800
+  { accent: '#ddd6fe', secondary: '#e02e00' }, // brand-2.200 + neon-orange.600
+  { accent: '#a7f3d0', secondary: '#7c3aed' }, // success-primitive.200 + brand-2.600
+  { accent: '#93c5fd', secondary: '#db006d' }, // brand-1.300 + neon-pink.600
+  { accent: '#5eead4', secondary: '#92400e' }, // brand-3.300 + warning-primitive.800
+  { accent: '#f472b6', secondary: '#115e59' }, // accent-legacy.400 + brand-3.800
+  { accent: '#eab308', secondary: '#4c1d95' }, // neon-yellow.500 + brand-2.900
+  { accent: '#2563eb', secondary: '#ff7442' }, // brand-1.600 + neon-orange.400
+  { accent: '#8b5cf6', secondary: '#10b981' }, // brand-2.500 + success-primitive.500
+  { accent: '#0d9488', secondary: '#f59e0b' }, // brand-3.600 + warning-primitive.500
+  { accent: '#ec4899', secondary: '#34d399' }, // accent-legacy.500 + success-primitive.400
+  { accent: '#b82000', secondary: '#93c5fd' }, // neon-orange.700 + brand-1.300
+  { accent: '#172554', secondary: '#fde047' }, // brand-1.950 + neon-yellow.300
 ];
+
+export function getHeroStrokeColors(index: number): { accentColor: string; secondaryColor: string } {
+  const pair = HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length];
+  return { accentColor: pair.accent, secondaryColor: pair.secondary };
+}
 
 type HeroPaintingSvgHoverProps = {
   accentColor: string;

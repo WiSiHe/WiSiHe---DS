@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { FaDesktop, FaMoon, FaSun } from 'react-icons/fa';
@@ -36,20 +37,28 @@ const ThemeToggle = () => {
 
   const isDarkActive = mounted && resolvedTheme === 'dark';
 
+  const controlClassName = cn(
+    'flex min-h-10 min-w-10 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-lg transition-all duration-300',
+    'px-3 py-2.5 md:px-4 md:py-2',
+  );
+
   if (!mounted) {
     return (
-      <div className='w-[50px] h-[50px] p-4 flex items-center justify-center rounded-full border border-border bg-surface shadow-md'>
-        <div className='w-5 h-5' />
+      <div className={cn(controlClassName, 'cursor-default')} aria-hidden>
+        <div className='h-5 w-5' />
       </div>
     );
   }
 
   return (
     <motion.button
+      type='button'
       onClick={cycleTheme}
       data-state={isDarkActive ? 'dark' : 'light'}
-      className='flex items-center justify-center cursor-pointer p-4 rounded-full border border-border bg-surface text-foreground hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95 shadow-md transition-all duration-300 pointer-events-auto'
-      whileHover={{ scale: 1.05 }}
+      className={cn(
+        controlClassName,
+        'cursor-pointer hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95',
+      )}
       whileTap={{ scale: 0.95 }}
       aria-label={getLabel()}
       title={getLabel()}

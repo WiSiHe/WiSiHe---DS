@@ -31,17 +31,20 @@ const listItem: Variants = {
 interface iNavigationProps {
   isAbsolute?: boolean;
 }
-const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
+const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
 
   const navCluster = (
-    <div className='flex items-center justify-center gap-1 md:gap-2 pointer-events-auto'>
+    <div className='flex items-stretch justify-center gap-1.5 sm:gap-2 pointer-events-auto'>
       <motion.ul
         key='nav'
         variants={container}
         initial='hidden'
         animate='show'
-        className='flex max-w-[calc(100vw-5rem)] items-center overflow-x-auto overflow-y-clip text-foreground [scrollbar-width:none] [&::-webkit-scrollbar]:hidden bg-surface border border-border rounded-full shadow-lg'
+        className={cn(
+          'flex max-w-[min(100%,calc(100vw-3rem))] items-stretch text-foreground bg-surface border border-border rounded-full shadow-lg',
+          'overflow-x-auto overflow-y-hidden overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+        )}
         style={{ isolation: 'isolate' }}
       >
         {navigationItems.map(item => {
@@ -63,14 +66,14 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
               variants={listItem}
               className={cn(
                 'first:rounded-l-full first:rounded-r-none last:rounded-r-full last:rounded-l-none',
-                'shrink-0 p-1',
+                'flex shrink-0 items-stretch p-1',
               )}
             >
               <Link
                 href={href}
                 aria-label={`Navigate to ${label}`}
                 className={cn(
-                  'transition-all gap-1 md:gap-2 flex items-center ease-in-out duration-300 text-xs md:text-base rounded-full border active:scale-95 justify-center px-3 py-2.5 md:px-4 md:py-2 min-w-10 md:min-w-0',
+                  'transition-all gap-1 md:gap-2 flex h-full min-h-10 items-center ease-in-out duration-300 text-xs md:text-base rounded-full border active:scale-95 justify-center px-3 py-2.5 md:px-4 md:py-2 min-w-10 md:min-w-0',
                   isActive
                     ? 'bg-accent text-accent-contrast border-accent-border shadow-sm backdrop-blur-sm'
                     : 'text-foreground-subtle bg-transparent border-transparent hover:bg-surface-hover hover:text-accent hover:border-border',
@@ -84,74 +87,46 @@ const Navigation = ({ isAbsolute = true }: iNavigationProps): JSX.Element => {
           );
         })}
       </motion.ul>
-      <ThemeToggle />
     </div>
   );
 
   return (
     <header className='pointer-events-none'>
-      {isAbsolute ? (
-        <>
-          <div className='fixed top-4 left-4 z-20'>
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-              className='pointer-events-auto'
-            >
-              <Link
-                href='/'
-                aria-label='Navigate to the homepage'
-                className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
-              >
-                <IconLogo
-                  color='currentColor'
-                  className={cn(
-                    'transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20',
-                  )}
-                  size='100%'
-                />
-              </Link>
-            </motion.div>
-          </div>
-
-          <nav
-            aria-label='Main Navigation'
-            className='fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 w-full max-w-[min(100%,42rem)] -translate-x-1/2 px-3 sm:max-w-none sm:px-4'
+      <div className='fixed top-4 left-4 z-20'>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.95 }}
+          className='pointer-events-auto'
+        >
+          <Link
+            href='/'
+            aria-label='Navigate to the homepage'
+            className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
           >
-            {navCluster}
-          </nav>
-        </>
-      ) : (
-        <nav aria-label='Main Navigation' className='relative z-20 flex flex-col gap-6'>
-          <div className='pointer-events-auto self-start'>
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                href='/'
-                aria-label='Navigate to the homepage'
-                className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
-              >
-                <IconLogo
-                  color='currentColor'
-                  className={cn(
-                    'transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20',
-                  )}
-                  size='100%'
-                />
-              </Link>
-            </motion.div>
-          </div>
-          <div className='pointer-events-none flex justify-center'>{navCluster}</div>
-        </nav>
-      )}
+            <IconLogo
+              color='currentColor'
+              className={cn(
+                'transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20',
+              )}
+              size='100%'
+            />
+          </Link>
+        </motion.div>
+      </div>
+
+      <div className='fixed top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] z-20 pointer-events-auto'>
+        <ThemeToggle />
+      </div>
+
+      <nav
+        aria-label='Main Navigation'
+        className='fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 w-full max-w-[min(100%,42rem)] -translate-x-1/2 px-2 sm:max-w-none sm:px-4'
+      >
+        {navCluster}
+      </nav>
     </header>
   );
 };
