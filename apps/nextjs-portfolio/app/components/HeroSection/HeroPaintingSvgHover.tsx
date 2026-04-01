@@ -74,7 +74,10 @@ export const HERO_STROKE_COLOR_PAIRS: ReadonlyArray<{ accent: string; secondary:
   { accent: '#172554', secondary: '#fde047' }, // brand-1.950 + neon-yellow.300
 ];
 
-export function getHeroStrokeColors(index: number): { accentColor: string; secondaryColor: string } {
+export function getHeroStrokeColors(index: number): {
+  accentColor: string;
+  secondaryColor: string;
+} {
   const pair = HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length];
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
@@ -92,7 +95,7 @@ export function HeroPaintingSvgHover({
 }: HeroPaintingSvgHoverProps) {
   return (
     <>
-      <div data-hero-svg className='pointer-events-none absolute inset-0 z-[2]' aria-hidden>
+      <div data-hero-svg className='pointer-events-none absolute inset-0 z-2' aria-hidden>
         <div className='svg-stroke svg-stroke-1 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
           <svg
             className='block h-full w-full'
@@ -131,7 +134,7 @@ export function HeroPaintingSvgHover({
       {title ? (
         <div
           data-hero-title
-          className='pointer-events-none absolute bottom-2 left-2 right-2 z-[3] opacity-0'
+          className='pointer-events-none absolute bottom-2 left-2 right-2 z-3 opacity-0'
         >
           <p className='line-clamp-2 text-left font-serif text-lg font-medium leading-tight tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-xl'>
             {title}

@@ -33,6 +33,8 @@ interface iNavigationProps {
 }
 const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
+  /** Design system routes use their own bottom nav on small screens — hide ours to avoid overlap. */
+  const hideBottomNav = pathName?.startsWith('/design-system') ?? false;
 
   const navCluster = (
     <div className='flex items-stretch justify-center gap-1.5 sm:gap-2 pointer-events-auto'>
@@ -121,12 +123,14 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.E
         <ThemeToggle />
       </div>
 
-      <nav
-        aria-label='Main Navigation'
-        className='fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 w-full max-w-[min(100%,42rem)] -translate-x-1/2 px-2 sm:max-w-none sm:px-4'
-      >
-        {navCluster}
-      </nav>
+      {!hideBottomNav ? (
+        <nav
+          aria-label='Main Navigation'
+          className='fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 w-full max-w-[min(100%,42rem)] -translate-x-1/2 px-2 sm:max-w-none sm:px-4'
+        >
+          {navCluster}
+        </nav>
+      ) : null}
     </header>
   );
 };
