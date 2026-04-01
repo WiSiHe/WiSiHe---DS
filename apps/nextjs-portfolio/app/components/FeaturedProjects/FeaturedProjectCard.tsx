@@ -42,8 +42,8 @@ type FeaturedProjectCardProps = {
 
 const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCardProps) => {
   const titleId = `featured-project-title-${project._id}`;
-  const titleTrimmed = project.title?.trim();
-  const nameTrimmed = project.name?.trim();
+  const titleTrimmed = (project.title as unknown as string | undefined)?.trim();
+  const nameTrimmed = (project.name as string | undefined)?.trim();
   const headingText = titleTrimmed || nameTrimmed || 'Project';
   const showNameEyebrow = Boolean(titleTrimmed && nameTrimmed);
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
