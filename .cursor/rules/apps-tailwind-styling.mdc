@@ -1,0 +1,12 @@
+---
+description: Tailwind CSS and design tokens for apps that include Tailwind
+globs: apps/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Tailwind and styling
+
+- In apps where **Tailwind is configured** (see that app’s `package.json`), prefer utility classes and existing patterns: `tailwind-merge` (`cn` helpers), `@wisihe/tokens`, and shared UI packages.
+- Avoid large inline `style` except for truly dynamic values (e.g. motion, CSS variables from props).
+- Prefer theme tokens and shared components over one-off global CSS; keep `globals.css` for base layers only unless the app already uses a different convention.
+- In apps **without** Tailwind (e.g. some Astro setups), follow that app’s existing styling system; do not add Tailwind ad hoc.

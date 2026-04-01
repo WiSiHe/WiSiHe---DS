@@ -1,0 +1,12 @@
+---
+description: pnpm monorepo conventions—Turbo, Biome, and workspace packages
+alwaysApply: true
+---
+
+# Monorepo workspace
+
+- **Package manager**: Use **pnpm** (`pnpm install`, `pnpm --filter <pkg> <cmd>`). See root `package.json` for common scripts (`dev`, `build`, `lint`, `typecheck`, `ci`).
+- **Tasks**: Prefer **Turbo** (`turbo run <task> --filter=...`) for builds and checks across packages; respect existing `filter` patterns in scripts.
+- **Lint/format**: **Biome** is the default (`pnpm lint`, `pnpm format`). Match existing config; do not introduce ESLint/Prettier for this repo unless the user asks.
+- **Layout**: Apps live under `apps/`; shared libraries under `packages/`. Prefer adding shared code to an appropriate `packages/*` workspace package and importing via workspace protocol (`workspace:*`) where the repo already does.
+- **Changesets**: Library releases use Changesets when publishing from this repo; follow existing versioning workflow if touching publishable packages.
