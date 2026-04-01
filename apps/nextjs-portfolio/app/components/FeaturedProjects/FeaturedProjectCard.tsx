@@ -42,6 +42,10 @@ type FeaturedProjectCardProps = {
 
 const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCardProps) => {
   const titleId = `featured-project-title-${project._id}`;
+  const titleTrimmed = project.title?.trim();
+  const nameTrimmed = project.name?.trim();
+  const headingText = titleTrimmed || nameTrimmed || 'Project';
+  const showNameEyebrow = Boolean(titleTrimmed && nameTrimmed);
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
   const tags = project.tags?.slice(0, 4);
   const tagNames = tags?.map(t => t?.name).filter(Boolean) as string[];
@@ -66,9 +70,11 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
           <div className='flex min-h-0 flex-1 flex-col justify-between gap-4 md:gap-3 md:py-0 md:pr-3 lg:pr-5'>
             <div>
               <div className='mb-2 flex flex-wrap items-center gap-2 md:mb-2'>
-                <span className='text-xs font-semibold uppercase tracking-wide text-foreground'>
-                  {project.name}
-                </span>
+                {showNameEyebrow ? (
+                  <span className='text-xs font-semibold uppercase tracking-wide text-foreground'>
+                    {nameTrimmed}
+                  </span>
+                ) : null}
                 {project.status ? (
                   <span className='text-[10px] font-medium uppercase tracking-wider text-foreground-subtle md:text-xs'>
                     {formatProjectStatusLabel(project.status)}
@@ -79,7 +85,7 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
                 id={titleId}
                 className='mb-1.5 font-serif text-2xl font-bold leading-tight text-foreground md:mb-2 md:text-3xl lg:text-4xl'
               >
-                {project.title}
+                {headingText}
               </h3>
               <p className='line-clamp-3 text-sm leading-snug text-foreground-subtle md:text-base md:leading-relaxed'>
                 {(project.seo?.description || project.description) ?? undefined}
@@ -104,7 +110,7 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
               <Link
                 href={`projects/${project.slug}`}
                 className='inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-contrast transition-colors hover:bg-accent-hover md:px-6 md:py-2.5'
-                aria-label={`View case study: ${project.title ?? project.name ?? 'project'}`}
+                aria-label={`View case study: ${headingText}`}
               >
                 View case study
                 <IconArrowRight aria-hidden className='h-4 w-4' />
