@@ -8,7 +8,7 @@
   },
   "exports": {
     "./base.json": "./base.json",
-    "./react-app.json": "./react-app.json",
+    "./react-app.jsonc": "./react-app.jsonc",
     "./react-library.json": "./react-library.json",
     "./sanity.json": "./sanity.json",
     "./storybook.json": "./storybook.json"
