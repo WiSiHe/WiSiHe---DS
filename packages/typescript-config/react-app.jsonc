@@ -1,0 +1,51 @@
+{
+  // JSON Schema for editor autocomplete and validation
+  "$schema": "https://json.schemastore.org/tsconfig",
+  // Human-readable label in IDE/tsconfig pickers
+  "display": "Next.js",
+  // Shared strict defaults (strict, skipLibCheck, moduleResolution, etc.)
+  "extends": "./base.json",
+  "compilerOptions": {
+    // Allow importing .js/.jsx files alongside TypeScript
+    "allowJs": true,
+    // Do not emit .d.ts (the app is not a published library)
+    "declaration": false,
+    // No source maps for declarations (no declarations emitted)
+    "declarationMap": false,
+    // Reuse analysis from previous runs via .tsbuildinfo for faster checks
+    "incremental": true,
+    // Keep JSX syntax; Next/SWC transforms it, TS only type-checks
+    "jsx": "preserve",
+    // Type APIs: browser DOM, iterable DOM, and latest ECMAScript features
+    "lib": ["dom", "dom.iterable", "esnext"],
+    // Use native import/export syntax (bundler handles output format)
+    "module": "esnext",
+    // Resolve modules like Vite/Webpack (exports, imports, no require())
+    "moduleResolution": "bundler",
+    // Typecheck only; Next emits JS (no tsc emit)
+    "noEmit": true,
+    // Allow `import data from './x.json'` with typed JSON
+    "resolveJsonModule": true,
+    // Syntax level for emitted/checking assumptions (modern browsers)
+    "target": "ES2022",
+
+    // Error if a local variable is never read (dead code)
+    "noUnusedLocals": true,
+    // Error if a function parameter is never used (prefix with _ to ignore if needed)
+    "noUnusedParameters": true,
+    // Disallow unused labels (e.g. `loop: for` with no `break loop`)
+    "allowUnusedLabels": false,
+    // Side-effect imports (`import "polyfill"`) must resolve; typos/missing modules become errors
+    "noUncheckedSideEffectImports": true,
+    // `switch` cases must `break`/`return` or use `// fallthrough` style intentionally
+    "noFallthroughCasesInSwitch": true,
+    // Disallow code after `return`/`throw` that can never run
+    "allowUnreachableCode": false,
+    // `arr[i]` and `obj[key]` are `T | undefined` when key/index is not proven
+    "noUncheckedIndexedAccess": true,
+    // Properties from index signatures must use `obj["key"]`, not `obj.key`
+    "noPropertyAccessFromIndexSignature": true,
+    // Forbid syntax that needs runtime emit from TS (stay on erasable-only features)
+    "erasableSyntaxOnly": true
+  }
+}

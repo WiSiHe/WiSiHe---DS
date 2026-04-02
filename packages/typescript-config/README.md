@@ -8,9 +8,9 @@ This directory contains shared TypeScript configurations for the WiSiHe monorepo
 
 Base configuration with common settings for all TypeScript projects.
 
-### `react-app.json`
+### `react-app.jsonc`
 
-Configuration for Next.js applications. Extends `base.json` with React-specific settings.
+Configuration for Next.js applications. Extends `base.json` with React-specific settings. Uses the `.jsonc` extension so comments are valid (JSONC), not strict JSON.
 
 ### `react-library.json`
 
@@ -41,7 +41,7 @@ The foundation that all other configs extend from:
 }
 ```
 
-### React App Configuration (`react-app.json`)
+### React App Configuration (`react-app.jsonc`)
 
 For Next.js applications:
 
@@ -88,7 +88,7 @@ For React component libraries (like `@wisihe/ui-react`):
 
 ```json
 {
-  "extends": "../../packages/typescript-config/react-app.json",
+  "extends": "../../packages/typescript-config/react-app.jsonc",
   "compilerOptions": {
     "plugins": [
       {
@@ -164,7 +164,7 @@ Custom configuration for Sanity CMS:
 
 ### App vs Library Configurations
 
-| Setting       | App (`react-app.json`)            | Library (`react-library.json`)        |
+| Setting       | App (`react-app.jsonc`)           | Library (`react-library.json`)        |
 | ------------- | --------------------------------- | ------------------------------------- |
 | `declaration` | `false` (Next.js handles)         | `true` (generates .d.ts)              |
 | `jsx`         | `"preserve"` (Next.js transforms) | `"react-jsx"` (TypeScript transforms) |
@@ -183,7 +183,7 @@ Custom configuration for Sanity CMS:
 
 ## When to Use Each Configuration
 
-### Use `react-app.json` for:
+### Use `react-app.jsonc` for:
 
 - Next.js applications
 - React applications with bundlers
