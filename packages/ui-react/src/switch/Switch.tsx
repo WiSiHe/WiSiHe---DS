@@ -53,7 +53,7 @@ export interface SwitchProps
  * Bare toggle widget. `label` is always supplied for aria-label.
  * For a labelled field use `SwitchField` instead.
  */
-export function Switch({ label, size, className, ...props }: SwitchProps) {
+export function Switch({ label, size, className, ...props }: Readonly<SwitchProps>) {
   return (
     <HeadlessSwitch
       aria-label={label}
@@ -80,14 +80,16 @@ export interface SwitchFieldProps extends SwitchProps {
  * Uses HeadlessUI Field + Label + Description so clicking the label text
  * toggles the switch and screen readers receive all context.
  */
-export function SwitchField({ label, description, size, className, ...props }: SwitchFieldProps) {
+export function SwitchField({
+  label,
+  description,
+  size,
+  className,
+  ...props
+}: Readonly<SwitchFieldProps>) {
   return (
     <Field className='flex items-center gap-3'>
-      <HeadlessSwitch
-        aria-label={label}
-        className={cn(trackVariants({ size }), 'group', className)}
-        {...props}
-      >
+      <HeadlessSwitch className={cn(trackVariants({ size }), 'group', className)} {...props}>
         <span className={thumbVariants({ size })} aria-hidden='true' />
       </HeadlessSwitch>
 

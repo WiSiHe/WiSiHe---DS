@@ -51,7 +51,7 @@ interface TabsRootProps extends React.ComponentProps<typeof TabGroup> {
 }
 
 /** Context carrier — pass `variant` here and it flows to TabBar + TabItem via className helpers */
-export function Tabs({ variant = 'underline', className, ...props }: TabsRootProps) {
+export function Tabs({ variant = 'underline', className, ...props }: Readonly<TabsRootProps>) {
   return <TabGroup className={cn('w-full', className)} {...props} />;
 }
 
@@ -60,7 +60,11 @@ interface TabBarProps extends Omit<React.ComponentProps<typeof TabList>, 'classN
   className?: string;
 }
 
-export function TabBar({ variant = 'underline', className, ...props }: TabBarProps) {
+/**
+ * Tab row. When multiple tab groups appear on one page, pass a distinct
+ * `aria-label` (or `aria-labelledby`) so each tablist has an accessible name.
+ */
+export function TabBar({ variant = 'underline', className, ...props }: Readonly<TabBarProps>) {
   return <TabList className={cn(tabListVariants({ variant }), className)} {...props} />;
 }
 
@@ -69,7 +73,7 @@ interface TabItemProps extends Omit<React.ComponentProps<typeof Tab>, 'className
   className?: string;
 }
 
-export function TabItem({ variant = 'underline', className, ...props }: TabItemProps) {
+export function TabItem({ variant = 'underline', className, ...props }: Readonly<TabItemProps>) {
   return <Tab className={cn(tabVariants({ variant }), className)} {...props} />;
 }
 

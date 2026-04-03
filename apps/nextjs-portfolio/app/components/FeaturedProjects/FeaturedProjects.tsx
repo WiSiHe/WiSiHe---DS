@@ -6,10 +6,10 @@
 
 import { IconArrowRight } from '@tabler/icons-react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
+import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
 import FeaturedProjectCard from './FeaturedProjectCard';
 import ScrollStack from './ScrollStack';
 
@@ -75,17 +75,8 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         </p>
       </motion.div>
 
-      <ScrollStack
-        useWindowScroll
-        useLenis={true}
-        itemDistance={100}
-        itemScale={0.03}
-        itemStackDistance={30}
-        stackPosition='20%'
-        scaleEndPosition='10%'
-        baseScale={0.85}
-        blurAmount={0}
-      >
+      {/* ScrollStack: gentler scale + a bit more scroll room; tweak stackPosition / scaleEndPosition if the stack feels too high or low on screen */}
+      <ScrollStack useWindowScroll useLenis>
         {displayedProjects.map((project, index) => (
           <FeaturedProjectCard
             key={project._id}
@@ -99,16 +90,17 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       <div className='flex items-center justify-center px-4 pt-40'>
         <div className='text-center'>
           <p className='mb-8 text-lg text-foreground-subtle'>Want to see more of my work?</p>
-          <Link
+          <Button
+            as={Link}
             href='/projects'
-            className='group inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-contrast transition-colors hover:bg-accent-hover md:gap-3 md:px-10 md:py-5 md:text-lg'
+            variant='primary'
+            size='large'
+            Icon={IconArrowRight}
+            iconPosition='right'
+            className='gap-2 rounded-full px-8 py-4 md:gap-3 md:px-10 md:py-5'
           >
             Explore all projects
-            <IconArrowRight
-              aria-hidden
-              className='h-5 w-5 transition-transform group-hover:translate-x-0.5 md:h-6 md:w-6'
-            />
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

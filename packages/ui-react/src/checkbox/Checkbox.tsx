@@ -1,4 +1,4 @@
-import { Checkbox as HeadlessCheckbox } from '@headlessui/react';
+import { Field, Checkbox as HeadlessCheckbox, Label } from '@headlessui/react';
 import { IconCheck } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -48,8 +48,8 @@ export function Checkbox({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         className,
       )}
-      aria-label={label ?? props['aria-label']}
       {...props}
+      aria-label={label ? undefined : props['aria-label']}
     >
       <IconCheck
         className='size-full text-accent-contrast opacity-0 transition-opacity duration-200 group-data-checked:opacity-100 p-px'
@@ -60,10 +60,10 @@ export function Checkbox({
 
   if (label) {
     return (
-      <span className={cn('flex items-center gap-2 cursor-pointer select-none', labelClassName)}>
+      <Field className={cn('flex items-center gap-2', labelClassName)}>
         {checkbox}
-        <span>{label}</span>
-      </span>
+        <Label className='cursor-pointer select-none text-sm text-foreground'>{label}</Label>
+      </Field>
     );
   }
 
