@@ -2,8 +2,19 @@
 
 /**
  * CodeGrid-style SVG brush strokes: two organic paths (different viewBoxes), dash reveal + stroke-width.
- * GSAP targets `[data-hero-svg] path` from HeroSection. Parent uses `overflow-hidden rounded-lg` so strokes clip to the image.
+ * GSAP targets `[data-hero-svg] path`. Parent should use `overflow-hidden` + radius so strokes clip to the image.
  */
+
+/** Prepare paths for dash-offset animation (call once per card root that contains `[data-hero-svg]`). */
+export function initHeroSvgStrokePaths(root: HTMLElement | null): void {
+  if (!root) return;
+  const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
+  paths.forEach(path => {
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = `${len}`;
+    path.style.strokeDashoffset = `${len}`;
+  });
+}
 
 /** Organic stroke paths from CodeGrid “SVG Image Hover” example (brush-like, not circular). */
 const BRUSH_PATH_PRIMARY =

@@ -13,20 +13,11 @@ import {
   HERO_BRUSH_STROKE_WIDTH_HOVER,
   HERO_BRUSH_STROKE_WIDTH_REST,
   HeroPaintingSvgHover,
+  initHeroSvgStrokePaths,
 } from './HeroPaintingSvgHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 
 gsap.registerPlugin(useGSAP);
-
-function initHeroSvgStrokePaths(root: HTMLElement | null) {
-  if (!root) return;
-  const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-  paths.forEach(path => {
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = `${len}`;
-    path.style.strokeDashoffset = `${len}`;
-  });
-}
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;

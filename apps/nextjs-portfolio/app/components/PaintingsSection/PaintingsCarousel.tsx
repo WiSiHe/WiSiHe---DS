@@ -2,6 +2,7 @@
 
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
 import type { RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
+import { Button } from '@wisihe/ui-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, type Variants } from 'motion/react';
 import Link from 'next/link';
@@ -92,33 +93,40 @@ const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {
           <div className='flex gap-4'>
             {paintings.map((painting, index) => (
               <div key={painting._id} className='w-96 shrink-0'>
-                {/* biome-ignore lint/suspicious/noExplicitAny: RandomPaintingsQueryResult shape differs from GetAllPaintingsandTagsResult */}
-                <PaintingCard paintingData={painting as any} shouldBeLazy={index < 2} />
+                <PaintingCard
+                  paintingData={
+                    // biome-ignore lint/suspicious/noExplicitAny: RandomPaintingsQueryResult shape differs from GetAllPaintingsandTagsResult
+                    painting as any
+                  }
+                  shouldBeLazy={index < 2}
+                  alwaysShowTags
+                />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Navigation buttons */}
-        <div className='flex justify-end gap-2 mt-4'>
-          <button
+        <div className='mt-4 flex justify-end gap-2'>
+          <Button
             type='button'
-            className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
-            onClick={scrollPrev}
-            disabled={!canScrollPrev}
+            variant='accent'
+            size='icon'
+            className='relative z-10 shrink-0 rounded-full'
+            Icon={IconArrowNarrowLeft}
             aria-label='Scroll left'
-          >
-            <IconArrowNarrowLeft className='w-6 h-6 text-accent-contrast' />
-          </button>
-          <button
+            onClick={scrollPrev}
+            isDisabled={!canScrollPrev}
+          />
+          <Button
             type='button'
-            className='relative z-10 flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer pointer-events-auto bg-accent disabled:opacity-50 hover:bg-accent-hover'
-            onClick={scrollNext}
-            disabled={!canScrollNext}
+            variant='accent'
+            size='icon'
+            className='relative z-10 shrink-0 rounded-full'
+            Icon={IconArrowNarrowRight}
             aria-label='Scroll right'
-          >
-            <IconArrowNarrowRight className='w-6 h-6 text-accent-contrast' />
-          </button>
+            onClick={scrollNext}
+            isDisabled={!canScrollNext}
+          />
         </div>
       </motion.div>
 

@@ -33,3 +33,20 @@ export function first<T>(arr: T[] | undefined | null): T | undefined {
 export function last<T>(arr: T[] | undefined | null): T | undefined {
   return isNotEmptyArray(arr) ? arr[arr.length - 1] : undefined;
 }
+
+/**
+ * Fisher–Yates shuffle — returns a new array (does not mutate the input).
+ */
+export function shuffleArray<T>(array: readonly T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const a = shuffled[i];
+    const b = shuffled[j];
+    if (a !== undefined && b !== undefined) {
+      shuffled[i] = b;
+      shuffled[j] = a;
+    }
+  }
+  return shuffled;
+}
