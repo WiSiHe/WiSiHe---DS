@@ -3,15 +3,14 @@
 /**
  * Scroll-stack cards (React Bits–style). The outer `.scroll-stack-card` is layout-only (no min-height
  * / visuals). Sizing, radius, shadow, and transforms live on `.scroll-stack-card-surface` so the whole
- * card moves as one unit — otherwise the stack animates inside a tall empty frame.
+ * card moves as one unit - otherwise the stack animates inside a tall empty frame.
  * Document scroll uses global Lenis (`@/app/lib/lenis-registry`).
  */
 
 import gsap from 'gsap';
-import Lenis from 'lenis';
 import { type CSSProperties, type ReactNode, useCallback, useLayoutEffect, useRef } from 'react';
 
-import { getDocumentScrollTop } from '@/app/lib/lenis-registry';
+import { getDocumentScrollTop, getGlobalLenis } from '@/app/lib/lenis-registry';
 
 export type ScrollStackItemProps = {
   children: ReactNode;
@@ -21,10 +20,15 @@ export type ScrollStackItemProps = {
 export const ScrollStackItem = ({ children, itemClassName = '' }: ScrollStackItemProps) => (
   <div className='scroll-stack-card relative box-border w-full'>
     <div
-      className={`scroll-stack-card-surface box-border w-full origin-top will-change-transform ${itemClassName}`.trim()}
+      className={`scroll-stack-card-surface box-border w-full${itemClassName ? ` ${itemClassName}` : ''}`}
       style={{
         backfaceVisibility: 'hidden',
         transformStyle: 'preserve-3d',
+        willChange: 'transform, filter',
+        transformOrigin: 'top center',
+        perspective: '1000px',
+        // Same as useLayoutEffect on `.scroll-stack-card-surface` so SSR markup matches first client paint
+        transform: 'translateZ(0)',
       }}
     >
       {children}
@@ -79,7 +83,7 @@ const ScrollStack = ({
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
-  const lenisRef = useRef<Lenis | null>(null);
+  const lenisRef = useRef<{ on: (event: string, cb: (...args: unknown[]) => void) => void; off: (event: string, cb: (...args: unknown[]) => void) => void; raf: (t: number) => void; destroy: () => void } | null>(null);
   const layoutCardsRef = useRef<HTMLElement[]>([]);
   const surfaceCardsRef = useRef<HTMLElement[]>([]);
   const lastTransformsRef = useRef(
@@ -120,7 +124,7 @@ const ScrollStack = ({
     };
   }, [useWindowScroll]);
 
-  /** Document Y (window) or content Y (container) — layout boxes only; not for transformed nodes. */
+  /** Document Y (window) or content Y (container) - layout boxes only; not for transformed nodes. */
   const getLayoutDocumentTop = useCallback(
     (element: HTMLElement, inner: HTMLElement, scrollTop: number): number => {
       if (useWindowScroll) {
@@ -262,61 +266,20 @@ const ScrollStack = ({
   const setupLenis = useCallback(() => {
     if (!useLenis) return;
 
+    // Re-use the global Lenis instance managed by SmoothScroll - avoids a second instance
+    // and removes the need to import lenis directly in this file.
     if (useWindowScroll) {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: t => Math.min(1, 1.001 - 2 ** (-10 * t)),
-        smoothWheel: true,
-        touchMultiplier: 2,
-        infinite: false,
-        wheelMultiplier: 1,
-        lerp: 0.1,
-        syncTouch: true,
-        syncTouchLerp: 0.075,
-      });
-
-      lenis.on('scroll', handleScroll);
-
-      const raf = (time: number) => {
-        lenis.raf(time);
-        animationFrameRef.current = requestAnimationFrame(raf);
-      };
-      animationFrameRef.current = requestAnimationFrame(raf);
-
-      lenisRef.current = lenis;
-      return lenis;
+      const globalLenis = getGlobalLenis();
+      if (globalLenis) {
+        globalLenis.on('scroll', handleScroll);
+        lenisRef.current = {
+          on: (event: string, cb: (...args: unknown[]) => void) => globalLenis.on(event, cb),
+          off: (event: string, cb: (...args: unknown[]) => void) => globalLenis.off(event, cb),
+          raf: () => {},
+          destroy: () => { globalLenis.off('scroll', handleScroll); },
+        };
+      }
     }
-
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const innerEl = scroller.querySelector('.scroll-stack-inner');
-    if (!innerEl) return;
-
-    const lenis = new Lenis({
-      wrapper: scroller,
-      content: innerEl as HTMLElement,
-      duration: 1.2,
-      easing: t => Math.min(1, 1.001 - 2 ** (-10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 2,
-      infinite: false,
-      wheelMultiplier: 1,
-      lerp: 0.1,
-      syncTouch: true,
-      syncTouchLerp: 0.075,
-    });
-
-    lenis.on('scroll', handleScroll);
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-      animationFrameRef.current = requestAnimationFrame(raf);
-    };
-    animationFrameRef.current = requestAnimationFrame(raf);
-
-    lenisRef.current = lenis;
-    return lenis;
   }, [handleScroll, useWindowScroll, useLenis]);
 
   useLayoutEffect(() => {
@@ -337,13 +300,8 @@ const ScrollStack = ({
     });
 
     surfaces.forEach(card => {
-      card.style.willChange = 'transform, filter';
-      card.style.transformOrigin = 'top center';
-      card.style.backfaceVisibility = 'hidden';
+      // GPU layer; initial value also set in ScrollStackItem `style` for hydration parity
       card.style.transform = 'translateZ(0)';
-      card.style.webkitTransform = 'translateZ(0)';
-      card.style.perspective = '1000px';
-      card.style.webkitPerspective = '1000px';
     });
 
     if (useLenis) {
@@ -356,8 +314,8 @@ const ScrollStack = ({
 
     let tickerFn: (() => void) | null = null;
 
-    if (useWindowScroll && !useLenis) {
-      /** Same clock as SmoothScroll’s Lenis — avoids scroll vs paint drift */
+    if (useWindowScroll && (!useLenis || !getGlobalLenis())) {
+      /** GSAP ticker drives updates - used when Lenis is absent or unavailable */
       tickerFn = () => {
         updateCardTransforms();
       };
@@ -384,7 +342,7 @@ const ScrollStack = ({
       transformsCache.clear();
       lastActiveIndexRef.current = -1;
 
-      if (useWindowScroll && !useLenis) {
+      if (useWindowScroll && (!useLenis || !lenisRef.current)) {
         window.removeEventListener('resize', onResize);
       } else if (!useWindowScroll) {
         root.removeEventListener('scroll', handleScroll);

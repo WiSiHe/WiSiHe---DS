@@ -163,7 +163,7 @@ const PortableTextVideo = ({
       }
       if (videoUrl.hostname.includes('youtube.com')) {
         if (videoUrl.pathname.includes('/shorts/')) {
-          return videoUrl.pathname.split('/shorts/')[1];
+          return videoUrl.pathname.split('/shorts/')[1] ?? null;
         }
         return videoUrl.searchParams.get('v');
       }

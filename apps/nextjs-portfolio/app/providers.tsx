@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 import PostHogPageView from './components/PostHogPageView/PostHogPageView';
 
 // eslint-disable-next-line no-undef
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogKey = process.env['NEXT_PUBLIC_POSTHOG_KEY'];
 // eslint-disable-next-line no-undef
-const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+const posthogHost = process.env['NEXT_PUBLIC_POSTHOG_HOST'];
 
 // Re-export useTheme from next-themes for convenience
 export { useTheme } from 'next-themes';

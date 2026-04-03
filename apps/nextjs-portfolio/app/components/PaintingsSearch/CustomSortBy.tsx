@@ -11,7 +11,7 @@ export default function CustomSortBy({
 }) {
   const { currentRefinement, refine } = useSortBy({ items });
 
-  const value = items.find(o => o.value === currentRefinement) || items[0];
+  const value = items.find(o => o.value === currentRefinement) ?? items[0] ?? null;
 
   return <Select options={items} value={value} onChange={val => refine(val.value)} />;
 }

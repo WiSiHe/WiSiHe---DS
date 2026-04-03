@@ -39,7 +39,7 @@ export function TechnicalSlideContent({
     onAutoRotateChange,
   } = showcaseControls;
 
-  const { title, description, mode, code, links } = currentSlideData;
+  const { title, description, mode, code: _code, links: _links } = currentSlideData;
   return (
     <article className='h-full flex flex-col relative'>
       <TechnicalSlideHeader

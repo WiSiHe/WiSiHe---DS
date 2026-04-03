@@ -14,7 +14,7 @@ interface ResourceLinksProps {
   currentSlide: number;
 }
 
-export function ResourceLinks({ links, shouldAnimate, currentSlide }: ResourceLinksProps) {
+export function ResourceLinks({ links, shouldAnimate: _shouldAnimate, currentSlide: _currentSlide }: ResourceLinksProps) {
   const linksContent = (
     <div className='mb-8 space-y-3'>
       <h3 className='text-lg font-bold text-foreground mb-3'>Resources:</h3>

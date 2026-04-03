@@ -161,7 +161,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
             visibleImages.forEach((img, i) => {
               // Only use positions up to the number of visible images (don't cycle)
-              const pos = positions[i] || positions[i % positions.length];
+              const pos = (positions[i] ?? positions[i % positions.length])!;
 
               // Set to final position
               gsap.set(img, {
@@ -260,7 +260,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
             visibleImages.forEach((img, i) => {
               // Only use positions up to the number of visible images (don't cycle)
-              const pos = positions[i] || positions[i % positions.length];
+              const pos = (positions[i] ?? positions[i % positions.length])!;
 
               tl.to(
                 img,
@@ -331,7 +331,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     // Determine which position set to use based on window width
     const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
     const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-    const baseScale = positions[index % positions.length].scale;
+    const baseScale = positions[index % positions.length]!.scale;
 
     svgHoverTlsRef.current.get(index)?.kill();
     const tl = gsap.timeline();
@@ -388,7 +388,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
 
     Array.from(imageElements).forEach((img, i) => {
-      const baseScale = positions[i % positions.length].scale;
+      const baseScale = positions[i % positions.length]!.scale;
       const currentZ = gsap.getProperty(img, 'zIndex');
 
       // Only reset if this image was hovered (zIndex > 1)

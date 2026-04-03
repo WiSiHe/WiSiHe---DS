@@ -72,7 +72,7 @@ export const BeerCanScene = forwardRef<THREE.Group, BeerCanSceneProps>(({ textur
             const mat = obj.material as ThreeMaterial;
             const isCanMaterial =
               mat.name === 'Can' ||
-              (materials?.Can && mat === materials.Can) ||
+              (materials?.['Can'] && mat === materials['Can']) ||
               (mat instanceof THREE.MeshStandardMaterial &&
                 mat.map !== null &&
                 mat.map !== undefined);
@@ -108,7 +108,7 @@ export const BeerCanScene = forwardRef<THREE.Group, BeerCanSceneProps>(({ textur
           const mat = obj.material as ThreeMaterial;
           const isCanMaterial =
             mat.name === 'Can' ||
-            (materials?.Can && mat === materials.Can) ||
+            (materials?.['Can'] && mat === materials['Can']) ||
             (mat instanceof THREE.MeshStandardMaterial &&
               mat.map !== null &&
               mat.map !== undefined);
@@ -147,7 +147,7 @@ export const BeerCanScene = forwardRef<THREE.Group, BeerCanSceneProps>(({ textur
               const mat = obj.material as ThreeMaterial;
               const isCanMaterial =
                 mat.name === 'Can' ||
-                (materials?.Can && mat === materials.Can) ||
+                (materials?.['Can'] && mat === materials['Can']) ||
                 (mat instanceof THREE.MeshStandardMaterial &&
                   mat.map !== null &&
                   mat.map !== undefined);

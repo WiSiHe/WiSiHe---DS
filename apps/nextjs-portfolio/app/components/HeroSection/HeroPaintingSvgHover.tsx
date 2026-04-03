@@ -78,7 +78,7 @@ export function getHeroStrokeColors(index: number): {
   accentColor: string;
   secondaryColor: string;
 } {
-  const pair = HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length];
+  const pair = HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length]!;
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
 

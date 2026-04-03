@@ -8,6 +8,7 @@ import { IconArrowRight } from '@tabler/icons-react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 import FeaturedProjectCard from './FeaturedProjectCard';
 import ScrollStack from './ScrollStack';
@@ -21,7 +22,13 @@ const MAX_PROJECTS = 3;
 const stackColors = ['#3d2fa9', '#ff7722', '#ff3d33', '#785f47'];
 
 const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const prefersReducedMotion = useReducedMotion();
+  /** SSR + first client paint must match; `useReducedMotion()` is null on the server but can be true on the client. */
+  const reducedMotion = mounted && prefersReducedMotion;
 
   if (!showcaseProjects || showcaseProjects.length === 0) {
     return null;
@@ -36,10 +43,10 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       aria-describedby='featured-projects-desc'
     >
       <motion.div
-        initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+        initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, margin: '-80px' }}
-        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }}
         className='relative max-w-prose pb-4'
       >
         <h2
@@ -76,7 +83,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
               key={project._id}
               project={project}
               index={index}
-              panelColor={stackColors[index % stackColors.length]}
+              panelColor={stackColors[index % stackColors.length]!}
             />
           ))}
         </>

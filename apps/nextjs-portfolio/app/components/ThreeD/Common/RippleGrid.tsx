@@ -45,9 +45,9 @@ const RippleGrid: React.FC<Props> = ({
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? [
-            parseInt(result[1], 16) / 255,
-            parseInt(result[2], 16) / 255,
-            parseInt(result[3], 16) / 255,
+            parseInt(result[1] ?? '0', 16) / 255,
+            parseInt(result[2] ?? '0', 16) / 255,
+            parseInt(result[3] ?? '0', 16) / 255,
           ]
         : [1, 1, 1];
     };
@@ -279,9 +279,9 @@ void main() {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? [
-            parseInt(result[1], 16) / 255,
-            parseInt(result[2], 16) / 255,
-            parseInt(result[3], 16) / 255,
+            parseInt(result[1] ?? '0', 16) / 255,
+            parseInt(result[2] ?? '0', 16) / 255,
+            parseInt(result[3] ?? '0', 16) / 255,
           ]
         : [1, 1, 1];
     };

@@ -70,7 +70,9 @@ const useMeasure = () => {
       setSize({ width: r.width, height: r.height });
     };
     read();
-    const ro = new ResizeObserver(([entry]) => {
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
       const { width, height } = entry.contentRect;
       setSize({ width, height });
     });
@@ -130,9 +132,9 @@ const Masonry = ({
       const col = colHeights.indexOf(Math.min(...colHeights));
       const x = col * (columnWidth + gap);
       const height = child.height / 2;
-      const y = colHeights[col];
+      const y = colHeights[col] ?? 0;
 
-      colHeights[col] += height + gap;
+      colHeights[col] = y + height + gap;
       return { ...child, x, y, w: columnWidth, h: height };
     });
   }, [columns, items, width]);

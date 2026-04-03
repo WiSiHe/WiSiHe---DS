@@ -9,8 +9,9 @@ export const useLazyIframe = () => {
     if (!containerRef.current) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
           setIsVisible(true);
           // Keep observing to unload if far off-screen (optional optimization)
         }

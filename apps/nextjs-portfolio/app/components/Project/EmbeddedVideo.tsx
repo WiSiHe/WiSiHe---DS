@@ -15,7 +15,7 @@ function getYouTubeVideoId(url: string): string | null {
     // Handle youtube.com formats including shorts
     if (videoUrl.hostname.includes('youtube.com')) {
       if (videoUrl.pathname.includes('/shorts/')) {
-        return videoUrl.pathname.split('/shorts/')[1];
+        return videoUrl.pathname.split('/shorts/')[1] ?? null;
       }
       const videoId = videoUrl.searchParams.get('v');
       if (videoId) return videoId;

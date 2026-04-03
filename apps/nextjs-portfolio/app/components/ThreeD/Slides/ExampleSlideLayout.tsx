@@ -69,7 +69,7 @@ export const ExampleSlideLayout = ({ slideData, index, slideDesign }: ExampleSli
                 <p>
                   {typeof slideData.content[0] === 'string'
                     ? slideData.content[0].trim().replace(/^•\s*/, '')
-                    : slideData.content[0].text.trim().replace(/^•\s*/, '')}
+                    : (slideData.content[0]?.text.trim().replace(/^•\s*/, '') ?? '')}
                 </p>
               )}
             </div>
