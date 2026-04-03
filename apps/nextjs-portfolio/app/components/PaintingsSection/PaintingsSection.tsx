@@ -22,15 +22,12 @@ const PaintingsSection = async ({
     return null;
   }
 
-  const featuredPaintings = shuffleArray(paintingsPool).slice(
-    0,
-    FEATURED_PAINTING_COUNT,
-  );
+  const featuredPaintings = shuffleArray(paintingsPool).slice(0, FEATURED_PAINTING_COUNT);
 
   return (
     <>
-      <div className="mb-4 px-4 max-w-7xl mx-auto">
-        <div className="max-w-prose">
+      <div className='mb-4 px-4 max-w-7xl mx-auto'>
+        <div className='max-w-prose'>
           <PortableText value={paintingsDescription as PortableTextBlock[]} />
         </div>
       </div>

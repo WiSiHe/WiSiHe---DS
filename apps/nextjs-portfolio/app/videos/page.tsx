@@ -1,6 +1,7 @@
 import { isEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/app/components/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllVideos } from '@/sanity/lib/queries';
 import { VideosPage } from '../components/pages/VideosPage';
@@ -77,12 +78,7 @@ export default async function Videos() {
 
   return (
     <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
+      <JsonLd data={structuredData} />
       <section className='w-full min-h-screen p-4 pt-32 mx-auto max-w-7xl'>
         <div className='w-full pb-6'>
           <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>Videos</h1>

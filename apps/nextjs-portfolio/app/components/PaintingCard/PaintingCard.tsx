@@ -8,12 +8,11 @@ import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
 import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
 import { TbBoxMultiple } from 'react-icons/tb';
-import { urlForImage } from '@/sanity/lib/utils';
-
 import {
   getHeroStrokeColors,
   HeroPaintingSvgHover,
 } from '@/app/components/HeroSection/HeroPaintingSvgHover';
+import { urlForImage } from '@/sanity/lib/utils';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -78,10 +77,7 @@ const PaintingCardAdapter = ({
     imageEl && svgHoverIndex !== undefined ? (
       <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
         {imageEl}
-        <HeroPaintingSvgHover
-          {...getHeroStrokeColors(svgHoverIndex)}
-          title={title || null}
-        />
+        <HeroPaintingSvgHover {...getHeroStrokeColors(svgHoverIndex)} title={title || null} />
       </div>
     ) : (
       imageEl

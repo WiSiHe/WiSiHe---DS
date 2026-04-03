@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiBarChart, FiThermometer, FiUsers } from 'react-icons/fi';
+import { JsonLd } from '@/app/components/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllRecipes } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -74,39 +75,36 @@ export default async function RecipesPage() {
   const result = (await sanityFetch({ query: getAllRecipes })) as RecipesQueryResult;
   const recipes = result.data;
 
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Recipes Collection',
+    description: "A collection of recipes I've tried and enjoyed",
+    numberOfItems: recipes?.length || 0,
+    itemListElement:
+      recipes?.map((recipe, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Recipe',
+          '@id': `https://www.wisihe.no/recipes/${recipe.slug}`,
+          name: recipe.title,
+          description: recipe.description,
+          image: recipe.mainImage ? urlForImage(recipe.mainImage)?.url() : undefined,
+          cookTime: recipe.cookingTime ? `PT${recipe.cookingTime}M` : undefined,
+          prepTime: recipe.prepTime ? `PT${recipe.prepTime}M` : undefined,
+          totalTime: recipe.totalTime ? `PT${recipe.totalTime}M` : undefined,
+          recipeYield: recipe.servings ? `${recipe.servings} servings` : undefined,
+          difficulty: recipe.difficulty,
+          datePublished: recipe.publishedAt,
+          keywords: recipe.tags?.map(tag => tag.name).join(', '),
+        },
+      })) || [],
+  };
+
   return (
     <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'ItemList',
-            name: 'Recipes Collection',
-            description: "A collection of recipes I've tried and enjoyed",
-            numberOfItems: recipes?.length || 0,
-            itemListElement:
-              recipes?.map((recipe, index) => ({
-                '@type': 'ListItem',
-                position: index + 1,
-                item: {
-                  '@type': 'Recipe',
-                  '@id': `https://www.wisihe.no/recipes/${recipe.slug}`,
-                  name: recipe.title,
-                  description: recipe.description,
-                  image: recipe.mainImage ? urlForImage(recipe.mainImage)?.url() : undefined,
-                  cookTime: recipe.cookingTime ? `PT${recipe.cookingTime}M` : undefined,
-                  prepTime: recipe.prepTime ? `PT${recipe.prepTime}M` : undefined,
-                  totalTime: recipe.totalTime ? `PT${recipe.totalTime}M` : undefined,
-                  recipeYield: recipe.servings ? `${recipe.servings} servings` : undefined,
-                  difficulty: recipe.difficulty,
-                  datePublished: recipe.publishedAt,
-                  keywords: recipe.tags?.map(tag => tag.name).join(', '),
-                },
-              })) || [],
-          }),
-        }}
-      />
+      <JsonLd data={itemListJsonLd} />
       <div className='w-full min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl'>
         <div className='w-full pb-6'>
           <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>

@@ -13,7 +13,13 @@ interface PaintingCardTagProps extends Pick<TagProps, 'variant' | 'size' | 'shap
  * Animated wrapper around the generic `Tag` atom.
  * Inherits motion variants (rest/hover) from the parent `motion.ul`.
  */
-export function PaintingCardTag({ label, variant, size, shape, alwaysVisible = false }: PaintingCardTagProps) {
+export function PaintingCardTag({
+  label,
+  variant,
+  size,
+  shape,
+  alwaysVisible = false,
+}: PaintingCardTagProps) {
   return (
     <motion.li
       variants={{

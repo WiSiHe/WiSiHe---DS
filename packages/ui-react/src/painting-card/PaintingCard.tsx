@@ -187,11 +187,7 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {pinnedBadge && (
         <div className='absolute z-20 right-2 top-2'>
-          <PaintingCardBadgeItem
-            icon={pinnedBadge.icon}
-            label={pinnedBadge.label}
-            pinned
-          />
+          <PaintingCardBadgeItem icon={pinnedBadge.icon} label={pinnedBadge.label} pinned />
         </div>
       )}
 

@@ -15,6 +15,7 @@ import DraftModeToast from './components/DraftModeToast';
 import Footer from './components/Footer/Footer';
 import './globals.css';
 import type React from 'react';
+import { JsonLd } from './components/JsonLd/JsonLd';
 import SmoothScroll from './components/SmoothScroll';
 import { PostHogProvider } from './providers';
 
@@ -171,18 +172,8 @@ export default async function RootLayout({
         <link rel='manifest' href='/manifest.json' />
         <link rel='mask-icon' href='/wisihe.svg' color='oklch(65% 0.15 180)' />
 
-        <script
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd),
-          }}
-        />
-        <script
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdSite),
-          }}
-        />
+        <JsonLd data={jsonLd} />
+        <JsonLd data={jsonLdSite} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}

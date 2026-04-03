@@ -5,7 +5,7 @@
   "scripts": {
     "build:packages": "turbo run build --filter=./packages/*",
     "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs --filter=!ui-svelte-docs --filter=!ui-vue-docs --filter=!ui-web-components-docs",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build:packages",
+    "ci": "pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build:packages",
     "dev": "turbo run dev --filter=nextjs-portfolio... --filter=ui-docs...",
     "dev:studio": "turbo run dev --filter=sanity-studio...",
     "dev:astro": "turbo run dev --filter=apps-astro-portfolio...",
@@ -16,6 +16,7 @@
     "dev:web-components": "turbo run dev --filter=@wisihe/ui-web-components... --filter=ui-web-components-docs...",
     "dev:all": "turbo run dev --concurrency=20",
     "lint": "biome check .",
+    "lint:ci": "biome ci --config-path=biome.ci.json .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test --filter=@wisihe/ui-angular --filter=@wisihe/ui-vue --filter=@wisihe/ui-web-components",
     "storybook": "turbo run storybook --filter=ui-docs --filter=ui-svelte-docs --filter=ui-vue-docs --filter=ui-web-components-docs",

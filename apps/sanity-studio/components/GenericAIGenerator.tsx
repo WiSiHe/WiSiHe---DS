@@ -9,7 +9,7 @@ import {
 import { Badge, Button, Card, Flex, Spinner, Text, TextArea } from '@sanity/ui';
 import OpenAI from 'openai';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { WiStars } from 'react-icons/wi';
 import { type StringInputProps, set, unset, useFormValue } from 'sanity';
 import { OPENAI_API_KEY } from '../environment';
@@ -19,6 +19,43 @@ const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
 });
+
+function getValueAtPath(obj: unknown, path: string[]): unknown {
+  let current: unknown = obj;
+  for (const segment of path) {
+    if (current == null) return undefined;
+    if (typeof current !== 'object') return undefined;
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return current;
+}
+
+function extractTextFromBlockContent(blockContent: unknown): string {
+  if (!blockContent || !Array.isArray(blockContent)) return '';
+
+  return blockContent
+    .map((block: any) => {
+      if (block._type === 'block' && block.children) {
+        return block.children.map((child: any) => child.text || '').join('');
+      }
+      return '';
+    })
+    .join(' ')
+    .trim();
+}
+
+function extractTagNames(tags: unknown): string {
+  if (!tags || !Array.isArray(tags)) return '';
+
+  return tags
+    .map((tag: any) => {
+      if (typeof tag === 'string') return tag;
+      if (tag && typeof tag === 'object' && tag.name) return tag.name;
+      return '';
+    })
+    .filter(Boolean)
+    .join(', ');
+}
 
 interface GenericAIGeneratorProps extends StringInputProps {
   // The prompt to send to the AI
@@ -63,55 +100,27 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [customPrompt, setCustomPrompt] = useState(prompt || defaultPrompt);
 
-  // Get the image value if imageField is specified
-  const image = imageField ? (useFormValue([imageField]) as string) : null;
+  const documentValue = useFormValue([]) as Record<string, unknown> | undefined;
 
-  // Function to extract plain text from blockContent
-  const extractTextFromBlockContent = (blockContent: any): string => {
-    if (!blockContent || !Array.isArray(blockContent)) return '';
+  const image = imageField
+    ? (getValueAtPath(documentValue, imageField.split('.')) as string | undefined | null)
+    : null;
 
-    return blockContent
-      .map((block: any) => {
-        if (block._type === 'block' && block.children) {
-          return block.children.map((child: any) => child.text || '').join('');
-        }
-        return '';
-      })
-      .join(' ')
-      .trim();
-  };
-
-  // Function to extract tag names from tags array
-  const extractTagNames = (tags: any): string => {
-    if (!tags || !Array.isArray(tags)) return '';
-
-    return tags
-      .map((tag: any) => {
-        if (typeof tag === 'string') return tag;
-        if (tag && typeof tag === 'object' && tag.name) return tag.name;
-        return '';
-      })
-      .filter(Boolean)
-      .join(', ');
-  };
-
-  // Get field dependency values
-  const dependencyValues: Record<string, string> = {};
-  if (fieldDependencies) {
-    Object.entries(fieldDependencies).forEach(([fieldPath, variableName]) => {
-      const fieldValue = useFormValue(fieldPath.split('.'));
-
-      // Special handling for different field types
+  const dependencyValues = useMemo(() => {
+    if (!fieldDependencies) return {};
+    const out: Record<string, string> = {};
+    for (const [fieldPath, variableName] of Object.entries(fieldDependencies)) {
+      const fieldValue = getValueAtPath(documentValue, fieldPath.split('.'));
       if (fieldPath === 'content' && fieldValue) {
-        dependencyValues[variableName] = extractTextFromBlockContent(fieldValue);
+        out[variableName] = extractTextFromBlockContent(fieldValue);
       } else if (fieldPath === 'tags' && fieldValue) {
-        dependencyValues[variableName] = extractTagNames(fieldValue);
+        out[variableName] = extractTagNames(fieldValue);
       } else {
-        // Convert to string and handle non-string values
-        dependencyValues[variableName] = fieldValue ? String(fieldValue) : '';
+        out[variableName] = fieldValue ? String(fieldValue) : '';
       }
-    });
-  }
+    }
+    return out;
+  }, [documentValue, fieldDependencies]);
 
   const finalPrompt = customPrompt || defaultPrompt;
 
