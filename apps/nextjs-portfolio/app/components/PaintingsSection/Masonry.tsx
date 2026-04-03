@@ -70,7 +70,7 @@ const useMeasure = () => {
       setSize({ width: r.width, height: r.height });
     };
     read();
-    const ro = new ResizeObserver((entries) => {
+    const ro = new ResizeObserver(entries => {
       const entry = entries[0];
       if (!entry) return;
       const { width, height } = entry.contentRect;
