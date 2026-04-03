@@ -47,7 +47,7 @@ export function ThreeDSlideDeckClient({
     if (!technicalSeparatorRef.current || shouldPreloadTechnical) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         // Start preloading when separator becomes visible (user is approaching technical section)
         if (entry?.isIntersecting && entry.intersectionRatio > 0.1) {
@@ -68,7 +68,7 @@ export function ThreeDSlideDeckClient({
     if (!technicalDeckRef.current || shouldLoadTechnical) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         if (entry?.isIntersecting && entry.intersectionRatio > 0.1) {
           setShouldLoadTechnical(true);

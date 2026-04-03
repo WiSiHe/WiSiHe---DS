@@ -9,7 +9,7 @@ export const useLazyIframe = () => {
     if (!containerRef.current) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         if (entry?.isIntersecting) {
           setIsVisible(true);

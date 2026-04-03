@@ -83,7 +83,12 @@ const ScrollStack = ({
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
-  const lenisRef = useRef<{ on: (event: string, cb: (...args: unknown[]) => void) => void; off: (event: string, cb: (...args: unknown[]) => void) => void; raf: (t: number) => void; destroy: () => void } | null>(null);
+  const lenisRef = useRef<{
+    on: (event: string, cb: (...args: unknown[]) => void) => void;
+    off: (event: string, cb: (...args: unknown[]) => void) => void;
+    raf: (t: number) => void;
+    destroy: () => void;
+  } | null>(null);
   const layoutCardsRef = useRef<HTMLElement[]>([]);
   const surfaceCardsRef = useRef<HTMLElement[]>([]);
   const lastTransformsRef = useRef(
@@ -276,7 +281,9 @@ const ScrollStack = ({
           on: (event: string, cb: (...args: unknown[]) => void) => globalLenis.on(event, cb),
           off: (event: string, cb: (...args: unknown[]) => void) => globalLenis.off(event, cb),
           raf: () => {},
-          destroy: () => { globalLenis.off('scroll', handleScroll); },
+          destroy: () => {
+            globalLenis.off('scroll', handleScroll);
+          },
         };
       }
     }

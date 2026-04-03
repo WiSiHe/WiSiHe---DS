@@ -14,7 +14,7 @@ export function ThreeDHero() {
     if (!sectionRef.current) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         const visible = (entry?.isIntersecting ?? false) && (entry?.intersectionRatio ?? 0) > 0.1;
         setIsVisible(visible);

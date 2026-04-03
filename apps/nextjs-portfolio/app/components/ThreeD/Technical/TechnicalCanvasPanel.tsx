@@ -33,7 +33,7 @@ export function TechnicalCanvasPanel({
     if (!canvasContainerRef.current) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         setIsVisible((entry?.isIntersecting ?? false) && (entry?.intersectionRatio ?? 0) > 0.1);
       },
