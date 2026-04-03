@@ -10,6 +10,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import {
+  getHeroStrokeColors,
+  HeroPaintingSvgHover,
+  initHeroSvgStrokePaths,
+} from '@/app/components/HeroSection/HeroPaintingSvgHover';
+import {
+  paintingSvgBrushEnter,
+  paintingSvgBrushLeave,
+} from '@/app/components/HeroSection/paintingSvgBrushHover';
+
 export type MasonryItem = {
   id: string;
   img: string;
@@ -17,6 +27,8 @@ export type MasonryItem = {
   /** Logical height used for column packing (pixels) */
   height: number;
   title?: string;
+  /** Index for {@link getHeroStrokeColors} when SVG brush hover is enabled */
+  strokeIndex?: number;
 };
 
 type MasonryProps = {
@@ -174,6 +186,7 @@ const Masonry = ({
   };
 
   const hasMounted = useRef(false);
+  const svgHoverTlByIdRef = useRef<Map<string, gsap.core.Timeline>>(new Map());
   const itemIdsKey = useMemo(() => items.map(i => i.id).join('|'), [items]);
 
   useEffect(() => {
@@ -225,12 +238,29 @@ const Masonry = ({
     hasMounted.current = true;
   }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
 
+  useLayoutEffect(() => {
+    if (!imagesReady || !grid.length) return;
+    grid.forEach(item => {
+      if (item.strokeIndex === undefined) return;
+      const tile = containerRef.current?.querySelector<HTMLElement>(
+        `[data-masonry-key="${CSS.escape(item.id)}"]`,
+      );
+      if (tile) initHeroSvgStrokePaths(tile);
+    });
+  }, [grid, imagesReady]);
+
   const handleMouseEnter = (id: string, el: HTMLElement) => {
     if (
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
       return;
+    }
+    const item = grid.find(g => g.id === id);
+    if (item?.strokeIndex !== undefined) {
+      svgHoverTlByIdRef.current.get(id)?.kill();
+      const tl = paintingSvgBrushEnter(el);
+      svgHoverTlByIdRef.current.set(id, tl);
     }
     if (!scaleOnHover) return;
     gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
@@ -250,6 +280,12 @@ const Masonry = ({
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
       return;
+    }
+    const item = grid.find(g => g.id === id);
+    if (item?.strokeIndex !== undefined) {
+      svgHoverTlByIdRef.current.get(id)?.kill();
+      svgHoverTlByIdRef.current.delete(id);
+      paintingSvgBrushLeave(el);
     }
     if (!scaleOnHover) return;
     gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
@@ -285,7 +321,7 @@ const Masonry = ({
             className='relative block h-full w-full'
             aria-label={item.title ? `View painting: ${item.title}` : 'View painting'}
           >
-            <div className='relative h-full w-full'>
+            <div className='relative h-full w-full overflow-hidden rounded-[10px]'>
               <Image
                 src={item.img}
                 alt={item.title ?? ''}
@@ -293,6 +329,12 @@ const Masonry = ({
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
               />
+              {item.strokeIndex !== undefined ? (
+                <HeroPaintingSvgHover
+                  {...getHeroStrokeColors(item.strokeIndex)}
+                  title={item.title ?? null}
+                />
+              ) : null}
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />
               ) : null}

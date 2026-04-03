@@ -55,6 +55,7 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         url: `/paintings/${p.slug}`,
         height,
         title: p.title ?? undefined,
+        strokeIndex: index,
       });
     });
     return out;

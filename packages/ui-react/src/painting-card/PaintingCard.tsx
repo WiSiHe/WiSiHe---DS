@@ -19,6 +19,17 @@ const iconsListVariants: Variants = {
   hover: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } },
 };
 
+/** When hover is unavailable (touch), keep chips / badges readable without :hover. */
+const alwaysVisibleTagVariants: Variants = {
+  rest: { opacity: 1, y: 0 },
+  hover: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
+};
+
+const alwaysVisibleIconsVariants: Variants = {
+  rest: { opacity: 1, x: 0 },
+  hover: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } },
+};
+
 // ---------------------------------------------------------------------------
 // Placeholder for missing images
 // ---------------------------------------------------------------------------
@@ -110,6 +121,11 @@ export interface PaintingCardProps {
    * The first badge is always visible; subsequent ones animate in on hover.
    */
   badges?: PaintingCardBadge[];
+  /**
+   * Show tag chips, secondary badges, and the title strip without requiring hover.
+   * Use on touch-first layouts (e.g. mobile carousel) where hover metadata would stay hidden.
+   */
+  alwaysShowTags?: boolean;
   /** Passed through to the wrapping `motion.article` */
   className?: string;
 }
@@ -127,10 +143,13 @@ export function PaintingCard({
   isNsfw = false,
   isNsfwVisible = false,
   badges = [],
+  alwaysShowTags = false,
   className,
 }: PaintingCardProps) {
   const showBlur = isNsfw && !isNsfwVisible;
   const [pinnedBadge, ...animatedBadges] = badges;
+  const tagVariants = alwaysShowTags ? alwaysVisibleTagVariants : listVariants;
+  const iconBadgeVariants = alwaysShowTags ? alwaysVisibleIconsVariants : iconsListVariants;
 
   const LinkEl = LinkComponent ?? 'a';
 
@@ -155,10 +174,10 @@ export function PaintingCard({
       {tags.length > 0 && (
         <motion.ul
           className='absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2'
-          variants={listVariants}
+          variants={tagVariants}
         >
           {tags.map(tag => (
-            <PaintingCardTag key={tag} label={tag} />
+            <PaintingCardTag key={tag} label={tag} alwaysVisible={alwaysShowTags} />
           ))}
         </motion.ul>
       )}
@@ -168,7 +187,11 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {pinnedBadge && (
         <div className='absolute z-20 right-2 top-2'>
-          <PaintingCardBadgeItem icon={pinnedBadge.icon} label={pinnedBadge.label} pinned />
+          <PaintingCardBadgeItem
+            icon={pinnedBadge.icon}
+            label={pinnedBadge.label}
+            pinned
+          />
         </div>
       )}
 
@@ -181,10 +204,15 @@ export function PaintingCard({
             'absolute z-20 flex flex-col gap-1 text-xs right-2',
             pinnedBadge ? 'top-12' : 'top-2',
           )}
-          variants={iconsListVariants}
+          variants={iconBadgeVariants}
         >
           {animatedBadges.map(badge => (
-            <PaintingCardBadgeItem key={badge.key} icon={badge.icon} label={badge.label} />
+            <PaintingCardBadgeItem
+              key={badge.key}
+              icon={badge.icon}
+              label={badge.label}
+              alwaysVisible={alwaysShowTags}
+            />
           ))}
         </motion.ul>
       )}
@@ -222,10 +250,18 @@ export function PaintingCard({
         className='before:absolute before:inset-0 before:z-0'
         aria-label={`View painting: ${title}`}
       >
-        <div className='absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0'>
+        <div
+          className={cn(
+            'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
+            alwaysShowTags && 'opacity-100 translate-y-0',
+          )}
+        >
           <motion.h2
             layoutId={`title-${title}`}
-            className='text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter group-hover:text-accent transition-colors duration-300'
+            className={cn(
+              'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
+              alwaysShowTags && 'text-accent',
+            )}
           >
             {title}
           </motion.h2>

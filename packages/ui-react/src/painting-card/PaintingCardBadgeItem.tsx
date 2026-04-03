@@ -10,6 +10,8 @@ interface PaintingCardBadgeItemProps
   label: string;
   /** Pinned badge: always visible, no motion animation */
   pinned?: boolean;
+  /** When true, visible in parent `rest` for non-pinned badges (`PaintingCard` `alwaysShowTags`). */
+  alwaysVisible?: boolean;
 }
 
 /**
@@ -21,6 +23,7 @@ export function PaintingCardBadgeItem({
   icon,
   label,
   pinned = false,
+  alwaysVisible = false,
   variant,
   size,
   shape,
@@ -44,7 +47,7 @@ export function PaintingCardBadgeItem({
   return (
     <motion.li
       variants={{
-        rest: { opacity: 0, x: 50 },
+        rest: alwaysVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 },
         hover: { opacity: 1, x: 0 },
       }}
     >

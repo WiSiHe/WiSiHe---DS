@@ -10,6 +10,11 @@ import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
 import { TbBoxMultiple } from 'react-icons/tb';
 import { urlForImage } from '@/sanity/lib/utils';
 
+import {
+  getHeroStrokeColors,
+  HeroPaintingSvgHover,
+} from '@/app/components/HeroSection/HeroPaintingSvgHover';
+
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
@@ -19,6 +24,10 @@ type PaintingCardAdapterProps = {
   shouldBeLazy?: boolean;
   /** Set true when the user has actively filtered for NSFW in InstantSearch */
   isNsfwFilterActive?: boolean;
+  /** When set, brush-stroke SVG hover (home hero) is drawn over the image; pair with `PaintingCardSvgHoverWrap`. */
+  svgHoverIndex?: number;
+  /** Tags + title strip stay visible without hover (e.g. touch / mobile carousel). */
+  alwaysShowTags?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -29,6 +38,8 @@ const PaintingCardAdapter = ({
   paintingData,
   shouldBeLazy = false,
   isNsfwFilterActive = false,
+  svgHoverIndex,
+  alwaysShowTags = false,
 }: PaintingCardAdapterProps) => {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
@@ -47,8 +58,7 @@ const PaintingCardAdapter = ({
     ? urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url()
     : null;
 
-  // Build the image ReactNode that will be passed to the generic card
-  const imageNode = imageSrc ? (
+  const imageEl = imageSrc ? (
     <Image
       src={imageSrc}
       alt={title || 'Painting'}
@@ -62,6 +72,20 @@ const PaintingCardAdapter = ({
       className='object-cover w-full h-full'
     />
   ) : undefined;
+
+  // Build the image ReactNode that will be passed to the generic card
+  const imageNode =
+    imageEl && svgHoverIndex !== undefined ? (
+      <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
+        {imageEl}
+        <HeroPaintingSvgHover
+          {...getHeroStrokeColors(svgHoverIndex)}
+          title={title || null}
+        />
+      </div>
+    ) : (
+      imageEl
+    );
 
   // Build the badges array
   const badges: PaintingCardBadge[] = [];
@@ -102,9 +126,7 @@ const PaintingCardAdapter = ({
       isNsfw={isNsfw}
       isNsfwVisible={isNsfwFilterActive}
       badges={badges}
-      // Wrap the Next.js <Link> over the card's anchor — done via `asChild`-style override
-      // by passing a custom link wrapper if needed. For now the built-in <a> works fine
-      // since Next.js soft-navigates on <a href> inside App Router.
+      alwaysShowTags={alwaysShowTags}
     />
   );
 };
