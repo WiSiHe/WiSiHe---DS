@@ -1,0 +1,12 @@
+/**
+ * Storybook preview iframe: match semantic page background so dark mode
+ * does not show the default light gray canvas behind stories.
+ */
+html,
+body,
+#storybook-root,
+#storybook-docs,
+.sb-show-main,
+.sb-main-padded {
+  background-color: var(--color-background);
+}

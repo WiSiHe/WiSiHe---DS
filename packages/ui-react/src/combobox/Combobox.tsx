@@ -50,7 +50,7 @@ export function Combobox<T extends string | number = string>({
   placeholder = 'Search...',
   disabled,
   className,
-}: ComboboxProps<T>) {
+}: Readonly<ComboboxProps<T>>) {
   const generatedId = React.useId();
   const labelId = `${generatedId}-label`;
   const descriptionId = `${generatedId}-description`;
@@ -119,8 +119,12 @@ export function Combobox<T extends string | number = string>({
             )}
           />
 
-          <ComboboxButton className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'>
-            <IconChevronDown className='size-4' />
+          <ComboboxButton
+            type='button'
+            aria-label='Show options'
+            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+          >
+            <IconChevronDown className='size-4' aria-hidden />
           </ComboboxButton>
         </div>
 

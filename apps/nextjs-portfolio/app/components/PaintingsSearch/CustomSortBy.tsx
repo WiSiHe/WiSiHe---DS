@@ -13,5 +13,13 @@ export default function CustomSortBy({
 
   const value = items.find(o => o.value === currentRefinement) ?? items[0] ?? null;
 
-  return <Select options={items} value={value} onChange={val => refine(val.value)} />;
+  return (
+    <Select
+      label='Sort'
+      hideLabel
+      options={items}
+      value={value}
+      onChange={val => refine(val.value)}
+    />
+  );
 }

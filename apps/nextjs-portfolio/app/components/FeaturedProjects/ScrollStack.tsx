@@ -7,6 +7,7 @@
  * Document scroll uses global Lenis (`@/app/lib/lenis-registry`).
  */
 
+import clsx from 'clsx';
 import gsap from 'gsap';
 import { type CSSProperties, type ReactNode, useCallback, useLayoutEffect, useRef } from 'react';
 
@@ -14,13 +15,14 @@ import { getDocumentScrollTop, getGlobalLenis } from '@/app/lib/lenis-registry';
 
 export type ScrollStackItemProps = {
   children: ReactNode;
+  /** Applied to an inner wrapper; the transformed surface keeps a stable class string for hydration. */
   itemClassName?: string;
 };
 
 export const ScrollStackItem = ({ children, itemClassName = '' }: ScrollStackItemProps) => (
   <div className='scroll-stack-card relative box-border w-full'>
     <div
-      className={`scroll-stack-card-surface box-border w-full${itemClassName ? ` ${itemClassName}` : ''}`}
+      className='scroll-stack-card-surface box-border w-full'
       style={{
         backfaceVisibility: 'hidden',
         transformStyle: 'preserve-3d',
@@ -31,7 +33,7 @@ export const ScrollStackItem = ({ children, itemClassName = '' }: ScrollStackIte
         transform: 'translateZ(0)',
       }}
     >
-      {children}
+      <div className={clsx(itemClassName)}>{children}</div>
     </div>
   </div>
 );
@@ -82,7 +84,6 @@ const ScrollStack = ({
 }: ScrollStackProps) => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stackCompletedRef = useRef(false);
-  const animationFrameRef = useRef<number | null>(null);
   const lenisRef = useRef<{
     on: (event: string, cb: (...args: unknown[]) => void) => void;
     off: (event: string, cb: (...args: unknown[]) => void) => void;
@@ -321,14 +322,16 @@ const ScrollStack = ({
 
     let tickerFn: (() => void) | null = null;
 
-    if (useWindowScroll && (!useLenis || !getGlobalLenis())) {
-      /** GSAP ticker drives updates - used when Lenis is absent or unavailable */
-      tickerFn = () => {
-        updateCardTransforms();
-      };
-      gsap.ticker.add(tickerFn);
+    if (useWindowScroll) {
+      if (!useLenis || !getGlobalLenis()) {
+        /** GSAP ticker drives updates - used when Lenis is absent or unavailable */
+        tickerFn = () => {
+          updateCardTransforms();
+        };
+        gsap.ticker.add(tickerFn);
+      }
       window.addEventListener('resize', onResize);
-    } else if (!useWindowScroll) {
+    } else {
       root.addEventListener('scroll', handleScroll, { passive: true });
       window.addEventListener('resize', onResize);
     }
@@ -336,9 +339,6 @@ const ScrollStack = ({
     return () => {
       if (tickerFn) {
         gsap.ticker.remove(tickerFn);
-      }
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
       }
       if (lenisRef.current) {
         lenisRef.current.destroy();
@@ -349,9 +349,9 @@ const ScrollStack = ({
       transformsCache.clear();
       lastActiveIndexRef.current = -1;
 
-      if (useWindowScroll && (!useLenis || !lenisRef.current)) {
+      if (useWindowScroll) {
         window.removeEventListener('resize', onResize);
-      } else if (!useWindowScroll) {
+      } else {
         root.removeEventListener('scroll', handleScroll);
         window.removeEventListener('resize', onResize);
       }

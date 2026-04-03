@@ -1,6 +1,9 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const require = createRequire(import.meta.url);
 
@@ -15,6 +18,8 @@ const config: StorybookConfig = {
   stories: [
     `${getAbsolutePath('@wisihe/ui-react')}/src/**/*.mdx`,
     `${getAbsolutePath('@wisihe/ui-react')}/src/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
+    join(__dirname, '../src/**/*.mdx'),
+    join(__dirname, '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'),
   ],
   addons: [
     getAbsolutePath('@chromatic-com/storybook'),
