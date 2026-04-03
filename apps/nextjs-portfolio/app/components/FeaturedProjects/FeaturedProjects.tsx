@@ -14,9 +14,7 @@ import FeaturedProjectCard from './FeaturedProjectCard';
 import ScrollStack from './ScrollStack';
 
 type FeaturedProjectsProps = {
-  showcaseProjects?:
-    | NonNullable<HomePageQueryResult>['showcaseProjects']
-    | null;
+  showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
 };
 
 const MAX_PROJECTS = 3;
@@ -50,30 +48,28 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
 
   return (
     <section
-      className="mx-auto max-w-7xl bg-background px-4 py-4 md:py-8"
-      aria-labelledby="featured-projects-heading"
-      aria-describedby="featured-projects-desc"
+      className='mx-auto max-w-7xl bg-background px-4 py-4 md:py-8'
+      aria-labelledby='featured-projects-heading'
+      aria-describedby='featured-projects-desc'
     >
       <motion.div
         initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, margin: '-140px' }}
-        transition={
-          reducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }
-        }
-        className="relative max-w-prose pb-4"
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }}
+        className='relative max-w-prose pb-4'
       >
         <h2
-          id="featured-projects-heading"
-          className="mb-1.5 font-serif text-4xl font-bold leading-[1.05] text-foreground md:text-5xl lg:text-6xl xl:text-7xl"
+          id='featured-projects-heading'
+          className='mb-1.5 font-serif text-4xl font-bold leading-[1.05] text-foreground md:text-5xl lg:text-6xl xl:text-7xl'
         >
           Featured
           <br />
           Projects
         </h2>
         <p
-          id="featured-projects-desc"
-          className="max-w-prose text-base leading-snug text-foreground-subtle md:text-lg pb-4"
+          id='featured-projects-desc'
+          className='max-w-prose text-base leading-snug text-foreground-subtle md:text-lg pb-4'
         >
           A few things I&apos;ve worked on.
         </p>
@@ -85,8 +81,8 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         itemDistance={100}
         itemScale={0.03}
         itemStackDistance={30}
-        stackPosition="20%"
-        scaleEndPosition="10%"
+        stackPosition='20%'
+        scaleEndPosition='10%'
         baseScale={0.85}
         blurAmount={0}
       >
@@ -100,19 +96,17 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
         ))}
       </ScrollStack>
 
-      <div className="flex items-center justify-center px-4 pt-40">
-        <div className="text-center">
-          <p className="mb-8 text-lg text-foreground-subtle">
-            Want to see more of my work?
-          </p>
+      <div className='flex items-center justify-center px-4 pt-40'>
+        <div className='text-center'>
+          <p className='mb-8 text-lg text-foreground-subtle'>Want to see more of my work?</p>
           <Link
-            href="/projects"
-            className="group inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-contrast transition-colors hover:bg-accent-hover md:gap-3 md:px-10 md:py-5 md:text-lg"
+            href='/projects'
+            className='group inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-contrast transition-colors hover:bg-accent-hover md:gap-3 md:px-10 md:py-5 md:text-lg'
           >
             Explore all projects
             <IconArrowRight
               aria-hidden
-              className="h-5 w-5 transition-transform group-hover:translate-x-0.5 md:h-6 md:w-6"
+              className='h-5 w-5 transition-transform group-hover:translate-x-0.5 md:h-6 md:w-6'
             />
           </Link>
         </div>

@@ -36,40 +36,9 @@ const STATUS_CONFIG = {
 } as const;
 
 const ProjectInformation = ({ project }: ProjectInformationProps) => {
-  if (!project) {
-    return null;
-  }
-
-  const {
-    _id,
-    name,
-    status = 'unknown',
-    projectStart,
-    projectEnd,
-    tags = [],
-    viewsCount = 0,
-    likesCount,
-    views = [],
-  } = project;
-
-  const projectContent = project.content as PortableTextBlock[];
-
-  const projectTitle = name || 'Untitled Project';
-  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.unknown;
-  const StatusIcon = statusConfig.icon;
-
-  // Format dates
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } catch {
-      return dateString;
-    }
-  };
+  const _id = project?._id ?? '';
+  const viewsFromProject = project?.views ?? [];
+  const likesCount = project?.likesCount;
 
   const generateOrRetrieveViewerId = useCallback((): string => {
     try {
@@ -92,6 +61,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
 
   // Check if liked previously
   useEffect(() => {
+    if (!_id) return;
     try {
       const likedProjects = JSON.parse(localStorage.getItem('likedProjects') || '{}');
       if (likedProjects[_id]) {
@@ -104,11 +74,12 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
 
   // On mount, patch project views
   useEffect(() => {
+    if (!_id) return;
     const addView = async () => {
       const viewerId = generateOrRetrieveViewerId();
 
       // Ensure views is an array
-      const viewsArray = Array.isArray(views) ? views : [];
+      const viewsArray = Array.isArray(viewsFromProject) ? viewsFromProject : [];
 
       if (!viewsArray.some((view: any) => view.viewerId === viewerId) && !hasAddedView) {
         setHasAddedView(true);
@@ -116,7 +87,32 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
       }
     };
     void addView();
-  }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
+  }, [_id, viewsFromProject, hasAddedView, generateOrRetrieveViewerId]);
+
+  if (!project) {
+    return null;
+  }
+
+  const { name, status = 'unknown', projectStart, projectEnd, tags = [], viewsCount = 0 } = project;
+
+  const projectContent = project.content as PortableTextBlock[];
+
+  const projectTitle = name || 'Untitled Project';
+  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.unknown;
+  const StatusIcon = statusConfig.icon;
+
+  // Format dates
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
   const handleLike = async () => {
     const likerId = generateOrRetrieveViewerId();

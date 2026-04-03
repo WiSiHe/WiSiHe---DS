@@ -1,11 +1,9 @@
 'use client';
 
-import gsap from 'gsap';
+import type gsap from 'gsap';
 import { type ReactNode, useLayoutEffect, useRef } from 'react';
 
-import {
-  initHeroSvgStrokePaths,
-} from '@/app/components/HeroSection/HeroPaintingSvgHover';
+import { initHeroSvgStrokePaths } from '@/app/components/HeroSection/HeroPaintingSvgHover';
 import {
   paintingSvgBrushEnter,
   paintingSvgBrushLeave,

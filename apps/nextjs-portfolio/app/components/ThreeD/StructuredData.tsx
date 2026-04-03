@@ -1,5 +1,7 @@
 'use client';
 
+import { JsonLd } from '@/app/components/JsonLd/JsonLd';
+
 export function StructuredData() {
   const webPageSchema = {
     '@context': 'https://schema.org',
@@ -123,24 +125,9 @@ export function StructuredData() {
 
   return (
     <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(webPageSchema),
-        }}
-      />
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(howToSchema),
-        }}
-      />
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleSchema),
-        }}
-      />
+      <JsonLd data={webPageSchema} />
+      <JsonLd data={howToSchema} />
+      <JsonLd data={articleSchema} />
     </>
   );
 }

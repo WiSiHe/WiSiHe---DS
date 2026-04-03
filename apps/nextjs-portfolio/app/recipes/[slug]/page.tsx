@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
+import { JsonLd } from '@/app/components/JsonLd/JsonLd';
 import { client } from '@/sanity/lib/client';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getRecipe, getRecipeSlugs } from '@/sanity/lib/queries';
@@ -211,12 +212,7 @@ export default async function RecipePage({ params }: Props) {
 
   return (
     <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
+      <JsonLd data={structuredData} />
       <RecipeDetail recipe={{ ...recipe, tags: limitedTags }} />
 
       {/* Additional internal links section for SEO */}

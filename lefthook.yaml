@@ -1,12 +1,17 @@
+# Pre-commit: full `turbo typecheck` is intentional — it matches CI and catches
+# cross-package issues. Turbo `--affected` uses main...HEAD and is a poor fit for
+# staged-but-uncommitted changes right before `git commit`.
+
 pre-commit:
   parallel: true
   commands:
     typecheck:
-      glob: "*.{ts,tsx,js,jsx}"
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs}"
       run: pnpm turbo typecheck
       fail_text: "❌ TypeScript type checking failed. Please fix the errors and try again."
 
     lint:
-      glob: "*.{js,jsx,ts,tsx,json,svelte,vue,css}"
+      glob: "*.{js,jsx,ts,tsx,json,svelte,vue,css,astro}"
       run: pnpm biome check --write {staged_files}
+      stage_fixed: true
       fail_text: "❌ Biome check failed. Please fix the errors and try again."

@@ -1,6 +1,7 @@
 import type { PaintingQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/app/components/JsonLd/JsonLd';
 import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
@@ -95,12 +96,7 @@ export default async function PaintingPage(props: Props) {
 
   return (
     <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
+      <JsonLd data={structuredData} />
       <PaintingDetail paintingData={painting} />
     </>
   );
