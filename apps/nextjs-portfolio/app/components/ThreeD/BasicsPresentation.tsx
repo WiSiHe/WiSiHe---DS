@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const PresentationModel = ({ step, progress }: { step: number; progress: number }) => {
+const PresentationModel = ({ step, progress: _progress }: { step: number; progress: number }) => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
 

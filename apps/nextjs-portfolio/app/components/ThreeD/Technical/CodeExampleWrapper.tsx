@@ -12,8 +12,8 @@ interface CodeExampleWrapperProps {
 
 export function CodeExampleWrapper({
   code,
-  shouldAnimate,
-  currentSlide,
+  shouldAnimate: _shouldAnimate,
+  currentSlide: _currentSlide,
   className = '',
 }: CodeExampleWrapperProps) {
   const codeBlock = (

@@ -33,8 +33,9 @@ export function TechnicalCanvasPanel({
     if (!canvasContainerRef.current) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting && entry.intersectionRatio > 0.1);
+      (entries) => {
+        const entry = entries[0];
+        setIsVisible((entry?.isIntersecting ?? false) && (entry?.intersectionRatio ?? 0) > 0.1);
       },
       { threshold: [0, 0.1, 0.5, 1], rootMargin: '50px' },
     );
@@ -134,7 +135,7 @@ export function TechnicalCanvasPanel({
           }}
           dpr={1}
           className='w-full h-full'
-          onCreated={({ gl, scene }) => {
+          onCreated={({ gl, scene: _scene }) => {
             // Handle WebGL context loss
             const canvas = gl.domElement;
 

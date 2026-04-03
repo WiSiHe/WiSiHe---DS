@@ -26,7 +26,7 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
   const isDark = mounted && resolvedTheme === 'dark';
   const style = isDark ? oneDark : oneLight;
 
-  const currentFontSize = FONT_SIZES[fontSizeIndex];
+  const currentFontSize = FONT_SIZES[fontSizeIndex] ?? 1;
   const canZoomIn = fontSizeIndex < FONT_SIZES.length - 1;
   const canZoomOut = fontSizeIndex > 0;
 

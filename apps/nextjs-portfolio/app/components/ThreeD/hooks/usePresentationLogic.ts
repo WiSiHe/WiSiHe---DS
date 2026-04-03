@@ -48,12 +48,9 @@ export const usePresentationLogic = ({
 
     rafIdRef.current = requestAnimationFrame(() => {
       const updates = pendingUpdatesRef.current;
-      let _hasUpdates = false;
-
       if (updates.currentSlide !== undefined && updates.currentSlide !== currentSlideRef.current) {
         currentSlideRef.current = updates.currentSlide;
         setCurrentSlide(updates.currentSlide);
-        _hasUpdates = true;
       }
 
       if (
@@ -62,12 +59,10 @@ export const usePresentationLogic = ({
       ) {
         previousSlideIndexRef.current = updates.previousSlideIndex;
         setPreviousSlideIndex(updates.previousSlideIndex);
-        _hasUpdates = true;
       }
 
       if (updates.showCategoryTransition !== undefined) {
         setShowCategoryTransition(updates.showCategoryTransition);
-        _hasUpdates = true;
       }
 
       if (
@@ -76,13 +71,11 @@ export const usePresentationLogic = ({
       ) {
         isTechnicalSectionVisibleRef.current = updates.isTechnicalSectionVisible;
         setIsTechnicalSectionVisible(updates.isTechnicalSectionVisible);
-        _hasUpdates = true;
       }
 
       if (updates.isScrolled !== undefined && updates.isScrolled !== isScrolledRef.current) {
         isScrolledRef.current = updates.isScrolled;
         setIsScrolled(updates.isScrolled);
-        _hasUpdates = true;
       }
 
       pendingUpdatesRef.current = {};

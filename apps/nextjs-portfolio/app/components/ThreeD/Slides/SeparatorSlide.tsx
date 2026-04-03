@@ -12,9 +12,9 @@ interface SeparatorSlideProps {
 
 export const SeparatorSlide = ({
   slideData,
-  index,
-  shouldAnimate,
-  slideDirection,
+  index: _index,
+  shouldAnimate: _shouldAnimate,
+  slideDirection: _slideDirection,
 }: SeparatorSlideProps) => {
   const design = slideData.slideDesign || 'default';
 

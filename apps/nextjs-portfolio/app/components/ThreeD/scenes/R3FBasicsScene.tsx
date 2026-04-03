@@ -57,7 +57,7 @@ export const R3FBasicsScene = forwardRef<THREE.Group, R3FBasicsSceneProps>(
             (Math.random() - 0.5) * 4,
             (Math.random() - 0.5) * 2,
           ] as [number, number, number],
-          color: colors[i % colors.length],
+          color: colors[i % colors.length]!,
           speed: 2 + Math.random() * 3,
         });
       }

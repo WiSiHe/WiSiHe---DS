@@ -35,7 +35,7 @@ export function Numbers({ metrics }: NumbersProps) {
         {/* Metrics Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {metrics.map((metric, index) => {
-            const _valueType = getValueType(metric.value);
+            void getValueType(metric.value);
             const color = getMetricColor(metric);
 
             return (

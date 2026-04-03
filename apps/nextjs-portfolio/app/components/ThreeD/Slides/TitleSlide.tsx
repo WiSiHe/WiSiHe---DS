@@ -12,9 +12,9 @@ interface TitleSlideProps {
 
 export const TitleSlide = ({
   slideData,
-  index,
-  shouldAnimate,
-  slideDirection,
+  index: _index,
+  shouldAnimate: _shouldAnimate,
+  slideDirection: _slideDirection,
 }: TitleSlideProps) => {
   const slideDesign = slideData.slideDesign || 'default';
 

@@ -18,9 +18,9 @@ export function cssColorToHex(cssColor: string, fallback: string = '#14b8a6'): s
   // If it's an rgb/rgba color, convert to hex
   const rgbMatch = cssColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
   if (rgbMatch) {
-    const r = parseInt(rgbMatch[1], 10);
-    const g = parseInt(rgbMatch[2], 10);
-    const b = parseInt(rgbMatch[3], 10);
+    const r = parseInt(rgbMatch[1] ?? '0', 10);
+    const g = parseInt(rgbMatch[2] ?? '0', 10);
+    const b = parseInt(rgbMatch[3] ?? '0', 10);
     return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
   }
 
@@ -39,9 +39,9 @@ export function cssColorToHex(cssColor: string, fallback: string = '#14b8a6'): s
     // Convert rgb() to hex
     const computedRgbMatch = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
     if (computedRgbMatch) {
-      const r = parseInt(computedRgbMatch[1], 10);
-      const g = parseInt(computedRgbMatch[2], 10);
-      const b = parseInt(computedRgbMatch[3], 10);
+      const r = parseInt(computedRgbMatch[1] ?? '0', 10);
+      const g = parseInt(computedRgbMatch[2] ?? '0', 10);
+      const b = parseInt(computedRgbMatch[3] ?? '0', 10);
       return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
     }
   } catch (error) {
@@ -113,13 +113,13 @@ export function resolveCssColorForAnimation(
     // Check if there's an opacity modifier like "/ 0.2"
     const opacityMatch = cssColorValue.match(/\/\s*([\d.]+)/);
     if (opacityMatch) {
-      const opacity = parseFloat(opacityMatch[1]);
+      const opacity = parseFloat(opacityMatch[1] ?? '0');
       // Convert computed color (rgb/rgba) to rgba with the specified opacity
       const rgbMatch = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
       if (rgbMatch) {
-        const r = parseInt(rgbMatch[1], 10);
-        const g = parseInt(rgbMatch[2], 10);
-        const b = parseInt(rgbMatch[3], 10);
+        const r = parseInt(rgbMatch[1] ?? '0', 10);
+        const g = parseInt(rgbMatch[2] ?? '0', 10);
+        const b = parseInt(rgbMatch[3] ?? '0', 10);
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
       }
     }

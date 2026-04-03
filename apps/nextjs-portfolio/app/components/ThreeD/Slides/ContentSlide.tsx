@@ -25,8 +25,8 @@ interface ContentSlideProps {
 export const ContentSlide = ({
   slideData,
   index,
-  shouldAnimate,
-  slideDirection,
+  shouldAnimate: _shouldAnimate,
+  slideDirection: _slideDirection,
   currentHistorySlideIndex,
 }: ContentSlideProps) => {
   // Get slide design variant - ensure consistent value for SSR

@@ -14,8 +14,9 @@ export function ThreeDHero() {
     if (!sectionRef.current) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        const visible = entry.isIntersecting && entry.intersectionRatio > 0.1;
+      (entries) => {
+        const entry = entries[0];
+        const visible = (entry?.isIntersecting ?? false) && (entry?.intersectionRatio ?? 0) > 0.1;
         setIsVisible(visible);
         // Load Spline when section becomes visible for the first time
         if (visible && !shouldLoadSpline) {
@@ -23,7 +24,7 @@ export function ThreeDHero() {
         }
         // Unload Spline when section is completely out of view (to save resources)
         // Only unload if it was previously loaded and now completely out of view
-        if (!visible && shouldLoadSpline && entry.intersectionRatio === 0) {
+        if (!visible && shouldLoadSpline && (entry?.intersectionRatio ?? 0) === 0) {
           setShouldLoadSpline(false);
         }
       },
