@@ -429,7 +429,7 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
   return (
     <section
       ref={containerRef}
-      className='relative flex h-dvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle'
+      className='relative flex min-h-lvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle'
     >
       {/* Loader */}
       <div

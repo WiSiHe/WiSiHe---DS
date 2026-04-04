@@ -37,14 +37,9 @@ const ThemeToggle = () => {
 
   const isDarkActive = mounted && resolvedTheme === 'dark';
 
-  const controlClassName = cn(
-    'flex min-h-10 min-w-10 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-lg transition-all duration-300',
-    'px-3 py-2.5 md:px-4 md:py-2',
-  );
-
   if (!mounted) {
     return (
-      <div className={cn(controlClassName, 'cursor-default')} aria-hidden>
+      <div className={cn('', 'cursor-default')} aria-hidden>
         <div className='h-5 w-5' />
       </div>
     );
@@ -56,7 +51,8 @@ const ThemeToggle = () => {
       onClick={cycleTheme}
       data-state={isDarkActive ? 'dark' : 'light'}
       className={cn(
-        controlClassName,
+        'flex items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-lg transition-all duration-300',
+        'p-4',
         'cursor-pointer hover:bg-surface-hover hover:text-accent hover:border-accent-border active:scale-95',
       )}
       whileTap={{ scale: 0.95 }}
