@@ -3,7 +3,7 @@
   "display": "Storybook",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,

@@ -9,7 +9,7 @@
     "module": "ESNext",
     "noEmit": false,
     "resolveJsonModule": true,
-    "target": "es6",
+    "target": "ES2024",
     "types": ["react", "react-dom"]
   }
 }

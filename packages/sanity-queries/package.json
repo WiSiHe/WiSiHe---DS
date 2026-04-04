@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "@sanity/client": "^7.20.0",
-    "groq": "^5.18.0"
+    "groq": "^5.19.0"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
     "tsup": "^8.5.1",
-    "typescript": "5.9.3"
+    "typescript": "6.0.2"
   }
 }

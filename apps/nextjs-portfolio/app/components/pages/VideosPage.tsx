@@ -14,7 +14,8 @@ import Chip from '../Chip/Chip';
 function getYouTubeVideoId(url: string): string {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
   const match = url.match(regExp);
-  return match && match[2] && match[2].length >= 11 ? match[2] : '';
+  const id = match?.[2];
+  return id && id.length >= 11 ? id : '';
 }
 
 interface VideosPageProps {
@@ -30,10 +31,10 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
     setIsOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setSelectedVideo(null);
-  };
+  }, []);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -140,7 +141,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     {tags && (
                       <div className='flex flex-wrap gap-2 py-2'>
                         {tags.map(tag => (
-                          <Chip key={tag.name} label={tag.name} outlined />
+                          <Chip key={tag.name} label={tag.name} outlined interactive={false} />
                         ))}
                       </div>
                     )}
@@ -184,6 +185,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
               >
                 <div className='absolute z-20 flex items-center justify-center left-4 right-4 -top-16'>
                   <button
+                    type='button'
                     onClick={() => setIsOpen(false)}
                     className='flex gap-2 px-4 py-2 rounded-lg text-accent-contrast transition-all duration-200 cursor-pointer bg-accent hover:bg-accent-hover shadow-lg'
                     aria-label='Close video'
@@ -198,6 +200,8 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                       strokeWidth='2'
                       strokeLinecap='round'
                       strokeLinejoin='round'
+                      aria-hidden='true'
+                      focusable='false'
                     >
                       <line x1='18' y1='6' x2='6' y2='18'></line>
                       <line x1='6' y1='6' x2='18' y2='18'></line>
