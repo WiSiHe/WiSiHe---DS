@@ -180,7 +180,7 @@ export default async function RootLayout({
       >
         <div className='relative z-10'>
           <ProgressBarProvider>
-            <ProgressBar className='fixed h-1 shadow-lg shadow-sky-500/20 bg-sky-500 top-0 z-50' />
+            <ProgressBar className='fixed h-1 shadow-lg shadow-accent bg-accent top-0 z-50' />
             <PostHogProvider>
               <SmoothScroll />
               {isDraftMode && (
