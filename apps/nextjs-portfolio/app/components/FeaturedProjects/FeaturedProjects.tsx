@@ -55,7 +55,7 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
       <motion.div
         initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, margin: '-140px' }}
+        viewport={{ once: true, margin: '-140px' }}
         transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }}
         className='relative max-w-prose pb-4'
       >

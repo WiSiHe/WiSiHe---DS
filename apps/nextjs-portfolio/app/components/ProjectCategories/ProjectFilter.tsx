@@ -1,8 +1,9 @@
 'use client';
 
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
-import { AnimatePresence, motion } from 'motion/react';
-import { IoAdd, IoClose } from 'react-icons/io5';
+import { Dialog, DialogPanel } from '@headlessui/react';
+import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react';
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
+import { useState } from 'react';
 import Chip from '../Chip/Chip';
 
 type Tag = {
@@ -28,155 +29,180 @@ const ProjectFilter = ({
   totalFilteredCount,
   totalCount,
 }: ProjectFilterProps) => {
-  const availableTags = tags.filter(tag => !activeFilters.includes(tag.name));
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='bg-surface border border-border rounded-2xl p-4 shadow-sm'>
-      <div className='flex items-center justify-between gap-4 mb-4'>
-        <h3 className='font-medium text-sm text-foreground-subtle'>Filter by tag:</h3>
-        {activeFilters.length > 0 && (
-          <button
-            type='button'
-            onClick={onClearAll}
-            className='text-sm text-accent hover:text-accent-hover hover:underline transition-colors duration-200'
-          >
-            Clear all ({activeFilters.length})
-          </button>
-        )}
-      </div>
-
+    <>
+      {/* Trigger row */}
       <div className='flex flex-wrap items-center gap-2'>
-        {/* Add filter listbox */}
-        {availableTags.length > 0 && (
-          <Listbox
-            value={null}
-            onChange={(tag: Tag | null) => {
-              if (tag) {
-                onToggleFilter(tag.name);
-              }
-            }}
-          >
-            <div className='relative'>
-              <ListboxButton className='inline-flex items-center gap-2 px-4 py-2 text-sm border border-dashed border-border/50 rounded-full bg-surface hover:border-accent hover:bg-surface-hover hover:shadow-lg transition-all duration-200 w-auto min-w-[140px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer group shadow-sm'>
-                <IoAdd className='w-4 h-4 text-foreground-muted group-hover:text-accent transition-colors duration-200' />
-                <span className='text-foreground-subtle group-hover:text-foreground transition-colors duration-200 font-medium'>
-                  Add filter
-                </span>
-              </ListboxButton>
+        <button
+          type='button'
+          onClick={() => setIsOpen(true)}
+          className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-sm font-medium text-foreground hover:border-accent hover:bg-surface-hover transition-all duration-200 shadow-sm'
+        >
+          <IconAdjustmentsHorizontal className='w-4 h-4' />
+          Filter
+          {activeFilters.length > 0 && (
+            <span className='inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-accent text-accent-contrast rounded-full'>
+              {activeFilters.length}
+            </span>
+          )}
+        </button>
 
-              <ListboxOptions
-                anchor='bottom'
-                className='w-[600px] bg-surface border border-border/50 rounded-lg shadow-2xl z-20 mt-4 mb-4 mx-2 max-h-96 overflow-y-auto p-4'
-                transition
-              >
-                <AnimatePresence>
-                  {availableTags.length > 0 ? (
-                    <div className='grid grid-cols-2 gap-2'>
-                      {availableTags.map((tag, index) => (
-                        <motion.div
-                          key={tag._id}
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          transition={{
-                            delay: index * 0.02,
-                            duration: 0.15,
-                          }}
-                        >
-                          <ListboxOption
-                            value={tag}
-                            className='group flex flex-col gap-1 px-3 py-2.5 text-sm hover:bg-surface-hover hover:shadow-md text-foreground data-focus:bg-surface-hover data-focus:shadow-md cursor-pointer transition-all duration-200 rounded-lg border border-border/20 hover:border-accent/30'
-                          >
-                            <div className='flex items-center justify-between'>
-                              <span className='font-medium text-foreground group-hover:text-accent transition-colors'>
-                                {tag.name}
-                              </span>
-                              <span className='text-xs text-accent-text bg-accent-subtle group-hover:bg-accent-surface px-2 py-0.5 rounded-full font-medium transition-colors'>
-                                {tag.count}
-                              </span>
-                            </div>
-                          </ListboxOption>
-                        </motion.div>
-                      ))}
-                    </div>
-                  ) : (
-                    <motion.div
-                      className='px-4 py-6 text-sm text-foreground-muted text-center'
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      No available tags
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </ListboxOptions>
-            </div>
-          </Listbox>
-        )}
-
-        {/* Active filters */}
+        {/* Active filter pills inline */}
         <AnimatePresence mode='popLayout'>
-          {activeFilters.map(filter => {
-            const tag = tags.find(t => t.name === filter);
-            const label = tag ? `${filter} (${tag.count})` : filter;
-
-            return (
-              <ActiveFilterChip
-                key={filter}
-                label={label}
-                filter={filter}
-                onToggleFilter={onToggleFilter}
+          {activeFilters.map(filter => (
+            <motion.div
+              key={filter}
+              layout
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            >
+              <Chip
+                label={filter}
+                variation='primary'
+                size='small'
+                interactive={false}
+                removable
+                onRemove={() => onToggleFilter(filter)}
               />
-            );
-          })}
+            </motion.div>
+          ))}
         </AnimatePresence>
+
+        {activeFilters.length > 0 && (
+          <span className='text-sm text-foreground-muted'>
+            {totalFilteredCount} of {totalCount}
+          </span>
+        )}
       </div>
 
-      {activeFilters.length > 0 && (
-        <div className='mt-4 pt-4 border-t border-border/50 text-sm text-foreground-muted'>
-          Showing {totalFilteredCount} of {totalCount} project{totalCount === 1 ? '' : 's'}
-        </div>
-      )}
-    </div>
+      {/* Bottom sheet */}
+      <AnimatePresence>
+        {isOpen && (
+          <Dialog static open={isOpen} onClose={() => setIsOpen(false)} className='relative z-50'>
+            {/* Backdrop */}
+            <motion.div
+              className='fixed inset-0 bg-black/50 backdrop-blur-xs'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsOpen(false)}
+              aria-hidden
+            />
+
+            {/* Sheet panel */}
+            <div className='fixed inset-x-0 bottom-0 z-50'>
+              <SheetPanel
+                tags={tags}
+                activeFilters={activeFilters}
+                onToggleFilter={onToggleFilter}
+                onClearAll={onClearAll}
+                totalFilteredCount={totalFilteredCount}
+                totalCount={totalCount}
+                onClose={() => setIsOpen(false)}
+              />
+            </div>
+          </Dialog>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
-// Component for active filter chips
-const ActiveFilterChip = ({
-  label,
-  filter,
+type SheetPanelProps = ProjectFilterProps & { onClose: () => void };
+
+const SheetPanel = ({
+  tags,
+  activeFilters,
   onToggleFilter,
-}: {
-  label: string;
-  filter: string;
-  onToggleFilter: (tag: string) => void;
-}) => {
-  const handleToggle = () => {
-    onToggleFilter(filter);
+  onClearAll,
+  totalFilteredCount,
+  totalCount,
+  onClose,
+}: SheetPanelProps) => {
+  const y = useMotionValue(0);
+  const opacity = useTransform(y, [0, 240], [1, 0]);
+
+  const handleDragEnd = (_: unknown, info: { offset: { y: number }; velocity: { y: number } }) => {
+    if (info.offset.y > 120 || info.velocity.y > 400) {
+      onClose();
+    }
   };
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.8, y: -10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.8, y: -10 }}
-      transition={{
-        type: 'spring',
-        stiffness: 500,
-        damping: 30,
-        duration: 0.2,
-      }}
+      style={{ y, opacity }}
+      drag='y'
+      dragConstraints={{ top: 0 }}
+      dragElastic={{ top: 0, bottom: 0.15 }}
+      onDragEnd={handleDragEnd}
+      initial={{ y: '100%' }}
+      animate={{ y: 0 }}
+      exit={{ y: '100%' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 40 }}
+      className='bg-surface rounded-t-3xl shadow-2xl border-t border-border select-none touch-none'
     >
-      <Chip
-        label={label}
-        onRemove={handleToggle}
-        onClick={handleToggle}
-        Icon={IoClose}
-        variation='primary'
-      />
+      <DialogPanel className='flex flex-col max-h-[80svh]'>
+        {/* Drag handle */}
+        <div className='flex justify-center pt-3 pb-1 shrink-0'>
+          <div className='w-10 h-1 rounded-full bg-border' />
+        </div>
+
+        {/* Header */}
+        <div className='flex items-center justify-between px-5 py-3 shrink-0'>
+          <div>
+            <h2 className='text-base font-semibold text-foreground'>Filter by tag</h2>
+            {activeFilters.length > 0 && (
+              <p className='text-xs text-foreground-muted mt-0.5'>
+                {totalFilteredCount} of {totalCount} projects
+              </p>
+            )}
+          </div>
+          <div className='flex items-center gap-2'>
+            {activeFilters.length > 0 && (
+              <button
+                type='button'
+                onClick={onClearAll}
+                className='text-sm text-accent hover:text-accent-hover transition-colors px-3 py-1.5 rounded-full hover:bg-surface-hover'
+              >
+                Clear all
+              </button>
+            )}
+            <button
+              type='button'
+              onClick={onClose}
+              className='p-2 rounded-full hover:bg-surface-hover transition-colors text-foreground-muted hover:text-foreground'
+              aria-label='Close filter'
+            >
+              <IconX className='w-5 h-5' />
+            </button>
+          </div>
+        </div>
+
+        {/* Tag list — scrollable */}
+        <div className='overflow-y-auto overscroll-contain px-5 pb-8 pt-2 touch-auto'>
+          <div className='flex flex-wrap gap-2'>
+            {tags.map(tag => {
+              const isActive = activeFilters.includes(tag.name);
+              return (
+                <Chip
+                  key={tag._id}
+                  label={tag.name}
+                  additionalText={`${tag.count}`}
+                  variation={isActive ? 'primary' : 'secondary'}
+                  selected={isActive}
+                  size='medium'
+                  onClick={() => onToggleFilter(tag.name)}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </DialogPanel>
     </motion.div>
   );
 };

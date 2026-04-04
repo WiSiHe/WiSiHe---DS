@@ -1,6 +1,5 @@
 import { IconArrowNarrowRight } from '@tabler/icons-react';
 import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
-import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -16,95 +15,76 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
     project;
 
   const projectTitle = title ?? name;
-  const startDate = projectStart
-    ? new Date(projectStart).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : null;
-
-  const displayTags = (tags ?? []).slice(0, 3);
-  const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
+  const year = projectStart ? new Date(projectStart).getFullYear() : null;
+  const displayTags = (tags ?? []).slice(0, 4);
+  const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 4);
 
   return (
-    <motion.li key={project._id} layout className='relative w-full'>
-      <motion.article className='group relative overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1'>
-        <Link href={`projects/${slug}`} className='block'>
-          <div className='flex flex-col lg:flex-row'>
-            {/* Image Section */}
-            <div className='relative w-full lg:w-80 lg:shrink-0 aspect-video lg:aspect-square overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none'>
-              <Image
-                src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
-                alt={image?.alt || projectTitle}
-                priority={index < 2}
-                fill
-                sizes='(max-width: 1024px) 100vw, 320px'
-                className='object-cover transition-transform duration-500 group-hover:scale-110'
-              />
-              <div className='absolute inset-0 bg-background/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
-              {/* Status Badge - Overlaid on image */}
-              {status && (
-                <div className='absolute top-4 right-4 z-10'>
-                  <Chip variation='secondary' label={status} interactive={false} />
+    <li className='relative w-full'>
+      <Link href={`projects/${slug}`} className='group block'>
+        <article className='relative overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:shadow-xl'>
+          <div className='flex flex-col md:flex-row md:min-h-56'>
+            {/* Content */}
+            <div className='flex-1 flex flex-col justify-between gap-6 p-6 md:p-8'>
+              <div className='space-y-3'>
+                <div className='flex flex-wrap items-center gap-2'>
+                  {status && (
+                    <Chip variation='secondary' label={status} interactive={false} size='small' />
+                  )}
+                  {year && (
+                    <span className='text-xs text-foreground-muted font-medium'>since {year}</span>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Content Section */}
-            <div className='flex-1 p-6 flex flex-col justify-between'>
-              <div className='space-y-4'>
-                {/* Title */}
-                <h3 className='text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300'>
+                <h3 className='text-2xl md:text-3xl font-serif font-bold text-foreground group-hover:text-accent transition-colors duration-200 leading-tight'>
                   {projectTitle}
                 </h3>
 
-                {/* Tags */}
-                {tags && tags.length > 0 && (
-                  <div className='flex flex-wrap gap-2'>
-                    {displayTags.map(tag => (
-                      <Chip
-                        key={tag.name}
-                        variation='primary'
-                        label={tag.name}
-                        interactive={false}
-                        className='transition-transform duration-200'
-                      />
-                    ))}
-                    {remainingTagsCount > 0 && (
-                      <Chip
-                        variation='tertiary'
-                        label={`+${remainingTagsCount} more`}
-                        interactive={false}
-                      />
-                    )}
-                  </div>
-                )}
-
-                {/* Description */}
-                <p className='text-foreground-subtle text-base leading-relaxed line-clamp-3 group-hover:text-foreground transition-colors duration-300'>
+                <p className='text-foreground-subtle text-sm md:text-base leading-relaxed line-clamp-2'>
                   {seoDescription ?? description}
                 </p>
-
-                {/* Link Button */}
-                <div className='inline-flex items-center gap-2 text-sm font-medium text-accent group-hover:text-accent-hover transition-colors duration-200 group/button'>
-                  <span>View Project</span>
-                  <IconArrowNarrowRight className='w-4 h-4 transition-transform duration-200 group-hover/button:translate-x-2' />
-                </div>
               </div>
 
-              {/* Bottom Content - Start Date */}
-              {projectStart && (
-                <div className='flex items-center gap-2 text-foreground-muted text-sm pt-4 mt-4 border-t border-border/20 group-hover:border-accent/30 transition-colors duration-300'>
-                  <div className='w-2 h-2 bg-accent rounded-full group-hover:scale-125 transition-transform duration-300' />
-                  <span>Started {startDate}</span>
-                </div>
-              )}
+              <div className='flex flex-wrap items-center gap-2'>
+                {displayTags.map(tag => (
+                  <Chip
+                    key={tag.name}
+                    variation='tertiary'
+                    label={tag.name}
+                    interactive={false}
+                    size='small'
+                  />
+                ))}
+                {remainingTagsCount > 0 && (
+                  <Chip
+                    variation='tertiary'
+                    label={`+${remainingTagsCount}`}
+                    interactive={false}
+                    size='small'
+                  />
+                )}
+                <IconArrowNarrowRight className='ml-auto w-5 h-5 text-foreground-muted group-hover:text-accent group-hover:translate-x-1 transition-all duration-200' />
+              </div>
             </div>
+
+            {/* Image */}
+            {image && (
+              <div className='relative w-full md:w-72 lg:w-96 aspect-video md:aspect-auto shrink-0 overflow-hidden rounded-b-2xl md:rounded-b-none md:rounded-r-2xl'>
+                <Image
+                  src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
+                  alt={image?.alt || projectTitle}
+                  priority={index < 2}
+                  fill
+                  sizes='(max-width: 768px) 100vw, 384px'
+                  className='object-cover transition-transform duration-500 group-hover:scale-105'
+                />
+                <div className='absolute inset-0 bg-linear-to-r from-surface/20 to-transparent md:block hidden' />
+              </div>
+            )}
           </div>
-        </Link>
-      </motion.article>
-    </motion.li>
+        </article>
+      </Link>
+    </li>
   );
 };
 
