@@ -1,5 +1,4 @@
 import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
-import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -22,16 +21,12 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
   const { seoDescription, description } = project;
 
   return (
-    <motion.li
+    <li
       key={project._id}
-      layout
       className='relative z-10 flex flex-col items-start justify-start w-full overflow-hidden rounded-2xl shrink-0 text-foreground col-span-full md:col-span-6 lg:col-span-4 group bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1'
     >
-      <motion.article className='w-full'>
-        <motion.div
-          layoutId={`image-${projectTitle}`}
-          className='relative pointer-events-none aspect-square overflow-clip rounded-t-xl'
-        >
+      <article className='w-full'>
+        <div className='relative pointer-events-none aspect-square overflow-clip rounded-t-xl'>
           <div className='absolute z-10 flex flex-wrap gap-2 p-2'>
             {status && <Chip variation='secondary' label={status} interactive={false} />}
             {displayTags.map(tag => (
@@ -50,15 +45,12 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
             className='object-cover transition-transform duration-500 scale-105 group-hover:scale-115'
           />
           <div className='absolute inset-0 bg-background/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
-        </motion.div>
+        </div>
         <div className='p-4'>
           <Link href={`projects/${slug}`} className='before:absolute before:inset-0 before:z-0'>
-            <motion.h2
-              layoutId={`title-${projectTitle}`}
-              className='text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300'
-            >
+            <h2 className='text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300'>
               {projectTitle}
-            </motion.h2>
+            </h2>
           </Link>
           <p className='line-clamp-3 text-foreground-subtle group-hover:text-foreground transition-colors duration-300'>
             {seoDescription ?? description}
@@ -67,8 +59,8 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
             Completed: {year}
           </p>
         </div>
-      </motion.article>
-    </motion.li>
+      </article>
+    </li>
   );
 };
 
