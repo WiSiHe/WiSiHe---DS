@@ -10,7 +10,6 @@
     "dev:studio": "turbo run dev --filter=sanity-studio...",
     "dev:astro": "turbo run dev --filter=apps-astro-portfolio...",
     "dev:react": "turbo run dev --filter=@wisihe/ui-react... --filter=ui-docs...",
-    "dev:angular": "turbo run dev --filter=angular-portfolio... --filter=@wisihe/ui-angular...",
     "dev:vue": "turbo run dev --filter=@wisihe/ui-vue... --filter=ui-vue-docs...",
     "dev:svelte": "turbo run dev --filter=@wisihe/ui-svelte... --filter=ui-svelte-docs...",
     "dev:web-components": "turbo run dev --filter=@wisihe/ui-web-components... --filter=ui-web-components-docs...",
@@ -18,7 +17,7 @@
     "lint": "biome check .",
     "lint:ci": "biome ci --config-path=biome.ci.json .",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test --filter=@wisihe/ui-angular --filter=@wisihe/ui-vue --filter=@wisihe/ui-web-components",
+    "test": "turbo run test --filter=@wisihe/ui-vue --filter=@wisihe/ui-web-components",
     "storybook": "turbo run storybook --filter=ui-docs --filter=ui-svelte-docs --filter=ui-vue-docs --filter=ui-web-components-docs",
     "build-storybook": "turbo run build-storybook --filter=ui-docs --filter=ui-svelte-docs --filter=ui-vue-docs --filter=ui-web-components-docs",
     "clean": "turbo run clean && rm -rf node_modules",
@@ -33,7 +32,7 @@
     "@changesets/cli": "^2.30.0",
     "knip": "5.70.2",
     "lefthook": "1.13.6",
-    "turbo": "^2.8.20"
+    "turbo": "^2.9.3"
   },
   "packageManager": "pnpm@10.23.0",
   "pnpm": {

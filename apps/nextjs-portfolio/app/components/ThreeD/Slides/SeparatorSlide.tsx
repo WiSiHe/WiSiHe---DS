@@ -65,8 +65,8 @@ export const SeparatorSlide = ({
     return (
       <div className='w-full h-full flex flex-col items-center justify-center relative px-6 md:px-8 lg:px-12'>
         {/* Decorative circles */}
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-accent/10 rounded-full' />
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-accent/20 rounded-full' />
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 border border-accent/10 rounded-full' />
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 border border-accent/20 rounded-full' />
 
         <div className='w-3 h-3 bg-accent rounded-full mb-10 md:mb-12' />
 

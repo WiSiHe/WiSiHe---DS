@@ -27,7 +27,7 @@
     // Allow `import data from './x.json'` with typed JSON
     "resolveJsonModule": true,
     // Syntax level for emitted/checking assumptions (modern browsers)
-    "target": "ES2022",
+    "target": "ES2024",
 
     // Error if a local variable is never read (dead code)
     "noUnusedLocals": true,
