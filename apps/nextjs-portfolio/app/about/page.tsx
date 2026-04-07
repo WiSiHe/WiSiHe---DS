@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { FaChevronDown, FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import SkillsSection from '../components/SkillsSection/SkillsSection';
+import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);

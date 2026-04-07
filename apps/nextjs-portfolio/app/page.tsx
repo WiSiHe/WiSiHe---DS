@@ -3,10 +3,10 @@ import { shuffleArray } from '@wisihe/utils';
 import { Suspense } from 'react';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homePageQuery } from '@/sanity/lib/queries';
-import FeaturedProjects from './components/FeaturedProjects/FeaturedProjects';
-import HeroImageSection from './components/HeroSection/HeroSection';
-import PaintingsSection from './components/PaintingsSection/PaintingsSection';
-import SkillsSection from './components/SkillsSection/SkillsSection';
+import HeroImageSection from './components/marketing/HeroSection/HeroSection';
+import SkillsSection from './components/marketing/SkillsSection/SkillsSection';
+import PaintingsSection from './components/paintings/PaintingsSection/PaintingsSection';
+import FeaturedProjects from './components/projects/FeaturedProjects/FeaturedProjects';
 
 const HeroSkeleton = () => (
   <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>

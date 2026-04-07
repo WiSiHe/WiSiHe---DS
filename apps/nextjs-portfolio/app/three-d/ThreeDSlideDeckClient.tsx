@@ -2,18 +2,18 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import { IntroPresentation } from '../components/ThreeD/IntroPresentation';
-import { PresentationControls } from '../components/ThreeD/PresentationControls';
-import { SourcesSection } from '../components/ThreeD/SourcesSection';
-import { StructuredData } from '../components/ThreeD/StructuredData';
-import { TechnicalDeckSkeleton } from '../components/ThreeD/Technical/TechnicalDeckSkeleton';
-import { TechnicalSeparator } from '../components/ThreeD/TechnicalSeparator';
-import { ThreeDHero } from '../components/ThreeD/ThreeDHero';
+import { IntroPresentation } from '../components/three-d/IntroPresentation';
+import { PresentationControls } from '../components/three-d/PresentationControls';
+import { SourcesSection } from '../components/three-d/SourcesSection';
+import { StructuredData } from '../components/three-d/StructuredData';
+import { TechnicalDeckSkeleton } from '../components/three-d/Technical/TechnicalDeckSkeleton';
+import { TechnicalSeparator } from '../components/three-d/TechnicalSeparator';
+import { ThreeDHero } from '../components/three-d/ThreeDHero';
 import type { PresentationSlide } from './types';
 
 const TechnicalDeck = dynamic(
   () =>
-    import('../components/ThreeD/Technical/TechnicalDeck').then(mod => ({
+    import('../components/three-d/Technical/TechnicalDeck').then(mod => ({
       default: mod.TechnicalDeck,
     })),
   {
@@ -86,7 +86,7 @@ export function ThreeDSlideDeckClient({
   useEffect(() => {
     if (shouldPreloadTechnical && !shouldLoadTechnical) {
       // Preload the dynamic import
-      import('../components/ThreeD/Technical/TechnicalDeck').catch(() => {
+      import('../components/three-d/Technical/TechnicalDeck').catch(() => {
         // Silently handle preload errors
       });
     }

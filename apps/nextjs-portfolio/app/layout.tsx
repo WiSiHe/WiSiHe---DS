@@ -6,17 +6,17 @@ import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
 import { VisualEditing } from 'next-sanity/visual-editing';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
-import HeaderNavigation from '@/app/components/HeaderNavigation';
+import HeaderNavigation from '@/app/components/layout/HeaderNavigation';
 import { SanityLive, sanityFetch } from '@/sanity/lib/live';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import { handleError } from './client-utils';
-import DraftModeToast from './components/DraftModeToast';
-import Footer from './components/Footer/Footer';
+import DraftModeToast from './components/cms/DraftModeToast';
+import Footer from './components/layout/Footer/Footer';
 import './globals.css';
 import type React from 'react';
-import { JsonLd } from './components/JsonLd/JsonLd';
-import SmoothScroll from './components/SmoothScroll';
+import { JsonLd } from './components/cms/JsonLd/JsonLd';
+import SmoothScroll from './components/layout/SmoothScroll';
 import { PostHogProvider } from './providers';
 
 const geistSans = localFont({

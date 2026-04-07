@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllProjects } from '@/sanity/lib/queries';
-import ProjectCategories from '../components/ProjectCategories/ProjectCategories';
+import ProjectCategories from '../components/projects/ProjectCategories/ProjectCategories';
 
 export const metadata: Metadata = {
   title: 'Projects | WiSiHe',

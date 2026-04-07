@@ -1,8 +1,8 @@
 import type { PaintingQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
-import { JsonLd } from '@/app/components/JsonLd/JsonLd';
-import PaintingDetail from '@/app/components/PaintingDetails/PaintingsDetails';
+import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import PaintingDetail from '@/app/components/paintings/PaintingDetails/PaintingsDetails';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';

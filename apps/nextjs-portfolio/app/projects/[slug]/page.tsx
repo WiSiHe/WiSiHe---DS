@@ -9,7 +9,7 @@ import {
   EmbeddedVideo,
   ProjectImage,
   ProjectInformation,
-} from '@/app/components/Project';
+} from '@/app/components/projects/Project';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import PaintingsSearch from '../components/PaintingsSearch/PaintingsSearch';
-import ScrollToTopButton from '../components/ScrollToTop/ScrollToTop';
+import ScrollToTopButton from '../components/layout/ScrollToTop/ScrollToTop';
+import PaintingsSearch from '../components/paintings/PaintingsSearch/PaintingsSearch';
 
 // Generate metadata dynamically to ensure canonical URLs point to base page
 // This prevents duplicate indexing of paginated/filtered URLs

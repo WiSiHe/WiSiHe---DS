@@ -4,7 +4,7 @@ import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import type React from 'react';
 import { useEffect } from 'react';
-import PostHogPageView from './components/PostHogPageView/PostHogPageView';
+import PostHogPageView from './components/layout/PostHogPageView/PostHogPageView';
 
 // eslint-disable-next-line no-undef
 const posthogKey = process.env['NEXT_PUBLIC_POSTHOG_KEY'];

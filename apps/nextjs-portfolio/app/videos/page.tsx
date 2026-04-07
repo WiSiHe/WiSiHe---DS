@@ -1,10 +1,10 @@
 import { isEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { JsonLd } from '@/app/components/JsonLd/JsonLd';
+import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllVideos } from '@/sanity/lib/queries';
-import { VideosPage } from '../components/pages/VideosPage';
+import { VideosPage } from '../components/marketing/VideosPage';
 
 export const metadata: Metadata = {
   title: 'Creative Video Gallery | WiSiHe',

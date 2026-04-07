@@ -8,10 +8,9 @@
         "postcss.config.mjs",
         "sanity/**/*.ts",
         "utils/**/*.ts",
-        "hooks/**/*.ts",
-        "store/**/*.ts"
+        "hooks/**/*.ts"
       ],
-      "ignore": ["sanity.types.ts"]
+      "ignore": ["sanity.types.ts", "lib/utils.ts"]
     },
     "apps/sanity-studio": {
       "entry": ["sanity.config.ts", "sanity.cli.ts", "components/**/*.tsx", "schemas/**/*.{ts,tsx}"]
