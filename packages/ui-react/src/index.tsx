@@ -17,6 +17,7 @@ export {
   type CardTitleProps,
 } from './card/Card';
 export { Checkbox, type CheckboxProps } from './checkbox/Checkbox';
+export { Chip, type ChipProps } from './chip/Chip';
 export { Combobox, type ComboboxItem, type ComboboxProps } from './combobox/Combobox';
 export {
   Dialog,

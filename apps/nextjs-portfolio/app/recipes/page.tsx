@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiBarChart, FiThermometer, FiUsers } from 'react-icons/fi';
-import { JsonLd } from '@/app/components/JsonLd/JsonLd';
+import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllRecipes } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';

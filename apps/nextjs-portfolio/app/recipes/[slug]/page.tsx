@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
-import { JsonLd } from '@/app/components/JsonLd/JsonLd';
+import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { client } from '@/sanity/lib/client';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getRecipe, getRecipeSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import RecipeDetail from '../../components/RecipeDetail/RecipeDetail';
+import RecipeDetail from '../../components/recipes/RecipeDetail/RecipeDetail';
 
 interface RecipeIngredient {
   ingredient: string;
