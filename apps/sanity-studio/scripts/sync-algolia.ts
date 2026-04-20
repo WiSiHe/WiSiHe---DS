@@ -43,15 +43,17 @@ const ALGOLIA_INDEX_NAME = 'wisihe-search';
 // We fetch paintings, projects, and recipes.
 // We coalesce tagsV2 and tags references to get string arrays of tag names
 const query = `
-  *[_type in ["painting", "project", "recipe"] && !(_id in path("drafts.**")) && hideFromSearch != true] {
+  *[_type in ["painting", "project", "recipe"] && !(_id in path("drafts.**")) && hideFromSearch != true && (_type != "project" || defined(slug.current))] {
     _id,
     _type,
     _createdAt,
     title,
     name,
-    description,
+    "description": coalesce(description, seo.description),
     slug,
     views,
+    status,
+    projectType,
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
     // Preserve asset._ref so urlForImage works on the client.
     // Only dereference lqip from metadata (needed for blur placeholders).
@@ -95,7 +97,7 @@ async function syncToAlgolia() {
 
       const createdAtDate = doc._createdAt ? new Date(doc._createdAt).getTime() : 0;
 
-      return {
+      const base = {
         objectID: doc._id,
         _type: doc._type,
         // use title if it exists, otherwise fall back to name
@@ -107,6 +109,16 @@ async function syncToAlgolia() {
         views: popularity,
         createdAt: createdAtDate,
       };
+
+      if (doc._type === 'project') {
+        return {
+          ...base,
+          ...(doc.status ? { status: doc.status as string } : {}),
+          ...(doc.projectType ? { projectType: doc.projectType as string } : {}),
+        };
+      }
+
+      return base;
     });
 
     // 5. Replace all objects in the Algolia index
