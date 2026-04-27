@@ -15,7 +15,7 @@ importers:
         specifier: 2.4.4
         version: 2.4.4
       '@changesets/cli':
-        specifier: ^2.30.0
+        specifier: ^2.31.0
         version: 2.31.0(@types/node@25.3.5)
       knip:
         specifier: 5.70.2

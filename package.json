@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
-    "@changesets/cli": "^2.30.0",
+    "@changesets/cli": "^2.31.0",
     "knip": "5.70.2",
     "lefthook": "1.13.6",
     "turbo": "^2.9.3"
