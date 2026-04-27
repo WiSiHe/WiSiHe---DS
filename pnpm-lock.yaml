@@ -24,7 +24,7 @@ importers:
         specifier: 1.13.6
         version: 1.13.6
       turbo:
-        specifier: ^2.9.3
+        specifier: ^2.9.6
         version: 2.9.6
 
   apps/astro-portfolio:
