@@ -5,8 +5,17 @@ import * as React from 'react';
 import { IoCloseCircle, IoSearchOutline } from 'react-icons/io5';
 import { useSearchBox } from 'react-instantsearch';
 
-export default function CustomSearchBox(props: Parameters<typeof useSearchBox>[0]) {
-  const { query, refine } = useSearchBox(props);
+type CustomSearchBoxProps = Parameters<typeof useSearchBox>[0] & {
+  inputLabel?: string;
+  placeholder?: string;
+};
+
+export default function CustomSearchBox({
+  inputLabel = 'Search paintings',
+  placeholder = 'Search paintings...',
+  ...searchBoxProps
+}: CustomSearchBoxProps) {
+  const { query, refine } = useSearchBox(searchBoxProps);
   const [inputValue, setInputValue] = React.useState(query);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -25,13 +34,13 @@ export default function CustomSearchBox(props: Parameters<typeof useSearchBox>[0
     <form onSubmit={handleSubmit} className='flex gap-2 w-full'>
       <Input
         ref={inputRef}
-        label='Search paintings'
+        label={inputLabel}
         hideLabel
         value={inputValue}
         onChange={e => {
           setInputValue(e.target.value);
         }}
-        placeholder='Search paintings...'
+        placeholder={placeholder}
         leftIcon={<IoSearchOutline className='w-5 h-5 shrink-0' />}
         rightIcon={
           inputValue ? (
