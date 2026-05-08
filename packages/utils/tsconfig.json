@@ -2,7 +2,7 @@
   "extends": "@wisihe/typescript-config/base.json",
   "include": ["."],
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "target": "ES2024",
     "resolveJsonModule": true
   },
