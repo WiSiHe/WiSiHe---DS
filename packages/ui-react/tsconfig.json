@@ -2,7 +2,7 @@
   "extends": "@wisihe/typescript-config/react-library.json",
   "compilerOptions": {
     "target": "ES2024",
-    "ignoreDeprecations": "5.0"
+    "ignoreDeprecations": "6.0"
   },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
