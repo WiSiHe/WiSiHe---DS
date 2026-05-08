@@ -16,6 +16,7 @@ import Footer from './components/layout/Footer/Footer';
 import './globals.css';
 import type React from 'react';
 import { JsonLd } from './components/cms/JsonLd/JsonLd';
+import { ReactScanDev } from './components/dev/ReactScanDev';
 import SmoothScroll from './components/layout/SmoothScroll';
 import { PostHogProvider } from './providers';
 
@@ -136,6 +137,12 @@ const jsonLdSite = {
   url: 'https://www.wisihe.no',
 };
 
+/** Single graph avoids multiple <script> siblings in <head> (less fragile vs extensions reordering). */
+const jsonLdGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [jsonLd, jsonLdSite],
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -166,19 +173,16 @@ export default async function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
-        {process.env.NODE_ENV === 'development' && (
-          <script crossOrigin='anonymous' src='//unpkg.com/react-scan/dist/auto.global.js' />
-        )}
         <link rel='manifest' href='/manifest.json' />
         <link rel='mask-icon' href='/wisihe.svg' color='oklch(65% 0.15 180)' />
 
-        <JsonLd data={jsonLd} />
-        <JsonLd data={jsonLdSite} />
+        <JsonLd data={jsonLdGraph} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
       >
         <div className='relative z-10'>
+          <ReactScanDev />
           <ProgressBarProvider>
             <ProgressBar className='fixed h-1 shadow-lg shadow-accent bg-accent top-0 z-50' />
             <PostHogProvider>

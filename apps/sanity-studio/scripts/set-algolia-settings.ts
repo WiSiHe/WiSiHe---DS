@@ -16,7 +16,12 @@ async function setSettings() {
     await client.setSettings({
       indexName: INDEX,
       indexSettings: {
-        attributesForFaceting: ['tags', 'searchable(_type)'],
+        attributesForFaceting: [
+          'tags',
+          'searchable(_type)',
+          'filterOnly(status)',
+          'filterOnly(projectType)',
+        ],
         replicas: [
           `virtual(${INDEX}_newest)`,
           `virtual(${INDEX}_oldest)`,
