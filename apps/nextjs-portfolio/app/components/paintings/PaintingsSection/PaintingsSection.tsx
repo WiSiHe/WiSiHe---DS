@@ -1,4 +1,4 @@
-import type { BlockContent } from '@wisihe/sanity-queries';
+import type { BlockContent, RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
 import { shuffleArray } from '@wisihe/utils';
 import { PortableText, type PortableTextBlock } from 'next-sanity';
 import { sanityFetch } from '@/sanity/lib/live';
@@ -22,7 +22,10 @@ const PaintingsSection = async ({
     return null;
   }
 
-  const featuredPaintings = shuffleArray(paintingsPool).slice(0, FEATURED_PAINTING_COUNT);
+  const featuredPaintings = shuffleArray(paintingsPool as RandomPaintingsQueryResult).slice(
+    0,
+    FEATURED_PAINTING_COUNT,
+  ) as RandomPaintingsQueryResult;
 
   return (
     <>
