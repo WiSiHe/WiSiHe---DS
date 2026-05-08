@@ -1,10 +1,10 @@
 // @ts-check
 
 import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
-import node from '@astrojs/node';
 import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 
