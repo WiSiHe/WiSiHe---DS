@@ -4,8 +4,13 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
+import node from '@astrojs/node';
 import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
+
+// Use Vercel adapter when deploying to Vercel, otherwise use Node adapter locally
+// This avoids the Windows EPERM symlink issue with the Vercel adapter's NFT tracing
+const useVercel = process.env.VERCEL === '1';
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,8 +32,12 @@ export default defineConfig({
     checkOrigin: false,
   },
 
-  adapter: vercel({
-    webAnalytics: { enabled: true },
-    imageService: true,
-  }),
+  adapter: useVercel
+    ? vercel({
+        webAnalytics: { enabled: true },
+        imageService: true,
+      })
+    : node({
+        mode: 'standalone',
+      }),
 });
