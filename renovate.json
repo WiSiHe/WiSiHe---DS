@@ -3,70 +3,100 @@
   "extends": ["config:recommended", ":semanticCommits", ":semanticCommitTypeAll(chore)"],
   "packageRules": [
     {
-      "matchDepTypes": ["dependencies"],
+      "description": "Disable major updates globally for all dependencies.",
+      "matchDepTypes": ["dependencies", "devDependencies"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
-    },
-    {
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchDepTypes": ["dependencies"],
-      "matchPackageNames": ["react", "react-dom"],
-      "groupName": "React dependencies",
-      "groupSlug": "react"
-    },
-    {
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchPackageNames": ["vue", "vue-tsc", "@vitejs/plugin-vue"],
-      "matchPackagePatterns": ["^@vue/"],
-      "groupName": "Vue dependencies",
-      "groupSlug": "vue"
-    },
-    {
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchPackageNames": [
-        "svelte",
-        "svelte-check",
-        "@sveltejs/vite-plugin-svelte",
-        "@sveltejs/package"
-      ],
-      "groupName": "Svelte dependencies",
-      "groupSlug": "svelte"
-    },
-    {
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchPackagePatterns": ["^@angular/"],
-      "groupName": "Angular dependencies",
-      "groupSlug": "angular"
-    },
-    {
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchDepTypes": ["dependencies"],
-      "matchPackagePatterns": ["^@types/"],
-      "groupName": "TypeScript types",
-      "groupSlug": "types"
-    },
-    {
+      "description": "Catch-all group for app dependencies. Placed early so ecosystem groups override it.",
       "matchPaths": ["apps/**"],
       "groupName": "app dependencies",
       "groupSlug": "apps",
       "automerge": false
     },
     {
+      "description": "Catch-all group for package dependencies. Placed early so ecosystem groups override it.",
       "matchPaths": ["packages/**"],
       "groupName": "package dependencies",
       "groupSlug": "packages",
       "automerge": false
     },
     {
+      "description": "Automatically merge patch updates for devDependencies as they are usually low risk.",
       "matchUpdateTypes": ["patch"],
       "matchDepTypes": ["devDependencies"],
       "automerge": true,
       "automergeType": "pr"
+    },
+    {
+      "description": "Group React ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["react", "react-dom"],
+      "groupName": "React dependencies",
+      "groupSlug": "react"
+    },
+    {
+      "description": "Group Vue ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["vue", "vue-tsc"],
+      "matchPackagePatterns": ["^@vue/"],
+      "groupName": "Vue dependencies",
+      "groupSlug": "vue"
+    },
+    {
+      "description": "Group Svelte ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["svelte", "svelte-check", "@sveltejs/package"],
+      "matchPackagePatterns": ["^@sveltejs/"],
+      "groupName": "Svelte dependencies",
+      "groupSlug": "svelte"
+    },
+    {
+      "description": "Group Vite ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["vite"],
+      "matchPackagePatterns": ["^@vitejs/"],
+      "groupName": "Vite dependencies",
+      "groupSlug": "vite"
+    },
+    {
+      "description": "Group Astro ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["astro"],
+      "matchPackagePatterns": ["^@astrojs/"],
+      "groupName": "Astro dependencies",
+      "groupSlug": "astro"
+    },
+    {
+      "description": "Group Next.js ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["next", "eslint-config-next"],
+      "groupName": "Next.js dependencies",
+      "groupSlug": "nextjs"
+    },
+    {
+      "description": "Group Sanity ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackageNames": ["sanity", "next-sanity"],
+      "matchPackagePatterns": ["^@sanity/"],
+      "groupName": "Sanity dependencies",
+      "groupSlug": "sanity"
+    },
+    {
+      "description": "Group Biome ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackagePatterns": ["^@biomejs/"],
+      "groupName": "Biome dependencies",
+      "groupSlug": "biome"
+    },
+    {
+      "description": "Group TypeScript DefinitelyTyped updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
+      "matchPackagePatterns": ["^@types/"],
+      "groupName": "TypeScript types",
+      "groupSlug": "types"
     }
   ],
   "rangeStrategy": "bump",
