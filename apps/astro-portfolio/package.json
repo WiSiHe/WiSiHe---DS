@@ -28,5 +28,8 @@
     "sharp": "^0.34.5",
     "svelte": "^5.55.5",
     "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@astrojs/node": "^9.5.5"
   }
 }
