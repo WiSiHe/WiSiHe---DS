@@ -16,7 +16,13 @@ import { Route as PaintingsRouteImport } from './routes/paintings';
 import { Route as PaintingsSlugRouteImport } from './routes/paintings.$slug';
 import { Route as PaintingsIndexRouteImport } from './routes/paintings.index';
 import { Route as ProjectsRouteImport } from './routes/projects';
+import { Route as VideosRouteImport } from './routes/videos';
 
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute;
   '/paintings': typeof PaintingsRouteWithChildren;
   '/projects': typeof ProjectsRoute;
+  '/videos': typeof VideosRoute;
   '/paintings/$slug': typeof PaintingsSlugRoute;
   '/paintings/': typeof PaintingsIndexRoute;
 }
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute;
   '/contact': typeof ContactRoute;
   '/projects': typeof ProjectsRoute;
+  '/videos': typeof VideosRoute;
   '/paintings/$slug': typeof PaintingsSlugRoute;
   '/paintings': typeof PaintingsIndexRoute;
 }
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute;
   '/paintings': typeof PaintingsRouteWithChildren;
   '/projects': typeof ProjectsRoute;
+  '/videos': typeof VideosRoute;
   '/paintings/$slug': typeof PaintingsSlugRoute;
   '/paintings/': typeof PaintingsIndexRoute;
 }
@@ -88,10 +97,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/paintings'
     | '/projects'
+    | '/videos'
     | '/paintings/$slug'
     | '/paintings/';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/about' | '/contact' | '/projects' | '/paintings/$slug' | '/paintings';
+  to: '/' | '/about' | '/contact' | '/projects' | '/videos' | '/paintings/$slug' | '/paintings';
   id:
     | '__root__'
     | '/'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/paintings'
     | '/projects'
+    | '/videos'
     | '/paintings/$slug'
     | '/paintings/';
   fileRoutesById: FileRoutesById;
@@ -109,10 +120,18 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute;
   PaintingsRoute: typeof PaintingsRouteWithChildren;
   ProjectsRoute: typeof ProjectsRoute;
+  VideosRoute: typeof VideosRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/videos': {
+      id: '/videos';
+      path: '/videos';
+      fullPath: '/videos';
+      preLoaderRoute: typeof VideosRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/projects': {
       id: '/projects';
       path: '/projects';
@@ -183,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   PaintingsRoute: PaintingsRouteWithChildren,
   ProjectsRoute: ProjectsRoute,
+  VideosRoute: VideosRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
