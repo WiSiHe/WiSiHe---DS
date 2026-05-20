@@ -93,6 +93,7 @@ function AboutPage() {
                 target='_blank'
                 whileHover={{ y: -5, color: 'var(--color-accent)' }}
                 className='text-3xl text-foreground/40 transition-colors'
+                rel='noopener'
               >
                 {social.icon}
               </motion.a>

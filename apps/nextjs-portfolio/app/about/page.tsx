@@ -140,6 +140,7 @@ export default function AboutPage() {
                 href={social.href}
                 target='_blank'
                 className='text-3xl text-foreground/50 hover:text-accent transition-colors'
+                rel='noopener'
               >
                 {social.icon}
               </a>

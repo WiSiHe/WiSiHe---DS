@@ -1,13 +1,22 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false,
-    "includes": ["**", "!!**/dist", "!!**/build", "!!**/.next", "!!**/.turbo", "!!**/coverage"]
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!!**/build",
+      "!!**/.next",
+      "!!**/.turbo",
+      "!!**/coverage",
+      "!!**/routeTree.gen.ts",
+      "!!**/sanity.types.ts"
+    ]
   },
   "assist": {
     "enabled": true,
@@ -33,7 +42,8 @@
         "noExplicitAny": "warn",
         "noArrayIndexKey": "warn",
         "noImplicitAnyLet": "warn",
-        "useIterableCallbackReturn": "warn"
+        "useIterableCallbackReturn": "warn",
+        "noDuplicateProperties": "off"
       },
       "correctness": {
         "noUnusedVariables": "warn",
@@ -91,8 +101,7 @@
         "**/dist/**",
         "**/build/**",
         "**/.next/**",
-        "**/.turbo/**",
-        "**/sanity.types.ts"
+        "**/.turbo/**"
       ],
       "linter": { "enabled": false },
       "formatter": { "enabled": false }
