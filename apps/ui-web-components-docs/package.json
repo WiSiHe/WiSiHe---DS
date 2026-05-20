@@ -14,15 +14,15 @@
     "@wisihe/ui-web-components": "workspace:*"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^5.1.2",
-    "@storybook/addon-a11y": "^10.3.6",
-    "@storybook/addon-docs": "^10.3.6",
-    "@storybook/addon-themes": "^10.3.6",
-    "@storybook/web-components-vite": "^10.3.6",
+    "@chromatic-com/storybook": "^5.2.1",
+    "@storybook/addon-a11y": "^10.4.0",
+    "@storybook/addon-docs": "^10.4.0",
+    "@storybook/addon-themes": "^10.4.0",
+    "@storybook/web-components-vite": "^10.4.0",
     "@wisihe/typescript-config": "workspace:*",
-    "storybook": "^10.3.6",
+    "storybook": "^10.4.0",
     "storybook-addon-tag-badges": "^3.1.0",
     "typescript": "^6.0.3",
-    "vite": "^7.3.3"
+    "vite": "^8.0.13"
   }
 }

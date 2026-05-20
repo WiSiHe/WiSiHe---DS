@@ -12,14 +12,13 @@
     "deploy:wisihe-ai": "pnpm --filter wisihe-ai exec sanity deploy",
     "dev:astro": "turbo run dev --filter=apps-astro-portfolio...",
     "dev:react": "turbo run dev --filter=@wisihe/ui-react... --filter=ui-docs...",
-    "dev:vue": "turbo run dev --filter=@wisihe/ui-vue...",
     "dev:svelte": "turbo run dev --filter=@wisihe/ui-svelte... --filter=ui-svelte-docs...",
     "dev:web-components": "turbo run dev --filter=@wisihe/ui-web-components... --filter=ui-web-components-docs...",
     "dev:all": "turbo run dev --concurrency=20",
     "lint": "biome check .",
     "lint:ci": "biome ci --config-path=biome.ci.json .",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test --filter=@wisihe/ui-vue --filter=@wisihe/ui-web-components",
+    "test": "turbo run test --filter=@wisihe/ui-web-components",
     "storybook": "turbo run storybook --filter=ui-docs --filter=ui-svelte-docs --filter=ui-web-components-docs",
     "build-storybook": "turbo run build-storybook --filter=ui-docs --filter=ui-svelte-docs --filter=ui-web-components-docs",
     "clean": "turbo run clean && rm -rf node_modules",
@@ -30,11 +29,11 @@
     "release": "pnpm build:packages && changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.4",
+    "@biomejs/biome": "2.4.15",
     "@changesets/cli": "^2.31.0",
-    "knip": "5.70.2",
-    "lefthook": "1.13.6",
-    "turbo": "^2.9.8"
+    "knip": "6.14.1",
+    "lefthook": "2.1.8",
+    "turbo": "^2.9.14"
   },
   "packageManager": "pnpm@10.23.0",
   "pnpm": {

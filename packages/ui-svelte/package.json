@@ -35,10 +35,10 @@
   },
   "devDependencies": {
     "@sveltejs/package": "^2.5.7",
-    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@wisihe/typescript-config": "workspace:*",
-    "svelte": "^5.55.1",
-    "svelte-check": "^4.4.6",
+    "svelte": "^5.55.9",
+    "svelte-check": "^4.4.8",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

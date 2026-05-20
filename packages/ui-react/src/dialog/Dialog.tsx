@@ -83,7 +83,7 @@ export function DialogHeader({ className, children }: React.HTMLAttributes<HTMLD
   return <div className={cn('flex flex-col gap-1.5 px-6 pt-6 pb-4', className)}>{children}</div>;
 }
 
-export { DialogTitle, DialogDescription };
+export { DialogDescription, DialogTitle };
 
 export function DialogBody({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn('px-6 pb-4 text-sm text-foreground', className)}>{children}</div>;
