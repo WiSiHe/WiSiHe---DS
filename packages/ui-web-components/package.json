@@ -28,14 +28,14 @@
   },
   "dependencies": {
     "@wisihe/tokens": "workspace:*",
-    "lit": "3.3.2"
+    "lit": "3.3.3"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
-    "jsdom": "^28.1.0",
+    "jsdom": "^29.1.1",
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.7"
   },
   "publishConfig": {
     "access": "public"

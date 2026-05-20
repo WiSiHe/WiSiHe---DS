@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { footerLinks } from '@wisihe/constants';
 import { Flex } from '@wisihe/ui-react';
-import { Github, Linkedin } from 'lucide-react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 export function Footer() {
   return (
@@ -42,7 +42,7 @@ export function Footer() {
               rel='noreferrer'
               className='group flex items-center gap-2 text-foreground/70 hover:text-accent font-medium transition-colors'
             >
-              <Github className='w-5 h-5 transition-transform group-hover:scale-110' />
+              <FaGithub className='w-5 h-5 transition-transform group-hover:scale-110' />
               <span>GitHub</span>
             </a>
             <a
@@ -51,7 +51,7 @@ export function Footer() {
               rel='noreferrer'
               className='group flex items-center gap-2 text-foreground/70 hover:text-accent font-medium transition-colors'
             >
-              <Linkedin className='w-5 h-5 transition-transform group-hover:scale-110' />
+              <FaLinkedin className='w-5 h-5 transition-transform group-hover:scale-110' />
               <span>LinkedIn</span>
             </a>
           </Flex>

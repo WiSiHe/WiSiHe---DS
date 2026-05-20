@@ -13,6 +13,7 @@ export function RootDocument({ children }: { children: ReactNode }) {
         <Meta />
         {/* Flash prevention script */}
         <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Flash prevention script must run synchronously before rendering
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
