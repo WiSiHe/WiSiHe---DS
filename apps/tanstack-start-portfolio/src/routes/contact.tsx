@@ -103,6 +103,7 @@ function ContactPage() {
                   whileHover={{ scale: 1.1, y: -5 }}
                   whileTap={{ scale: 0.9 }}
                   className='w-12 h-12 bg-surface border border-border rounded-xl flex items-center justify-center text-foreground/60 hover:text-accent hover:border-accent/50 transition-all shadow-sm'
+                  rel='noopener'
                 >
                   <span className='text-xl'>{social.icon}</span>
                 </motion.a>

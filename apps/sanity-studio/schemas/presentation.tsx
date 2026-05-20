@@ -854,12 +854,12 @@ export default defineType({
 
 // Export supporting types for use in other schemas if needed
 export {
-  sourceType,
-  toolType,
-  exampleType,
-  metricType,
-  mediaType,
   contentSlideType,
-  titleSlideType,
+  exampleType,
+  mediaType,
+  metricType,
   separatorSlideType,
+  sourceType,
+  titleSlideType,
+  toolType,
 };

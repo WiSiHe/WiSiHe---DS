@@ -8,89 +8,89 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as AboutRouteImport } from './routes/about';
-import { Route as ContactRouteImport } from './routes/contact';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as PaintingsRouteImport } from './routes/paintings';
-import { Route as PaintingsSlugRouteImport } from './routes/paintings.$slug';
-import { Route as PaintingsIndexRouteImport } from './routes/paintings.index';
-import { Route as ProjectsRouteImport } from './routes/projects';
-import { Route as VideosRouteImport } from './routes/videos';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as VideosRouteImport } from './routes/videos'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PaintingsRouteImport } from './routes/paintings'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as PaintingsIndexRouteImport } from './routes/paintings.index'
+import { Route as PaintingsSlugRouteImport } from './routes/paintings.$slug'
 
 const VideosRoute = VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PaintingsRoute = PaintingsRouteImport.update({
   id: '/paintings',
   path: '/paintings',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PaintingsIndexRoute = PaintingsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PaintingsRoute,
-} as any);
+} as any)
 const PaintingsSlugRoute = PaintingsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => PaintingsRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/contact': typeof ContactRoute;
-  '/paintings': typeof PaintingsRouteWithChildren;
-  '/projects': typeof ProjectsRoute;
-  '/videos': typeof VideosRoute;
-  '/paintings/$slug': typeof PaintingsSlugRoute;
-  '/paintings/': typeof PaintingsIndexRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/paintings': typeof PaintingsRouteWithChildren
+  '/projects': typeof ProjectsRoute
+  '/videos': typeof VideosRoute
+  '/paintings/$slug': typeof PaintingsSlugRoute
+  '/paintings/': typeof PaintingsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/contact': typeof ContactRoute;
-  '/projects': typeof ProjectsRoute;
-  '/videos': typeof VideosRoute;
-  '/paintings/$slug': typeof PaintingsSlugRoute;
-  '/paintings': typeof PaintingsIndexRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/projects': typeof ProjectsRoute
+  '/videos': typeof VideosRoute
+  '/paintings/$slug': typeof PaintingsSlugRoute
+  '/paintings': typeof PaintingsIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
-  '/contact': typeof ContactRoute;
-  '/paintings': typeof PaintingsRouteWithChildren;
-  '/projects': typeof ProjectsRoute;
-  '/videos': typeof VideosRoute;
-  '/paintings/$slug': typeof PaintingsSlugRoute;
-  '/paintings/': typeof PaintingsIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/paintings': typeof PaintingsRouteWithChildren
+  '/projects': typeof ProjectsRoute
+  '/videos': typeof VideosRoute
+  '/paintings/$slug': typeof PaintingsSlugRoute
+  '/paintings/': typeof PaintingsIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
@@ -99,9 +99,16 @@ export interface FileRouteTypes {
     | '/projects'
     | '/videos'
     | '/paintings/$slug'
-    | '/paintings/';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/about' | '/contact' | '/projects' | '/videos' | '/paintings/$slug' | '/paintings';
+    | '/paintings/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/projects'
+    | '/videos'
+    | '/paintings/$slug'
+    | '/paintings'
   id:
     | '__root__'
     | '/'
@@ -111,90 +118,92 @@ export interface FileRouteTypes {
     | '/projects'
     | '/videos'
     | '/paintings/$slug'
-    | '/paintings/';
-  fileRoutesById: FileRoutesById;
+    | '/paintings/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AboutRoute: typeof AboutRoute;
-  ContactRoute: typeof ContactRoute;
-  PaintingsRoute: typeof PaintingsRouteWithChildren;
-  ProjectsRoute: typeof ProjectsRoute;
-  VideosRoute: typeof VideosRoute;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  PaintingsRoute: typeof PaintingsRouteWithChildren
+  ProjectsRoute: typeof ProjectsRoute
+  VideosRoute: typeof VideosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/videos': {
-      id: '/videos';
-      path: '/videos';
-      fullPath: '/videos';
-      preLoaderRoute: typeof VideosRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
-      id: '/projects';
-      path: '/projects';
-      fullPath: '/projects';
-      preLoaderRoute: typeof ProjectsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/paintings': {
-      id: '/paintings';
-      path: '/paintings';
-      fullPath: '/paintings';
-      preLoaderRoute: typeof PaintingsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/paintings'
+      path: '/paintings'
+      fullPath: '/paintings'
+      preLoaderRoute: typeof PaintingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
-      id: '/contact';
-      path: '/contact';
-      fullPath: '/contact';
-      preLoaderRoute: typeof ContactRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
-      id: '/about';
-      path: '/about';
-      fullPath: '/about';
-      preLoaderRoute: typeof AboutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/paintings/': {
-      id: '/paintings/';
-      path: '/';
-      fullPath: '/paintings/';
-      preLoaderRoute: typeof PaintingsIndexRouteImport;
-      parentRoute: typeof PaintingsRoute;
-    };
+      id: '/paintings/'
+      path: '/'
+      fullPath: '/paintings/'
+      preLoaderRoute: typeof PaintingsIndexRouteImport
+      parentRoute: typeof PaintingsRoute
+    }
     '/paintings/$slug': {
-      id: '/paintings/$slug';
-      path: '/$slug';
-      fullPath: '/paintings/$slug';
-      preLoaderRoute: typeof PaintingsSlugRouteImport;
-      parentRoute: typeof PaintingsRoute;
-    };
+      id: '/paintings/$slug'
+      path: '/$slug'
+      fullPath: '/paintings/$slug'
+      preLoaderRoute: typeof PaintingsSlugRouteImport
+      parentRoute: typeof PaintingsRoute
+    }
   }
 }
 
 interface PaintingsRouteChildren {
-  PaintingsSlugRoute: typeof PaintingsSlugRoute;
-  PaintingsIndexRoute: typeof PaintingsIndexRoute;
+  PaintingsSlugRoute: typeof PaintingsSlugRoute
+  PaintingsIndexRoute: typeof PaintingsIndexRoute
 }
 
 const PaintingsRouteChildren: PaintingsRouteChildren = {
   PaintingsSlugRoute: PaintingsSlugRoute,
   PaintingsIndexRoute: PaintingsIndexRoute,
-};
+}
 
-const PaintingsRouteWithChildren = PaintingsRoute._addFileChildren(PaintingsRouteChildren);
+const PaintingsRouteWithChildren = PaintingsRoute._addFileChildren(
+  PaintingsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -203,17 +212,16 @@ const rootRouteChildren: RootRouteChildren = {
   PaintingsRoute: PaintingsRouteWithChildren,
   ProjectsRoute: ProjectsRoute,
   VideosRoute: VideosRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { createStart } from '@tanstack/react-start';
-import type { getRouter } from './router.tsx';
-
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
