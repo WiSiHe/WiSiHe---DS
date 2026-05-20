@@ -100,14 +100,14 @@
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-heading: "Outfit", var(--font-sans);
 
-  /* Map to @wisihe/tokens */
-  --bg: var(--semantic-dark-color-background-default);
-  --fg: var(--semantic-dark-color-text-default);
-  --muted: var(--semantic-dark-color-text-subtle);
-  --accent: var(--semantic-dark-color-base-default);
-  --accent-hover: var(--semantic-dark-color-base-hover);
-  --card-bg: var(--semantic-dark-color-surface-default);
-  --border: var(--semantic-dark-color-border-default);
+  /* Theme-aware mapping to @wisihe/tokens */
+  --bg: var(--color-background);
+  --fg: var(--color-foreground);
+  --muted: var(--color-foreground-subtle);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --card-bg: var(--color-surface);
+  --border: var(--color-border);
 
   --container-max-width: 1200px;
   --header-height: 80px;

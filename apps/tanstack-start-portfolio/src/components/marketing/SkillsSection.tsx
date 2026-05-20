@@ -1,0 +1,112 @@
+import { Chip } from '@wisihe/ui-react';
+import { motion, type Variants } from 'motion/react';
+import React, { useMemo } from 'react';
+import Marquee from 'react-fast-marquee';
+
+const professionalSkills = [
+  'Frontend Development',
+  'UI/UX Design',
+  'Responsive Web Design',
+  'Accessibility (WCAG Standards)',
+  'React.js',
+  'SvelteKit',
+  'Next.js',
+  'Tailwind CSS',
+  'Sanity CMS Integration',
+  'Performance Optimization',
+  'Interactive Prototyping',
+] as const;
+
+const creativeSkills = [
+  'Digital Drawing & Painting',
+  '3D Modeling (Blender)',
+  'Game Development (Unreal Engine 5)',
+  'Video Editing & Production',
+  'Interactive 3D Design (Spline)',
+  'Concept Art & Illustration',
+] as const;
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 150,
+      damping: 20,
+    },
+  },
+};
+
+export const SkillsSection = React.memo(function SkillsSection() {
+  const professionalChips = useMemo(
+    () =>
+      professionalSkills.map(skill => (
+        <Chip key={skill} label={skill} className='ml-2' interactive={false} />
+      )),
+    [],
+  );
+
+  const creativeChips = useMemo(
+    () =>
+      creativeSkills.map(skill => (
+        <Chip key={skill} label={skill} className='ml-2' interactive={false} />
+      )),
+    [],
+  );
+
+  return (
+    <motion.section
+      initial='hidden'
+      whileInView='visible'
+      viewport={{ once: true, margin: '-100px' }}
+      variants={containerVariants}
+      className='relative flex flex-col gap-8 py-20'
+    >
+      <motion.div variants={itemVariants} className='px-4 md:px-8'>
+        <h2 className='text-4xl md:text-5xl font-bold mb-3'>Skills</h2>
+        <p className='text-lg text-foreground/60'>
+          A blend of technical engineering and creative artistry acquired over years of exploration.
+        </p>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <Marquee
+          autoFill
+          gradient
+          gradientColor='var(--color-surface)'
+          direction='left'
+          speed={30}
+          className='py-2'
+        >
+          {professionalChips}
+        </Marquee>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <Marquee
+          autoFill
+          gradient
+          gradientColor='var(--color-surface)'
+          direction='right'
+          speed={30}
+          className='py-2'
+        >
+          {creativeChips}
+        </Marquee>
+      </motion.div>
+    </motion.section>
+  );
+});
