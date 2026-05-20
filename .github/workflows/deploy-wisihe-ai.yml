@@ -1,0 +1,53 @@
+# Deploys the Sanity App SDK app in apps/wisihe-ai to Sanity hosting.
+# See: https://www.sanity.io/docs/app-sdk/sdk-deployment
+#
+# Prerequisite: run `pnpm deploy:wisihe-ai` once locally (interactive, no `-y`) so
+# `sanity.cli.ts` gets `deployment.appId`. Otherwise `sanity deploy -y` fails in CI.
+#
+# Required repository secret:
+#   SANITY_AUTH_TOKEN — organization-level robot token with "Manage SDK Apps"
+#
+# Optional repository variables (build-time SANITY_APP_* for the bundle):
+#   SANITY_APP_PROJECT_ID, SANITY_APP_DATASET, SANITY_APP_AI_PROXY_URL, SANITY_APP_AI_PROXY_SECRET
+
+name: Deploy wisihe-ai
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-wisihe-ai-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: sanity deploy (wisihe-ai)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.23.0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy App SDK app
+        working-directory: apps/wisihe-ai
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_APP_PROJECT_ID: ${{ vars.SANITY_APP_PROJECT_ID }}
+          SANITY_APP_DATASET: ${{ vars.SANITY_APP_DATASET }}
+          SANITY_APP_AI_PROXY_URL: ${{ vars.SANITY_APP_AI_PROXY_URL }}
+          SANITY_APP_AI_PROXY_SECRET: ${{ vars.SANITY_APP_AI_PROXY_SECRET }}
+        run: pnpm exec sanity deploy -y

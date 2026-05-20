@@ -1,0 +1,179 @@
+/* Container styling for the app */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+/* Basic reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.muted {
+  color: #555;
+}
+
+.small {
+  font-size: 0.85rem;
+}
+
+.bulk-app {
+  padding-bottom: 3rem;
+}
+
+.bulk-header {
+  margin-bottom: 1rem;
+}
+
+.bulk-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tab.active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.banner {
+  display: block;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.banner.success {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.banner.error {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.toolbar {
+  margin-bottom: 1.25rem;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-row.wrap {
+  align-items: flex-end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.select {
+  min-width: 220px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
+.btn {
+  border: none;
+  background: #111;
+  color: #fff;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.table-scroll {
+  overflow: auto;
+  max-height: min(60vh, 520px);
+  margin: 0.75rem 0;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.doc-table th,
+.doc-table td {
+  border-bottom: 1px solid #eee;
+  padding: 0.45rem 0.35rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.th-check {
+  width: 2.5rem;
+}
+
+.doc-title {
+  font-weight: 500;
+}
+
+.ai-row {
+  margin-top: 0.5rem;
+}
