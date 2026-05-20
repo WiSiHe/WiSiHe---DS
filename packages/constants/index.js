@@ -10,8 +10,16 @@ export const navigationItems = [
     description: 'Projects',
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
-  // { label: '3D', href: '/three-d', description: '3D Art & Experiments' },
-  // { label: 'About', href: '/about', description: 'About Henrik' },
+  { label: 'About', href: '/about', description: 'About Henrik' },
+  { label: 'Contact', href: '/contact', description: 'Get in touch' },
+];
+
+export const footerLinks = [
+  { name: 'Paintings', href: '/paintings' },
+  { name: 'Projects', href: '/projects' },
+  { name: 'Videos', href: '/videos' },
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 export const socialMediaLinks = [

@@ -1,13 +1,16 @@
 import { cn } from '@wisihe/utils';
-import { type MotionProps, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import type React from 'react';
 
-export interface IconLogoProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
+export interface IconLogoProps {
   size?: number | string;
   color?: string;
   animated?: boolean;
-  motionProps?: MotionProps;
+  motionProps?: any;
   className?: string;
+  width?: number | string;
+  height?: number | string;
+  fill?: string;
 }
 
 const IconLogo = ({
@@ -93,4 +96,4 @@ const IconLogo = ({
   return <svg {...svgProps}>{paths}</svg>;
 };
 
-export default IconLogo;
+export { IconLogo };
