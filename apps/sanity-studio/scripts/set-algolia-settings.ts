@@ -18,7 +18,7 @@ async function setSettings() {
       indexSettings: {
         attributesForFaceting: [
           'tags',
-          'searchable(_type)',
+          'filterOnly(_type)',
           'filterOnly(status)',
           'filterOnly(projectType)',
         ],

@@ -27,44 +27,31 @@ export async function GET(request: NextRequest) {
     const start = (page - 1) * limit;
     const end = start + limit;
 
-    // Use filtered queries if filters are provided, otherwise use regular queries
-    const paintingsQuery =
-      filters.length > 0 ? getFilteredPaginatedPaintings : getPaginatedPaintings;
-    const countQuery = filters.length > 0 ? getFilteredPaintingsCount : getPaintingsCount;
-
-    let results: [{ data: GetPaginatedPaintingsResult }, { data: number }];
+    let paintings: GetPaginatedPaintingsResult;
+    let totalCount: number;
 
     if (filters.length > 0) {
-      // Build filter params for GROQ
       const filterParams: Record<string, string> = {};
       for (let i = 0; i < 5; i++) {
         filterParams[`filter${i}`] = filters[i] || '';
       }
-
-      results = await Promise.all([
+      const [paintingsResult, countResult] = await Promise.all([
         sanityFetch({
-          query: paintingsQuery,
+          query: getFilteredPaginatedPaintings,
           params: { start, end, ...filterParams },
         }),
-        sanityFetch({
-          query: countQuery,
-          params: { ...filterParams },
-        }),
+        sanityFetch({ query: getFilteredPaintingsCount, params: { ...filterParams } }),
       ]);
+      paintings = paintingsResult.data as GetPaginatedPaintingsResult;
+      totalCount = countResult.data as number;
     } else {
-      results = await Promise.all([
-        sanityFetch({
-          query: paintingsQuery,
-          params: { start, end },
-        }),
-        sanityFetch({
-          query: countQuery,
-        }),
+      const [paintingsResult, countResult] = await Promise.all([
+        sanityFetch({ query: getPaginatedPaintings, params: { start, end } }),
+        sanityFetch({ query: getPaintingsCount }),
       ]);
+      paintings = paintingsResult.data as GetPaginatedPaintingsResult;
+      totalCount = countResult.data as number;
     }
-
-    const paintings = results[0].data;
-    const totalCount = results[1].data;
 
     const hasMore = end < totalCount;
 

@@ -11,8 +11,9 @@ export default async function TestPage() {
   const result = await sanityFetch({
     query: getAllPaintingsandTags,
   });
+  const resultData = result.data as GetAllPaintingsandTagsResult;
 
-  const paintings = result.data?.paintings || [];
+  const paintings = resultData?.paintings || [];
 
   return (
     <div className='p-8'>

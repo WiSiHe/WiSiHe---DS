@@ -14,15 +14,16 @@ const PaintingsSection = async ({
   paintingsDescription: BlockContent;
 }) => {
   // NSFW exclusion is in GROQ: `randomPaintingsQuery` (packages/sanity-queries/src/index.ts).
-  const { data: paintingsPool } = await sanityFetch({
+  const { data } = await sanityFetch({
     query: randomPaintingsQuery,
   });
+  const paintingsPool = data as RandomPaintingsQueryResult;
 
   if (!paintingsPool?.length) {
     return null;
   }
 
-  const featuredPaintings = shuffleArray(paintingsPool as RandomPaintingsQueryResult).slice(
+  const featuredPaintings = shuffleArray(paintingsPool).slice(
     0,
     FEATURED_PAINTING_COUNT,
   ) as RandomPaintingsQueryResult;

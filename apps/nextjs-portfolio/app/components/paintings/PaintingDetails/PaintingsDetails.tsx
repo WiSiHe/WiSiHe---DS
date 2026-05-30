@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
 import { BsClockFill, BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { TbMasksTheater, TbPalette } from 'react-icons/tb';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { urlForImage } from '@/sanity/lib/utils';
 
@@ -37,6 +38,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     video,
     redbubbleUrl,
     format,
+    medium,
+    isFanArt,
   } = paintingData;
 
   const aspectRatioStyle = {
@@ -321,6 +324,16 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 <span className='flex items-center gap-1.5' title='Painting date'>
                   <BsClockFill className='w-3.5 h-3.5' /> {formattedPaintedAt}
                 </span>
+                {medium && (
+                  <span className='flex items-center gap-1.5' title='Medium'>
+                    <TbPalette className='w-4 h-4' /> {medium}
+                  </span>
+                )}
+                {isFanArt && (
+                  <span className='flex items-center gap-1.5 text-accent' title='Fan art'>
+                    <TbMasksTheater className='w-4 h-4' /> Fan Art
+                  </span>
+                )}
                 <span className='flex items-center gap-1.5' title='View count'>
                   <BsEye className='w-4 h-4' /> {viewsCount?.toString() ?? '0'} Views
                 </span>

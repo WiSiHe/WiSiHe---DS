@@ -101,8 +101,13 @@ export const paintingQuery = defineQuery(`
     description,
     seoDescription,
     format,
+    medium,
+    isFeatured,
+    isFanArt,
+    isNSFW,
+    isForSale,
     "likesCount": count(likes),
-    "views": select(defined(views) => views[]{ viewerId, timestamp }, []), // Using select to handle undefined views
+    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),
     "viewsCount": count(views),
     paintedAt,
     artstationUrl,
@@ -193,20 +198,22 @@ export const homePageQuery = defineQuery(`
     title,
     "paintingsCount": count(*[_type == "painting"]),
     paintingsDescription,
-    showcasePaintings[]->{
-      _type,
-      _id,
-      altText,
-      "slug": slug.current,
-      title,
-      format,
-      tagsV2[]->{name},
-      image{
-        ...,
-        "lqip": asset->metadata.lqip,
-        "aspectRatio": asset->metadata.dimensions.aspectRatio
+    "showcasePaintings": coalesce(
+      showcasePaintings[]->{
+        _type, _id, altText,
+        "slug": slug.current,
+        title, format, isFeatured, isNSFW,
+        tagsV2[]->{name},
+        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
+      },
+      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
+        _type, _id,
+        "slug": slug.current,
+        title, format, isFeatured, isNSFW,
+        tagsV2[]->{name},
+        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
       }
-    },
+    ),
     projectsDescription,
     showcaseProjects[]->{
       _type,
@@ -242,12 +249,16 @@ export const getAllPaintingsandTags = defineQuery(`
         _id,
         "slug": slug.current,
         title,
+        medium,
+        isFeatured,
+        isFanArt,
+        isNSFW,
+        isForSale,
         tagsV2[]->{name},
         "viewsCount": count(views),
         paintedAt,
         video,
         "imagesCount": coalesce(count(images), 0),
-        "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
         image {
           ...,
           "lqip": asset->metadata.lqip,
@@ -268,16 +279,20 @@ export const getAllPaintingsandTags = defineQuery(`
 
 export const getPaginatedPaintings = defineQuery(`
   *[_type == "painting" && defined(slug.current)]
-  | order(paintedAt desc, _updatedAt desc) [$start...$end] {
+  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {
     _id,
     "slug": slug.current,
     title,
+    medium,
+    isFeatured,
+    isFanArt,
+    isNSFW,
+    isForSale,
     tagsV2[]->{name},
     "viewsCount": count(views),
     paintedAt,
     video,
     "imagesCount": coalesce(count(images), 0),
-    "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
     image {
       ...,
       "lqip": asset->metadata.lqip,
@@ -298,16 +313,20 @@ export const getFilteredPaginatedPaintings = defineQuery(`
     && ($filter3 == "" || $filter3 in tagsV2[]->name)
     && ($filter4 == "" || $filter4 in tagsV2[]->name)
   )]
-  | order(paintedAt desc, _updatedAt desc) [$start...$end] {
+  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {
     _id,
     "slug": slug.current,
     title,
+    medium,
+    isFeatured,
+    isFanArt,
+    isNSFW,
+    isForSale,
     tagsV2[]->{name},
     "viewsCount": count(views),
     paintedAt,
     video,
     "imagesCount": coalesce(count(images), 0),
-    "isForSale": defined(redbubbleUrl) || defined(society6Url) || defined(artstationUrl) || defined(inPrintUrl),
     image {
       ...,
       "lqip": asset->metadata.lqip,
@@ -521,11 +540,12 @@ export const randomPaintingsQuery = defineQuery(`
     _type == "painting" &&
     defined(slug.current) &&
     defined(image) &&
-    !("NSFW" in coalesce(tagsV2[]->name, []))
+    isNSFW != true
   ] | order(_createdAt desc) [0...50] {
     _id,
     title,
     "slug": slug.current,
+    isFeatured,
     tagsV2[]->{name},
     image{
       ...,

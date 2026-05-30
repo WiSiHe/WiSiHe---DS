@@ -2,7 +2,7 @@ import type OpenAI from 'openai';
 
 export * from './tagSuggest';
 
-export const BULK_AI_MODEL = 'o4-mini-2025-04-16';
+export const BULK_AI_MODEL = 'gpt-5.4-nano';
 
 export type PaintingBulkRequest = {
   kind: 'painting';
