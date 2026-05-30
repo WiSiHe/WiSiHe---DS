@@ -18,27 +18,30 @@ interface CategoryItem {
 // Configuration data
 const singletons: DocumentItem[] = [
   { title: 'Home Page', icon: '🏠', schemaType: 'home', documentId: 'home' },
-  { title: 'Site Settings', icon: '🔧', schemaType: 'settings', documentId: 'settings' },
+  { title: 'Site Settings', icon: '⚙️', schemaType: 'settings', documentId: 'settings' },
 ];
 
 const categories: CategoryItem[] = [
   {
-    title: 'Art & Creative',
+    title: 'Portfolio',
     icon: '🎨',
     items: [
       { title: 'Paintings', icon: '🖼️', schemaType: 'painting' },
-      { title: 'Projects', icon: '📁', schemaType: 'project' },
-      { title: 'Videos', icon: '🎥', schemaType: 'video' },
+      { title: 'Projects', icon: '💼', schemaType: 'project' },
     ],
   },
   {
     title: 'Content',
     icon: '📝',
-    items: [{ title: 'Recipes', icon: '🍳', schemaType: 'recipe' }],
+    items: [
+      { title: 'Blog Posts', icon: '✍️', schemaType: 'post' },
+      { title: 'Recipes', icon: '🍳', schemaType: 'recipe' },
+      { title: 'Videos', icon: '🎥', schemaType: 'video' },
+    ],
   },
   {
-    title: 'Presentations',
-    icon: '📊',
+    title: 'Talks & Slides',
+    icon: '🎤',
     items: [
       { title: 'Presentations', icon: '📊', schemaType: 'presentation' },
       { title: 'Categories', icon: '🏷️', schemaType: 'presentationCategory' },
@@ -46,8 +49,11 @@ const categories: CategoryItem[] = [
   },
   {
     title: 'Management',
-    icon: '🏷️',
-    items: [{ title: 'Tags', icon: '🏷️', schemaType: 'tag' }],
+    icon: '⚙️',
+    items: [
+      { title: 'Tags', icon: '🏷️', schemaType: 'tag' },
+      { title: 'Redirects', icon: '🔀', schemaType: 'redirect' },
+    ],
   },
 ];
 

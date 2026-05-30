@@ -10,6 +10,9 @@ import { defineCliConfig } from 'sanity/cli';
  * `sanity deploy -y`).
  */
 export default defineCliConfig({
+  server: {
+    port: 3334,
+  },
   app: {
     organizationId: 'o9QnfPBim',
     entry: './src/App.tsx',

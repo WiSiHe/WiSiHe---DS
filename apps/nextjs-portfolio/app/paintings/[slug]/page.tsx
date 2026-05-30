@@ -23,11 +23,12 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const params = await props.params;
 
-  const { data: painting } = await sanityFetch({
+  const { data: _paintingData } = await sanityFetch({
     query: paintingQuery,
     params,
     stega: false,
   });
+  const painting = _paintingData as PaintingQueryResult;
 
   const title = painting?.title || 'Untitled Painting';
   const description = painting?.seoDescription || painting?.description || 'View this painting.';
@@ -62,9 +63,8 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 export default async function PaintingPage(props: Props) {
   const params = await props.params;
 
-  const [{ data: painting }]: [{ data: PaintingQueryResult }] = await Promise.all([
-    sanityFetch({ query: paintingQuery, params }),
-  ]);
+  const [{ data: _painting }] = await Promise.all([sanityFetch({ query: paintingQuery, params })]);
+  const painting = _painting as PaintingQueryResult;
 
   if (!painting?._id) {
     return notFound();

@@ -1,5 +1,6 @@
 import blockContent from './blockContent';
 import painting from './painting';
+import post from './post';
 import presentation, {
   contentSlideType,
   exampleType,
@@ -25,6 +26,7 @@ export const schemaTypes = [
   home,
   settings,
   painting,
+  post,
   project,
   video,
   tag,

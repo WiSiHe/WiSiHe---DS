@@ -27,9 +27,10 @@ const SectionSkeleton = () => (
 );
 
 export default async function Home() {
-  const { data: homepage }: { data: HomePageQueryResult } = await sanityFetch({
+  const { data: _homepageData } = await sanityFetch({
     query: homePageQuery,
   });
+  const homepage = _homepageData as HomePageQueryResult;
 
   if (!homepage) {
     return (

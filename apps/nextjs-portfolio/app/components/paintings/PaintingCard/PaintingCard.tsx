@@ -6,8 +6,8 @@ import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
-import { FaExclamation, FaShoppingCart } from 'react-icons/fa';
-import { TbBoxMultiple } from 'react-icons/tb';
+import { FaExclamation, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import {
   getHeroStrokeColors,
   HeroPaintingSvgHover,
@@ -43,14 +43,23 @@ const PaintingCardAdapter = ({
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
   // biome-ignore lint/suspicious/noExplicitAny: Sanity result shape varies by query
-  const { image, title = '', video = '', imagesCount = 0, slug } = paintingData as any;
+  const {
+    image,
+    title = '',
+    video = '',
+    imagesCount = 0,
+    slug,
+    isFeatured,
+    isFanArt,
+    isNSFW,
+    isForSale,
+  } = paintingData as any;
   const { tagsV2 } = paintingData;
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];
   const cleanedTags = filteredTags.map(t => cleanTagName(t.name));
 
-  const hasStore = cleanedTags.includes('Store');
-  const isNsfw = cleanedTags.includes('NSFW');
+  const isNsfw = isNSFW === true;
 
   // urlForImage needs asset._ref — the Algolia sync now stores it correctly.
   const imageSrc = image
@@ -83,13 +92,27 @@ const PaintingCardAdapter = ({
       imageEl
     );
 
-  // Build the badges array
+  // Build the badges array — pinned badge goes first (always visible)
   const badges: PaintingCardBadge[] = [];
-  if (hasStore) {
+  if (isFeatured === true) {
+    badges.push({
+      key: 'featured',
+      icon: <FaStar className='w-4 h-4 text-yellow-400' />,
+      label: 'Featured painting',
+    });
+  }
+  if (isForSale === true) {
     badges.push({
       key: 'store',
       icon: <FaShoppingCart className='w-4 h-4' />,
       label: 'Available for sale',
+    });
+  }
+  if (isFanArt === true) {
+    badges.push({
+      key: 'fanart',
+      icon: <TbMasksTheater className='w-4 h-4' />,
+      label: 'Fan art',
     });
   }
   if (Number(imagesCount) > 0) {
