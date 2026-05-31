@@ -1,51 +1,68 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
+import { useRef } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import PaintingCard from '../PaintingCard/PaintingCard';
 
-// Skeleton card that matches the PaintingCard aspect ratio
+// Skeleton card — varied heights to mimic the masonry feel
 function PaintingCardSkeleton({ index }: { index: number }) {
+  const aspects = [
+    'aspect-[3/4]',
+    'aspect-square',
+    'aspect-[4/3]',
+    'aspect-[3/5]',
+    'aspect-[3/4]',
+    'aspect-square',
+  ];
+  const aspect = aspects[index % aspects.length];
   return (
     <div
       className={cn(
-        'relative col-span-6 md:col-span-4 lg:col-span-4',
-        'aspect-3/4 rounded-xl bg-surface border border-border overflow-hidden',
-        'animate-pulse',
+        'w-full rounded-xl bg-surface border border-border overflow-hidden animate-pulse mb-2 relative',
+        aspect,
       )}
-      style={{ animationDelay: `${index * 50}ms` }}
+      style={{ animationDelay: `${index * 40}ms` }}
     >
-      {/* Shimmer overlay */}
       <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle via-surface to-surface-subtle' />
-      {/* Fake title bar at bottom */}
-      <div className='absolute bottom-0 left-0 right-0 h-12 bg-surface/80 backdrop-blur-sm border-t border-border px-4 py-3'>
-        <div className='h-3 w-3/5 rounded-full bg-surface-subtle' />
+      <div className='absolute bottom-0 left-0 right-0 h-10 bg-surface/80 border-t border-border px-3 py-2.5'>
+        <div className='h-2.5 w-2/5 rounded-full bg-surface-subtle' />
       </div>
     </div>
   );
 }
 
-const SKELETON_COUNT = 12;
+// Aspect class based on painting format
+function aspectClass(format: string): string {
+  if (format === 'landscape') return 'aspect-[4/3]';
+  if (format === 'portrait') return 'aspect-[3/4]';
+  return 'aspect-square';
+}
+
+const SKELETON_COUNT = 18;
 
 export default function CustomHits() {
   const { items } = useHits();
-  const { status } = useInstantSearch();
+  useInstantSearch();
   const { items: refinements } = useCurrentRefinements();
+
+  // Show skeleton until first real results arrive (covers idle state on soft nav)
+  const hasReceivedResults = useRef(false);
+  if (items.length > 0) hasReceivedResults.current = true;
 
   const isNsfwFilterActive = refinements.some(
     r => r.attribute === 'tags' && r.refinements.some(v => v.label === 'NSFW'),
   );
 
-  // Show skeleton while Algolia is fetching results for the first time
-  const isLoading = status === 'loading' || status === 'stalled';
-
-  if (isLoading && items.length === 0) {
+  if (!hasReceivedResults.current) {
     return (
-      <div className='grid w-full h-full grid-cols-12 gap-2 mt-6'>
+      <div className='columns-2 sm:columns-3 gap-2 mt-4'>
         {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: skeletons have no stable key
-          <PaintingCardSkeleton key={i} index={i} />
+          <div key={i} className='break-inside-avoid'>
+            <PaintingCardSkeleton index={i} />
+          </div>
         ))}
       </div>
     );
@@ -61,37 +78,44 @@ export default function CustomHits() {
   }
 
   return (
-    <motion.div layout className='grid w-full h-full grid-cols-12 gap-2 mt-6'>
-      <AnimatePresence mode='popLayout'>
-        {items.map((hit, index: number) => {
-          const rawSlug = hit['slug'] as string | { current?: string } | undefined;
-          const adaptedPaintingData = {
-            ...hit,
-            _id: hit.objectID,
-            slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
-            tagsV2: hit['tags'] ? (hit['tags'] as string[]).map((t: string) => ({ name: t })) : [],
-          };
+    <LayoutGroup id='masonry'>
+      <motion.div layout className='columns-2 sm:columns-3 gap-2 mt-4'>
+        <AnimatePresence mode='popLayout'>
+          {items.map((hit, index) => {
+            const format = (hit['format'] as string) || 'square';
+            const rawSlug = hit['slug'] as string | { current?: string } | undefined;
+            const adaptedPaintingData = {
+              ...hit,
+              _id: hit.objectID,
+              slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
+              tagsV2: hit['tags']
+                ? (hit['tags'] as string[]).map((t: string) => ({ name: t }))
+                : [],
+            };
 
-          return (
-            <motion.div
-              key={hit.objectID}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className='relative col-span-6 md:col-span-4 lg:col-span-4'
-            >
-              <PaintingCard
-                // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
-                paintingData={adaptedPaintingData as any}
-                shouldBeLazy={index < 4}
-                isNsfwFilterActive={isNsfwFilterActive}
-              />
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
-    </motion.div>
+            return (
+              <motion.div
+                key={hit.objectID}
+                layout
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.2, ease: 'easeOut', delay: Math.min(index * 0.015, 0.2) }}
+                className='break-inside-avoid mb-2'
+              >
+                <PaintingCard
+                  // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
+                  paintingData={adaptedPaintingData as any}
+                  shouldBeLazy={index < 6}
+                  isNsfwFilterActive={isNsfwFilterActive}
+                  // Pass aspect class so tailwind-merge overrides the hardcoded aspect-3/4
+                  className={aspectClass(format)}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
+    </LayoutGroup>
   );
 }

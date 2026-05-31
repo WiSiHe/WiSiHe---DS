@@ -7,7 +7,6 @@ import { FaWeibo } from 'react-icons/fa';
 
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
-import ViewsArray from '../components/ViewsArray';
 
 export default defineType({
   name: 'painting',
@@ -92,7 +91,7 @@ export default defineType({
       ],
       options: {
         hotspot: true,
-        metadata: ['lqip', 'palette'],
+        metadata: ['lqip', 'blurhash', 'palette'],
       },
       validation: rule => rule.required(),
     }),
@@ -211,53 +210,12 @@ Requirements:
       },
     }),
     defineField({
-      name: 'views',
+      name: 'viewsCount',
       title: 'Views',
-      type: 'array',
-      group: 'social',
-      options: {
-        layout: 'list',
-      },
-      components: {
-        input: ViewsArray,
-      },
-      of: [
-        {
-          type: 'object',
-          fields: [
-            {
-              name: 'viewerId',
-              title: 'Viewer ID',
-              type: 'string', // You might want to consider a more robust ID system if necessary
-              description: 'ID of the viewer',
-            },
-            {
-              name: 'timestamp',
-              title: 'Timestamp',
-              type: 'datetime',
-              description: 'Time when the view was recorded',
-            },
-            {
-              name: 'location',
-              title: 'Location',
-              type: 'string',
-              description: 'Location of the viewer',
-            },
-          ],
-          preview: {
-            select: {
-              viewerId: 'viewerId',
-              timestamp: 'timestamp',
-            },
-            prepare({ viewerId, timestamp }: { viewerId: string; timestamp: string }) {
-              return {
-                title: viewerId,
-                subtitle: new Date(timestamp).toLocaleString(),
-              };
-            },
-          },
-        },
-      ],
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Tracked via PostHog — do not edit manually',
     }),
     defineField({
       name: 'isNSFW',
@@ -307,7 +265,18 @@ Requirements:
     defineField({
       name: 'likes',
       title: 'Likes',
-      type: 'number',
+      type: 'array',
+      readOnly: true,
+      description: 'Toggled by visitors — do not edit manually',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'likerId', type: 'string', title: 'Liker ID' },
+            { name: 'timestamp', type: 'datetime', title: 'Timestamp' },
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'redbubbleUrl',
@@ -316,35 +285,11 @@ Requirements:
       group: 'social',
     }),
     defineField({
-      name: 'society6Url',
-      title: 'Society6 URL',
+      name: 'gelatoUrl',
+      title: 'Gelato URL',
       type: 'url',
       group: 'social',
-    }),
-    defineField({
-      name: 'artstationUrl',
-      title: 'ArtStation URL',
-      type: 'url',
-      group: 'social',
-    }),
-    defineField({
-      name: 'inPrintUrl',
-      title: 'In Print',
-      type: 'url',
-      group: 'social',
-    }),
-
-    defineField({
-      name: 'instagramUrl',
-      title: 'Instagram URL',
-      type: 'url',
-      group: 'social',
-    }),
-    defineField({
-      name: 'twitterUrl',
-      title: 'Twitter URL',
-      type: 'url',
-      group: 'social',
+      description: 'Link to print-on-demand product on Gelato',
     }),
     defineField({
       name: 'paintedAt',

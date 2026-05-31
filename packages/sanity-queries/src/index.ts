@@ -4,6 +4,26 @@ export * from './sanity.types';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
+export const aboutQuery = defineQuery(`
+  *[_type == "about" && _id == "about"][0] {
+    heroTitle,
+    heroSubtitle,
+    bio,
+    jobTitle,
+    journeyItems[] {
+      _key,
+      year,
+      title,
+      content,
+      image { ..., "lqip": asset->metadata.lqip }
+    },
+    ctaTitle,
+    ctaButtonText,
+    ctaButtonUrl,
+    socialLinks[] { _key, platform, url }
+  }
+`);
+
 const postFields = /* groq */ `
   _id,
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
@@ -107,19 +127,22 @@ export const paintingQuery = defineQuery(`
     isNSFW,
     isForSale,
     "likesCount": count(likes),
-    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),
-    "viewsCount": count(views),
+    viewsCount,
     paintedAt,
-    artstationUrl,
     format,
     redbubbleUrl,
-    society6Url,
-    inPrintUrl,
+    gelatoUrl,
     image{
       ...,
       "lqip": asset->metadata.lqip,
+      "blurhash": asset->metadata.blurhash,
       "aspectRatio": asset->metadata.dimensions.aspectRatio,
-      "altText": altText
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height,
+      "hasAlpha": asset->metadata.hasAlpha,
+      "isOpaque": asset->metadata.isOpaque,
+      "altText": altText,
+      "palette": asset->metadata.palette
     },
     "images": coalesce(
       images[]{
@@ -140,8 +163,7 @@ export const projectQuery = defineQuery(`
     ...,
     "slug": slug.current,
     "likesCount": count(likes),
-    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),
-    "viewsCount": count(views),
+    viewsCount,
     tags[]->{
       "name": coalesce(name, "")
     },
@@ -255,7 +277,7 @@ export const getAllPaintingsandTags = defineQuery(`
         isNSFW,
         isForSale,
         tagsV2[]->{name},
-        "viewsCount": count(views),
+        viewsCount,
         paintedAt,
         video,
         "imagesCount": coalesce(count(images), 0),
@@ -289,7 +311,7 @@ export const getPaginatedPaintings = defineQuery(`
     isNSFW,
     isForSale,
     tagsV2[]->{name},
-    "viewsCount": count(views),
+    viewsCount,
     paintedAt,
     video,
     "imagesCount": coalesce(count(images), 0),
@@ -323,7 +345,7 @@ export const getFilteredPaginatedPaintings = defineQuery(`
     isNSFW,
     isForSale,
     tagsV2[]->{name},
-    "viewsCount": count(views),
+    viewsCount,
     paintedAt,
     video,
     "imagesCount": coalesce(count(images), 0),
@@ -352,13 +374,11 @@ export const getAllProjects = defineQuery(`
           _id,
           "slug": slug.current,
           title,
-          description,
-          seoDescription,
+          "seoDescription": coalesce(seo.description, ""),
           projectType,
           projectStart,
           projectEnd,
           status,
-          content,
           name,
           "tags": tags[]->{name},
           image {
@@ -371,13 +391,11 @@ export const getAllProjects = defineQuery(`
           _id,
           "slug": slug.current,
           title,
-          description,
-          seoDescription,
+          "seoDescription": coalesce(seo.description, ""),
           projectType,
           projectStart,
           projectEnd,
           status,
-          content,
           name,
           "tags": tags[]->{name},
           image {
@@ -425,6 +443,37 @@ export const getAllVideos = defineQuery(`
         }
       }
     `);
+
+export const videoBySlugQuery = defineQuery(`
+  *[_type == "video" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    videoUrl,
+    "featured": featured == true,
+    "linkedPainting": coalesce(linkedPainting->{
+      _id,
+      "slug": slug.current,
+      title,
+      description,
+      image{
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      }
+    }, null),
+    tags[]->{name},
+    thumbnail {
+      ...,
+      "lqip": asset->metadata.lqip
+    }
+  }
+`);
+
+export const videosSlugs = defineQuery(`
+  *[_type == "video" && defined(slug.current)] { "slug": slug.current }
+`);
 
 export const generateStaticSlugs = defineQuery(`
   *[_type == $type && defined(slug.current)]{

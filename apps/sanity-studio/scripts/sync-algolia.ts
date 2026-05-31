@@ -55,8 +55,9 @@ const query = `
     status,
     projectType,
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
-    // Preserve asset._ref so urlForImage works on the client.
-    // Only dereference lqip from metadata (needed for blur placeholders).
+    format,
+    isFeatured,
+    "palette": image.asset->metadata.palette,
     "image": coalesce(
       image{
         ...,
@@ -77,6 +78,62 @@ const query = `
     )
   }
 `;
+
+// ── Colour extraction ─────────────────────────────────────────────────────
+
+/** Convert hex colour string to [H, S, L] (0-360, 0-100, 0-100) */
+function hexToHsl(hex: string): [number, number, number] {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, Math.round(l * 100)];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h = 0;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
+
+/** Map a hex colour to a broad human-readable colour family */
+function hexToColorName(hex: string): string {
+  if (!hex || !hex.startsWith('#') || hex.length < 7) return 'Other';
+  try {
+    const [h, s, l] = hexToHsl(hex);
+    if (l < 12) return 'Black';
+    if (l > 88) return 'White';
+    if (s < 15) return 'Grey';
+    if (h < 15 || h >= 345) return 'Red';
+    if (h < 40) return 'Orange';
+    if (h < 65) return 'Yellow';
+    if (h < 150) return 'Green';
+    if (h < 195) return 'Teal';
+    if (h < 255) return 'Blue';
+    if (h < 290) return 'Purple';
+    return 'Pink';
+  } catch {
+    return 'Other';
+  }
+}
+
+/** Extract unique colour names from a Sanity palette object */
+function extractColors(palette: Record<string, any> | null | undefined): string[] {
+  if (!palette) return [];
+  const swatches = ['dominant', 'vibrant', 'lightVibrant', 'darkVibrant', 'muted'];
+  const colorNames = new Set<string>();
+  for (const key of swatches) {
+    const bg = palette[key]?.background;
+    if (bg) {
+      const name = hexToColorName(bg);
+      if (name !== 'Other') colorNames.add(name);
+    }
+  }
+  return [...colorNames];
+}
 
 async function syncToAlgolia() {
   console.log('Fetching documents from Sanity...');
@@ -104,6 +161,9 @@ async function syncToAlgolia() {
         description: doc.description || '',
         slug: doc.slug,
         tags: doc.tags,
+        format: doc.format || 'square',
+        isFeatured: doc.isFeatured === true,
+        dominantColors: extractColors(doc.palette),
         image: doc.image || null,
         views: popularity,
         createdAt: createdAtDate,

@@ -18,6 +18,7 @@ async function setSettings() {
       indexSettings: {
         attributesForFaceting: [
           'tags',
+          'dominantColors',
           'filterOnly(_type)',
           'filterOnly(status)',
           'filterOnly(projectType)',

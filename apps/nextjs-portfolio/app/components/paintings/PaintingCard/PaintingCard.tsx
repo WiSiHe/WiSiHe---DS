@@ -34,6 +34,8 @@ type PaintingCardAdapterProps = {
   svgHoverIndex?: number;
   /** Tags + title strip stay visible without hover (e.g. touch / mobile carousel). */
   alwaysShowTags?: boolean;
+  /** Passed through to PaintingCard — use to override aspect ratio via tailwind-merge */
+  className?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -46,6 +48,7 @@ const PaintingCardAdapter = ({
   isNsfwFilterActive = false,
   svgHoverIndex,
   alwaysShowTags = false,
+  className,
 }: PaintingCardAdapterProps) => {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
@@ -153,6 +156,7 @@ const PaintingCardAdapter = ({
       isNsfwVisible={isNsfwFilterActive}
       badges={badges}
       alwaysShowTags={alwaysShowTags}
+      className={className}
     />
   );
 };
