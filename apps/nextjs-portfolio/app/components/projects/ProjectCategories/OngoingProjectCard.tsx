@@ -27,7 +27,13 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
             <div className='flex-1 flex flex-col justify-between gap-6 p-6 md:p-8'>
               <div className='space-y-3'>
                 <div className='flex flex-wrap items-center gap-2'>
-                  {status && (
+                  {status === 'inProgress' && (
+                    <span className='inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-500/10 text-green-600 border border-green-500/20'>
+                      <span className='w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse' />
+                      In Progress
+                    </span>
+                  )}
+                  {status && status !== 'inProgress' && (
                     <Chip variation='secondary' label={status} interactive={false} size='small' />
                   )}
                   {year && (

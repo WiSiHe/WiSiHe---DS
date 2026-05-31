@@ -4,10 +4,10 @@ import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import Image, { getImageProps } from 'next/image';
+import { getImageProps } from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
-import { FaPlay } from 'react-icons/fa';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FaPlay, FaTimes } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 
 function getYouTubeVideoId(url: string): string {
@@ -34,6 +34,29 @@ type VideoItem = {
   } | null;
 };
 
+// Category definitions — map tag names to a display category
+const CATEGORY_MAP: Record<string, string> = {
+  'Time-lapse': 'Timelapse',
+  Animation: 'Animation',
+  Rotoscope: 'Animation',
+  'Unreal Engine 4': '3D / UE4',
+  'Unreal Engine 5': '3D / UE4',
+  Game: 'Game Dev',
+  Unity: 'Game Dev',
+  Flash: 'Game Dev',
+  Babel: 'Game Dev',
+};
+
+function getCategory(video: VideoItem): string {
+  for (const tag of video.tags ?? []) {
+    const cat = CATEGORY_MAP[tag.name ?? ''];
+    if (cat) return cat;
+  }
+  return 'Other';
+}
+
+const ALL_CATEGORIES = ['All', 'Timelapse', 'Animation', '3D / UE4', 'Game Dev'];
+
 interface VideosPageProps {
   videos: VideoItem[];
 }
@@ -41,6 +64,7 @@ interface VideosPageProps {
 export const VideosPage = ({ videos }: VideosPageProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const handleVideoClick = (video: VideoItem) => {
     setSelectedVideo(video);
@@ -54,45 +78,81 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        handleClose();
-      }
+      if (event.key === 'Escape') handleClose();
     },
     [handleClose],
   );
 
-  // Set up the event listener when the component mounts
-  // and clean it up when the component unmounts
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-
-    // Clean up the event listener
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  const filteredVideos = useMemo(() => {
+    const sorted = [...videos].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    if (activeCategory === 'All') return sorted;
+    return sorted.filter(v => getCategory(v) === activeCategory);
+  }, [videos, activeCategory]);
+
+  // Count per category for badges
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { All: videos.length };
+    for (const v of videos) {
+      const cat = getCategory(v);
+      counts[cat] = (counts[cat] ?? 0) + 1;
+    }
+    return counts;
+  }, [videos]);
 
   return (
     <>
-      <div className='grid grid-cols-12 gap-6'>
-        {videos
-          .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
-          .map((video: VideoItem) => {
+      {/* Category filter bar */}
+      <div className='flex flex-wrap gap-2 mb-6'>
+        {ALL_CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            type='button'
+            onClick={() => setActiveCategory(cat)}
+            className={cn(
+              'flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border',
+              activeCategory === cat
+                ? 'bg-accent text-accent-contrast border-accent'
+                : 'bg-surface text-foreground-subtle border-border hover:border-accent-border hover:text-foreground',
+            )}
+          >
+            {cat}
+            {categoryCounts[cat] ? (
+              <span
+                className={cn(
+                  'text-xs rounded-full px-1.5 py-0.5 font-semibold',
+                  activeCategory === cat ? 'bg-accent-contrast/20' : 'bg-surface-subtle',
+                )}
+              >
+                {categoryCounts[cat]}
+              </span>
+            ) : null}
+          </button>
+        ))}
+      </div>
+
+      {/* Video grid */}
+      <AnimatePresence mode='wait'>
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className='grid grid-cols-12 gap-4 lg:gap-6'
+        >
+          {filteredVideos.map((video, index) => {
             const { thumbnail, _id, featured, title, description, tags } = video;
-
             const thumbnailUrl = urlForImage(thumbnail);
-            const common = {
-              alt: video.title ?? '',
-              fill: true,
-              className: 'object-cover',
-            };
-
-            // desktop
+            const common = { alt: title ?? '', fill: true, className: 'object-cover' };
             const desktopWidth = featured ? 1280 : 800;
-            const desktopHeight = featured ? 720 : 1100;
-            // mobile
+            const desktopHeight = featured ? 720 : 900;
             const mobileWidth = featured ? 640 : 400;
-            const mobileHeight = featured ? 420 : 400;
+            const mobileHeight = featured ? 420 : 450;
 
             const {
               props: { srcSet: desktop },
@@ -109,54 +169,177 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
               src: thumbnailUrl?.width(mobileWidth).height(mobileHeight).url() || '',
             });
 
+            const displayTags = (tags ?? []).slice(0, 3);
+
             return (
-              <button
-                type='button'
+              <motion.button
                 key={_id}
+                type='button'
+                layout
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.25, delay: index * 0.03 }}
                 onClick={() => handleVideoClick(video)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleVideoClick(video);
-                  }
-                }}
-                tabIndex={0}
                 className={cn(
-                  'relative bg-surface border border-border/30 flex flex-col transition-all duration-300 w-full h-full shadow-lg hover:shadow-xl rounded-lg overflow-clip cursor-pointer group hover:border-accent/30',
-                  featured ? 'col-span-full lg:col-span-6' : 'col-span-6 lg:col-span-3',
+                  'relative group flex flex-col overflow-hidden rounded-2xl',
+                  'bg-surface border border-border cursor-pointer',
+                  'transition-all duration-300 hover:border-accent-border hover:shadow-xl hover:-translate-y-1',
+                  // Featured videos span full width on mobile, half on desktop
+                  featured
+                    ? 'col-span-full lg:col-span-6'
+                    : 'col-span-6 sm:col-span-6 lg:col-span-4',
                 )}
               >
-                <motion.div
+                {/* Thumbnail */}
+                <div
                   className={cn(
-                    ' w-full h-full',
-                    featured ? 'aspect-video flex relative' : 'aspect-square lg:aspect-portrait',
+                    'relative w-full overflow-hidden',
+                    featured ? 'aspect-video' : 'aspect-video',
                   )}
-                  layoutId={`video-${_id}`}
                 >
-                  <div className='absolute inset-0 transition-all duration-300 opacity-20 bg-accent group-hover:opacity-60'></div>
-                  <div className='absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110'>
-                    <FaPlay className='text-5xl text-white drop-shadow-2xl' />
+                  {/* Play overlay */}
+                  <div className='absolute inset-0 z-10 bg-black/20 group-hover:bg-black/40 transition-colors duration-300' />
+                  <div className='absolute inset-0 z-20 flex items-center justify-center'>
+                    <div className='w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300 border border-white/30'>
+                      <FaPlay className='w-4 h-4 text-white ml-0.5' />
+                    </div>
                   </div>
-                  <picture className='w-full'>
+
+                  {/* Featured badge */}
+                  {featured && (
+                    <div className='absolute top-3 left-3 z-20'>
+                      <span className='text-xs font-semibold px-2.5 py-1 rounded-full bg-accent text-accent-contrast'>
+                        Featured
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Tags */}
+                  {displayTags.length > 0 && (
+                    <div className='absolute top-3 right-3 z-20 flex gap-1.5'>
+                      {displayTags.map(tag => (
+                        <span
+                          key={tag.name}
+                          className='text-xs font-medium px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90'
+                        >
+                          {tag.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <picture className='absolute inset-0'>
                     <source media='(min-width: 1000px)' srcSet={desktop} />
                     <source media='(min-width: 500px)' srcSet={mobile} />
                     <img
                       {...rest}
-                      style={{ width: '100%', height: '100%' }}
-                      className={cn(
-                        'object-cover w-full h-full',
-                        featured ? 'aspect-video' : 'aspect-square lg:aspect-portrait',
-                      )}
-                      alt={video.title || 'Video thumbnail'}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      alt={title ?? 'Video thumbnail'}
+                      className='transition-transform duration-500 group-hover:scale-105'
                     />
                   </picture>
-                </motion.div>
-                {featured && (
-                  <div className='relative p-4 text-left shrink-0 text-foreground bg-surface'>
-                    <h3 className='text-xl font-bold text-foreground mb-2'>{title}</h3>
-                    {tags && (
-                      <div className='flex flex-wrap gap-2 py-2'>
-                        {tags.map(tag => (
+                </div>
+
+                {/* Title + description */}
+                <div className='p-4 text-left flex-1 flex flex-col'>
+                  <h3
+                    className={cn(
+                      'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 line-clamp-1',
+                      featured ? 'text-lg' : 'text-sm',
+                    )}
+                  >
+                    {title}
+                  </h3>
+                  {description && (
+                    <p className='text-xs text-foreground-muted mt-1 line-clamp-2 leading-relaxed'>
+                      {description}
+                    </p>
+                  )}
+                  {video.linkedPainting && (
+                    <div className='mt-auto pt-3 flex items-center gap-1.5'>
+                      <span className='text-xs text-foreground-muted'>↗</span>
+                      <span className='text-xs text-accent hover:underline'>
+                        {video.linkedPainting.title}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Video modal */}
+      <AnimatePresence>
+        {isOpen && selectedVideo && (
+          <Dialog open={isOpen} onClose={handleClose} className='relative z-50'>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className='fixed inset-0 bg-black/70 backdrop-blur-lg'
+              onClick={handleClose}
+            />
+
+            <div className='fixed inset-0 flex items-center justify-center p-4 sm:p-8'>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ duration: 0.2 }}
+                className='relative w-full max-w-4xl'
+              >
+                <DialogPanel className='relative w-full bg-surface rounded-2xl overflow-hidden shadow-2xl border border-border'>
+                  {/* Close button */}
+                  <button
+                    type='button'
+                    onClick={handleClose}
+                    className='absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors'
+                    aria-label='Close video'
+                  >
+                    <FaTimes className='w-3.5 h-3.5' />
+                  </button>
+
+                  {/* YouTube embed */}
+                  <div className='aspect-video w-full bg-black'>
+                    <iframe
+                      className='w-full h-full'
+                      src={`https://www.youtube.com/embed/${getYouTubeVideoId(selectedVideo.videoUrl ?? '')}?autoplay=1&rel=0`}
+                      title={selectedVideo.title ?? ''}
+                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                      allowFullScreen
+                    />
+                  </div>
+
+                  {/* Info below video */}
+                  <div className='p-5'>
+                    <div className='flex items-start justify-between gap-4'>
+                      <div className='flex-1 min-w-0'>
+                        <DialogTitle className='text-xl font-bold text-foreground'>
+                          {selectedVideo.title}
+                        </DialogTitle>
+                        {selectedVideo.description && (
+                          <Description className='mt-1.5 text-sm text-foreground-subtle leading-relaxed'>
+                            {selectedVideo.description}
+                          </Description>
+                        )}
+                      </div>
+
+                      {selectedVideo.linkedPainting?.slug && (
+                        <Link
+                          href={`/paintings/${selectedVideo.linkedPainting.slug}`}
+                          className='shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border border-accent/30 text-accent hover:bg-accent/10 transition-colors'
+                          onClick={handleClose}
+                        >
+                          View painting →
+                        </Link>
+                      )}
+                    </div>
+
+                    {selectedVideo.tags && selectedVideo.tags.length > 0 && (
+                      <div className='flex flex-wrap gap-1.5 mt-3'>
+                        {selectedVideo.tags.map(tag => (
                           <Chip
                             key={tag.name ?? ''}
                             label={tag.name ?? ''}
@@ -166,112 +349,9 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                         ))}
                       </div>
                     )}
-                    <p className='line-clamp-3 text-foreground-subtle'>{description}</p>
                   </div>
-                )}
-              </button>
-            );
-          })}
-      </div>
-      <AnimatePresence>
-        {isOpen && selectedVideo && (
-          <Dialog open={isOpen} onClose={() => setIsOpen(false)} className='relative z-50'>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className='fixed inset-0 bg-black/60 backdrop-blur-lg'
-            />
-
-            <div className='fixed inset-0 flex items-center justify-center w-screen p-4 overflow-y-auto sm:p-6 md:p-10 lg:p-12'>
-              <DialogPanel
-                layoutId={`video-${selectedVideo?._id}`}
-                as={motion.div}
-                initial={{
-                  opacity: 0,
-                  scale: 0.95,
-                  transition: { duration: 0.3 },
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  transition: { duration: 0.3 },
-                }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.95,
-                  transition: { duration: 0.3 },
-                }}
-                className='w-full relative max-w-6xl max-h-[90vh] bg-surface-elevated border border-border rounded-lg shadow-2xl overflow-hidden'
-              >
-                <div className='absolute z-20 flex items-center justify-center left-4 right-4 -top-16'>
-                  <button
-                    type='button'
-                    onClick={() => setIsOpen(false)}
-                    className='flex gap-2 px-4 py-2 rounded-lg text-accent-contrast transition-all duration-200 cursor-pointer bg-accent hover:bg-accent-hover shadow-lg'
-                    aria-label='Close video'
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      aria-hidden='true'
-                      focusable='false'
-                    >
-                      <line x1='18' y1='6' x2='6' y2='18'></line>
-                      <line x1='6' y1='6' x2='18' y2='18'></line>
-                    </svg>
-                    <span className=''>Close video</span>
-                  </button>
-                </div>
-                {selectedVideo?.videoUrl && (
-                  <div className='w-full bg-accent aspect-square lg:aspect-video'>
-                    <iframe
-                      src={`https://www.youtube.com/embed/${getYouTubeVideoId(selectedVideo?.videoUrl)}?autoplay=1&loop=1&playlist=${getYouTubeVideoId(selectedVideo?.videoUrl)}`}
-                      className='w-full h-full'
-                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                      allowFullScreen
-                      title={selectedVideo.title ?? ''}
-                    />
-                  </div>
-                )}
-
-                <div className='p-6 overflow-y-auto text-foreground'>
-                  <DialogTitle className='pb-4 text-2xl font-bold text-foreground'>
-                    {selectedVideo?.title}
-                  </DialogTitle>
-                  <Description className='line-clamp-3 text-foreground-subtle'>
-                    {selectedVideo?.description}
-                  </Description>
-                  {selectedVideo?.linkedPainting && (
-                    <div className='mt-4'>
-                      <h3 className='mb-2 text-lg font-bold text-foreground'>
-                        The finished painting:
-                      </h3>
-                      <Link href={`/paintings/${selectedVideo?.linkedPainting?.slug}`}>
-                        <Image
-                          src={
-                            urlForImage(selectedVideo?.linkedPainting?.image)
-                              ?.width(100)
-                              .height(100)
-                              .url() || ''
-                          }
-                          alt={selectedVideo?.linkedPainting?.title || 'Painting'}
-                          width={100}
-                          height={100}
-                          className='rounded-lg'
-                        />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </DialogPanel>
+                </DialogPanel>
+              </motion.div>
             </div>
           </Dialog>
         )}
