@@ -6,20 +6,24 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import posthog from 'posthog-js';
+import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
-import { BsClockFill, BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
+import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { TbMasksTheater, TbPalette } from 'react-icons/tb';
+import { TbMasksTheater } from 'react-icons/tb';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
+import Breadcrumbs, { type Crumb } from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { urlForImage } from '@/sanity/lib/utils';
 
 // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
 type PaintingDetailProps = {
   paintingData: any;
+  breadcrumbs?: Crumb[];
 };
 
-const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
+const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -28,7 +32,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const {
     title,
     _id,
-    views,
     description,
     tagsV2 = [],
     paintedAt,
@@ -38,10 +41,58 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     images = [],
     video,
     redbubbleUrl,
+    gelatoUrl,
     format,
     medium,
     isFanArt,
   } = paintingData as any;
+
+  // Build the list of available stores — easy to extend with more platforms
+  const storeLinks: { label: string; url: string; icon: React.ReactNode }[] = [
+    ...(redbubbleUrl
+      ? [{ label: 'Redbubble', url: redbubbleUrl, icon: <BiLogoRedbubble className='w-4 h-4' /> }]
+      : []),
+    ...(gelatoUrl
+      ? [
+          {
+            label: 'Gelato',
+            url: gelatoUrl,
+            icon: <span className='text-xs font-black leading-none'>G</span>,
+          },
+        ]
+      : []),
+  ];
+
+  const imageWidth: number | null = image?.width ?? null;
+  const imageHeight: number | null = image?.height ?? null;
+  const hasAlpha: boolean = image?.hasAlpha ?? false;
+  const formatLabel =
+    format === 'portrait' ? 'Portrait' : format === 'landscape' ? 'Landscape' : 'Square';
+
+  // Palette swatch labels for display
+  const SWATCH_LABELS: Record<string, string> = {
+    dominant: 'Dominant',
+    vibrant: 'Vibrant',
+    lightVibrant: 'Light',
+    darkVibrant: 'Dark',
+    muted: 'Muted',
+    lightMuted: 'Lt. Muted',
+    darkMuted: 'Dk. Muted',
+  };
+
+  // Extract dominant palette swatches sorted by population
+  const paletteSwatches: { key: string; color: string; population: number }[] = image?.palette
+    ? Object.entries(image.palette)
+        .filter(([key]) => !key.startsWith('_'))
+        .map(([key, swatch]: [string, any]) => ({
+          key,
+          color: swatch?.background as string,
+          population: (swatch?.population as number) ?? 0,
+        }))
+        .filter(s => s.color)
+        .sort((a, b) => b.population - a.population)
+        .slice(0, 5)
+    : [];
 
   const aspectRatioStyle = (
     {
@@ -129,6 +180,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         console.error('Failed to update likedPaintings in localStorage', err);
       }
 
+      posthog.capture('painting_unliked', { painting_id: _id, title });
       await removePaintingLike(_id, likerId);
     } else {
       // Optimistic update
@@ -143,6 +195,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         console.error('Failed to update likedPaintings in localStorage', err);
       }
 
+      posthog.capture('painting_liked', { painting_id: _id, title });
       await incrementPaintingLike(_id, likerId);
     }
   };
@@ -169,22 +222,28 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     }
   };
 
-  // On mount, patch painting views
+  // On mount, track view via PostHog + increment Sanity counter
+  // Deduplication: localStorage key prevents counting the same painting twice per device
   useEffect(() => {
     const addView = async () => {
-      const viewerId = generateOrRetrieveViewerId();
-
-      if (
-        Array.isArray(views) &&
-        !views.some(view => view.viewerId === viewerId) &&
-        !hasAddedView
-      ) {
+      if (hasAddedView) return;
+      const storageKey = `viewed_${_id}`;
+      try {
+        if (localStorage.getItem(storageKey)) return;
         setHasAddedView(true);
-        await incrementPaintingView(_id, viewerId);
+        localStorage.setItem(storageKey, '1');
+        // Track in PostHog for analytics
+        posthog.capture('painting_viewed', { painting_id: _id, title });
+        // Increment counter in Sanity (no array, just inc)
+        await incrementPaintingView(_id);
+      } catch {
+        // localStorage blocked (private browsing etc.) — still track in PostHog
+        posthog.capture('painting_viewed', { painting_id: _id, title });
+        await incrementPaintingView(_id);
       }
     };
     void addView();
-  }, [_id, views, hasAddedView, generateOrRetrieveViewerId]);
+  }, [_id, title, hasAddedView]);
 
   // Provide higher max bounds to allow next/image to serve crisp retina images
   const getImageDimensions = (format: string) => {
@@ -200,7 +259,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
   return (
     <div className='pt-32 min-h-[calc(100vh-5rem)] pb-32 overflow-clip'>
-      <section className='grid items-start grid-cols-12 gap-4 mx-auto text-foreground lg:gap-10 max-w-screen-2xl'>
+      <section className='grid items-start grid-cols-12 gap-6 mx-auto text-foreground lg:gap-16 max-w-screen-2xl'>
         <section className='relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8'>
           <div className='relative w-full'>
             <motion.img
@@ -226,7 +285,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               aria-hidden='true'
             />
 
-            <div className={cn('relative', aspectRatioStyle)}>
+            <motion.div
+              layoutId={`image-${title}`}
+              className={cn('relative', aspectRatioStyle)}
+              transition={{ type: 'spring', stiffness: 200, damping: 28 }}
+            >
               <div className='overflow-hidden rounded-3xl w-full h-full shadow-2xl' ref={emblaRef}>
                 <div className='flex w-full h-full'>
                   {allImages.map((img, index) => {
@@ -281,7 +344,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                   </button>
                 </>
               )}
-            </div>
+            </motion.div>
           </div>
 
           {allImages.length > 1 && (
@@ -305,56 +368,132 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         </section>
         <motion.div
           layout
-          className='z-10 flex flex-col items-center justify-center gap-5 col-span-full lg:right-14 lg:bottom-4 lg:top-42 lg:sticky md:col-span-4'
+          className='z-10 flex flex-col col-span-full lg:right-14 lg:bottom-4 lg:top-42 lg:sticky md:col-span-4'
         >
           <motion.div
-            initial={{ scale: 0.8, x: -20 }}
-            animate={{ scale: 1, x: 0 }}
-            exit={{ scale: 0.9, x: -20 }}
-            transition={{ type: 'spring' }}
-            className='w-full lg:rounded-lg pointer-events-auto h-fit lg:bg-surface lg:border lg:border-border p-4 lg:p-10 lg:max-w-[520px] lg:shadow-2xl lg:cursor-grab'
+            initial={{ scale: 0.95, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 24 }}
+            className='w-full lg:rounded-2xl pointer-events-auto h-fit lg:bg-surface lg:border lg:border-border p-4 lg:p-8 lg:max-w-[520px] lg:shadow-xl'
           >
-            <div className={cn('pt-2 flex flex-col gap-4')}>
-              <motion.h1
-                // layoutId={`title-${title}`}
-                className='text-3xl font-bold text-balance text-foreground'
-              >
-                {title}
-              </motion.h1>
+            <div className='flex flex-col gap-5'>
+              {/* Breadcrumbs */}
+              {breadcrumbs && <Breadcrumbs crumbs={breadcrumbs} />}
 
-              {/* Information Row */}
-              <div className='flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium'>
-                <span className='flex items-center gap-1.5' title='Painting date'>
-                  <BsClockFill className='w-3.5 h-3.5' /> {formattedPaintedAt}
-                </span>
-                {medium && (
-                  <span className='flex items-center gap-1.5' title='Medium'>
-                    <TbPalette className='w-4 h-4' /> {medium}
+              {/* Title + badges */}
+              <div className='space-y-2'>
+                <div className='flex flex-wrap items-center gap-2'>
+                  {isFanArt && (
+                    <span className='inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20'>
+                      <TbMasksTheater className='w-3.5 h-3.5' /> Fan Art
+                    </span>
+                  )}
+                </div>
+                <h1 className='text-2xl lg:text-3xl font-bold text-balance text-foreground leading-tight'>
+                  {title}
+                </h1>
+
+                {/* Views + likes inline */}
+                <div className='flex items-center gap-4 text-sm text-foreground-muted'>
+                  <span className='flex items-center gap-1.5'>
+                    <BsEye className='w-3.5 h-3.5' /> {viewsCount?.toString() ?? '0'} views
                   </span>
-                )}
-                {isFanArt && (
-                  <span className='flex items-center gap-1.5 text-accent' title='Fan art'>
-                    <TbMasksTheater className='w-4 h-4' /> Fan Art
-                  </span>
-                )}
-                <span className='flex items-center gap-1.5' title='View count'>
-                  <BsEye className='w-4 h-4' /> {viewsCount?.toString() ?? '0'} Views
-                </span>
-                <span className='flex items-center gap-1.5' title='Like count'>
-                  <span className={cn(hasLikedLocal ? 'text-red-500' : '')}>
+                  <span
+                    className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-red-500')}
+                  >
                     {hasLikedLocal ? (
                       <BsHeartFill className='w-3.5 h-3.5' />
                     ) : (
                       <BsHeart className='w-3.5 h-3.5' />
                     )}
+                    {localLikesCount} likes
                   </span>
-                  {localLikesCount} Likes
-                </span>
+                </div>
               </div>
 
-              {/* Taxonomy (Tags) */}
+              <hr className='border-border/40' />
+
+              {/* Details grid — buyer info */}
+              <div className='grid grid-cols-2 gap-x-6 gap-y-3'>
+                <div className='space-y-0.5'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    Date
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>{formattedPaintedAt}</p>
+                </div>
+                <div className='space-y-0.5'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    Medium
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>{medium ?? 'Digital'}</p>
+                </div>
+                <div className='space-y-0.5'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    Format
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>{formatLabel}</p>
+                </div>
+                {imageWidth && imageHeight && (
+                  <div className='space-y-0.5'>
+                    <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                      Resolution
+                    </p>
+                    <p className='text-sm font-semibold text-foreground'>
+                      {imageWidth.toLocaleString()} × {imageHeight.toLocaleString()} px
+                    </p>
+                  </div>
+                )}
+                <div className='space-y-0.5'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    Background
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {hasAlpha ? '✦ Transparent' : 'Solid'}
+                  </p>
+                </div>
+                <div className='space-y-0.5'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    File type
+                  </p>
+                  <p className='text-sm font-semibold text-foreground'>
+                    {hasAlpha ? 'PNG' : 'JPEG / PNG'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Colour palette — labelled swatches */}
+              {paletteSwatches.length > 0 && (
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
+                    Colour Palette
+                  </p>
+                  <div className='flex flex-wrap gap-2'>
+                    {paletteSwatches.map(swatch => (
+                      <div
+                        key={swatch.key}
+                        className='flex flex-col items-center gap-1 group cursor-default'
+                      >
+                        <div
+                          className='w-10 h-10 rounded-xl border border-border/40 shadow-sm transition-all duration-200 group-hover:scale-110 group-hover:shadow-md'
+                          style={{ backgroundColor: swatch.color }}
+                          title={`${SWATCH_LABELS[swatch.key] ?? swatch.key}: ${swatch.color.toUpperCase()}`}
+                          aria-label={swatch.color}
+                        />
+                        <span className='text-[10px] text-foreground-muted leading-tight text-center'>
+                          {SWATCH_LABELS[swatch.key] ?? swatch.key}
+                        </span>
+                        <span className='text-[9px] text-foreground-muted/60 font-mono opacity-0 group-hover:opacity-100 transition-opacity'>
+                          {swatch.color.toUpperCase()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tags */}
               {tagsV2.length > 0 && (
-                <div className='flex flex-wrap gap-2 mt-1'>
+                <div className='flex flex-wrap gap-1.5'>
                   {tagsV2.map((tag: { name?: string | null }) => {
                     const { name } = tag;
                     if (!name) return null;
@@ -367,8 +506,15 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 </div>
               )}
 
+              <hr className='border-border/40' />
+
+              {/* Description */}
+              {description && (
+                <p className='text-sm text-foreground-subtle leading-relaxed'>{description}</p>
+              )}
+
               {/* Actions */}
-              <div className='flex items-center flex-wrap gap-3 mt-1'>
+              <div className='flex items-center flex-wrap gap-2'>
                 <Button
                   onClick={handleLike}
                   variant='secondary'
@@ -396,36 +542,39 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 </Button>
               </div>
 
-              {redbubbleUrl && (
+              {/* Buy CTA — shows when at least one store is configured */}
+              {storeLinks.length > 0 && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: 'spring', delay: 0.4 }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', delay: 0.3 }}
+                  className='rounded-xl border border-border bg-surface-subtle p-4 space-y-3'
                 >
-                  <hr className='my-4 border-border/30' />
-
-                  <div className='flex flex-col'>
-                    <h2 className='text-2xl font-semibold text-foreground mb-2'>
-                      Want to own this piece?
-                    </h2>
-                    <p className='text-foreground-subtle mb-3'>
-                      This painting is available for purchase on my Redbubble store.
+                  <div>
+                    <h2 className='font-semibold text-foreground text-sm'>Available to buy</h2>
+                    <p className='text-xs text-foreground-muted mt-0.5'>
+                      Prints, posters, stickers and more — shipped worldwide.
                     </p>
-                    <a
-                      href={redbubbleUrl}
-                      target='_blank'
-                      rel='noreferrer'
-                      className='px-4 py-2.5 mt-2 flex rounded-lg bg-accent hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none font-semibold text-accent-contrast justify-center items-center gap-2 w-fit transition-colors shadow-lg hover:shadow-xl'
-                    >
-                      <BiLogoRedbubble className='inline' title='Redbubble logo' /> Go to store{' '}
-                      <BiRightArrow />
-                    </a>
+                  </div>
+                  <div className='flex flex-col gap-2'>
+                    {storeLinks.map(store => (
+                      <a
+                        key={store.label}
+                        href={store.url}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='flex items-center justify-between gap-2 w-full px-4 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-accent-contrast font-semibold text-sm transition-colors shadow-sm hover:shadow-md focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none'
+                      >
+                        <span className='flex items-center gap-2'>
+                          {store.icon}
+                          Shop on {store.label}
+                        </span>
+                        <BiRightArrow className='w-3.5 h-3.5 opacity-70' />
+                      </a>
+                    ))}
                   </div>
                 </motion.div>
               )}
-              <p className='whitespace-pre-wrap text-foreground-subtle leading-relaxed'>
-                {description}
-              </p>
             </div>
           </motion.div>
         </motion.div>

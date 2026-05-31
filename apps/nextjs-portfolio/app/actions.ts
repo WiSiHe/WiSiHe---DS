@@ -3,86 +3,67 @@
 import { draftMode } from 'next/headers';
 import { client } from '@/sanity/lib/client';
 
-export async function incrementPaintingView(paintingId: string, viewerId: string) {
+/**
+ * Views are tracked via PostHog on the client side.
+ * This action just increments the viewsCount integer — no more array writes.
+ * Deduplication is handled client-side via localStorage.
+ */
+export async function incrementPaintingView(paintingId: string) {
   try {
-    const patch = await client
-      .patch(paintingId)
-      .setIfMissing({ views: [] })
-      .insert('after', 'views[-1]', [
-        {
-          _key: crypto.randomUUID(), // Unique key
-          viewerId,
-          timestamp: new Date().toISOString(),
-        },
-      ])
-      .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    await client.patch(paintingId).inc({ viewsCount: 1 }).commit();
+    return { success: true };
   } catch (error) {
     console.error('Failed to increment painting view:', error);
-    return { success: false, error: 'Failed to increment view' };
+    return { success: false };
   }
 }
 
 export async function incrementPaintingLike(paintingId: string, likerId: string) {
   try {
-    const patch = await client
+    await client
       .patch(paintingId)
       .setIfMissing({ likes: [] })
       .insert('after', 'likes[-1]', [
         {
-          _key: crypto.randomUUID(), // Unique key
+          _key: crypto.randomUUID(),
           likerId,
           timestamp: new Date().toISOString(),
         },
       ])
       .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    return { success: true };
   } catch (error) {
     console.error('Failed to increment painting like:', error);
-    return { success: false, error: 'Failed to increment like' };
+    return { success: false };
   }
 }
 
 export async function removePaintingLike(paintingId: string, likerId: string) {
   try {
-    const patch = await client
+    await client
       .patch(paintingId)
       .unset([`likes[likerId=="${likerId}"]`])
       .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    return { success: true };
   } catch (error) {
     console.error('Failed to remove painting like:', error);
-    return { success: false, error: 'Failed to remove like' };
+    return { success: false };
   }
 }
 
-export async function incrementProjectView(projectId: string, viewerId: string) {
+export async function incrementProjectView(projectId: string) {
   try {
-    const patch = await client
-      .patch(projectId)
-      .setIfMissing({ views: [] })
-      .insert('after', 'views[-1]', [
-        {
-          _key: crypto.randomUUID(),
-          viewerId,
-          timestamp: new Date().toISOString(),
-        },
-      ])
-      .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    await client.patch(projectId).inc({ viewsCount: 1 }).commit();
+    return { success: true };
   } catch (error) {
     console.error('Failed to increment project view:', error);
-    return { success: false, error: 'Failed to increment view' };
+    return { success: false };
   }
 }
 
 export async function incrementProjectLike(projectId: string, likerId: string) {
   try {
-    const patch = await client
+    await client
       .patch(projectId)
       .setIfMissing({ likes: [] })
       .insert('after', 'likes[-1]', [
@@ -93,25 +74,23 @@ export async function incrementProjectLike(projectId: string, likerId: string) {
         },
       ])
       .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    return { success: true };
   } catch (error) {
     console.error('Failed to increment project like:', error);
-    return { success: false, error: 'Failed to increment like' };
+    return { success: false };
   }
 }
 
 export async function removeProjectLike(projectId: string, likerId: string) {
   try {
-    const patch = await client
+    await client
       .patch(projectId)
       .unset([`likes[likerId=="${likerId}"]`])
       .commit({ autoGenerateArrayKeys: true });
-
-    return { success: true, patch };
+    return { success: true };
   } catch (error) {
     console.error('Failed to remove project like:', error);
-    return { success: false, error: 'Failed to remove like' };
+    return { success: false };
   }
 }
 

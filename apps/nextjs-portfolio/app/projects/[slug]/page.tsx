@@ -2,6 +2,8 @@ import { isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import {
   ConnectedPage,
   ConnectedPaintingsCarousel,
@@ -12,6 +14,13 @@ import {
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
+
+const PROJECT_TYPE_SCHEMA: Record<string, string> = {
+  development: 'WebApplication',
+  gameDevelopment: 'VideoGame',
+  design: 'CreativeWork',
+  other: 'CreativeWork',
+};
 
 // Loading component for Suspense boundaries
 function ProjectSectionSkeleton() {
@@ -132,8 +141,69 @@ export default async function ProjectPage(props: Props) {
 
     const { connectedVideo, connectedPaintings = [] } = project;
 
+    const projectUrl = `https://www.wisihe.no/projects/${project.slug}`;
+    const imageUrl = project.image
+      ? urlForImage(project.image)?.width(1200).height(630).url()
+      : null;
+    const schemaType = PROJECT_TYPE_SCHEMA[project.projectType] ?? 'CreativeWork';
+
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': schemaType,
+      name: project.name ?? project.title,
+      description: project.seo?.description || '',
+      url: projectUrl,
+      ...(imageUrl ? { image: imageUrl } : {}),
+      ...(project.projectStart ? { dateCreated: project.projectStart } : {}),
+      ...(project.projectEnd ? { datePublished: project.projectEnd } : {}),
+      author: {
+        '@type': 'Person',
+        name: 'Henrik Sissener',
+        url: 'https://www.wisihe.no',
+      },
+      creator: {
+        '@type': 'Person',
+        name: 'Henrik Sissener',
+        url: 'https://www.wisihe.no',
+      },
+      ...(project.tags?.length
+        ? { keywords: project.tags.map((t: { name: string }) => t.name).join(', ') }
+        : {}),
+    };
+
+    const breadcrumbData = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.wisihe.no' },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Projects',
+          item: 'https://www.wisihe.no/projects',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: project.name ?? project.title,
+          item: `https://www.wisihe.no/projects/${project.slug}`,
+        },
+      ],
+    };
+
     return (
       <div className='min-h-screen pt-32'>
+        <JsonLd data={structuredData} />
+        <JsonLd data={breadcrumbData} />
+        <div className='max-w-7xl mx-auto px-4 pt-4'>
+          <Breadcrumbs
+            crumbs={[
+              { label: 'Home', href: '/' },
+              { label: 'Projects', href: '/projects' },
+              { label: project.name ?? project.title ?? 'Project' },
+            ]}
+          />
+        </div>
         {/* Hero Section with Project Image */}
         <section className='relative py-8 lg:py-12'>
           <div className='max-w-7xl mx-auto px-4'>
@@ -160,7 +230,12 @@ export default async function ProjectPage(props: Props) {
               </Suspense>
               {connectedVideo?.videoUrl && (
                 <Suspense fallback={<ProjectSectionSkeleton />}>
-                  <EmbeddedVideo videoUrl={connectedVideo.videoUrl} />
+                  <div className='space-y-3'>
+                    <h2 className='text-xl font-semibold font-serif text-foreground'>
+                      Project Video
+                    </h2>
+                    <EmbeddedVideo videoUrl={connectedVideo.videoUrl} />
+                  </div>
                 </Suspense>
               )}
             </section>

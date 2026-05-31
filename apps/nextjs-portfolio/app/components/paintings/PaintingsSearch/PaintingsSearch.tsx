@@ -1,42 +1,241 @@
 'use client';
 
-import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { useEffect, useState } from 'react';
+import { LayoutGroup, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { IoCheckmark, IoChevronDown, IoClose, IoFilterOutline } from 'react-icons/io5';
 import {
-  IoClose,
-  IoEyeOutline,
-  IoFilterOutline,
-  IoHourglassOutline,
-  IoStarOutline,
-  IoTimeOutline,
-} from 'react-icons/io5';
-import { Configure, Pagination, useStats } from 'react-instantsearch';
+  Configure,
+  Pagination,
+  useCurrentRefinements,
+  useInstantSearch,
+  useRefinementList,
+  useSortBy,
+  useStats,
+} from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { indexName, searchClient } from './AlgoliaClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
-import CustomSortBy from './CustomSortBy';
+
+// ── Colour swatch map ────────────────────────────────────────────────────────
+const COLOR_SWATCHES: Record<string, string> = {
+  Red: '#c0392b',
+  Orange: '#e67e22',
+  Yellow: '#f1c40f',
+  Green: '#27ae60',
+  Teal: '#16a085',
+  Blue: '#2980b9',
+  Purple: '#8e44ad',
+  Pink: '#e91e8c',
+  Black: '#1a1a1a',
+  Grey: '#7f8c8d',
+  White: '#ecf0f1',
+};
+
+const COLOR_ORDER = [
+  'Red',
+  'Orange',
+  'Yellow',
+  'Green',
+  'Teal',
+  'Blue',
+  'Purple',
+  'Pink',
+  'Black',
+  'Grey',
+  'White',
+];
+
+function ColourRefinement() {
+  const { items, refine } = useRefinementList({ attribute: 'dominantColors', limit: 20 });
+
+  if (items.length === 0) return null;
+
+  const sorted = [...items].sort((a, b) => {
+    const ai = COLOR_ORDER.indexOf(a.label);
+    const bi = COLOR_ORDER.indexOf(b.label);
+    if (ai === -1 && bi === -1) return a.label.localeCompare(b.label);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+
+  return (
+    <LayoutGroup id='colour-chips'>
+      <motion.div layout className='flex flex-wrap gap-2'>
+        {sorted.map(item => {
+          const swatch = COLOR_SWATCHES[item.label] ?? '#aaa';
+          return (
+            <motion.button
+              key={item.label}
+              layout
+              type='button'
+              onClick={() => refine(item.value)}
+              title={`${item.label} (${item.count})`}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className={cn(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-150 border',
+                item.isRefined
+                  ? 'bg-foreground text-background border-foreground shadow-sm'
+                  : 'bg-surface border-border text-foreground-subtle hover:border-foreground-muted hover:text-foreground',
+              )}
+            >
+              <span
+                className='w-3.5 h-3.5 rounded-full border border-black/10 shrink-0'
+                style={{ backgroundColor: swatch }}
+              />
+              {item.label}
+              <span className='text-[10px] opacity-60'>{item.count}</span>
+            </motion.button>
+          );
+        })}
+      </motion.div>
+    </LayoutGroup>
+  );
+}
 
 // ---------------------------------------------------------------------------
-// HitStats — shows "Showing X–Y of Z paintings"
+// HitStats + custom Sort dropdown — compact results header
 // ---------------------------------------------------------------------------
-function HitStats() {
+type SortItem = { label: string; value: string };
+
+function SortDropdown({ items }: { items: SortItem[] }) {
+  const { currentRefinement, refine } = useSortBy({ items });
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const current = items.find(i => i.value === currentRefinement) ??
+    items[0] ?? { label: 'Sort', value: '' };
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} className='relative'>
+      <button
+        type='button'
+        onClick={() => setOpen(v => !v)}
+        className={cn(
+          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150',
+          'bg-surface border border-border text-foreground-subtle',
+          'hover:border-accent-border hover:text-foreground',
+          open && 'border-accent text-foreground',
+        )}
+      >
+        {current.label}
+        <IoChevronDown
+          className={cn('w-3.5 h-3.5 transition-transform duration-150', open && 'rotate-180')}
+        />
+      </button>
+
+      {open && (
+        <div className='absolute right-0 top-full mt-1.5 z-50 min-w-[140px] bg-surface border border-border rounded-xl shadow-lg overflow-hidden'>
+          {items.map(item => (
+            <button
+              key={item.value}
+              type='button'
+              onClick={() => {
+                refine(item.value);
+                setOpen(false);
+              }}
+              className={cn(
+                'w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition-colors duration-100 text-left',
+                item.value === currentRefinement
+                  ? 'text-foreground bg-surface-hover font-medium'
+                  : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
+              )}
+            >
+              {item.label}
+              {item.value === currentRefinement && (
+                <IoCheckmark className='w-3.5 h-3.5 text-accent shrink-0' />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type HitStatsProps = { sortItems: SortItem[] };
+
+function HitStatsWithSort({ sortItems }: HitStatsProps) {
   const { nbHits, page, hitsPerPage } = useStats();
   if (nbHits === 0 || hitsPerPage === undefined) return null;
-
   const from = page * hitsPerPage + 1;
   const to = Math.min((page + 1) * hitsPerPage, nbHits);
 
   return (
-    <p className='text-sm text-foreground-subtle'>
-      Showing{' '}
-      <span className='font-medium text-foreground'>
-        {from}–{to}
-      </span>{' '}
-      of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
-    </p>
+    <div className='flex items-center justify-between gap-4 mb-2'>
+      <p className='text-sm text-foreground-subtle'>
+        <span className='font-medium text-foreground'>
+          {from}–{to}
+        </span>{' '}
+        of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
+      </p>
+      <SortDropdown items={sortItems} />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ScrollToResults — scrolls the results area into view after every search
+// ---------------------------------------------------------------------------
+const RESULTS_ID = 'paintings-results';
+
+function ScrollToResults() {
+  const { results } = useInstantSearch();
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    // Skip the very first render — only scroll on subsequent state changes
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const el = document.getElementById(RESULTS_ID);
+    if (el) {
+      // Small delay so the DOM has updated before we scroll
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+    // results._state changes on every new search / page turn / filter toggle
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results?.queryID, results?.page, results?._state?.disjunctiveFacetsRefinements]);
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// MobileFilterButton — shows active refinement count badge
+// ---------------------------------------------------------------------------
+function MobileFilterButton({ onClick }: { onClick: () => void }) {
+  const { items } = useCurrentRefinements();
+  const activeCount = items.reduce((sum, item) => sum + item.refinements.length, 0);
+  return (
+    <div className='md:hidden w-full'>
+      <button
+        type='button'
+        onClick={onClick}
+        className='w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-surface border border-border text-sm font-medium text-foreground hover:border-accent-border hover:bg-surface-hover transition-all duration-200 shadow-sm'
+      >
+        <IoFilterOutline className='w-4 h-4' />
+        Filters
+        {activeCount > 0 && (
+          <span className='inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-accent text-accent-contrast rounded-full'>
+            {activeCount}
+          </span>
+        )}
+      </button>
+    </div>
   );
 }
 
@@ -44,37 +243,47 @@ function HitStats() {
 // FiltersSidebar — defined OUTSIDE the parent so React never creates a new
 // component identity on re-render (which would reset Algolia widget state).
 // ---------------------------------------------------------------------------
-type FiltersSidebarProps = {
-  sortItems: React.ComponentProps<typeof CustomSortBy>['items'];
-};
+const TAG_PREVIEW_COUNT = 10;
 
-function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
+function FiltersSidebar() {
+  const [showAllTags, setShowAllTags] = useState(false);
+
   return (
     <>
-      <div className='flex flex-col gap-2'>
-        <h3 className='font-semibold text-foreground text-sm uppercase tracking-wider'>Search</h3>
+      {/* Search */}
+      <div className='flex flex-col gap-1.5'>
+        <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
+          Search
+        </p>
         <CustomSearchBox />
       </div>
 
+      {/* Colour */}
       <div className='flex flex-col gap-2'>
-        <h3 className='font-semibold text-foreground text-sm uppercase tracking-wider'>Sort</h3>
-        <CustomSortBy items={sortItems} />
+        <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
+          Colour
+        </p>
+        <ColourRefinement />
       </div>
 
+      {/* Tags — collapsed by default with animated expand */}
       <div className='flex flex-col gap-2'>
-        <h3 className='font-semibold text-foreground text-sm uppercase tracking-wider mb-2'>
-          Filter by Tag
-        </h3>
-        <CustomRefinementList
-          attribute='tags'
-          limit={50}
-          transformItems={items => {
-            const filtered = items.filter(item => item.count >= 5 || item.isRefined);
-            const storeItem = filtered.find(item => item.label.toLowerCase() === 'store');
-            const otherItems = filtered.filter(item => item.label.toLowerCase() !== 'store');
-            return storeItem ? [storeItem, ...otherItems] : otherItems;
-          }}
-        />
+        <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Tags</p>
+        <motion.div layout='size' style={{ overflow: 'hidden' }}>
+          <CustomRefinementList
+            attribute='tags'
+            limit={showAllTags ? 50 : TAG_PREVIEW_COUNT}
+            transformItems={items => items.filter(item => item.count >= 3 || item.isRefined)}
+          />
+        </motion.div>
+        <motion.button
+          layout
+          type='button'
+          onClick={() => setShowAllTags(v => !v)}
+          className='text-xs text-accent hover:text-accent-hover transition-colors text-left w-fit'
+        >
+          {showAllTags ? '↑ Show fewer' : '↓ Show all tags'}
+        </motion.button>
       </div>
     </>
   );
@@ -86,7 +295,6 @@ function FiltersSidebar({ sortItems }: FiltersSidebarProps) {
 export default function PaintingsSearch() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  // Lock body scroll while drawer is open
   useEffect(() => {
     document.body.style.overflow = isMobileFiltersOpen ? 'hidden' : '';
     return () => {
@@ -95,38 +303,22 @@ export default function PaintingsSearch() {
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
-    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
-    {
-      label: 'Oldest',
-      value: `${indexName}_oldest`,
-      icon: <IoHourglassOutline className='w-4 h-4' />,
-    },
-    {
-      label: 'Most Viewed',
-      value: `${indexName}_views`,
-      icon: <IoEyeOutline className='w-4 h-4' />,
-    },
+    { label: 'Featured', value: indexName },
+    { label: 'Newest', value: `${indexName}_newest` },
+    { label: 'Oldest', value: `${indexName}_oldest` },
+    { label: 'Most Viewed', value: `${indexName}_views` },
   ];
 
   return (
     <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
-      <Configure hitsPerPage={12} filters='_type:"painting"' />
+      <Configure hitsPerPage={18} filters='_type:"painting"' />
+      <ScrollToResults />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
         {/* ---------------------------------------------------------------- */}
         {/* Mobile — Filter toggle button                                    */}
         {/* ---------------------------------------------------------------- */}
-        <div className='md:hidden w-full'>
-          <Button
-            onClick={() => setIsMobileFiltersOpen(true)}
-            variant='secondary'
-            className='w-full justify-center'
-            Icon={IoFilterOutline}
-          >
-            Filters &amp; Search
-          </Button>
-        </div>
+        <MobileFilterButton onClick={() => setIsMobileFiltersOpen(true)} />
 
         {/* ---------------------------------------------------------------- */}
         {/* Mobile — Always-mounted slide-up drawer                         */}
@@ -181,8 +373,8 @@ export default function PaintingsSearch() {
             </div>
 
             {/* Filters content */}
-            <div className='flex flex-col gap-8 pb-10'>
-              <FiltersSidebar sortItems={sortItems} />
+            <div className='flex flex-col gap-6 pb-10'>
+              <FiltersSidebar />
             </div>
           </div>
         </div>
@@ -190,15 +382,15 @@ export default function PaintingsSearch() {
         {/* ---------------------------------------------------------------- */}
         {/* Desktop — Sidebar (always visible, always mounted)              */}
         {/* ---------------------------------------------------------------- */}
-        <div className='hidden md:flex w-64 shrink-0 flex-col gap-8'>
-          <FiltersSidebar sortItems={sortItems} />
+        <div className='hidden md:flex w-56 shrink-0 flex-col gap-6'>
+          <FiltersSidebar />
         </div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Main content                                                     */}
         {/* ---------------------------------------------------------------- */}
-        <div className='grow flex flex-col min-w-0'>
-          <HitStats />
+        <div id={RESULTS_ID} className='grow flex flex-col min-w-0'>
+          <HitStatsWithSort sortItems={sortItems} />
           <CustomHits />
 
           <div className='mt-12 flex justify-center w-full'>

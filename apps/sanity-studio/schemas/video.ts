@@ -9,16 +9,6 @@ export default defineType({
   title: 'Video',
   icon: DocumentVideoIcon,
   type: 'document',
-  fieldsets: [
-    {
-      name: 'links',
-      title: 'Social Media Links',
-      options: {
-        collapsible: true,
-        collapsed: true,
-      },
-    },
-  ],
   fields: [
     defineField({
       name: 'title',

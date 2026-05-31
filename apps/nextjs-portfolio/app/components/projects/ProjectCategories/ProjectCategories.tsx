@@ -228,12 +228,12 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, delay: filteredOngoing.length > 0 ? 0.05 : 0 }}
-            className='space-y-3'
+            className='space-y-4'
           >
             {filteredOngoing.length > 0 && (
               <h2 className='text-xl font-semibold font-serif text-foreground'>Past Projects</h2>
             )}
-            <ul className='flex flex-col gap-3'>
+            <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               {filteredPast.map((project, index) => (
                 <PastProjectCard key={project._id} project={project} index={index} />
               ))}

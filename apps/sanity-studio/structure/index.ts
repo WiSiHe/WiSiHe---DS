@@ -18,6 +18,7 @@ interface CategoryItem {
 // Configuration data
 const singletons: DocumentItem[] = [
   { title: 'Home Page', icon: '🏠', schemaType: 'home', documentId: 'home' },
+  { title: 'About Page', icon: '👤', schemaType: 'about', documentId: 'about' },
   { title: 'Site Settings', icon: '⚙️', schemaType: 'settings', documentId: 'settings' },
 ];
 

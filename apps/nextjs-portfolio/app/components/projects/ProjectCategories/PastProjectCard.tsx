@@ -9,29 +9,17 @@ type PastProjectCardProps = {
   index: number;
 };
 
-const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  completed: {
-    label: 'Completed',
-    className: 'text-green-600 bg-green-500/10 border-green-500/20',
-  },
-  cancelled: {
-    label: 'Cancelled',
-    className: 'text-foreground-muted bg-surface-subtle border-border',
-  },
-  abandoned: {
-    label: 'Abandoned',
-    className: 'text-foreground-muted bg-surface-subtle border-border',
-  },
-  inProgress: {
-    label: 'In Progress',
-    className: 'text-blue-600 bg-blue-500/10 border-blue-500/20',
-  },
-  onHold: { label: 'On Hold', className: 'text-yellow-600 bg-yellow-500/10 border-yellow-500/20' },
+const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
+  completed: { label: 'Completed', dot: 'bg-green-500' },
+  cancelled: { label: 'Cancelled', dot: 'bg-foreground-muted' },
+  abandoned: { label: 'Abandoned', dot: 'bg-foreground-muted' },
+  inProgress: { label: 'In Progress', dot: 'bg-blue-500 animate-pulse' },
+  onHold: { label: 'On Hold', dot: 'bg-yellow-500' },
 };
 
 const TYPE_LABEL: Record<string, string> = {
-  development: 'Dev',
-  gameDevelopment: 'Game',
+  development: 'Development',
+  gameDevelopment: 'Game Dev',
   design: 'Design',
   other: 'Other',
 };
@@ -59,7 +47,7 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
   const isDeprecated = status === 'cancelled' || status === 'abandoned';
   const excerpt = seoDescription ?? description ?? '';
 
-  const imageSrc = image ? urlForImage(image)?.width(160).height(160).quality(70).url() : null;
+  const imageSrc = image ? urlForImage(image)?.width(600).height(400).quality(75).url() : null;
 
   return (
     <li
@@ -69,83 +57,78 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
       )}
     >
       <Link href={`projects/${slug}`}>
-        <article className='flex items-center gap-4 p-3 sm:p-4 rounded-xl bg-surface border border-border transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:shadow-md'>
+        <article className='flex flex-col overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:shadow-lg hover:-translate-y-0.5'>
           {/* Thumbnail */}
-          {imageSrc && (
-            <div className='w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden shrink-0 bg-surface-subtle'>
+          <div className='relative aspect-video w-full overflow-hidden bg-surface-subtle'>
+            {imageSrc ? (
               <Image
                 src={imageSrc}
                 alt={projectTitle}
-                width={64}
-                height={64}
-                priority={index < 6}
-                className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
+                fill
+                priority={index < 4}
+                sizes='(max-width: 768px) 100vw, 50vw'
+                className='object-cover transition-transform duration-500 group-hover:scale-105'
               />
-            </div>
-          )}
+            ) : (
+              <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle to-surface' />
+            )}
+
+            {/* Year badge top-right */}
+            {year && (
+              <div className='absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
+                {year}
+              </div>
+            )}
+
+            {/* Type badge top-left */}
+            {typeLabel && (
+              <div className='absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
+                {typeLabel}
+              </div>
+            )}
+          </div>
 
           {/* Content */}
-          <div className='flex-1 min-w-0'>
-            <div className='flex items-start justify-between gap-2'>
+          <div className='flex flex-col flex-1 p-4 gap-2'>
+            {/* Status + title row */}
+            <div className='flex items-start gap-2'>
+              <span
+                className={cn('mt-1.5 w-2 h-2 rounded-full shrink-0', statusConfig.dot)}
+                title={statusConfig.label}
+              />
               <h3
                 className={cn(
-                  'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 leading-snug truncate',
+                  'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 leading-snug',
                   isDeprecated && 'text-foreground-subtle',
                 )}
               >
                 {projectTitle}
               </h3>
-              {year && (
-                <span className='text-xs text-foreground-muted shrink-0 mt-0.5'>{year}</span>
-              )}
             </div>
 
+            {/* Description */}
             {excerpt && (
-              <p className='text-xs text-foreground-muted mt-0.5 line-clamp-1'>{excerpt}</p>
+              <p className='text-xs text-foreground-muted line-clamp-1 leading-relaxed pl-4'>
+                {excerpt}
+              </p>
             )}
 
-            <div className='flex flex-wrap items-center gap-1.5 mt-2'>
-              {/* Status badge */}
-              <span
-                className={cn(
-                  'text-xs font-medium px-2 py-0.5 rounded-full border',
-                  statusConfig.className,
+            {/* Tags */}
+            {displayTags.length > 0 && (
+              <div className='flex flex-wrap items-center gap-1 pl-4 mt-auto pt-1'>
+                {displayTags.map((tag: { name?: string | null }) => (
+                  <span
+                    key={tag.name}
+                    className='text-xs text-foreground-muted px-1.5 py-0.5 rounded bg-surface-subtle'
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+                {remainingTagsCount > 0 && (
+                  <span className='text-xs text-foreground-muted'>+{remainingTagsCount}</span>
                 )}
-              >
-                {statusConfig.label}
-              </span>
-              {/* Type badge */}
-              {typeLabel && (
-                <span className='text-xs font-medium px-2 py-0.5 rounded-full border border-border bg-surface-subtle text-foreground-muted'>
-                  {typeLabel}
-                </span>
-              )}
-              {/* Tags */}
-              {displayTags.map((tag: { name?: string | null }) => (
-                <span
-                  key={tag.name}
-                  className='text-xs text-foreground-muted px-1.5 py-0.5 rounded-full bg-surface-subtle'
-                >
-                  {tag.name}
-                </span>
-              ))}
-              {remainingTagsCount > 0 && (
-                <span className='text-xs text-foreground-muted'>+{remainingTagsCount}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Arrow */}
-          <div className='shrink-0 text-foreground-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all duration-200'>
-            <svg
-              className='w-4 h-4'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-              aria-hidden='true'
-            >
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
-            </svg>
+              </div>
+            )}
           </div>
         </article>
       </Link>

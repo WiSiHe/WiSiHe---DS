@@ -95,10 +95,38 @@ export default async function PaintingPage(props: Props) {
       }),
   };
 
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.wisihe.no' },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Paintings',
+        item: 'https://www.wisihe.no/paintings',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: painting.title,
+        item: `https://www.wisihe.no/paintings/${params.slug}`,
+      },
+    ],
+  };
+
   return (
     <>
       <JsonLd data={structuredData} />
-      <PaintingDetail paintingData={painting} />
+      <JsonLd data={breadcrumbData} />
+      <PaintingDetail
+        paintingData={painting}
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Paintings', href: '/paintings' },
+          { label: painting.title ?? 'Painting' },
+        ]}
+      />
     </>
   );
 }

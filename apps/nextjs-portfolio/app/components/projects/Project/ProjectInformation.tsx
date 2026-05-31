@@ -3,6 +3,7 @@ import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import type { PortableTextBlock } from 'next-sanity';
+import posthog from 'posthog-js';
 import { useCallback, useEffect, useState } from 'react';
 import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import {
@@ -35,7 +36,6 @@ const STATUS_CONFIG = {
 
 const ProjectInformation = ({ project }: ProjectInformationProps) => {
   const _id = project?._id ?? '';
-  const viewsFromProject = project?.views ?? [];
   const likesCount = project?.likesCount;
 
   const generateOrRetrieveViewerId = useCallback((): string => {
@@ -70,22 +70,30 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     }
   }, [_id]);
 
-  // On mount, patch project views
+  // On mount, track project view via PostHog + increment Sanity counter
   useEffect(() => {
-    if (!_id) return;
+    if (!_id || hasAddedView) return;
     const addView = async () => {
-      const viewerId = generateOrRetrieveViewerId();
-
-      // Ensure views is an array
-      const viewsArray = Array.isArray(viewsFromProject) ? viewsFromProject : [];
-
-      if (!viewsArray.some((view: any) => view.viewerId === viewerId) && !hasAddedView) {
+      const storageKey = `viewed_project_${_id}`;
+      try {
+        if (localStorage.getItem(storageKey)) return;
         setHasAddedView(true);
-        await incrementProjectView(_id, viewerId);
+        localStorage.setItem(storageKey, '1');
+        posthog.capture('project_viewed', {
+          project_id: _id,
+          name: project?.name ?? project?.title,
+        });
+        await incrementProjectView(_id);
+      } catch {
+        posthog.capture('project_viewed', {
+          project_id: _id,
+          name: project?.name ?? project?.title,
+        });
+        await incrementProjectView(_id);
       }
     };
     void addView();
-  }, [_id, viewsFromProject, hasAddedView, generateOrRetrieveViewerId]);
+  }, [_id, hasAddedView, project]);
 
   if (!project) {
     return null;
@@ -98,19 +106,6 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   const projectTitle = name || 'Untitled Project';
   const statusConfig = STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.unknown;
   const StatusIcon = statusConfig.icon;
-
-  // Format dates
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   const handleLike = async () => {
     const likerId = generateOrRetrieveViewerId();
@@ -127,6 +122,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         console.error('Failed to update likedProjects in localStorage', err);
       }
 
+      posthog.capture('project_unliked', { project_id: _id });
       await removeProjectLike(_id, likerId);
     } else {
       setLocalLikesCount(prev => prev + 1);
@@ -140,6 +136,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         console.error('Failed to update likedProjects in localStorage', err);
       }
 
+      posthog.capture('project_liked', { project_id: _id });
       await incrementProjectLike(_id, likerId);
     }
   };
@@ -166,76 +163,168 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     }
   };
 
-  return (
-    <motion.div layout className='space-y-6'>
-      <motion.h1
-        className='text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight'
-        layoutId={`title-${projectTitle}`}
-      >
-        {projectTitle}
-      </motion.h1>
+  // Separate tags into tech and non-tech for display
+  const techTags = tags.filter((t: { name?: string | null }) =>
+    [
+      'React',
+      'NextJS',
+      'TypeScript',
+      'TailwindCSS',
+      'Turborepo',
+      'GraphQL',
+      'CSS',
+      'HTML',
+      'Javascript',
+      'PHP',
+      'Wordpress',
+      'Vite',
+      'Redux',
+      'Unity',
+      'C#',
+      'Flash',
+      'Unreal Engine 4',
+      'Unreal Engine 5',
+      'Blender',
+      'ZBrush',
+      'Substance Painter',
+      'Figma',
+      'Tokens',
+      'Designsystem',
+      'EnonicXP',
+      'ThreeJS',
+      'Framer Motion',
+      'Speed Tree',
+      'NextAuth',
+      'Sanity',
+    ].includes(t.name ?? ''),
+  );
+  const otherTags = tags.filter((t: { name?: string | null }) => !techTags.includes(t));
 
-      <div className='flex items-center flex-wrap gap-x-5 gap-y-2 text-sm text-foreground-subtle/80 font-medium'>
-        <span className='flex items-center gap-1.5' title='Project Status'>
-          <StatusIcon className='w-3.5 h-3.5' /> {statusConfig.label}
-        </span>
-        {projectStart && (
-          <span className='flex items-center gap-1.5' title='Project Start Date'>
-            <IconCalendar className='w-3.5 h-3.5' /> Started {formatDate(projectStart)}
+  return (
+    <motion.div layout className='space-y-8'>
+      {/* Title + actions */}
+      <div className='space-y-4'>
+        <motion.h1
+          className='text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight'
+          layoutId={`title-${projectTitle}`}
+        >
+          {projectTitle}
+        </motion.h1>
+
+        <div className='flex items-center flex-wrap gap-3'>
+          <Button
+            onClick={handleLike}
+            variant='secondary'
+            className={cn(
+              'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
+              hasLikedLocal
+                ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
+                : '',
+            )}
+          >
+            {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
+            {hasLikedLocal ? 'Liked' : 'Like'}
+          </Button>
+          <Button
+            onClick={handleShare}
+            variant='secondary'
+            className='gap-2 w-fit rounded-full px-4 shadow-sm'
+          >
+            <BsShare className='w-4 h-4' />
+            {shareText}
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats panel */}
+      <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
+        {/* Status */}
+        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+            Status
           </span>
-        )}
-        {projectEnd && (
-          <span className='flex items-center gap-1.5' title='Project End Date'>
-            <IconCalendar className='w-3.5 h-3.5' /> Ended {formatDate(projectEnd)}
+          <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
+            <StatusIcon className='w-3.5 h-3.5' />
+            {statusConfig.label}
           </span>
-        )}
-        <span className='flex items-center gap-1.5' title='View count'>
-          <BsEye className='w-4 h-4' /> {viewsCount?.toString() ?? '0'} Views
-        </span>
-        <span className='flex items-center gap-1.5' title='Like count'>
-          <span className={cn(hasLikedLocal ? 'text-red-500' : '')}>
+        </div>
+
+        {/* Duration */}
+        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+            Duration
+          </span>
+          <span className='text-sm font-semibold text-foreground'>
+            {(() => {
+              const start = projectStart ? new Date(projectStart).getFullYear() : null;
+              const end = projectEnd ? new Date(projectEnd).getFullYear() : null;
+              if (start && end && start !== end) return `${start} – ${end}`;
+              if (start && end && start === end) return String(start);
+              if (start && !end) return `Since ${start}`;
+              return '—';
+            })()}
+          </span>
+        </div>
+
+        {/* Views */}
+        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+            Views
+          </span>
+          <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
+            <BsEye className='w-3.5 h-3.5' />
+            {viewsCount?.toString() ?? '0'}
+          </span>
+        </div>
+
+        {/* Likes */}
+        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+            Likes
+          </span>
+          <span
+            className={cn(
+              'flex items-center gap-1.5 text-sm font-semibold',
+              hasLikedLocal ? 'text-red-500' : 'text-foreground',
+            )}
+          >
             {hasLikedLocal ? (
               <BsHeartFill className='w-3.5 h-3.5' />
             ) : (
               <BsHeart className='w-3.5 h-3.5' />
             )}
+            {localLikesCount}
           </span>
-          {localLikesCount} Likes
-        </span>
+        </div>
       </div>
 
-      {tags.length > 0 && (
-        <div className='flex flex-wrap gap-2 mt-1'>
-          {tags.map((tag: { name?: string | null }) => (
+      {/* Tech stack */}
+      {techTags.length > 0 && (
+        <div className='space-y-2'>
+          <h3 className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+            Tech Stack
+          </h3>
+          <div className='flex flex-wrap gap-2'>
+            {techTags.map((tag: { name?: string | null }) => (
+              <Chip key={tag.name ?? ''} variation='secondary' label={tag.name ?? ''} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Other tags */}
+      {otherTags.length > 0 && (
+        <div className='flex flex-wrap gap-2'>
+          {otherTags.map((tag: { name?: string | null }) => (
             <Chip key={tag.name ?? ''} variation='primary' label={tag.name ?? ''} />
           ))}
         </div>
       )}
 
-      <div className='flex items-center flex-wrap gap-3 mt-1'>
-        <Button
-          onClick={handleLike}
-          variant='secondary'
-          className={cn(
-            'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
-            hasLikedLocal
-              ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
-              : '',
-          )}
-        >
-          {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
-          {hasLikedLocal ? 'Liked' : 'Like'}
-        </Button>
-        <Button
-          onClick={handleShare}
-          variant='secondary'
-          className='gap-2 w-fit rounded-full px-4 shadow-sm'
-        >
-          <BsShare className='w-4 h-4' />
-          {shareText}
-        </Button>
-      </div>
+      {/* Divider */}
+      {projectContent && <hr className='border-border/40' />}
 
+      {/* Content */}
       {projectContent && (
         <div className='prose prose-lg max-w-none'>
           <CustomPortableText

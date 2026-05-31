@@ -16,6 +16,7 @@ import project from './project';
 import recipe from './recipe';
 import { redirectType } from './redirectType';
 import { seoType } from './seoType';
+import about from './singletons/about';
 import home from './singletons/home';
 import settings from './singletons/settings';
 import { socialType } from './socialType';
@@ -25,6 +26,7 @@ import video from './video';
 export const schemaTypes = [
   home,
   settings,
+  about,
   painting,
   post,
   project,
