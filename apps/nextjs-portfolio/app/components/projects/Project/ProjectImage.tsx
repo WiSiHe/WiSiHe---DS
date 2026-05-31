@@ -1,5 +1,4 @@
 'use client';
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -8,7 +7,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type ProjectImageProps = {
-  project: NonNullable<ProjectQueryResult>;
+  project: any;
 };
 
 const ProjectImage = ({ project }: ProjectImageProps) => {
@@ -100,7 +99,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
           // Carousel with multiple images
           <div className='overflow-hidden h-full' ref={emblaRef}>
             <div className='flex h-full'>
-              {allImages.map((img, index) => {
+              {allImages.map((img: any, index: number) => {
                 if (!img) return null;
 
                 return (

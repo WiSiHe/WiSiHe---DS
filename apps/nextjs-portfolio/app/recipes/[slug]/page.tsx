@@ -86,7 +86,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const result = (await sanityFetch({ query: getRecipe, params: { slug } })) as RecipeQueryResult;
+  const result = (await sanityFetch({
+    query: getRecipe,
+    params: { slug },
+  })) as unknown as RecipeQueryResult;
   const recipe = result.data;
 
   if (!recipe) {
@@ -155,7 +158,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RecipePage({ params }: Props) {
   const { slug } = await params;
-  const result = (await sanityFetch({ query: getRecipe, params: { slug } })) as RecipeQueryResult;
+  const result = (await sanityFetch({
+    query: getRecipe,
+    params: { slug },
+  })) as unknown as RecipeQueryResult;
   const recipe = result.data;
 
   if (!recipe) {

@@ -127,8 +127,8 @@ export default function ProjectsSearch() {
   ];
 
   return (
-    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
-      <Configure hitsPerPage={12} filters='_type:project' />
+    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={false}>
+      <Configure hitsPerPage={12} filters='_type:"project"' />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
         <div className='md:hidden w-full'>

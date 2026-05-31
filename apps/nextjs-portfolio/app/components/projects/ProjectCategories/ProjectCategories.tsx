@@ -1,15 +1,14 @@
 'use client';
 
-import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { useState } from 'react';
 import OngoingProjectCard from './OngoingProjectCard';
 import PastProjectCard from './PastProjectCard';
 import ProjectFilter from './ProjectFilter';
 
 type ProjectCategoriesProps = {
-  ongoingProjects: GetAllProjectsResult['ongoingProjects'];
-  pastProjects: GetAllProjectsResult['pastProjects'];
-  tags: GetAllProjectsResult['tags'];
+  ongoingProjects: any[];
+  pastProjects: any[];
+  tags: any[];
 };
 
 const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCategoriesProps) => {
@@ -23,12 +22,14 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
     }
   };
 
-  const filterProjects = (projects: GetAllProjectsResult['ongoingProjects']) => {
+  const filterProjects = (projects: any[]) => {
     return projects.filter(project => {
       if (activeFilters.length === 0) {
         return true;
       }
-      return project.tags.some(tag => activeFilters.includes(tag.name));
+      return project.tags.some((tag: { name?: string | null }) =>
+        activeFilters.includes(tag.name ?? ''),
+      );
     });
   };
 

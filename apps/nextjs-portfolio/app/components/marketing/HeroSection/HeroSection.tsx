@@ -1,7 +1,6 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,8 +18,20 @@ import HeroScrollIndicator from './HeroScrollIndicator';
 
 gsap.registerPlugin(useGSAP);
 
+type ShowcasePainting = {
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  altText?: string | null;
+  format: 'square' | 'landscape' | 'portrait' | null;
+  isFeatured?: boolean | null;
+  isNSFW?: boolean | null;
+  image?: { asset?: { _ref: string }; lqip?: string; aspectRatio?: number; alt?: string } | null;
+  tagsV2?: { name: string | null }[] | null;
+};
+
 type HeroImageSectionProps = {
-  paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+  paintings?: ShowcasePainting[] | null;
 };
 
 // Positions that avoid the center text area but are closer together

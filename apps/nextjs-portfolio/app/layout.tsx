@@ -43,11 +43,13 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data: settings } = await sanityFetch({
+  const { data: _settingsData } = await sanityFetch({
     query: settingsQuery,
     // Metadata should never contain stega
     stega: false,
   });
+  // biome-ignore lint/suspicious/noExplicitAny: SettingsQueryResult resolves to null until typegen is fixed
+  const settings = _settingsData as any;
 
   if (!settings) {
     return {
@@ -150,11 +152,13 @@ export default async function RootLayout({
 }>) {
   const { isEnabled: isDraftMode } = await draftMode();
 
-  const { data: settings } = await sanityFetch({
+  const { data: _settings2 } = await sanityFetch({
     query: settingsQuery,
     // Metadata should never contain stega
     stega: false,
   });
+  // biome-ignore lint/suspicious/noExplicitAny: SettingsQueryResult resolves to null until typegen is fixed
+  const settings = _settings2 as any;
 
   if (!settings) {
     return (

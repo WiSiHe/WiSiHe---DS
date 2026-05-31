@@ -1,6 +1,5 @@
 'use client';
 
-import type { GetAllPaintingsandTagsResult } from '@wisihe/sanity-queries';
 import { PaintingCard, type PaintingCardBadge } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
@@ -18,8 +17,16 @@ import { urlForImage } from '@/sanity/lib/utils';
 // Props
 // ---------------------------------------------------------------------------
 
+// Loose type so this adapter works with both Sanity GROQ results and Algolia hits
+// (avoids brittle dependency on generated types that resolve to `never` when typegen fails)
+type PaintingData = Record<string, unknown> & {
+  _id?: string;
+  slug?: string | null;
+  title?: string;
+};
+
 type PaintingCardAdapterProps = {
-  paintingData: GetAllPaintingsandTagsResult['paintings'][0];
+  paintingData: PaintingData;
   shouldBeLazy?: boolean;
   /** Set true when the user has actively filtered for NSFW in InstantSearch */
   isNsfwFilterActive?: boolean;
@@ -53,8 +60,8 @@ const PaintingCardAdapter = ({
     isFanArt,
     isNSFW,
     isForSale,
+    tagsV2,
   } = paintingData as any;
-  const { tagsV2 } = paintingData;
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];
   const cleanedTags = filteredTags.map(t => cleanTagName(t.name));

@@ -1,4 +1,3 @@
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -49,11 +48,13 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   try {
     const params = await props.params;
-    const { data: project } = await sanityFetch({
+    const { data: _projectData } = await sanityFetch({
       query: projectQuery,
       params,
       stega: false,
     });
+    // biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
+    const project = _projectData as any;
 
     if (!project) {
       return {
@@ -121,9 +122,9 @@ export default async function ProjectPage(props: Props) {
   const params = await props.params;
 
   try {
-    const [{ data: project }]: [{ data: ProjectQueryResult }] = await Promise.all([
-      sanityFetch({ query: projectQuery, params }),
-    ]);
+    const [{ data: _proj }] = await Promise.all([sanityFetch({ query: projectQuery, params })]);
+    // biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
+    const project = _proj as any;
 
     if (!project?._id) {
       return notFound();

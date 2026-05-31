@@ -111,7 +111,7 @@ export default function PaintingsSearch() {
 
   return (
     <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
-      <Configure hitsPerPage={12} filters='_type:painting' />
+      <Configure hitsPerPage={12} filters='_type:"painting"' />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
         {/* ---------------------------------------------------------------- */}

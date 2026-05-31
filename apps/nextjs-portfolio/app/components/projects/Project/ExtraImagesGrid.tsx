@@ -1,6 +1,5 @@
 'use client';
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { isNotEmptyArray } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
@@ -8,8 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 import ImageModal from './ImageModal';
 
+// biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
 type ExtraImagesGridProps = {
-  images: NonNullable<ProjectQueryResult>['extraImages'];
+  images: any[];
 };
 
 const ExtraImagesGrid = ({ images }: ExtraImagesGridProps) => {
