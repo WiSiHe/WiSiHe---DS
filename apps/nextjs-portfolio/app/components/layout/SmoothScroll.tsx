@@ -23,10 +23,10 @@ export default function SmoothScroll() {
       locomotiveScroll = new LocomotiveScroll({
         lenisOptions: {
           lerp: 0.1,
-          duration: 1.2,
+          duration: 0.8,
           smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
+          wheelMultiplier: 1.1,
+          touchMultiplier: 1.5,
           infinite: false,
         },
       });

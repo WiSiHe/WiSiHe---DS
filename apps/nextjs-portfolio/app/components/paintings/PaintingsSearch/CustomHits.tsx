@@ -1,16 +1,55 @@
 'use client';
 
+import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCurrentRefinements, useHits } from 'react-instantsearch';
+import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import PaintingCard from '../PaintingCard/PaintingCard';
+
+// Skeleton card that matches the PaintingCard aspect ratio
+function PaintingCardSkeleton({ index }: { index: number }) {
+  return (
+    <div
+      className={cn(
+        'relative col-span-6 md:col-span-4 lg:col-span-4',
+        'aspect-3/4 rounded-xl bg-surface border border-border overflow-hidden',
+        'animate-pulse',
+      )}
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
+      {/* Shimmer overlay */}
+      <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle via-surface to-surface-subtle' />
+      {/* Fake title bar at bottom */}
+      <div className='absolute bottom-0 left-0 right-0 h-12 bg-surface/80 backdrop-blur-sm border-t border-border px-4 py-3'>
+        <div className='h-3 w-3/5 rounded-full bg-surface-subtle' />
+      </div>
+    </div>
+  );
+}
+
+const SKELETON_COUNT = 12;
 
 export default function CustomHits() {
   const { items } = useHits();
+  const { status } = useInstantSearch();
   const { items: refinements } = useCurrentRefinements();
 
   const isNsfwFilterActive = refinements.some(
     r => r.attribute === 'tags' && r.refinements.some(v => v.label === 'NSFW'),
   );
+
+  // Show skeleton while Algolia is fetching results for the first time
+  const isLoading = status === 'loading' || status === 'stalled';
+
+  if (isLoading && items.length === 0) {
+    return (
+      <div className='grid w-full h-full grid-cols-12 gap-2 mt-6'>
+        {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: skeletons have no stable key
+          <PaintingCardSkeleton key={i} index={i} />
+        ))}
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
