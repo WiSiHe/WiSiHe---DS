@@ -1,7 +1,6 @@
 'use client';
 
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
-import type { RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, type Variants } from 'motion/react';
@@ -9,8 +8,9 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import PaintingCard from '../PaintingCard/PaintingCard';
 
+// biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
 type PaintingsCarouselProps = {
-  paintings: RandomPaintingsQueryResult;
+  paintings: any[];
 };
 
 const PaintingsCarousel = ({ paintings }: PaintingsCarouselProps) => {

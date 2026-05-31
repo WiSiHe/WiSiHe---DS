@@ -1,11 +1,10 @@
 'use client';
-import type { SettingsQueryResult } from '@wisihe/sanity-queries';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { SocialListItem } from './SocialListItem';
 
 type FooterProps = {
-  socialLinks: NonNullable<SettingsQueryResult>['socialLinks'];
+  socialLinks: { _key: string; platform: string; url: string }[] | null | undefined;
 };
 
 const Footer = ({ socialLinks }: FooterProps) => {

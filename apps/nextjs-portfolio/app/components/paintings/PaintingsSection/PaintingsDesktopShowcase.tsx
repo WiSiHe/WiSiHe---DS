@@ -1,6 +1,5 @@
 'use client';
 
-import type { RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -8,8 +7,9 @@ import { urlForImage } from '@/sanity/lib/utils';
 
 import Masonry, { type MasonryItem } from './Masonry';
 
+// biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
 type PaintingsDesktopShowcaseProps = {
-  paintings: RandomPaintingsQueryResult;
+  paintings: any[];
 };
 
 /**

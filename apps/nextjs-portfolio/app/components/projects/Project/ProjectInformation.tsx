@@ -1,5 +1,4 @@
 'use client';
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
@@ -19,7 +18,7 @@ import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@
 import CustomPortableText from '../../cms/PortableText/PortableText';
 
 type ProjectInformationProps = {
-  project: ProjectQueryResult;
+  project: any;
 };
 
 // Status configuration object for better maintainability
@@ -97,7 +96,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   const projectContent = project.content as PortableTextBlock[];
 
   const projectTitle = name || 'Untitled Project';
-  const statusConfig = STATUS_CONFIG[status] || STATUS_CONFIG.unknown;
+  const statusConfig = STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.unknown;
   const StatusIcon = statusConfig.icon;
 
   // Format dates
@@ -207,8 +206,8 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
 
       {tags.length > 0 && (
         <div className='flex flex-wrap gap-2 mt-1'>
-          {tags.map(tag => (
-            <Chip key={tag.name} variation='primary' label={tag.name} />
+          {tags.map((tag: { name?: string | null }) => (
+            <Chip key={tag.name ?? ''} variation='primary' label={tag.name ?? ''} />
           ))}
         </div>
       )}

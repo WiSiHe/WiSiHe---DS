@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/performance/noImgElement: Necessary for motion.img which doesn't support Next.js Image component easily for this specific transition */
 'use client';
-import type { PaintingQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -15,8 +14,9 @@ import { TbMasksTheater, TbPalette } from 'react-icons/tb';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { urlForImage } from '@/sanity/lib/utils';
 
+// biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
 type PaintingDetailProps = {
-  paintingData: Exclude<PaintingQueryResult, null>;
+  paintingData: any;
 };
 
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
@@ -24,6 +24,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
+  // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
   const {
     title,
     _id,
@@ -40,13 +41,15 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     format,
     medium,
     isFanArt,
-  } = paintingData;
+  } = paintingData as any;
 
-  const aspectRatioStyle = {
-    landscape: 'aspect-video',
-    square: 'aspect-square',
-    portrait: 'aspect-portrait',
-  }[format];
+  const aspectRatioStyle = (
+    {
+      landscape: 'aspect-video',
+      square: 'aspect-square',
+      portrait: 'aspect-portrait',
+    } as Record<string, string>
+  )[format as string];
 
   // Combine the primary image + any additional images
   const allImages = [image, ...images];
@@ -352,7 +355,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               {/* Taxonomy (Tags) */}
               {tagsV2.length > 0 && (
                 <div className='flex flex-wrap gap-2 mt-1'>
-                  {tagsV2.map(tag => {
+                  {tagsV2.map((tag: { name?: string | null }) => {
                     const { name } = tag;
                     if (!name) return null;
                     return (

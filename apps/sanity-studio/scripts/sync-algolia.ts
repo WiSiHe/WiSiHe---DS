@@ -40,10 +40,10 @@ const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_KEY);
 const ALGOLIA_INDEX_NAME = 'wisihe-search';
 
 // 3. Define the GROQ Query
-// We fetch paintings, projects, and recipes.
-// We coalesce tagsV2 and tags references to get string arrays of tag names
+// Projects are now server-rendered via GROQ — no longer synced to Algolia.
+// We only sync paintings and recipes.
 const query = `
-  *[_type in ["painting", "project", "recipe"] && !(_id in path("drafts.**")) && hideFromSearch != true && (_type != "project" || defined(slug.current))] {
+  *[_type in ["painting", "recipe"] && !(_id in path("drafts.**")) && hideFromSearch != true && defined(slug.current)] {
     _id,
     _type,
     _createdAt,
@@ -97,11 +97,10 @@ async function syncToAlgolia() {
 
       const createdAtDate = doc._createdAt ? new Date(doc._createdAt).getTime() : 0;
 
-      const base = {
+      return {
         objectID: doc._id,
         _type: doc._type,
-        // use title if it exists, otherwise fall back to name
-        title: doc.title || doc.name || 'Untitled',
+        title: doc.title || 'Untitled',
         description: doc.description || '',
         slug: doc.slug,
         tags: doc.tags,
@@ -109,16 +108,6 @@ async function syncToAlgolia() {
         views: popularity,
         createdAt: createdAtDate,
       };
-
-      if (doc._type === 'project') {
-        return {
-          ...base,
-          ...(doc.status ? { status: doc.status as string } : {}),
-          ...(doc.projectType ? { projectType: doc.projectType as string } : {}),
-        };
-      }
-
-      return base;
     });
 
     // 5. Replace all objects in the Algolia index

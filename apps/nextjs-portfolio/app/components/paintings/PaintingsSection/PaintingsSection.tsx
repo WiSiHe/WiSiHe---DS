@@ -1,6 +1,6 @@
-import type { BlockContent, RandomPaintingsQueryResult } from '@wisihe/sanity-queries';
 import { shuffleArray } from '@wisihe/utils';
-import { PortableText, type PortableTextBlock } from 'next-sanity';
+import type { PortableTextBlock } from 'next-sanity';
+import { PortableText } from 'next-sanity';
 import { sanityFetch } from '@/sanity/lib/live';
 import { randomPaintingsQuery } from '@/sanity/lib/queries';
 import PaintingsCarousel from './PaintingsCarousel';
@@ -11,22 +11,19 @@ const FEATURED_PAINTING_COUNT = 10;
 const PaintingsSection = async ({
   paintingsDescription,
 }: {
-  paintingsDescription: BlockContent;
+  paintingsDescription: PortableTextBlock[];
 }) => {
   // NSFW exclusion is in GROQ: `randomPaintingsQuery` (packages/sanity-queries/src/index.ts).
   const { data } = await sanityFetch({
     query: randomPaintingsQuery,
   });
-  const paintingsPool = data as RandomPaintingsQueryResult;
+  const paintingsPool = (data ?? []) as Record<string, unknown>[];
 
   if (!paintingsPool?.length) {
     return null;
   }
 
-  const featuredPaintings = shuffleArray(paintingsPool).slice(
-    0,
-    FEATURED_PAINTING_COUNT,
-  ) as RandomPaintingsQueryResult;
+  const featuredPaintings = shuffleArray(paintingsPool).slice(0, FEATURED_PAINTING_COUNT);
 
   return (
     <>

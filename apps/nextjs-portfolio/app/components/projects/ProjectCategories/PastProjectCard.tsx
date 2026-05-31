@@ -1,11 +1,10 @@
-import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type PastProjectCardProps = {
-  project: GetAllProjectsResult['pastProjects'][0];
+  project: any;
   index: number;
 };
 
@@ -29,8 +28,13 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
         <div className='relative pointer-events-none aspect-square overflow-clip rounded-t-xl'>
           <div className='absolute z-10 flex flex-wrap gap-2 p-2'>
             {status && <Chip variation='secondary' label={status} interactive={false} />}
-            {displayTags.map(tag => (
-              <Chip variation='primary' key={tag.name} label={tag.name} interactive={false} />
+            {displayTags.map((tag: { name?: string | null }) => (
+              <Chip
+                variation='primary'
+                key={tag.name ?? ''}
+                label={tag.name ?? ''}
+                interactive={false}
+              />
             ))}
             {remainingTagsCount > 0 && (
               <Chip variation='tertiary' label={`+${remainingTagsCount}`} interactive={false} />

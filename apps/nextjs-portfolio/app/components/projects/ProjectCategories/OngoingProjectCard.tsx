@@ -1,12 +1,11 @@
 import { IconArrowNarrowRight } from '@tabler/icons-react';
-import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type OngoingProjectCardProps = {
-  project: GetAllProjectsResult['ongoingProjects'][0];
+  project: any;
   index: number;
 };
 
@@ -46,11 +45,11 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
               </div>
 
               <div className='flex flex-wrap items-center gap-2'>
-                {displayTags.map(tag => (
+                {displayTags.map((tag: { name?: string | null }) => (
                   <Chip
-                    key={tag.name}
+                    key={tag.name ?? ''}
                     variation='tertiary'
-                    label={tag.name}
+                    label={tag.name ?? ''}
                     interactive={false}
                     size='small'
                   />

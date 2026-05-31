@@ -1,7 +1,6 @@
 'use client';
 
 import { IconArrowRight, IconCalendar, IconTag } from '@tabler/icons-react';
-import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -13,9 +12,8 @@ import {
 } from './featuredProjectHelpers';
 import { ScrollStackItem } from './ScrollStack';
 
-export type FeaturedProject = NonNullable<
-  NonNullable<HomePageQueryResult>['showcaseProjects']
->[number];
+// biome-ignore lint/suspicious/noExplicitAny: HomePageQueryResult resolves to null until typegen is fixed
+export type FeaturedProject = any;
 
 type ImageSourceWithRef = { asset: { _ref: string } };
 
@@ -48,7 +46,7 @@ const FeaturedProjectCard = ({ project, index, panelColor }: FeaturedProjectCard
   const showNameEyebrow = Boolean(titleTrimmed && nameTrimmed);
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
   const tags = project.tags?.slice(0, 4);
-  const tagNames = tags?.map(t => t?.name).filter(Boolean) as string[];
+  const tagNames = tags?.map((t: { name?: string | null }) => t?.name).filter(Boolean) as string[];
   const dateTimeAttr = toDateTimeAttr(project.projectStart);
   const heroUrl = project.image
     ? urlForImage(project.image)?.width(1200).height(900).quality(80).url()

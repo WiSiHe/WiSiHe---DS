@@ -1,7 +1,6 @@
 'use client';
 
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { isNotEmptyArray } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
@@ -10,7 +9,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
 interface ConnectedPaintingsCarouselProps {
-  paintings: NonNullable<ProjectQueryResult>['connectedPaintings'];
+  // biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
+  paintings: any[];
 }
 
 export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaintingsCarouselProps) {

@@ -1,7 +1,6 @@
 'use client';
 
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import type { GetAllVideosResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
@@ -18,15 +17,32 @@ function getYouTubeVideoId(url: string): string {
   return id && id.length >= 11 ? id : '';
 }
 
+type VideoItem = {
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  featured?: boolean | null;
+  description?: string | null;
+  videoUrl?: string | null;
+  tags?: { name: string | null }[] | null;
+  thumbnail?: { asset?: { _ref: string }; lqip?: string } | null;
+  linkedPainting?: {
+    _id: string;
+    slug: string | null;
+    title: string | null;
+    image?: { asset?: { _ref: string }; lqip?: string } | null;
+  } | null;
+};
+
 interface VideosPageProps {
-  videos: GetAllVideosResult['videos'];
+  videos: VideoItem[];
 }
 
 export const VideosPage = ({ videos }: VideosPageProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<GetAllVideosResult['videos'][0] | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
 
-  const handleVideoClick = (video: GetAllVideosResult['videos'][0]) => {
+  const handleVideoClick = (video: VideoItem) => {
     setSelectedVideo(video);
     setIsOpen(true);
   };
@@ -61,12 +77,12 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
       <div className='grid grid-cols-12 gap-6'>
         {videos
           .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
-          .map((video: GetAllVideosResult['videos'][0]) => {
+          .map((video: VideoItem) => {
             const { thumbnail, _id, featured, title, description, tags } = video;
 
             const thumbnailUrl = urlForImage(thumbnail);
             const common = {
-              alt: video.title,
+              alt: video.title ?? '',
               fill: true,
               className: 'object-cover',
             };
@@ -141,7 +157,12 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     {tags && (
                       <div className='flex flex-wrap gap-2 py-2'>
                         {tags.map(tag => (
-                          <Chip key={tag.name} label={tag.name} outlined interactive={false} />
+                          <Chip
+                            key={tag.name ?? ''}
+                            label={tag.name ?? ''}
+                            outlined
+                            interactive={false}
+                          />
                         ))}
                       </div>
                     )}
@@ -216,7 +237,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                       className='w-full h-full'
                       allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                       allowFullScreen
-                      title={selectedVideo.title}
+                      title={selectedVideo.title ?? ''}
                     />
                   </div>
                 )}

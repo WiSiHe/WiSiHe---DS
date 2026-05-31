@@ -1,4 +1,3 @@
-import type { PaintingQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
@@ -28,7 +27,8 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     params,
     stega: false,
   });
-  const painting = _paintingData as PaintingQueryResult;
+  // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
+  const painting = _paintingData as any;
 
   const title = painting?.title || 'Untitled Painting';
   const description = painting?.seoDescription || painting?.description || 'View this painting.';
@@ -64,7 +64,8 @@ export default async function PaintingPage(props: Props) {
   const params = await props.params;
 
   const [{ data: _painting }] = await Promise.all([sanityFetch({ query: paintingQuery, params })]);
-  const painting = _painting as PaintingQueryResult;
+  // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
+  const painting = _painting as any;
 
   if (!painting?._id) {
     return notFound();
