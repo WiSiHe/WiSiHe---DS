@@ -8,7 +8,7 @@ import { VisualEditing } from 'next-sanity/visual-editing';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 import HeaderNavigation from '@/app/components/layout/HeaderNavigation';
 import { SanityLive, sanityFetch } from '@/sanity/lib/live';
-import { settingsQuery } from '@/sanity/lib/queries';
+import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/cms/DraftModeToast';
@@ -152,13 +152,13 @@ export default async function RootLayout({
 }>) {
   const { isEnabled: isDraftMode } = await draftMode();
 
-  const { data: _settings2 } = await sanityFetch({
-    query: settingsQuery,
-    // Metadata should never contain stega
-    stega: false,
-  });
+  const [{ data: _settings2 }, { data: _aboutData }] = await Promise.all([
+    sanityFetch({ query: settingsQuery, stega: false }),
+    sanityFetch({ query: aboutQuery, stega: false }),
+  ]);
   // biome-ignore lint/suspicious/noExplicitAny: SettingsQueryResult resolves to null until typegen is fixed
   const settings = _settings2 as any;
+  const aboutBio = (_aboutData as any)?.bio ?? null;
 
   if (!settings) {
     return (
@@ -202,7 +202,7 @@ export default async function RootLayout({
               <main id='main-content' className='bg-transparent'>
                 {children}
               </main>
-              <Footer socialLinks={socialLinks} />
+              <Footer socialLinks={socialLinks} bio={aboutBio} />
               <Analytics />
               <SpeedInsights />
             </PostHogProvider>

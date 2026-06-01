@@ -44,18 +44,27 @@ const SKELETON_COUNT = 18;
 
 export default function CustomHits() {
   const { items } = useHits();
-  useInstantSearch();
+  const { status } = useInstantSearch();
   const { items: refinements } = useCurrentRefinements();
 
-  // Show skeleton until first real results arrive (covers idle state on soft nav)
-  const hasReceivedResults = useRef(false);
-  if (items.length > 0) hasReceivedResults.current = true;
+  // This ref is created fresh on every mount — it does NOT persist across
+  // navigations the way `results.processingTimeMS` does with preserveSharedStateOnUnmount.
+  // It flips to true the first time items arrive after this mount.
+  const hasReceivedResultsThisMount = useRef(false);
+  if (items.length > 0) hasReceivedResultsThisMount.current = true;
 
   const isNsfwFilterActive = refinements.some(
     r => r.attribute === 'tags' && r.refinements.some(v => v.label === 'NSFW'),
   );
 
-  if (!hasReceivedResults.current) {
+  // Show skeleton when:
+  //   - We haven't received results yet in this mount session, OR
+  //   - A search is actively in flight
+  // Once items arrive (hasReceivedResultsThisMount = true), show real results or empty state.
+  const showSkeleton =
+    !hasReceivedResultsThisMount.current || status === 'loading' || status === 'stalled';
+
+  if (items.length === 0 && showSkeleton) {
     return (
       <div className='columns-2 sm:columns-3 gap-2 mt-4'>
         {Array.from({ length: SKELETON_COUNT }).map((_, i) => (

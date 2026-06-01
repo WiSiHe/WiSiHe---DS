@@ -19,6 +19,7 @@ export default defineCliConfig({
     title: 'WiSiHe bulk tools',
   },
   deployment: {
-    appId: process.env.SANITY_APP_ID || 'ns25bkom',
+    autoUpdates: true,
+    appId: 'ka7tolfx8perki9f97u2rugb',
   },
 });

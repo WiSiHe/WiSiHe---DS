@@ -3,11 +3,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { BiLogoYoutube } from 'react-icons/bi';
+import { BsEye, BsHeart } from 'react-icons/bs';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
+import { formatCount, getYouTubeStats } from '@/lib/youtube';
 import { sanityFetch } from '@/sanity/lib/live';
 import { videoBySlugQuery, videosSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
+import VideoActions from './VideoActions';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -70,6 +73,9 @@ export default async function VideoPage(props: Props) {
   if (!video?._id) return notFound();
 
   const videoId = getYouTubeId(video.videoUrl ?? '');
+
+  // Fetch real YouTube stats server-side (cached 1 hour, key never sent to browser)
+  const youtubeStats = videoId ? await getYouTubeStats(videoId) : null;
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -136,6 +142,26 @@ export default async function VideoPage(props: Props) {
           <div className='lg:col-span-2 space-y-4'>
             <h1 className='text-2xl md:text-3xl font-bold text-foreground'>{video.title}</h1>
 
+            {/* YouTube stats — server-fetched, cached 1 hour */}
+            {youtubeStats && (
+              <div className='flex items-center gap-5 text-sm text-foreground-muted'>
+                <span className='flex items-center gap-1.5'>
+                  <BsEye className='w-3.5 h-3.5' />
+                  <span className='font-semibold text-foreground'>
+                    {formatCount(youtubeStats.viewCount)}
+                  </span>{' '}
+                  views on YouTube
+                </span>
+                <span className='flex items-center gap-1.5'>
+                  <BsHeart className='w-3.5 h-3.5' />
+                  <span className='font-semibold text-foreground'>
+                    {formatCount(youtubeStats.likeCount)}
+                  </span>{' '}
+                  YouTube likes
+                </span>
+              </div>
+            )}
+
             {video.tags?.length > 0 && (
               <div className='flex flex-wrap gap-2'>
                 {video.tags.map((tag: { name: string }) => (
@@ -152,6 +178,13 @@ export default async function VideoPage(props: Props) {
             {video.description && (
               <p className='text-foreground-subtle leading-relaxed'>{video.description}</p>
             )}
+
+            <VideoActions
+              videoId={video._id}
+              title={video.title ?? ''}
+              viewsCount={video.viewsCount ?? 0}
+              likesCount={video.likesCount ?? 0}
+            />
 
             {video.videoUrl && (
               <a

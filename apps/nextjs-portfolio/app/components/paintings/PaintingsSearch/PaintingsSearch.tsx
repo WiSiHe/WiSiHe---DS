@@ -3,7 +3,16 @@
 import { cn } from '@wisihe/utils';
 import { LayoutGroup, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { IoCheckmark, IoChevronDown, IoClose, IoFilterOutline } from 'react-icons/io5';
+import { BsEye } from 'react-icons/bs';
+import {
+  IoCheckmark,
+  IoChevronDown,
+  IoClose,
+  IoFilterOutline,
+  IoHourglassOutline,
+  IoStarOutline,
+  IoTimeOutline,
+} from 'react-icons/io5';
 import {
   Configure,
   Pagination,
@@ -99,7 +108,7 @@ function ColourRefinement() {
 // ---------------------------------------------------------------------------
 // HitStats + custom Sort dropdown — compact results header
 // ---------------------------------------------------------------------------
-type SortItem = { label: string; value: string };
+type SortItem = { label: string; value: string; icon?: React.ReactNode };
 
 function SortDropdown({ items }: { items: SortItem[] }) {
   const { currentRefinement, refine } = useSortBy({ items });
@@ -129,6 +138,7 @@ function SortDropdown({ items }: { items: SortItem[] }) {
           open && 'border-accent text-foreground',
         )}
       >
+        {current.icon && <span className='shrink-0'>{current.icon}</span>}
         {current.label}
         <IoChevronDown
           className={cn('w-3.5 h-3.5 transition-transform duration-150', open && 'rotate-180')}
@@ -152,7 +162,10 @@ function SortDropdown({ items }: { items: SortItem[] }) {
                   : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
               )}
             >
-              {item.label}
+              <span className='flex items-center gap-2'>
+                {item.icon && <span className='shrink-0 opacity-60'>{item.icon}</span>}
+                {item.label}
+              </span>
               {item.value === currentRefinement && (
                 <IoCheckmark className='w-3.5 h-3.5 text-accent shrink-0' />
               )}
@@ -243,11 +256,7 @@ function MobileFilterButton({ onClick }: { onClick: () => void }) {
 // FiltersSidebar — defined OUTSIDE the parent so React never creates a new
 // component identity on re-render (which would reset Algolia widget state).
 // ---------------------------------------------------------------------------
-const TAG_PREVIEW_COUNT = 10;
-
 function FiltersSidebar() {
-  const [showAllTags, setShowAllTags] = useState(false);
-
   return (
     <>
       {/* Search */}
@@ -266,24 +275,14 @@ function FiltersSidebar() {
         <ColourRefinement />
       </div>
 
-      {/* Tags — collapsed by default with animated expand */}
+      {/* Tags — CustomRefinementList handles its own expand/collapse */}
       <div className='flex flex-col gap-2'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Tags</p>
-        <motion.div layout='size' style={{ overflow: 'hidden' }}>
-          <CustomRefinementList
-            attribute='tags'
-            limit={showAllTags ? 50 : TAG_PREVIEW_COUNT}
-            transformItems={items => items.filter(item => item.count >= 3 || item.isRefined)}
-          />
-        </motion.div>
-        <motion.button
-          layout
-          type='button'
-          onClick={() => setShowAllTags(v => !v)}
-          className='text-xs text-accent hover:text-accent-hover transition-colors text-left w-fit'
-        >
-          {showAllTags ? '↑ Show fewer' : '↓ Show all tags'}
-        </motion.button>
+        <CustomRefinementList
+          attribute='tags'
+          limit={50}
+          transformItems={items => items.filter(item => item.count >= 3 || item.isRefined)}
+        />
       </div>
     </>
   );
@@ -292,6 +291,7 @@ function FiltersSidebar() {
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
+
 export default function PaintingsSearch() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
@@ -303,14 +303,22 @@ export default function PaintingsSearch() {
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured', value: indexName },
-    { label: 'Newest', value: `${indexName}_newest` },
-    { label: 'Oldest', value: `${indexName}_oldest` },
-    { label: 'Most Viewed', value: `${indexName}_views` },
+    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-3.5 h-3.5' /> },
+    {
+      label: 'Newest',
+      value: `${indexName}_newest`,
+      icon: <IoTimeOutline className='w-3.5 h-3.5' />,
+    },
+    {
+      label: 'Oldest',
+      value: `${indexName}_oldest`,
+      icon: <IoHourglassOutline className='w-3.5 h-3.5' />,
+    },
+    { label: 'Most Viewed', value: `${indexName}_views`, icon: <BsEye className='w-3.5 h-3.5' /> },
   ];
 
   return (
-    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
+    <InstantSearchNext searchClient={searchClient} indexName={indexName}>
       <Configure hitsPerPage={18} filters='_type:"painting"' />
       <ScrollToResults />
 

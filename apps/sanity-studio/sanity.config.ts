@@ -9,8 +9,8 @@ import { media } from 'sanity-plugin-media';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
 
-export const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-export const dataset = process.env.SANITY_STUDIO_DATASET;
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
+const dataset = process.env.SANITY_STUDIO_DATASET;
 
 // Environment configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -24,6 +24,10 @@ const allowedOrigins = [
   'http://localhost:3001',
 ];
 
+// Skip plugins when running CLI tools (schema extract, typegen)
+// Plugins cause esbuild to fail silently during schema extraction
+const isCliMode = process.env.SANITY_CLI_MODE === 'true';
+
 // Main Sanity Studio configuration
 const config = defineConfig({
   name: 'wisihe-studio',
@@ -32,30 +36,32 @@ const config = defineConfig({
   projectId,
   dataset,
 
-  plugins: [
-    // Core structure and content editing
-    structureTool({ structure }),
+  plugins: isCliMode
+    ? []
+    : ([
+        // Core structure and content editing
+        structureTool({ structure }),
 
-    // Live preview and presentation
-    presentationTool({
-      previewUrl: {
-        origin: previewUrl,
-        previewMode: {
-          enable: '/api/draft-mode/enable',
-        },
-      },
-      allowOrigins: allowedOrigins,
-    }),
+        // Live preview and presentation
+        presentationTool({
+          previewUrl: {
+            origin: previewUrl,
+            previewMode: {
+              enable: '/api/draft-mode/enable',
+            },
+          },
+          allowOrigins: allowedOrigins,
+        }),
 
-    // AI-powered content assistance
-    assist(),
+        // AI-powered content assistance
+        assist(),
 
-    // Media library management
-    media(),
+        // Media library management
+        media(),
 
-    // Development tools (only in dev mode)
-    ...(isDevelopment ? [visionTool()] : []),
-  ] as any, // Type assertion needed due to Sanity plugin type limitations
+        // Development tools (only in dev mode)
+        ...(isDevelopment ? [visionTool()] : []),
+      ] as any), // Type assertion needed due to Sanity plugin type limitations
 
   schema: {
     types: schemaTypes,

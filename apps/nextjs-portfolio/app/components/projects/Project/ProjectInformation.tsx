@@ -249,22 +249,53 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
           </span>
         </div>
 
-        {/* Duration */}
-        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-            Duration
-          </span>
-          <span className='text-sm font-semibold text-foreground'>
-            {(() => {
-              const start = projectStart ? new Date(projectStart).getFullYear() : null;
-              const end = projectEnd ? new Date(projectEnd).getFullYear() : null;
-              if (start && end && start !== end) return `${start} – ${end}`;
-              if (start && end && start === end) return String(start);
-              if (start && !end) return `Since ${start}`;
-              return '—';
-            })()}
-          </span>
-        </div>
+        {/* Year / Duration — only show when we have meaningful date info */}
+        {(() => {
+          const start = projectStart ? new Date(projectStart).getFullYear() : null;
+          const end = projectEnd ? new Date(projectEnd).getFullYear() : null;
+          const startDate = projectStart ? new Date(projectStart) : null;
+          const endDate = projectEnd ? new Date(projectEnd) : null;
+          const sameDay =
+            startDate && endDate && startDate.toDateString() === endDate.toDateString();
+
+          // Multi-year span
+          if (start && end && start !== end) {
+            return (
+              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                  Duration
+                </span>
+                <span className='text-sm font-semibold text-foreground'>
+                  {start} – {end}
+                </span>
+              </div>
+            );
+          }
+          // Ongoing (no end)
+          if (start && !end) {
+            return (
+              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                  Started
+                </span>
+                <span className='text-sm font-semibold text-foreground'>{start}</span>
+              </div>
+            );
+          }
+          // Same day — just show the year, no misleading "Duration" label
+          if (sameDay || (start && end && start === end)) {
+            return (
+              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
+                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                  Year
+                </span>
+                <span className='text-sm font-semibold text-foreground'>{start}</span>
+              </div>
+            );
+          }
+          // No dates — hide the box entirely
+          return null;
+        })()}
 
         {/* Views */}
         <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>

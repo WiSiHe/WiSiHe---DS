@@ -15,10 +15,14 @@ import { type StringInputProps, set, unset, useFormValue } from 'sanity';
 import { OPENAI_API_KEY } from '../environment';
 import { urlFor } from '../utils/image';
 
-const client = new OpenAI({
-  apiKey: OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
+// Lazy client — created on first use so module import doesn't fail in CLI/SSR contexts
+let _client: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!_client) {
+    _client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+  }
+  return _client;
+}
 
 function getValueAtPath(obj: unknown, path: string[]): unknown {
   let current: unknown = obj;
@@ -198,7 +202,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       };
 
       const chatCompletion: OpenAI.Chat.ChatCompletion =
-        await client.chat.completions.create(params);
+        await getClient().chat.completions.create(params);
 
       const response = chatCompletion.choices[0].message.content?.trim() || '';
 

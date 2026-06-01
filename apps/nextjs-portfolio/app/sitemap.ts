@@ -3,11 +3,6 @@
 import type { MetadataRoute } from 'next';
 import { getStaticSlugs } from '@/sanity/lib/queries';
 
-type SanityDocument = {
-  slug: string;
-  _updatedAt: string;
-};
-
 export const revalidate = 86400; // revalidate every 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -41,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add dynamic paintings
     sitemapEntries.push(
-      ...allPaintings.map((painting: SanityDocument) => ({
+      ...allPaintings.map((painting: any) => ({
         url: `${baseUrl}/paintings/${painting.slug}`,
         lastModified: painting._updatedAt,
         changeFrequency: 'monthly' as const,
@@ -51,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add dynamic projects
     sitemapEntries.push(
-      ...allProjects.map((project: SanityDocument) => ({
+      ...allProjects.map((project: any) => ({
         url: `${baseUrl}/projects/${project.slug}`,
         lastModified: project._updatedAt,
         changeFrequency: 'monthly' as const,
@@ -61,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add dynamic recipes
     sitemapEntries.push(
-      ...allRecipes.map((recipe: SanityDocument) => ({
+      ...allRecipes.map((recipe: any) => ({
         url: `${baseUrl}/recipes/${recipe.slug}`,
         lastModified: recipe._updatedAt,
         changeFrequency: 'monthly' as const,
