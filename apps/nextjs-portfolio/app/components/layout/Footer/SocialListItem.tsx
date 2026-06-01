@@ -13,18 +13,18 @@ const iconPlatform = {
 };
 
 interface SocialLink {
-  platform: string;
+  platform?: string | null;
   _key: string;
-  url: string;
+  url?: string | null;
 }
 
 export const SocialListItem = ({ item }: { item: SocialLink }) => {
   const { platform, url } = item;
-  const Icon = iconPlatform[platform as keyof typeof iconPlatform];
+  const Icon = platform ? iconPlatform[platform as keyof typeof iconPlatform] : null;
 
   return (
     <a
-      href={url}
+      href={url ?? undefined}
       target='_blank'
       rel='noreferrer'
       className='flex items-center h-10 gap-4 px-4 py-3 text-2xl text-foreground transition-all duration-200 rounded-md bg-surface border border-border hover:bg-surface-hover hover:border-accent-border hover:scale-105 hover:shadow-sm'

@@ -1,6 +1,7 @@
 'use client';
 
 import { IconSearch, IconX } from '@tabler/icons-react';
+import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useState } from 'react';
@@ -8,11 +9,10 @@ import OngoingProjectCard from './OngoingProjectCard';
 import PastProjectCard from './PastProjectCard';
 import ProjectFilter from './ProjectFilter';
 
-// biome-ignore lint/suspicious/noExplicitAny: GetAllProjectsResult resolves to null until typegen is fixed
 type ProjectCategoriesProps = {
-  ongoingProjects: any[];
-  pastProjects: any[];
-  tags: any[];
+  ongoingProjects: GetAllProjectsResult['ongoingProjects'];
+  pastProjects: GetAllProjectsResult['pastProjects'];
+  tags: GetAllProjectsResult['tags'];
 };
 
 // Project type tab definitions
@@ -24,25 +24,26 @@ const PROJECT_TYPES = [
   { key: 'other', label: 'Other' },
 ] as const;
 
-// biome-ignore lint/suspicious/noExplicitAny: Dynamic project data
-function matchesSearch(project: any, query: string): boolean {
+type ProjectItem =
+  | GetAllProjectsResult['ongoingProjects'][number]
+  | GetAllProjectsResult['pastProjects'][number];
+
+function matchesSearch(project: ProjectItem, query: string): boolean {
   if (!query) return true;
   const q = query.toLowerCase();
-  const name = (project.title ?? project.name ?? '').toLowerCase();
-  const desc = (project.seoDescription ?? project.description ?? '').toLowerCase();
+  const name = (project.name ?? '').toLowerCase();
+  const desc = (project.seoDescription ?? '').toLowerCase();
   return name.includes(q) || desc.includes(q);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: Dynamic project data
-function matchesType(project: any, type: string): boolean {
+function matchesType(project: ProjectItem, type: string): boolean {
   if (type === 'all') return true;
   return project.projectType === type;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: Dynamic project data
-function matchesTags(project: any, filters: string[]): boolean {
+function matchesTags(project: ProjectItem, filters: string[]): boolean {
   if (filters.length === 0) return true;
-  return project.tags?.some((tag: { name?: string | null }) => filters.includes(tag.name ?? ''));
+  return project.tags?.some(tag => filters.includes(tag.name ?? '')) ?? false;
 }
 
 const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCategoriesProps) => {
@@ -60,8 +61,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
     setActiveType('all');
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: Dynamic project data
-  const filterProjects = (projects: any[]) =>
+  const filterProjects = (projects: ProjectItem[]) =>
     projects.filter(
       p =>
         matchesSearch(p, searchQuery) &&

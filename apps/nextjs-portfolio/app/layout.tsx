@@ -1,5 +1,6 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { AboutQueryResult, SettingsQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -48,8 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // Metadata should never contain stega
     stega: false,
   });
-  // biome-ignore lint/suspicious/noExplicitAny: SettingsQueryResult resolves to null until typegen is fixed
-  const settings = _settingsData as any;
+  const settings = _settingsData as SettingsQueryResult;
 
   if (!settings) {
     return {
@@ -156,9 +156,8 @@ export default async function RootLayout({
     sanityFetch({ query: settingsQuery, stega: false }),
     sanityFetch({ query: aboutQuery, stega: false }),
   ]);
-  // biome-ignore lint/suspicious/noExplicitAny: SettingsQueryResult resolves to null until typegen is fixed
-  const settings = _settings2 as any;
-  const aboutBio = (_aboutData as any)?.bio ?? null;
+  const settings = _settings2 as SettingsQueryResult;
+  const aboutBio = (_aboutData as AboutQueryResult)?.bio ?? null;
 
   if (!settings) {
     return (

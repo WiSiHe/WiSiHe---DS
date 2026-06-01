@@ -318,7 +318,7 @@ export default function PaintingsSearch() {
   ];
 
   return (
-    <InstantSearchNext searchClient={searchClient} indexName={indexName}>
+    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
       <Configure hitsPerPage={18} filters='_type:"painting"' />
       <ScrollToResults />
 

@@ -1,3 +1,4 @@
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
@@ -22,18 +23,17 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const { data } = await sanityFetch({ query: aboutQuery });
-  // biome-ignore lint/suspicious/noExplicitAny: AboutQuery resolves to null until typegen is fixed
-  const about = (data ?? {}) as any;
+  const about = data as AboutQueryResult;
 
   const personStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: about.heroSubtitle ?? 'Henrik Sissener',
-    jobTitle: about.jobTitle ?? 'Frontend Developer & Digital Artist',
-    description: about.bio ?? '',
+    name: about?.heroSubtitle ?? 'Henrik Sissener',
+    jobTitle: about?.jobTitle ?? 'Frontend Developer & Digital Artist',
+    description: about?.bio ?? '',
     url: 'https://www.wisihe.no',
     image: 'https://www.wisihe.no/wisihe.png',
-    sameAs: (about.socialLinks ?? []).map((l: { url: string }) => l.url).filter(Boolean),
+    sameAs: (about?.socialLinks ?? []).map((l: { url: string | null }) => l.url).filter(Boolean),
     knowsAbout: [
       'React',
       'Next.js',

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { SocialListItem } from './SocialListItem';
 
 type FooterProps = {
-  socialLinks: { _key: string; platform: string; url: string }[] | null | undefined;
+  socialLinks: { _key: string; platform?: string | null; url?: string | null }[] | null | undefined;
   /** Short bio from the About page Sanity document */
   bio?: string | null;
 };

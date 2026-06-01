@@ -1,3 +1,4 @@
+import type { BlockContent } from '@wisihe/sanity-queries';
 import { shuffleArray } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
@@ -11,7 +12,7 @@ const FEATURED_PAINTING_COUNT = 10;
 const PaintingsSection = async ({
   paintingsDescription,
 }: {
-  paintingsDescription: PortableTextBlock[];
+  paintingsDescription: BlockContent | null | undefined;
 }) => {
   // NSFW exclusion is in GROQ: `randomPaintingsQuery` (packages/sanity-queries/src/index.ts).
   const { data } = await sanityFetch({

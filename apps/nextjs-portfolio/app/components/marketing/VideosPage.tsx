@@ -16,12 +16,12 @@ type VideoItem = {
   description?: string | null;
   videoUrl?: string | null;
   tags?: { name: string | null }[] | null;
-  thumbnail?: { asset?: { _ref: string }; lqip?: string } | null;
+  thumbnail?: { asset?: { _ref: string }; lqip?: string | null } | null;
   linkedPainting?: {
     _id: string;
     slug: string | null;
     title: string | null;
-    image?: { asset?: { _ref: string }; lqip?: string } | null;
+    image?: { asset?: { _ref: string }; lqip?: string | null } | null;
   } | null;
 };
 
