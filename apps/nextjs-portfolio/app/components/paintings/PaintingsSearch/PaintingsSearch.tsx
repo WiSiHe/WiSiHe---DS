@@ -15,6 +15,7 @@ import {
 } from 'react-icons/io5';
 import {
   Configure,
+  InstantSearch,
   Pagination,
   useCurrentRefinements,
   useInstantSearch,
@@ -22,7 +23,6 @@ import {
   useSortBy,
   useStats,
 } from 'react-instantsearch';
-import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { indexName, searchClient } from './AlgoliaClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
@@ -318,7 +318,7 @@ export default function PaintingsSearch() {
   ];
 
   return (
-    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={true}>
+    <InstantSearch searchClient={searchClient} indexName={indexName} routing={true}>
       <Configure hitsPerPage={18} filters='_type:"painting"' />
       <ScrollToResults />
 
@@ -415,6 +415,6 @@ export default function PaintingsSearch() {
           </div>
         </div>
       </div>
-    </InstantSearchNext>
+    </InstantSearch>
   );
 }

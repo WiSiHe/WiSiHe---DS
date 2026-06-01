@@ -2,7 +2,7 @@
 
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import PaintingCard from '../PaintingCard/PaintingCard';
 
@@ -41,28 +41,61 @@ function aspectClass(format: string): string {
 }
 
 const SKELETON_COUNT = 18;
+// Maximum time to show skeleton before giving up and showing empty state
+const SKELETON_TIMEOUT_MS = 6000;
 
 export default function CustomHits() {
   const { items } = useHits();
-  const { status } = useInstantSearch();
+  const { status, results, refresh } = useInstantSearch();
   const { items: refinements } = useCurrentRefinements();
 
-  // This ref is created fresh on every mount — it does NOT persist across
-  // navigations the way `results.processingTimeMS` does with preserveSharedStateOnUnmount.
-  // It flips to true the first time items arrive after this mount.
+  // Flip to true the first time items arrive after this mount
   const hasReceivedResultsThisMount = useRef(false);
   if (items.length > 0) hasReceivedResultsThisMount.current = true;
+
+  // Safety valve: if skeleton has shown for too long, stop waiting.
+  // This catches cases where the search never fires (routing/hydration issues).
+  const [skeletonTimedOut, setSkeletonTimedOut] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Reset timeout on every mount
+    setSkeletonTimedOut(false);
+    timeoutRef.current = setTimeout(() => {
+      setSkeletonTimedOut(true);
+    }, SKELETON_TIMEOUT_MS);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  // If we received results, clear the timeout
+  useEffect(() => {
+    if (hasReceivedResultsThisMount.current && timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, [items.length]);
+
+  // Force a search refresh if we've been idle too long with no results.
+  // This handles cases where the search failed to fire on initial mount.
+  useEffect(() => {
+    if (skeletonTimedOut && !hasReceivedResultsThisMount.current && status === 'idle') {
+      refresh();
+    }
+  }, [skeletonTimedOut, status, refresh]);
 
   const isNsfwFilterActive = refinements.some(
     r => r.attribute === 'tags' && r.refinements.some(v => v.label === 'NSFW'),
   );
 
-  // Show skeleton when:
-  //   - We haven't received results yet in this mount session, OR
-  //   - A search is actively in flight
-  // Once items arrive (hasReceivedResultsThisMount = true), show real results or empty state.
+  // `processingTimeMS` is set after Algolia responds — distinguishes
+  // "no search fired yet" from "search returned 0 results"
+  const searchHasCompleted = results?.processingTimeMS !== undefined;
+
+  // Show skeleton while: loading, stalled, or first search not yet complete
+  // BUT stop after timeout to avoid infinite skeleton
   const showSkeleton =
-    !hasReceivedResultsThisMount.current || status === 'loading' || status === 'stalled';
+    !skeletonTimedOut && (!searchHasCompleted || status === 'loading' || status === 'stalled');
 
   if (items.length === 0 && showSkeleton) {
     return (
