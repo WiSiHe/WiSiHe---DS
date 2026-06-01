@@ -46,7 +46,7 @@ export default async function Videos() {
     return notFound();
   }
 
-  const { videos } = data;
+  const { videos } = data as any;
 
   // Create structured data for video collection
   const structuredData = {

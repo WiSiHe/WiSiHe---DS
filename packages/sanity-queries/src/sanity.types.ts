@@ -15,6 +15,930 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type Image1 = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type Seo1 = {
+  title?: string;
+  description?: string;
+  image?: Image1;
+  noIndex?: boolean;
+};
+
+export type TagReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "tag";
+};
+
+export type Presentation = {
+  _id: string;
+  _type: "presentation";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  slides?: Array<
+    | ({
+        _key: string;
+      } & ContentSlide)
+    | ({
+        _key: string;
+      } & TitleSlide)
+    | ({
+        _key: string;
+      } & SeparatorSlide)
+  >;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
+export type PresentationCategoryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "presentationCategory";
+};
+
+export type SeparatorSlide = {
+  _type: "separatorSlide";
+  status?: "published" | "draft" | "hidden";
+  title?: string;
+  category?: PresentationCategoryReference;
+  slideDesign?: "default" | "minimal" | "bold";
+};
+
+export type TitleSlide = {
+  _type: "titleSlide";
+  status?: "published" | "draft" | "hidden";
+  title?: string;
+  subtitle?: string;
+  media?: PresentationMedia;
+  slideDesign?: "default" | "centered" | "hero" | "minimal";
+};
+
+export type PresentationMedia = {
+  _type: "presentationMedia";
+  mediaType?:
+    | "none"
+    | "image"
+    | "video"
+    | "iframe"
+    | "numbers"
+    | "graph"
+    | "custom";
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  imageAspectRatio?: "video" | "square" | "portrait" | "landscape" | "auto";
+  videoUrl?: string;
+  iframeUrl?: string;
+  iframeAspectRatio?: "video" | "square" | "portrait" | "landscape" | "auto";
+  metrics?: Array<
+    {
+      _key: string;
+    } & PresentationMetric
+  >;
+  chartType?:
+    | "performance"
+    | "business-impact"
+    | "engagement"
+    | "history-timeline";
+  componentName?: string;
+  componentProps?: string;
+};
+
+export type ContentSlide = {
+  _type: "contentSlide";
+  status?: "published" | "draft" | "hidden";
+  title?: string;
+  subtitle?: string;
+  content?: BlockContent;
+  media?: PresentationMedia;
+  slideDesign?: "default" | "centered" | "split" | "full-width" | "minimal";
+  category?: PresentationCategoryReference;
+  sources?: Array<
+    {
+      _key: string;
+    } & PresentationSource
+  >;
+  tools?: Array<
+    {
+      _key: string;
+    } & PresentationTool
+  >;
+  examples?: Array<
+    {
+      _key: string;
+    } & PresentationExample
+  >;
+};
+
+export type PaintingReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "painting";
+};
+
+export type ProjectReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "project";
+};
+
+export type BlockContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        linkType?: "href" | "slug" | "painting" | "project";
+        href?: string;
+        slug?: string;
+        painting?: PaintingReference;
+        project?: ProjectReference;
+        openInNewTab?: boolean;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      caption?: string;
+      _type: "image";
+      _key: string;
+    }
+  | {
+      code?: string;
+      language?:
+        | "javascript"
+        | "typescript"
+        | "html"
+        | "css"
+        | "json"
+        | "python"
+        | "bash"
+        | "text";
+      _type: "codeBlock";
+      _key: string;
+    }
+  | {
+      type?: "info" | "warning" | "success" | "error";
+      title?: string;
+      content?: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "normal"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "blockquote";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+      _type: "callout";
+      _key: string;
+    }
+  | {
+      icon?: string;
+      title?: string;
+      content?: string;
+      type?: "pro" | "time" | "flavor" | "technique" | "substitution";
+      _type: "recipeTip";
+      _key: string;
+    }
+  | {
+      url?: string;
+      title?: string;
+      caption?: string;
+      _type: "videoEmbed";
+      _key: string;
+    }
+>;
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type PresentationMetric = {
+  _type: "presentationMetric";
+  label?: string;
+  value?: string;
+  description?: string;
+  color?: "#22c55e" | "#ef4444" | "#3b82f6" | "#a855f7" | "#f97316" | "#14b8a6";
+};
+
+export type PresentationExample = {
+  _type: "presentationExample";
+  name?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  iframe?: string;
+  url?: string;
+};
+
+export type PresentationTool = {
+  _type: "presentationTool";
+  name?: string;
+  description?: string;
+  url?: string;
+  category?: string;
+  workshopUrl?: string;
+  nerdLevel?: number;
+};
+
+export type PresentationSource = {
+  _type: "presentationSource";
+  text?: string;
+  url?: string;
+};
+
+export type PresentationCategory = {
+  _id: string;
+  _type: "presentationCategory";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  description?: string;
+  color?:
+    | "#ef4444"
+    | "#f97316"
+    | "#eab308"
+    | "#22c55e"
+    | "#3b82f6"
+    | "#a855f7"
+    | "#ec4899"
+    | "#14b8a6";
+};
+
+export type Recipe = {
+  _id: string;
+  _type: "recipe";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  additionalImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  ingredientCategories?: Array<{
+    categoryName?: string;
+    ingredients?: Array<{
+      ingredient?: string;
+      photo?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+      };
+      amount?: string;
+      unit?: string;
+      isDiscrete?: boolean;
+      notes?: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  instructions?: Array<{
+    title?: string;
+    content?: BlockContent;
+    _key: string;
+  }>;
+  tips?: Array<{
+    title?: string;
+    content?: string;
+    icon?: string;
+    _key: string;
+  }>;
+  cookingTime?: number;
+  prepTime?: number;
+  totalTime?: number;
+  servings?: number;
+  difficulty?: "easy" | "medium" | "hard";
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  publishedAt?: string;
+  seo?: Seo1;
+};
+
+export type Social = {
+  _type: "social";
+  linkedIn?: string;
+  x?: string;
+};
+
+export type Redirect = {
+  _id: string;
+  _type: "redirect";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  source?: string;
+  destination?: string;
+  permanent?: boolean;
+  isEnabled?: boolean;
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  image?: Image1;
+  noIndex?: boolean;
+};
+
+export type Tag = {
+  _id: string;
+  _type: "tag";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  description?: string;
+  parent?: TagReference;
+  children?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  color?:
+    | "#ef4444"
+    | "#f97316"
+    | "#eab308"
+    | "#22c55e"
+    | "#3b82f6"
+    | "#a855f7"
+    | "#ec4899"
+    | "#6b7280"
+    | "#a16207"
+    | "#14b8a6";
+  isFeatured?: boolean;
+  isRoot?: boolean;
+  sortOrder?: number;
+};
+
+export type Post = {
+  _id: string;
+  _type: "post";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  excerpt?: string;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  body?: BlockContent;
+};
+
+export type About = {
+  _id: string;
+  _type: "about";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  bio?: string;
+  jobTitle?: string;
+  journeyItems?: Array<{
+    year?: string;
+    title?: string;
+    content?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    _key: string;
+  }>;
+  ctaTitle?: string;
+  ctaButtonText?: string;
+  ctaButtonUrl?: string;
+  socialLinks?: Array<{
+    platform?: string;
+    url?: string;
+    _key: string;
+  }>;
+};
+
+export type Settings = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  twitter?: {
+    twitterCard?: "summary" | "summary_large_image";
+    twitterUsername?: string;
+    twitterImage?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  keywords?: Array<string>;
+  metadataBase?: string;
+  structuredData?: {
+    type?: string;
+    data?: string;
+  };
+  socialLinks?: Array<{
+    platform?: string;
+    url?: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+};
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  overview?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  paintingsTitle?: string;
+  paintingsDescription?: BlockContent;
+  showcasePaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
+  projectsDescription?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<
+      | {
+          href?: string;
+          _type: "link";
+          _key: string;
+        }
+      | {
+          reference?: string;
+          _type: "internalLink";
+          _key: string;
+        }
+    >;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  projectsTitle?: string;
+  showcaseProjects?: Array<
+    {
+      _key: string;
+    } & ProjectReference
+  >;
+};
+
+export type VideoReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "video";
+};
+
+export type Project = {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  status?:
+    | "inProgress"
+    | "completed"
+    | "onHold"
+    | "cancelled"
+    | "abandoned"
+    | "unknown"
+    | "notStarted"
+    | "planned";
+  projectType?: "art" | "design" | "development" | "gameDevelopment" | "other";
+  slug?: Slug;
+  projectStart?: string;
+  projectEnd?: string;
+  content?: BlockContent;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  extraImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  connectedPaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
+  connectedVideo?: VideoReference;
+  connectedPage?: string;
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  seo?: Seo1;
+  redirect?: {
+    source?: string;
+    destination?: string;
+    permanent?: boolean;
+    isEnabled?: boolean;
+  };
+  social?: {
+    linkedIn?: string;
+    x?: string;
+  };
+};
+
+export type Video = {
+  _id: string;
+  _type: "video";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  videoUrl?: string;
+  featured?: boolean;
+  thumbnail?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  linkedPainting?: PaintingReference;
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  viewsCount?: number;
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
+};
+
+export type Painting = {
+  _id: string;
+  _type: "painting";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  description?: string;
+  seoDescription?: string;
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    title?: string;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  video?: string;
+  format?: "square" | "landscape" | "portrait";
+  viewsCount?: number;
+  isNSFW?: boolean;
+  isForSale?: boolean;
+  isFeatured?: boolean;
+  isFanArt?: boolean;
+  medium?:
+    | "Digital (Procreate)"
+    | "Digital (Photoshop)"
+    | "Digital (Other)"
+    | "Oil on canvas"
+    | "Watercolour"
+    | "Pencil / Ink";
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
+  redbubbleUrl?: string;
+  gelatoUrl?: string;
+  paintedAt?: string;
+  tagsV2?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+};
+
+export type MediaTag = {
+  _id: string;
+  _type: "media.tag";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: Slug;
+};
+
+export type SanityAssistInstructionTask = {
+  _type: "sanity.assist.instructionTask";
+  path?: string;
+  instructionKey?: string;
+  started?: string;
+  updated?: string;
+  info?: string;
+};
+
+export type SanityAssistTaskStatus = {
+  _type: "sanity.assist.task.status";
+  tasks?: Array<
+    {
+      _key: string;
+    } & SanityAssistInstructionTask
+  >;
+};
+
+export type SanityAssistSchemaTypeAnnotations = {
+  _type: "sanity.assist.schemaType.annotations";
+  title?: string;
+  fields?: Array<
+    {
+      _key: string;
+    } & SanityAssistSchemaTypeField
+  >;
+};
+
+export type SanityAssistOutputType = {
+  _type: "sanity.assist.output.type";
+  type?: string;
+};
+
+export type SanityAssistOutputField = {
+  _type: "sanity.assist.output.field";
+  path?: string;
+};
+
+export type AssistInstructionContextReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+};
+
+export type SanityAssistInstructionContext = {
+  _type: "sanity.assist.instruction.context";
+  reference?: AssistInstructionContextReference;
+};
+
+export type AssistInstructionContext = {
+  _id: string;
+  _type: "assist.instruction.context";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  context?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+};
+
+export type SanityAssistInstructionUserInput = {
+  _type: "sanity.assist.instruction.userInput";
+  message?: string;
+  description?: string;
+};
+
+export type SanityAssistInstructionPrompt = Array<{
+  children?: Array<
+    | {
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }
+    | ({
+        _key: string;
+      } & SanityAssistInstructionFieldRef)
+    | ({
+        _key: string;
+      } & SanityAssistInstructionContext)
+    | ({
+        _key: string;
+      } & SanityAssistInstructionUserInput)
+  >;
+  style?: "normal";
+  listItem?: never;
+  markDefs?: null;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type SanityAssistInstructionFieldRef = {
+  _type: "sanity.assist.instruction.fieldRef";
+  path?: string;
+};
+
+export type SanityAssistInstruction = {
+  _type: "sanity.assist.instruction";
+  prompt?: SanityAssistInstructionPrompt;
+  icon?: string;
+  title?: string;
+  userId?: string;
+  createdById?: string;
+  output?: Array<
+    | ({
+        _key: string;
+      } & SanityAssistOutputField)
+    | ({
+        _key: string;
+      } & SanityAssistOutputType)
+  >;
+};
+
+export type SanityAssistSchemaTypeField = {
+  _type: "sanity.assist.schemaType.field";
+  path?: string;
+  instructions?: Array<
+    {
+      _key: string;
+    } & SanityAssistInstruction
+  >;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -36,9 +960,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height: number;
-  width: number;
-  aspectRatio: number;
+  height?: number;
+  width?: number;
+  aspectRatio?: number;
 };
 
 export type SanityImageMetadata = {
@@ -53,22 +977,6 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
 export type SanityFileAsset = {
   _id: string;
   _type: "sanity.fileAsset";
@@ -80,14 +988,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash: string;
-  extension: string;
-  mimeType: string;
-  size: number;
-  assetId: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
   uploadId?: string;
-  path: string;
-  url: string;
+  path?: string;
+  url?: string;
   source?: SanityAssetSourceData;
 };
 
@@ -109,14 +1017,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash: string;
-  extension: string;
-  mimeType: string;
-  size: number;
-  assetId: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
   uploadId?: string;
-  path: string;
-  url: string;
+  path?: string;
+  url?: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -128,29 +1036,139 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type AllSanitySchemaTypes =
+  | SanityImageAssetReference
+  | Image1
+  | Seo1
+  | TagReference
+  | Presentation
+  | Slug
+  | PresentationCategoryReference
+  | SeparatorSlide
+  | TitleSlide
+  | PresentationMedia
+  | ContentSlide
+  | PaintingReference
+  | ProjectReference
+  | BlockContent
+  | SanityImageCrop
+  | SanityImageHotspot
+  | PresentationMetric
+  | PresentationExample
+  | PresentationTool
+  | PresentationSource
+  | PresentationCategory
+  | Recipe
+  | Social
+  | Redirect
+  | Seo
+  | Tag
+  | Post
+  | About
+  | Settings
+  | Home
+  | VideoReference
+  | Project
+  | Video
+  | Painting
+  | MediaTag
+  | SanityAssistInstructionTask
+  | SanityAssistTaskStatus
+  | SanityAssistSchemaTypeAnnotations
+  | SanityAssistOutputType
+  | SanityAssistOutputField
+  | AssistInstructionContextReference
+  | SanityAssistInstructionContext
+  | AssistInstructionContext
+  | SanityAssistInstructionUserInput
+  | SanityAssistInstructionPrompt
+  | SanityAssistInstructionFieldRef
+  | SanityAssistInstruction
+  | SanityAssistSchemaTypeField
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
   | SanityImageMetadata
-  | SanityImageHotspot
-  | SanityImageCrop
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint
-  | Slug;
+  | Geopoint;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
-export type SettingsQueryResult = null;
+export type SettingsQueryResult = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  twitter?: {
+    twitterCard?: "summary_large_image" | "summary";
+    twitterUsername?: string;
+    twitterImage?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+  keywords?: Array<string>;
+  metadataBase?: string;
+  structuredData?: {
+    type?: string;
+    data?: string;
+  };
+  socialLinks?: Array<{
+    platform?: string;
+    url?: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+} | null;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: aboutQuery
+// Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    journeyItems[] {      _key,      year,      title,      content,      image { ..., "lqip": asset->metadata.lqip }    },    ctaTitle,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
+export type AboutQueryResult = {
+  heroTitle: string | null;
+  heroSubtitle: string | null;
+  bio: string | null;
+  jobTitle: string | null;
+  journeyItems: Array<{
+    _key: string;
+    year: string | null;
+    title: string | null;
+    content: string | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+  }> | null;
+  ctaTitle: string | null;
+  ctaButtonText: string | null;
+  ctaButtonUrl: string | null;
+  socialLinks: Array<{
+    _key: string;
+    platform: string | null;
+    url: string | null;
+  }> | null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPageQuery
@@ -160,47 +1178,233 @@ export type GetPageQueryResult = null;
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: allPostsQuery
 // Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
-export type AllPostsQueryResult = Array<never>;
+export type AllPostsQueryResult = Array<{
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  excerpt: string | null;
+  coverImage: null;
+  date: string;
+  author: null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: allPaintingsQuery
 // Query: *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {        _id,        title,        slug,        image,        "date": coalesce(date, _updatedAt),    }
-export type AllPaintingsQueryResult = Array<never>;
+export type AllPaintingsQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: Slug | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  date: string;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: morePostsQuery
 // Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
-export type MorePostsQueryResult = Array<never>;
+export type MorePostsQueryResult = Array<{
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  excerpt: string | null;
+  coverImage: null;
+  date: string;
+  author: null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: postQuery
 // Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        link {      ...,      _type == "link" => {        "page": page->slug.current,        "post": post->slug.current        }      }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
-export type PostQueryResult = null;
+export type PostQueryResult = {
+  content: null;
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  excerpt: string | null;
+  coverImage: null;
+  date: string;
+  author: null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: paintingQuery
-// Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    format,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    "likesCount": count(likes),    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),    "viewsCount": count(views),    paintedAt,    artstationUrl,    format,    redbubbleUrl,    society6Url,    inPrintUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "altText": altText    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
-export type PaintingQueryResult = null;
+// Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    format,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    "likesCount": count(likes),    viewsCount,    paintedAt,    format,    redbubbleUrl,    gelatoUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "altText": altText,      "palette": asset->metadata.palette    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
+export type PaintingQueryResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  description: string | null;
+  seoDescription: string | null;
+  format: "landscape" | "portrait" | "square" | null;
+  medium:
+    | "Digital (Other)"
+    | "Digital (Photoshop)"
+    | "Digital (Procreate)"
+    | "Oil on canvas"
+    | "Pencil / Ink"
+    | "Watercolour"
+    | null;
+  isFeatured: boolean | null;
+  isFanArt: boolean | null;
+  isNSFW: boolean | null;
+  isForSale: boolean | null;
+  likesCount: number | null;
+  viewsCount: number | null;
+  paintedAt: string | null;
+  redbubbleUrl: string | null;
+  gelatoUrl: string | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    blurhash: null;
+    aspectRatio: number | null;
+    width: number | null;
+    height: number | null;
+    hasAlpha: boolean | null;
+    isOpaque: boolean | null;
+    altText: null;
+    palette: SanityImagePalette | null;
+  } | null;
+  images:
+    | Array<{
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        title?: string;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        lqip: string | null;
+        aspectRatio: number | null;
+        altText: null;
+      }>
+    | Array<never>;
+  tagsV2: Array<{
+    name: string | null;
+  }> | null;
+  video: string | null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: projectQuery
-// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),    "viewsCount": count(views),    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
-export type ProjectQueryResult = null;
+// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    viewsCount,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
+export type ProjectQueryResult = {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  status?:
+    | "abandoned"
+    | "cancelled"
+    | "completed"
+    | "inProgress"
+    | "notStarted"
+    | "onHold"
+    | "planned"
+    | "unknown";
+  projectType?: "art" | "design" | "development" | "gameDevelopment" | "other";
+  slug: string | null;
+  projectStart?: string;
+  projectEnd?: string;
+  content?: BlockContent;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+  } | null;
+  extraImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  connectedPaintings:
+    | Array<{
+        title: string | "";
+        slug: string | "";
+        format: "" | "landscape" | "portrait" | "square";
+        image: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+      }>
+    | Array<never>;
+  connectedVideo: {
+    videoUrl: string | null;
+  } | null;
+  connectedPage: string | "";
+  tags: Array<{
+    name: string | "";
+  }> | null;
+  seo: {
+    title: string | "";
+    description: string | "";
+    image: Image1 | null;
+    noIndex: boolean | false;
+  };
+  redirect?: {
+    source?: string;
+    destination?: string;
+    permanent?: boolean;
+    isEnabled?: boolean;
+  };
+  social?: {
+    linkedIn?: string;
+    x?: string;
+  };
+  likesCount: null;
+  viewsCount: null;
+  type: "" | "art" | "design" | "development" | "gameDevelopment" | "other";
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
-export type PostPagesSlugsResult = Array<never>;
+export type PostPagesSlugsResult = Array<{
+  slug: string | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: paintingsSlugs
 // Query: *[_type == "painting" && defined(slug.current)]  {"slug": slug.current}
-export type PaintingsSlugsResult = Array<never>;
+export type PaintingsSlugsResult = Array<{
+  slug: string | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: projectsSlugs
 // Query: *[_type == "project" && defined(slug.current)]  {"slug": slug.current}
-export type ProjectsSlugsResult = Array<never>;
+export type ProjectsSlugsResult = Array<{
+  slug: string | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: pagesSlugs
@@ -210,20 +1414,206 @@ export type PagesSlugsResult = Array<never>;
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: homePageQuery
 // Query: *[_type == "home"][0]{    _id,    title,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    "showcasePaintings": coalesce(      showcasePaintings[]->{        _type, _id, altText,        "slug": slug.current,        title, format, isFeatured, isNSFW,        tagsV2[]->{name},        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }      },      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {        _type, _id,        "slug": slug.current,        title, format, isFeatured, isNSFW,        tagsV2[]->{name},        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }      }    ),    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      "seo": {        "title": coalesce(seo.title, title, ""),        "description": coalesce(seo.description,  ""),        "image": seo.image,        "noIndex": seo.noIndex == true      },      name,      "tags": tags[]->{name},      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },  }
-export type HomePageQueryResult = null;
+export type HomePageQueryResult = {
+  _id: string;
+  title: string | null;
+  paintingsCount: number;
+  paintingsDescription: BlockContent | null;
+  showcasePaintings:
+    | Array<{
+        _type: "painting";
+        _id: string;
+        altText: null;
+        slug: string | null;
+        title: string | null;
+        format: "landscape" | "portrait" | "square" | null;
+        isFeatured: boolean | null;
+        isNSFW: boolean | null;
+        tagsV2: Array<{
+          name: string | null;
+        }> | null;
+        image: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+          lqip: string | null;
+          aspectRatio: number | null;
+        } | null;
+      }>
+    | Array<{
+        _type: "painting";
+        _id: string;
+        slug: string | null;
+        title: string | null;
+        format: "landscape" | "portrait" | "square" | null;
+        isFeatured: boolean | null;
+        isNSFW: boolean | null;
+        tagsV2: Array<{
+          name: string | null;
+        }> | null;
+        image: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+          lqip: string | null;
+          aspectRatio: number | null;
+        } | null;
+      }>;
+  projectsDescription: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<
+      | {
+          reference?: string;
+          _type: "internalLink";
+          _key: string;
+        }
+      | {
+          href?: string;
+          _type: "link";
+          _key: string;
+        }
+    >;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  showcaseProjects: Array<{
+    _type: "project";
+    _id: string;
+    title: null;
+    description: null;
+    seoDescription: null;
+    projectStart: string | null;
+    projectEnd: string | null;
+    status:
+      | "abandoned"
+      | "cancelled"
+      | "completed"
+      | "inProgress"
+      | "notStarted"
+      | "onHold"
+      | "planned"
+      | "unknown"
+      | null;
+    content: BlockContent | null;
+    seo: {
+      title: string | "";
+      description: string | "";
+      image: Image1 | null;
+      noIndex: boolean | false;
+    };
+    name: string | null;
+    tags: Array<{
+      name: string | null;
+    }> | null;
+    slug: string | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+  }> | null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllPaintingsandTags
-// Query: {    "paintings": *[_type == "painting" && defined(slug.current)]      {        _id,        "slug": slug.current,        title,        medium,        isFeatured,        isFanArt,        isNSFW,        isForSale,        tagsV2[]->{name},        "viewsCount": count(views),        paintedAt,        video,        "imagesCount": coalesce(count(images), 0),        image {          ...,          "lqip": asset->metadata.lqip,          "aspectRatio": asset->metadata.dimensions.aspectRatio        }      },    "tags": *[      _type == "tag" &&      count(*[_type == "painting" && references(^._id)]) > 0    ]    | order(name asc) {      _id,      name,      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)    }  }
+// Query: {    "paintings": *[_type == "painting" && defined(slug.current)]      {        _id,        "slug": slug.current,        title,        medium,        isFeatured,        isFanArt,        isNSFW,        isForSale,        tagsV2[]->{name},        viewsCount,        paintedAt,        video,        "imagesCount": coalesce(count(images), 0),        image {          ...,          "lqip": asset->metadata.lqip,          "aspectRatio": asset->metadata.dimensions.aspectRatio        }      },    "tags": *[      _type == "tag" &&      count(*[_type == "painting" && references(^._id)]) > 0    ]    | order(name asc) {      _id,      name,      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)    }  }
 export type GetAllPaintingsandTagsResult = {
-  paintings: Array<never>;
-  tags: Array<never>;
+  paintings: Array<{
+    _id: string;
+    slug: string | null;
+    title: string | null;
+    medium:
+      | "Digital (Other)"
+      | "Digital (Photoshop)"
+      | "Digital (Procreate)"
+      | "Oil on canvas"
+      | "Pencil / Ink"
+      | "Watercolour"
+      | null;
+    isFeatured: boolean | null;
+    isFanArt: boolean | null;
+    isNSFW: boolean | null;
+    isForSale: boolean | null;
+    tagsV2: Array<{
+      name: string | null;
+    }> | null;
+    viewsCount: number | null;
+    paintedAt: string | null;
+    video: string | null;
+    imagesCount: number | 0;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+      aspectRatio: number | null;
+    } | null;
+  }>;
+  tags: Array<{
+    _id: string;
+    name: string | null;
+    paintingsCount: number;
+  }>;
 };
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPaginatedPaintings
-// Query: *[_type == "painting" && defined(slug.current)]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    "viewsCount": count(views),    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
-export type GetPaginatedPaintingsResult = Array<never>;
+// Query: *[_type == "painting" && defined(slug.current)]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    viewsCount,    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
+export type GetPaginatedPaintingsResult = Array<{
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  medium:
+    | "Digital (Other)"
+    | "Digital (Photoshop)"
+    | "Digital (Procreate)"
+    | "Oil on canvas"
+    | "Pencil / Ink"
+    | "Watercolour"
+    | null;
+  isFeatured: boolean | null;
+  isFanArt: boolean | null;
+  isNSFW: boolean | null;
+  isForSale: boolean | null;
+  tagsV2: Array<{
+    name: string | null;
+  }> | null;
+  viewsCount: number | null;
+  paintedAt: string | null;
+  video: string | null;
+  imagesCount: number | 0;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPaintingsCount
@@ -232,8 +1622,41 @@ export type GetPaintingsCountResult = number;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getFilteredPaginatedPaintings
-// Query: *[_type == "painting" && defined(slug.current) && (    ($filter0 == "" || $filter0 in tagsV2[]->name)    && ($filter1 == "" || $filter1 in tagsV2[]->name)    && ($filter2 == "" || $filter2 in tagsV2[]->name)    && ($filter3 == "" || $filter3 in tagsV2[]->name)    && ($filter4 == "" || $filter4 in tagsV2[]->name)  )]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    "viewsCount": count(views),    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
-export type GetFilteredPaginatedPaintingsResult = Array<never>;
+// Query: *[_type == "painting" && defined(slug.current) && (    ($filter0 == "" || $filter0 in tagsV2[]->name)    && ($filter1 == "" || $filter1 in tagsV2[]->name)    && ($filter2 == "" || $filter2 in tagsV2[]->name)    && ($filter3 == "" || $filter3 in tagsV2[]->name)    && ($filter4 == "" || $filter4 in tagsV2[]->name)  )]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    viewsCount,    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
+export type GetFilteredPaginatedPaintingsResult = Array<{
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  medium:
+    | "Digital (Other)"
+    | "Digital (Photoshop)"
+    | "Digital (Procreate)"
+    | "Oil on canvas"
+    | "Pencil / Ink"
+    | "Watercolour"
+    | null;
+  isFeatured: boolean | null;
+  isFanArt: boolean | null;
+  isNSFW: boolean | null;
+  isForSale: boolean | null;
+  tagsV2: Array<{
+    name: string | null;
+  }> | null;
+  viewsCount: number | null;
+  paintedAt: string | null;
+  video: string | null;
+  imagesCount: number | 0;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getFilteredPaintingsCount
@@ -242,77 +1665,2984 @@ export type GetFilteredPaintingsCountResult = number;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllProjects
-// Query: {      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]        | order(projectStart desc) {          _id,          "slug": slug.current,          title,          description,          seoDescription,          projectType,          projectStart,          projectEnd,          status,          content,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]        | order(projectEnd desc) {          _id,          "slug": slug.current,          title,          description,          seoDescription,          projectType,          projectStart,          projectEnd,          status,          content,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "tags": *[        _type == "tag" &&        count(*[_type == "project" && references(^._id)]) > 0      ]      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {        _id,        name,        "count": count(*[_type == "project" && references(^._id)]),        "projectsCount": count(*[_type == "project" && references(^._id)])      }    }
+// Query: {      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]        | order(projectStart desc) {          _id,          "slug": slug.current,          title,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]        | order(projectEnd desc) {          _id,          "slug": slug.current,          title,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "tags": *[        _type == "tag" &&        count(*[_type == "project" && references(^._id)]) > 0      ]      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {        _id,        name,        "count": count(*[_type == "project" && references(^._id)]),        "projectsCount": count(*[_type == "project" && references(^._id)])      }    }
 export type GetAllProjectsResult = {
-  ongoingProjects: Array<never>;
-  pastProjects: Array<never>;
-  tags: Array<never>;
+  ongoingProjects: Array<{
+    _id: string;
+    slug: string | null;
+    title: null;
+    seoDescription: string | "";
+    projectType:
+      | "art"
+      | "design"
+      | "development"
+      | "gameDevelopment"
+      | "other"
+      | null;
+    projectStart: string | null;
+    projectEnd: string | null;
+    status:
+      | "abandoned"
+      | "cancelled"
+      | "completed"
+      | "inProgress"
+      | "notStarted"
+      | "onHold"
+      | "planned"
+      | "unknown"
+      | null;
+    name: string | null;
+    tags: Array<{
+      name: string | null;
+    }> | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+  }>;
+  pastProjects: Array<{
+    _id: string;
+    slug: string | null;
+    title: null;
+    seoDescription: string | "";
+    projectType:
+      | "art"
+      | "design"
+      | "development"
+      | "gameDevelopment"
+      | "other"
+      | null;
+    projectStart: string | null;
+    projectEnd: string | null;
+    status:
+      | "abandoned"
+      | "cancelled"
+      | "completed"
+      | "inProgress"
+      | "notStarted"
+      | "onHold"
+      | "planned"
+      | "unknown"
+      | null;
+    name: string | null;
+    tags: Array<{
+      name: string | null;
+    }> | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+  }>;
+  tags: Array<{
+    _id: string;
+    name: string | null;
+    count: number;
+    projectsCount: number;
+  }>;
 };
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllVideos
 // Query: {        "videos": *[_type == "video" && defined(slug.current)]        | order(date desc, _updatedAt desc) {          _id,          "slug": slug.current,          title,          "featured": featured == true,          description,          videoUrl,          "linkedPainting": coalesce(linkedPainting->{            _id,            "slug": slug.current,            title,            image{              ...,              "lqip": asset->metadata.lqip            }          }, null),          tags[]->{name},          thumbnail {            ...,            "lqip": asset->metadata.lqip          }        }      }
 export type GetAllVideosResult = {
-  videos: Array<never>;
+  videos: Array<{
+    _id: string;
+    slug: string | null;
+    title: string | null;
+    featured: boolean | false;
+    description: string | null;
+    videoUrl: string | null;
+    linkedPainting: {
+      _id: string;
+      slug: string | null;
+      title: string | null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        lqip: string | null;
+      } | null;
+    } | null;
+    tags: Array<{
+      name: string | null;
+    }> | null;
+    thumbnail: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+  }>;
 };
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: videoBySlugQuery
+// Query: *[_type == "video" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    description,    videoUrl,    "featured": featured == true,    "viewsCount": coalesce(viewsCount, 0),    "likesCount": count(likes),    "linkedPainting": coalesce(linkedPainting->{      _id,      "slug": slug.current,      title,      description,      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    }, null),    tags[]->{name},    thumbnail {      ...,      "lqip": asset->metadata.lqip    }  }
+export type VideoBySlugQueryResult = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  description: string | null;
+  videoUrl: string | null;
+  featured: boolean | false;
+  viewsCount: number | 0;
+  likesCount: number | null;
+  linkedPainting: {
+    _id: string;
+    slug: string | null;
+    title: string | null;
+    description: string | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+      lqip: string | null;
+      aspectRatio: number | null;
+    } | null;
+  } | null;
+  tags: Array<{
+    name: string | null;
+  }> | null;
+  thumbnail: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+  } | null;
+} | null;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: videosSlugs
+// Query: *[_type == "video" && defined(slug.current)] { "slug": slug.current }
+export type VideosSlugsResult = Array<{
+  slug: string | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: generateStaticSlugs
 // Query: *[_type == $type && defined(slug.current)]{    "slug": slug.current,    _updatedAt  }
-export type GenerateStaticSlugsResult = Array<never>;
+export type GenerateStaticSlugsResult = Array<{
+  slug: string | null;
+  _updatedAt: string;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: REDIRECTS_QUERY
 // Query: *[_type == "redirect" && isEnabled == true] {      source,      destination,      permanent  }
-export type REDIRECTS_QUERY_RESULT = Array<never>;
+export type REDIRECTS_QUERY_RESULT = Array<{
+  source: string | null;
+  destination: string | null;
+  permanent: boolean | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: OG_IMAGE_QUERY
 // Query: *[_id == $id][0]{    title,    image {      ...,      "palette": asset->metadata.palette,    },  }
-export type OG_IMAGE_QUERY_RESULT = {
-  title: string | null;
-  image: null;
-} | null;
+export type OG_IMAGE_QUERY_RESULT =
+  | {
+      title: null;
+      image: null;
+    }
+  | {
+      title: string | null;
+      image: null;
+    }
+  | {
+      title: null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        palette: SanityImagePalette | null;
+      } | null;
+    }
+  | {
+      title: string | null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        palette: SanityImagePalette | null;
+      } | null;
+    }
+  | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: SITEMAP_QUERY
 // Query: *[_type in ["page", "post"] && defined(slug.current)] {      "href": select(        _type == "page" => "/" + slug.current,        _type == "post" => "/posts/" + slug.current,        slug.current      ),      _updatedAt  }
-export type SITEMAP_QUERY_RESULT = Array<never>;
+export type SITEMAP_QUERY_RESULT = Array<{
+  href: string | null;
+  _updatedAt: string;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllRecipes
 // Query: *[_type == "recipe" && defined(slug.current)]  | order(publishedAt desc, _updatedAt desc) {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
-export type GetAllRecipesResult = Array<never>;
+export type GetAllRecipesResult = Array<{
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  description: string | null;
+  mainImage: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+  cookingTime: number | null;
+  prepTime: number | null;
+  totalTime: number | null;
+  servings: number | null;
+  difficulty: "easy" | "hard" | "medium" | null;
+  publishedAt: string | null;
+  tags: Array<{
+    name: string | null;
+  }> | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getRecipe
 // Query: *[_type == "recipe" && slug.current == $slug][0] {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    ingredientCategories[]{      categoryName,              ingredients[]{          ingredient,          photo {            ...,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          amount,          unit,          isDiscrete,          notes        }    },    instructions[]{      title,      content    },    tips[]{      title,      content,      icon    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
-export type GetRecipeResult = null;
+export type GetRecipeResult = {
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  description: string | null;
+  mainImage: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+  ingredientCategories: Array<{
+    categoryName: string | null;
+    ingredients: Array<{
+      ingredient: string | null;
+      photo: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        lqip: string | null;
+        aspectRatio: number | null;
+      } | null;
+      amount: string | null;
+      unit: string | null;
+      isDiscrete: boolean | null;
+      notes: string | null;
+    }> | null;
+  }> | null;
+  instructions: Array<{
+    title: string | null;
+    content: BlockContent | null;
+  }> | null;
+  tips: Array<{
+    title: string | null;
+    content: string | null;
+    icon: string | null;
+  }> | null;
+  cookingTime: number | null;
+  prepTime: number | null;
+  totalTime: number | null;
+  servings: number | null;
+  difficulty: "easy" | "hard" | "medium" | null;
+  publishedAt: string | null;
+  tags: Array<{
+    name: string | null;
+  }> | null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getRecipeSlugs
 // Query: *[_type == "recipe" && defined(slug.current)]  {"slug": slug.current}
-export type GetRecipeSlugsResult = Array<never>;
+export type GetRecipeSlugsResult = Array<{
+  slug: string | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: randomPaintingsQuery
 // Query: *[    _type == "painting" &&    defined(slug.current) &&    defined(image) &&    isNSFW != true  ] | order(_createdAt desc) [0...50] {    _id,    title,    "slug": slug.current,    isFeatured,    tagsV2[]->{name},    image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
-export type RandomPaintingsQueryResult = Array<never>;
+export type RandomPaintingsQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  isFeatured: boolean | null;
+  tagsV2: Array<{
+    name: string | null;
+  }> | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  } | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: presentationQuery
 // Query: *[_type == "presentation" && slug.current == $slug][0] {    _id,    title,    description,    "slug": slug.current,    tags[]->{      _id,      name    },    slides[] {      _type,      status,      _type == "contentSlide" => {        title,        subtitle,        content,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        },        category->{          _id,          name,          description,          color        },        sources[] {          text,          url        },        tools[] {          name,          description,          url,          category,          workshopUrl,          nerdLevel        },        examples[] {          name,          description,          image {            ...,            "url": asset->url,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          iframe,          url        }      },      _type == "titleSlide" => {        title,        subtitle,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        }      },      _type == "separatorSlide" => {        title,        slideDesign,        category->{          _id,          name,          description,          color        }      }    }  }
-export type PresentationQueryResult = null;
+export type PresentationQueryResult = {
+  _id: string;
+  title: string | null;
+  description: string | null;
+  slug: string | null;
+  tags: Array<{
+    _id: string;
+    name: string | null;
+  }> | null;
+  slides: Array<
+    | {
+        _type: "contentSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string | null;
+        subtitle: string | null;
+        content: BlockContent | null;
+        slideDesign:
+          | "centered"
+          | "default"
+          | "full-width"
+          | "minimal"
+          | "split"
+          | null;
+        media:
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+            }
+          | null;
+        category: {
+          _id: string;
+          name: string | null;
+          description: string | null;
+          color:
+            | "#14b8a6"
+            | "#22c55e"
+            | "#3b82f6"
+            | "#a855f7"
+            | "#eab308"
+            | "#ec4899"
+            | "#ef4444"
+            | "#f97316"
+            | null;
+        } | null;
+        sources: Array<{
+          text: string | null;
+          url: string | null;
+        }> | null;
+        tools: Array<{
+          name: string | null;
+          description: string | null;
+          url: string | null;
+          category: string | null;
+          workshopUrl: string | null;
+          nerdLevel: number | null;
+        }> | null;
+        examples: Array<{
+          name: string | null;
+          description: string | null;
+          image: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            url: string | null;
+            lqip: string | null;
+            aspectRatio: number | null;
+          } | null;
+          iframe: string | null;
+          url: string | null;
+        }> | null;
+      }
+    | {
+        _type: "separatorSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string | null;
+        slideDesign: "bold" | "default" | "minimal" | null;
+        category: {
+          _id: string;
+          name: string | null;
+          description: string | null;
+          color:
+            | "#14b8a6"
+            | "#22c55e"
+            | "#3b82f6"
+            | "#a855f7"
+            | "#eab308"
+            | "#ec4899"
+            | "#ef4444"
+            | "#f97316"
+            | null;
+        } | null;
+      }
+    | {
+        _type: "titleSlide";
+        status: "draft" | "hidden" | "published" | null;
+        title: string | null;
+        subtitle: string | null;
+        slideDesign: "centered" | "default" | "hero" | "minimal" | null;
+        media:
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              chartType:
+                | "business-impact"
+                | "engagement"
+                | "history-timeline"
+                | "performance"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              componentName: string | null;
+              componentProps: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              iframeUrl: string | null;
+              iframeAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string | null;
+                _type: "image";
+                url: string | null;
+                lqip: string | null;
+                aspectRatio: number | null;
+              } | null;
+              imageAspectRatio:
+                | "auto"
+                | "landscape"
+                | "portrait"
+                | "square"
+                | "video"
+                | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              metrics: Array<{
+                label: string | null;
+                value: string | null;
+                description: string | null;
+                color:
+                  | "#14b8a6"
+                  | "#22c55e"
+                  | "#3b82f6"
+                  | "#a855f7"
+                  | "#ef4444"
+                  | "#f97316"
+                  | null;
+              }> | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+              videoUrl: string | null;
+            }
+          | {
+              mediaType:
+                | "custom"
+                | "graph"
+                | "iframe"
+                | "image"
+                | "none"
+                | "numbers"
+                | "video"
+                | null;
+            }
+          | null;
+      }
+  > | null;
+} | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: allPresentationsQuery
 // Query: *[_type == "presentation"] | order(_createdAt desc) {    _id,    title,    description,    "slug": slug.current,    "slidesCount": count(slides),    tags[]->{      _id,      name    }  }
-export type AllPresentationsQueryResult = Array<never>;
+export type AllPresentationsQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  description: string | null;
+  slug: string | null;
+  slidesCount: number | null;
+  tags: Array<{
+    _id: string;
+    name: string | null;
+  }> | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPaginatedProjects
 // Query: *[_type == "project" && defined(slug.current)]  | order(projectStart desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    description,    seoDescription,    projectType,    projectStart,    projectEnd,    status,    content,    name,    "tags": tags[]->{name},    image {      ...,      "lqip": asset->metadata.lqip    }  }
-export type GetPaginatedProjectsResult = Array<never>;
+export type GetPaginatedProjectsResult = Array<{
+  _id: string;
+  slug: string | null;
+  title: null;
+  description: null;
+  seoDescription: null;
+  projectType:
+    | "art"
+    | "design"
+    | "development"
+    | "gameDevelopment"
+    | "other"
+    | null;
+  projectStart: string | null;
+  projectEnd: string | null;
+  status:
+    | "abandoned"
+    | "cancelled"
+    | "completed"
+    | "inProgress"
+    | "notStarted"
+    | "onHold"
+    | "planned"
+    | "unknown"
+    | null;
+  content: BlockContent | null;
+  name: string | null;
+  tags: Array<{
+    name: string | null;
+  }> | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    lqip: string | null;
+  } | null;
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getProjectsCount
@@ -324,25 +4654,28 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
+    '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    ctaTitle,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n,\n      }\n    },\n  }\n': GetPageQueryResult;
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult;
     '\n    *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        "date": coalesce(date, _updatedAt),\n    }\n    ': AllPaintingsQueryResult;
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult;
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult;
-    '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),\n    "viewsCount": count(views),\n    paintedAt,\n    artstationUrl,\n    format,\n    redbubbleUrl,\n    society6Url,\n    inPrintUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "altText": altText\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    "views": select(defined(views) => views[]{ viewerId, timestamp }, []),\n    "viewsCount": count(views),\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
+    '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    viewsCount,\n    paintedAt,\n    format,\n    redbubbleUrl,\n    gelatoUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "altText": altText,\n      "palette": asset->metadata.palette\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  {"slug": slug.current}\n': PaintingsSlugsResult;
     '\n  *[_type == "project" && defined(slug.current)]\n  {"slug": slug.current}\n': ProjectsSlugsResult;
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult;
     '\n  *[_type == "home"][0]{\n    _id,\n    title,\n    "paintingsCount": count(*[_type == "painting"]),\n    paintingsDescription,\n    "showcasePaintings": coalesce(\n      showcasePaintings[]->{\n        _type, _id, altText,\n        "slug": slug.current,\n        title, format, isFeatured, isNSFW,\n        tagsV2[]->{name},\n        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n      },\n      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {\n        _type, _id,\n        "slug": slug.current,\n        title, format, isFeatured, isNSFW,\n        tagsV2[]->{name},\n        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n      }\n    ),\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      "seo": {\n        "title": coalesce(seo.title, title, ""),\n        "description": coalesce(seo.description,  ""),\n        "image": seo.image,\n        "noIndex": seo.noIndex == true\n      },\n      name,\n      "tags": tags[]->{name},\n      "slug": slug.current,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip\n      },\n    },\n  }\n': HomePageQueryResult;
-    '\n  {\n    "paintings": *[_type == "painting" && defined(slug.current)]\n      {\n        _id,\n        "slug": slug.current,\n        title,\n        medium,\n        isFeatured,\n        isFanArt,\n        isNSFW,\n        isForSale,\n        tagsV2[]->{name},\n        "viewsCount": count(views),\n        paintedAt,\n        video,\n        "imagesCount": coalesce(count(images), 0),\n        image {\n          ...,\n          "lqip": asset->metadata.lqip,\n          "aspectRatio": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    "tags": *[\n      _type == "tag" &&\n      count(*[_type == "painting" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)\n    }\n  }\n  ': GetAllPaintingsandTagsResult;
-    '\n  *[_type == "painting" && defined(slug.current)]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    "viewsCount": count(views),\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': GetPaginatedPaintingsResult;
+    '\n  {\n    "paintings": *[_type == "painting" && defined(slug.current)]\n      {\n        _id,\n        "slug": slug.current,\n        title,\n        medium,\n        isFeatured,\n        isFanArt,\n        isNSFW,\n        isForSale,\n        tagsV2[]->{name},\n        viewsCount,\n        paintedAt,\n        video,\n        "imagesCount": coalesce(count(images), 0),\n        image {\n          ...,\n          "lqip": asset->metadata.lqip,\n          "aspectRatio": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    "tags": *[\n      _type == "tag" &&\n      count(*[_type == "painting" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)\n    }\n  }\n  ': GetAllPaintingsandTagsResult;
+    '\n  *[_type == "painting" && defined(slug.current)]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    viewsCount,\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': GetPaginatedPaintingsResult;
     '\n  count(*[_type == "painting" && defined(slug.current)])\n': GetPaintingsCountResult;
-    '\n  *[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    "viewsCount": count(views),\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': GetFilteredPaginatedPaintingsResult;
+    '\n  *[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    viewsCount,\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': GetFilteredPaginatedPaintingsResult;
     '\n  count(*[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )])\n': GetFilteredPaintingsCountResult;
-    '\n    {\n      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]\n        | order(projectStart desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]\n        | order(projectEnd desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          description,\n          seoDescription,\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "tags": *[\n        _type == "tag" &&\n        count(*[_type == "project" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        "count": count(*[_type == "project" && references(^._id)]),\n        "projectsCount": count(*[_type == "project" && references(^._id)])\n      }\n    }\n    ': GetAllProjectsResult;
+    '\n    {\n      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]\n        | order(projectStart desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]\n        | order(projectEnd desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "tags": *[\n        _type == "tag" &&\n        count(*[_type == "project" && references(^._id)]) > 0\n      ]\n      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        "count": count(*[_type == "project" && references(^._id)]),\n        "projectsCount": count(*[_type == "project" && references(^._id)])\n      }\n    }\n    ': GetAllProjectsResult;
     '\n      {\n        "videos": *[_type == "video" && defined(slug.current)]\n        | order(date desc, _updatedAt desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "featured": featured == true,\n          description,\n          videoUrl,\n          "linkedPainting": coalesce(linkedPainting->{\n            _id,\n            "slug": slug.current,\n            title,\n            image{\n              ...,\n              "lqip": asset->metadata.lqip\n            }\n          }, null),\n          tags[]->{name},\n          thumbnail {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        }\n      }\n    ': GetAllVideosResult;
+    '\n  *[_type == "video" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    videoUrl,\n    "featured": featured == true,\n    "viewsCount": coalesce(viewsCount, 0),\n    "likesCount": count(likes),\n    "linkedPainting": coalesce(linkedPainting->{\n      _id,\n      "slug": slug.current,\n      title,\n      description,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }, null),\n    tags[]->{name},\n    thumbnail {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': VideoBySlugQueryResult;
+    '\n  *[_type == "video" && defined(slug.current)] { "slug": slug.current }\n': VideosSlugsResult;
     '\n  *[_type == $type && defined(slug.current)]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': GenerateStaticSlugsResult;
     '\n  *[_type == "redirect" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n': REDIRECTS_QUERY_RESULT;
     '\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      "palette": asset->metadata.palette,\n    },\n  }\n': OG_IMAGE_QUERY_RESULT;

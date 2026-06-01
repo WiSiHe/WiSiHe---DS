@@ -94,6 +94,45 @@ export async function removeProjectLike(projectId: string, likerId: string) {
   }
 }
 
+export async function incrementVideoView(videoId: string) {
+  try {
+    await client.patch(videoId).inc({ viewsCount: 1 }).commit();
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to increment video view:', error);
+    return { success: false };
+  }
+}
+
+export async function incrementVideoLike(videoId: string, likerId: string) {
+  try {
+    await client
+      .patch(videoId)
+      .setIfMissing({ likes: [] })
+      .insert('after', 'likes[-1]', [
+        { _key: crypto.randomUUID(), likerId, timestamp: new Date().toISOString() },
+      ])
+      .commit({ autoGenerateArrayKeys: true });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to increment video like:', error);
+    return { success: false };
+  }
+}
+
+export async function removeVideoLike(videoId: string, likerId: string) {
+  try {
+    await client
+      .patch(videoId)
+      .unset([`likes[likerId=="${likerId}"]`])
+      .commit({ autoGenerateArrayKeys: true });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to remove video like:', error);
+    return { success: false };
+  }
+}
+
 export async function disableDraftMode() {
   (await draftMode()).disable();
 }

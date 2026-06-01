@@ -7,6 +7,7 @@ export default defineCliConfig({
   },
   deployment: {
     autoUpdates: true,
+    appId: '524f8ded9f7d9cbde954c6ba',
   },
   typegen: {
     path: [

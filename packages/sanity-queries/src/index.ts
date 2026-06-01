@@ -452,6 +452,8 @@ export const videoBySlugQuery = defineQuery(`
     description,
     videoUrl,
     "featured": featured == true,
+    "viewsCount": coalesce(viewsCount, 0),
+    "likesCount": count(likes),
     "linkedPainting": coalesce(linkedPainting->{
       _id,
       "slug": slug.current,

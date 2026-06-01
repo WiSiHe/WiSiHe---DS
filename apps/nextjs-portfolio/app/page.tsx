@@ -64,7 +64,7 @@ export default async function Home() {
 
       <section className='bg-surface py-24 px-4 md:px-8'>
         <Suspense fallback={<SectionSkeleton />}>
-          <PaintingsSection paintingsDescription={paintingsDescription} />
+          <PaintingsSection paintingsDescription={paintingsDescription as any} />
         </Suspense>
       </section>
 

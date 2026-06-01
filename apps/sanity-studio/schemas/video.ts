@@ -85,6 +85,30 @@ export default defineType({
       description: 'Tags for the video',
       validation: rule => rule.required(),
     }),
+    defineField({
+      name: 'viewsCount',
+      title: 'Views',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Tracked via PostHog — do not edit manually',
+    }),
+    defineField({
+      name: 'likes',
+      title: 'Likes',
+      type: 'array',
+      readOnly: true,
+      description: 'Toggled by visitors — do not edit manually',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'likerId', type: 'string', title: 'Liker ID' },
+            { name: 'timestamp', type: 'datetime', title: 'Timestamp' },
+          ],
+        },
+      ],
+    }),
   ],
   preview: {
     select: {
