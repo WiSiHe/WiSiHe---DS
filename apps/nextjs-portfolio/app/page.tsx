@@ -52,7 +52,7 @@ export default async function Home() {
     <div className='bg-background'>
       <div className='bg-background'>
         <Suspense fallback={<HeroSkeleton />}>
-          <HeroImageSection paintings={shuffledHeroPaintings as any[]} />
+          <HeroImageSection paintings={shuffledHeroPaintings} />
         </Suspense>
 
         <section className='relative pt-24 pb-12'>
@@ -64,7 +64,7 @@ export default async function Home() {
 
       <section className='bg-surface py-24 px-4 md:px-8'>
         <Suspense fallback={<SectionSkeleton />}>
-          <PaintingsSection paintingsDescription={paintingsDescription as any} />
+          <PaintingsSection paintingsDescription={paintingsDescription} />
         </Suspense>
       </section>
 

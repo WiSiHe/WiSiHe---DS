@@ -1,4 +1,5 @@
 'use client';
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
@@ -19,7 +20,7 @@ import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@
 import CustomPortableText from '../../cms/PortableText/PortableText';
 
 type ProjectInformationProps = {
-  project: any;
+  project: NonNullable<ProjectQueryResult>;
 };
 
 // Status configuration object for better maintainability
@@ -81,13 +82,13 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         localStorage.setItem(storageKey, '1');
         posthog.capture('project_viewed', {
           project_id: _id,
-          name: project?.name ?? project?.title,
+          name: project?.name,
         });
         await incrementProjectView(_id);
       } catch {
         posthog.capture('project_viewed', {
           project_id: _id,
-          name: project?.name ?? project?.title,
+          name: project?.name,
         });
         await incrementProjectView(_id);
       }
@@ -99,7 +100,15 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
     return null;
   }
 
-  const { name, status = 'unknown', projectStart, projectEnd, tags = [], viewsCount = 0 } = project;
+  const {
+    name,
+    status = 'unknown',
+    projectStart,
+    projectEnd,
+    tags: rawTags = [],
+    viewsCount = 0,
+  } = project;
+  const tags = rawTags ?? [];
 
   const projectContent = project.content as PortableTextBlock[];
 
@@ -164,41 +173,40 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   };
 
   // Separate tags into tech and non-tech for display
-  const techTags = tags.filter((t: { name?: string | null }) =>
-    [
-      'React',
-      'NextJS',
-      'TypeScript',
-      'TailwindCSS',
-      'Turborepo',
-      'GraphQL',
-      'CSS',
-      'HTML',
-      'Javascript',
-      'PHP',
-      'Wordpress',
-      'Vite',
-      'Redux',
-      'Unity',
-      'C#',
-      'Flash',
-      'Unreal Engine 4',
-      'Unreal Engine 5',
-      'Blender',
-      'ZBrush',
-      'Substance Painter',
-      'Figma',
-      'Tokens',
-      'Designsystem',
-      'EnonicXP',
-      'ThreeJS',
-      'Framer Motion',
-      'Speed Tree',
-      'NextAuth',
-      'Sanity',
-    ].includes(t.name ?? ''),
-  );
-  const otherTags = tags.filter((t: { name?: string | null }) => !techTags.includes(t));
+  const TECH_TAG_NAMES = [
+    'React',
+    'NextJS',
+    'TypeScript',
+    'TailwindCSS',
+    'Turborepo',
+    'GraphQL',
+    'CSS',
+    'HTML',
+    'Javascript',
+    'PHP',
+    'Wordpress',
+    'Vite',
+    'Redux',
+    'Unity',
+    'C#',
+    'Flash',
+    'Unreal Engine 4',
+    'Unreal Engine 5',
+    'Blender',
+    'ZBrush',
+    'Substance Painter',
+    'Figma',
+    'Tokens',
+    'Designsystem',
+    'EnonicXP',
+    'ThreeJS',
+    'Framer Motion',
+    'Speed Tree',
+    'NextAuth',
+    'Sanity',
+  ];
+  const techTags = tags.filter(t => TECH_TAG_NAMES.includes(t.name ?? ''));
+  const otherTags = tags.filter(t => !techTags.includes(t));
 
   return (
     <motion.div layout className='space-y-8'>

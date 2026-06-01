@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 type Tag = {
   _id: string;
-  name: string;
+  name: string | null;
   count: number;
 };
 
@@ -187,16 +187,17 @@ const SheetPanel = ({
         <div className='overflow-y-auto overscroll-contain px-5 pb-8 pt-2 touch-auto'>
           <div className='flex flex-wrap gap-2'>
             {tags.map(tag => {
-              const isActive = activeFilters.includes(tag.name);
+              const tagName = tag.name ?? '';
+              const isActive = activeFilters.includes(tagName);
               return (
                 <Chip
                   key={tag._id}
-                  label={tag.name}
+                  label={tagName}
                   additionalText={`${tag.count}`}
                   variation={isActive ? 'primary' : 'secondary'}
                   selected={isActive}
                   size='medium'
-                  onClick={() => onToggleFilter(tag.name)}
+                  onClick={() => onToggleFilter(tagName)}
                 />
               );
             })}

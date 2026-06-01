@@ -1,6 +1,7 @@
 'use client';
 
 import { IconArrowRight, IconCalendar, IconTag } from '@tabler/icons-react';
+import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -12,8 +13,9 @@ import {
 } from './featuredProjectHelpers';
 import { ScrollStackItem } from './ScrollStack';
 
-// biome-ignore lint/suspicious/noExplicitAny: HomePageQueryResult resolves to null until typegen is fixed
-export type FeaturedProject = any;
+export type FeaturedProject = NonNullable<
+  NonNullable<HomePageQueryResult>['showcaseProjects']
+>[number];
 
 type ImageSourceWithRef = { asset: { _ref: string } };
 

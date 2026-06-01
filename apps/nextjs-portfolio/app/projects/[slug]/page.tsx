@@ -1,3 +1,4 @@
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -62,8 +63,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       params,
       stega: false,
     });
-    // biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
-    const project = _projectData as any;
+    const project = _projectData as ProjectQueryResult;
 
     if (!project) {
       return {
@@ -132,8 +132,7 @@ export default async function ProjectPage(props: Props) {
 
   try {
     const [{ data: _proj }] = await Promise.all([sanityFetch({ query: projectQuery, params })]);
-    // biome-ignore lint/suspicious/noExplicitAny: ProjectQueryResult resolves to null until typegen is fixed
-    const project = _proj as any;
+    const project = _proj as ProjectQueryResult;
 
     if (!project?._id) {
       return notFound();
@@ -145,12 +144,14 @@ export default async function ProjectPage(props: Props) {
     const imageUrl = project.image
       ? urlForImage(project.image)?.width(1200).height(630).url()
       : null;
-    const schemaType = PROJECT_TYPE_SCHEMA[project.projectType] ?? 'CreativeWork';
+    const schemaType = project.projectType
+      ? (PROJECT_TYPE_SCHEMA[project.projectType] ?? 'CreativeWork')
+      : 'CreativeWork';
 
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': schemaType,
-      name: project.name ?? project.title,
+      name: project.name,
       description: project.seo?.description || '',
       url: projectUrl,
       ...(imageUrl ? { image: imageUrl } : {}),
@@ -185,7 +186,7 @@ export default async function ProjectPage(props: Props) {
         {
           '@type': 'ListItem',
           position: 3,
-          name: project.name ?? project.title,
+          name: project.name,
           item: `https://www.wisihe.no/projects/${project.slug}`,
         },
       ],
@@ -200,7 +201,7 @@ export default async function ProjectPage(props: Props) {
             crumbs={[
               { label: 'Home', href: '/' },
               { label: 'Projects', href: '/projects' },
-              { label: project.name ?? project.title ?? 'Project' },
+              { label: project.name ?? 'Project' },
             ]}
           />
         </div>

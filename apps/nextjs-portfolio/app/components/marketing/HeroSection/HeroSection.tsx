@@ -26,7 +26,12 @@ type ShowcasePainting = {
   format: 'square' | 'landscape' | 'portrait' | null;
   isFeatured?: boolean | null;
   isNSFW?: boolean | null;
-  image?: { asset?: { _ref: string }; lqip?: string; aspectRatio?: number; alt?: string } | null;
+  image?: {
+    asset?: { _ref: string };
+    lqip?: string | null;
+    aspectRatio?: number | null;
+    alt?: string;
+  } | null;
   tagsV2?: { name: string | null }[] | null;
 };
 

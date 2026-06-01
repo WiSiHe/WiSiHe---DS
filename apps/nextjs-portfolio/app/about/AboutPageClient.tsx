@@ -1,6 +1,7 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
@@ -20,8 +21,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   Twitter: <FaTwitter />,
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: About data from Sanity
-export default function AboutPageClient({ about }: { about: any }) {
+export default function AboutPageClient({ about }: { about: AboutQueryResult }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -107,16 +107,16 @@ export default function AboutPageClient({ about }: { about: any }) {
             {heroSubtitle}
           </p>
           <div className='hero-text flex justify-center gap-6'>
-            {socialLinks.map((social: { platform: string; url: string }) => (
+            {socialLinks.map((social: { platform: string | null; url: string | null }) => (
               <a
-                key={social.url}
-                href={social.url}
+                key={social.url ?? social.platform}
+                href={social.url ?? undefined}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='text-3xl text-foreground/50 hover:text-accent transition-colors'
-                aria-label={social.platform}
+                aria-label={social.platform ?? undefined}
               >
-                {PLATFORM_ICONS[social.platform] ?? null}
+                {PLATFORM_ICONS[social.platform ?? ''] ?? null}
               </a>
             ))}
           </div>
@@ -127,7 +127,7 @@ export default function AboutPageClient({ about }: { about: any }) {
       </section>
 
       {/* Journey */}
-      {journeyItems.map((item: any, idx: number) => (
+      {journeyItems.map((item, idx) => (
         <section
           key={item._key ?? item.title}
           className='journey-section min-h-screen py-32 px-4 md:px-8 flex items-center bg-surface/5 even:bg-background'
@@ -150,7 +150,7 @@ export default function AboutPageClient({ about }: { about: any }) {
                 {item.image?.asset ? (
                   <Image
                     src={`https://cdn.sanity.io/images/cbjsv7wi/production/${item.image.asset._ref.replace('image-', '').replace(/-(\w+)$/, '.$1')}`}
-                    alt={item.title}
+                    alt={item.title ?? ''}
                     fill
                     className='object-cover'
                     placeholder={item.image.lqip ? 'blur' : 'empty'}

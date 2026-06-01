@@ -1,3 +1,4 @@
+import type { GetAllVideosResult } from '@wisihe/sanity-queries';
 import { isEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -46,7 +47,7 @@ export default async function Videos() {
     return notFound();
   }
 
-  const { videos } = data as any;
+  const { videos } = data as GetAllVideosResult;
 
   // Create structured data for video collection
   const structuredData = {

@@ -1,19 +1,19 @@
 import { IconArrowNarrowRight } from '@tabler/icons-react';
+import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type OngoingProjectCardProps = {
-  project: any;
+  project: GetAllProjectsResult['ongoingProjects'][number];
   index: number;
 };
 
 const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
-  const { title, name, seoDescription, description, image, slug, tags, status, projectStart } =
-    project;
+  const { name, seoDescription, image, slug, tags, status, projectStart } = project;
 
-  const projectTitle = title ?? name;
+  const projectTitle = name;
   const year = projectStart ? new Date(projectStart).getFullYear() : null;
   const displayTags = (tags ?? []).slice(0, 4);
   const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 4);
@@ -46,7 +46,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
                 </h3>
 
                 <p className='text-foreground-subtle text-sm md:text-base leading-relaxed line-clamp-2'>
-                  {seoDescription ?? description}
+                  {seoDescription}
                 </p>
               </div>
 
@@ -77,7 +77,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
               <div className='relative w-full md:w-72 lg:w-96 aspect-video md:aspect-auto shrink-0 overflow-hidden rounded-b-2xl md:rounded-b-none md:rounded-r-2xl'>
                 <Image
                   src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
-                  alt={image?.alt || projectTitle}
+                  alt={image?.alt || projectTitle || ''}
                   priority={index < 2}
                   fill
                   sizes='(max-width: 768px) 100vw, 384px'

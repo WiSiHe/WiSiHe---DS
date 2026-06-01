@@ -1,11 +1,11 @@
+import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { urlForImage } from '@/sanity/lib/utils';
 
-// biome-ignore lint/suspicious/noExplicitAny: GetAllProjectsResult resolves to null until typegen is fixed
 type PastProjectCardProps = {
-  project: any;
+  project: GetAllProjectsResult['pastProjects'][number];
   index: number;
 };
 
@@ -25,27 +25,17 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
-  const {
-    title,
-    name,
-    image,
-    slug,
-    tags,
-    status,
-    projectEnd,
-    projectType,
-    seoDescription,
-    description,
-  } = project;
+  const { name, image, slug, tags, status, projectEnd, projectType, seoDescription } = project;
 
-  const projectTitle = title ?? name;
+  const projectTitle = name;
   const year = projectEnd ? new Date(projectEnd).getFullYear() : null;
   const displayTags = (tags ?? []).slice(0, 3);
   const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
-  const statusConfig = (status && STATUS_CONFIG[status]) || STATUS_CONFIG['completed'];
-  const typeLabel = TYPE_LABEL[projectType] ?? null;
+  const statusConfig = (status && STATUS_CONFIG[status]) ||
+    STATUS_CONFIG['completed'] || { label: 'Completed', dot: 'bg-green-500' };
+  const typeLabel = projectType ? (TYPE_LABEL[projectType] ?? null) : null;
   const isDeprecated = status === 'cancelled' || status === 'abandoned';
-  const excerpt = seoDescription ?? description ?? '';
+  const excerpt = seoDescription ?? '';
 
   const imageSrc = image ? urlForImage(image)?.width(600).height(400).quality(75).url() : null;
 
@@ -63,7 +53,7 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
             {imageSrc ? (
               <Image
                 src={imageSrc}
-                alt={projectTitle}
+                alt={projectTitle ?? ''}
                 fill
                 priority={index < 4}
                 sizes='(max-width: 768px) 100vw, 50vw'

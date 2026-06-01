@@ -1,3 +1,4 @@
+import type { VideoBySlugQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -48,15 +49,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     params: await props.params,
     stega: false,
   });
-  // biome-ignore lint/suspicious/noExplicitAny: query result
-  const video = data as any;
+  const video = data as VideoBySlugQueryResult;
   if (!video) return { title: 'Video | WiSiHe' };
   return {
     title: `${video.title} | WiSiHe`,
     description: video.description ?? `Watch ${video.title} by Henrik Sissener`,
     alternates: { canonical: `https://www.wisihe.no/videos/${video.slug}` },
     openGraph: {
-      title: video.title,
+      title: video.title ?? undefined,
       description: video.description ?? '',
       url: `https://www.wisihe.no/videos/${video.slug}`,
       type: 'video.other',
@@ -67,8 +67,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function VideoPage(props: Props) {
   const params = await props.params;
   const { data } = await sanityFetch({ query: videoBySlugQuery, params });
-  // biome-ignore lint/suspicious/noExplicitAny: query result
-  const video = data as any;
+  const video = data as VideoBySlugQueryResult;
 
   if (!video?._id) return notFound();
 
@@ -125,7 +124,7 @@ export default async function VideoPage(props: Props) {
           {videoId ? (
             <iframe
               src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`}
-              title={video.title}
+              title={video.title ?? undefined}
               className='w-full h-full'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
               allowFullScreen
@@ -162,9 +161,9 @@ export default async function VideoPage(props: Props) {
               </div>
             )}
 
-            {video.tags?.length > 0 && (
+            {(video.tags?.length ?? 0) > 0 && (
               <div className='flex flex-wrap gap-2'>
-                {video.tags.map((tag: { name: string }) => (
+                {video.tags?.map(tag => (
                   <span
                     key={tag.name}
                     className='text-xs font-medium px-2.5 py-1 rounded-full bg-surface border border-border text-foreground-subtle'

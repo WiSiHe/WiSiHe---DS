@@ -5,6 +5,7 @@
  */
 
 import { IconArrowRight } from '@tabler/icons-react';
+import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
@@ -12,9 +13,8 @@ import { useEffect, useState } from 'react';
 import FeaturedProjectCard from './FeaturedProjectCard';
 import ScrollStack from './ScrollStack';
 
-// biome-ignore lint/suspicious/noExplicitAny: HomePageQueryResult resolves to null until typegen is fixed
 type FeaturedProjectsProps = {
-  showcaseProjects?: any[] | null;
+  showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'];
 };
 
 const MAX_PROJECTS = 3;
