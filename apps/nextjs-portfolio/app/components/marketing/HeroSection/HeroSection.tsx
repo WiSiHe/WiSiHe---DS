@@ -37,27 +37,30 @@ const canvasTextureStyle = {
   backgroundSize: '30px 30px, 6px 6px, 6px 6px',
 };
 
-// --- CURATED DESIGN & ART QUOTES ---
-const QUOTES = [
+// --- CORE FOCUS TOPICS ---
+const DEFAULT_FOCUS = {
+  title: 'Web Development',
+  description:
+    'Crafting high-performance web systems, accessible interfaces, and fluid micro-animations with React, Next.js, and TypeScript.',
+  tagline: 'PERFORMANCE x ACCESSIBILITY',
+  category: 'WEB_DEV_SECTOR',
+};
+
+const FOCUS_AREAS = [
+  DEFAULT_FOCUS,
   {
-    text: 'The canvas is a playground for the mind, and code is the brush that paints it in real-time.',
-    author: 'Henrik Sissener',
+    title: 'Game Development',
+    description:
+      'Designing custom 2D/3D visual environments, canvas physics engines, custom shaders, and gameplay logic in Unreal Engine.',
+    tagline: 'INTERACTIVE x GRAPHICS_PHYSICS',
+    category: 'GAME_DEV_SECTOR',
   },
   {
-    text: 'Design is not just what it looks like and feels like. Design is how it works.',
-    author: 'Steve Jobs',
-  },
-  {
-    text: 'Every stroke of the brush and every line of code is a search for order and expression.',
-    author: 'Henrik Sissener',
-  },
-  {
-    text: 'Technology is the canvas of our age, and code is the raw medium we shape.',
-    author: 'Anonymous',
-  },
-  {
-    text: 'To create is to bridge the gap between abstract logical systems and physical sensory art.',
-    author: 'Henrik Sissener',
+    title: 'Paintings & Drawings',
+    description:
+      'Blending traditional physical mediums like oil paint and charcoal with digital art techniques to translate texture to the web.',
+    tagline: 'CANVAS_TEXTURE x FINE_ART',
+    category: 'ART_SECTOR',
   },
 ];
 
@@ -159,7 +162,7 @@ const getCellLabel = (type: string) => {
     case 'D3':
       return 'WATERCOLOR';
     default:
-      return 'QUOTE';
+      return 'FOCUS';
   }
 };
 
@@ -201,9 +204,9 @@ function FocusPullWrapper({
 
 // --- CURATED GRAPHIC CELLS ---
 
-function QuoteCell({ gx, gy }: { gx: number; gy: number }) {
-  const index = Math.abs(gx + gy) % QUOTES.length;
-  const quote = QUOTES[index] || { text: '', author: '' };
+function FocusCell({ gx, gy }: { gx: number; gy: number }) {
+  const index = Math.abs(gx + gy) % FOCUS_AREAS.length;
+  const area = FOCUS_AREAS[index] ?? DEFAULT_FOCUS;
 
   return (
     <div
@@ -211,23 +214,70 @@ function QuoteCell({ gx, gy }: { gx: number; gy: number }) {
       style={canvasTextureStyle}
     >
       <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[9px] text-foreground-muted select-none'>
-        <span>SECTOR: QUOTE_ARCHIVE</span>
+        <span>SECTOR: {area.category}</span>
         <span>{`(${gx}, ${gy})`}</span>
       </div>
 
-      <div className='flex-1 flex flex-col justify-center max-w-sm mx-auto text-center gap-4 my-auto'>
-        <p className='font-serif text-lg md:text-xl italic text-foreground leading-relaxed'>
-          &ldquo;{quote.text}&rdquo;
-        </p>
-        <p className='font-mono text-[10px] text-accent tracking-wider uppercase'>
-          — {quote.author}
+      <div className='flex-1 flex flex-col justify-center max-w-sm mx-auto text-left gap-4 my-auto'>
+        <div className='font-mono text-[9px] text-accent tracking-wider uppercase'>
+          {`// ${area.tagline}`}
+        </div>
+        <h2 className='text-2xl font-serif font-black uppercase text-foreground leading-none tracking-tight'>
+          {area.title}
+        </h2>
+        <p className='font-mono text-[10px] md:text-xs text-foreground-subtle leading-relaxed'>
+          {area.description}
         </p>
       </div>
 
       <div className='font-mono text-[8px] text-foreground-muted flex justify-between border-t border-border/40 pt-2 select-none'>
-        <span>REF_STREAM: PERSISTED</span>
-        <span>OK</span>
+        <span>DISCIPLINE_STREAM</span>
+        <span>ACTIVE</span>
       </div>
+    </div>
+  );
+}
+
+// Pixelated grid wipe transition overlay
+function PixelWipe({ triggerKey }: { triggerKey: string }) {
+  const cols = 10;
+  const rows = 8;
+  const totalCells = cols * rows;
+
+  return (
+    <div className='absolute inset-0 z-40 grid grid-cols-10 grid-rows-8 pointer-events-none overflow-hidden'>
+      <AnimatePresence mode='popLayout'>
+        <motion.div key={triggerKey} className='absolute inset-0 grid grid-cols-10 grid-rows-8'>
+          {Array.from({ length: totalCells }).map((_, i) => {
+            const x = i % cols;
+            const y = Math.floor(i / cols);
+            // Stagger delay based on diagonal distance from top-left to bottom-right
+            const delay = (x + y) * 0.018;
+
+            return (
+              <motion.div
+                key={`${x}-${y}`}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{
+                  scale: [0, 1, 1, 0],
+                  opacity: [0, 1, 1, 0],
+                }}
+                transition={{
+                  duration: 0.42,
+                  times: [0, 0.25, 0.75, 1],
+                  delay,
+                  ease: 'easeInOut',
+                }}
+                className='bg-background border-[0.5px] border-border/10 shadow-inner'
+                style={{
+                  gridColumnStart: x + 1,
+                  gridRowStart: y + 1,
+                }}
+              />
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -967,7 +1017,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
         content = <SkillsCell isActive={isActive} />;
         break;
       case 'Q':
-        content = <QuoteCell gx={gx} gy={gy} />;
+        content = <FocusCell gx={gx} gy={gy} />;
         break;
       default:
         content = <DummyWatercolorCell gx={gx} gy={gy} isActive={isActive} />;
@@ -1199,6 +1249,42 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     };
   }, [loading, coords, handleUserNavigate]);
 
+  // Konami Code easter egg listener to trigger autoplay again
+  useEffect(() => {
+    if (loading) return;
+
+    const konamiCode = [
+      'arrowup',
+      'arrowup',
+      'arrowdown',
+      'arrowdown',
+      'arrowleft',
+      'arrowright',
+      'arrowleft',
+      'arrowright',
+      'b',
+      'a',
+    ];
+    let konamiIndex = 0;
+
+    const handleKonamiKey = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if (key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          konamiIndex = 0;
+          setAutoplay(true);
+          setCoords({ x: 1, y: 1 });
+        }
+      } else {
+        konamiIndex = key === 'arrowup' ? 1 : 0;
+      }
+    };
+
+    window.addEventListener('keydown', handleKonamiKey);
+    return () => window.removeEventListener('keydown', handleKonamiKey);
+  }, [loading]);
+
   // Infinite grid rendering: dynamic 9x9 render range window centered on current coordinates
   const ix = Math.round(coords.x);
   const iy = Math.round(coords.y);
@@ -1314,6 +1400,9 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
                 />
               </div>
             )}
+
+            {/* Pixelated grid transition wipe overlay */}
+            {!shouldReduceMotion && <PixelWipe triggerKey={`${coords.x}-${coords.y}`} />}
 
             {/* 1. Skip Intro Button (Top Right - positioned below ThemeToggle to prevent overlap) */}
             {autoplay && (
