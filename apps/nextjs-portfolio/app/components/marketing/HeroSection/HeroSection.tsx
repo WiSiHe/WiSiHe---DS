@@ -1,7 +1,7 @@
 'use client';
 
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -675,6 +675,12 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
   const [autoplay, setAutoplay] = useState(true);
   const containerRef = useRef<HTMLElement>(null);
 
+  // Scroll hooks for exit parallax
+  const { scrollY } = useScroll();
+  const scrollOpacity = useTransform(scrollY, [0, 600], [1, 0]);
+  const scrollScale = useTransform(scrollY, [0, 600], [1, shouldReduceMotion ? 1.0 : 0.88]);
+  const scrollYOffset = useTransform(scrollY, [0, 600], [0, shouldReduceMotion ? 0 : -100]);
+
   const renderCellContent = (type: string, isActive: boolean, gx: number, gy: number) => {
     let content: React.ReactNode;
     switch (type) {
@@ -732,6 +738,16 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     [stopAutoplayAndNavigate],
   );
 
+  const handleScrollDown = () => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth',
+      });
+      stopAutoplayAndNavigate({ x: 1, y: 1 });
+    }
+  };
+
   // Load persistence (play-once) and mount status
   useEffect(() => {
     setMounted(true);
@@ -785,7 +801,6 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const runTour = async () => {
-      // Align step to current coordinates
       const currentIdx = PATH.findIndex(
         c => c.x === coordsRef.current.x && c.y === coordsRef.current.y,
       );
@@ -796,19 +811,19 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
         await delay(4500);
         if (!active) break;
 
-        // Swoosh out & pan at the same time (subtle scale pull-back)
-        setScale(0.82);
+        // Swoosh out & pan at the same time (pull further out to reveal more of the grid!)
+        setScale(0.24);
         step = (step + 1) % PATH.length;
         const target = PATH[step];
         if (target) {
           setCoords(target);
         }
-        await delay(900);
+        await delay(550); // Snappy glide zoom out/pan
         if (!active) break;
 
         // Swoosh back in
         setScale(1.0);
-        await delay(900);
+        await delay(550); // Snappy settle zoom in
       }
     };
 
@@ -943,51 +958,63 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
           }}
         />
 
-        {/* The Infinite Grid Canvas Container */}
+        {/* Outer Scroll-Parallax Exit Wrapper */}
         <motion.div
-          animate={{
-            x: `${-coords.x * 100}vw`,
-            y: `${-coords.y * 100}vh`,
-            scale: scale,
-            rotate: shouldReduceMotion || scale === 1.0 ? 0 : (coords.x - coords.y) * 2,
-          }}
-          transition={
-            shouldReduceMotion
-              ? { duration: 0 }
-              : {
-                  type: 'spring',
-                  stiffness: 16, // Heavy, luxurious cinematic glide (no bounce)
-                  damping: 22,
-                  mass: 1.4,
-                }
-          }
-          className='absolute top-0 left-0 w-[300vw] h-[300vh]'
           style={{
-            ...gridPatternStyle,
-            transformOrigin: `${coords.x * 100 + 50}vw ${coords.y * 100 + 50}vh`,
+            opacity: scrollOpacity,
+            scale: scrollScale,
+            y: scrollYOffset,
           }}
+          className='w-full h-full relative'
         >
-          {/* Dynamic 7x7 Cellular Rendering Grid */}
-          {rangeY.map(gy =>
-            rangeX.map(gx => {
-              const cellType = getCellType(gx, gy);
-              const isActive = coords.x === gx && coords.y === gy;
-              return (
-                <div
-                  key={`${gx}-${gy}`}
-                  className='absolute border-[3px] border-border bg-background overflow-hidden'
-                  style={{
-                    left: `${gx * 100}vw`,
-                    top: `${gy * 100}vh`,
-                    width: '100vw',
-                    height: '100vh',
-                  }}
-                >
-                  {renderCellContent(cellType, isActive, gx, gy)}
-                </div>
-              );
-            }),
-          )}
+          {/* The Infinite Grid Canvas Container */}
+          <motion.div
+            animate={{
+              x: `${-coords.x * 100}vw`,
+              y: `${-coords.y * 100}vh`,
+              scale: loading ? 0.15 : scale,
+              opacity: loading ? 0 : 1,
+              filter: loading ? 'blur(10px)' : 'blur(0px)',
+              rotate: shouldReduceMotion || scale === 1.0 ? 0 : (coords.x - coords.y) * 2.5,
+            }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    type: 'spring',
+                    stiffness: 95, // Snappy spring camera (was 16)
+                    damping: 20, // Snappy damping (was 22)
+                    mass: 1.0, // Snappy mass (was 1.4)
+                  }
+            }
+            className='absolute top-0 left-0 w-[300vw] h-[300vh]'
+            style={{
+              ...gridPatternStyle,
+              transformOrigin: `${coords.x * 100 + 50}vw ${coords.y * 100 + 50}vh`,
+            }}
+          >
+            {/* Dynamic 7x7 Cellular Rendering Grid */}
+            {rangeY.map(gy =>
+              rangeX.map(gx => {
+                const cellType = getCellType(gx, gy);
+                const isActive = coords.x === gx && coords.y === gy;
+                return (
+                  <div
+                    key={`${gx}-${gy}`}
+                    className='absolute border-[3px] border-border bg-background overflow-hidden'
+                    style={{
+                      left: `${gx * 100}vw`,
+                      top: `${gy * 100}vh`,
+                      width: '100vw',
+                      height: '100vh',
+                    }}
+                  >
+                    {renderCellContent(cellType, isActive, gx, gy)}
+                  </div>
+                );
+              }),
+            )}
+          </motion.div>
         </motion.div>
 
         {/* ==================== PERSISTENT HUD OVERLAYS ==================== */}
@@ -1106,6 +1133,18 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
                   ? 'PRESS WASD/ARROWS OR SWIPE TO INTERACT'
                   : 'KEYS: WASD / ARROWS | MOUSE: CLICK RADAR SCAN'}
               </span>
+            </div>
+
+            {/* 5. Enter Portfolio Scroll Button (Bottom Center) */}
+            <div className='absolute bottom-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col items-center gap-1.5'>
+              <button
+                type='button'
+                onClick={handleScrollDown}
+                className='px-4 py-2 border border-foreground/30 bg-background/80 hover:border-accent hover:text-accent font-mono text-[10px] tracking-widest uppercase rounded shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2'
+              >
+                <span>ENTER PORTFOLIO</span>
+                <span className='animate-bounce text-xs'>▼</span>
+              </button>
             </div>
           </>
         )}
