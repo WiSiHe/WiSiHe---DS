@@ -17,6 +17,18 @@ type HeroImageSectionProps = {
   projects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
 };
 
+type ProjectItem = {
+  title?: string | null;
+  name?: string | null;
+  slug?: string | null;
+  description?: string | null;
+  tags?: { name?: string | null }[] | null;
+  image?: Parameters<typeof urlForImage>[0] | null;
+  role?: string | null;
+  story?: string | null;
+  challenge?: string | null;
+};
+
 type Coord = { x: number; y: number };
 
 const gridPatternStyle = {
@@ -44,6 +56,8 @@ const DEFAULT_FOCUS = {
     'Crafting high-performance web systems, accessible interfaces, and fluid micro-animations with React, Next.js, and TypeScript.',
   tagline: 'PERFORMANCE x ACCESSIBILITY',
   category: 'WEB_DEV_SECTOR',
+  story:
+    'I build digital systems that act like dynamic canvases. Every interface should combine flawless performance with tactile, organic micro-interactions that make the product feel alive.',
 };
 
 const FOCUS_AREAS = [
@@ -54,6 +68,8 @@ const FOCUS_AREAS = [
       'Designing custom 2D/3D visual environments, canvas physics engines, custom shaders, and gameplay logic in Unreal Engine.',
     tagline: 'INTERACTIVE x GRAPHICS_PHYSICS',
     category: 'GAME_DEV_SECTOR',
+    story:
+      'From C++ algorithms in Unreal Engine 5 to screen-space shaders, I love designing digital playgrounds. I focus on implementing satisfying physics bounds, custom lighting, and responsive controls.',
   },
   {
     title: 'Paintings & Drawings',
@@ -61,6 +77,8 @@ const FOCUS_AREAS = [
       'Blending traditional physical mediums like oil paint and charcoal with digital art techniques to translate texture to the web.',
     tagline: 'CANVAS_TEXTURE x FINE_ART',
     category: 'ART_SECTOR',
+    story:
+      'Fine art is the foundation of my engineering. Physical painting teaches me light, shadow, texture, and chemistry—which I translate directly into custom GLSL fragment shaders.',
   },
 ];
 
@@ -71,24 +89,44 @@ const FALLBACK_PAINTINGS = [
     slug: 'resonance-of-code',
     altText: 'Abstract code elements painted in heavy oil textures',
     image: null,
+    medium: 'Oil on Canvas',
+    year: '2024',
+    dimensions: '120 x 90 cm',
+    story:
+      'An exploration of heavy textured oil paint colliding with visual digital matrix patterns. Explores the tension between organic human expression and logical computer code.',
   },
   {
     title: 'Digital Horizon',
     slug: 'digital-horizon',
     altText: 'Vibrant pixelated sunset blending with oil medium',
     image: null,
+    medium: 'Acrylic & Mixed Media',
+    year: '2023',
+    dimensions: '100 x 100 cm',
+    story:
+      'A vibrant sunset blending digital neon pigments with heavy textured acrylic impasto layers, representing the merging line between software horizons and physical reality.',
   },
   {
     title: 'Glitched Canvas',
     slug: 'glitched-canvas',
     altText: 'Traditional portrait with digital neon scanlines',
     image: null,
+    medium: 'Oil & Spray Paint',
+    year: '2025',
+    dimensions: '80 x 100 cm',
+    story:
+      'A traditional portrait overlayed with bright digital scanlines, conveying the fragmentation of human identity in the social media era.',
   },
   {
     title: 'Intertwined Disciplines',
     slug: 'intertwined-disciplines',
     altText: 'Complex brushstrokes morphing into technical CAD outlines',
     image: null,
+    medium: 'Charcoal & Oil on Canvas',
+    year: '2024',
+    dimensions: '150 x 120 cm',
+    story:
+      'A sweeping physical charcoal sketch morphing seamlessly into technical CAD wireframes, representing the duality of art and engineering.',
   },
 ];
 
@@ -101,6 +139,11 @@ const FALLBACK_PROJECTS = [
       'An interactive WebGL physics engine simulating wet paint diffusion on canvas paper using custom fragment shaders.',
     tags: [{ name: 'WebGL' }, { name: 'GLSL' }, { name: 'React' }],
     image: null,
+    role: 'Lead Creative Engineer',
+    story:
+      'Developed a custom 2D WebGL fluid dynamics solver that calculates real paint diffusion on textured paper backgrounds. Engineered custom fragment shaders running at 60 FPS.',
+    challenge:
+      'Achieving real-time fluid simulation and pigment mixing inside the constraints of a mobile browser.',
   },
   {
     title: 'Unreal Art Gallery',
@@ -110,6 +153,11 @@ const FALLBACK_PROJECTS = [
       'A 3D virtual exhibition space built in Unreal Engine 5, showcasing physical paintings with realistic ray-traced canvas lighting.',
     tags: [{ name: 'Unreal Engine' }, { name: 'C++' }, { name: 'DirectX 12' }],
     image: null,
+    role: '3D Graphics Programmer',
+    story:
+      'Created a virtual exhibition space allowing visitors to walk through a gallery of physical paintings. Features custom ray-traced canvas texture lighting and physics-based visitor controls.',
+    challenge:
+      'Optimizing high-polygon canvas assets and global illumination for standard hardware performance.',
   },
   {
     title: 'Shader Symphony',
@@ -119,6 +167,11 @@ const FALLBACK_PROJECTS = [
       'Audio-reactive screen-space shaders that transform live ambient noises into flowing oil paint strokes.',
     tags: [{ name: 'GLSL' }, { name: 'Web Audio API' }, { name: 'Vite' }],
     image: null,
+    role: 'Interactive Developer',
+    story:
+      'Programmed screen-space fragment shaders that hook into the Web Audio API, transforming live voice/music frequencies into dynamic, morphing watercolor ripples.',
+    challenge:
+      'Mapping real-time audio FFT bins to organic shader noise arrays without noticeable latency.',
   },
 ];
 
@@ -204,35 +257,47 @@ function FocusPullWrapper({
 
 // --- CURATED GRAPHIC CELLS ---
 
+// --- CURATED GRAPHIC CELLS ---
+
 function FocusCell({ gx, gy }: { gx: number; gy: number }) {
   const index = Math.abs(gx + gy) % FOCUS_AREAS.length;
   const area = FOCUS_AREAS[index] ?? DEFAULT_FOCUS;
 
   return (
     <div
-      className='w-full h-full flex flex-col justify-between p-8 bg-background relative'
+      className='w-full h-full flex flex-col justify-between p-8 bg-background relative overflow-hidden'
       style={canvasTextureStyle}
     >
-      <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[9px] text-foreground-muted select-none'>
+      <div className='absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none' />
+      <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[9px] text-foreground-muted select-none z-10'>
         <span>SECTOR: {area.category}</span>
         <span>{`(${gx}, ${gy})`}</span>
       </div>
 
-      <div className='flex-1 flex flex-col justify-center max-w-sm mx-auto text-left gap-4 my-auto'>
-        <div className='font-mono text-[9px] text-accent tracking-wider uppercase'>
-          {`// ${area.tagline}`}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className='flex-1 flex flex-col justify-center max-w-sm mx-auto text-left gap-4 my-auto z-10'
+      >
+        <div className='font-mono text-[9px] text-accent tracking-wider uppercase flex items-center gap-1.5'>
+          <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+          <span>{`// ${area.tagline}`}</span>
         </div>
-        <h2 className='text-2xl font-serif font-black uppercase text-foreground leading-none tracking-tight'>
+        <h2 className='text-3xl font-serif font-black uppercase text-foreground leading-none tracking-tight bg-gradient-to-r from-foreground via-foreground-subtle to-foreground/80'>
           {area.title}
         </h2>
-        <p className='font-mono text-[10px] md:text-xs text-foreground-subtle leading-relaxed'>
+        <p className='font-mono text-[10.5px] md:text-xs text-foreground-subtle leading-relaxed border-l-2 border-accent pl-3 py-0.5'>
           {area.description}
         </p>
-      </div>
+        <p className='font-mono text-[9.5px] text-foreground-muted italic leading-relaxed bg-surface/30 p-2.5 rounded border border-border/20 mt-1.5 shadow-sm'>
+          {area.story}
+        </p>
+      </motion.div>
 
-      <div className='font-mono text-[8px] text-foreground-muted flex justify-between border-t border-border/40 pt-2 select-none'>
+      <div className='font-mono text-[8px] text-foreground-muted flex justify-between border-t border-border/40 pt-2 select-none z-10'>
         <span>DISCIPLINE_STREAM</span>
-        <span>ACTIVE</span>
+        <span className='text-accent font-semibold'>STATUS: ONLINE</span>
       </div>
     </div>
   );
@@ -284,78 +349,353 @@ function PixelWipe({ triggerKey }: { triggerKey: string }) {
 
 // Organic Watercolor Morphing Blob Cell
 function DummyWatercolorCell({ gx, gy, isActive }: { gx: number; gy: number; isActive: boolean }) {
+  const blobIndex = Math.abs(gx * gy + 3) % 4;
+  const gradientColors =
+    [
+      'from-accent via-violet-500 to-emerald-400',
+      'from-pink-500 via-orange-400 to-yellow-300',
+      'from-blue-500 via-cyan-400 to-purple-600',
+      'from-rose-500 via-red-400 to-amber-500',
+    ][blobIndex] || 'from-accent via-violet-500 to-emerald-400';
+
   return (
     <div
-      className='w-full h-full flex flex-col justify-between p-6 select-none relative overflow-hidden'
+      className='w-full h-full flex flex-col justify-between p-6 select-none relative overflow-hidden bg-background'
       style={canvasTextureStyle}
     >
+      <div className='absolute inset-0 bg-scanline opacity-[0.02]' />
       <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[10px] text-foreground-muted z-10'>
-        <span>NODE_SYS: WATERCOLOR_MEDIUM</span>
+        <span>NODE_SYS: WATERCOLOR_FLUID</span>
         <span>{`(${gx}, ${gy})`}</span>
       </div>
 
-      {/* Morphing paint blob */}
+      {/* Morphing paint blobs */}
       <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
         <motion.div
           animate={
             isActive
               ? {
-                  scale: [1, 1.2, 0.85, 1],
+                  scale: [1, 1.25, 0.82, 1.1, 1],
                   borderRadius: [
                     '42% 58% 70% 30% / 45% 45% 55% 55%',
                     '70% 30% 52% 48% / 60% 40% 60% 40%',
+                    '35% 65% 80% 20% / 30% 50% 50% 70%',
                     '42% 58% 70% 30% / 45% 45% 55% 55%',
                   ],
-                  rotate: [0, 90, 180, 360],
+                  rotate: [0, 90, 180, 270, 360],
                 }
-              : { scale: 0.8, rotate: 0 }
+              : { scale: 0.75, rotate: 0 }
           }
           transition={{
-            duration: 12,
+            duration: 16,
             repeat: Number.POSITIVE_INFINITY,
             ease: 'linear',
           }}
-          className='w-[45vw] h-[45vw] md:w-[25vw] md:h-[25vw] rounded-full filter blur-3xl opacity-25 bg-gradient-to-tr from-accent via-violet-500 to-emerald-400'
+          className={`w-[60vw] h-[60vw] md:w-[28vw] md:h-[28vw] rounded-full filter blur-[48px] opacity-[0.22] bg-gradient-to-tr ${gradientColors}`}
         />
       </div>
 
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0 }}
+        className='z-10 max-w-xs mx-auto text-center flex flex-col gap-2 font-mono p-4 bg-surface/30 backdrop-blur-[2px] rounded-lg border border-border/30 shadow-md'
+      >
+        <span className='text-[8px] text-accent tracking-widest uppercase'>
+          [ WATERCOLOR FLUID SIM ]
+        </span>
+        <p className='text-[9.5px] text-foreground-subtle leading-relaxed'>
+          Capillary paint diffusion calculation running on paper grid node.
+        </p>
+      </motion.div>
+
       <div className='z-10 font-mono text-[9px] text-foreground-muted flex justify-between border-t border-border/40 pt-2'>
-        <span>BLENDING_PROCESS: ONGOING</span>
-        <span className='animate-pulse text-accent'>MORPHING</span>
+        <span>PIGMENT_DIFFUSION: SOLVED</span>
+        <span className='animate-pulse text-accent'>DIFFUSING</span>
       </div>
     </div>
   );
 }
 
+// Interactive HTML5 paint splattering canvas
+function InteractivePaintCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const COLORS = ['#ff4400', '#ff007f', '#00f3ff', '#7c3aed', '#ffc800', '#10b981'];
+
+    interface PaintDrop {
+      x: number;
+      y: number;
+      radius: number;
+      targetRadius: number;
+      color: string;
+      opacity: number;
+      bleedSpeed: number;
+    }
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      color: string;
+      opacity: number;
+      life: number;
+      maxLife: number;
+    }
+
+    let drops: PaintDrop[] = [];
+    let particles: Particle[] = [];
+    let animationFrameId: number;
+
+    const bufferCanvas = document.createElement('canvas');
+    const bufferCtx = bufferCanvas.getContext('2d');
+
+    const syncBuffer = () => {
+      bufferCanvas.width = canvas.width;
+      bufferCanvas.height = canvas.height;
+      if (bufferCtx) {
+        bufferCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+    };
+    syncBuffer();
+
+    const addSplatter = (clientX: number, clientY: number, force = false) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)] ?? '#ff007f';
+      const targetRadius = (force ? 18 : 7) + Math.random() * (force ? 28 : 14);
+
+      drops.push({
+        x,
+        y,
+        radius: 1,
+        targetRadius,
+        color,
+        opacity: 0.85,
+        bleedSpeed: 0.04 + Math.random() * 0.07,
+      });
+
+      const numParticles = force
+        ? 12 + Math.floor(Math.random() * 15)
+        : 3 + Math.floor(Math.random() * 5);
+      for (let i = 0; i < numParticles; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (force ? 2.5 : 1) + Math.random() * (force ? 6 : 3.5);
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: 0.8 + Math.random() * 2.5,
+          color,
+          opacity: 0.85,
+          life: 0,
+          maxLife: 25 + Math.random() * 30,
+        });
+      }
+    };
+
+    const draw = () => {
+      if (!ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.drawImage(bufferCanvas, 0, 0, rect.width, rect.height);
+
+      const nextDrops: PaintDrop[] = [];
+      for (const d of drops) {
+        if (d.radius < d.targetRadius) {
+          d.radius += (d.targetRadius - d.radius) * d.bleedSpeed;
+          d.opacity = Math.max(0.1, d.opacity - 0.004);
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+        ctx.fillStyle = d.color;
+        ctx.globalAlpha = d.opacity;
+        ctx.fill();
+
+        if (d.radius > 5) {
+          ctx.beginPath();
+          ctx.arc(d.x + d.radius * 0.22, d.y - d.radius * 0.12, d.radius * 0.78, 0, Math.PI * 2);
+          ctx.arc(d.x - d.radius * 0.18, d.y + d.radius * 0.22, d.radius * 0.72, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        if (d.radius < d.targetRadius - 0.5) {
+          nextDrops.push(d);
+        } else {
+          if (bufferCtx) {
+            bufferCtx.save();
+            bufferCtx.beginPath();
+            bufferCtx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+            bufferCtx.fillStyle = d.color;
+            bufferCtx.globalAlpha = d.opacity * 0.65;
+            bufferCtx.fill();
+            if (d.radius > 5) {
+              bufferCtx.beginPath();
+              bufferCtx.arc(
+                d.x + d.radius * 0.22,
+                d.y - d.radius * 0.12,
+                d.radius * 0.78,
+                0,
+                Math.PI * 2,
+              );
+              bufferCtx.arc(
+                d.x - d.radius * 0.18,
+                d.y + d.radius * 0.22,
+                d.radius * 0.72,
+                0,
+                Math.PI * 2,
+              );
+              bufferCtx.fill();
+            }
+            bufferCtx.restore();
+          }
+        }
+      }
+      drops = nextDrops;
+
+      const nextParticles: Particle[] = [];
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.93;
+        p.vy *= 0.93;
+        p.life++;
+        p.opacity = Math.max(0, 0.85 - (p.life / p.maxLife) * 0.85);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fill();
+        ctx.restore();
+
+        if (p.life < p.maxLife) {
+          nextParticles.push(p);
+        } else {
+          if (bufferCtx) {
+            bufferCtx.save();
+            bufferCtx.beginPath();
+            bufferCtx.arc(p.x, p.y, p.radius * 1.1, 0, Math.PI * 2);
+            bufferCtx.fillStyle = p.color;
+            bufferCtx.globalAlpha = p.opacity * 0.45;
+            bufferCtx.fill();
+            bufferCtx.restore();
+          }
+        }
+      }
+      particles = nextParticles;
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+    animationFrameId = requestAnimationFrame(draw);
+
+    let lastMove = 0;
+    const handleMouseMove = (e: MouseEvent) => {
+      const now = Date.now();
+      if (now - lastMove > 50) {
+        addSplatter(e.clientX, e.clientY, false);
+        lastMove = now;
+      }
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      addSplatter(e.clientX, e.clientY, true);
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mousedown', handleMouseDown);
+
+    setTimeout(() => {
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w > 0 && h > 0) {
+        addSplatter(rect.left + w * 0.25, rect.top + h * 0.35, true);
+        addSplatter(rect.left + w * 0.72, rect.top + h * 0.28, true);
+        addSplatter(rect.left + w * 0.48, rect.top + h * 0.68, true);
+      }
+    }, 150);
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className='absolute inset-0 w-full h-full pointer-events-auto z-0 opacity-[0.28] mix-blend-multiply dark:mix-blend-screen'
+    />
+  );
+}
+
 // --- MAIN HERO CELL CONTENT COMPONENTS ---
 
-function HubCell({ isActive }: { isActive: boolean }) {
+function HubCell({ isActive, onScrollDown }: { isActive: boolean; onScrollDown: () => void }) {
   return (
     <div
-      className='w-full h-full flex flex-col items-center justify-center p-6 bg-background'
+      className='w-full h-full flex flex-col items-center justify-center p-6 bg-background relative overflow-hidden'
       style={canvasTextureStyle}
     >
+      <InteractivePaintCanvas />
+
       <motion.div
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
         transition={{ duration: 0.5 }}
-        className='max-w-xl text-center flex flex-col items-center gap-6 z-10'
+        className='max-w-xl text-center flex flex-col items-center gap-6 z-10 select-none'
       >
-        <div className='border border-foreground/20 px-3 py-1 font-mono text-xs uppercase tracking-[0.2em] text-foreground-muted'>
+        <div className='border border-foreground/20 px-3 py-1 font-mono text-xs uppercase tracking-[0.2em] text-foreground-muted bg-background/50 backdrop-blur-sm rounded'>
           {'COORDINATES: (1, 1) // HUB'}
         </div>
-        <h1 className='text-7xl md:text-9xl font-serif font-black tracking-tight text-foreground uppercase select-none leading-none'>
+        <h1 className='text-7xl md:text-[10rem] font-serif font-black tracking-tighter uppercase select-none leading-none bg-gradient-to-r from-foreground via-accent to-pink-500 bg-clip-text text-transparent filter drop-shadow-[0_4px_20px_rgba(0,243,255,0.15)] transition-all duration-300 hover:skew-x-2'>
           Henrik
         </h1>
-        <p className='font-mono text-sm md:text-base text-accent font-bold tracking-wider'>
+        <p className='font-mono text-xs md:text-sm text-accent font-bold tracking-[0.25em] bg-surface/50 border border-border/40 px-3 py-1 rounded backdrop-blur-sm'>
           [ DESIGN ENGINEER | PAINTER | MAKER ]
         </p>
-        <p className='text-foreground-subtle leading-relaxed text-sm md:text-base max-w-md'>
+        <p className='text-foreground-subtle leading-relaxed text-sm md:text-base max-w-md bg-background/45 backdrop-blur-[2px] p-4 rounded-xl border border-border/20 shadow-md font-sans'>
           I bridge traditional canvas painting with digital graphics. Explore my work, code
           blueprints, and interactive widgets in this infinite wrapping canvas.
         </p>
-        <div className='flex flex-col items-center gap-2 mt-4 font-mono text-xs text-foreground-muted'>
-          <span className='animate-pulse'>▲ ▼ ◄ ► NAVIGATE CANVAS</span>
+        <div className='flex flex-col items-center gap-2 mt-2 font-mono text-[10px] text-foreground-muted bg-background/60 px-3 py-1.5 rounded-full border border-border/30 shadow-sm'>
+          <span className='animate-pulse text-accent'>▲ ▼ ◄ ► NAVIGATE CANVAS</span>
         </div>
+
+        <button
+          type='button'
+          onClick={onScrollDown}
+          className='mt-2 px-5 py-2.5 border-2 border-foreground bg-foreground text-background hover:bg-transparent hover:text-foreground font-mono text-xs tracking-widest uppercase rounded-lg shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2'
+        >
+          <span>ENTER PORTFOLIO</span>
+          <span className='animate-bounce text-xs'>▼</span>
+        </button>
       </motion.div>
     </div>
   );
@@ -364,29 +704,34 @@ function HubCell({ isActive }: { isActive: boolean }) {
 function BioCell({ isActive }: { isActive: boolean }) {
   return (
     <div
-      className='w-full h-full flex flex-col items-center justify-center p-8 bg-background'
+      className='w-full h-full flex flex-col items-center justify-center p-8 bg-background relative overflow-hidden'
       style={canvasTextureStyle}
     >
+      <div className='absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-accent/5 to-transparent pointer-events-none' />
       <motion.div
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
         transition={{ duration: 0.5 }}
-        className='max-w-md text-left flex flex-col gap-4 border border-border/80 bg-surface/40 p-6 rounded relative'
+        className='max-w-md text-left flex flex-col gap-4 border-2 border-foreground bg-surface p-6 rounded-xl relative shadow-2xl overflow-hidden'
       >
-        <div className='font-mono text-[9px] uppercase tracking-wider text-accent border-b border-border/40 pb-2 flex justify-between'>
-          <span>SECTOR: BIO_MANIFESTO</span>
+        <div className='absolute -top-10 -right-10 w-24 h-24 bg-accent/10 rounded-full blur-xl' />
+        <div className='font-mono text-[9px] uppercase tracking-wider text-accent border-b border-border/40 pb-2 flex justify-between items-center z-10'>
+          <span className='flex items-center gap-1.5'>
+            <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+            <span>SECTOR: BIO_MANIFESTO</span>
+          </span>
           <span>{'02 // PHILOSOPHY'}</span>
         </div>
-        <p className='font-serif text-lg italic text-foreground leading-relaxed'>
+        <p className='font-serif text-lg md:text-xl italic text-foreground leading-relaxed font-semibold bg-gradient-to-r from-foreground to-foreground-subtle bg-clip-text z-10'>
           &ldquo;I bridge the physical paint canvas with digital software, creating systems that act
           like brushstrokes and art that lives in the browser.&rdquo;
         </p>
-        <p className='font-mono text-xs text-foreground-subtle leading-relaxed'>
+        <p className='font-mono text-[10.5px] md:text-xs text-foreground-subtle leading-relaxed z-10'>
           Henrik Sissener is a design engineer and painter from Norway. By day, he crafts
           high-performance web systems and interactive tools; by night, he works with traditional
           oil paints, acrylics, and GLSL shaders.
         </p>
-        <div className='border-t border-border/40 pt-2 flex justify-between font-mono text-[8px] text-foreground-muted'>
-          <span>NORWAY / EARTH</span>
+        <div className='border-t border-border/40 pt-2.5 flex justify-between font-mono text-[8px] text-foreground-muted z-10'>
+          <span>LOCATION: OSLO, NORWAY</span>
           <span>EST. 1990</span>
         </div>
       </motion.div>
@@ -447,6 +792,149 @@ function SkillsCell({ isActive }: { isActive: boolean }) {
   );
 }
 
+// Reusable tabbed project card with hover scanline and outline glow
+function ProjectCard({
+  proj,
+  idx,
+  isActive,
+}: {
+  proj: ProjectItem;
+  idx: number;
+  isActive: boolean;
+}) {
+  const [activeTab, setActiveTab] = useState<'story' | 'challenge' | 'stack'>('story');
+
+  const heading = proj.title || proj.name || 'Project';
+  const tags =
+    proj.tags?.map(t => t?.name).filter((name): name is string => typeof name === 'string') || [];
+  const imageUrl = proj.image
+    ? urlForImage(proj.image)?.width(400).height(240).quality(85).url()
+    : null;
+
+  const role = proj.role || 'Creative Developer';
+  const story =
+    proj.story ||
+    'An engineering solution blending modern frontend technology with high-fidelity UI.';
+  const challenge =
+    proj.challenge || 'Optimizing client-side execution to ensure responsive rendering.';
+
+  return (
+    <motion.div
+      animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+      transition={{ duration: 0.5, delay: idx * 0.15 }}
+      whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,243,255,0.15)' }}
+      className='relative border-2 border-foreground bg-surface rounded-xl flex flex-col overflow-hidden max-w-sm mx-auto w-full transition-shadow duration-300 select-none'
+    >
+      {/* Interactive Scanline overlay */}
+      <div className='absolute inset-0 pointer-events-none z-10 bg-scanline opacity-0 hover:opacity-[0.03] transition-opacity duration-300' />
+
+      {/* Header */}
+      <div className='border-b-2 border-foreground bg-surface-elevated px-3 py-1.5 flex items-center justify-between font-mono text-[8px] text-foreground-muted select-none'>
+        <div className='flex gap-1'>
+          <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
+          <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
+          <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
+        </div>
+        <div className='bg-surface border border-foreground/30 px-1.5 py-0.5 rounded truncate max-w-[120px]'>
+          {`wisihe.no/${proj.slug}`}
+        </div>
+      </div>
+
+      {/* Image / Thumbnail */}
+      <div className='relative w-full aspect-[16/9] bg-background overflow-hidden border-b-2 border-foreground group'>
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={heading}
+            fill
+            className='object-cover transition-transform duration-700 group-hover:scale-105'
+            sizes='(max-width: 768px) 80vw, 25vw'
+          />
+        ) : (
+          <div className='w-full h-full bg-gradient-to-tr from-accent/10 to-pink-500/10 flex flex-col items-center justify-center font-mono text-[9px] text-foreground-muted gap-1 relative overflow-hidden'>
+            <div className='absolute inset-0 bg-accent/5 opacity-50 backdrop-blur-[1px]' />
+            <span className='z-15 text-[10px] tracking-wider font-bold text-accent group-hover:scale-110 transition-transform duration-300'>
+              [ {heading.toUpperCase()} ]
+            </span>
+          </div>
+        )}
+        {/* Glow overlay */}
+        <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2'>
+          <span className='text-[8px] text-white font-mono uppercase tracking-widest'>{role}</span>
+        </div>
+      </div>
+
+      {/* Narrative content block */}
+      <div className='p-3.5 flex flex-col justify-between font-mono text-[9px] leading-snug flex-1 bg-background'>
+        <div className='flex flex-col gap-2'>
+          <h3 className='font-bold text-foreground text-[12px] truncate uppercase tracking-tight'>
+            {heading}
+          </h3>
+
+          {/* Tabs header */}
+          <div className='flex border-b border-border/40 pb-1 text-[8px] gap-2'>
+            <button
+              type='button'
+              onClick={() => setActiveTab('story')}
+              className={`hover:text-accent font-bold px-1 py-0.5 rounded transition-all cursor-pointer ${activeTab === 'story' ? 'bg-accent/15 text-accent border border-accent/30' : 'text-foreground-muted'}`}
+            >
+              [ STORY ]
+            </button>
+            <button
+              type='button'
+              onClick={() => setActiveTab('challenge')}
+              className={`hover:text-accent font-bold px-1 py-0.5 rounded transition-all cursor-pointer ${activeTab === 'challenge' ? 'bg-accent/15 text-accent border border-accent/30' : 'text-foreground-muted'}`}
+            >
+              [ CHALLENGE ]
+            </button>
+            <button
+              type='button'
+              onClick={() => setActiveTab('stack')}
+              className={`hover:text-accent font-bold px-1 py-0.5 rounded transition-all cursor-pointer ${activeTab === 'stack' ? 'bg-accent/15 text-accent border border-accent/30' : 'text-foreground-muted'}`}
+            >
+              [ STACK ]
+            </button>
+          </div>
+
+          {/* Dynamic Tab Body */}
+          <div className='min-h-[56px] text-foreground-subtle leading-normal text-[9.5px] mt-1'>
+            {activeTab === 'story' && <p>{story}</p>}
+            {activeTab === 'challenge' && <p>{challenge}</p>}
+            {activeTab === 'stack' && (
+              <div className='flex flex-wrap gap-1 mt-1'>
+                {tags.map((t: string) => (
+                  <span
+                    key={t}
+                    className='border border-accent/30 px-1.5 py-0.5 rounded text-[8px] text-accent bg-accent/5 font-semibold shadow-[0_0_4px_rgba(0,243,255,0.05)]'
+                  >
+                    {t}
+                  </span>
+                ))}
+                {tags.length === 0 && (
+                  <span className='text-foreground-muted'>No tech stack tags loaded.</span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className='flex justify-between items-center mt-3 pt-2 border-t border-border/20'>
+          <span className='text-[7.5px] text-foreground-muted uppercase'>ROLE: {role}</span>
+          {proj.slug && (
+            <Link
+              href={`/projects/${proj.slug}`}
+              className='text-accent hover:text-pink-500 font-bold text-[8px] transition-colors border border-accent/25 hover:border-pink-500/50 px-2 py-0.5 rounded cursor-pointer'
+            >
+              {'[ BLUEPRINT ]'}
+            </Link>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // Single Painting Museum Placard Frame Cell
 function PaintingsCell({
   paintings,
@@ -479,71 +967,100 @@ function PaintingsCell({
     ? urlForImage(image)?.width(800).height(600).auto('format').quality(85).url()
     : '';
 
+  const pData = painting as {
+    medium?: string;
+    year?: string;
+    dimensions?: string;
+    story?: string;
+  };
+  const medium = pData.medium || 'Oil & Mixed Media';
+  const year = pData.year || '2024';
+  const dimensions = pData.dimensions || '100 x 80 cm';
+  const story =
+    pData.story ||
+    "Part of Henrik's fine art collection bridging organic expressions with digital concepts.";
+
   return (
     <div
-      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 p-8 bg-background'
+      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-10 p-8 bg-background relative'
       style={canvasTextureStyle}
     >
-      <motion.div
-        animate={isActive ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className='relative w-full max-w-[70vw] md:max-w-[40vw] aspect-[4/3] border-[6px] border-foreground p-3 bg-surface shadow-2xl origin-center flex-shrink-0'
-      >
-        {imageUrl ? (
-          <div className='relative w-full h-full overflow-hidden bg-background'>
-            <Image
-              src={imageUrl}
-              alt={altText || 'Painting'}
-              fill
-              className='object-cover'
-              sizes='(max-width: 768px) 70vw, 40vw'
-            />
-          </div>
-        ) : (
-          <div className='relative w-full h-full overflow-hidden bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
-            {/* Abstract vector brush decoration */}
-            <svg className='w-1/2 h-1/2 opacity-20 text-accent animate-pulse' viewBox='0 0 100 100'>
-              <title>Brush stroke line decoration</title>
-              <path
-                d='M 10 50 Q 30 20, 50 50 T 90 50'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth='2'
-              />
-            </svg>
-            <div className='absolute bottom-4 left-4 font-mono text-[8px] text-foreground-muted uppercase'>
-              [ LOCAL_EXHIBITION_PREVIEW ]
-            </div>
-          </div>
-        )}
-      </motion.div>
+      <div className='absolute top-6 left-6 font-mono text-[9px] text-foreground-muted uppercase z-10 flex items-center gap-2'>
+        <span className='w-1.5 h-1.5 rounded-full bg-accent animate-pulse' />
+        <span>EXHIBIT_DECK: SINGLE_PIECE_FEATURE</span>
+      </div>
+      <div className='flex flex-col md:flex-row items-center justify-center gap-10 max-w-4xl mx-auto'>
+        {/* Museum-grade Single Painting Frame */}
+        <div className='relative w-full max-w-[70vw] md:max-w-[35vw] aspect-[4/3] border-[6px] border-foreground p-3.5 bg-surface shadow-2xl origin-center flex-shrink-0 overflow-hidden rounded'>
+          <motion.div
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={isActive ? { opacity: 1, scale: 1.0 } : { opacity: 0 }}
+            transition={{ duration: 0.7 }}
+            className='w-full h-full relative overflow-hidden bg-background'
+          >
+            {imageUrl ? (
+              <motion.div
+                animate={isActive ? { scale: [1, 1.06], rotate: [0, 0.3] } : {}}
+                transition={{ duration: 5.5, ease: 'linear' }}
+                className='w-full h-full relative'
+              >
+                <Image
+                  src={imageUrl}
+                  alt={altText || 'Painting'}
+                  fill
+                  className='object-cover'
+                  sizes='(max-width: 768px) 70vw, 35vw'
+                />
+              </motion.div>
+            ) : (
+              <div className='relative w-full h-full bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
+                <svg className='w-1/3 h-1/3 opacity-20 text-accent' viewBox='0 0 100 100'>
+                  <title>Brush stroke line decoration</title>
+                  <path
+                    d='M 10 50 Q 30 20, 50 50 T 90 50'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  />
+                </svg>
+              </div>
+            )}
+          </motion.div>
+        </div>
 
-      <motion.div
-        animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className='flex flex-col justify-between max-w-xs p-5 border-l border-border/80 font-mono text-xs leading-relaxed self-center'
-      >
-        <div className='flex flex-col gap-2'>
-          <div className='text-[9px] text-foreground-muted uppercase tracking-wider'>
-            {`CANVAS_SECTOR: P_${index}`}
+        {/* Museum Placard */}
+        <motion.div
+          initial={{ opacity: 0, x: 15 }}
+          animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className='flex flex-col justify-center max-w-xs p-6 border border-border/80 bg-surface/30 backdrop-blur-sm rounded-xl font-mono text-xs leading-relaxed min-h-[180px] shadow-lg relative overflow-hidden group'
+        >
+          <div className='absolute top-0 right-0 w-20 h-20 bg-accent/5 rounded-full blur-xl' />
+          <div className='text-[8.5px] text-foreground-muted uppercase tracking-wider flex justify-between items-center mb-1'>
+            <span>{`SECTOR: P_FEATURE`}</span>
+            <span className='bg-accent/15 text-accent px-1.5 py-0.5 rounded font-bold'>{year}</span>
           </div>
-          <h2 className='text-lg font-serif font-bold italic text-foreground tracking-tight leading-snug'>
+          <h2 className='text-xl font-serif font-black italic text-foreground tracking-tight leading-tight uppercase mb-1.5'>
             {title}
           </h2>
-          <hr className='border-border/60 my-1.5' />
-          <p className='text-[10px] text-foreground-muted'>Fine art painting catalog item.</p>
-        </div>
-        {slug && (
-          <div className='mt-6'>
-            <Link
-              href={`/paintings/${slug}`}
-              className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
-            >
-              {'[ VIEW DETAILS ]'}
-            </Link>
+          <div className='text-[9px] text-accent font-semibold tracking-wide uppercase border-b border-border/30 pb-1.5 mb-2'>
+            {medium} • {dimensions}
           </div>
-        )}
-      </motion.div>
+          <p className='text-[9.5px] text-foreground-subtle leading-relaxed italic pr-2 mb-3'>
+            &ldquo;{story}&rdquo;
+          </p>
+          {slug && (
+            <div>
+              <Link
+                href={`/paintings/${slug}`}
+                className='inline-flex items-center gap-1.5 border border-foreground/30 px-3 py-1.5 hover:border-accent hover:text-accent transition-all font-bold text-[9px] rounded bg-background/50 hover:bg-accent/5 cursor-pointer'
+              >
+                <span>[ INSPECT ARTWORK ]</span>
+              </Link>
+            </div>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -575,104 +1092,12 @@ function ProjectsCell({
     );
   }
 
-  const heading = project.title || project.name || 'Project';
-  const tags = project.tags
-    ?.slice(0, 3)
-    .map(t => t?.name)
-    .filter(Boolean);
-  const imageUrl = project.image
-    ? urlForImage(project.image)?.width(800).height(480).quality(85).url()
-    : null;
-
   return (
     <div
-      className='w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 p-8 bg-background'
+      className='w-full h-full flex items-center justify-center p-8 bg-background'
       style={canvasTextureStyle}
     >
-      {/* Mock Browser Frame */}
-      <motion.div
-        animate={isActive ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className='relative w-full max-w-[80vw] lg:max-w-[45vw] border-4 border-foreground bg-surface rounded shadow-2xl flex flex-col overflow-hidden flex-shrink-0'
-      >
-        <div className='border-b-4 border-foreground bg-surface-elevated px-3 py-1.5 flex items-center justify-between font-mono text-[9px] text-foreground-muted'>
-          <div className='flex gap-1'>
-            <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
-            <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
-            <span className='w-1.5 h-1.5 bg-foreground rounded-full' />
-          </div>
-          <div className='bg-surface border border-foreground/30 px-3 py-0.5 rounded truncate max-w-[200px] select-none text-[8px]'>
-            {`wisihe.no/projects/${project.slug}`}
-          </div>
-          <div className='w-3' />
-        </div>
-        {imageUrl ? (
-          <div className='relative w-full aspect-[16/10] bg-background'>
-            <Image
-              src={imageUrl}
-              alt={heading}
-              fill
-              className='object-cover'
-              sizes='(max-width: 768px) 80vw, 45vw'
-            />
-          </div>
-        ) : (
-          <div className='relative w-full aspect-[16/10] bg-gradient-to-tr from-amber-50/50 to-indigo-50/50 dark:from-neutral-900 dark:to-neutral-950 flex flex-col items-center justify-center font-mono text-xs text-foreground-muted gap-2 border border-border/20 overflow-hidden'>
-            <svg
-              className='w-12 h-12 opacity-25 text-foreground animate-spin'
-              style={{ animationDuration: '20s' }}
-              viewBox='0 0 100 100'
-            >
-              <title>Loading wireframe decoration</title>
-              <circle
-                cx='50'
-                cy='50'
-                r='30'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth='1'
-                strokeDasharray='10 5'
-              />
-            </svg>
-            <span className='text-[9px] tracking-widest opacity-60'>[ MOCK_ENGINE_ACTIVE ]</span>
-          </div>
-        )}
-      </motion.div>
-
-      {/* Case Study Metadata */}
-      <motion.div
-        animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className='flex flex-col justify-between max-w-xs p-5 border-l border-border/80 font-mono text-xs leading-relaxed self-center'
-      >
-        <div className='flex flex-col gap-2'>
-          <div className='text-[9px] text-foreground-muted uppercase tracking-wider'>
-            {`PROJECT_SECTOR: PR_${index}`}
-          </div>
-          <h2 className='text-lg font-bold text-foreground tracking-tight leading-snug truncate'>
-            {heading}
-          </h2>
-          <hr className='border-border/60 my-1.5' />
-          <p className='text-[10px] text-foreground-subtle line-clamp-3'>
-            {project.description || 'Detailed software case study.'}
-          </p>
-          <div className='flex flex-wrap gap-1.5 mt-2 text-[8px] text-foreground-muted'>
-            {tags?.map(t => (
-              <span key={t}>{`[${t}]`}</span>
-            ))}
-          </div>
-        </div>
-        {project.slug && (
-          <div className='mt-6'>
-            <Link
-              href={`/projects/${project.slug}`}
-              className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
-            >
-              {'[ CASE STUDY ]'}
-            </Link>
-          </div>
-        )}
-      </motion.div>
+      <ProjectCard proj={project} idx={0} isActive={isActive} />
     </div>
   );
 }
@@ -716,7 +1141,7 @@ function MultiPaintingsCell({
     if (!isActive) return;
     const timer = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % list.length);
-    }, 3000);
+    }, 5500);
     return () => clearInterval(timer);
   }, [isActive, list.length]);
 
@@ -724,40 +1149,61 @@ function MultiPaintingsCell({
   if (!painting) return null;
 
   const imageUrl = painting.image
-    ? urlForImage(painting.image)?.width(800).height(600).auto('format').quality(85).url()
+    ? urlForImage(painting.image)?.width(800).height(600).auto('format').quality(90).url()
     : '';
+
+  const pData = painting as {
+    medium?: string;
+    year?: string;
+    dimensions?: string;
+    story?: string;
+  };
+  const medium = pData.medium || 'Oil & Mixed Media';
+  const year = pData.year || '2024';
+  const dimensions = pData.dimensions || '100 x 80 cm';
+  const story =
+    pData.story ||
+    "Part of Henrik's fine art collection bridging organic expressions with digital concepts.";
 
   return (
     <div
-      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 p-8 bg-background relative'
+      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-10 p-8 bg-background relative'
       style={canvasTextureStyle}
     >
-      <div className='absolute top-6 left-6 font-mono text-[9px] text-foreground-muted uppercase z-10'>
-        <span>EXHIBIT_DECK: MULTI_PAINTINGS</span>
+      <div className='absolute top-6 left-6 font-mono text-[9px] text-foreground-muted uppercase z-10 flex items-center gap-2'>
+        <span className='w-1.5 h-1.5 rounded-full bg-accent animate-pulse' />
+        <span>EXHIBIT_DECK: PAINTING_ARCHIVE</span>
       </div>
 
-      <div className='relative w-full max-w-[70vw] md:max-w-[40vw] aspect-[4/3] border-[6px] border-foreground p-3 bg-surface shadow-2xl origin-center flex-shrink-0'>
+      {/* Ken Burns Image Container */}
+      <div className='relative w-full max-w-[70vw] md:max-w-[40vw] aspect-[4/3] border-[6px] border-foreground p-3.5 bg-surface shadow-2xl origin-center flex-shrink-0 overflow-hidden rounded'>
         <AnimatePresence mode='wait'>
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1.0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7 }}
             className='w-full h-full relative overflow-hidden bg-background'
           >
             {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt={painting.altText || 'Painting'}
-                fill
-                className='object-cover'
-                sizes='(max-width: 768px) 70vw, 40vw'
-              />
+              <motion.div
+                animate={{ scale: [1, 1.06], rotate: [0, 0.3] }}
+                transition={{ duration: 5.5, ease: 'linear' }}
+                className='w-full h-full relative'
+              >
+                <Image
+                  src={imageUrl}
+                  alt={painting.altText || 'Painting'}
+                  fill
+                  className='object-cover'
+                  sizes='(max-width: 768px) 70vw, 40vw'
+                />
+              </motion.div>
             ) : (
-              <div className='relative w-full h-full overflow-hidden bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
+              <div className='relative w-full h-full bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
                 <svg
-                  className='w-1/2 h-1/2 opacity-20 text-accent animate-pulse'
+                  className='w-1/3 h-1/3 opacity-20 text-accent animate-pulse'
                   viewBox='0 0 100 100'
                 >
                   <title>Brush stroke line decoration</title>
@@ -768,47 +1214,68 @@ function MultiPaintingsCell({
                     strokeWidth='2'
                   />
                 </svg>
-                <div className='absolute bottom-4 left-4 font-mono text-[8px] text-foreground-muted uppercase'>
-                  [ {painting.title} ]
-                </div>
               </div>
             )}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className='flex flex-col justify-between max-w-xs p-5 border-l border-border/80 font-mono text-xs leading-relaxed self-center min-h-[150px]'>
+      {/* Museum Placard */}
+      <div className='flex flex-col justify-between max-w-xs p-6 border border-border/80 bg-surface/30 backdrop-blur-sm rounded-xl font-mono text-xs leading-relaxed self-center min-h-[200px] shadow-lg relative overflow-hidden group'>
+        <div className='absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-xl group-hover:bg-accent/10 transition-colors' />
         <AnimatePresence mode='wait'>
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
-            transition={{ duration: 0.3 }}
-            className='flex flex-col gap-2'
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35 }}
+            className='flex flex-col gap-2.5 z-10'
           >
-            <div className='text-[9px] text-foreground-muted uppercase tracking-wider'>
-              {`COLLECTION_INDEX: ${currentIndex + 1} / ${list.length}`}
+            <div className='text-[8px] text-foreground-muted uppercase tracking-wider flex justify-between items-center'>
+              <span>{`CATALOG ITEM: ${currentIndex + 1} / ${list.length}`}</span>
+              <span className='bg-accent/15 text-accent px-1.5 py-0.5 rounded font-bold'>
+                {year}
+              </span>
             </div>
-            <h2 className='text-lg font-serif font-bold italic text-foreground tracking-tight leading-snug'>
+            <h2 className='text-xl font-serif font-black italic text-foreground tracking-tight leading-tight uppercase bg-gradient-to-r from-foreground to-foreground-subtle bg-clip-text'>
               {painting.title}
             </h2>
-            <hr className='border-border/60 my-1.5' />
-            <p className='text-[10px] text-foreground-muted'>
-              {painting.altText || 'Part of the fine art showcase collection.'}
+            <div className='text-[9px] text-accent font-semibold tracking-wide uppercase border-b border-border/30 pb-1.5'>
+              {medium} • {dimensions}
+            </div>
+            <p className='text-[9.5px] text-foreground-subtle leading-relaxed italic pr-2'>
+              &ldquo;{story}&rdquo;
             </p>
             {painting.slug && (
-              <div className='mt-4'>
+              <div className='mt-2.5'>
                 <Link
                   href={`/paintings/${painting.slug}`}
-                  className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
+                  className='inline-flex items-center gap-1.5 border border-foreground/30 px-3 py-1.5 hover:border-accent hover:text-accent transition-all font-bold text-[9px] rounded bg-background/50 hover:bg-accent/5 cursor-pointer'
                 >
-                  {'[ VIEW PAINTING ]'}
+                  <span>[ INSPECT ARTWORK ]</span>
                 </Link>
               </div>
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Bullet Navigators */}
+        <div className='flex gap-1.5 mt-5 justify-center z-10 border-t border-border/20 pt-3'>
+          {list.map((p, idx) => (
+            <button
+              key={`${p.title || idx}-${idx}`}
+              type='button'
+              onClick={() => setCurrentIndex(idx)}
+              className={`w-2 h-2 rounded-full border border-foreground/30 transition-all cursor-pointer ${
+                idx === currentIndex
+                  ? 'bg-accent border-accent scale-125 shadow-[0_0_6px_var(--color-accent)]'
+                  : 'bg-transparent hover:bg-foreground/20'
+              }`}
+              title={`View slide ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -832,86 +1299,17 @@ function MultiProjectsCell({
       style={canvasTextureStyle}
     >
       <div className='flex justify-between items-center border-b border-border pb-2 font-mono text-[10px] text-foreground-muted'>
-        <span>PROJECTS_OVERVIEW: MULTI_GRID</span>
+        <span>PROJECTS_OVERVIEW: DUAL_GRID</span>
         <span>ACTIVE</span>
       </div>
 
       <div className='flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center my-auto'>
-        {[proj1, proj2].map((proj, idx) => {
-          if (!proj) return null;
-          const heading = proj.title || proj.name || 'Project';
-          const tags = proj.tags
-            ?.slice(0, 2)
-            .map(t => t?.name)
-            .filter(Boolean);
-          const imageUrl = proj.image
-            ? urlForImage(proj.image)?.width(400).height(240).quality(85).url()
-            : null;
-
-          return (
-            <motion.div
-              key={`${proj.slug}-${idx}`}
-              animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-              transition={{ duration: 0.5, delay: idx * 0.15 }}
-              className='border-2 border-foreground bg-surface rounded shadow-lg flex flex-col overflow-hidden max-w-sm mx-auto w-full'
-            >
-              <div className='border-b-2 border-foreground bg-surface-elevated px-2 py-1 flex items-center justify-between font-mono text-[8px] text-foreground-muted select-none'>
-                <div className='flex gap-0.5'>
-                  <span className='w-1 h-1 bg-foreground rounded-full' />
-                  <span className='w-1 h-1 bg-foreground rounded-full' />
-                  <span className='w-1 h-1 bg-foreground rounded-full' />
-                </div>
-                <div className='bg-surface border border-foreground/30 px-1.5 py-0.2 rounded truncate max-w-[120px]'>
-                  {`wisihe.no/${proj.slug}`}
-                </div>
-              </div>
-
-              {imageUrl ? (
-                <div className='relative w-full aspect-[16/9] bg-background'>
-                  <Image
-                    src={imageUrl}
-                    alt={heading}
-                    fill
-                    className='object-cover'
-                    sizes='(max-width: 768px) 100vw, 25vw'
-                  />
-                </div>
-              ) : (
-                <div className='w-full aspect-[16/9] bg-gradient-to-tr from-amber-50/50 to-indigo-50/50 dark:from-neutral-900 dark:to-neutral-950 flex flex-col items-center justify-center font-mono text-[9px] text-foreground-muted gap-1 border-b border-border/20'>
-                  <span>[ PREVIEW_ACTIVE ]</span>
-                </div>
-              )}
-
-              <div className='p-3 flex flex-col justify-between font-mono text-[10px] leading-snug flex-1 bg-background'>
-                <div>
-                  <h3 className='font-bold text-foreground truncate'>{heading}</h3>
-                  <p className='text-[9px] text-foreground-subtle line-clamp-2 mt-1'>
-                    {proj.description || 'Software case study.'}
-                  </p>
-                </div>
-                <div className='flex justify-between items-center mt-3 pt-1 border-t border-border/40'>
-                  <div className='flex gap-1 text-[8px] text-foreground-muted'>
-                    {tags?.map(t => (
-                      <span key={t}>{`[${t}]`}</span>
-                    ))}
-                  </div>
-                  {proj.slug && (
-                    <Link
-                      href={`/projects/${proj.slug}`}
-                      className='text-accent hover:underline font-bold text-[8px]'
-                    >
-                      {'[ DETAIL ]'}
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+        {proj1 && <ProjectCard proj={proj1} idx={0} isActive={isActive} />}
+        {proj2 && <ProjectCard proj={proj2} idx={1} isActive={isActive} />}
       </div>
 
       <div className='font-mono text-[9px] text-foreground-muted flex justify-between border-t border-border/40 pt-2'>
-        <span>SHOWCASE: DUAL_GRID</span>
+        <span>SHOWCASE: PORTFOLIO</span>
         <span>TOTAL: {list.length}</span>
       </div>
     </div>
@@ -990,7 +1388,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     let content: React.ReactNode;
     switch (type) {
       case 'H':
-        content = <HubCell isActive={isActive} />;
+        content = <HubCell isActive={isActive} onScrollDown={handleScrollDown} />;
         break;
       case 'P':
         content = <PaintingsCell paintings={paintings} isActive={isActive} gx={gx} gy={gy} />;
@@ -1036,6 +1434,55 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     coordsRef.current = coords;
   }, [coords]);
 
+  const [gridScaleX, setGridScaleX] = useState(1);
+  const [gridScaleY, setGridScaleY] = useState(1);
+  const [gridRotate, setGridRotate] = useState(0);
+  const prevCoordsRef = useRef<Coord>({ x: 1, y: 1 });
+  const [hoveredDir, setHoveredDir] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const prev = prevCoordsRef.current;
+    const dx = coords.x - prev.x;
+    const dy = coords.y - prev.y;
+    prevCoordsRef.current = coords;
+
+    if (dx === 0 && dy === 0) return;
+
+    let targetScaleX = 1;
+    let targetScaleY = 1;
+    let targetRotate = 0;
+
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+
+    if (absDx > absDy) {
+      targetScaleX = 1.24;
+      targetScaleY = 0.8;
+      targetRotate = dx > 0 ? -1.8 : 1.8;
+    } else if (absDy > absDx) {
+      targetScaleX = 0.8;
+      targetScaleY = 1.24;
+      targetRotate = dy > 0 ? 1.5 : -1.5;
+    } else {
+      targetScaleX = 1.15;
+      targetScaleY = 1.15;
+      targetRotate = dx > 0 ? -1.2 : 1.2;
+    }
+
+    setGridScaleX(targetScaleX);
+    setGridScaleY(targetScaleY);
+    setGridRotate(targetRotate);
+
+    const timeout = setTimeout(() => {
+      setGridScaleX(1);
+      setGridScaleY(1);
+      setGridRotate(0);
+    }, 45);
+
+    return () => clearTimeout(timeout);
+  }, [coords, shouldReduceMotion]);
+
   const stopAutoplayAndNavigate = useCallback((target: Coord) => {
     setAutoplay(false);
     setScale(1.0);
@@ -1044,6 +1491,16 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     if (typeof window !== 'undefined') {
       localStorage.setItem('wisihe_hero_tour_played', 'true');
     }
+  }, []);
+
+  const navTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navTimeoutRef.current) {
+        clearTimeout(navTimeoutRef.current);
+      }
+    };
   }, []);
 
   const handleUserNavigate = useCallback(
@@ -1114,7 +1571,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
 
       // Step 1: Pan to Paintings (1, 0)
       setShowTimer(false);
-      setScale(0.24);
+      setScale(0.18);
       setCoords(PATH[1] || { x: 1, y: 1 });
       await delay(550);
       if (!active) return;
@@ -1128,7 +1585,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
 
       // Step 2: Pan to Projects (2, 1)
       setShowTimer(false);
-      setScale(0.24);
+      setScale(0.18);
       setCoords(PATH[2] || { x: 1, y: 1 });
       await delay(550);
       if (!active) return;
@@ -1142,7 +1599,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
 
       // Step 3: Pan back to Hub (1, 1) and settle
       setShowTimer(false);
-      setScale(0.24);
+      setScale(0.18);
       setCoords(PATH[3] || { x: 1, y: 1 });
       await delay(550);
       if (!active) return;
@@ -1220,14 +1677,12 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
       if (Math.max(absX, absY) > 50) {
         let nextCoords: Coord | null = null;
         if (absX > absY) {
-          // Horizontal Swipe
           if (dx > 0) {
             nextCoords = { x: coords.x - 1, y: coords.y }; // Swipe Right
           } else {
             nextCoords = { x: coords.x + 1, y: coords.y }; // Swipe Left
           }
         } else {
-          // Vertical Swipe
           if (dy > 0) {
             nextCoords = { x: coords.x, y: coords.y - 1 }; // Swipe Down
           } else {
@@ -1285,13 +1740,12 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     return () => window.removeEventListener('keydown', handleKonamiKey);
   }, [loading]);
 
-  // Infinite grid rendering: dynamic 9x9 render range window centered on current coordinates
   const ix = Math.round(coords.x);
   const iy = Math.round(coords.y);
   const rangeX = Array.from({ length: 9 }, (_, i) => ix - 4 + i);
   const rangeY = Array.from({ length: 9 }, (_, i) => iy - 4 + i);
 
-  // local 3x3 cells for interactive scanner HUD map (dev only)
+  // local 3x3 cells for interactive radar map
   const localCells = [];
   for (let dy = -1; dy <= 1; dy++) {
     for (let dx = -1; dx <= 1; dx++) {
@@ -1318,7 +1772,6 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
         ref={containerRef}
         className='relative w-full h-screen overflow-hidden bg-background select-none'
       >
-        {/* Fine art canvas paper texture overlay */}
         <div
           className='absolute inset-0 pointer-events-none z-20 opacity-[0.06] mix-blend-overlay'
           style={{
@@ -1326,7 +1779,6 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
           }}
         />
 
-        {/* Outer Scroll-Parallax Exit Wrapper */}
         <motion.div
           style={{
             opacity: scrollOpacity,
@@ -1335,24 +1787,24 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
           }}
           className='w-full h-full relative'
         >
-          {/* The Infinite Grid Canvas Container */}
           <motion.div
             animate={{
               x: `${-coords.x * 100}vw`,
               y: `${-coords.y * 100}vh`,
-              scale: loading ? 0.15 : scale,
+              scaleX: loading ? 0.15 : scale !== 1.0 ? scale : gridScaleX,
+              scaleY: loading ? 0.15 : scale !== 1.0 ? scale : gridScaleY,
               opacity: loading ? 0 : 1,
               filter: loading ? 'blur(10px)' : 'blur(0px)',
-              rotate: shouldReduceMotion || scale === 1.0 ? 0 : (coords.x - coords.y) * 2.5,
+              rotate: shouldReduceMotion ? 0 : gridRotate,
             }}
             transition={
               shouldReduceMotion
                 ? { duration: 0 }
                 : {
                     type: 'spring',
-                    stiffness: 95, // Snappy spring camera (was 16)
-                    damping: 20, // Snappy damping (was 22)
-                    mass: 1.0, // Snappy mass (was 1.4)
+                    stiffness: 125,
+                    damping: 12,
+                    mass: 0.65,
                   }
             }
             className='absolute top-0 left-0 w-[300vw] h-[300vh]'
@@ -1361,7 +1813,6 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               transformOrigin: `${coords.x * 100 + 50}vw ${coords.y * 100 + 50}vh`,
             }}
           >
-            {/* Dynamic 9x9 Cellular Rendering Grid */}
             {rangeY.map(gy =>
               rangeX.map(gx => {
                 const cellType = getCellType(gx, gy);
@@ -1401,12 +1852,11 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               </div>
             )}
 
-            {/* Pixelated grid transition wipe overlay */}
             {!shouldReduceMotion && <PixelWipe triggerKey={`${coords.x}-${coords.y}`} />}
 
-            {/* 1. Skip Intro Button (Top Right - positioned below ThemeToggle to prevent overlap) */}
+            {/* 1. Skip Intro Button (Top Center - safe from navigation overlaps) */}
             {autoplay && (
-              <div className='absolute top-20 right-6 z-30 pointer-events-auto'>
+              <div className='absolute top-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto'>
                 <button
                   type='button'
                   onClick={() => stopAutoplayAndNavigate({ x: 1, y: 1 })}
@@ -1436,102 +1886,125 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               </div>
             )}
 
-            {/* 3. Manual Overlay Edge Arrows (Only in Manual Mode) */}
+            {/* 3. Consolidated Navigation HUD (Bottom Right Corner) */}
             {!autoplay && (
-              <div className='absolute inset-0 pointer-events-none z-30'>
-                {/* Up Arrow */}
-                <button
-                  type='button'
-                  onClick={() => handleUserNavigate({ x: coords.x, y: coords.y - 1 })}
-                  className='pointer-events-auto absolute top-36 left-1/2 -translate-x-1/2 bg-background/90 border-2 border-border px-4 py-2 font-mono text-[10px] text-foreground hover:border-accent hover:text-accent transition-all shadow-lg cursor-pointer'
-                >
-                  ▲ {getCellLabel(getCellType(coords.x, coords.y - 1))}
-                </button>
+              <div className='absolute bottom-8 right-8 z-30 bg-background/80 backdrop-blur-md border border-border/60 p-4 rounded-xl shadow-2xl font-mono text-xs w-64 flex flex-col gap-3 pointer-events-auto select-none'>
+                <div className='flex justify-between items-center border-b border-border/30 pb-2'>
+                  <span className='font-bold text-foreground'>{'CTRL PANEL // CANVAS_NAV'}</span>
+                  <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+                </div>
 
-                {/* Down Arrow */}
-                <button
-                  type='button'
-                  onClick={() => handleUserNavigate({ x: coords.x, y: coords.y + 1 })}
-                  className='pointer-events-auto absolute bottom-6 left-1/2 -translate-x-1/2 bg-background/90 border-2 border-border px-4 py-2 font-mono text-[10px] text-foreground hover:border-accent hover:text-accent transition-all shadow-lg cursor-pointer'
-                >
-                  ▼ {getCellLabel(getCellType(coords.x, coords.y + 1))}
-                </button>
-
-                {/* Left Arrow */}
-                <button
-                  type='button'
-                  onClick={() => handleUserNavigate({ x: coords.x - 1, y: coords.y })}
-                  className='pointer-events-auto absolute left-6 top-1/2 -translate-y-1/2 bg-background/90 border-2 border-border px-4 py-2 font-mono text-[10px] text-foreground hover:border-accent hover:text-accent transition-all shadow-lg cursor-pointer'
-                >
-                  ◄ {getCellLabel(getCellType(coords.x - 1, coords.y))}
-                </button>
-
-                {/* Right Arrow */}
-                <button
-                  type='button'
-                  onClick={() => handleUserNavigate({ x: coords.x + 1, y: coords.y })}
-                  className='pointer-events-auto absolute right-6 top-1/2 -translate-y-1/2 bg-background/90 border-2 border-border px-4 py-2 font-mono text-[10px] text-foreground hover:border-accent hover:text-accent transition-all shadow-lg cursor-pointer'
-                >
-                  {getCellLabel(getCellType(coords.x + 1, coords.y))} ►
-                </button>
-              </div>
-            )}
-
-            {/* 4. Persistent HUD Minimap scanner & Controls guide (Dev Mode only) */}
-            {isDev && (
-              <>
-                <div className='absolute bottom-6 right-6 z-30 bg-background/90 border-2 border-border p-4 font-mono text-[9px] uppercase tracking-wider flex flex-col gap-2 shadow-2xl rounded'>
-                  <div className='flex justify-between items-center font-bold text-foreground-muted gap-4'>
-                    <span>RADAR SCAN v4.0</span>
-                    <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+                {/* 3x3 Radar Grid Navigator */}
+                <div className='flex flex-col gap-1'>
+                  <div className='text-[7.5px] text-foreground-muted tracking-wider uppercase mb-1'>
+                    RADAR NEIGHBORS:
                   </div>
-                  <hr className='border-border/60' />
-                  <div className='grid grid-cols-3 gap-1 w-24 h-24 mt-1 self-center'>
+                  <div className='grid grid-cols-3 gap-1 w-28 h-28 mx-auto border border-border/20 p-1 bg-surface/30 rounded'>
                     {localCells.map((cell, idx) => (
                       <button
                         key={`${cell.x}-${cell.y}-${idx}`}
                         type='button'
                         onClick={() => handleUserNavigate({ x: cell.x, y: cell.y })}
+                        onMouseEnter={() => setHoveredDir(`PAN TO: ${cell.label}`)}
+                        onMouseLeave={() => setHoveredDir(null)}
                         className={`
-                          border flex items-center justify-center font-mono font-bold select-none cursor-pointer transition-all duration-150 text-[9px] w-7 h-7 rounded
+                          border flex items-center justify-center font-mono font-bold select-none cursor-pointer transition-all duration-150 text-[7px] w-7 h-7 rounded
                           ${
                             cell.active
                               ? 'bg-accent text-accent-contrast border-accent shadow-md scale-105 shadow-accent/20'
-                              : 'bg-surface border-border hover:bg-surface-hover hover:border-accent text-foreground-subtle'
+                              : 'bg-surface border-border/50 hover:bg-surface-hover hover:border-accent text-foreground-subtle'
                           }
                         `}
-                        title={`Pan to (${cell.x}, ${cell.y}) - ${cell.label}`}
                       >
                         {cell.abbr}
                       </button>
                     ))}
                   </div>
-                  <div className='text-[8px] text-center text-foreground-muted mt-1'>
-                    COORD: ({coords.x}, {coords.y})
+                </div>
+
+                {/* Interactive D-Pad Diamond Controller */}
+                <div className='flex flex-col gap-1 border-t border-border/20 pt-2.5'>
+                  <div className='text-[7.5px] text-foreground-muted tracking-wider uppercase mb-1'>
+                    D-PAD STEERING:
+                  </div>
+                  <div className='grid grid-cols-3 gap-1.5 w-24 h-24 mx-auto'>
+                    <div />
+                    <button
+                      type='button'
+                      onClick={() => handleUserNavigate({ x: coords.x, y: coords.y - 1 })}
+                      onMouseEnter={() =>
+                        setHoveredDir(`UP: ${getCellLabel(getCellType(coords.x, coords.y - 1))}`)
+                      }
+                      onMouseLeave={() => setHoveredDir(null)}
+                      className='flex items-center justify-center border border-border/60 rounded-lg bg-surface/50 hover:bg-accent/20 hover:border-accent text-foreground transition-all duration-150 active:scale-90 cursor-pointer'
+                      title='Move Up'
+                    >
+                      ▲
+                    </button>
+                    <div />
+
+                    <button
+                      type='button'
+                      onClick={() => handleUserNavigate({ x: coords.x - 1, y: coords.y })}
+                      onMouseEnter={() =>
+                        setHoveredDir(`LEFT: ${getCellLabel(getCellType(coords.x - 1, coords.y))}`)
+                      }
+                      onMouseLeave={() => setHoveredDir(null)}
+                      className='flex items-center justify-center border border-border/60 rounded-lg bg-surface/50 hover:bg-accent/20 hover:border-accent text-foreground transition-all duration-150 active:scale-90 cursor-pointer'
+                      title='Move Left'
+                    >
+                      ◄
+                    </button>
+                    <div className='flex items-center justify-center font-bold text-[8px] text-accent border border-border/30 rounded-lg bg-background/40'>
+                      {getCellType(coords.x, coords.y)}
+                    </div>
+                    <button
+                      type='button'
+                      onClick={() => handleUserNavigate({ x: coords.x + 1, y: coords.y })}
+                      onMouseEnter={() =>
+                        setHoveredDir(`RIGHT: ${getCellLabel(getCellType(coords.x + 1, coords.y))}`)
+                      }
+                      onMouseLeave={() => setHoveredDir(null)}
+                      className='flex items-center justify-center border border-border/60 rounded-lg bg-surface/50 hover:bg-accent/20 hover:border-accent text-foreground transition-all duration-150 active:scale-90 cursor-pointer'
+                      title='Move Right'
+                    >
+                      ►
+                    </button>
+
+                    <div />
+                    <button
+                      type='button'
+                      onClick={() => handleUserNavigate({ x: coords.x, y: coords.y + 1 })}
+                      onMouseEnter={() =>
+                        setHoveredDir(`DOWN: ${getCellLabel(getCellType(coords.x, coords.y + 1))}`)
+                      }
+                      onMouseLeave={() => setHoveredDir(null)}
+                      className='flex items-center justify-center border border-border/60 rounded-lg bg-surface/50 hover:bg-accent/20 hover:border-accent text-foreground transition-all duration-150 active:scale-90 cursor-pointer'
+                      title='Move Down'
+                    >
+                      ▼
+                    </button>
+                    <div />
                   </div>
                 </div>
 
-                <div className='absolute bottom-6 left-6 z-30 bg-background/90 border-2 border-border px-3 py-2 font-mono text-[9px] text-foreground-muted flex gap-2 shadow-2xl rounded items-center'>
-                  <span>
-                    {autoplay
-                      ? 'PRESS WASD/ARROWS OR SWIPE TO INTERACT'
-                      : 'KEYS: WASD / ARROWS | MOUSE: CLICK RADAR SCAN'}
-                  </span>
+                {/* Readout Status Bar */}
+                <div className='mt-2.5 pt-2 border-t border-border/20 text-center h-4 flex items-center justify-center text-[9px] text-foreground-muted font-bold tracking-wider'>
+                  {hoveredDir || `LOC: [X: ${coords.x}, Y: ${coords.y}]`}
                 </div>
-              </>
+              </div>
             )}
 
-            {/* 5. Enter Portfolio Scroll Button (Bottom Center) */}
-            <div className='absolute bottom-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col items-center gap-1.5'>
-              <button
-                type='button'
-                onClick={handleScrollDown}
-                className='px-4 py-2 border border-foreground/30 bg-background/80 hover:border-accent hover:text-accent font-mono text-[10px] tracking-widest uppercase rounded shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2'
-              >
-                <span>ENTER PORTFOLIO</span>
-                <span className='animate-bounce text-xs'>▼</span>
-              </button>
-            </div>
+            {/* 4. Keyboard Shortcuts reminder (Bottom Left Corner) */}
+            {!autoplay && (
+              <div className='absolute bottom-8 left-8 z-30 bg-background/80 backdrop-blur-md border border-border/60 px-4 py-3 rounded-xl font-mono text-[9px] text-foreground-muted shadow-2xl flex flex-col gap-1 select-none pointer-events-auto w-52'>
+                <span className='font-bold text-accent tracking-wider'>SHORTCUTS AVAILABLE:</span>
+                <hr className='border-border/20 my-0.5' />
+                <span>• WASD / ARROWS TO STEER</span>
+                <span>• MOUSE OVER RADAR MAP</span>
+                <span>• DRAG MOUSE FOR PAINT SPLATS</span>
+              </div>
+            )}
           </>
         )}
       </section>
