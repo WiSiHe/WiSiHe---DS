@@ -2,70 +2,54 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// 8x8 Grid definitions for retro sprites
-const SPRITES = {
-  invader: [
-    [0, 0, 1, 0, 0, 1, 0, 0],
-    [1, 0, 0, 1, 1, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 1, 1, 0, 0, 1, 1, 1],
-    [0, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 0, 0, 1, 0, 0],
-    [0, 1, 0, 0, 0, 0, 1, 0],
-  ],
-  controller: [
-    [0, 1, 1, 1, 1, 1, 1, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 0, 1, 1, 0, 1, 1],
-    [0, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 1, 1, 1, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-  ],
-  sword: [
-    [0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 1, 0, 1, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0],
-  ],
-};
-
-type Particle = {
+type Drop = {
   x: number;
   y: number;
-  targetX: number;
-  targetY: number;
-  vx: number;
   vy: number;
   color: string;
   size: number;
 };
 
+type Splat = {
+  x: number;
+  y: number;
+  r: number;
+  color: string;
+};
+
+const PALETTE_COLORS = [
+  '#ff4400', // orange
+  '#7c3aed', // violet
+  '#14b8a6', // teal
+  '#eab308', // yellow
+  '#ec4899', // pink
+  '#10b981', // green
+];
+
 export default function HeroArcadeWidget() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeSprite, setActiveSprite] = useState<keyof typeof SPRITES>('invader');
-  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
 
+  const gameStateRef = useRef(gameState);
   useEffect(() => {
-    const spriteKeys: Array<keyof typeof SPRITES> = ['invader', 'controller', 'sword'];
-    let idx = 0;
-    const interval = setInterval(() => {
-      idx = (idx + 1) % spriteKeys.length;
-      const key = spriteKeys[idx];
-      if (key) {
-        setActiveSprite(key);
-      }
-    }, 3500);
+    gameStateRef.current = gameState;
+  }, [gameState]);
 
-    return () => clearInterval(interval);
-  }, []);
+  const mouseXRef = useRef<number>(-1000);
+  const splatsRef = useRef<Splat[]>([]);
+  const dropsRef = useRef<Drop[]>([]);
+
+  // Start the game
+  const startGame = () => {
+    splatsRef.current = [];
+    dropsRef.current = [];
+    setScore(0);
+    setLives(3);
+    setGameState('playing');
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,40 +58,11 @@ export default function HeroArcadeWidget() {
     if (!ctx) return;
 
     let animationId: number;
-    let particles: Particle[] = [];
 
     const resize = () => {
       const rect = containerRef.current?.getBoundingClientRect();
       canvas.width = rect?.width || 300;
       canvas.height = rect?.height || 300;
-      initParticles();
-    };
-
-    const initParticles = () => {
-      particles = [];
-      const spriteGrid = SPRITES[activeSprite];
-      const cellSize = Math.min(canvas.width, canvas.height) / 12;
-      const offsetX = (canvas.width - cellSize * 8) / 2;
-      const offsetY = (canvas.height - cellSize * 8) / 2;
-
-      for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-          if (spriteGrid[r]?.[c] === 1) {
-            const tx = offsetX + c * cellSize + cellSize / 2;
-            const ty = offsetY + r * cellSize + cellSize / 2;
-            particles.push({
-              x: Math.random() * canvas.width,
-              y: Math.random() * canvas.height,
-              targetX: tx,
-              targetY: ty,
-              vx: 0,
-              vy: 0,
-              size: cellSize * 0.8,
-              color: 'var(--color-accent, #10b981)',
-            });
-          }
-        }
-      }
     };
 
     resize();
@@ -115,62 +70,32 @@ export default function HeroArcadeWidget() {
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
+      mouseXRef.current = e.clientX - rect.left;
     };
 
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        mouseXRef.current = (e.touches[0]?.clientX || 0) - rect.left;
+      }
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
 
-    // Physics Loop
+    // Paddle definitions
+    const paddleWidth = 80;
+    const paddleHeight = 10;
+    let currentPaddleX = canvas.width / 2 - paddleWidth / 2;
+
+    // Game loop
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const spring = 0.08;
-      const friction = 0.82;
-      const mouseRepulsion = 120;
-      const forceRadius = 80;
-
-      particles.forEach(p => {
-        // Magnetic repulsion from cursor
-        const dx = p.x - mouseRef.current.x;
-        const dy = p.y - mouseRef.current.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < forceRadius) {
-          const force = (forceRadius - dist) / forceRadius;
-          const angle = Math.atan2(dy, dx);
-          p.vx += Math.cos(angle) * force * mouseRepulsion * 0.15;
-          p.vy += Math.sin(angle) * force * mouseRepulsion * 0.15;
-        }
-
-        // Return to target grid position (spring physics)
-        const targetDx = p.targetX - p.x;
-        const targetDy = p.targetY - p.y;
-        p.vx += targetDx * spring;
-        p.vy += targetDy * spring;
-
-        p.vx *= friction;
-        p.vy *= friction;
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Render pixel block
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
-      });
-
-      // Simple grid overlays
-      ctx.strokeStyle = 'var(--color-border, rgba(255,255,255,0.05))';
+      // 1. Draw Canvas background grid
+      ctx.strokeStyle = 'var(--color-border, rgba(255,255,255,0.03))';
       ctx.lineWidth = 1;
-      const cellSize = Math.min(canvas.width, canvas.height) / 12;
+      const cellSize = 30;
       for (let x = 0; x < canvas.width; x += cellSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -184,6 +109,110 @@ export default function HeroArcadeWidget() {
         ctx.stroke();
       }
 
+      // 2. Draw Splats on canvas background
+      splatsRef.current.forEach(splat => {
+        ctx.beginPath();
+        ctx.arc(splat.x, splat.y, splat.r, 0, Math.PI * 2);
+        ctx.fillStyle = splat.color;
+        ctx.globalAlpha = 0.35; // semi-transparent splat
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      });
+
+      // 3. Smooth paddle movement interpolation
+      const targetPaddleX =
+        mouseXRef.current !== -1000
+          ? mouseXRef.current - paddleWidth / 2
+          : canvas.width / 2 - paddleWidth / 2;
+
+      currentPaddleX += (targetPaddleX - currentPaddleX) * 0.22;
+      // Clamp paddle inside canvas boundaries
+      if (currentPaddleX < 0) currentPaddleX = 0;
+      if (currentPaddleX > canvas.width - paddleWidth) currentPaddleX = canvas.width - paddleWidth;
+
+      const paddleY = canvas.height - 30;
+
+      // 4. Draw Palette Paddle
+      ctx.fillStyle = 'var(--color-foreground, #ffffff)';
+      ctx.beginPath();
+      ctx.roundRect(currentPaddleX, paddleY, paddleWidth, paddleHeight, 5);
+      ctx.fill();
+
+      // Little color details on the paddle palette
+      for (let i = 0; i < 4; i++) {
+        ctx.fillStyle = PALETTE_COLORS[i % PALETTE_COLORS.length] || '#ff4400';
+        ctx.beginPath();
+        ctx.arc(currentPaddleX + 12 + i * 18, paddleY + paddleHeight / 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 5. Game Playing State Logic
+      if (gameStateRef.current === 'playing') {
+        // Spawn drops
+        if (Math.random() < 0.03 && dropsRef.current.length < 8) {
+          dropsRef.current.push({
+            x: Math.random() * (canvas.width - 20) + 10,
+            y: -10,
+            vy: Math.random() * 2 + 2.5,
+            color: PALETTE_COLORS[Math.floor(Math.random() * PALETTE_COLORS.length)] || '#ff4400',
+            size: Math.random() * 6 + 6,
+          });
+        }
+
+        // Update & Render drops
+        const activeDrops: Drop[] = [];
+        dropsRef.current.forEach(drop => {
+          drop.y += drop.vy;
+
+          // Check hit paddle
+          const hitX = drop.x >= currentPaddleX && drop.x <= currentPaddleX + paddleWidth;
+          const hitY =
+            drop.y + drop.size / 2 >= paddleY && drop.y - drop.size / 2 <= paddleY + paddleHeight;
+
+          if (hitX && hitY) {
+            // Catches drop! Add splat splatters
+            splatsRef.current.push({
+              x: drop.x,
+              y: paddleY - 2,
+              r: drop.size * (Math.random() * 1.5 + 1.5),
+              color: drop.color,
+            });
+            // Splash secondary particles around
+            for (let k = 0; k < 3; k++) {
+              splatsRef.current.push({
+                x: drop.x + (Math.random() * 30 - 15),
+                y: paddleY - 2 - Math.random() * 10,
+                r: drop.size * 0.4,
+                color: drop.color,
+              });
+            }
+            setScore(s => s + 10);
+          } else if (drop.y > canvas.height + 10) {
+            // Drops past bottom -> lose life
+            setLives(l => {
+              const next = l - 1;
+              if (next <= 0) {
+                setGameState('gameover');
+              }
+              return next;
+            });
+          } else {
+            activeDrops.push(drop);
+          }
+
+          // Draw drop
+          ctx.beginPath();
+          ctx.arc(drop.x, drop.y, drop.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = drop.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = drop.color;
+          ctx.fill();
+          ctx.shadowBlur = 0; // reset shadow
+        });
+
+        dropsRef.current = activeDrops;
+      }
+
       animationId = requestAnimationFrame(draw);
     };
 
@@ -192,20 +221,88 @@ export default function HeroArcadeWidget() {
     return () => {
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchmove', handleTouchMove);
       cancelAnimationFrame(animationId);
     };
-  }, [activeSprite]);
+  }, []);
 
   return (
     <div
       ref={containerRef}
-      className='w-full h-full flex items-center justify-center relative bg-surface-elevated/40'
+      className='w-full h-full flex items-center justify-center relative bg-surface-elevated/10 overflow-hidden select-none'
     >
-      <div className='absolute top-4 left-4 font-mono text-[10px] uppercase text-foreground-muted tracking-wider bg-surface/80 px-2 py-0.5 border border-border'>
-        MODULE: GAME_DEV / {activeSprite}
-      </div>
       <canvas ref={canvasRef} className='block w-full h-full cursor-crosshair' />
+
+      {/* State Overlays */}
+      {gameState === 'start' && (
+        <div className='absolute inset-0 bg-background/95 flex flex-col justify-center items-center p-6 text-center font-mono gap-4 pointer-events-auto'>
+          <div className='flex flex-col gap-1'>
+            <h4 className='text-accent font-bold tracking-widest text-sm uppercase'>
+              CATCH THE PAINT PIXELS
+            </h4>
+            <p className='text-[10px] text-foreground-muted max-w-xs leading-relaxed mt-2'>
+              Move mouse or swipe horizontally to steer the paddle. Catch falling neon drops to
+              splash color onto the canvas!
+            </p>
+          </div>
+          <button
+            type='button'
+            onClick={startGame}
+            className='bg-accent text-accent-contrast border border-accent px-4 py-2 text-xs font-bold hover:bg-accent/80 transition-all cursor-pointer rounded mt-2 shadow-lg hover:scale-105 active:scale-95'
+          >
+            [ START GAME ]
+          </button>
+        </div>
+      )}
+
+      {gameState === 'playing' && (
+        <div className='absolute top-4 left-4 right-4 flex justify-between items-center font-mono text-[10px] text-foreground-muted pointer-events-none'>
+          <div className='bg-surface/80 px-2 py-0.5 border border-border rounded'>
+            SCORE: <span className='text-accent font-bold'>{score}</span>
+          </div>
+          <div className='bg-surface/80 px-2 py-0.5 border border-border rounded flex gap-1 items-center'>
+            LIVES:{' '}
+            <span
+              className={lives > 0 ? 'text-red-500 font-bold' : 'text-foreground-muted opacity-30'}
+            >
+              ♥
+            </span>
+            <span
+              className={lives > 1 ? 'text-red-500 font-bold' : 'text-foreground-muted opacity-30'}
+            >
+              ♥
+            </span>
+            <span
+              className={lives > 2 ? 'text-red-500 font-bold' : 'text-foreground-muted opacity-30'}
+            >
+              ♥
+            </span>
+          </div>
+        </div>
+      )}
+
+      {gameState === 'gameover' && (
+        <div className='absolute inset-0 bg-background/95 flex flex-col justify-center items-center p-6 text-center font-mono gap-4 pointer-events-auto'>
+          <div className='flex flex-col gap-1'>
+            <h4 className='text-red-500 font-bold tracking-widest text-sm uppercase'>
+              CANVAS COMPLETE!
+            </h4>
+            <p className='text-[11px] text-foreground-subtle mt-2 font-bold'>
+              Final Score: <span className='text-accent'>{score}</span>
+            </p>
+            <p className='text-[9px] text-foreground-muted max-w-xs mt-1 leading-normal'>
+              Your score painted {splatsRef.current.length} colored splats onto the grid board.
+            </p>
+          </div>
+          <button
+            type='button'
+            onClick={startGame}
+            className='bg-accent text-accent-contrast border border-accent px-4 py-2 text-xs font-bold hover:bg-accent/80 transition-all cursor-pointer rounded mt-2 shadow-lg hover:scale-105 active:scale-95'
+          >
+            [ PLAY AGAIN ]
+          </button>
+        </div>
+      )}
     </div>
   );
 }

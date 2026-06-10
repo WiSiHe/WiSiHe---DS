@@ -2,12 +2,15 @@
 
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 import HeroArcadeWidget from './HeroArcadeWidget';
 import HeroRetroLoader from './HeroRetroLoader';
+
+const ThreeDScene = dynamic(() => import('../../three-d/BasicScene'), { ssr: false });
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
@@ -122,14 +125,14 @@ const getCellType = (x: number, y: number) => {
   const my = ((y % 8) + 8) % 8;
 
   const LAYOUT = [
-    ['Q', 'P', 'D3', 'Pr', 'Q', 'B', 'D3', 'P'],
-    ['Pr', 'H', 'Q', 'S', 'P', 'D3', 'Pr', 'H'],
-    ['D3', 'G', 'P', 'Q', 'Pr', 'G', 'Q', 'B'],
-    ['Q', 'Pr', 'D3', 'H', 'Q', 'P', 'S', 'Q'],
-    ['P', 'B', 'S', 'Pr', 'P', 'Q', 'Pr', 'G'],
-    ['Pr', 'Q', 'P', 'G', 'D3', 'H', 'Q', 'Pr'],
-    ['Q', 'S', 'Pr', 'Q', 'B', 'Q', 'P', 'D3'],
-    ['D3', 'P', 'Q', 'Pr', 'Q', 'S', 'G', 'H'],
+    ['Q', 'MP', 'D3', 'MPr', 'Q', 'B', 'D3', 'P'],
+    ['Pr', 'H', 'MPr', 'T', 'P', 'D3', 'Pr', 'H'],
+    ['D3', 'G', 'P', 'Q', 'MPr', 'G', 'Q', 'B'],
+    ['Q', 'MPr', 'D3', 'H', 'Q', 'MP', 'T', 'Q'],
+    ['P', 'B', 'T', 'Pr', 'P', 'Q', 'MPr', 'G'],
+    ['MPr', 'Q', 'MP', 'G', 'D3', 'H', 'Q', 'Pr'],
+    ['Q', 'T', 'Pr', 'Q', 'B', 'Q', 'P', 'D3'],
+    ['D3', 'MP', 'Q', 'MPr', 'Q', 'T', 'G', 'H'],
   ];
 
   return LAYOUT[my]?.[mx] || 'D3';
@@ -141,14 +144,18 @@ const getCellLabel = (type: string) => {
       return 'HUB';
     case 'P':
       return 'PAINTING';
+    case 'MP':
+      return 'PAINTINGS';
     case 'Pr':
       return 'PROJECT';
+    case 'MPr':
+      return 'PROJECTS';
     case 'G':
       return 'ARCADE';
     case 'B':
       return 'ABOUT';
-    case 'S':
-      return 'SKILLS';
+    case 'T':
+      return '3D SCENE';
     case 'D3':
       return 'WATERCOLOR';
     default:
@@ -620,6 +627,247 @@ function ProjectsCell({
   );
 }
 
+// Interactive 3D distorted sphere canvas cell (ThreeJS Fiber)
+function ThreeJSCell({ isActive }: { isActive: boolean }) {
+  return (
+    <div
+      className='w-full h-full flex flex-col justify-between p-6 select-none relative overflow-hidden bg-background'
+      style={canvasTextureStyle}
+    >
+      <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[10px] text-foreground-muted z-10'>
+        <span>NODE_SYS: THREEJS_3D_SCENE</span>
+        <span>ACTIVE</span>
+      </div>
+
+      <div className='absolute inset-0 flex items-center justify-center p-4 z-0'>
+        {isActive && <ThreeDScene />}
+      </div>
+
+      <div className='z-10 font-mono text-[9px] text-foreground-muted flex justify-between border-t border-border/40 pt-2'>
+        <span>RENDER_TARGET: CANVAS</span>
+        <span className='animate-pulse text-accent'>3D_SHADERS</span>
+      </div>
+    </div>
+  );
+}
+
+// Auto cross-fading Paintings slideshow cell
+function MultiPaintingsCell({
+  paintings,
+  isActive,
+}: {
+  paintings: HeroImageSectionProps['paintings'];
+  isActive: boolean;
+}) {
+  const list = paintings && paintings.length > 0 ? paintings : FALLBACK_PAINTINGS;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) return;
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % list.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [isActive, list.length]);
+
+  const painting = list[currentIndex];
+  if (!painting) return null;
+
+  const imageUrl = painting.image
+    ? urlForImage(painting.image)?.width(800).height(600).auto('format').quality(85).url()
+    : '';
+
+  return (
+    <div
+      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 p-8 bg-background relative'
+      style={canvasTextureStyle}
+    >
+      <div className='absolute top-6 left-6 font-mono text-[9px] text-foreground-muted uppercase z-10'>
+        <span>EXHIBIT_DECK: MULTI_PAINTINGS</span>
+      </div>
+
+      <div className='relative w-full max-w-[70vw] md:max-w-[40vw] aspect-[4/3] border-[6px] border-foreground p-3 bg-surface shadow-2xl origin-center flex-shrink-0'>
+        <AnimatePresence mode='wait'>
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className='w-full h-full relative overflow-hidden bg-background'
+          >
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={painting.altText || 'Painting'}
+                fill
+                className='object-cover'
+                sizes='(max-width: 768px) 70vw, 40vw'
+              />
+            ) : (
+              <div className='relative w-full h-full overflow-hidden bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
+                <svg
+                  className='w-1/2 h-1/2 opacity-20 text-accent animate-pulse'
+                  viewBox='0 0 100 100'
+                >
+                  <title>Brush stroke line decoration</title>
+                  <path
+                    d='M 10 50 Q 30 20, 50 50 T 90 50'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                  />
+                </svg>
+                <div className='absolute bottom-4 left-4 font-mono text-[8px] text-foreground-muted uppercase'>
+                  [ {painting.title} ]
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className='flex flex-col justify-between max-w-xs p-5 border-l border-border/80 font-mono text-xs leading-relaxed self-center min-h-[150px]'>
+        <AnimatePresence mode='wait'>
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.3 }}
+            className='flex flex-col gap-2'
+          >
+            <div className='text-[9px] text-foreground-muted uppercase tracking-wider'>
+              {`COLLECTION_INDEX: ${currentIndex + 1} / ${list.length}`}
+            </div>
+            <h2 className='text-lg font-serif font-bold italic text-foreground tracking-tight leading-snug'>
+              {painting.title}
+            </h2>
+            <hr className='border-border/60 my-1.5' />
+            <p className='text-[10px] text-foreground-muted'>
+              {painting.altText || 'Part of the fine art showcase collection.'}
+            </p>
+            {painting.slug && (
+              <div className='mt-4'>
+                <Link
+                  href={`/paintings/${painting.slug}`}
+                  className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
+                >
+                  {'[ VIEW PAINTING ]'}
+                </Link>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// Side-by-side Showcase Projects cell
+function MultiProjectsCell({
+  projects,
+  isActive,
+}: {
+  projects: HeroImageSectionProps['projects'];
+  isActive: boolean;
+}) {
+  const list = projects && projects.length > 0 ? projects : FALLBACK_PROJECTS;
+  const proj1 = list[0];
+  const proj2 = list[1] || list[0];
+
+  return (
+    <div
+      className='w-full h-full flex flex-col justify-between p-8 bg-background'
+      style={canvasTextureStyle}
+    >
+      <div className='flex justify-between items-center border-b border-border pb-2 font-mono text-[10px] text-foreground-muted'>
+        <span>PROJECTS_OVERVIEW: MULTI_GRID</span>
+        <span>ACTIVE</span>
+      </div>
+
+      <div className='flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center my-auto'>
+        {[proj1, proj2].map((proj, idx) => {
+          if (!proj) return null;
+          const heading = proj.title || proj.name || 'Project';
+          const tags = proj.tags
+            ?.slice(0, 2)
+            .map(t => t?.name)
+            .filter(Boolean);
+          const imageUrl = proj.image
+            ? urlForImage(proj.image)?.width(400).height(240).quality(85).url()
+            : null;
+
+          return (
+            <motion.div
+              key={`${proj.slug}-${idx}`}
+              animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              className='border-2 border-foreground bg-surface rounded shadow-lg flex flex-col overflow-hidden max-w-sm mx-auto w-full'
+            >
+              <div className='border-b-2 border-foreground bg-surface-elevated px-2 py-1 flex items-center justify-between font-mono text-[8px] text-foreground-muted select-none'>
+                <div className='flex gap-0.5'>
+                  <span className='w-1 h-1 bg-foreground rounded-full' />
+                  <span className='w-1 h-1 bg-foreground rounded-full' />
+                  <span className='w-1 h-1 bg-foreground rounded-full' />
+                </div>
+                <div className='bg-surface border border-foreground/30 px-1.5 py-0.2 rounded truncate max-w-[120px]'>
+                  {`wisihe.no/${proj.slug}`}
+                </div>
+              </div>
+
+              {imageUrl ? (
+                <div className='relative w-full aspect-[16/9] bg-background'>
+                  <Image
+                    src={imageUrl}
+                    alt={heading}
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 768px) 100vw, 25vw'
+                  />
+                </div>
+              ) : (
+                <div className='w-full aspect-[16/9] bg-gradient-to-tr from-amber-50/50 to-indigo-50/50 dark:from-neutral-900 dark:to-neutral-950 flex flex-col items-center justify-center font-mono text-[9px] text-foreground-muted gap-1 border-b border-border/20'>
+                  <span>[ PREVIEW_ACTIVE ]</span>
+                </div>
+              )}
+
+              <div className='p-3 flex flex-col justify-between font-mono text-[10px] leading-snug flex-1 bg-background'>
+                <div>
+                  <h3 className='font-bold text-foreground truncate'>{heading}</h3>
+                  <p className='text-[9px] text-foreground-subtle line-clamp-2 mt-1'>
+                    {proj.description || 'Software case study.'}
+                  </p>
+                </div>
+                <div className='flex justify-between items-center mt-3 pt-1 border-t border-border/40'>
+                  <div className='flex gap-1 text-[8px] text-foreground-muted'>
+                    {tags?.map(t => (
+                      <span key={t}>{`[${t}]`}</span>
+                    ))}
+                  </div>
+                  {proj.slug && (
+                    <Link
+                      href={`/projects/${proj.slug}`}
+                      className='text-accent hover:underline font-bold text-[8px]'
+                    >
+                      {'[ DETAIL ]'}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className='font-mono text-[9px] text-foreground-muted flex justify-between border-t border-border/40 pt-2'>
+        <span>SHOWCASE: DUAL_GRID</span>
+        <span>TOTAL: {list.length}</span>
+      </div>
+    </div>
+  );
+}
+
 function ArcadeCell() {
   return (
     <div
@@ -646,8 +894,9 @@ function ArcadeCell() {
               screen-space shaders, and particle layouts.
             </p>
             <p>
-              Hover over the canvas to interact with the grid sprites. The particles react to cursor
-              magnetism with spring physics.
+              Play 'Catch the Paint Pixels'! Catch falling paint droplets with the paddle to
+              splatter color onto the canvas background and score points. Use mouse moves, touch, or
+              left/right arrows to steer.
             </p>
           </div>
           <div className='flex flex-col gap-1 text-foreground-muted'>
@@ -668,12 +917,18 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const shouldReduceMotion = !!(mounted && prefersReducedMotion);
+  const isDev = process.env.NODE_ENV === 'development';
 
   const [loading, setLoading] = useState(true);
   const [coords, setCoords] = useState<Coord>({ x: 1, y: 1 });
   const [scale, setScale] = useState(1);
   const [autoplay, setAutoplay] = useState(true);
   const containerRef = useRef<HTMLElement>(null);
+
+  // Autoplay Timer progress bar states
+  const [timerDuration, setTimerDuration] = useState(1.2);
+  const [timerKey, setTimerKey] = useState(0);
+  const [showTimer, setShowTimer] = useState(true);
 
   // Scroll hooks for exit parallax
   const { scrollY } = useScroll();
@@ -690,8 +945,17 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
       case 'P':
         content = <PaintingsCell paintings={paintings} isActive={isActive} gx={gx} gy={gy} />;
         break;
+      case 'MP':
+        content = <MultiPaintingsCell paintings={paintings} isActive={isActive} />;
+        break;
       case 'Pr':
         content = <ProjectsCell projects={projects} isActive={isActive} gx={gx} gy={gy} />;
+        break;
+      case 'MPr':
+        content = <MultiProjectsCell projects={projects} isActive={isActive} />;
+        break;
+      case 'T':
+        content = <ThreeJSCell isActive={isActive} />;
         break;
       case 'G':
         content = <ArcadeCell />;
@@ -726,6 +990,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     setAutoplay(false);
     setScale(1.0);
     setCoords(target);
+    setShowTimer(false);
     if (typeof window !== 'undefined') {
       localStorage.setItem('wisihe_hero_tour_played', 'true');
     }
@@ -768,71 +1033,88 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     }
   }, [shouldReduceMotion]);
 
-  // Autoplay sequencer tour loop (continuous swoosh)
+  // One-time intro animation sequence (plays exactly once, then terminates)
   useEffect(() => {
     if (!autoplay || shouldReduceMotion) {
       setScale(1.0);
+      setShowTimer(false);
       return;
     }
 
     let active = true;
-    let step = 0;
 
-    // 16-step winding organic coordinate path
+    // Curved intro path: Hub -> Paintings -> Projects -> Hub (then settle)
     const PATH: Coord[] = [
-      { x: 1, y: 1 }, // Hub (H)
-      { x: 1, y: 0 }, // Paintings (P)
-      { x: 2, y: 0 }, // Watercolor (D3)
-      { x: 3, y: 0 }, // Projects (Pr)
-      { x: 3, y: 1 }, // Skills (S)
-      { x: 4, y: 1 }, // Paintings (P)
-      { x: 5, y: 1 }, // Watercolor (D3)
-      { x: 5, y: 2 }, // Arcade (G)
-      { x: 5, y: 3 }, // Paintings (P)
-      { x: 4, y: 4 }, // Paintings (P)
-      { x: 3, y: 4 }, // Projects (Pr)
-      { x: 2, y: 4 }, // Skills (S)
-      { x: 1, y: 4 }, // Bio (B)
-      { x: 1, y: 3 }, // Projects (Pr)
-      { x: 0, y: 2 }, // Watercolor (D3)
-      { x: 1, y: 2 }, // Arcade (G)
+      { x: 1, y: 1 }, // Start at Hub
+      { x: 1, y: 0 }, // Pan to Paintings
+      { x: 2, y: 1 }, // Pan to Projects
+      { x: 1, y: 1 }, // Settle back on Hub
     ];
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const runTour = async () => {
-      const currentIdx = PATH.findIndex(
-        c => c.x === coordsRef.current.x && c.y === coordsRef.current.y,
-      );
-      step = currentIdx !== -1 ? currentIdx : 0;
+    const runIntro = async () => {
+      // Step 0: Hub (1.2s focal time)
+      if (!active) return;
+      setShowTimer(true);
+      setTimerDuration(1.2);
+      setTimerKey(0);
+      await delay(1200);
+      if (!active) return;
 
-      while (active) {
-        // Wait zoomed in (focal time: 4.5 seconds)
-        await delay(4500);
-        if (!active) break;
+      // Step 1: Pan to Paintings (1, 0)
+      setShowTimer(false);
+      setScale(0.24);
+      setCoords(PATH[1] || { x: 1, y: 1 });
+      await delay(550);
+      if (!active) return;
 
-        // Swoosh out & pan at the same time (pull further out to reveal more of the grid!)
-        setScale(0.24);
-        step = (step + 1) % PATH.length;
-        const target = PATH[step];
-        if (target) {
-          setCoords(target);
-        }
-        await delay(550); // Snappy glide zoom out/pan
-        if (!active) break;
+      setScale(1.0);
+      setShowTimer(true);
+      setTimerDuration(1.8);
+      setTimerKey(1);
+      await delay(1800); // let them view the painting for 1.8s
+      if (!active) return;
 
-        // Swoosh back in
-        setScale(1.0);
-        await delay(550); // Snappy settle zoom in
-      }
+      // Step 2: Pan to Projects (2, 1)
+      setShowTimer(false);
+      setScale(0.24);
+      setCoords(PATH[2] || { x: 1, y: 1 });
+      await delay(550);
+      if (!active) return;
+
+      setScale(1.0);
+      setShowTimer(true);
+      setTimerDuration(1.8);
+      setTimerKey(2);
+      await delay(1800); // let them view the project for 1.8s
+      if (!active) return;
+
+      // Step 3: Pan back to Hub (1, 1) and settle
+      setShowTimer(false);
+      setScale(0.24);
+      setCoords(PATH[3] || { x: 1, y: 1 });
+      await delay(550);
+      if (!active) return;
+
+      setScale(1.0);
+      setShowTimer(true);
+      setTimerDuration(0.95);
+      setTimerKey(3);
+      await delay(950);
+      if (!active) return;
+
+      // Finish intro animation and hand over control to the user
+      setShowTimer(false);
+      stopAutoplayAndNavigate({ x: 1, y: 1 });
     };
 
-    runTour();
+    runIntro();
 
     return () => {
       active = false;
     };
-  }, [autoplay, shouldReduceMotion]);
+  }, [autoplay, shouldReduceMotion, stopAutoplayAndNavigate]);
 
   // Keyboard navigation overrides WASD & Arrows
   useEffect(() => {
@@ -917,13 +1199,13 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
     };
   }, [loading, coords, handleUserNavigate]);
 
-  // Infinite grid rendering: dynamic 7x7 render range window centered on current coordinates
+  // Infinite grid rendering: dynamic 9x9 render range window centered on current coordinates
   const ix = Math.round(coords.x);
   const iy = Math.round(coords.y);
-  const rangeX = Array.from({ length: 7 }, (_, i) => ix - 3 + i);
-  const rangeY = Array.from({ length: 7 }, (_, i) => iy - 3 + i);
+  const rangeX = Array.from({ length: 9 }, (_, i) => ix - 4 + i);
+  const rangeY = Array.from({ length: 9 }, (_, i) => iy - 4 + i);
 
-  // local 3x3 cells for interactive scanner HUD map
+  // local 3x3 cells for interactive scanner HUD map (dev only)
   const localCells = [];
   for (let dy = -1; dy <= 1; dy++) {
     for (let dx = -1; dx <= 1; dx++) {
@@ -993,7 +1275,7 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               transformOrigin: `${coords.x * 100 + 50}vw ${coords.y * 100 + 50}vh`,
             }}
           >
-            {/* Dynamic 7x7 Cellular Rendering Grid */}
+            {/* Dynamic 9x9 Cellular Rendering Grid */}
             {rangeY.map(gy =>
               rangeX.map(gx => {
                 const cellType = getCellType(gx, gy);
@@ -1020,40 +1302,52 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
         {/* ==================== PERSISTENT HUD OVERLAYS ==================== */}
         {!loading && (
           <>
-            {/* 1. Skip / Autoplay Status Controller (Top Center) */}
-            <div className='absolute top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col sm:flex-row items-center gap-3 bg-background/90 border-2 border-border p-4 font-mono text-xs shadow-2xl rounded'>
-              <div className='flex items-center gap-2'>
-                <span
-                  className={`w-2.5 h-2.5 rounded-full ${
-                    autoplay ? 'bg-accent animate-pulse' : 'bg-foreground-muted'
-                  }`}
+            {/* Autoplay Progress Line */}
+            {autoplay && showTimer && (
+              <div className='absolute top-0 left-0 right-0 h-1 bg-border/20 z-[9999] pointer-events-none'>
+                <motion.div
+                  key={timerKey}
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: timerDuration, ease: 'linear' }}
+                  className='h-full bg-accent shadow-[0_0_8px_var(--color-accent)]'
                 />
-                <span className='font-bold tracking-widest text-[10px] text-foreground-subtle'>
-                  {autoplay ? 'AUTO TOUR IN PROGRESS' : 'MANUAL CONTROL ENGAGED'}
-                </span>
               </div>
-              <div className='flex gap-2 text-[10px]'>
-                {autoplay ? (
-                  <button
-                    type='button'
-                    onClick={() => stopAutoplayAndNavigate({ x: 1, y: 1 })}
-                    className='bg-accent text-accent-contrast border border-accent px-3 py-1 font-bold hover:bg-accent/90 transition-all cursor-pointer'
-                  >
-                    [ SKIP TOUR & ENTER ]
-                  </button>
-                ) : (
-                  <button
-                    type='button'
-                    onClick={() => setAutoplay(true)}
-                    className='border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-all cursor-pointer'
-                  >
-                    [ START AUTO TOUR ]
-                  </button>
-                )}
-              </div>
-            </div>
+            )}
 
-            {/* 2. Manual Overlay Edge Arrows (Only in Manual Mode) */}
+            {/* 1. Skip Intro Button (Top Right - positioned below ThemeToggle to prevent overlap) */}
+            {autoplay && (
+              <div className='absolute top-20 right-6 z-30 pointer-events-auto'>
+                <button
+                  type='button'
+                  onClick={() => stopAutoplayAndNavigate({ x: 1, y: 1 })}
+                  className='bg-background/90 border border-foreground/35 px-4 py-1.5 font-mono text-[9px] tracking-widest uppercase hover:border-accent hover:text-accent transition-all shadow-xl cursor-pointer hover:scale-105 active:scale-95'
+                >
+                  [ SKIP INTRO ]
+                </button>
+              </div>
+            )}
+
+            {/* 2. Developer Diagnostic HUD (Dev Mode only) */}
+            {isDev && !autoplay && (
+              <div className='absolute top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex items-center gap-3 bg-background/90 border-2 border-border p-4 font-mono text-xs shadow-2xl rounded'>
+                <div className='flex items-center gap-2'>
+                  <span className='w-2.5 h-2.5 rounded-full bg-foreground-muted' />
+                  <span className='font-bold tracking-widest text-[10px] text-foreground-subtle'>
+                    DEV_MODE: MANUAL CONTROL ENGAGED
+                  </span>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => setAutoplay(true)}
+                  className='border border-foreground/30 px-3 py-1 text-[10px] hover:border-accent hover:text-accent transition-all cursor-pointer'
+                >
+                  [ REPLAY INTRO ]
+                </button>
+              </div>
+            )}
+
+            {/* 3. Manual Overlay Edge Arrows (Only in Manual Mode) */}
             {!autoplay && (
               <div className='absolute inset-0 pointer-events-none z-30'>
                 {/* Up Arrow */}
@@ -1094,46 +1388,49 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               </div>
             )}
 
-            {/* 3. Persistent HUD Minimap scanner */}
-            <div className='absolute bottom-6 right-6 z-30 bg-background/90 border-2 border-border p-4 font-mono text-[9px] uppercase tracking-wider flex flex-col gap-2 shadow-2xl rounded'>
-              <div className='flex justify-between items-center font-bold text-foreground-muted gap-4'>
-                <span>RADAR SCAN v4.0</span>
-                <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
-              </div>
-              <hr className='border-border/60' />
-              <div className='grid grid-cols-3 gap-1 w-24 h-24 mt-1 self-center'>
-                {localCells.map((cell, idx) => (
-                  <button
-                    key={`${cell.x}-${cell.y}-${idx}`}
-                    type='button'
-                    onClick={() => handleUserNavigate({ x: cell.x, y: cell.y })}
-                    className={`
-                      border flex items-center justify-center font-mono font-bold select-none cursor-pointer transition-all duration-150 text-[9px] w-7 h-7 rounded
-                      ${
-                        cell.active
-                          ? 'bg-accent text-accent-contrast border-accent shadow-md scale-105 shadow-accent/20'
-                          : 'bg-surface border-border hover:bg-surface-hover hover:border-accent text-foreground-subtle'
-                      }
-                    `}
-                    title={`Pan to (${cell.x}, ${cell.y}) - ${cell.label}`}
-                  >
-                    {cell.abbr}
-                  </button>
-                ))}
-              </div>
-              <div className='text-[8px] text-center text-foreground-muted mt-1'>
-                COORD: ({coords.x}, {coords.y})
-              </div>
-            </div>
+            {/* 4. Persistent HUD Minimap scanner & Controls guide (Dev Mode only) */}
+            {isDev && (
+              <>
+                <div className='absolute bottom-6 right-6 z-30 bg-background/90 border-2 border-border p-4 font-mono text-[9px] uppercase tracking-wider flex flex-col gap-2 shadow-2xl rounded'>
+                  <div className='flex justify-between items-center font-bold text-foreground-muted gap-4'>
+                    <span>RADAR SCAN v4.0</span>
+                    <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+                  </div>
+                  <hr className='border-border/60' />
+                  <div className='grid grid-cols-3 gap-1 w-24 h-24 mt-1 self-center'>
+                    {localCells.map((cell, idx) => (
+                      <button
+                        key={`${cell.x}-${cell.y}-${idx}`}
+                        type='button'
+                        onClick={() => handleUserNavigate({ x: cell.x, y: cell.y })}
+                        className={`
+                          border flex items-center justify-center font-mono font-bold select-none cursor-pointer transition-all duration-150 text-[9px] w-7 h-7 rounded
+                          ${
+                            cell.active
+                              ? 'bg-accent text-accent-contrast border-accent shadow-md scale-105 shadow-accent/20'
+                              : 'bg-surface border-border hover:bg-surface-hover hover:border-accent text-foreground-subtle'
+                          }
+                        `}
+                        title={`Pan to (${cell.x}, ${cell.y}) - ${cell.label}`}
+                      >
+                        {cell.abbr}
+                      </button>
+                    ))}
+                  </div>
+                  <div className='text-[8px] text-center text-foreground-muted mt-1'>
+                    COORD: ({coords.x}, {coords.y})
+                  </div>
+                </div>
 
-            {/* 4. Controls Guide HUD (Bottom-Left Corner) */}
-            <div className='absolute bottom-6 left-6 z-30 bg-background/90 border-2 border-border px-3 py-2 font-mono text-[9px] text-foreground-muted flex gap-2 shadow-2xl rounded items-center'>
-              <span>
-                {autoplay
-                  ? 'PRESS WASD/ARROWS OR SWIPE TO INTERACT'
-                  : 'KEYS: WASD / ARROWS | MOUSE: CLICK RADAR SCAN'}
-              </span>
-            </div>
+                <div className='absolute bottom-6 left-6 z-30 bg-background/90 border-2 border-border px-3 py-2 font-mono text-[9px] text-foreground-muted flex gap-2 shadow-2xl rounded items-center'>
+                  <span>
+                    {autoplay
+                      ? 'PRESS WASD/ARROWS OR SWIPE TO INTERACT'
+                      : 'KEYS: WASD / ARROWS | MOUSE: CLICK RADAR SCAN'}
+                  </span>
+                </div>
+              </>
+            )}
 
             {/* 5. Enter Portfolio Scroll Button (Bottom Center) */}
             <div className='absolute bottom-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col items-center gap-1.5'>
