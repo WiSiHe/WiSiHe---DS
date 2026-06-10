@@ -51,7 +51,7 @@ export default async function Home() {
     <div className='bg-background'>
       <div className='bg-background'>
         <Suspense fallback={<HeroSkeleton />}>
-          <HeroImageSection paintings={shuffledHeroPaintings} />
+          <HeroImageSection paintings={shuffledHeroPaintings} projects={showcaseProjects} />
         </Suspense>
 
         <section className='relative pt-24 pb-12'>

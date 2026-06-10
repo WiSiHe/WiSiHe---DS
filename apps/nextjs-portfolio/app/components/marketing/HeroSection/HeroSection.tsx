@@ -1,541 +1,551 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
-import gsap from 'gsap';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
-
-import {
-  getHeroStrokeColors,
-  HERO_BRUSH_STROKE_WIDTH_HOVER,
-  HERO_BRUSH_STROKE_WIDTH_REST,
-  HeroPaintingSvgHover,
-  initHeroSvgStrokePaths,
-} from './HeroPaintingSvgHover';
-import HeroScrollIndicator from './HeroScrollIndicator';
-
-gsap.registerPlugin(useGSAP);
+import HeroArcadeWidget from './HeroArcadeWidget';
+import HeroRetroLoader from './HeroRetroLoader';
 
 type HeroImageSectionProps = {
   paintings?: NonNullable<HomePageQueryResult>['showcasePaintings'] | null;
+  projects?: NonNullable<HomePageQueryResult>['showcaseProjects'] | null;
 };
 
-// Positions that avoid the center text area but are closer together
-// Center text area: approximately 35-65% vertical, 30-70% horizontal
-// Mobile positions can use space below text (65%+ vertical)
-const FIXED_POSITIONS_DESKTOP = [
-  { top: '15%', left: '20%', rotation: -12, scale: 0.9 },
-  { top: '20%', left: '80%', rotation: 15, scale: 0.85 },
-  { top: '30%', left: '15%', rotation: -5, scale: 1.0 },
-  { top: '25%', left: '85%', rotation: 10, scale: 0.95 },
-  { top: '75%', left: '20%', rotation: -15, scale: 0.85 },
-  { top: '80%', left: '80%', rotation: 5, scale: 1.0 },
-  { top: '12%', left: '50%', rotation: -8, scale: 0.9 },
-  { top: '88%', left: '50%', rotation: 12, scale: 0.9 },
-];
+// Camera Coordinates: Center is (1,1)
+type Coord = { x: number; y: number };
 
-// Mobile positions - use space both above and below text
-// Text area is approximately 35-65% vertical, so positions above 35% and below 65%
-const FIXED_POSITIONS_MOBILE = [
-  // Above text (top area)
-  { top: '10%', left: '15%', rotation: -12, scale: 0.8 },
-  { top: '15%', left: '85%', rotation: 15, scale: 0.75 },
-  { top: '8%', left: '50%', rotation: -8, scale: 0.8 },
-  { top: '20%', left: '20%', rotation: -10, scale: 0.75 },
-  { top: '25%', left: '80%', rotation: 12, scale: 0.8 },
-  { top: '12%', left: '30%', rotation: -5, scale: 0.75 },
-  // Below text (bottom area)
-  { top: '70%', left: '20%', rotation: -15, scale: 0.8 },
-  { top: '75%', left: '80%', rotation: 5, scale: 0.75 },
-  { top: '85%', left: '50%', rotation: 12, scale: 0.8 },
-  { top: '80%', left: '15%', rotation: -8, scale: 0.75 },
-  { top: '78%', left: '85%', rotation: 10, scale: 0.8 },
-  { top: '88%', left: '30%', rotation: -12, scale: 0.75 },
-];
+const gridPatternStyle = {
+  backgroundImage: `
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px)
+  `,
+  backgroundSize: '60px 60px',
+};
 
-const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
+// Check if a coordinate is valid on our cross-shaped grid
+const isValidCoord = (x: number, y: number) => {
+  return x === 1 || y === 1;
+};
+
+export default function HeroImageSection({ paintings, projects }: HeroImageSectionProps) {
+  const [loading, setLoading] = useState(true);
+  const [coords, setCoords] = useState<Coord>({ x: 1, y: 1 });
   const containerRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<HTMLDivElement>(null);
-  const loaderRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const svgHoverTlsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
 
-  useLayoutEffect(() => {
-    initHeroSvgStrokePaths(containerRef.current);
-  }, [paintings]);
-
-  useEffect(() => {
-    return () => {
-      svgHoverTlsRef.current.forEach(tl => tl.kill());
-      svgHoverTlsRef.current.clear();
-    };
-  }, []);
-
-  // Hide scroll indicator after user scrolls
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const scrollY = window.scrollY || window.pageYOffset;
-
-      // Hide after scrolling 100px or when hero section is out of view
-      if (scrollY > 100 || containerRect.bottom < 0) {
-        setShowScrollIndicator(false);
-      } else {
-        setShowScrollIndicator(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Check initial state
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const { contextSafe } = useGSAP(
-    () => {
-      if (!paintings || paintings.length === 0) return;
-
-      const images = imagesRef.current?.children;
-      if (!images) return;
-
-      const mm = gsap.matchMedia();
-
-      mm.add(
-        {
-          isMobile: '(max-width: 767px)',
-          isTablet: '(min-width: 768px) and (max-width: 1023px)',
-          isDesktop: '(min-width: 1024px)',
-        },
-        context => {
-          const { isMobile, isTablet } = context.conditions || {};
-          const tl = gsap.timeline();
-          const isDev = process.env.NODE_ENV === 'development';
-          const hasPlayed = sessionStorage.getItem('hero-splash-played');
-
-          // On mobile: 12 images (6 above, 6 below text)
-          // On tablet: 7 images
-          // On desktop: 8 images
-          let visibleImages: Element[];
-          if (isMobile) {
-            visibleImages = Array.from(images).slice(0, 12);
-          } else if (isTablet) {
-            visibleImages = Array.from(images).slice(0, 7);
-          } else {
-            visibleImages = Array.from(images).slice(0, 8);
-          }
-
-          if (hasPlayed && !isDev) {
-            // --- FAST TRACK: Set final state immediately ---
-
-            // Hide loader
-            gsap.set(loaderRef.current, { display: 'none' });
-
-            // Show Text
-            if (textRef.current) {
-              gsap.set(textRef.current.children, {
-                opacity: 1,
-                y: 0,
-                filter: 'blur(0px)',
-              });
-            }
-
-            // Position Images & Start Float
-            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-            visibleImages.forEach((img, i) => {
-              // Only use positions up to the number of visible images (don't cycle)
-              const pos = (positions[i] ?? positions[i % positions.length])!;
-
-              // Set to final position
-              gsap.set(img, {
-                left: pos.left,
-                top: pos.top,
-                rotation: pos.rotation,
-                scale: pos.scale,
-                xPercent: -50,
-                yPercent: -50,
-                opacity: 1,
-                zIndex: 1,
-              });
-
-              // Start Float
-              gsap.to(img, {
-                y: `+=${Math.random() * 20 + 10}`,
-                x: `+=${Math.random() * 10 - 5}`,
-                rotation: `+=${Math.random() * 6 - 3}`,
-                duration: Math.random() * 3 + 4,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
-                delay: i * 0.1,
-              });
-            });
-
-            // Enable hover effects immediately for fast track
-            setIsAnimationComplete(true);
-          } else {
-            // --- FULL ANIMATION SEQUENCE ---
-
-            if (!isDev) {
-              sessionStorage.setItem('hero-splash-played', 'true');
-            }
-
-            // 1. Loader Animation & Stacking
-            const progressObj = { value: 0 };
-
-            tl.to(progressObj, {
-              value: 100,
-              duration: 2.5, // Slightly longer for better stacking effect
-              ease: 'power2.inOut',
-              onUpdate: () => setProgress(Math.round(progressObj.value)),
-            });
-
-            // Stack images in center (same position as loader), starting from bottom and stacking upward
-            visibleImages.forEach((img, i) => {
-              // Calculate stacking offset - centered horizontally, stacking upward vertically
-              const stackOffsetX = 0; // Keep centered horizontally
-              const stackOffsetY = -(i * 15); // Stack upward from center (negative Y moves up)
-              const stackRotation = (i % 3) * 3 - 3; // Small rotation: -3, 0, 3
-              const stackScale = 1 - i * 0.03; // Slightly smaller as they stack
-
-              tl.fromTo(
-                img,
-                {
-                  scale: 0,
-                  opacity: 0,
-                  xPercent: -50,
-                  yPercent: -50,
-                  left: '50%',
-                  top: '50%', // Start at center (same as loader)
-                  rotation: 0,
-                  zIndex: i + 1, // First image has lowest z-index, last has highest (on top)
-                },
-                {
-                  scale: stackScale,
-                  opacity: 1,
-                  x: stackOffsetX,
-                  y: stackOffsetY, // Stack upward from center
-                  rotation: stackRotation,
-                  duration: 0.6,
-                  ease: 'back.out(1.4)',
-                },
-                0.1 + i * 0.12, // Stagger the stacking
-              );
-            });
-
-            // Fade out loader
-            tl.to(
-              loaderRef.current,
-              {
-                opacity: 0,
-                y: -50,
-                filter: 'blur(10px)',
-                duration: 0.5,
-                ease: 'power2.in',
-                display: 'none',
-              },
-              '-=0.5',
-            );
-
-            tl.addLabel('explode', '+=0.1');
-
-            // 2. Explode & Float
-            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-            visibleImages.forEach((img, i) => {
-              // Only use positions up to the number of visible images (don't cycle)
-              const pos = (positions[i] ?? positions[i % positions.length])!;
-
-              tl.to(
-                img,
-                {
-                  left: pos.left,
-                  top: pos.top,
-                  rotation: pos.rotation,
-                  scale: pos.scale,
-                  xPercent: -50,
-                  yPercent: -50,
-                  duration: 1.2, // Faster explosion
-                  ease: 'back.out(2)', // Springier
-                  zIndex: 1,
-                },
-                'explode',
-              );
-
-              gsap.to(img, {
-                y: `+=${Math.random() * 20 + 10}`,
-                x: `+=${Math.random() * 10 - 5}`,
-                rotation: `+=${Math.random() * 6 - 3}`,
-                duration: Math.random() * 3 + 4,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
-                delay: 3 + i * 0.1,
-              });
-            });
-
-            // 3. Text Entrance (After explosion)
-            if (textRef.current) {
-              const textElements = textRef.current.children;
-              tl.fromTo(
-                textElements,
-                { opacity: 0, y: 30, filter: 'blur(5px)' },
-                {
-                  opacity: 1,
-                  y: 0,
-                  filter: 'blur(0px)',
-                  duration: 1,
-                  stagger: 0.15,
-                  ease: 'power3.out',
-                },
-                '-=0.4', // Overlap slightly with end of explosion
-              );
-            }
-
-            // 4. Enable hover effects after all animations complete
-            tl.call(() => {
-              setIsAnimationComplete(true);
-            });
-          }
-        },
-      );
-    },
-    { scope: containerRef, dependencies: [paintings] },
-  );
-
-  const handleMouseEnter = contextSafe((index: number) => {
-    // Only allow hover effects after animation is complete
-    if (!isAnimationComplete) return;
-
-    const imageElements = imagesRef.current?.children;
-    if (!imageElements) return;
-
-    const link = imageElements[index] as HTMLElement;
-
-    // Determine which position set to use based on window width
-    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
-    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-    const baseScale = positions[index % positions.length]!.scale;
-
-    svgHoverTlsRef.current.get(index)?.kill();
-    const tl = gsap.timeline();
-    svgHoverTlsRef.current.set(index, tl);
-
-    const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-    paths.forEach(path => {
-      const len = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-      tl.to(
-        path,
-        {
-          strokeDashoffset: 0,
-          attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_HOVER },
-          duration: 1.5,
-          ease: 'power2.out',
-        },
-        0,
-      );
-    });
-
-    const titleEl = link.querySelector('[data-hero-title]');
-    if (titleEl) {
-      tl.fromTo(
-        titleEl,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-        0.25,
-      );
+  const navigateTo = (x: number, y: number) => {
+    if (isValidCoord(x, y)) {
+      setCoords({ x, y });
     }
+  };
 
-    tl.to(
-      link,
-      {
-        scale: baseScale * 1.2,
-        zIndex: 20,
-        duration: 0.5,
-        ease: 'power2.out',
-      },
-      0,
-    );
-  });
+  // Keyboard navigation listeners (WASD & Arrows)
+  useEffect(() => {
+    if (loading) return;
 
-  const handleMouseLeave = contextSafe(() => {
-    // Only allow hover effects after animation is complete
-    if (!isAnimationComplete) return;
-
-    // Reset hovered image to its base position
-    const imageElements = imagesRef.current?.children;
-    if (!imageElements) return;
-
-    // Determine which position set to use (we'll check if mobile by checking window width)
-    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
-    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-
-    Array.from(imageElements).forEach((img, i) => {
-      const baseScale = positions[i % positions.length]!.scale;
-      const currentZ = gsap.getProperty(img, 'zIndex');
-
-      // Only reset if this image was hovered (zIndex > 1)
-      if (typeof currentZ === 'number' && currentZ > 1) {
-        svgHoverTlsRef.current.get(i)?.kill();
-        svgHoverTlsRef.current.delete(i);
-
-        const link = img as HTMLElement;
-        const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-        paths.forEach(path => {
-          const len = path.getTotalLength();
-          gsap.to(path, {
-            strokeDashoffset: len,
-            attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_REST },
-            duration: 1,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          });
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if (e.key === 'ArrowUp' || key === 'w') {
+        setCoords(prev => {
+          const nextY = prev.y - 1;
+          if (isValidCoord(prev.x, nextY) && nextY >= 0) return { x: prev.x, y: nextY };
+          return prev;
         });
-
-        const titleEl = link.querySelector('[data-hero-title]');
-        if (titleEl) {
-          gsap.to(titleEl, {
-            opacity: 0,
-            y: 6,
-            duration: 0.35,
-            ease: 'power2.in',
-            overwrite: 'auto',
-          });
-        }
-
-        gsap.to(img, {
-          scale: baseScale,
-          zIndex: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-          overwrite: 'auto',
+      } else if (e.key === 'ArrowDown' || key === 's') {
+        setCoords(prev => {
+          const nextY = prev.y + 1;
+          if (isValidCoord(prev.x, nextY) && nextY <= 2) return { x: prev.x, y: nextY };
+          return prev;
+        });
+      } else if (e.key === 'ArrowLeft' || key === 'a') {
+        setCoords(prev => {
+          const nextX = prev.x - 1;
+          if (isValidCoord(nextX, prev.y) && nextX >= 0) return { x: nextX, y: prev.y };
+          return prev;
+        });
+      } else if (e.key === 'ArrowRight' || key === 'd') {
+        setCoords(prev => {
+          const nextX = prev.x + 1;
+          if (isValidCoord(nextX, prev.y) && nextX <= 2) return { x: nextX, y: prev.y };
+          return prev;
         });
       }
-    });
-  });
+    };
 
-  if (!paintings || paintings.length === 0) {
-    return <div>No paintings available.</div>;
-  }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [loading]);
+
+  // Touch swipe navigation for mobile
+  useEffect(() => {
+    if (loading) return;
+
+    let touchStart = { x: 0, y: 0 };
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStart = {
+        x: e.touches[0]?.clientX || 0,
+        y: e.touches[0]?.clientY || 0,
+      };
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStart.x || !touchStart.y) return;
+      const touchEnd = {
+        x: e.changedTouches[0]?.clientX || 0,
+        y: e.changedTouches[0]?.clientY || 0,
+      };
+
+      const dx = touchEnd.x - touchStart.x;
+      const dy = touchEnd.y - touchStart.y;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (Math.max(absX, absY) > 50) {
+        if (absX > absY) {
+          // Horizontal Swipe
+          if (dx > 0) {
+            // Swipe Right -> Go Left
+            setCoords(prev => {
+              const nextX = prev.x - 1;
+              if (isValidCoord(nextX, prev.y) && nextX >= 0) return { x: nextX, y: prev.y };
+              return prev;
+            });
+          } else {
+            // Swipe Left -> Go Right
+            setCoords(prev => {
+              const nextX = prev.x + 1;
+              if (isValidCoord(nextX, prev.y) && nextX <= 2) return { x: nextX, y: prev.y };
+              return prev;
+            });
+          }
+        } else {
+          // Vertical Swipe
+          if (dy > 0) {
+            // Swipe Down -> Go Up
+            setCoords(prev => {
+              const nextY = prev.y - 1;
+              if (isValidCoord(prev.x, nextY) && nextY >= 0) return { x: prev.x, y: nextY };
+              return prev;
+            });
+          } else {
+            // Swipe Up -> Go Down
+            setCoords(prev => {
+              const nextY = prev.y + 1;
+              if (isValidCoord(prev.x, nextY) && nextY <= 2) return { x: prev.x, y: nextY };
+              return prev;
+            });
+          }
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [loading]);
 
   return (
-    <section
-      ref={containerRef}
-      className='relative flex min-h-lvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle overflow-x-clip'
-    >
-      {/* Loader */}
-      <div
-        ref={loaderRef}
-        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center pointer-events-none'
+    <>
+      <AnimatePresence>
+        {loading && <HeroRetroLoader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      <section
+        ref={containerRef}
+        className='relative w-full h-screen overflow-hidden bg-background select-none'
       >
-        <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
-          {progress}%
-        </div>
-      </div>
+        {/* The 3x3 Infinite Grid Canvas */}
+        <motion.div
+          animate={{
+            x: `${-coords.x * 100}vw`,
+            y: `${-coords.y * 100}vh`,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 90,
+            damping: 18,
+          }}
+          className='absolute top-0 left-0 w-[300vw] h-[300vh]'
+          style={gridPatternStyle}
+        >
+          {/* ==================== CENTER CELL (1,1) ==================== */}
+          <div className='absolute left-[100vw] top-[100vh] w-[100vw] h-[100vh] border-4 border-foreground/30 flex flex-col items-center justify-center p-6 bg-background'>
+            <div className='max-w-xl text-center flex flex-col items-center gap-6'>
+              <div className='border border-foreground/20 px-3 py-1 font-mono text-xs uppercase tracking-[0.2em] text-foreground-muted'>
+                {'COORDINATES: (1, 1) // HUB'}
+              </div>
+              <h1 className='text-7xl md:text-9xl font-serif font-black tracking-tight text-foreground uppercase select-none'>
+                Henrik
+              </h1>
+              <p className='font-mono text-sm md:text-base text-accent font-bold tracking-wider'>
+                [ DESIGN ENGINEER | PAINTER | MAKER ]
+              </p>
+              <p className='text-foreground-subtle leading-relaxed text-sm md:text-base max-w-md'>
+                Welcome to my multi-disciplinary playground. Explore the areas by clicking the edge
+                markers or using WASD / Arrow keys.
+              </p>
 
-      {/* Central Text Content */}
-      <div
-        ref={textRef}
-        className='relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none'
-      >
-        <p className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-foreground-subtle'>
-          My name is
-        </p>
-        <h1 className='text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground'>
-          Henrik
-        </h1>
-        <p className='text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-foreground-subtle'>
-          I&apos;m a design engineer, painter and a maker.
-          <br />
-          Explore my work.
-        </p>
+              {/* D-Pad Controls / Central Indicator */}
+              <div className='flex flex-col items-center gap-2 mt-4 font-mono text-xs text-foreground-muted'>
+                <span className='animate-pulse'>◄ ▲ ▼ ► NAVIGATE GRID</span>
+              </div>
+            </div>
+          </div>
 
-        <div className='mt-8 pointer-events-auto opacity-0'>
-          <Link
-            href='/paintings'
-            className='inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg'
-          >
-            View Gallery
-          </Link>
-        </div>
-      </div>
+          {/* ==================== TOP CELL (1,0) - PAINTINGS ==================== */}
+          <div className='absolute left-[100vw] top-0 w-[100vw] h-[100vh] border-4 border-foreground/30 flex flex-col justify-between p-8 bg-background'>
+            <div className='flex justify-between items-center border-b border-border pb-4 font-mono'>
+              <span className='text-sm font-bold'>{'[01 // GALLERY_OUTPOST]'}</span>
+              <span className='text-xs text-foreground-muted'>COORDINATES: (1, 0)</span>
+            </div>
 
-      {/* Floating Images Container */}
-      <div
-        ref={imagesRef}
-        className='absolute inset-0 pointer-events-none max-w-[1776px] mx-auto pt-10'
-      >
-        {paintings?.map((painting, index) => {
-          const { image, altText, slug, title } = painting;
-          if (!image) return null;
+            <div className='flex-1 my-6 overflow-y-auto pr-2'>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-6 pt-4'>
+                {paintings?.slice(0, 3).map(painting => {
+                  const { image, altText, slug, title } = painting;
+                  const imageUrl = image
+                    ? urlForImage(image)?.width(600).height(450).auto('format').quality(85).url()
+                    : '';
 
-          const imageUrl = urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
+                  return (
+                    <Link
+                      key={painting._id}
+                      href={`paintings/${slug}`}
+                      className='group border-2 border-border p-3 bg-surface hover:border-accent flex flex-col gap-3 transition-all duration-200'
+                    >
+                      {imageUrl && (
+                        <div className='relative aspect-[4/3] w-full overflow-hidden bg-background'>
+                          <Image
+                            src={imageUrl}
+                            alt={altText || 'Painting'}
+                            fill
+                            className='object-cover transition-transform duration-300 group-hover:scale-105'
+                            sizes='(max-width: 768px) 100vw, 30vw'
+                          />
+                        </div>
+                      )}
+                      <div className='font-mono flex justify-between items-center text-xs'>
+                        <span className='font-bold text-foreground truncate'>{title}</span>
+                        <span className='text-accent shrink-0 group-hover:translate-x-1 transition-transform'>
+                          →
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
 
-          // Deterministic random-like properties based on index
-          const aspectRatios = ['aspect-square', 'aspect-video', 'aspect-[3/4]', 'aspect-[4/5]'];
-          const sizes = [
-            'w-48 md:w-80 lg:max-w-[20vw]',
-            'w-56 md:w-96 lg:max-w-[22vw]',
-            'w-40 md:w-64 lg:max-w-[18vw]',
-            'w-52 md:w-80 lg:max-w-[20vw]',
-          ];
-          // Optimize LCP: Prioritize the first few images
-          const isPriority = index < 4;
+            <div className='flex justify-center border-t border-border pt-4'>
+              <button
+                type='button'
+                onClick={() => navigateTo(1, 1)}
+                className='font-mono text-xs px-4 py-2 border border-border hover:border-accent hover:text-accent transition-colors cursor-pointer'
+              >
+                [ ▼ RETURN TO HUB ]
+              </button>
+            </div>
+          </div>
 
-          const aspectRatio = aspectRatios[index % aspectRatios.length];
-          const size = sizes[index % sizes.length];
+          {/* ==================== BOTTOM CELL (1,2) - GAME DEV ==================== */}
+          <div className='absolute left-[100vw] top-[200vh] w-[100vw] h-[100vh] border-4 border-foreground/30 flex flex-col justify-between p-8 bg-background'>
+            <div className='flex justify-between items-center border-b border-border pb-4 font-mono'>
+              <span className='text-sm font-bold'>{'[04 // ARCADE_OUTPOST]'}</span>
+              <span className='text-xs text-foreground-muted'>COORDINATES: (1, 2)</span>
+            </div>
 
-          // Show paintings: mobile (12), tablet (7), desktop (8)
-          let visibilityClass = 'hidden';
-          if (index < 7) {
-            // Show on all devices (mobile, tablet, desktop)
-            visibilityClass = 'block';
-          } else if (index === 7) {
-            // Show on mobile and desktop, hide on tablet
-            visibilityClass = 'block md:hidden lg:block';
-          } else if (index < 12) {
-            // Show on mobile only (images 8-11)
-            visibilityClass = 'block md:hidden';
-          }
-
-          return (
-            <Link
-              key={painting._id}
-              href={`paintings/${slug}`}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-              // Initial state: centered
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-1 ${size} ${aspectRatio} ${visibilityClass} pointer-events-auto group opacity-0 will-change-transform`}
-            >
-              <div className='h-full w-full rounded-lg shadow-2xl'>
-                <div className='relative isolate h-full w-full overflow-hidden rounded-lg'>
-                  <Image
-                    src={imageUrl}
-                    alt={altText || 'Painting'}
-                    fill
-                    priority={isPriority}
-                    className='object-cover'
-                    sizes='(max-width: 768px) 40vw, 30vw'
-                  />
-                  <HeroPaintingSvgHover {...getHeroStrokeColors(index)} title={title} />
+            <div className='flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 my-6 overflow-hidden'>
+              <div className='lg:col-span-2 border-2 border-border relative overflow-hidden h-full rounded'>
+                <HeroArcadeWidget />
+              </div>
+              <div className='flex flex-col justify-between p-6 border-2 border-border bg-surface font-mono text-xs leading-relaxed'>
+                <div className='flex flex-col gap-3'>
+                  <div className='text-accent font-bold uppercase tracking-wider'>
+                    MODULE: GAME_DEV_SYS
+                  </div>
+                  <hr className='border-border' />
+                  <p>
+                    I design games and interactive environments focusing on rigid-body physics,
+                    screen-space shaders, and particle layouts.
+                  </p>
+                  <p>
+                    Hover over the canvas to interact with the grid sprites. The particles react to
+                    cursor magnetism with spring physics.
+                  </p>
+                </div>
+                <div className='flex flex-col gap-1 text-foreground-muted'>
+                  <div>ENGINE: UNREAL / CANVAS</div>
+                  <div>LANGUAGE: C++ / TS</div>
+                  <div>SHADERS: GLSL</div>
                 </div>
               </div>
-            </Link>
-          );
-        })}
-      </div>
+            </div>
 
-      <HeroScrollIndicator show={showScrollIndicator} />
-    </section>
+            <div className='flex justify-center border-t border-border pt-4'>
+              <button
+                type='button'
+                onClick={() => navigateTo(1, 1)}
+                className='font-mono text-xs px-4 py-2 border border-border hover:border-accent hover:text-accent transition-colors cursor-pointer'
+              >
+                [ ▲ RETURN TO HUB ]
+              </button>
+            </div>
+          </div>
+
+          {/* ==================== LEFT CELL (0,1) - ABOUT & SKILLS ==================== */}
+          <div className='absolute left-0 top-[100vh] w-[100vw] h-[100vh] border-4 border-foreground/30 flex flex-col justify-between p-8 bg-background'>
+            <div className='flex justify-between items-center border-b border-border pb-4 font-mono'>
+              <span className='text-sm font-bold'>{'[03 // INTEL_HUB]'}</span>
+              <span className='text-xs text-foreground-muted'>COORDINATES: (0, 1)</span>
+            </div>
+
+            <div className='flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 my-6 overflow-y-auto pr-2'>
+              {/* Bio block */}
+              <div className='border-2 border-border p-6 bg-surface font-mono text-xs md:text-sm leading-relaxed flex flex-col justify-between'>
+                <div className='flex flex-col gap-2'>
+                  <div className='text-accent font-bold uppercase tracking-wider'>
+                    USER: HENRIK SISSENER
+                  </div>
+                  <div>ROLE: DESIGN ENGINEER & MAKER</div>
+                  <hr className='border-border my-2' />
+                  <p>
+                    I operate at the intersection of structural engineering, modern interface
+                    design, and organic creative arts.
+                  </p>
+                  <p>
+                    Whether coding responsive frontend layouts in React/Svelte, rendering game
+                    physics, or laying oil strokes on canvas, I focus on premium, interactive
+                    experiences.
+                  </p>
+                </div>
+                <div className='mt-6 flex flex-wrap gap-2'>
+                  <Link
+                    href='/about'
+                    className='border border-foreground px-3 py-1 text-xs hover:border-accent hover:text-accent transition-colors'
+                  >
+                    [ READ MORE_ ]
+                  </Link>
+                </div>
+              </div>
+
+              {/* RPG-style Skills list */}
+              <div className='border-2 border-border p-6 bg-surface font-mono text-xs flex flex-col gap-4 justify-center'>
+                <div className='text-foreground-muted font-bold tracking-wider mb-2'>
+                  SKILLS PROFILE:
+                </div>
+                <div className='flex flex-col gap-1.5'>
+                  <div className='flex justify-between'>
+                    <span>FRONTEND DEV</span>
+                    <span>85%</span>
+                  </div>
+                  <div className='text-accent font-bold'>[████████░░]</div>
+                </div>
+                <div className='flex flex-col gap-1.5'>
+                  <div className='flex justify-between'>
+                    <span>UI/UX DESIGN</span>
+                    <span>90%</span>
+                  </div>
+                  <div className='text-accent font-bold'>[█████████░]</div>
+                </div>
+                <div className='flex flex-col gap-1.5'>
+                  <div className='flex justify-between'>
+                    <span>GAME DEV</span>
+                    <span>70%</span>
+                  </div>
+                  <div className='text-accent font-bold'>[███████░░░]</div>
+                </div>
+                <div className='flex flex-col gap-1.5'>
+                  <div className='flex justify-between'>
+                    <span>FINE ART</span>
+                    <span>90%</span>
+                  </div>
+                  <div className='text-accent font-bold'>[█████████░]</div>
+                </div>
+              </div>
+            </div>
+
+            <div className='flex justify-center border-t border-border pt-4'>
+              <button
+                type='button'
+                onClick={() => navigateTo(1, 1)}
+                className='font-mono text-xs px-4 py-2 border border-border hover:border-accent hover:text-accent transition-colors cursor-pointer'
+              >
+                [ ► RETURN TO HUB ]
+              </button>
+            </div>
+          </div>
+
+          {/* ==================== RIGHT CELL (2,1) - PROJECTS ==================== */}
+          <div className='absolute left-[200vw] top-[100vh] w-[100vw] h-[100vh] border-4 border-foreground/30 flex flex-col justify-between p-8 bg-background'>
+            <div className='flex justify-between items-center border-b border-border pb-4 font-mono'>
+              <span className='text-sm font-bold'>{'[02 // PROJECT_INDEX]'}</span>
+              <span className='text-xs text-foreground-muted'>COORDINATES: (2, 1)</span>
+            </div>
+
+            <div className='flex-1 my-6 overflow-y-auto pr-2'>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-6 pt-4'>
+                {projects?.slice(0, 3).map((project, index) => {
+                  const heading = project.title || project.name || 'Project';
+                  const tags = project.tags
+                    ?.slice(0, 3)
+                    .map(t => t?.name)
+                    .filter(Boolean);
+
+                  return (
+                    <div
+                      key={project._id}
+                      className='border-2 border-border p-6 bg-surface hover:border-accent flex flex-col justify-between h-full transition-all duration-200 group'
+                    >
+                      <div className='font-mono flex flex-col gap-2'>
+                        <div className='text-[10px] text-foreground-muted uppercase tracking-wider'>
+                          PROJECT_0{index + 1}
+                        </div>
+                        <h3 className='text-lg font-bold text-foreground group-hover:text-accent transition-colors truncate'>
+                          {heading}
+                        </h3>
+                        <p className='text-xs text-foreground-subtle line-clamp-3 leading-relaxed mt-2'>
+                          {project.description || 'Creative build details.'}
+                        </p>
+                      </div>
+                      <div className='font-mono flex justify-between items-center text-xs mt-6 pt-4 border-t border-border/40'>
+                        <div className='flex gap-1.5 text-[10px] text-foreground-muted'>
+                          {tags?.map(t => (
+                            <span key={t}>[{t}]</span>
+                          ))}
+                        </div>
+                        <Link
+                          href={`projects/${project.slug}`}
+                          className='text-accent font-bold hover:underline'
+                        >
+                          [ STUDY ]
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className='flex justify-center border-t border-border pt-4'>
+              <button
+                type='button'
+                onClick={() => navigateTo(1, 1)}
+                className='font-mono text-xs px-4 py-2 border border-border hover:border-accent hover:text-accent transition-colors cursor-pointer'
+              >
+                [ ◄ RETURN TO HUB ]
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ==================== GLOBAL PERSISTENT HUD OVERLAYS ==================== */}
+        {!loading && (
+          <>
+            {/* 1. Thin Sleek Edge Navigation Arrows */}
+            <div className='absolute inset-0 pointer-events-none z-30'>
+              {/* Up Arrow (Paintings) */}
+              {coords.y > 0 && (
+                <button
+                  type='button'
+                  onClick={() => navigateTo(coords.x, coords.y - 1)}
+                  className='pointer-events-auto absolute top-20 left-1/2 -translate-x-1/2 bg-background/80 border-2 border-border px-4 py-2 font-mono text-xs text-foreground hover:border-accent hover:text-accent transition-all animate-bounce shadow-md cursor-pointer'
+                >
+                  ▲ GALLERY
+                </button>
+              )}
+
+              {/* Down Arrow (Game Dev) */}
+              {coords.y < 2 && (
+                <button
+                  type='button'
+                  onClick={() => navigateTo(coords.x, coords.y + 1)}
+                  className='pointer-events-auto absolute bottom-6 left-1/2 -translate-x-1/2 bg-background/80 border-2 border-border px-4 py-2 font-mono text-xs text-foreground hover:border-accent hover:text-accent transition-all animate-bounce shadow-md cursor-pointer'
+                >
+                  ▼ ARCADE
+                </button>
+              )}
+
+              {/* Left Arrow (Skills/About) */}
+              {coords.x > 0 && (
+                <button
+                  type='button'
+                  onClick={() => navigateTo(coords.x - 1, coords.y)}
+                  className='pointer-events-auto absolute left-6 top-1/2 -translate-y-1/2 bg-background/80 border-2 border-border px-4 py-2 font-mono text-xs text-foreground hover:border-accent hover:text-accent transition-all shadow-md cursor-pointer'
+                >
+                  ◄ ABOUT
+                </button>
+              )}
+
+              {/* Right Arrow (Projects) */}
+              {coords.x < 2 && (
+                <button
+                  type='button'
+                  onClick={() => navigateTo(coords.x + 1, coords.y)}
+                  className='pointer-events-auto absolute right-6 top-1/2 -translate-y-1/2 bg-background/80 border-2 border-border px-4 py-2 font-mono text-xs text-foreground hover:border-accent hover:text-accent transition-all shadow-md cursor-pointer'
+                >
+                  PROJECTS ►
+                </button>
+              )}
+            </div>
+
+            {/* 2. Persistent HUD Minimap (Bottom-Right Corner) */}
+            <div className='absolute bottom-6 right-6 z-30 bg-background/90 border-2 border-border p-4 font-mono text-[9px] uppercase tracking-wider flex flex-col gap-2 shadow-lg'>
+              <div className='flex justify-between items-center font-bold text-foreground-muted gap-4'>
+                <span>GRID HUD V1.0</span>
+                <span className='w-1.5 h-1.5 bg-accent rounded-full animate-ping' />
+              </div>
+              <hr className='border-border/60' />
+              <div className='grid grid-cols-3 gap-1 w-16 h-16 mt-1 self-center'>
+                {/* HUD Map cells */}
+                {[
+                  { x: 0, y: 0, label: '', active: false, valid: false },
+                  { x: 1, y: 0, label: 'P', active: coords.x === 1 && coords.y === 0, valid: true },
+                  { x: 2, y: 0, label: '', active: false, valid: false },
+
+                  { x: 0, y: 1, label: 'A', active: coords.x === 0 && coords.y === 1, valid: true },
+                  { x: 1, y: 1, label: 'H', active: coords.x === 1 && coords.y === 1, valid: true },
+                  {
+                    x: 2,
+                    y: 1,
+                    label: 'Pr',
+                    active: coords.x === 2 && coords.y === 1,
+                    valid: true,
+                  },
+
+                  { x: 0, y: 2, label: '', active: false, valid: false },
+                  { x: 1, y: 2, label: 'G', active: coords.x === 1 && coords.y === 2, valid: true },
+                  { x: 2, y: 2, label: '', active: false, valid: false },
+                ].map((cell, idx) => (
+                  <button
+                    key={`${cell.x}-${cell.y}-${idx}`}
+                    type='button'
+                    disabled={!cell.valid}
+                    onClick={() => navigateTo(cell.x, cell.y)}
+                    className={`
+                      border flex items-center justify-center font-bold select-none cursor-pointer transition-colors duration-150
+                      ${!cell.valid ? 'border-transparent bg-transparent cursor-default' : 'border-border'}
+                      ${cell.active ? 'bg-accent text-accent-contrast border-accent' : 'bg-surface hover:bg-surface-hover'}
+                    `}
+                    title={cell.valid ? `Pan to Cell (${cell.x}, ${cell.y})` : undefined}
+                  >
+                    {cell.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. Helper Controls HUD (Bottom-Left Corner) */}
+            <div className='absolute bottom-6 left-6 z-30 bg-background/90 border-2 border-border px-3 py-2 font-mono text-[9px] text-foreground-muted flex gap-2 shadow-lg items-center'>
+              <span>KEYS: WASD / ARROWS</span>
+            </div>
+          </>
+        )}
+      </section>
+    </>
   );
-};
-
-export default HeroImageSection;
+}
