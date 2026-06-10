@@ -34,23 +34,105 @@ const canvasTextureStyle = {
   backgroundSize: '30px 30px, 6px 6px, 6px 6px',
 };
 
+// --- CURATED DESIGN & ART QUOTES ---
+const QUOTES = [
+  {
+    text: 'The canvas is a playground for the mind, and code is the brush that paints it in real-time.',
+    author: 'Henrik Sissener',
+  },
+  {
+    text: 'Design is not just what it looks like and feels like. Design is how it works.',
+    author: 'Steve Jobs',
+  },
+  {
+    text: 'Every stroke of the brush and every line of code is a search for order and expression.',
+    author: 'Henrik Sissener',
+  },
+  {
+    text: 'Technology is the canvas of our age, and code is the raw medium we shape.',
+    author: 'Anonymous',
+  },
+  {
+    text: 'To create is to bridge the gap between abstract logical systems and physical sensory art.',
+    author: 'Henrik Sissener',
+  },
+];
+
+// --- LOCAL FALLBACK DATA (To guarantee a filled grid) ---
+const FALLBACK_PAINTINGS = [
+  {
+    title: 'The Resonance of Code',
+    slug: 'resonance-of-code',
+    altText: 'Abstract code elements painted in heavy oil textures',
+    image: null,
+  },
+  {
+    title: 'Digital Horizon',
+    slug: 'digital-horizon',
+    altText: 'Vibrant pixelated sunset blending with oil medium',
+    image: null,
+  },
+  {
+    title: 'Glitched Canvas',
+    slug: 'glitched-canvas',
+    altText: 'Traditional portrait with digital neon scanlines',
+    image: null,
+  },
+  {
+    title: 'Intertwined Disciplines',
+    slug: 'intertwined-disciplines',
+    altText: 'Complex brushstrokes morphing into technical CAD outlines',
+    image: null,
+  },
+];
+
+const FALLBACK_PROJECTS = [
+  {
+    title: 'Canvas Shaders',
+    name: 'Canvas Shaders',
+    slug: 'canvas-shaders',
+    description:
+      'An interactive WebGL physics engine simulating wet paint diffusion on canvas paper using custom fragment shaders.',
+    tags: [{ name: 'WebGL' }, { name: 'GLSL' }, { name: 'React' }],
+    image: null,
+  },
+  {
+    title: 'Unreal Art Gallery',
+    name: 'Unreal Art Gallery',
+    slug: 'unreal-art-gallery',
+    description:
+      'A 3D virtual exhibition space built in Unreal Engine 5, showcasing physical paintings with realistic ray-traced canvas lighting.',
+    tags: [{ name: 'Unreal Engine' }, { name: 'C++' }, { name: 'DirectX 12' }],
+    image: null,
+  },
+  {
+    title: 'Shader Symphony',
+    name: 'Shader Symphony',
+    slug: 'shader-symphony',
+    description:
+      'Audio-reactive screen-space shaders that transform live ambient noises into flowing oil paint strokes.',
+    tags: [{ name: 'GLSL' }, { name: 'Web Audio API' }, { name: 'Vite' }],
+    image: null,
+  },
+];
+
 // Get cell type based on coordinate modulo mapping in a larger 8x8 layout
 const getCellType = (x: number, y: number) => {
   const mx = ((x % 8) + 8) % 8;
   const my = ((y % 8) + 8) % 8;
 
   const LAYOUT = [
-    ['D1', 'P', 'D3', 'Pr', 'D4', 'B', 'D2', 'P'],
-    ['Pr', 'H', 'D1', 'S', 'P', 'D3', 'Pr', 'H'],
-    ['D3', 'G', 'P', 'D2', 'Pr', 'G', 'D4', 'B'],
-    ['D4', 'Pr', 'D3', 'H', 'D1', 'P', 'S', 'D1'],
-    ['P', 'B', 'S', 'Pr', 'P', 'D2', 'Pr', 'G'],
-    ['Pr', 'D2', 'P', 'G', 'D3', 'H', 'D1', 'Pr'],
-    ['D1', 'S', 'Pr', 'D1', 'B', 'D4', 'P', 'D3'],
-    ['D3', 'P', 'D2', 'Pr', 'D4', 'S', 'G', 'H'],
+    ['Q', 'P', 'D3', 'Pr', 'Q', 'B', 'D3', 'P'],
+    ['Pr', 'H', 'Q', 'S', 'P', 'D3', 'Pr', 'H'],
+    ['D3', 'G', 'P', 'Q', 'Pr', 'G', 'Q', 'B'],
+    ['Q', 'Pr', 'D3', 'H', 'Q', 'P', 'S', 'Q'],
+    ['P', 'B', 'S', 'Pr', 'P', 'Q', 'Pr', 'G'],
+    ['Pr', 'Q', 'P', 'G', 'D3', 'H', 'Q', 'Pr'],
+    ['Q', 'S', 'Pr', 'Q', 'B', 'Q', 'P', 'D3'],
+    ['D3', 'P', 'Q', 'Pr', 'Q', 'S', 'G', 'H'],
   ];
 
-  return LAYOUT[my]?.[mx] || 'D4';
+  return LAYOUT[my]?.[mx] || 'D3';
 };
 
 const getCellLabel = (type: string) => {
@@ -70,108 +152,75 @@ const getCellLabel = (type: string) => {
     case 'D3':
       return 'WATERCOLOR';
     default:
-      return 'CANVAS';
+      return 'QUOTE';
   }
 };
 
-// --- DUMMY DECORATIVE CELLS ---
-
-function DummyCadCell({ gx, gy, isActive }: { gx: number; gy: number; isActive: boolean }) {
+// --- FANCY CINEMATIC FOCUS-PULL DEPTH-OF-FIELD CELL WRAPPER ---
+function FocusPullWrapper({
+  children,
+  isActive,
+  shouldReduceMotion,
+}: {
+  children: React.ReactNode;
+  isActive: boolean;
+  shouldReduceMotion: boolean;
+}) {
   return (
-    <div className='w-full h-full flex flex-col justify-between p-6 bg-surface-elevated/20 font-mono text-[10px] text-foreground-muted select-none relative overflow-hidden'>
-      <div className='flex justify-between border-b border-border/40 pb-2'>
-        <span>NODE_SYS: CAD_VECTOR</span>
-        <span>{`(${gx}, ${gy})`}</span>
-      </div>
-      <div className='flex-1 flex items-center justify-center relative'>
-        <svg className='w-2/3 h-2/3 opacity-30 text-accent' viewBox='0 0 100 100'>
-          <title>CAD Vector Grid Schema</title>
-          <motion.circle
-            cx='50'
-            cy='50'
-            r='40'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='0.5'
-            initial={{ pathLength: 0 }}
-            animate={isActive ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
-          />
-          <motion.path
-            d='M 10 50 L 90 50 M 50 10 L 50 90'
-            stroke='currentColor'
-            strokeWidth='0.5'
-            initial={{ pathLength: 0 }}
-            animate={isActive ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          />
-          <motion.rect
-            x='30'
-            y='30'
-            width='40'
-            height='40'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='0.5'
-            initial={{ pathLength: 0 }}
-            animate={isActive ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 1.2, delay: 0.5 }}
-          />
-        </svg>
-      </div>
-      <div className='flex justify-between pt-2 border-t border-border/40'>
-        <span>GRID_COMPILING: ACTIVE</span>
-        <span className='text-accent animate-pulse'>OK</span>
-      </div>
-    </div>
+    <motion.div
+      animate={
+        shouldReduceMotion
+          ? { opacity: isActive ? 1.0 : 0.25, filter: 'blur(0px)', scale: 1.0 }
+          : {
+              opacity: isActive ? 1.0 : 0.35,
+              filter: isActive ? 'blur(0px)' : 'blur(4px)',
+              scale: isActive ? 1.0 : 0.94,
+            }
+      }
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : {
+              duration: 1.2,
+              ease: [0.16, 1, 0.3, 1], // easeOutExpo
+            }
+      }
+      className='w-full h-full overflow-hidden'
+    >
+      {children}
+    </motion.div>
   );
 }
 
-const LOG_POOL = [
-  'LOADING BLUEPRINT GRAPHICS...',
-  'CONNECTING TO SANITY CLIENT API...',
-  'MEMORY REGISTER: 64MB STABLE',
-  'INJECTING PAINTING CANVAS BUFFER...',
-  'COMPILING GLSL SHADER METADATA...',
-  'PORTAL GRID MATRIX ACTIVE',
-  'INITIALIZING INPUT LISTENER HOOKS...',
-  'BUFFER CHECK: OK',
-];
+// --- CURATED GRAPHIC CELLS ---
 
-type LogLine = { id: number; text: string };
-
-function DummyLogsCell({ gx, gy }: { gx: number; gy: number }) {
-  const [logs, setLogs] = useState<LogLine[]>([]);
-
-  useEffect(() => {
-    // Fill initial logs
-    setLogs(LOG_POOL.slice(0, 4).map((text, id) => ({ id, text })));
-
-    const interval = setInterval(() => {
-      setLogs(prev => {
-        const nextLine = LOG_POOL[Math.floor(Math.random() * LOG_POOL.length)] || '';
-        const nextId = prev.length > 0 ? (prev[prev.length - 1]?.id ?? 0) + 1 : 0;
-        return [...prev.slice(1), { id: nextId, text: nextLine }];
-      });
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, []);
+function QuoteCell({ gx, gy }: { gx: number; gy: number }) {
+  const index = Math.abs(gx + gy) % QUOTES.length;
+  const quote = QUOTES[index] || { text: '', author: '' };
 
   return (
-    <div className='w-full h-full flex flex-col justify-between p-6 bg-neutral-950/40 font-mono text-[9px] text-foreground-muted select-none'>
-      <div className='flex justify-between border-b border-border/40 pb-2'>
-        <span>NODE_SYS: LOGS_PIPELINE</span>
+    <div
+      className='w-full h-full flex flex-col justify-between p-8 bg-background relative'
+      style={canvasTextureStyle}
+    >
+      <div className='flex justify-between border-b border-border/40 pb-2 font-mono text-[9px] text-foreground-muted select-none'>
+        <span>SECTOR: QUOTE_ARCHIVE</span>
         <span>{`(${gx}, ${gy})`}</span>
       </div>
-      <div className='flex-1 flex flex-col gap-1 mt-4 text-left justify-start overflow-hidden'>
-        {logs.map(log => (
-          <div key={log.id} className='truncate font-mono text-foreground-subtle'>
-            {`> ${log.text}`}
-          </div>
-        ))}
+
+      <div className='flex-1 flex flex-col justify-center max-w-sm mx-auto text-center gap-4 my-auto'>
+        <p className='font-serif text-lg md:text-xl italic text-foreground leading-relaxed'>
+          &ldquo;{quote.text}&rdquo;
+        </p>
+        <p className='font-mono text-[10px] text-accent tracking-wider uppercase'>
+          — {quote.author}
+        </p>
       </div>
-      <div className='text-right text-[8px] opacity-60'>COMPILE_STREAM: STABLE</div>
+
+      <div className='font-mono text-[8px] text-foreground-muted flex justify-between border-t border-border/40 pt-2 select-none'>
+        <span>REF_STREAM: PERSISTED</span>
+        <span>OK</span>
+      </div>
     </div>
   );
 }
@@ -216,17 +265,6 @@ function DummyWatercolorCell({ gx, gy, isActive }: { gx: number; gy: number; isA
       <div className='z-10 font-mono text-[9px] text-foreground-muted flex justify-between border-t border-border/40 pt-2'>
         <span>BLENDING_PROCESS: ONGOING</span>
         <span className='animate-pulse text-accent'>MORPHING</span>
-      </div>
-    </div>
-  );
-}
-
-function DummyEmptyCell({ gx, gy }: { gx: number; gy: number }) {
-  return (
-    <div className='w-full h-full flex items-center justify-center p-6 bg-background relative font-mono text-[9px] text-foreground-muted select-none'>
-      <div className='absolute top-4 left-4'>{`[NODE_${gx}_${gy}_EMPTY]`}</div>
-      <div className='w-4 h-4 border border-foreground/20 relative'>
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-foreground/30' />
       </div>
     </div>
   );
@@ -364,11 +402,19 @@ function PaintingsCell({
   gx: number;
   gy: number;
 }) {
-  const index = paintings && paintings.length > 0 ? Math.abs(gx + gy) % paintings.length : 0;
-  const painting = paintings?.[index];
+  const list = paintings && paintings.length > 0 ? paintings : FALLBACK_PAINTINGS;
+  const index = Math.abs(gx + gy) % list.length;
+  const painting = list[index];
 
   if (!painting) {
-    return <DummyEmptyCell gx={gx} gy={gy} />;
+    return (
+      <div
+        className='w-full h-full flex items-center justify-center bg-background'
+        style={canvasTextureStyle}
+      >
+        <span className='font-mono text-xs opacity-50'>[ NO_PAINTINGS_FOUND ]</span>
+      </div>
+    );
   }
 
   const { image, altText, slug, title } = painting;
@@ -378,7 +424,7 @@ function PaintingsCell({
 
   return (
     <div
-      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 p-8 md:p-16 bg-background'
+      className='w-full h-full flex flex-col md:flex-row items-center justify-center gap-8 p-8 bg-background'
       style={canvasTextureStyle}
     >
       <motion.div
@@ -386,7 +432,7 @@ function PaintingsCell({
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className='relative w-full max-w-[70vw] md:max-w-[40vw] aspect-[4/3] border-[6px] border-foreground p-3 bg-surface shadow-2xl origin-center flex-shrink-0'
       >
-        {imageUrl && (
+        {imageUrl ? (
           <div className='relative w-full h-full overflow-hidden bg-background'>
             <Image
               src={imageUrl}
@@ -395,6 +441,22 @@ function PaintingsCell({
               className='object-cover'
               sizes='(max-width: 768px) 70vw, 40vw'
             />
+          </div>
+        ) : (
+          <div className='relative w-full h-full overflow-hidden bg-gradient-to-br from-orange-100 via-pink-100 to-indigo-100 dark:from-neutral-900 dark:via-purple-950 dark:to-neutral-950 flex items-center justify-center border border-border/40'>
+            {/* Abstract vector brush decoration */}
+            <svg className='w-1/2 h-1/2 opacity-20 text-accent animate-pulse' viewBox='0 0 100 100'>
+              <title>Brush stroke line decoration</title>
+              <path
+                d='M 10 50 Q 30 20, 50 50 T 90 50'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+              />
+            </svg>
+            <div className='absolute bottom-4 left-4 font-mono text-[8px] text-foreground-muted uppercase'>
+              [ LOCAL_EXHIBITION_PREVIEW ]
+            </div>
           </div>
         )}
       </motion.div>
@@ -412,18 +474,18 @@ function PaintingsCell({
             {title}
           </h2>
           <hr className='border-border/60 my-1.5' />
-          <p className='text-[10px] text-foreground-muted'>
-            Fine art painting catalog item from Sanity database.
-          </p>
+          <p className='text-[10px] text-foreground-muted'>Fine art painting catalog item.</p>
         </div>
-        <div className='mt-6'>
-          <Link
-            href={`/paintings/${slug}`}
-            className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
-          >
-            {'[ VIEW DETAILS ]'}
-          </Link>
-        </div>
+        {slug && (
+          <div className='mt-6'>
+            <Link
+              href={`/paintings/${slug}`}
+              className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
+            >
+              {'[ VIEW DETAILS ]'}
+            </Link>
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -441,11 +503,19 @@ function ProjectsCell({
   gx: number;
   gy: number;
 }) {
-  const index = projects && projects.length > 0 ? Math.abs(gx * gy) % projects.length : 0;
-  const project = projects?.[index];
+  const list = projects && projects.length > 0 ? projects : FALLBACK_PROJECTS;
+  const index = Math.abs(gx * gy) % list.length;
+  const project = list[index];
 
   if (!project) {
-    return <DummyEmptyCell gx={gx} gy={gy} />;
+    return (
+      <div
+        className='w-full h-full flex items-center justify-center bg-background'
+        style={canvasTextureStyle}
+      >
+        <span className='font-mono text-xs opacity-50'>[ NO_PROJECTS_FOUND ]</span>
+      </div>
+    );
   }
 
   const heading = project.title || project.name || 'Project';
@@ -459,7 +529,7 @@ function ProjectsCell({
 
   return (
     <div
-      className='w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 p-8 md:p-16 bg-background'
+      className='w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 p-8 bg-background'
       style={canvasTextureStyle}
     >
       {/* Mock Browser Frame */}
@@ -490,8 +560,24 @@ function ProjectsCell({
             />
           </div>
         ) : (
-          <div className='relative w-full aspect-[16/10] bg-surface-hover flex items-center justify-center font-mono text-xs text-foreground-muted'>
-            PREVIEW_NOT_FOUND
+          <div className='relative w-full aspect-[16/10] bg-gradient-to-tr from-amber-50/50 to-indigo-50/50 dark:from-neutral-900 dark:to-neutral-950 flex flex-col items-center justify-center font-mono text-xs text-foreground-muted gap-2 border border-border/20 overflow-hidden'>
+            <svg
+              className='w-12 h-12 opacity-25 text-foreground animate-spin'
+              style={{ animationDuration: '20s' }}
+              viewBox='0 0 100 100'
+            >
+              <title>Loading wireframe decoration</title>
+              <circle
+                cx='50'
+                cy='50'
+                r='30'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1'
+                strokeDasharray='10 5'
+              />
+            </svg>
+            <span className='text-[9px] tracking-widest opacity-60'>[ MOCK_ENGINE_ACTIVE ]</span>
           </div>
         )}
       </motion.div>
@@ -519,14 +605,16 @@ function ProjectsCell({
             ))}
           </div>
         </div>
-        <div className='mt-6'>
-          <Link
-            href={`/projects/${project.slug}`}
-            className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
-          >
-            {'[ CASE STUDY ]'}
-          </Link>
-        </div>
+        {project.slug && (
+          <div className='mt-6'>
+            <Link
+              href={`/projects/${project.slug}`}
+              className='inline-flex items-center gap-1 border border-foreground/30 px-3 py-1 hover:border-accent hover:text-accent transition-colors font-bold'
+            >
+              {'[ CASE STUDY ]'}
+            </Link>
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -579,7 +667,7 @@ function ArcadeCell() {
 export default function HeroImageSection({ paintings, projects }: HeroImageSectionProps) {
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
-  const shouldReduceMotion = mounted && prefersReducedMotion;
+  const shouldReduceMotion = !!(mounted && prefersReducedMotion);
 
   const [loading, setLoading] = useState(true);
   const [coords, setCoords] = useState<Coord>({ x: 1, y: 1 });
@@ -587,30 +675,40 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
   const [autoplay, setAutoplay] = useState(true);
   const containerRef = useRef<HTMLElement>(null);
 
-  // Render Cell content by mapped coordinate type
   const renderCellContent = (type: string, isActive: boolean, gx: number, gy: number) => {
+    let content: React.ReactNode;
     switch (type) {
       case 'H':
-        return <HubCell isActive={isActive} />;
+        content = <HubCell isActive={isActive} />;
+        break;
       case 'P':
-        return <PaintingsCell paintings={paintings} isActive={isActive} gx={gx} gy={gy} />;
+        content = <PaintingsCell paintings={paintings} isActive={isActive} gx={gx} gy={gy} />;
+        break;
       case 'Pr':
-        return <ProjectsCell projects={projects} isActive={isActive} gx={gx} gy={gy} />;
+        content = <ProjectsCell projects={projects} isActive={isActive} gx={gx} gy={gy} />;
+        break;
       case 'G':
-        return <ArcadeCell />;
+        content = <ArcadeCell />;
+        break;
       case 'B':
-        return <BioCell isActive={isActive} />;
+        content = <BioCell isActive={isActive} />;
+        break;
       case 'S':
-        return <SkillsCell isActive={isActive} />;
-      case 'D3':
-        return <DummyWatercolorCell gx={gx} gy={gy} isActive={isActive} />;
-      case 'D1':
-        return <DummyCadCell gx={gx} gy={gy} isActive={isActive} />;
-      case 'D2':
-        return <DummyLogsCell gx={gx} gy={gy} />;
+        content = <SkillsCell isActive={isActive} />;
+        break;
+      case 'Q':
+        content = <QuoteCell gx={gx} gy={gy} />;
+        break;
       default:
-        return <DummyEmptyCell gx={gx} gy={gy} />;
+        content = <DummyWatercolorCell gx={gx} gy={gy} isActive={isActive} />;
+        break;
     }
+
+    return (
+      <FocusPullWrapper isActive={isActive} shouldReduceMotion={shouldReduceMotion}>
+        {content}
+      </FocusPullWrapper>
+    );
   };
 
   const coordsRef = useRef(coords);
@@ -698,8 +796,8 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
         await delay(4500);
         if (!active) break;
 
-        // Swoosh out & pan at the same time
-        setScale(0.45);
+        // Swoosh out & pan at the same time (subtle scale pull-back)
+        setScale(0.82);
         step = (step + 1) % PATH.length;
         const target = PATH[step];
         if (target) {
@@ -858,9 +956,9 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
               ? { duration: 0 }
               : {
                   type: 'spring',
-                  stiffness: 30,
-                  damping: 15,
-                  mass: 1.2,
+                  stiffness: 16, // Heavy, luxurious cinematic glide (no bounce)
+                  damping: 22,
+                  mass: 1.4,
                 }
           }
           className='absolute top-0 left-0 w-[300vw] h-[300vh]'
@@ -899,7 +997,9 @@ export default function HeroImageSection({ paintings, projects }: HeroImageSecti
             <div className='absolute top-24 left-1/2 -translate-x-1/2 z-30 pointer-events-auto flex flex-col sm:flex-row items-center gap-3 bg-background/90 border-2 border-border p-4 font-mono text-xs shadow-2xl rounded'>
               <div className='flex items-center gap-2'>
                 <span
-                  className={`w-2.5 h-2.5 rounded-full ${autoplay ? 'bg-accent animate-pulse' : 'bg-foreground-muted'}`}
+                  className={`w-2.5 h-2.5 rounded-full ${
+                    autoplay ? 'bg-accent animate-pulse' : 'bg-foreground-muted'
+                  }`}
                 />
                 <span className='font-bold tracking-widest text-[10px] text-foreground-subtle'>
                   {autoplay ? 'AUTO TOUR IN PROGRESS' : 'MANUAL CONTROL ENGAGED'}
