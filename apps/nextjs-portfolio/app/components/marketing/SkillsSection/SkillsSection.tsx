@@ -3,7 +3,7 @@
 import { Chip } from '@wisihe/ui-react';
 import { motion, type Variants } from 'motion/react';
 import React, { useMemo } from 'react';
-import Marquee from 'react-fast-marquee';
+import { LogoLoop } from '../../ui/LogoLoop';
 
 const professionalSkills = [
   'Frontend Development',
@@ -86,29 +86,15 @@ const SkillsSection = React.memo(function SkillsSection() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee
-          gradientColor='var(--color-surface)'
-          autoFill
-          gradient
-          direction='left'
-          speed={8}
-          pauseOnHover={false}
-        >
+        <LogoLoop direction='left' speed={60}>
           {professionalChips}
-        </Marquee>
+        </LogoLoop>
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Marquee
-          gradientColor='var(--color-surface)'
-          autoFill
-          gradient
-          direction='right'
-          speed={8}
-          pauseOnHover={false}
-        >
+        <LogoLoop direction='right' speed={60}>
           {creativeChips}
-        </Marquee>
+        </LogoLoop>
       </motion.div>
     </motion.section>
   );

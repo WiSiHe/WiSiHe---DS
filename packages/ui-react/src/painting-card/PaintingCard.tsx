@@ -126,6 +126,10 @@ export interface PaintingCardProps {
    * Use on touch-first layouts (e.g. mobile carousel) where hover metadata would stay hidden.
    */
   alwaysShowTags?: boolean;
+  /** The medium used to create the painting */
+  medium?: string;
+  /** Year or date the painting was completed */
+  paintedAt?: string;
   /** Passed through to the wrapping `motion.article` */
   className?: string;
 }
@@ -145,6 +149,8 @@ export function PaintingCard({
   badges = [],
   alwaysShowTags = false,
   className,
+  medium,
+  paintedAt,
 }: PaintingCardProps) {
   const showBlur = isNsfw && !isNsfwVisible;
   const [pinnedBadge, ...animatedBadges] = badges;
@@ -261,6 +267,20 @@ export function PaintingCard({
           >
             {title}
           </motion.h2>
+          {(medium || paintedAt) && (
+            <div className='mt-1 flex flex-wrap items-center gap-1.5 text-xs text-foreground-subtle'>
+              {paintedAt && (
+                <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
+                  {paintedAt}
+                </span>
+              )}
+              {medium && (
+                <span className='font-mono text-[9px] uppercase tracking-wider font-semibold truncate max-w-[180px]'>
+                  {medium}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </LinkEl>
     </motion.article>

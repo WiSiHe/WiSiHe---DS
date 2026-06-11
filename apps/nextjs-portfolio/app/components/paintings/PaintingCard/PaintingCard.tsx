@@ -64,7 +64,28 @@ const PaintingCardAdapter = ({
     isNSFW,
     isForSale,
     tagsV2,
+    medium,
+    paintedAt,
   } = paintingData as any;
+
+  // Extract year from paintedAt date string safely
+  let yearString: string | undefined;
+  if (paintedAt) {
+    if (typeof paintedAt === 'string') {
+      if (paintedAt.includes('-')) {
+        const d = new Date(paintedAt);
+        if (!isNaN(d.getTime())) {
+          yearString = d.getFullYear().toString();
+        }
+      } else {
+        yearString = paintedAt;
+      }
+    } else if (typeof paintedAt === 'number') {
+      yearString = paintedAt.toString();
+    } else if (paintedAt instanceof Date) {
+      yearString = paintedAt.getFullYear().toString();
+    }
+  }
 
   const filteredTags = (tagsV2?.filter(Boolean) ?? []) as { name: string }[];
   const cleanedTags = filteredTags.map(t => cleanTagName(t.name));
@@ -157,6 +178,8 @@ const PaintingCardAdapter = ({
       badges={badges}
       alwaysShowTags={alwaysShowTags}
       className={className}
+      medium={medium}
+      paintedAt={yearString}
     />
   );
 };

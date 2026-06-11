@@ -7,8 +7,8 @@ import { urlForImage } from '@/sanity/lib/utils';
 
 import Masonry, { type MasonryItem } from './Masonry';
 
-// biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
 type PaintingsDesktopShowcaseProps = {
+  // biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
   paintings: any[];
 };
 
@@ -49,6 +49,9 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         ? urlForImage(p.image)?.width(900).height(1200).quality(85).auto('format').url()
         : null;
       if (!img || !p.slug) return;
+
+      const year = p.paintedAt ? new Date(p.paintedAt).getFullYear().toString() : undefined;
+
       out.push({
         id: p._id,
         img,
@@ -56,6 +59,8 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         height,
         title: p.title ?? undefined,
         strokeIndex: index,
+        medium: p.medium ?? undefined,
+        year,
       });
     });
     return out;

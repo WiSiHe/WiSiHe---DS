@@ -11,7 +11,6 @@ import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import FeaturedProjectCard from './FeaturedProjectCard';
-import ScrollStack from './ScrollStack';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'];
@@ -48,35 +47,57 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
 
   return (
     <section
-      className='mx-auto max-w-7xl bg-background px-4 py-4 md:py-8'
+      className='w-full bg-background relative overflow-hidden border-t border-border/10'
       aria-labelledby='featured-projects-heading'
       aria-describedby='featured-projects-desc'
     >
-      <motion.div
-        initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-140px' }}
-        transition={reducedMotion ? { duration: 0 } : { duration: 0.45, ease: 'easeOut' }}
-        className='relative max-w-prose pb-4'
-      >
-        <h2
-          id='featured-projects-heading'
-          className='mb-1.5 font-serif text-4xl font-bold leading-[1.05] text-foreground md:text-5xl lg:text-6xl xl:text-7xl'
-        >
-          Featured
-          <br />
-          Projects
-        </h2>
-        <p
-          id='featured-projects-desc'
-          className='max-w-prose text-base leading-snug text-foreground-subtle md:text-lg pb-4'
-        >
-          A few things I&apos;ve worked on.
-        </p>
-      </motion.div>
+      {/* Glowing background grid effects */}
+      <div className='absolute inset-x-0 top-0 h-[600px] bg-[linear-gradient(to_right,rgba(128,128,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.03)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none z-0' />
+      <div className='absolute top-[200px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[350px] bg-accent/5 rounded-full blur-[100px] pointer-events-none select-none z-0' />
 
-      {/* ScrollStack: gentler scale + a bit more scroll room; tweak stackPosition / scaleEndPosition if the stack feels too high or low on screen */}
-      <ScrollStack useWindowScroll useLenis>
+      {/* Intro Block */}
+      <div className='relative mx-auto max-w-7xl px-4 py-24 md:py-32 flex flex-col items-center text-center z-10'>
+        <motion.div
+          initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.6, ease: 'easeOut' }}
+          className='flex flex-col items-center'
+        >
+          {/* Eyebrow */}
+          <span className='mb-4 font-mono text-[10px] md:text-xs tracking-[0.3em] text-accent uppercase font-bold select-none'>
+            {'// Selected Works'}
+          </span>
+
+          {/* Section Title */}
+          <h2
+            id='featured-projects-heading'
+            className='mb-4 font-serif text-4xl font-extrabold leading-[1.1] text-foreground md:text-6xl lg:text-7xl xl:text-8xl tracking-tight bg-gradient-to-b from-foreground via-foreground to-foreground/45 bg-clip-text text-transparent'
+          >
+            Featured Projects
+          </h2>
+
+          {/* Description */}
+          <p
+            id='featured-projects-desc'
+            className='text-base leading-relaxed text-foreground-subtle md:text-xl max-w-2xl font-light tracking-wide'
+          >
+            A curated gallery of engineering and design projects built with modern web technologies.
+          </p>
+
+          {/* Flow Indicator Line */}
+          <div className='mt-12 w-[1px] h-16 bg-gradient-to-b from-accent/50 to-transparent relative overflow-hidden'>
+            <motion.div
+              animate={{ y: ['-100%', '100%'] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              className='absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-transparent via-accent to-transparent'
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Full-screen Projects List */}
+      <div className='flex flex-col w-full'>
         {displayedProjects.map((project, index) => (
           <FeaturedProjectCard
             key={project._id}
@@ -85,11 +106,18 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
             panelColor={stackPanelColor(index)}
           />
         ))}
-      </ScrollStack>
+      </div>
 
-      <div className='flex items-center justify-center px-4 pt-40'>
+      {/* View All Projects CTA */}
+      <div className='flex min-h-[50vh] items-center justify-center py-24 px-4 border-t border-border/10'>
         <div className='text-center'>
-          <p className='mb-8 text-lg text-foreground-subtle'>Want to see more of my work?</p>
+          <h2 className='mb-6 font-serif text-3xl md:text-5xl font-bold text-foreground'>
+            More to explore
+          </h2>
+          <p className='mb-10 text-base md:text-lg text-foreground-subtle max-w-lg mx-auto'>
+            I've worked on dozens of projects across engineering and design. Take a look at the full
+            archive.
+          </p>
           <Button
             as={Link}
             href='/projects'
