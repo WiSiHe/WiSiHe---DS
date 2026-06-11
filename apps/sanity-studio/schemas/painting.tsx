@@ -7,6 +7,7 @@ import { FaWeibo } from 'react-icons/fa';
 
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { PAINTING_TAG_GUIDE, validateContentTags } from './tagGuidance';
 
 export default defineType({
   name: 'painting',
@@ -303,11 +304,11 @@ Requirements:
       title: 'Tags',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'tag' } }],
-      description: 'Tags for the painting',
+      description: PAINTING_TAG_GUIDE,
       options: {
         layout: 'list',
       },
-      validation: rule => rule.required(),
+      validation: rule => validateContentTags(rule, 2),
     }),
   ],
 });
