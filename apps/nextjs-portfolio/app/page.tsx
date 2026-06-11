@@ -1,8 +1,11 @@
-import type { HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
 import { shuffleArray } from '@wisihe/utils';
+import type { Metadata } from 'next';
+import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import { sanityFetch } from '@/sanity/lib/live';
-import { homePageQuery } from '@/sanity/lib/queries';
+import { aboutQuery, homePageQuery } from '@/sanity/lib/queries';
+import { portableTextToPlainText } from '@/sanity/lib/utils';
 import HeroImageSection from './components/marketing/HeroSection/HeroSection';
 import SkillsSection from './components/marketing/SkillsSection/SkillsSection';
 import PaintingsSection from './components/paintings/PaintingsSection/PaintingsSection';
@@ -13,6 +16,39 @@ const HeroSkeleton = () => (
     <div className='w-full h-96 bg-surface-elevated animate-pulse rounded-2xl' />
   </div>
 );
+
+const HOME_CANONICAL = 'https://www.wisihe.no';
+const HOME_DESCRIPTION_FALLBACK =
+  "Explore Henrik's portfolio featuring paintings, creative projects, and video works.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await sanityFetch({
+    query: homePageQuery,
+    stega: false,
+  });
+  const home = data as HomePageQueryResult | null;
+  const title = home?.title?.trim() || 'WiSiHe Portfolio';
+  const description = portableTextToPlainText(home?.overview, 160) || HOME_DESCRIPTION_FALLBACK;
+
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: HOME_CANONICAL },
+    openGraph: {
+      title,
+      description,
+      url: HOME_CANONICAL,
+      siteName: title,
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 const SectionSkeleton = () => (
   <div className='max-w-7xl mx-auto px-4 py-20'>
@@ -27,10 +63,12 @@ const SectionSkeleton = () => (
 );
 
 export default async function Home() {
-  const { data: _homepageData } = await sanityFetch({
-    query: homePageQuery,
-  });
+  const [{ data: _homepageData }, { data: _aboutData }] = await Promise.all([
+    sanityFetch({ query: homePageQuery }),
+    sanityFetch({ query: aboutQuery }),
+  ]);
   const homepage = _homepageData as HomePageQueryResult;
+  const about = _aboutData as AboutQueryResult | null;
 
   if (!homepage) {
     return (
@@ -44,7 +82,13 @@ export default async function Home() {
     );
   }
 
-  const { showcasePaintings, showcaseProjects, paintingsDescription } = homepage;
+  const {
+    overview,
+    showcasePaintings,
+    showcaseProjects,
+    paintingsDescription,
+    projectsDescription,
+  } = homepage;
 
   const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
   const shuffledHeroProjects = showcaseProjects ? shuffleArray(showcaseProjects) : [];
@@ -65,12 +109,20 @@ export default async function Home() {
     <div className='bg-background'>
       <div className='bg-background'>
         <Suspense fallback={<HeroSkeleton />}>
-          <HeroImageSection items={combinedHeroItems} />
+          <HeroImageSection
+            items={combinedHeroItems}
+            overview={overview as PortableTextBlock[] | null}
+            heroEyebrow={about?.jobTitle}
+            heroName={about?.heroSubtitle}
+          />
         </Suspense>
 
         <section className='relative pt-24 pb-12'>
           <Suspense fallback={<SectionSkeleton />}>
-            <FeaturedProjects showcaseProjects={showcaseProjects} />
+            <FeaturedProjects
+              showcaseProjects={showcaseProjects}
+              projectsDescription={projectsDescription}
+            />
           </Suspense>
         </section>
       </div>

@@ -20,8 +20,8 @@ export default defineType({
     defineField({
       name: 'overview',
       description:
-        'Used both for the <meta> description tag for SEO, and the personal website subheader.',
-      title: 'Description',
+        'Shown in the home page hero below your name, and used for the home page meta description.',
+      title: 'Home intro',
       type: 'array',
       of: [
         // Paragraphs
@@ -62,13 +62,15 @@ export default defineType({
     defineField({
       name: 'paintingsTitle',
       title: 'Paintings title',
-      description: 'This is the title that will appear on your paintings page.',
+      description:
+        'Browser title for the paintings gallery page (falls back to “Digital Art Gallery”).',
       type: 'string',
     }),
     defineField({
       name: 'paintingsDescription',
       title: 'Paintings description',
-      description: 'This is the description that will appear on your paintings page.',
+      description:
+        'Intro copy on the home page paintings section. Also used for the paintings page meta description when set.',
       type: 'blockContent',
       validation: rule => rule.max(155).required(),
     }),
@@ -87,7 +89,7 @@ export default defineType({
     defineField({
       name: 'projectsDescription',
       title: 'Projects description',
-      description: 'This is the description that will appear on your projects page.',
+      description: 'Intro copy above the featured projects section on the home page.',
       type: 'array',
       of: [
         // Paragraphs
@@ -140,7 +142,8 @@ export default defineType({
     defineField({
       name: 'projectsTitle',
       title: 'Projects title',
-      description: 'This is the title that will appear on your projects page.',
+      description:
+        'Heading above featured projects on the home page. Also used for the projects page browser title when set.',
       type: 'string',
     }),
     defineField({

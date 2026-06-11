@@ -3,6 +3,8 @@
 import { AnimatePresence, animate, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { PortableTextBlock } from 'next-sanity';
+import { PortableText } from 'next-sanity';
 import { useEffect, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
@@ -48,8 +50,17 @@ type ShowcaseProject = {
 
 type ShowcaseItem = ShowcasePainting | ShowcaseProject;
 
+function heroDisplayName(heroSubtitle?: string | null): string {
+  const trimmed = heroSubtitle?.trim();
+  if (!trimmed) return 'Henrik';
+  return trimmed.split(/\s+/)[0] ?? trimmed;
+}
+
 type HeroImageSectionProps = {
   items?: ShowcaseItem[] | null;
+  overview?: PortableTextBlock[] | null;
+  heroEyebrow?: string | null;
+  heroName?: string | null;
 };
 
 // Positions that avoid the center text area but are closer together
@@ -82,7 +93,7 @@ const FIXED_POSITIONS_MOBILE = [
   { top: '88%', left: '30%', rotation: -12, scale: 0.75 },
 ];
 
-const HeroImageSection = ({ items }: HeroImageSectionProps) => {
+const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageSectionProps) => {
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState<'loading' | 'exploding' | 'floating'>('loading');
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
@@ -363,22 +374,31 @@ const HeroImageSection = ({ items }: HeroImageSectionProps) => {
           variants={textItemVariants}
           className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 text-foreground-subtle'
         >
-          My name is
+          {heroEyebrow?.trim() || 'My name is'}
         </motion.p>
         <motion.h1
           variants={textItemVariants}
           className='text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none text-foreground'
         >
-          Henrik
+          {heroDisplayName(heroName)}
         </motion.h1>
-        <motion.p
-          variants={textItemVariants}
-          className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle'
-        >
-          I&apos;m a design engineer, painter and a maker.
-          <br />
-          Explore my work.
-        </motion.p>
+        {overview?.length ? (
+          <motion.div
+            variants={textItemVariants}
+            className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle [&_p]:m-0'
+          >
+            <PortableText value={overview} />
+          </motion.div>
+        ) : (
+          <motion.p
+            variants={textItemVariants}
+            className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle'
+          >
+            I&apos;m a design engineer, painter and a maker.
+            <br />
+            Explore my work.
+          </motion.p>
+        )}
 
         {/* Double Call to Actions (serving both paintings & projects) */}
         <motion.div

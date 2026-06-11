@@ -9,11 +9,14 @@ import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
+import type { PortableTextBlock } from 'next-sanity';
+import { PortableText } from 'next-sanity';
 import { useEffect, useState } from 'react';
 import FeaturedProjectCard from './FeaturedProjectCard';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'];
+  projectsDescription?: NonNullable<HomePageQueryResult>['projectsDescription'];
 };
 
 const MAX_PROJECTS = 3;
@@ -30,7 +33,7 @@ function stackPanelColor(index: number): string {
   return STACK_PANEL_COLORS[index % STACK_PANEL_COLORS.length] ?? STACK_PANEL_COLORS[0];
 }
 
-const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
+const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedProjectsProps) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -77,13 +80,22 @@ const FeaturedProjects = ({ showcaseProjects }: FeaturedProjectsProps) => {
             Featured Projects
           </h2>
 
-          {/* Description */}
-          <p
-            id='featured-projects-desc'
-            className='text-base leading-relaxed text-foreground-subtle md:text-xl max-w-2xl font-light tracking-wide'
-          >
-            A curated gallery of engineering and design projects built with modern web technologies.
-          </p>
+          {projectsDescription?.length ? (
+            <div
+              id='featured-projects-desc'
+              className='text-base leading-relaxed text-foreground-subtle md:text-xl max-w-2xl font-light tracking-wide [&_p]:m-0'
+            >
+              <PortableText value={projectsDescription as PortableTextBlock[]} />
+            </div>
+          ) : (
+            <p
+              id='featured-projects-desc'
+              className='text-base leading-relaxed text-foreground-subtle md:text-xl max-w-2xl font-light tracking-wide'
+            >
+              A curated gallery of engineering and design projects built with modern web
+              technologies.
+            </p>
+          )}
 
           {/* Flow Indicator Line */}
           <div className='mt-12 w-[1px] h-16 bg-gradient-to-b from-accent/50 to-transparent relative overflow-hidden'>
