@@ -83,7 +83,6 @@ export default defineType({
       description: 'Type of project',
       options: {
         list: [
-          { title: 'Art', value: 'art' },
           { title: 'Design', value: 'design' },
           { title: 'Development', value: 'development' },
           { title: 'Game Development', value: 'gameDevelopment' },
@@ -247,12 +246,11 @@ export default defineType({
       title: 'name',
       media: 'image',
       status: 'status',
-      desc: 'description',
+      desc: 'seo.description',
       start: 'projectStart',
       end: 'projectEnd',
     },
     prepare({ title, media, status, desc, start, end }) {
-      // Optionally shorten SEO description
       const shortDesc = typeof desc === 'string' ? desc.substring(0, 50) : '';
       // Build a date range display if needed
       let dateRange = start ? `From ${start}` : '';
