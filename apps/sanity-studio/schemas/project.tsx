@@ -7,6 +7,7 @@ import { redirectType } from './redirectType';
 import { seoType } from './seoType';
 import { socialType } from './socialType';
 import { tag } from './tag';
+import { PROJECT_TAG_GUIDE, validateContentTags } from './tagGuidance';
 
 export default defineType({
   name: 'project',
@@ -228,11 +229,11 @@ export default defineType({
       group: 'main',
 
       of: [{ type: 'reference', to: { type: tag.name } }],
-      description: 'Tags for this project',
+      description: PROJECT_TAG_GUIDE,
       options: {
         layout: 'tags', // or 'grid' if you prefer
       },
-      validation: rule => rule.required(),
+      validation: rule => validateContentTags(rule, 3),
     }),
     defineField(seoType),
     defineField(redirectType),
