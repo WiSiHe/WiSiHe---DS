@@ -85,12 +85,15 @@ export const HERO_STROKE_COLOR_PAIRS: ReadonlyArray<{ accent: string; secondary:
   { accent: '#172554', secondary: '#fde047' }, // brand-1.950 + neon-yellow.300
 ];
 
+const DEFAULT_HERO_STROKE_COLOR_PAIR = { accent: '#ff4400', secondary: '#8b5cf6' } as const;
+
 export function getHeroStrokeColors(index: number): {
   accentColor: string;
   secondaryColor: string;
 } {
   const pair =
-    HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length] ?? HERO_STROKE_COLOR_PAIRS[0];
+    HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length] ??
+    DEFAULT_HERO_STROKE_COLOR_PAIR;
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
 
