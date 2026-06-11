@@ -6,6 +6,13 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "nextjs-portfolio", "dev"],
       "port": 1992
+    },
+    {
+      "name": "pinball-lottery",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/henrik.sissener/Dev/Claude/lottery-june/server.js"],
+      "port": 3333,
+      "autoPort": true
     }
   ]
 }
