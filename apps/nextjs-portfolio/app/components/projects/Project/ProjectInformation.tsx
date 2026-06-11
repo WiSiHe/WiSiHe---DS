@@ -4,7 +4,6 @@ import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import type { PortableTextBlock } from 'next-sanity';
-import posthog from 'posthog-js';
 import { useCallback, useEffect, useState } from 'react';
 import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import {
@@ -17,6 +16,7 @@ import {
   FaQuestionCircle as IconQuestion,
 } from 'react-icons/fa';
 import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@/app/actions';
+import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import CustomPortableText from '../../cms/PortableText/PortableText';
 
 type ProjectInformationProps = {
@@ -80,13 +80,13 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         if (localStorage.getItem(storageKey)) return;
         setHasAddedView(true);
         localStorage.setItem(storageKey, '1');
-        posthog.capture('project_viewed', {
+        trackEvent(AnalyticsEvent.PROJECT_VIEWED, {
           project_id: _id,
           name: project?.name,
         });
         await incrementProjectView(_id);
       } catch {
-        posthog.capture('project_viewed', {
+        trackEvent(AnalyticsEvent.PROJECT_VIEWED, {
           project_id: _id,
           name: project?.name,
         });
@@ -131,7 +131,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         console.error('Failed to update likedProjects in localStorage', err);
       }
 
-      posthog.capture('project_unliked', { project_id: _id });
+      trackEvent(AnalyticsEvent.PROJECT_UNLIKED, { project_id: _id });
       await removeProjectLike(_id, likerId);
     } else {
       setLocalLikesCount(prev => prev + 1);
@@ -145,7 +145,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
         console.error('Failed to update likedProjects in localStorage', err);
       }
 
-      posthog.capture('project_liked', { project_id: _id });
+      trackEvent(AnalyticsEvent.PROJECT_LIKED, { project_id: _id });
       await incrementProjectLike(_id, likerId);
     }
   };

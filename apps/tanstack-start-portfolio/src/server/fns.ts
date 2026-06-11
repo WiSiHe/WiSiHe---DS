@@ -9,11 +9,14 @@ import {
   type PaintingQueryResult,
   paintingQuery,
 } from '@wisihe/sanity-queries';
+import { portableTextToPlainText } from '../lib/portableText';
 import { client, urlFor } from '../lib/sanity';
 
 // Types for the frontend
 export interface HomeData {
   title: string;
+  overview: string;
+  projectsDescription: string;
   featuredProjects: Array<{
     _id: string;
     title: string;
@@ -61,10 +64,16 @@ export const getHomeData = createServerFn({ method: 'GET' }).handler(
 
     return {
       title: data?.title || 'Building Digital Experiences with Precision',
+      overview:
+        portableTextToPlainText(data?.overview) ||
+        "I'm a design engineer, painter and maker. Explore paintings, projects, and experiments from my portfolio.",
+      projectsDescription:
+        portableTextToPlainText(data?.projectsDescription) ||
+        'A curated gallery of engineering and design projects built with modern web technologies.',
       featuredProjects: (data?.showcaseProjects || []).slice(0, 3).map(p => ({
         _id: p._id,
-        title: p.title || '',
-        description: p.description || '',
+        title: p.name || p.title || '',
+        description: (p.seo?.description ?? p.seoDescription ?? '').trim(),
         imageUrl: p.image ? urlFor(p.image).width(800).height(450).url() : null,
       })),
     };
@@ -78,8 +87,8 @@ export const getProjects = createServerFn({ method: 'GET' }).handler(
 
     return allRaw.map(p => ({
       _id: p._id,
-      title: p.title || '',
-      description: p.description || '',
+      title: p.name || p.title || '',
+      description: p.seoDescription?.trim() || '',
       imageUrl: p.image ? urlFor(p.image).width(800).height(450).url() : null,
       tags: p.tags?.map(t => t.name) || [],
     }));

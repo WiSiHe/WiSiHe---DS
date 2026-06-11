@@ -6,7 +6,6 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import posthog from 'posthog-js';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
@@ -15,6 +14,7 @@ import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { TbMasksTheater } from 'react-icons/tb';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import Breadcrumbs, { type Crumb } from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
+import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { urlForImage } from '@/sanity/lib/utils';
 
 // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
@@ -180,7 +180,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
         console.error('Failed to update likedPaintings in localStorage', err);
       }
 
-      posthog.capture('painting_unliked', { painting_id: _id, title });
+      trackEvent(AnalyticsEvent.PAINTING_UNLIKED, { painting_id: _id, title });
       await removePaintingLike(_id, likerId);
     } else {
       // Optimistic update
@@ -195,7 +195,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
         console.error('Failed to update likedPaintings in localStorage', err);
       }
 
-      posthog.capture('painting_liked', { painting_id: _id, title });
+      trackEvent(AnalyticsEvent.PAINTING_LIKED, { painting_id: _id, title });
       await incrementPaintingLike(_id, likerId);
     }
   };
@@ -233,12 +233,12 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
         setHasAddedView(true);
         localStorage.setItem(storageKey, '1');
         // Track in PostHog for analytics
-        posthog.capture('painting_viewed', { painting_id: _id, title });
+        trackEvent(AnalyticsEvent.PAINTING_VIEWED, { painting_id: _id, title });
         // Increment counter in Sanity (no array, just inc)
         await incrementPaintingView(_id);
       } catch {
         // localStorage blocked (private browsing etc.) — still track in PostHog
-        posthog.capture('painting_viewed', { painting_id: _id, title });
+        trackEvent(AnalyticsEvent.PAINTING_VIEWED, { painting_id: _id, title });
         await incrementPaintingView(_id);
       }
     };

@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import posthog from 'posthog-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { incrementVideoLike, incrementVideoView, removeVideoLike } from '@/app/actions';
+import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
 interface VideoActionsProps {
   videoId: string;
@@ -42,10 +42,10 @@ export default function VideoActions({
       if (localStorage.getItem(storageKey)) return;
       hasTrackedView.current = true;
       localStorage.setItem(storageKey, '1');
-      posthog.capture('video_viewed', { video_id: videoId, title });
+      trackEvent(AnalyticsEvent.VIDEO_VIEWED, { video_id: videoId, title });
       void incrementVideoView(videoId);
     } catch {
-      posthog.capture('video_viewed', { video_id: videoId, title });
+      trackEvent(AnalyticsEvent.VIDEO_VIEWED, { video_id: videoId, title });
       void incrementVideoView(videoId);
     }
   }, [videoId, title]);
@@ -75,7 +75,7 @@ export default function VideoActions({
       } catch {
         /* ignore */
       }
-      posthog.capture('video_unliked', { video_id: videoId, title });
+      trackEvent(AnalyticsEvent.VIDEO_UNLIKED, { video_id: videoId, title });
       await removeVideoLike(videoId, likerId);
     } else {
       setLocalLikes(p => p + 1);
@@ -87,7 +87,7 @@ export default function VideoActions({
       } catch {
         /* ignore */
       }
-      posthog.capture('video_liked', { video_id: videoId, title });
+      trackEvent(AnalyticsEvent.VIDEO_LIKED, { video_id: videoId, title });
       await incrementVideoLike(videoId, likerId);
     }
   };

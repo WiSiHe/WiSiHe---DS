@@ -16,10 +16,7 @@ function Home() {
       <section className='hero'>
         <Flex direction='column' align='center' gap={32} style={{ textAlign: 'center' }}>
           <h1>{data.title}</h1>
-          <p>
-            I'm a Full Stack Developer specializing in building high-performance web applications
-            with modern technologies.
-          </p>
+          <p>{data.overview}</p>
           <Flex gap={16} justify='center'>
             <Link to='/projects'>
               <Button>View My Work</Button>
@@ -72,7 +69,12 @@ function Home() {
 
       {data.featuredProjects.length > 0 && (
         <section>
-          <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Featured Projects</h2>
+          <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Featured Projects</h2>
+          {data.projectsDescription ? (
+            <p style={{ textAlign: 'center', color: 'var(--muted)', marginBottom: '3rem' }}>
+              {data.projectsDescription}
+            </p>
+          ) : null}
           <Grid columns={3} gap={32}>
             {data.featuredProjects.map(project => (
               <Card key={project._id} style={{ overflow: 'hidden' }}>
