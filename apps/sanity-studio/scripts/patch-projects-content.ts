@@ -127,9 +127,9 @@ const SLUG_REDIRECTS = [
 ];
 
 const SHOWCASE_PROJECT_IDS = [
-  '7c2e6663-3d89-4463-b807-45402c101fb7', // Bane NOR
-  '7ea4c1a3-1780-4a29-b3d5-bc1229725aef', // TINE KREM
+  '7c2e6663-3d89-4463-b807-45402c101fb7', // Bane NOR | Design System Lead
   '037cce21-55e4-44be-beb1-17991a33f877', // 3D Black Hole
+  '030150dd-650c-48ae-9d85-a7d1e9401f9d', // Anton Sport Online Retail
 ];
 
 async function main() {
