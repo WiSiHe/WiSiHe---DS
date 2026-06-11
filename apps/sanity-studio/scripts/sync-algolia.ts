@@ -17,14 +17,18 @@ if (!projectId || !dataset) {
   process.exit(1);
 }
 
+const sanityToken = process.env.SANITY_API_READ_TOKEN;
+if (!sanityToken) {
+  console.error('Missing SANITY_API_READ_TOKEN in environment variables.');
+  process.exit(1);
+}
+
 const sanityClient = createClient({
   projectId: projectId,
   dataset: dataset,
   useCdn: false, // We want the latest published data
   apiVersion: '2024-08-22',
-  token:
-    process.env.SANITY_API_READ_TOKEN ||
-    'skCs2t9p0R75ZmajnywXA2winKSYN35rM0tl5ixgrCHp44UUzOKtltufSi9luU4VwuGDxbQZuteL1fagl6w1AbjrcMoI05EMB0e1vdo483D2ankiiZw5J1tSce1hdwA3k6hEG5Qm7W1R0JDXGVWDuN7RXsVKCrKRxNA1PiKH7CcN4uYxQpbN',
+  token: sanityToken,
 });
 
 // 2. Initialize Algolia Client

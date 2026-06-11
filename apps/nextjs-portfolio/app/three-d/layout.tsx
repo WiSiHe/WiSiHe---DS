@@ -34,10 +34,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        // TODO: Create OG image at /public/images/og-3d-presentation.png
-        // Recommended size: 1200x630px (1.91:1 aspect ratio)
-        // Should include: Title "Houston, we're coding 3D! 🚀", Three.js/React Three Fiber branding, 3D visual element
-        url: 'https://www.wisihe.no/images/og-3d-presentation.png',
+        // Fallback until /public/images/og-3d-presentation.png is added (1200×630)
+        url: 'https://www.wisihe.no/images/hell.jpg',
         width: 1200,
         height: 630,
         alt: "Houston, we're coding 3D! - Interactive Three.js and React Three Fiber tutorial",
@@ -50,8 +48,7 @@ export const metadata: Metadata = {
     description: 'Learn 3D web development with Three.js and React Three Fiber',
     creator: '@wisihe',
     site: '@wisihe',
-    // TODO: Use same OG image as OpenGraph (see above)
-    images: ['https://www.wisihe.no/images/og-3d-presentation.png'],
+    images: ['https://www.wisihe.no/images/hell.jpg'],
   },
   robots: {
     index: true,

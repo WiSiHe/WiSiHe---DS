@@ -42,7 +42,7 @@ export function StructuredData() {
     description:
       'Step-by-step tutorial on building interactive 3D experiences on the web using Three.js and React Three Fiber.',
     // TODO: Use OG image once created (see layout.tsx for requirements)
-    image: 'https://www.wisihe.no/images/og-3d-presentation.png',
+    image: 'https://www.wisihe.no/images/hell.jpg',
     totalTime: 'PT1H',
     supply: [
       {
@@ -99,7 +99,7 @@ export function StructuredData() {
     description:
       'A comprehensive guide to 3D web development using Three.js and React Three Fiber, making 3D accessible to frontend developers.',
     // TODO: Use OG image once created (see layout.tsx for requirements)
-    image: 'https://www.wisihe.no/images/og-3d-presentation.png',
+    image: 'https://www.wisihe.no/images/hell.jpg',
     author: {
       '@type': 'Person',
       name: 'Henrik Wilhelm Sissener',
