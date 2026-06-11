@@ -217,7 +217,8 @@ export default defineType({
       title: 'Connected Page',
       type: 'url', // if truly external
       group: 'main',
-      description: 'An external page/URL connected to the project',
+      description:
+        'Public URL for the live project. Shown as an external link on the project page (not embedded).',
     }),
 
     defineField({

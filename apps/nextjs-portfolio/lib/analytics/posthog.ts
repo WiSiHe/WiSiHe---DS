@@ -16,6 +16,7 @@ export const AnalyticsEvent = {
   PROJECTS_FILTERED: 'projects_filtered',
   HOME_PAINTINGS_SECTION_VIEWED: 'home_paintings_section_viewed',
   EXPLORE_ALL_PROJECTS_CLICKED: 'explore_all_projects_clicked',
+  PROJECT_EXTERNAL_LINK_CLICKED: 'project_external_link_clicked',
 } as const;
 
 export type AnalyticsEventName = (typeof AnalyticsEvent)[keyof typeof AnalyticsEvent];
