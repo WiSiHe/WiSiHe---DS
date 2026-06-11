@@ -1,33 +1,37 @@
-import type { BlockContent } from '@wisihe/sanity-queries';
-import { shuffleArray } from '@wisihe/utils';
+import type { BlockContent, HomePageQueryResult } from '@wisihe/sanity-queries';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
-import { sanityFetch } from '@/sanity/lib/live';
-import { randomPaintingsQuery } from '@/sanity/lib/queries';
+import HomePaintingsSectionAnalytics from '@/app/components/analytics/HomePaintingsSectionAnalytics';
 import PaintingsCarousel from './PaintingsCarousel';
 import PaintingsDesktopShowcase from './PaintingsDesktopShowcase';
 
 const FEATURED_PAINTING_COUNT = 10;
 
-const PaintingsSection = async ({
+type ShowcasePainting = NonNullable<HomePageQueryResult>['showcasePaintings'][number];
+
+const PaintingsSection = ({
   paintingsDescription,
+  showcasePaintings,
+  paintingsSource = 'cms_showcase',
 }: {
   paintingsDescription: BlockContent | null | undefined;
+  showcasePaintings: ShowcasePainting[] | null | undefined;
+  paintingsSource?: 'cms_showcase' | 'featured_fallback';
 }) => {
-  // NSFW exclusion is in GROQ: `randomPaintingsQuery` (packages/sanity-queries/src/index.ts).
-  const { data } = await sanityFetch({
-    query: randomPaintingsQuery,
-  });
-  const paintingsPool = (data ?? []) as Record<string, unknown>[];
+  const featuredPaintings = (showcasePaintings ?? [])
+    .filter(painting => painting.isNSFW !== true)
+    .slice(0, FEATURED_PAINTING_COUNT);
 
-  if (!paintingsPool?.length) {
+  if (!featuredPaintings.length) {
     return null;
   }
 
-  const featuredPaintings = shuffleArray(paintingsPool).slice(0, FEATURED_PAINTING_COUNT);
-
   return (
     <>
+      <HomePaintingsSectionAnalytics
+        paintingCount={featuredPaintings.length}
+        source={paintingsSource}
+      />
       <div className='mb-4 px-4 max-w-7xl mx-auto'>
         <div className='max-w-prose'>
           <PortableText value={paintingsDescription as PortableTextBlock[]} />

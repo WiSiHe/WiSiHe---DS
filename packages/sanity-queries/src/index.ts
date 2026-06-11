@@ -222,6 +222,7 @@ export const homeSectionCopyQuery = defineQuery(`
     paintingsDescription,
     projectsTitle,
     projectsDescription,
+    projectsListingDescription,
   }
 `);
 
@@ -234,6 +235,7 @@ export const homePageQuery = defineQuery(`
     projectsTitle,
     "paintingsCount": count(*[_type == "painting"]),
     paintingsDescription,
+    "showcasePaintingsCurated": count(showcasePaintings) > 0,
     "showcasePaintings": coalesce(
       showcasePaintings[]->{
         _type, _id, altText,
@@ -243,7 +245,7 @@ export const homePageQuery = defineQuery(`
         image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
       },
       *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
-        _type, _id,
+        _type, _id, altText,
         "slug": slug.current,
         title, format, isFeatured, isNSFW, medium, paintedAt,
         tagsV2[]->{name},

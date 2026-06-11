@@ -4,6 +4,7 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { usePostHog } from 'posthog-js/react';
 import { Suspense, useEffect } from 'react';
+import { AnalyticsEvent, getPageType } from '@/lib/analytics/posthog';
 
 function PostHogPageView(): null {
   const pathname = usePathname();
@@ -18,7 +19,11 @@ function PostHogPageView(): null {
         url = `${url}?${searchParams.toString()}`;
       }
 
-      posthog.capture('$pageview', { $current_url: url });
+      posthog.capture(AnalyticsEvent.PAGE_VIEW, {
+        $current_url: url,
+        page_path: pathname,
+        page_type: getPageType(pathname),
+      });
     }
   }, [pathname, searchParams, posthog]);
 

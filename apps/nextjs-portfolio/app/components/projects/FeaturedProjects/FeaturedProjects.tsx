@@ -12,6 +12,7 @@ import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import { useEffect, useState } from 'react';
+import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import FeaturedProjectCard from './FeaturedProjectCard';
 
 type FeaturedProjectsProps = {
@@ -138,6 +139,9 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
             Icon={IconArrowRight}
             iconPosition='right'
             className='gap-2 rounded-full px-8 py-4 md:gap-3 md:px-10 md:py-5'
+            onClick={() =>
+              trackEvent(AnalyticsEvent.EXPLORE_ALL_PROJECTS_CLICKED, { source: 'home_featured' })
+            }
           >
             Explore all projects
           </Button>
