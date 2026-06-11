@@ -423,9 +423,10 @@ export const getAllProjects = defineQuery(`
         _type == "tag" &&
         count(*[_type == "project" && references(^._id)]) > 0
       ]
-      | order(count(*[_type == "project" && references(^._id)]) desc, name asc) {
+      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {
         _id,
         name,
+        isFeatured,
         "count": count(*[_type == "project" && references(^._id)]),
         "projectsCount": count(*[_type == "project" && references(^._id)])
       }

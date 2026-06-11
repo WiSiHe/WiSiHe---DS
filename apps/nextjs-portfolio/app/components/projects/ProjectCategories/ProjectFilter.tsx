@@ -10,6 +10,7 @@ type Tag = {
   _id: string;
   name: string | null;
   count: number;
+  isFeatured?: boolean | null;
 };
 
 type ProjectFilterProps = {
@@ -124,6 +125,8 @@ const SheetPanel = ({
   totalCount,
   onClose,
 }: SheetPanelProps) => {
+  const featuredTags = tags.filter(tag => tag.isFeatured);
+  const otherTags = tags.filter(tag => !tag.isFeatured);
   const y = useMotionValue(0);
   const opacity = useTransform(y, [0, 240], [1, 0]);
 
@@ -184,24 +187,58 @@ const SheetPanel = ({
         </div>
 
         {/* Tag list — scrollable */}
-        <div className='overflow-y-auto overscroll-contain px-5 pb-8 pt-2 touch-auto'>
-          <div className='flex flex-wrap gap-2'>
-            {tags.map(tag => {
-              const tagName = tag.name ?? '';
-              const isActive = activeFilters.includes(tagName);
-              return (
-                <Chip
-                  key={tag._id}
-                  label={tagName}
-                  additionalText={`${tag.count}`}
-                  variation={isActive ? 'primary' : 'secondary'}
-                  selected={isActive}
-                  size='medium'
-                  onClick={() => onToggleFilter(tagName)}
-                />
-              );
-            })}
-          </div>
+        <div className='overflow-y-auto overscroll-contain px-5 pb-8 pt-2 touch-auto space-y-5'>
+          {featuredTags.length > 0 ? (
+            <div className='space-y-2'>
+              <p className='text-xs font-semibold uppercase tracking-wide text-foreground-muted'>
+                Popular tags
+              </p>
+              <div className='flex flex-wrap gap-2'>
+                {featuredTags.map(tag => {
+                  const tagName = tag.name ?? '';
+                  const isActive = activeFilters.includes(tagName);
+                  return (
+                    <Chip
+                      key={tag._id}
+                      label={tagName}
+                      additionalText={`${tag.count}`}
+                      variation={isActive ? 'primary' : 'secondary'}
+                      selected={isActive}
+                      size='medium'
+                      onClick={() => onToggleFilter(tagName)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+
+          {otherTags.length > 0 ? (
+            <div className='space-y-2'>
+              {featuredTags.length > 0 ? (
+                <p className='text-xs font-semibold uppercase tracking-wide text-foreground-muted'>
+                  All tags
+                </p>
+              ) : null}
+              <div className='flex flex-wrap gap-2'>
+                {otherTags.map(tag => {
+                  const tagName = tag.name ?? '';
+                  const isActive = activeFilters.includes(tagName);
+                  return (
+                    <Chip
+                      key={tag._id}
+                      label={tagName}
+                      additionalText={`${tag.count}`}
+                      variation={isActive ? 'primary' : 'secondary'}
+                      selected={isActive}
+                      size='medium'
+                      onClick={() => onToggleFilter(tagName)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
         </div>
       </DialogPanel>
     </motion.div>
