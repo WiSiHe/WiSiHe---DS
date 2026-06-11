@@ -214,10 +214,24 @@ export const pagesSlugs = defineQuery(`
   {"slug": slug.current}
 `);
 
+export const homeSectionCopyQuery = defineQuery(`
+  *[_type == "home"][0]{
+    title,
+    overview,
+    paintingsTitle,
+    paintingsDescription,
+    projectsTitle,
+    projectsDescription,
+  }
+`);
+
 export const homePageQuery = defineQuery(`
   *[_type == "home"][0]{
     _id,
     title,
+    overview,
+    paintingsTitle,
+    projectsTitle,
     "paintingsCount": count(*[_type == "painting"]),
     paintingsDescription,
     "showcasePaintings": coalesce(

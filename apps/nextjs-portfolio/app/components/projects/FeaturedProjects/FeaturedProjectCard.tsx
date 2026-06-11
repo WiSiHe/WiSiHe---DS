@@ -4,7 +4,7 @@ import { IconArrowRight } from '@tabler/icons-react';
 import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import Image from 'next/image';
 import Link from 'next/link';
-import { urlForImage } from '@/sanity/lib/utils';
+import { portableTextToPlainText, urlForImage } from '@/sanity/lib/utils';
 import { GlassSurface } from '../../ui/GlassSurface';
 
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
@@ -42,6 +42,17 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   const titleTrimmed = (project.title as unknown as string | undefined)?.trim();
   const nameTrimmed = (project.name as string | undefined)?.trim();
   const headingText = titleTrimmed || nameTrimmed || 'Project';
+  const seoDescription = (project.seoDescription as string | null | undefined)?.trim() ?? '';
+  const legacyDescription = (project.description as string | null | undefined)?.trim() ?? '';
+  const summaryText =
+    (project.seo?.description as string | undefined)?.trim() ||
+    seoDescription ||
+    legacyDescription ||
+    portableTextToPlainText(
+      project.content as Array<Record<string, unknown>> | null | undefined,
+      220,
+    ) ||
+    null;
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
   const heroUrl = project.image
     ? urlForImage(project.image)?.width(1200).height(900).quality(85).url()
@@ -113,9 +124,11 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
             </h3>
 
             {/* Description */}
-            <p className='text-sm md:text-base leading-relaxed text-foreground-subtle mb-8 line-clamp-3'>
-              {(project.seo?.description || project.description) ?? undefined}
-            </p>
+            {summaryText ? (
+              <p className='text-sm md:text-base leading-relaxed text-foreground-subtle mb-8 line-clamp-3'>
+                {summaryText}
+              </p>
+            ) : null}
 
             {/* Sub-specimens (Thumbnails) styled as clean rounded-lg items */}
             {previewSources.length > 1 ? (

@@ -57,6 +57,30 @@ export const urlForImage = (source: SanityImageSource | null | undefined) => {
   return imageBuilder?.image(source).auto('format').fit('max');
 };
 
+/** Flatten Sanity portable text blocks into a plain string (e.g. meta descriptions). */
+export function portableTextToPlainText(
+  blocks: readonly Record<string, unknown>[] | null | undefined,
+  maxLength?: number,
+): string {
+  if (!blocks?.length) return '';
+
+  const text = blocks
+    .map(block => {
+      const children = block['children'] as Array<{ text?: string }> | undefined;
+      if (!children?.length) return '';
+      return children.map(child => child.text ?? '').join('');
+    })
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!text) return '';
+  if (maxLength != null && text.length > maxLength) {
+    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+  }
+  return text;
+}
+
 export function resolveOpenGraphImage(
   image: (SanityImageSource & { alt?: string }) | null | undefined,
   width = 1200,
