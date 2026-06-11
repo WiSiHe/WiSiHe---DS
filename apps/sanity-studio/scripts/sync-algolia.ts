@@ -56,6 +56,8 @@ const query = `
     projectType,
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
     format,
+    medium,
+    paintedAt,
     isFeatured,
     "palette": image.asset->metadata.palette,
     "image": coalesce(
@@ -162,6 +164,8 @@ async function syncToAlgolia() {
         slug: doc.slug,
         tags: doc.tags,
         format: doc.format || 'square',
+        medium: doc.medium || null,
+        paintedAt: doc.paintedAt || null,
         isFeatured: doc.isFeatured === true,
         dominantColors: extractColors(doc.palette),
         image: doc.image || null,

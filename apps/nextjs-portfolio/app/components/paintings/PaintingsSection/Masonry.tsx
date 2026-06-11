@@ -29,6 +29,8 @@ export type MasonryItem = {
   title?: string;
   /** Index for {@link getHeroStrokeColors} when SVG brush hover is enabled */
   strokeIndex?: number;
+  medium?: string;
+  year?: string;
 };
 
 type MasonryProps = {
@@ -333,6 +335,9 @@ const Masonry = ({
                 <HeroPaintingSvgHover
                   {...getHeroStrokeColors(item.strokeIndex)}
                   title={item.title ?? null}
+                  medium={item.medium ?? null}
+                  year={item.year ?? null}
+                  useMotion={false}
                 />
               ) : null}
               {colorShiftOnHover ? (

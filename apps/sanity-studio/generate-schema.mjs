@@ -58,12 +58,29 @@ async function loadSchemas() {
   } = presentation;
 
   return [
-    home, settings, about,
-    painting, post, project, video,
-    tag, blockContent, seoType, redirectType, socialType, recipe,
-    presentationCategory, sourceType, toolType, exampleType,
-    metricType, mediaType, contentSlideType, titleSlideType,
-    separatorSlideType, presentationDefault,
+    home,
+    settings,
+    about,
+    painting,
+    post,
+    project,
+    video,
+    tag,
+    blockContent,
+    seoType,
+    redirectType,
+    socialType,
+    recipe,
+    presentationCategory,
+    sourceType,
+    toolType,
+    exampleType,
+    metricType,
+    mediaType,
+    contentSlideType,
+    titleSlideType,
+    separatorSlideType,
+    presentationDefault,
   ];
 }
 
@@ -73,5 +90,7 @@ const jsonSchema = compiled._original?.types ?? [];
 const outPath = path.join(__dirname, 'schema.json');
 writeFileSync(outPath, JSON.stringify(jsonSchema, null, 2));
 console.log(`✅ schema.json written with ${jsonSchema.length} types`);
-const custom = jsonSchema.filter(t => !t.name.startsWith('sanity.') && !['geopoint','slug'].includes(t.name));
+const custom = jsonSchema.filter(
+  t => !t.name.startsWith('sanity.') && !['geopoint', 'slug'].includes(t.name),
+);
 console.log(`   Custom types (${custom.length}): ${custom.map(t => t.name).join(', ')}`);

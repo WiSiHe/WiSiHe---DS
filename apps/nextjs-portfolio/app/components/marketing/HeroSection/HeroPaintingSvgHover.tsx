@@ -89,21 +89,124 @@ export function getHeroStrokeColors(index: number): {
   accentColor: string;
   secondaryColor: string;
 } {
-  const pair = HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length]!;
+  const pair =
+    HERO_STROKE_COLOR_PAIRS[index % HERO_STROKE_COLOR_PAIRS.length] ?? HERO_STROKE_COLOR_PAIRS[0];
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
+
+import { motion } from 'motion/react';
 
 type HeroPaintingSvgHoverProps = {
   accentColor: string;
   secondaryColor: string;
   title?: string | null;
+  medium?: string | null;
+  year?: string | null;
+  tags?: string[] | null;
+  useMotion?: boolean;
 };
 
 export function HeroPaintingSvgHover({
   accentColor,
   secondaryColor,
   title,
+  medium,
+  year,
+  useMotion = false,
 }: HeroPaintingSvgHoverProps) {
+  if (useMotion) {
+    const pathVariants = {
+      initial: {
+        pathLength: 0,
+        strokeWidth: HERO_BRUSH_STROKE_WIDTH_REST,
+        opacity: 0,
+      },
+      hover: {
+        pathLength: 1,
+        strokeWidth: HERO_BRUSH_STROKE_WIDTH_HOVER,
+        opacity: 1,
+        transition: {
+          pathLength: { duration: 1.5, ease: 'easeOut' as const },
+          opacity: { duration: 0.1 }, // Fade in quickly to hide start dots
+        },
+      },
+    };
+
+    const detailsVariants = {
+      initial: { opacity: 0, y: 15 },
+      hover: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.55, ease: 'easeOut' as const, delay: 0.25 },
+      },
+    };
+
+    return (
+      <>
+        <div data-hero-svg className='pointer-events-none absolute inset-0 z-2' aria-hidden>
+          <div className='svg-stroke svg-stroke-1 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
+            <svg
+              className='block h-full w-full'
+              viewBox='0 0 2453 2273'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+              preserveAspectRatio='xMidYMid meet'
+            >
+              <title>Decorative brush stroke</title>
+              <motion.path
+                variants={pathVariants}
+                d={BRUSH_PATH_PRIMARY}
+                stroke={accentColor}
+                strokeLinecap='round'
+                fill='none'
+              />
+            </svg>
+          </div>
+          <div className='svg-stroke svg-stroke-2 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
+            <svg
+              className='block h-full w-full'
+              viewBox='0 0 2250 2535'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+              preserveAspectRatio='xMidYMid meet'
+            >
+              <title>Decorative brush stroke</title>
+              <motion.path
+                variants={pathVariants}
+                d={BRUSH_PATH_SECONDARY}
+                stroke={secondaryColor}
+                strokeLinecap='round'
+                fill='none'
+              />
+            </svg>
+          </div>
+        </div>
+        {title ? (
+          <motion.div
+            variants={detailsVariants}
+            className='pointer-events-none absolute bottom-3 left-3 right-3 z-3 flex flex-col items-start text-left space-y-1'
+          >
+            <p className='line-clamp-2 font-serif text-lg font-medium leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-xl italic'>
+              {title}
+            </p>
+            <div className='flex flex-wrap items-center gap-2'>
+              {year && (
+                <span className='font-sans text-[10px] font-bold text-white/80 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/5'>
+                  {year}
+                </span>
+              )}
+              {medium && (
+                <span className='font-mono text-[9px] uppercase tracking-wider text-white/70 drop-shadow-sm font-semibold'>
+                  {medium}
+                </span>
+              )}
+            </div>
+          </motion.div>
+        ) : null}
+      </>
+    );
+  }
+
   return (
     <>
       <div data-hero-svg className='pointer-events-none absolute inset-0 z-2' aria-hidden>
@@ -115,12 +218,14 @@ export function HeroPaintingSvgHover({
             xmlns='http://www.w3.org/2000/svg'
             preserveAspectRatio='xMidYMid meet'
           >
+            <title>Decorative brush stroke</title>
             <path
               d={BRUSH_PATH_PRIMARY}
               stroke={accentColor}
               strokeWidth={HERO_BRUSH_STROKE_WIDTH_REST}
               strokeLinecap='round'
               fill='none'
+              style={{ opacity: 0 }}
             />
           </svg>
         </div>
@@ -132,12 +237,14 @@ export function HeroPaintingSvgHover({
             xmlns='http://www.w3.org/2000/svg'
             preserveAspectRatio='xMidYMid meet'
           >
+            <title>Decorative brush stroke</title>
             <path
               d={BRUSH_PATH_SECONDARY}
               stroke={secondaryColor}
               strokeWidth={HERO_BRUSH_STROKE_WIDTH_REST}
               strokeLinecap='round'
               fill='none'
+              style={{ opacity: 0 }}
             />
           </svg>
         </div>
@@ -145,11 +252,25 @@ export function HeroPaintingSvgHover({
       {title ? (
         <div
           data-hero-title
-          className='pointer-events-none absolute bottom-2 left-2 right-2 z-3 opacity-0'
+          className='pointer-events-none absolute bottom-2 left-2 right-2 z-3 opacity-0 flex flex-col items-start text-left space-y-0.5'
         >
-          <p className='line-clamp-2 text-left font-serif text-lg font-medium leading-tight tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-xl'>
+          <p className='line-clamp-2 font-serif text-base font-medium leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-lg italic'>
             {title}
           </p>
+          {(year || medium) && (
+            <div className='flex flex-wrap items-center gap-1.5'>
+              {year && (
+                <span className='font-sans text-[9px] font-bold text-white/80 bg-black/40 px-1.2 py-0.2 rounded backdrop-blur-sm border border-white/5'>
+                  {year}
+                </span>
+              )}
+              {medium && (
+                <span className='font-mono text-[8px] uppercase tracking-wider text-white/70 drop-shadow-sm font-semibold truncate max-w-[150px]'>
+                  {medium}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       ) : null}
     </>

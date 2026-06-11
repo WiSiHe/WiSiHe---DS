@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll() {
   useEffect(() => {
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic import reference
     let locomotiveScroll: any;
 
     // Dynamically import to prevent SSR reference errors
@@ -31,14 +32,21 @@ export default function SmoothScroll() {
         },
       });
 
-      // Synchronize GSAP ScrollTrigger with Locomotive Scroll's scroll events
-      locomotiveScroll.on('scroll', () => {
-        ScrollTrigger.update();
-      });
+      // Synchronize GSAP ScrollTrigger with the underlying Lenis instance scroll events
+      if (locomotiveScroll.lenis) {
+        locomotiveScroll.lenis.on('scroll', () => {
+          ScrollTrigger.update();
+        });
+      }
 
       // Register the underlying Lenis instance globally
-      if (locomotiveScroll.lenisInstance) {
-        setGlobalLenis(locomotiveScroll.lenisInstance);
+      if (locomotiveScroll.lenis) {
+        setGlobalLenis(locomotiveScroll.lenis);
+        // Refresh GSAP ScrollTrigger once Locomotive Scroll is fully initialized
+        // to ensure all sticky and animated positions are calculated correctly.
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 150);
       }
     });
 

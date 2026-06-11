@@ -22,7 +22,7 @@ export default defineBlueprint({
         // It fetches references but the user said they are okay with mapping primarily via the manual script
         // to handle the joined data until they enable auto-sync later.
         projection:
-          "{_id, _type, title, name, description, slug, hideFromSearch, 'operation': delta::operation()}",
+          "{_id, _type, title, name, description, slug, hideFromSearch, medium, paintedAt, 'operation': delta::operation()}",
       },
       env: {
         ALGOLIA_APP_ID,

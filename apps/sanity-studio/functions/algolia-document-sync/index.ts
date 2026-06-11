@@ -14,8 +14,19 @@ export const handler = documentEventHandler(async ({ event }) => {
     return;
   }
 
-  const { _id, _type, title, name, description, slug, hideFromSearch, image, operation } =
-    event.data as any;
+  const {
+    _id,
+    _type,
+    title,
+    name,
+    description,
+    slug,
+    hideFromSearch,
+    image,
+    operation,
+    medium,
+    paintedAt,
+  } = event.data as any;
 
   // fallback for title/name depending on document schema
   const documentTitle = title || name || 'Untitled';
@@ -45,6 +56,8 @@ export const handler = documentEventHandler(async ({ event }) => {
           slug,
           hideFromSearch,
           image,
+          medium: medium || null,
+          paintedAt: paintedAt || null,
           // Tags fetched dynamically via GROQ on manual sync
           // Blueprint event projections don't currently support deep dereferencing directly
           // So if auto-sync is enabled later, you may want to refine the function projection or re-fetch.

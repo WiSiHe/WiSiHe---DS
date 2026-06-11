@@ -1,24 +1,17 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import { AnimatePresence, animate, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
-import {
-  getHeroStrokeColors,
-  HERO_BRUSH_STROKE_WIDTH_HOVER,
-  HERO_BRUSH_STROKE_WIDTH_REST,
-  HeroPaintingSvgHover,
-  initHeroSvgStrokePaths,
-} from './HeroPaintingSvgHover';
+import { getHeroStrokeColors, HeroPaintingSvgHover } from './HeroPaintingSvgHover';
+import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 
-gsap.registerPlugin(useGSAP);
-
 type ShowcasePainting = {
+  _type: 'painting';
   _id: string;
   slug: string | null;
   title: string | null;
@@ -26,6 +19,8 @@ type ShowcasePainting = {
   format: 'square' | 'landscape' | 'portrait' | null;
   isFeatured?: boolean | null;
   isNSFW?: boolean | null;
+  medium?: string | null;
+  paintedAt?: string | null;
   image?: {
     asset?: { _ref: string };
     lqip?: string | null;
@@ -35,13 +30,29 @@ type ShowcasePainting = {
   tagsV2?: { name: string | null }[] | null;
 };
 
+type ShowcaseProject = {
+  _type: 'project';
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  name?: string | null;
+  description?: string | null;
+  seoDescription?: string | null;
+  image?: {
+    asset?: { _ref: string };
+    lqip?: string | null;
+    alt?: string;
+  } | null;
+  tags?: { name: string | null }[] | null;
+};
+
+type ShowcaseItem = ShowcasePainting | ShowcaseProject;
+
 type HeroImageSectionProps = {
-  paintings?: ShowcasePainting[] | null;
+  items?: ShowcaseItem[] | null;
 };
 
 // Positions that avoid the center text area but are closer together
-// Center text area: approximately 35-65% vertical, 30-70% horizontal
-// Mobile positions can use space below text (65%+ vertical)
 const FIXED_POSITIONS_DESKTOP = [
   { top: '15%', left: '20%', rotation: -12, scale: 0.9 },
   { top: '20%', left: '80%', rotation: 15, scale: 0.85 },
@@ -54,7 +65,6 @@ const FIXED_POSITIONS_DESKTOP = [
 ];
 
 // Mobile positions - use space both above and below text
-// Text area is approximately 35-65% vertical, so positions above 35% and below 65%
 const FIXED_POSITIONS_MOBILE = [
   // Above text (top area)
   { top: '10%', left: '15%', rotation: -12, scale: 0.8 },
@@ -72,37 +82,140 @@ const FIXED_POSITIONS_MOBILE = [
   { top: '88%', left: '30%', rotation: -12, scale: 0.75 },
 ];
 
-const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
-  const containerRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<HTMLDivElement>(null);
-  const loaderRef = useRef<HTMLDivElement>(null);
+const HeroImageSection = ({ items }: HeroImageSectionProps) => {
   const [progress, setProgress] = useState(0);
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const [stage, setStage] = useState<'loading' | 'exploding' | 'floating'>('loading');
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const svgHoverTlsRef = useRef<Map<number, gsap.core.Timeline>>(new Map());
+  const [hasPlayedAlready, setHasPlayedAlready] = useState(false);
+  const [viewport, setViewport] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [flares, setFlares] = useState<
+    Array<{ id: number; top: string; left: string; color: string }>
+  >([]);
+  const [activeFlareId, setActiveFlareId] = useState<number | null>(null);
+  const [cardOffsets, setCardOffsets] = useState<Array<{ x: number; y: number; rotate: number }>>(
+    [],
+  );
 
-  useLayoutEffect(() => {
-    initHeroSvgStrokePaths(containerRef.current);
-  }, [paintings]);
-
+  // Track viewport matches reactively
   useEffect(() => {
-    return () => {
-      svgHoverTlsRef.current.forEach(tl => tl.kill());
-      svgHoverTlsRef.current.clear();
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setViewport('mobile');
+      } else if (width < 1024) {
+        setViewport('tablet');
+      } else {
+        setViewport('desktop');
+      }
     };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Hide scroll indicator after user scrolls
+  // Detect touch device for mobile optimizations
+  useEffect(() => {
+    const checkTouch = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkTouch();
+  }, []);
+
+  // Initialize background spark coordinates and organic card offsets once on mount
+  useEffect(() => {
+    const generated = Array.from({ length: 18 }).map((_, i) => ({
+      id: i,
+      top: `${Math.random() * 80 + 10}%`,
+      left: `${Math.random() * 80 + 10}%`,
+      color: i % 2 === 0 ? 'var(--color-accent)' : 'var(--color-brand-2-500)',
+    }));
+    setFlares(generated);
+
+    const offsets = Array.from({ length: 15 }).map(() => ({
+      x: (Math.random() - 0.5) * 50, // ±25px translation
+      y: (Math.random() - 0.5) * 50, // ±25px translation
+      rotate: (Math.random() - 0.5) * 20, // ±10 degrees rotation
+    }));
+    setCardOffsets(offsets);
+  }, []);
+
+  // Trigger coordinate sparks at random intervals during active floating
+  useEffect(() => {
+    if (stage !== 'floating' || flares.length === 0) return;
+
+    const triggerRandomFlare = () => {
+      const randomIndex = Math.floor(Math.random() * flares.length);
+      setActiveFlareId(randomIndex);
+      setTimeout(() => {
+        setActiveFlareId(null);
+      }, 1500);
+    };
+
+    const interval = setInterval(
+      () => {
+        triggerRandomFlare();
+      },
+      Math.random() * 2000 + 2000,
+    ); // Trigger every 2-4 seconds
+
+    return () => clearInterval(interval);
+  }, [stage, flares.length]);
+
+  // Track mouse coordinates normalized relative to window center (-1 to 1)
+  useEffect(() => {
+    if (isTouchDevice) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = (e.clientY / window.innerHeight) * 2 - 1;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [isTouchDevice]);
+
+  // Set up the loading & entry stages using Framer Motion
+  useEffect(() => {
+    const hasPlayed = sessionStorage.getItem('hero-splash-played');
+    const isDev = process.env.NODE_ENV === 'development';
+
+    if (hasPlayed && !isDev) {
+      setStage('floating');
+      setProgress(100);
+      setHasPlayedAlready(true);
+      return;
+    }
+
+    if (!isDev) {
+      sessionStorage.setItem('hero-splash-played', 'true');
+    }
+
+    // Animate the progress counter (0% to 100% over 2.5s)
+    const controls = animate(0, 100, {
+      duration: 2.5,
+      ease: 'easeInOut',
+      onUpdate: latest => setProgress(Math.round(latest)),
+      onComplete: () => {
+        setStage('exploding');
+        // Let the spring explosion settle for 1.2s before entering float loop
+        setTimeout(() => {
+          setStage('floating');
+        }, 1200);
+      },
+    });
+
+    return () => controls.stop();
+  }, []);
+
+  // Hide scroll indicator after scroll threshold
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
-
-      const containerRect = containerRef.current.getBoundingClientRect();
       const scrollY = window.scrollY || window.pageYOffset;
-
-      // Hide after scrolling 100px or when hero section is out of view
-      if (scrollY > 100 || containerRect.bottom < 0) {
+      if (scrollY > 100) {
         setShowScrollIndicator(false);
       } else {
         setShowScrollIndicator(true);
@@ -110,392 +223,195 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Check initial state
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const { contextSafe } = useGSAP(
-    () => {
-      if (!paintings || paintings.length === 0) return;
+  // Determine visibility slice for items (matches original layout logic)
+  const isMobile = viewport === 'mobile';
+  const isTablet = viewport === 'tablet';
 
-      const images = imagesRef.current?.children;
-      if (!images) return;
+  const visibleItems = items
+    ? isMobile
+      ? items.slice(0, 12)
+      : isTablet
+        ? items.slice(0, 7)
+        : items.slice(0, 8)
+    : [];
 
-      const mm = gsap.matchMedia();
+  // Auto-cycling highlight timer on mobile/touch screens
+  useEffect(() => {
+    if (!isTouchDevice || stage !== 'floating' || visibleItems.length === 0) return;
 
-      mm.add(
-        {
-          isMobile: '(max-width: 767px)',
-          isTablet: '(min-width: 768px) and (max-width: 1023px)',
-          isDesktop: '(min-width: 1024px)',
-        },
-        context => {
-          const { isMobile, isTablet } = context.conditions || {};
-          const tl = gsap.timeline();
-          const isDev = process.env.NODE_ENV === 'development';
-          const hasPlayed = sessionStorage.getItem('hero-splash-played');
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      setHoveredIndex(currentIndex);
+      currentIndex = (currentIndex + 1) % visibleItems.length;
+    }, 3000); // Highlight a different card every 3 seconds
 
-          // On mobile: 12 images (6 above, 6 below text)
-          // On tablet: 7 images
-          // On desktop: 8 images
-          let visibleImages: Element[];
-          if (isMobile) {
-            visibleImages = Array.from(images).slice(0, 12);
-          } else if (isTablet) {
-            visibleImages = Array.from(images).slice(0, 7);
-          } else {
-            visibleImages = Array.from(images).slice(0, 8);
-          }
+    return () => clearInterval(interval);
+  }, [isTouchDevice, stage, visibleItems.length]);
 
-          if (hasPlayed && !isDev) {
-            // --- FAST TRACK: Set final state immediately ---
-
-            // Hide loader
-            gsap.set(loaderRef.current, { display: 'none' });
-
-            // Show Text
-            if (textRef.current) {
-              gsap.set(textRef.current.children, {
-                opacity: 1,
-                y: 0,
-                filter: 'blur(0px)',
-              });
-            }
-
-            // Position Images & Start Float
-            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-            visibleImages.forEach((img, i) => {
-              // Only use positions up to the number of visible images (don't cycle)
-              const pos = (positions[i] ?? positions[i % positions.length])!;
-
-              // Set to final position
-              gsap.set(img, {
-                left: pos.left,
-                top: pos.top,
-                rotation: pos.rotation,
-                scale: pos.scale,
-                xPercent: -50,
-                yPercent: -50,
-                opacity: 1,
-                zIndex: 1,
-              });
-
-              // Start Float
-              gsap.to(img, {
-                y: `+=${Math.random() * 20 + 10}`,
-                x: `+=${Math.random() * 10 - 5}`,
-                rotation: `+=${Math.random() * 6 - 3}`,
-                duration: Math.random() * 3 + 4,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
-                delay: i * 0.1,
-              });
-            });
-
-            // Enable hover effects immediately for fast track
-            setIsAnimationComplete(true);
-          } else {
-            // --- FULL ANIMATION SEQUENCE ---
-
-            if (!isDev) {
-              sessionStorage.setItem('hero-splash-played', 'true');
-            }
-
-            // 1. Loader Animation & Stacking
-            const progressObj = { value: 0 };
-
-            tl.to(progressObj, {
-              value: 100,
-              duration: 2.5, // Slightly longer for better stacking effect
-              ease: 'power2.inOut',
-              onUpdate: () => setProgress(Math.round(progressObj.value)),
-            });
-
-            // Stack images in center (same position as loader), starting from bottom and stacking upward
-            visibleImages.forEach((img, i) => {
-              // Calculate stacking offset - centered horizontally, stacking upward vertically
-              const stackOffsetX = 0; // Keep centered horizontally
-              const stackOffsetY = -(i * 15); // Stack upward from center (negative Y moves up)
-              const stackRotation = (i % 3) * 3 - 3; // Small rotation: -3, 0, 3
-              const stackScale = 1 - i * 0.03; // Slightly smaller as they stack
-
-              tl.fromTo(
-                img,
-                {
-                  scale: 0,
-                  opacity: 0,
-                  xPercent: -50,
-                  yPercent: -50,
-                  left: '50%',
-                  top: '50%', // Start at center (same as loader)
-                  rotation: 0,
-                  zIndex: i + 1, // First image has lowest z-index, last has highest (on top)
-                },
-                {
-                  scale: stackScale,
-                  opacity: 1,
-                  x: stackOffsetX,
-                  y: stackOffsetY, // Stack upward from center
-                  rotation: stackRotation,
-                  duration: 0.6,
-                  ease: 'back.out(1.4)',
-                },
-                0.1 + i * 0.12, // Stagger the stacking
-              );
-            });
-
-            // Fade out loader
-            tl.to(
-              loaderRef.current,
-              {
-                opacity: 0,
-                y: -50,
-                filter: 'blur(10px)',
-                duration: 0.5,
-                ease: 'power2.in',
-                display: 'none',
-              },
-              '-=0.5',
-            );
-
-            tl.addLabel('explode', '+=0.1');
-
-            // 2. Explode & Float
-            const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-            visibleImages.forEach((img, i) => {
-              // Only use positions up to the number of visible images (don't cycle)
-              const pos = (positions[i] ?? positions[i % positions.length])!;
-
-              tl.to(
-                img,
-                {
-                  left: pos.left,
-                  top: pos.top,
-                  rotation: pos.rotation,
-                  scale: pos.scale,
-                  xPercent: -50,
-                  yPercent: -50,
-                  duration: 1.2, // Faster explosion
-                  ease: 'back.out(2)', // Springier
-                  zIndex: 1,
-                },
-                'explode',
-              );
-
-              gsap.to(img, {
-                y: `+=${Math.random() * 20 + 10}`,
-                x: `+=${Math.random() * 10 - 5}`,
-                rotation: `+=${Math.random() * 6 - 3}`,
-                duration: Math.random() * 3 + 4,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
-                delay: 3 + i * 0.1,
-              });
-            });
-
-            // 3. Text Entrance (After explosion)
-            if (textRef.current) {
-              const textElements = textRef.current.children;
-              tl.fromTo(
-                textElements,
-                { opacity: 0, y: 30, filter: 'blur(5px)' },
-                {
-                  opacity: 1,
-                  y: 0,
-                  filter: 'blur(0px)',
-                  duration: 1,
-                  stagger: 0.15,
-                  ease: 'power3.out',
-                },
-                '-=0.4', // Overlap slightly with end of explosion
-              );
-            }
-
-            // 4. Enable hover effects after all animations complete
-            tl.call(() => {
-              setIsAnimationComplete(true);
-            });
-          }
-        },
-      );
-    },
-    { scope: containerRef, dependencies: [paintings] },
-  );
-
-  const handleMouseEnter = contextSafe((index: number) => {
-    // Only allow hover effects after animation is complete
-    if (!isAnimationComplete) return;
-
-    const imageElements = imagesRef.current?.children;
-    if (!imageElements) return;
-
-    const link = imageElements[index] as HTMLElement;
-
-    // Determine which position set to use based on window width
-    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
-    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-    const baseScale = positions[index % positions.length]!.scale;
-
-    svgHoverTlsRef.current.get(index)?.kill();
-    const tl = gsap.timeline();
-    svgHoverTlsRef.current.set(index, tl);
-
-    const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-    paths.forEach(path => {
-      const len = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-      tl.to(
-        path,
-        {
-          strokeDashoffset: 0,
-          attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_HOVER },
-          duration: 1.5,
-          ease: 'power2.out',
-        },
-        0,
-      );
-    });
-
-    const titleEl = link.querySelector('[data-hero-title]');
-    if (titleEl) {
-      tl.fromTo(
-        titleEl,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-        0.25,
-      );
-    }
-
-    tl.to(
-      link,
-      {
-        scale: baseScale * 1.2,
-        zIndex: 20,
-        duration: 0.5,
-        ease: 'power2.out',
-      },
-      0,
-    );
-  });
-
-  const handleMouseLeave = contextSafe(() => {
-    // Only allow hover effects after animation is complete
-    if (!isAnimationComplete) return;
-
-    // Reset hovered image to its base position
-    const imageElements = imagesRef.current?.children;
-    if (!imageElements) return;
-
-    // Determine which position set to use (we'll check if mobile by checking window width)
-    const isMobileCheck = typeof window !== 'undefined' && window.innerWidth < 768;
-    const positions = isMobileCheck ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-
-    Array.from(imageElements).forEach((img, i) => {
-      const baseScale = positions[i % positions.length]!.scale;
-      const currentZ = gsap.getProperty(img, 'zIndex');
-
-      // Only reset if this image was hovered (zIndex > 1)
-      if (typeof currentZ === 'number' && currentZ > 1) {
-        svgHoverTlsRef.current.get(i)?.kill();
-        svgHoverTlsRef.current.delete(i);
-
-        const link = img as HTMLElement;
-        const paths = link.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-        paths.forEach(path => {
-          const len = path.getTotalLength();
-          gsap.to(path, {
-            strokeDashoffset: len,
-            attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_REST },
-            duration: 1,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          });
-        });
-
-        const titleEl = link.querySelector('[data-hero-title]');
-        if (titleEl) {
-          gsap.to(titleEl, {
-            opacity: 0,
-            y: 6,
-            duration: 0.35,
-            ease: 'power2.in',
-            overwrite: 'auto',
-          });
-        }
-
-        gsap.to(img, {
-          scale: baseScale,
-          zIndex: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        });
-      }
-    });
-  });
-
-  if (!paintings || paintings.length === 0) {
-    return <div>No paintings available.</div>;
+  if (!items || items.length === 0) {
+    return <div className='text-center py-20'>No items available.</div>;
   }
+
+  const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
+
+  // Variants for central text stagger entrance
+  const textContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const textItemVariants = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 1, ease: 'easeOut' as const },
+    },
+  };
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 1, ease: 'easeOut' as const },
+    },
+  };
 
   return (
     <section
-      ref={containerRef}
       className='relative flex min-h-lvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle overflow-x-clip'
+      style={{ perspective: 1200 }}
     >
-      {/* Loader */}
+      {/* Background Cyber-Blueprint Dot Grid */}
       <div
-        ref={loaderRef}
-        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center pointer-events-none'
-      >
-        <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
-          {progress}%
-        </div>
-      </div>
+        className='absolute inset-0 pointer-events-none opacity-20 transition-opacity duration-500 animate-fade-in'
+        style={{
+          backgroundImage: 'radial-gradient(var(--color-foreground) 1.5px, transparent 1.5px)',
+          backgroundSize: '36px 36px',
+        }}
+      />
+
+      {/* Blueprint Constellation Spark Flares (Randomly plays sparks) */}
+      {stage === 'floating' &&
+        flares.map(flare => {
+          const isActive = activeFlareId === flare.id;
+          return (
+            <motion.div
+              key={flare.id}
+              className='absolute w-2.5 h-2.5 rounded-full pointer-events-none z-10'
+              style={{
+                top: flare.top,
+                left: flare.left,
+                backgroundColor: flare.color,
+              }}
+              animate={
+                isActive
+                  ? {
+                      scale: [1, 2.5, 1],
+                      opacity: [0, 0.85, 0],
+                      filter: ['blur(0px)', 'blur(3px)', 'blur(0px)'],
+                    }
+                  : { opacity: 0 }
+              }
+              transition={{ duration: 1.5, ease: 'easeInOut' as const }}
+            />
+          );
+        })}
+
+      {/* Loader */}
+      <AnimatePresence>
+        {stage === 'loading' && (
+          <motion.div
+            key='loader'
+            initial={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{
+              opacity: 0,
+              y: -50,
+              filter: 'blur(10px)',
+              transition: { duration: 0.5, ease: 'easeIn' },
+            }}
+            className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center pointer-events-none'
+          >
+            <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
+              {progress}%
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Central Text Content */}
-      <div
-        ref={textRef}
+      <motion.div
+        variants={textContainerVariants}
+        initial={hasPlayedAlready ? 'visible' : 'hidden'}
+        animate={stage !== 'loading' ? 'visible' : 'hidden'}
         className='relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none'
       >
-        <p className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 opacity-0 text-foreground-subtle'>
+        <motion.p
+          variants={textItemVariants}
+          className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 text-foreground-subtle'
+        >
           My name is
-        </p>
-        <h1 className='text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none opacity-0 text-foreground'>
+        </motion.p>
+        <motion.h1
+          variants={textItemVariants}
+          className='text-7xl md:text-9xl font-serif font-black tracking-tighter mb-6 leading-none text-foreground'
+        >
           Henrik
-        </h1>
-        <p className='text-lg md:text-xl font-medium opacity-0 max-w-md leading-relaxed text-foreground-subtle'>
+        </motion.h1>
+        <motion.p
+          variants={textItemVariants}
+          className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle'
+        >
           I&apos;m a design engineer, painter and a maker.
           <br />
           Explore my work.
-        </p>
+        </motion.p>
 
-        <div className='mt-8 pointer-events-auto opacity-0'>
+        {/* Double Call to Actions (serving both paintings & projects) */}
+        <motion.div
+          variants={buttonVariants}
+          className='mt-8 flex flex-col sm:flex-row items-center gap-4 pointer-events-auto'
+        >
           <Link
             href='/paintings'
             className='inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg'
           >
-            View Gallery
+            View Paintings
           </Link>
-        </div>
-      </div>
+          <Link
+            href='/projects'
+            className='inline-flex items-center justify-center px-8 py-3 rounded-full border border-foreground/15 bg-background hover:bg-foreground/5 text-foreground font-bold tracking-wide transition-all hover:scale-105 shadow-md'
+          >
+            Explore Projects
+          </Link>
+        </motion.div>
+      </motion.div>
 
       {/* Floating Images Container */}
       <div
-        ref={imagesRef}
         className='absolute inset-0 pointer-events-none max-w-[1776px] mx-auto pt-10'
+        style={{ transformStyle: 'preserve-3d' }}
       >
-        {paintings?.map((painting, index) => {
-          const { image, altText, slug, title } = painting;
+        {visibleItems.map((item, index) => {
+          const { image, slug, title } = item;
           if (!image) return null;
 
           const imageUrl = urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
 
-          // Deterministic random-like properties based on index
+          // Deterministic styling based on index (aspectRatios, sizes)
           const aspectRatios = ['aspect-square', 'aspect-video', 'aspect-[3/4]', 'aspect-[4/5]'];
           const sizes = [
             'w-48 md:w-80 lg:max-w-[20vw]',
@@ -503,48 +419,272 @@ const HeroImageSection = ({ paintings }: HeroImageSectionProps) => {
             'w-40 md:w-64 lg:max-w-[18vw]',
             'w-52 md:w-80 lg:max-w-[20vw]',
           ];
-          // Optimize LCP: Prioritize the first few images
           const isPriority = index < 4;
-
           const aspectRatio = aspectRatios[index % aspectRatios.length];
           const size = sizes[index % sizes.length];
 
-          // Show paintings: mobile (12), tablet (7), desktop (8)
-          let visibilityClass = 'hidden';
-          if (index < 7) {
-            // Show on all devices (mobile, tablet, desktop)
-            visibilityClass = 'block';
-          } else if (index === 7) {
-            // Show on mobile and desktop, hide on tablet
-            visibilityClass = 'block md:hidden lg:block';
-          } else if (index < 12) {
-            // Show on mobile only (images 8-11)
-            visibilityClass = 'block md:hidden';
-          }
+          // Target configuration based on layout
+          const pos = positions[index % positions.length] || {
+            top: '50%',
+            left: '50%',
+            rotation: 0,
+            scale: 1,
+          };
+          const { accentColor, secondaryColor } = getHeroStrokeColors(index);
+
+          // Stacking coordinates at center
+          const stackScale = 1 - index * 0.03;
+          const stackOffsetY = -(index * 15);
+          const stackRotation = (index % 3) * 3 - 3;
+
+          // Parallax calculation creating a stereoscopic split (disabled on touch devices):
+          // tier 0 (Background): moves WITH the mouse, tilts slightly
+          // tier 1 (Middleground): moves slightly opposite, tilts normal
+          // tier 2 (Foreground): moves strongly opposite, tilts heavily
+          const getParallaxValues = (idx: number) => {
+            if (isTouchDevice) {
+              return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (idx % 3) + 1 };
+            }
+
+            const tier = idx % 3;
+            if (tier === 0) {
+              return {
+                x: mousePos.x * 24,
+                y: mousePos.y * 24,
+                rotateX: mousePos.y * -6,
+                rotateY: mousePos.x * 6,
+                zIndex: 1,
+              };
+            } else if (tier === 1) {
+              return {
+                x: mousePos.x * -12,
+                y: mousePos.y * -12,
+                rotateX: mousePos.y * -12,
+                rotateY: mousePos.x * 12,
+                zIndex: 2,
+              };
+            } else {
+              return {
+                x: mousePos.x * -42,
+                y: mousePos.y * -42,
+                rotateX: mousePos.y * -22,
+                rotateY: mousePos.x * 22,
+                zIndex: 3,
+              };
+            }
+          };
+
+          const parallax = getParallaxValues(index);
+          const isCurrentlyHovered = hoveredIndex === index;
+          const offset = cardOffsets[index] || { x: 0, y: 0, rotate: 0 };
+
+          // Animations
+          const outerAnimate =
+            stage === 'loading'
+              ? {
+                  left: '50%',
+                  top: '50%',
+                  x: '-50%',
+                  y: `calc(-50% + ${stackOffsetY}px)`,
+                  scale: stackScale,
+                  rotate: stackRotation,
+                  opacity: 1,
+                  filter: 'blur(0px)',
+                  zIndex: index + 1,
+                }
+              : stage === 'exploding'
+                ? {
+                    left: pos.left,
+                    top: pos.top,
+                    x: '-50%',
+                    y: '-50%',
+                    scale: pos.scale,
+                    rotate: pos.rotation + offset.rotate,
+                    opacity: 1,
+                    filter: 'blur(0px)',
+                    zIndex: 1,
+                  }
+                : {
+                    left: pos.left,
+                    top: pos.top,
+                    x: '-50%',
+                    y: '-50%',
+                    scale: pos.scale,
+                    rotate: pos.rotation + offset.rotate,
+                    opacity: 1,
+                    filter: 'blur(0px)',
+                    zIndex: isCurrentlyHovered ? 50 : parallax.zIndex, // Raise zIndex dynamically
+                  };
+
+          // Soft watercolor bleed for loading stage, snappy spring wobble for explosion stage
+          const outerTransition =
+            stage === 'loading'
+              ? {
+                  delay: 0.1 + index * 0.12,
+                  duration: 1.4,
+                  ease: 'easeOut' as const,
+                }
+              : stage === 'exploding'
+                ? {
+                    type: 'spring' as const,
+                    stiffness: 110,
+                    damping: 11,
+                    mass: 0.8,
+                  }
+                : {
+                    duration: 0.6,
+                    ease: 'easeOut' as const,
+                  };
+
+          // Float animation loop values
+          const floatAnimate =
+            stage === 'floating'
+              ? {
+                  y: [0, Math.random() * 20 + 10, 0],
+                  x: [0, Math.random() * 10 - 5, 0],
+                  rotate: [0, Math.random() * 6 - 3, 0],
+                }
+              : {
+                  y: 0,
+                  x: 0,
+                  rotate: 0,
+                };
+
+          const floatTransition = {
+            duration: Math.random() * 3 + 4,
+            repeat: Infinity,
+            ease: 'easeInOut' as const,
+            delay: index * 0.1,
+          };
+
+          const href = item._type === 'painting' ? `paintings/${slug}` : `projects/${slug}`;
+          const isPainting = item._type === 'painting';
+
+          // Extract project properties if type is project
+          const projectTags =
+            item._type === 'project' && item.tags
+              ? item.tags.map(t => t.name).filter((name): name is string => name !== null)
+              : null;
+
+          // Extract painting properties if type is painting
+          const paintingTags =
+            item._type === 'painting' && item.tagsV2
+              ? item.tagsV2.map(t => t.name).filter((name): name is string => name !== null)
+              : null;
+          const paintingMedium = item._type === 'painting' ? item.medium : null;
+          const paintingYear =
+            item._type === 'painting' && item.paintedAt
+              ? new Date(item.paintedAt).getFullYear().toString()
+              : null;
 
           return (
-            <Link
-              key={painting._id}
-              href={`paintings/${slug}`}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-              // Initial state: centered
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-1 ${size} ${aspectRatio} ${visibilityClass} pointer-events-auto group opacity-0 will-change-transform`}
+            <motion.div
+              key={`${item._type}-${item._id}`}
+              initial={
+                hasPlayedAlready
+                  ? false
+                  : {
+                      opacity: 0,
+                      scale: 0.3,
+                      filter: 'blur(30px)', // Watercolor dissolve start
+                      left: '50%',
+                      top: '50%',
+                      x: '-50%',
+                      y: stackOffsetY,
+                      rotate: stackRotation,
+                    }
+              }
+              animate={outerAnimate}
+              transition={outerTransition}
+              onMouseEnter={() => {
+                if (stage === 'floating') setHoveredIndex(index);
+              }}
+              onMouseLeave={() => {
+                if (stage === 'floating') setHoveredIndex(null);
+              }}
+              className={`absolute pointer-events-auto ${size} ${aspectRatio} will-change-transform`}
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <div className='h-full w-full rounded-lg shadow-2xl'>
-                <div className='relative isolate h-full w-full overflow-hidden rounded-lg'>
-                  <Image
-                    src={imageUrl}
-                    alt={altText || 'Painting'}
-                    fill
-                    priority={isPriority}
-                    className='object-cover'
-                    sizes='(max-width: 768px) 40vw, 30vw'
-                  />
-                  <HeroPaintingSvgHover {...getHeroStrokeColors(index)} title={title} />
-                </div>
-              </div>
-            </Link>
+              {/* Organic client-side scattering offset wrapper */}
+              <motion.div
+                animate={stage === 'loading' ? { x: 0, y: 0 } : { x: offset.x, y: offset.y }}
+                transition={outerTransition}
+                className='h-full w-full'
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                {/* 3D Mouse Parallax Wrap */}
+                <motion.div
+                  animate={{
+                    x: parallax.x,
+                    y: parallax.y,
+                    rotateX: parallax.rotateX,
+                    rotateY: parallax.rotateY,
+                  }}
+                  transition={{ type: 'spring', stiffness: 90, damping: 22, mass: 0.4 }}
+                  className='h-full w-full'
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  {/* Infinite float wrap */}
+                  <motion.div
+                    animate={floatAnimate}
+                    transition={floatTransition}
+                    className='h-full w-full'
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    {/* Scale & Hover wrap: moved whileHover here to allow correct variant propagation down to child components */}
+                    <motion.div
+                      initial='initial'
+                      animate={isCurrentlyHovered ? 'hover' : 'initial'}
+                      variants={{
+                        initial: { scale: 1 },
+                        hover: { scale: 1.2 },
+                      }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className='h-full w-full cursor-pointer'
+                      style={{ transformStyle: 'preserve-3d' }}
+                    >
+                      <Link
+                        href={href}
+                        className='block h-full w-full rounded-lg overflow-hidden relative isolate transition-all duration-300'
+                        style={{
+                          boxShadow: isCurrentlyHovered
+                            ? `0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px ${accentColor}33`
+                            : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+                        }}
+                      >
+                        <Image
+                          src={imageUrl}
+                          alt={item.title || 'Portfolio Item'}
+                          fill
+                          priority={isPriority}
+                          className='object-cover'
+                          sizes='(max-width: 768px) 40vw, 30vw'
+                        />
+
+                        {isPainting ? (
+                          <HeroPaintingSvgHover
+                            useMotion
+                            accentColor={accentColor}
+                            secondaryColor={secondaryColor}
+                            title={title}
+                            medium={paintingMedium}
+                            year={paintingYear}
+                            tags={paintingTags}
+                          />
+                        ) : (
+                          <HeroProjectUiHover
+                            accentColor={accentColor}
+                            secondaryColor={secondaryColor}
+                            title={title || item.name}
+                            tags={projectTags}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           );
         })}
       </div>

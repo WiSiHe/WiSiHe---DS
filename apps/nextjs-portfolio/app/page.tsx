@@ -47,12 +47,25 @@ export default async function Home() {
   const { showcasePaintings, showcaseProjects, paintingsDescription } = homepage;
 
   const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
+  const shuffledHeroProjects = showcaseProjects ? shuffleArray(showcaseProjects) : [];
+
+  // Interleave paintings and projects to ensure a balanced grid of both
+  const combinedHeroItems: any[] = [];
+  const maxLen = Math.max(shuffledHeroPaintings.length, shuffledHeroProjects.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < shuffledHeroPaintings.length) {
+      combinedHeroItems.push(shuffledHeroPaintings[i]);
+    }
+    if (i < shuffledHeroProjects.length) {
+      combinedHeroItems.push(shuffledHeroProjects[i]);
+    }
+  }
 
   return (
     <div className='bg-background'>
       <div className='bg-background'>
         <Suspense fallback={<HeroSkeleton />}>
-          <HeroImageSection paintings={shuffledHeroPaintings} />
+          <HeroImageSection items={combinedHeroItems} />
         </Suspense>
 
         <section className='relative pt-24 pb-12'>

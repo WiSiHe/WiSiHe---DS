@@ -224,14 +224,14 @@ export const homePageQuery = defineQuery(`
       showcasePaintings[]->{
         _type, _id, altText,
         "slug": slug.current,
-        title, format, isFeatured, isNSFW,
+        title, format, isFeatured, isNSFW, medium, paintedAt,
         tagsV2[]->{name},
         image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
       },
       *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
         _type, _id,
         "slug": slug.current,
-        title, format, isFeatured, isNSFW,
+        title, format, isFeatured, isNSFW, medium, paintedAt,
         tagsV2[]->{name},
         image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
       }

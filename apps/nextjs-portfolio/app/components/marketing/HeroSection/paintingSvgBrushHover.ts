@@ -18,6 +18,7 @@ export function paintingSvgBrushEnter(root: HTMLElement): gsap.core.Timeline {
       path,
       {
         strokeDashoffset: 0,
+        opacity: 1,
         attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_HOVER },
         duration: 1.5,
         ease: 'power2.out',
@@ -43,6 +44,7 @@ export function paintingSvgBrushLeave(root: HTMLElement): void {
     const len = path.getTotalLength();
     gsap.to(path, {
       strokeDashoffset: len,
+      opacity: 0,
       attr: { 'stroke-width': HERO_BRUSH_STROKE_WIDTH_REST },
       duration: 1,
       ease: 'power2.out',

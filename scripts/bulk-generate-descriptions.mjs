@@ -116,7 +116,7 @@ async function main() {
   console.log('\n📝 Step 1: Generating missing seoDescriptions...\n');
 
   const missingSeo = await client.fetch(
-    `*[_type == "painting" && !defined(seoDescription)] { _id, title, description }`
+    `*[_type == "painting" && !defined(seoDescription)] { _id, title, description }`,
   );
 
   for (const doc of missingSeo) {
@@ -137,7 +137,7 @@ async function main() {
   console.log('\n🎨 Step 2: Bulk-generating descriptions for paintings...\n');
 
   const missingDesc = await client.fetch(
-    `*[_type == "painting" && !defined(description)] { _id, title, "imageRef": image.asset._ref } | order(title asc)`
+    `*[_type == "painting" && !defined(description)] { _id, title, "imageRef": image.asset._ref } | order(title asc)`,
   );
 
   console.log(`Found ${missingDesc.length} paintings to process.\n`);
@@ -159,7 +159,7 @@ async function main() {
         console.error(`  ❌ [${idx + 1}/${missingDesc.length}] "${doc.title}": ${e.message}`);
       }
     },
-    5 // 5 concurrent requests
+    5, // 5 concurrent requests
   );
 
   console.log(`\n✨ Done! ${done} descriptions generated, ${failed} failed.`);
