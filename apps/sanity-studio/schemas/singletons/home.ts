@@ -147,6 +147,14 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'projectsListingDescription',
+      title: 'Projects listing description',
+      description:
+        'Intro copy on the /projects archive page. Also used for the projects page meta description when set.',
+      type: 'blockContent',
+      validation: rule => rule.max(155).required(),
+    }),
+    defineField({
       name: 'showcaseProjects',
       title: 'Showcase projects',
       description: 'These are the projects that will appear first on your landing page.',

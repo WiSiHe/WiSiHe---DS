@@ -5,6 +5,7 @@ import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useState } from 'react';
+import ProjectsFilterAnalytics from '@/app/components/analytics/ProjectsFilterAnalytics';
 import OngoingProjectCard from './OngoingProjectCard';
 import PastProjectCard from './PastProjectCard';
 import ProjectFilter from './ProjectFilter';
@@ -97,6 +98,13 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
 
   return (
     <section className='flex flex-col w-full gap-6'>
+      <ProjectsFilterAnalytics
+        activeType={activeType}
+        activeTags={activeFilters}
+        searchQuery={searchQuery}
+        resultCount={totalFiltered}
+        totalCount={totalCount}
+      />
       {/* ── Type tabs ─────────────────────────────────────────────── */}
       <div className='flex flex-wrap gap-2'>
         {PROJECT_TYPES.map(({ key, label }) => {

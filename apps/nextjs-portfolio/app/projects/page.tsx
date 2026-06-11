@@ -1,7 +1,11 @@
 import type { GetAllProjectsResult, HomeSectionCopyQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
+import type { PortableTextBlock } from 'next-sanity';
+import { PortableText } from 'next-sanity';
+import ProjectsListingAnalytics from '@/app/components/analytics/ProjectsListingAnalytics';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllProjects, homeSectionCopyQuery } from '@/sanity/lib/queries';
+import { portableTextToPlainText } from '@/sanity/lib/utils';
 import ScrollToTopButton from '../components/layout/ScrollToTop/ScrollToTop';
 import ProjectCategories from '../components/projects/ProjectCategories/ProjectCategories';
 
@@ -24,7 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   const home = data as HomeSectionCopyQueryResult | null;
   const title = home?.projectsTitle?.trim() || PROJECTS_TITLE_FALLBACK;
-  const description = PROJECTS_DESCRIPTION_FALLBACK;
+  const description =
+    portableTextToPlainText(home?.projectsListingDescription, 160) || PROJECTS_DESCRIPTION_FALLBACK;
 
   return {
     title,
@@ -57,16 +62,30 @@ export default async function ProjectsPage() {
   const { ongoingProjects, pastProjects, tags } = (projectsData ?? {}) as GetAllProjectsResult;
   const home = homeData as HomeSectionCopyQueryResult | null;
   const pageTitle = home?.projectsTitle?.trim() || PROJECTS_TITLE_FALLBACK;
+  const listingDescription = home?.projectsListingDescription;
+  const hasCmsIntro = Boolean(portableTextToPlainText(listingDescription));
 
   return (
     <>
+      <ProjectsListingAnalytics
+        ongoingCount={ongoingProjects?.length ?? 0}
+        pastCount={pastProjects?.length ?? 0}
+        tagCount={tags?.length ?? 0}
+        hasCmsIntro={hasCmsIntro}
+      />
       <div className='flex items-start justify-start w-full h-full min-h-screen pt-32 mx-auto max-w-7xl'>
         <div className='w-full p-4'>
           <div className='pb-8'>
             <h1 className='font-semibold text-foreground text-3xl md:text-4xl mb-3'>{pageTitle}</h1>
-            <p className='text-foreground-subtle text-base md:text-lg max-w-prose text-pretty leading-relaxed'>
-              {PROJECTS_PAGE_INTRO_FALLBACK}
-            </p>
+            {hasCmsIntro && listingDescription ? (
+              <div className='text-foreground-subtle text-base md:text-lg max-w-prose text-pretty leading-relaxed [&_p]:m-0'>
+                <PortableText value={listingDescription as PortableTextBlock[]} />
+              </div>
+            ) : (
+              <p className='text-foreground-subtle text-base md:text-lg max-w-prose text-pretty leading-relaxed'>
+                {PROJECTS_PAGE_INTRO_FALLBACK}
+              </p>
+            )}
           </div>
 
           <ProjectCategories

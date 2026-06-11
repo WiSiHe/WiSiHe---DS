@@ -37,6 +37,23 @@ async function main() {
     },
   ];
 
+  const projectsListingDescription = [
+    {
+      _key: 'projects-listing-desc',
+      _type: 'block',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _key: 'projects-listing-desc-span',
+          _type: 'span',
+          marks: [],
+          text: 'A mix of professional work, side projects, and experiments — from design systems to games I learned a lot building.',
+        },
+      ],
+    },
+  ];
+
   const showcasePaintingIds = [
     '15c0cb16-8ea2-4815-93a0-6458805c532e',
     '2a908178-99d4-462d-91dd-6a1e1c113929',
@@ -52,7 +69,7 @@ async function main() {
 
   await client
     .patch('home')
-    .set({ overview, projectsDescription })
+    .set({ overview, projectsDescription, projectsListingDescription })
     .commit({ autoGenerateArrayKeys: true });
 
   for (const paintingId of showcasePaintingIds) {
