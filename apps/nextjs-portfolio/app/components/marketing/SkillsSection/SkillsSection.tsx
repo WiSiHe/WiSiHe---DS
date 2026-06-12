@@ -60,9 +60,18 @@ function skillsToLogos(skills: readonly string[]): LogoItem[] {
   }));
 }
 
-const SkillsSection = React.memo(function SkillsSection() {
+const SkillsSection = React.memo(function SkillsSection({
+  eyebrow,
+  title,
+}: {
+  eyebrow?: string | null;
+  title?: string | null;
+}) {
   const professionalLogos = useMemo(() => skillsToLogos(professionalSkills), []);
   const creativeLogos = useMemo(() => skillsToLogos(creativeSkills), []);
+
+  const heading = title?.trim() || 'What I work with';
+  const label = eyebrow?.trim() || '// Skills';
 
   return (
     <motion.section
@@ -73,7 +82,10 @@ const SkillsSection = React.memo(function SkillsSection() {
       className='relative flex flex-col gap-8 overflow-hidden py-20 text-foreground'
     >
       <motion.div variants={itemVariants} className='z-10 pointer-events-none px-4 md:px-8'>
-        <h2 className='text-4xl md:text-5xl font-bold mb-3'>Skills</h2>
+        <p className='font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent md:text-xs mb-3'>
+          {label}
+        </p>
+        <h2 className='text-4xl md:text-5xl font-bold mb-3'>{heading}</h2>
         <p className='text-lg text-foreground-subtle'>
           Here are some of the skills I have acquired over the years.
         </p>

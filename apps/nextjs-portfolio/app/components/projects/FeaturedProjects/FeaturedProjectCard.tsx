@@ -1,17 +1,15 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { HomePageQueryResult } from '@wisihe/sanity-queries';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { HomeProjectsSection } from '@/lib/homePageBuilder';
 import { portableTextToPlainText, urlForImage } from '@/sanity/lib/utils';
 import { GlassSurface } from '../../ui/GlassSurface';
 
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
 
-export type FeaturedProject = NonNullable<
-  NonNullable<HomePageQueryResult>['showcaseProjects']
->[number];
+export type FeaturedProject = NonNullable<HomeProjectsSection['showcaseProjects']>[number];
 
 type ImageSourceWithRef = { asset: { _ref: string } };
 

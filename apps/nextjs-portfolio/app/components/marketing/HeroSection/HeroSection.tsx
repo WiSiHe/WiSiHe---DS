@@ -12,7 +12,7 @@ import { getHeroStrokeColors, HeroPaintingSvgHover } from './HeroPaintingSvgHove
 import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 
-type ShowcasePainting = {
+export type ShowcasePainting = {
   _type: 'painting';
   _id: string;
   slug: string | null;
@@ -32,7 +32,7 @@ type ShowcasePainting = {
   tagsV2?: { name: string | null }[] | null;
 };
 
-type ShowcaseProject = {
+export type ShowcaseProject = {
   _type: 'project';
   _id: string;
   slug: string | null;
@@ -48,7 +48,7 @@ type ShowcaseProject = {
   tags?: { name: string | null }[] | null;
 };
 
-type ShowcaseItem = ShowcasePainting | ShowcaseProject;
+export type ShowcaseItem = ShowcasePainting | ShowcaseProject;
 
 function heroDisplayName(heroSubtitle?: string | null): string {
   const trimmed = heroSubtitle?.trim();

@@ -1,15 +1,15 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { AboutQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { buildContactCtaCopy } from '@/lib/homeSectionCopy';
+import { buildContactCtaCopy, type ContactCtaSectionData } from '@/lib/homeSectionCopy';
 
 type ContactCtaSectionProps = {
-  home: HomePageQueryResult | null;
+  section: ContactCtaSectionData | null;
   about: AboutQueryResult | null;
 };
 
@@ -25,13 +25,13 @@ function renderCtaTitle(title: string) {
   );
 }
 
-export default function ContactCtaSection({ home, about }: ContactCtaSectionProps) {
+export default function ContactCtaSection({ section, about }: ContactCtaSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = mounted && prefersReducedMotion;
 
-  const copy = useMemo(() => buildContactCtaCopy(home, about), [home, about]);
+  const copy = useMemo(() => buildContactCtaCopy(section, about), [section, about]);
 
   return (
     <section

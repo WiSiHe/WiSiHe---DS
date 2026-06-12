@@ -1,5 +1,6 @@
 import blockContent from './blockContent';
 import blockContentMinimal from './blockContentMinimal';
+import { homePageSectionTypes } from './objects/homePageSections';
 import homeSectionIntro from './objects/homeSectionIntro';
 import painting from './painting';
 import post from './post';
@@ -30,6 +31,7 @@ export const schemaTypes = [
   settings,
   about,
   homeSectionIntro,
+  ...homePageSectionTypes,
   painting,
   post,
   project,

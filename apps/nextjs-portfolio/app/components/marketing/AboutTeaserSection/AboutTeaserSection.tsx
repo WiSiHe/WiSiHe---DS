@@ -1,33 +1,33 @@
 'use client';
 
 import { IconArrowRight, IconMapPin } from '@tabler/icons-react';
-import type { AboutQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { LOCATION_TYPE_META, normalizeJourneyItems } from '@/app/about/components/lifeJourneyTypes';
-import { buildAboutTeaserDescription } from '@/lib/homeSectionCopy';
+import { type AboutTeaserSectionData, buildAboutTeaserCopy } from '@/lib/homeSectionCopy';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
 type AboutTeaserSectionProps = {
-  home: HomePageQueryResult | null;
+  section: AboutTeaserSectionData | null;
   about: AboutQueryResult | null;
 };
 
-export default function AboutTeaserSection({ home, about }: AboutTeaserSectionProps) {
+export default function AboutTeaserSection({ section, about }: AboutTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = mounted && prefersReducedMotion;
 
-  const eyebrow = home?.aboutTeaserEyebrow?.trim() || '// About';
-  const title = home?.aboutTeaserTitle?.trim() || 'Code, canvas, and curiosity';
-  const description = buildAboutTeaserDescription(home, about);
-  const primaryLabel = home?.aboutTeaserPrimaryLabel?.trim() || 'My story';
-  const secondaryLabel = home?.aboutTeaserSecondaryLabel?.trim() || 'Get in touch';
-  const journeyEyebrow = home?.aboutTeaserJourneyEyebrow?.trim() || 'Life journey';
-  const journeyLinkLabel = home?.aboutTeaserJourneyLinkLabel?.trim() || 'View full journey';
+  const eyebrow = section?.eyebrow?.trim() || '// About';
+  const title = section?.title?.trim() || 'Code, canvas, and curiosity';
+  const description = buildAboutTeaserCopy(section, about);
+  const primaryLabel = section?.primaryLabel?.trim() || 'My story';
+  const secondaryLabel = section?.secondaryLabel?.trim() || 'Get in touch';
+  const journeyEyebrow = section?.journeyEyebrow?.trim() || 'Life journey';
+  const journeyLinkLabel = section?.journeyLinkLabel?.trim() || 'View full journey';
 
   const knowsAbout = (about?.knowsAbout ?? []).filter(Boolean).slice(0, 6);
 

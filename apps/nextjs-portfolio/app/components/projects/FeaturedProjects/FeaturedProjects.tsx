@@ -5,7 +5,7 @@
  */
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { BlockContentMinimal } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
@@ -13,11 +13,12 @@ import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import { useEffect, useState } from 'react';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import type { HomeProjectsSection } from '@/lib/homePageBuilder';
 import FeaturedProjectCard from './FeaturedProjectCard';
 
 type FeaturedProjectsProps = {
-  showcaseProjects?: NonNullable<HomePageQueryResult>['showcaseProjects'];
-  projectsDescription?: NonNullable<HomePageQueryResult>['projectsDescription'];
+  showcaseProjects?: HomeProjectsSection['showcaseProjects'];
+  projectsDescription?: BlockContentMinimal | null;
 };
 
 const MAX_PROJECTS = 3;
