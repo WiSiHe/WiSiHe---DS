@@ -674,7 +674,9 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                       >
                         <span className='sr-only'>
                           {isPainting ? 'View painting' : 'View project'}:{' '}
-                          {title || item.name || 'Portfolio item'}
+                          {title ||
+                            (item._type === 'project' ? item.name : null) ||
+                            'Portfolio item'}
                         </span>
                         <Image
                           src={imageUrl}
