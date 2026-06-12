@@ -505,10 +505,23 @@ export type About = {
   heroSubtitle: string;
   bio?: string;
   jobTitle?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  knowsAbout?: Array<string>;
   journeyItems?: Array<{
     year?: string;
     title?: string;
     content?: string;
+    placeName?: string;
+    locationType?:
+      | "birthplace"
+      | "lived"
+      | "studied"
+      | "worked"
+      | "trip"
+      | "other";
+    coordinates?: Geopoint;
+    mapZoom?: number;
     image?: {
       asset?: SanityImageAssetReference;
       media?: unknown;
@@ -526,6 +539,13 @@ export type About = {
     url?: string;
     _key: string;
   }>;
+};
+
+export type Geopoint = {
+  _type: "geopoint";
+  lat?: number;
+  lng?: number;
+  alt?: number;
 };
 
 export type Settings = {
@@ -1030,13 +1050,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
-};
-
 export type AllSanitySchemaTypes =
   | SanityImageAssetReference
   | Image1
@@ -1066,6 +1079,7 @@ export type AllSanitySchemaTypes =
   | Tag
   | Post
   | About
+  | Geopoint
   | Settings
   | Home
   | VideoReference
@@ -1092,8 +1106,7 @@ export type AllSanitySchemaTypes =
   | SanityImageMetadata
   | SanityFileAsset
   | SanityAssetSourceData
-  | SanityImageAsset
-  | Geopoint;
+  | SanityImageAsset;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: settingsQuery
@@ -1147,18 +1160,25 @@ export type AboutQueryResult = {
   heroSubtitle: string;
   bio: string | null;
   jobTitle: string | null;
-  seoTitle: null;
-  seoDescription: null;
-  knowsAbout: null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  knowsAbout: Array<string> | null;
   journeyItems: Array<{
     _key: string;
     year: string | null;
     title: string | null;
     content: string | null;
-    placeName: null;
-    locationType: null;
-    coordinates: null;
-    mapZoom: null;
+    placeName: string | null;
+    locationType:
+      | "birthplace"
+      | "lived"
+      | "other"
+      | "studied"
+      | "trip"
+      | "worked"
+      | null;
+    coordinates: Geopoint | null;
+    mapZoom: number | null;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;

@@ -21,9 +21,9 @@ export function PresentationMode() {
   useEffect(() => {
     if (!immersive) return;
 
-    document.documentElement.dataset.presentationMode = 'true';
+    document.documentElement.dataset['presentationMode'] = 'true';
     return () => {
-      delete document.documentElement.dataset.presentationMode;
+      delete document.documentElement.dataset['presentationMode'];
     };
   }, [immersive]);
 
