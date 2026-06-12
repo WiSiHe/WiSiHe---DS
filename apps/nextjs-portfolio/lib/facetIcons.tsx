@@ -1,0 +1,225 @@
+import { IconTag } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
+import {
+  FaBolt,
+  FaBook,
+  FaBriefcase,
+  FaBuilding,
+  FaChalkboardTeacher,
+  FaCloud,
+  FaCode,
+  FaComments,
+  FaCss3Alt,
+  FaCube,
+  FaDog,
+  FaDragon,
+  FaEllipsisH,
+  FaFigma,
+  FaFilm,
+  FaFlag,
+  FaGamepad,
+  FaHatWizard,
+  FaHeart,
+  FaHtml5,
+  FaJs,
+  FaLandmark,
+  FaLaptopCode,
+  FaLayerGroup,
+  FaLeaf,
+  FaLock,
+  FaMagic,
+  FaMapMarkerAlt,
+  FaMountain,
+  FaPaintBrush,
+  FaPalette,
+  FaPaw,
+  FaPenFancy,
+  FaPenNib,
+  FaPhp,
+  FaReact,
+  FaRocket,
+  FaServer,
+  FaShoppingCart,
+  FaSkull,
+  FaSnowflake,
+  FaStar,
+  FaSuitcase,
+  FaSwatchbook,
+  FaTrademark,
+  FaTree,
+  FaUnity,
+  FaUniversalAccess,
+  FaUser,
+  FaUtensils,
+  FaWater,
+  FaWordpress,
+} from 'react-icons/fa';
+import {
+  IoCalendarOutline,
+  IoCheckmarkCircle,
+  IoCloseCircle,
+  IoEllipseOutline,
+  IoHelpCircle,
+  IoHourglassOutline,
+  IoMusicalNotes,
+  IoPauseCircle,
+  IoTrashOutline,
+} from 'react-icons/io5';
+import { MdAnimation } from 'react-icons/md';
+import {
+  SiBlender,
+  SiGraphql,
+  SiNextdotjs,
+  SiRedux,
+  SiSanity,
+  SiTailwindcss,
+  SiThreedotjs,
+  SiTypescript,
+  SiVite,
+} from 'react-icons/si';
+
+const S = 'w-3 h-3';
+
+function ic(Icon: React.ComponentType<{ className?: string }>): ReactNode {
+  return <Icon className={S} />;
+}
+
+/** Icons for Algolia facet labels (tags, project status/type, shop filters). */
+export const FACET_ICONS: Record<string, ReactNode> = {
+  // ── People & portraits ───────────────────────────────────────────────────
+  Woman: ic(FaUser),
+  Man: ic(FaUser),
+  Portrait: ic(FaUser),
+  'Self Portrait': ic(FaUser),
+  Pinup: ic(FaHeart),
+
+  // ── Places & travel ────────────────────────────────────────────────────────
+  Landscape: ic(FaMountain),
+  Mountain: ic(FaMountain),
+  Nature: ic(FaLeaf),
+  Arendal: ic(FaMapMarkerAlt),
+  Norway: ic(FaFlag),
+  Travel: ic(FaSuitcase),
+  Lighthouse: ic(FaLandmark),
+
+  // ── Fantasy & fiction ────────────────────────────────────────────────────
+  Fantasy: ic(FaMagic),
+  Magic: ic(FaMagic),
+  Babel: ic(FaBuilding),
+  'Sci-Fi': ic(FaRocket),
+  Universe: ic(FaStar),
+  'Harry Potter': ic(FaHatWizard),
+  Ghibli: ic(FaCloud),
+  'Dark Souls': ic(FaSkull),
+  Fanart: ic(FaStar),
+  Dragon: ic(FaDragon),
+
+  // ── Art & style ──────────────────────────────────────────────────────────
+  'Concept Art': ic(FaPalette),
+  Illustration: ic(FaPaintBrush),
+  Design: ic(FaPenNib),
+  Architecture: ic(FaBuilding),
+  Tattoo: ic(FaPenFancy),
+  Clouds: ic(FaCloud),
+  Rotoscope: ic(FaFilm),
+  Salty: ic(FaUtensils),
+
+  // ── Media & entertainment ─────────────────────────────────────────────────
+  Anime: ic(MdAnimation),
+  Animation: ic(MdAnimation),
+  Game: ic(FaGamepad),
+  Music: ic(IoMusicalNotes),
+  Books: ic(FaBook),
+  Movies: ic(FaFilm),
+  'Comic Book': ic(FaBook),
+
+  // ── Nature & animals ──────────────────────────────────────────────────────
+  Winter: ic(FaSnowflake),
+  Animal: ic(FaPaw),
+  Dog: ic(FaDog),
+  Sea: ic(FaWater),
+  Horror: ic(FaSkull),
+
+  // ── Shop & content flags ───────────────────────────────────────────────────
+  Store: ic(FaShoppingCart),
+  'For Sale': ic(FaShoppingCart),
+  NSFW: ic(FaSkull),
+
+  // ── Project stack & tools ─────────────────────────────────────────────────
+  '3D': ic(FaCube),
+  Accessibility: ic(FaUniversalAccess),
+  Blender: ic(SiBlender),
+  Branding: ic(FaTrademark),
+  'C#': ic(FaCode),
+  CSS: ic(FaCss3Alt),
+  Designsystem: ic(FaLayerGroup),
+  EnonicXP: ic(FaServer),
+  Figma: ic(FaFigma),
+  Flash: ic(FaBolt),
+  'Framer Motion': ic(MdAnimation),
+  'Game Development': ic(FaGamepad),
+  GameJAM: ic(FaGamepad),
+  GraphQL: ic(SiGraphql),
+  HTML: ic(FaHtml5),
+  Hackathon: ic(FaLaptopCode),
+  'Headlesss UI': ic(FaCode),
+  JavaScript: ic(FaJs),
+  NextAuth: ic(FaLock),
+  NextJS: ic(SiNextdotjs),
+  PHP: ic(FaPhp),
+  'Panel Debate': ic(FaComments),
+  Presentation: ic(FaChalkboardTeacher),
+  React: ic(FaReact),
+  Redux: ic(SiRedux),
+  Sanity: ic(SiSanity),
+  'Speed Tree': ic(FaTree),
+  'Substance Painter': ic(FaPaintBrush),
+  TailwindCSS: ic(SiTailwindcss),
+  ThreeJS: ic(SiThreedotjs),
+  Tokens: ic(FaSwatchbook),
+  Turborepo: ic(FaRocket),
+  TypeScript: ic(SiTypescript),
+  Unity: ic(FaUnity),
+  'Unreal Engine 4': ic(FaGamepad),
+  'Unreal Engine 5': ic(FaGamepad),
+  Vite: ic(SiVite),
+  Wordpress: ic(FaWordpress),
+  Work: ic(FaBriefcase),
+  Workshop: ic(FaChalkboardTeacher),
+  ZBrush: ic(FaPaintBrush),
+
+  // ── Project status (raw + display labels) ─────────────────────────────────
+  inProgress: ic(IoHourglassOutline),
+  'In progress': ic(IoHourglassOutline),
+  completed: ic(IoCheckmarkCircle),
+  Completed: ic(IoCheckmarkCircle),
+  onHold: ic(IoPauseCircle),
+  'On hold': ic(IoPauseCircle),
+  cancelled: ic(IoCloseCircle),
+  Cancelled: ic(IoCloseCircle),
+  abandoned: ic(IoTrashOutline),
+  Abandoned: ic(IoTrashOutline),
+  unknown: ic(IoHelpCircle),
+  Unknown: ic(IoHelpCircle),
+  notStarted: ic(IoEllipseOutline),
+  'Not started': ic(IoEllipseOutline),
+  planned: ic(IoCalendarOutline),
+  Planned: ic(IoCalendarOutline),
+
+  // ── Project type ──────────────────────────────────────────────────────────
+  art: ic(FaPalette),
+  Art: ic(FaPalette),
+  design: ic(FaPenNib),
+  development: ic(FaCode),
+  Development: ic(FaCode),
+  gameDevelopment: ic(FaGamepad),
+  'Game development': ic(FaGamepad),
+  other: ic(FaEllipsisH),
+  Other: ic(FaEllipsisH),
+};
+
+const DEFAULT_FACET_ICON = <IconTag className={S} stroke={1.75} aria-hidden />;
+
+export function getFacetIcon(label: string): ReactNode {
+  return FACET_ICONS[label] ?? DEFAULT_FACET_ICON;
+}

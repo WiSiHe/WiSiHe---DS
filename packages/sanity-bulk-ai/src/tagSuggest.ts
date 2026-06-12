@@ -10,6 +10,10 @@ export type TagSuggestRequest = {
   title: string;
   textBody: string;
   tagsCatalog: TagCatalogEntry[];
+  /** When set, vision is used alongside text (paintings). */
+  imageUrl?: string | null;
+  medium?: string | null;
+  isFanArt?: boolean | null;
 };
 
 export type TagSuggestResult = {
@@ -43,28 +47,59 @@ export async function runTagSuggest(
   const allowed = new Set(body.tagsCatalog.map(t => t.id));
   const catalogLines = body.tagsCatalog.map(t => `- ${t.id}: ${t.name}`).join('\n');
 
+  const paintingRules =
+    body.documentKind === 'painting'
+      ? `
+Painting rules:
+- Pick 3–5 tag ids when possible (minimum 2 if only two clearly apply).
+- 1–2 subject or theme; 1 medium/style when relevant; 1 mood or technique when helpful.
+- Do NOT pick framework/stack tags (NextJS, Sanity, React, TypeScript, etc.) unless the artwork is literally about that topic.
+- Do NOT pick generic project/work tags (Design System, Hackathon, Workshop, E-commerce) unless clearly relevant.
+- Prefer tags already used on paintings in this portfolio when they fit.`
+      : `
+Project rules:
+- Prefer 4–6 tags when possible: stack, domain, and context when useful.
+- Reuse featured tags; skip generic labels like "Work".`;
+
+  const contextLines = [
+    `Document type: ${body.documentKind}`,
+    `Title: ${body.title}`,
+    body.medium ? `Medium: ${body.medium}` : null,
+    body.isFanArt === true ? 'Fan art: yes' : body.isFanArt === false ? 'Fan art: no' : null,
+    `Text (may be truncated):\n${body.textBody.slice(0, 12_000)}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
   const instructions = `You help categorize art portfolio content.
 
 Return a single JSON object with key "suggestedTagIds": an array of string ids.
 Rules:
 - ONLY include ids that appear in the catalog below (exact id match).
-- Prefer 3–10 tags when possible; fewer is fine if only a few clearly apply.
 - Omit tags that are unrelated.
 - If nothing fits, return an empty array.
+${paintingRules}
 
-Document type: ${body.documentKind}
-Title: ${body.title}
-Text (may be truncated):
-${body.textBody.slice(0, 12_000)}
+${contextLines}
 
 Catalog (id: name):
 ${catalogLines || '(empty catalog)'}
 
 Respond with JSON only.`;
 
+  const userContent: OpenAI.Chat.ChatCompletionContentPart[] = [
+    { type: 'text', text: instructions },
+  ];
+  if (body.imageUrl?.trim()) {
+    userContent.push({
+      type: 'image_url',
+      image_url: { url: body.imageUrl.trim(), detail: 'low' },
+    });
+  }
+
   const completion = await openai.chat.completions.create({
     model,
-    messages: [{ role: 'user', content: instructions }],
+    messages: [{ role: 'user', content: userContent }],
     response_format: { type: 'json_object' },
   });
 

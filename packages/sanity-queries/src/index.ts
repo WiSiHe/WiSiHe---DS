@@ -290,8 +290,67 @@ export const homePageQuery = defineQuery(`
         "lqip": asset->metadata.lqip
       },
     },
+    aboutTeaserEyebrow,
+    aboutTeaserTitle,
+    aboutTeaserDescription,
+    aboutTeaserPrimaryLabel,
+    aboutTeaserSecondaryLabel,
+    aboutTeaserJourneyEyebrow,
+    aboutTeaserJourneyLinkLabel,
+    videosTeaser {
+      eyebrow,
+      title,
+      description,
+      linkLabel
+    },
+    shopTeaser {
+      eyebrow,
+      title,
+      description,
+      linkLabel
+    },
+    contactCtaEyebrow,
+    contactCtaTitle,
+    contactCtaDescription,
+    contactCtaPrimaryLabel,
+    contactCtaPrimaryUrl,
+    contactCtaSecondaryLabel,
+    contactCtaSecondaryUrl
   }
 `);
+
+export const homeExtrasQuery = defineQuery(`{
+  "videos": *[_type == "video" && defined(slug.current)]
+    | order(featured desc, coalesce(date, _updatedAt) desc) [0...3] {
+      _id,
+      "slug": slug.current,
+      title,
+      "featured": featured == true,
+      description,
+      tags[]->{name},
+      thumbnail {
+        ...,
+        "lqip": asset->metadata.lqip
+      }
+    },
+  "forSalePaintings": *[_type == "painting" && defined(slug.current) && isNSFW != true && (
+      isForSale == true || defined(redbubbleUrl) || defined(gelatoUrl)
+    )] | order(paintedAt desc) [0...3] {
+      _id,
+      "slug": slug.current,
+      title,
+      isForSale,
+      redbubbleUrl,
+      gelatoUrl,
+      tagsV2[]->{name},
+      paintedAt,
+      image {
+        ...,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      }
+    }
+}`);
 
 export const getAllPaintingsandTags = defineQuery(`
   {
