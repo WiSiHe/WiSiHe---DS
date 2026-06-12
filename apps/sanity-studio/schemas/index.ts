@@ -25,6 +25,7 @@ import home from './singletons/home';
 import settings from './singletons/settings';
 import { socialType } from './socialType';
 import { tag } from './tag';
+import travelPlace from './travelPlace';
 import video from './video';
 
 export const schemaTypes = [
@@ -35,6 +36,7 @@ export const schemaTypes = [
   ...homePageSectionTypes,
   painting,
   photography,
+  travelPlace,
   post,
   project,
   video,

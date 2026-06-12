@@ -11,8 +11,9 @@ import OpenAI from 'openai';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { WiStars } from 'react-icons/wi';
-import { type StringInputProps, set, unset, useFormValue } from 'sanity';
+import { type StringInputProps, set, unset, useClient, useFormValue } from 'sanity';
 import { OPENAI_API_KEY } from '../environment';
+import { buildAiMetadataContext } from '../utils/buildAiMetadataContext';
 import { urlFor } from '../utils/image';
 
 // Lazy client — created on first use so module import doesn't fail in CLI/SSR contexts
@@ -78,6 +79,10 @@ interface GenericAIGeneratorProps extends StringInputProps {
   fieldDependencies?: {
     [key: string]: string; // field path -> variable name in prompt
   };
+  /** When true, generation is blocked until the image field has a value. */
+  imageRequired?: boolean;
+  /** Inject EXIF/GPS and location fields into {fileMetadata} in the prompt. */
+  includeFileMetadata?: boolean;
 }
 
 const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
@@ -91,7 +96,11 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     placeholder = 'Generated content will appear here...',
     transformResponse,
     fieldDependencies,
+    imageRequired = Boolean(imageField && !fieldDependencies),
+    includeFileMetadata = false,
   } = props;
+
+  const client = useClient({ apiVersion: '2024-10-28' });
 
   // Default prompt if none provided
   const defaultPrompt = imageField
@@ -115,21 +124,26 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     const out: Record<string, string> = {};
     for (const [fieldPath, variableName] of Object.entries(fieldDependencies)) {
       const fieldValue = getValueAtPath(documentValue, fieldPath.split('.'));
+      let extracted = '';
       if (fieldPath === 'content' && fieldValue) {
-        out[variableName] = extractTextFromBlockContent(fieldValue);
+        extracted = extractTextFromBlockContent(fieldValue);
       } else if (fieldPath === 'tags' && fieldValue) {
-        out[variableName] = extractTagNames(fieldValue);
+        extracted = extractTagNames(fieldValue);
       } else {
-        out[variableName] = fieldValue ? String(fieldValue) : '';
+        extracted = fieldValue ? String(fieldValue) : '';
+      }
+      const trimmed = extracted.trim();
+      const existing = out[variableName]?.trim() ?? '';
+      if (trimmed && !existing) {
+        out[variableName] = trimmed;
+      } else if (!out[variableName]) {
+        out[variableName] = extracted;
       }
     }
     return out;
   }, [documentValue, fieldDependencies]);
 
   const finalPrompt = customPrompt || defaultPrompt;
-
-  // Debug: Log the extracted values
-  console.log('AI Generator - Extracted values:', dependencyValues);
 
   function handleChangeContent(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const response = e.target.value;
@@ -140,8 +154,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     setIsLoading(true);
     setError(null);
 
-    // If image is required but not available
-    if (imageField && !imageUrl) {
+    if (imageRequired && !imageUrl) {
       setError('Image URL is missing');
       setIsLoading(false);
       return;
@@ -167,13 +180,26 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
       // Add text content
       let processedPrompt = finalPrompt;
 
-      // Replace field dependency variables in the prompt
       if (fieldDependencies && Object.keys(dependencyValues).length > 0) {
         Object.entries(dependencyValues).forEach(([variableName, value]) => {
           const placeholder = `{${variableName}}`;
           const stringValue = typeof value === 'string' ? value : String(value || '');
           processedPrompt = processedPrompt.replace(new RegExp(placeholder, 'g'), stringValue);
         });
+      }
+
+      if (includeFileMetadata) {
+        const imageValue = imageField
+          ? (getValueAtPath(documentValue, imageField.split('.')) as
+              | { asset?: { _ref?: string } }
+              | undefined)
+          : undefined;
+        const metadataContext = await buildAiMetadataContext(
+          client,
+          documentValue,
+          imageValue?.asset?._ref,
+        );
+        processedPrompt = processedPrompt.replace(/\{fileMetadata\}/g, metadataContext);
       }
 
       content.push({
@@ -220,20 +246,19 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
     }
   }
 
-  // Handle image URL generation if image field is specified
   useEffect(() => {
     if (!imageField || !image) {
-      // Only show image error if we're not using field dependencies
-      if (!fieldDependencies) {
+      setImageUrl('');
+      if (imageRequired) {
         setError('Image URL is missing');
-        setIsLoading(false);
       }
       return;
     }
 
+    setError(null);
     const sanityUrl = urlFor(image).width(256).height(256).url();
     setImageUrl(sanityUrl);
-  }, [image, imageField, fieldDependencies]);
+  }, [image, imageField, imageRequired]);
 
   return (
     <Card padding={4} tone='transparent' border radius={2} shadow={1}>
@@ -333,7 +358,7 @@ const GenericAIGenerator = (props: GenericAIGeneratorProps) => {
         <Button
           disabled={
             isLoading ||
-            (imageField && !imageUrl) ||
+            (imageRequired && !imageUrl) ||
             (fieldDependencies &&
               Object.keys(dependencyValues).some(key => {
                 const value = dependencyValues[key];

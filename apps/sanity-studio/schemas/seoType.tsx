@@ -25,12 +25,17 @@ export const seoType = defineType({
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt="Write a compelling SEO meta description for '{contentTitle}'. Context: {contentContext}. Keep it under 160 characters, include relevant keywords naturally, and encourage clicks from search results."
+            prompt="Write a compelling SEO meta description for '{contentTitle}'. Context: {contentContext}. Place: {placeName}, {country}. Keep it under 160 characters, include relevant keywords naturally, and encourage clicks from search results."
+            imageField='image'
             fieldDependencies={{
               title: 'contentTitle',
               name: 'contentTitle',
               description: 'contentContext',
+              caption: 'contentContext',
               projectType: 'contentContext',
+              placeName: 'placeName',
+              country: 'country',
+              countryCode: 'country',
             }}
             characterLimit={160}
             rows={3}

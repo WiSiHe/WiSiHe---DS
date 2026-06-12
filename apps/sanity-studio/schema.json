@@ -2852,6 +2852,288 @@
     }
   },
   {
+    "type": "type",
+    "name": "travelPlace.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "travelPlace"
+    }
+  },
+  {
+    "name": "photography",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "photography"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": false
+      },
+      "image": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "asset": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageAsset.reference"
+              },
+              "optional": true
+            },
+            "media": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "unknown"
+              },
+              "optional": true
+            },
+            "hotspot": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageHotspot"
+              },
+              "optional": true
+            },
+            "crop": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageCrop"
+              },
+              "optional": true
+            },
+            "alt": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": false
+            },
+            "_type": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string",
+                "value": "image"
+              }
+            }
+          }
+        },
+        "optional": false
+      },
+      "caption": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "place": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "travelPlace.reference"
+        },
+        "optional": true
+      },
+      "placeName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "country": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "countryCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "fileMetadataPanel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "region": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "coordinates": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "geopoint"
+        },
+        "optional": true
+      },
+      "capturedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "camera": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "isFeatured": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "tagsV2": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "tag.reference"
+            }
+          }
+        },
+        "optional": true
+      },
+      "seo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "seo"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "geopoint",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "geopoint"
+          }
+        },
+        "lat": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "lng": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "alt": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "homeContactCtaSection",
     "type": "type",
     "value": {
@@ -3259,7 +3541,7 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "heroSubtitle": {
         "type": "objectAttribute",
@@ -3279,6 +3561,53 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "portrait": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "asset": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageAsset.reference"
+              },
+              "optional": true
+            },
+            "media": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "unknown"
+              },
+              "optional": true
+            },
+            "hotspot": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageHotspot"
+              },
+              "optional": true
+            },
+            "crop": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageCrop"
+              },
+              "optional": true
+            },
+            "_type": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string",
+                "value": "image"
+              }
+            }
+          }
         },
         "optional": true
       },
@@ -3435,6 +3764,411 @@
                   }
                 },
                 "optional": true
+              },
+              "funFact": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "stats": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "object",
+                    "attributes": {
+                      "label": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "value": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    },
+                    "rest": {
+                      "type": "object",
+                      "attributes": {
+                        "_key": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      },
+      "visitedCountries": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "country": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "countryCode": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "placeName": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "coordinates": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "geopoint"
+                },
+                "optional": true
+              },
+              "notes": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "cities": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "object",
+                    "attributes": {
+                      "place": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "inline",
+                          "name": "travelPlace.reference"
+                        },
+                        "optional": true
+                      },
+                      "name": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "coordinates": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "inline",
+                          "name": "geopoint"
+                        },
+                        "optional": true
+                      },
+                      "isHighlight": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "boolean"
+                        },
+                        "optional": true
+                      },
+                      "notes": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "funFact": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "image": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "object",
+                          "attributes": {
+                            "asset": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "inline",
+                                "name": "sanity.imageAsset.reference"
+                              },
+                              "optional": true
+                            },
+                            "media": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "unknown"
+                              },
+                              "optional": true
+                            },
+                            "hotspot": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "inline",
+                                "name": "sanity.imageHotspot"
+                              },
+                              "optional": true
+                            },
+                            "crop": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "inline",
+                                "name": "sanity.imageCrop"
+                              },
+                              "optional": true
+                            },
+                            "_type": {
+                              "type": "objectAttribute",
+                              "value": {
+                                "type": "string",
+                                "value": "image"
+                              }
+                            }
+                          }
+                        },
+                        "optional": true
+                      },
+                      "stats": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "array",
+                          "of": {
+                            "type": "object",
+                            "attributes": {
+                              "label": {
+                                "type": "objectAttribute",
+                                "value": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              },
+                              "value": {
+                                "type": "objectAttribute",
+                                "value": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            },
+                            "rest": {
+                              "type": "object",
+                              "attributes": {
+                                "_key": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "optional": true
+                      }
+                    },
+                    "rest": {
+                      "type": "object",
+                      "attributes": {
+                        "_key": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      },
+      "adventurePlaces": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "place": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "travelPlace.reference"
+                },
+                "optional": true
+              },
+              "name": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "placeName": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "coordinates": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "geopoint"
+                },
+                "optional": true
+              },
+              "notes": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "funFact": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "image": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "object",
+                  "attributes": {
+                    "asset": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "sanity.imageAsset.reference"
+                      },
+                      "optional": true
+                    },
+                    "media": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "unknown"
+                      },
+                      "optional": true
+                    },
+                    "hotspot": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "sanity.imageHotspot"
+                      },
+                      "optional": true
+                    },
+                    "crop": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "inline",
+                        "name": "sanity.imageCrop"
+                      },
+                      "optional": true
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "image"
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              },
+              "stats": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "object",
+                    "attributes": {
+                      "label": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "value": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    },
+                    "rest": {
+                      "type": "object",
+                      "attributes": {
+                        "_key": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "optional": true
               }
             },
             "rest": {
@@ -3453,6 +4187,13 @@
         "optional": true
       },
       "ctaTitle": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ctaDescription": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -3513,39 +4254,198 @@
     }
   },
   {
-    "name": "geopoint",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "geopoint"
+    "name": "travelPlace",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "travelPlace"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": false
+      },
+      "kind": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "city"
+            },
+            {
+              "type": "string",
+              "value": "adventure"
+            }
+          ]
+        },
+        "optional": false
+      },
+      "countryName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "countryCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "coordinates": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "geopoint"
+        },
+        "optional": false
+      },
+      "isHighlight": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "funFact": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "notes": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "stats": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "label": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "value": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": false
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
-        "lat": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": true
+        "optional": true
+      },
+      "image": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "asset": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageAsset.reference"
+              },
+              "optional": true
+            },
+            "media": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "unknown"
+              },
+              "optional": true
+            },
+            "hotspot": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageHotspot"
+              },
+              "optional": true
+            },
+            "crop": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageCrop"
+              },
+              "optional": true
+            },
+            "_type": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string",
+                "value": "image"
+              }
+            }
+          }
         },
-        "lng": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": true
-        },
-        "alt": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": true
-        }
+        "optional": true
       }
     }
   },

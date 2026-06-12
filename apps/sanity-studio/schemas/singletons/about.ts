@@ -246,16 +246,36 @@ export default defineType({
                   type: 'object',
                   fields: [
                     defineField({
+                      name: 'place',
+                      title: 'Travel place',
+                      type: 'reference',
+                      to: [{ type: 'travelPlace' }],
+                      description:
+                        'Canonical place document — map card content and photography links use this when set.',
+                    }),
+                    defineField({
                       name: 'name',
                       title: 'City',
                       type: 'string',
-                      validation: rule => rule.required(),
+                      description: 'Fallback label when no travel place is linked.',
+                      validation: rule =>
+                        rule.custom((name, context) => {
+                          const parent = context.parent as { place?: { _ref?: string } };
+                          if (parent?.place?._ref) return true;
+                          return name?.trim() ? true : 'Required when no travel place is linked';
+                        }),
                     }),
                     defineField({
                       name: 'coordinates',
                       title: 'Coordinates',
                       type: 'geopoint',
-                      validation: rule => rule.required(),
+                      description: 'Fallback map pin when no travel place is linked.',
+                      validation: rule =>
+                        rule.custom((coordinates, context) => {
+                          const parent = context.parent as { place?: { _ref?: string } };
+                          if (parent?.place?._ref) return true;
+                          return coordinates ? true : 'Required when no travel place is linked';
+                        }),
                     }),
                     defineField({
                       name: 'isHighlight',
@@ -348,10 +368,23 @@ export default defineType({
           type: 'object',
           fields: [
             defineField({
+              name: 'place',
+              title: 'Travel place',
+              type: 'reference',
+              to: [{ type: 'travelPlace' }],
+              description: 'Canonical adventure place — links photography and map card content.',
+            }),
+            defineField({
               name: 'name',
               title: 'Name',
               type: 'string',
-              validation: rule => rule.required(),
+              description: 'Fallback label when no travel place is linked.',
+              validation: rule =>
+                rule.custom((name, context) => {
+                  const parent = context.parent as { place?: { _ref?: string } };
+                  if (parent?.place?._ref) return true;
+                  return name?.trim() ? true : 'Required when no travel place is linked';
+                }),
             }),
             defineField({
               name: 'placeName',
@@ -363,7 +396,13 @@ export default defineType({
               name: 'coordinates',
               title: 'Coordinates',
               type: 'geopoint',
-              validation: rule => rule.required(),
+              description: 'Fallback map pin when no travel place is linked.',
+              validation: rule =>
+                rule.custom((coordinates, context) => {
+                  const parent = context.parent as { place?: { _ref?: string } };
+                  if (parent?.place?._ref) return true;
+                  return coordinates ? true : 'Required when no travel place is linked';
+                }),
             }),
             defineField({
               name: 'notes',
@@ -413,7 +452,7 @@ export default defineType({
             }),
           ],
           preview: {
-            select: { title: 'name', subtitle: 'placeName' },
+            select: { title: 'name', subtitle: 'placeName', linked: 'place.name' },
           },
         },
       ],

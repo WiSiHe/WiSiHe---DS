@@ -134,8 +134,23 @@ export type PlaceImage = {
   alt?: string;
 } | null;
 
+export type TravelPlaceSnapshot = {
+  _id: string;
+  name?: string | null;
+  kind?: string | null;
+  countryName?: string | null;
+  countryCode?: string | null;
+  coordinates?: GeoCoordinates | null;
+  isHighlight?: boolean | null;
+  funFact?: string | null;
+  notes?: string | null;
+  stats?: PlaceStat[] | null;
+  image?: PlaceImage;
+};
+
 export interface VisitedCityItem {
   _key: string;
+  placeId?: string | null;
   name?: string | null;
   coordinates?: GeoCoordinates | null;
   isHighlight?: boolean | null;
@@ -149,6 +164,7 @@ export interface VisitedCityItem {
 
 export interface AdventurePlaceItem {
   _key: string;
+  placeId?: string | null;
   name?: string | null;
   placeName?: string | null;
   coordinates?: GeoCoordinates | null;
@@ -172,7 +188,14 @@ export interface TravelPhotoItem {
   _id: string;
   title?: string | null;
   country?: string | null;
+  countryCode?: string | null;
   placeName?: string | null;
+  place?: {
+    _id: string;
+    name?: string | null;
+    countryName?: string | null;
+    countryCode?: string | null;
+  } | null;
   isFeatured?: boolean | null;
   capturedAt?: string | null;
   image?: {
@@ -182,80 +205,83 @@ export interface TravelPhotoItem {
   } | null;
 }
 
-type RawVisitedCity = {
-  _key: string;
-  name?: string | null;
-  coordinates?: unknown;
-  isHighlight?: boolean | null;
-  notes?: string | null;
-  funFact?: string | null;
-  stats?: PlaceStat[] | null;
-  image?: PlaceImage;
-};
+/** Stable key for grouping photos with visited countries (ISO preferred). */
+export function getTravelPhotoCountryKey(photo: TravelPhotoItem): string | null {
+  const code = photo.countryCode?.trim().toUpperCase();
+  if (code) return code;
+  const name = photo.country?.trim();
+  return name || null;
+}
 
-type RawVisitedCountry = {
-  _key: string;
-  country?: string | null;
-  countryCode?: string | null;
-  placeName?: string | null;
-  coordinates?: unknown;
-  notes?: string | null;
-  cities?: RawVisitedCity[] | null;
-};
+export function travelPhotoMatchesCountry(
+  photo: TravelPhotoItem,
+  visited: { country?: string | null; countryCode?: string | null },
+): boolean {
+  const photoKey = getTravelPhotoCountryKey(photo);
+  if (!photoKey) return false;
+  const visitedCode = visited.countryCode?.trim().toUpperCase();
+  if (visitedCode && photoKey === visitedCode) return true;
+  const visitedName = visited.country?.trim();
+  if (visitedName && photoKey.toLowerCase() === visitedName.toLowerCase()) return true;
+  if (visitedName && photo.country?.trim() === visitedName) return true;
+  return false;
+}
 
-type RawAdventurePlace = {
-  _key: string;
-  name?: string | null;
-  placeName?: string | null;
-  coordinates?: unknown;
-  notes?: string | null;
-  funFact?: string | null;
-  stats?: PlaceStat[] | null;
-  image?: PlaceImage;
-};
+type RawVisitedCountry = NonNullable<AboutDocument['visitedCountries']>[number];
+type RawVisitedCity = NonNullable<RawVisitedCountry['cities']>[number];
+type RawAdventurePlace = NonNullable<AboutDocument['adventurePlaces']>[number];
+type LinkedTravelPlace = NonNullable<RawVisitedCity['place']>;
+
+function resolveVisitedCity(city: RawVisitedCity, country: RawVisitedCountry): VisitedCityItem {
+  const place: LinkedTravelPlace | null = city.place;
+  return enrichVisitedCity({
+    _key: city._key,
+    placeId: place?._id,
+    name: place?.name ?? city.name,
+    coordinates: parseCoordinates(place?.coordinates) ?? parseCoordinates(city.coordinates),
+    isHighlight: place?.isHighlight ?? city.isHighlight,
+    country: place?.countryName ?? country.country,
+    countryCode: place?.countryCode ?? country.countryCode,
+    notes: place?.notes ?? city.notes,
+    funFact: place?.funFact ?? city.funFact,
+    stats: place?.stats ?? city.stats,
+    image: place?.image ?? city.image,
+  });
+}
+
+function resolveAdventurePlace(place: RawAdventurePlace): AdventurePlaceItem {
+  const linked: LinkedTravelPlace | null = place.place;
+  return enrichAdventurePlace({
+    _key: place._key,
+    placeId: linked?._id,
+    name: linked?.name ?? place.name,
+    placeName: place.placeName,
+    coordinates: parseCoordinates(linked?.coordinates) ?? parseCoordinates(place.coordinates),
+    notes: linked?.notes ?? place.notes,
+    funFact: linked?.funFact ?? place.funFact,
+    stats: linked?.stats ?? place.stats,
+    image: linked?.image ?? place.image,
+  });
+}
 
 export function normalizeVisitedCountries(
-  countries: RawVisitedCountry[] | null | undefined,
+  countries: AboutDocument['visitedCountries'] | null | undefined,
 ): VisitedCountryItem[] {
-  return (countries ?? []).map((item: RawVisitedCountry) => ({
+  return (countries ?? []).map(item => ({
     _key: item._key,
     country: item.country,
     countryCode: item.countryCode,
     placeName: item.placeName,
     notes: item.notes,
     coordinates: parseCoordinates(item.coordinates),
-    cities: (item.cities ?? []).map(city =>
-      enrichVisitedCity({
-        _key: city._key,
-        name: city.name,
-        coordinates: parseCoordinates(city.coordinates),
-        isHighlight: city.isHighlight,
-        country: item.country,
-        countryCode: item.countryCode,
-        notes: city.notes,
-        funFact: city.funFact,
-        stats: city.stats,
-        image: city.image,
-      }),
-    ),
+    cities: (item.cities ?? []).map(city => resolveVisitedCity(city, item)),
   }));
 }
 
 export function normalizeAdventurePlaces(
-  places: RawAdventurePlace[] | null | undefined,
+  places: AboutDocument['adventurePlaces'] | null | undefined,
 ): AdventurePlaceItem[] {
-  return (places ?? []).map(place =>
-    enrichAdventurePlace({
-      _key: place._key,
-      name: place.name,
-      placeName: place.placeName,
-      notes: place.notes,
-      funFact: place.funFact,
-      stats: place.stats,
-      image: place.image,
-      coordinates: parseCoordinates(place.coordinates),
-    }),
-  );
+  return (places ?? []).map(place => resolveAdventurePlace(place));
 }
 
 export function flattenVisitedCities(countries: VisitedCountryItem[]): VisitedCityItem[] {
@@ -265,29 +291,16 @@ export function flattenVisitedCities(countries: VisitedCountryItem[]): VisitedCi
 }
 
 export function normalizeTravelPhotos(
-  photos:
-    | Array<{
-        _id: string;
-        title?: string | null;
-        country?: string | null;
-        placeName?: string | null;
-        isFeatured?: boolean | null;
-        capturedAt?: string | null;
-        image?: TravelPhotoItem['image'];
-      }>
-    | null
-    | undefined,
+  photos: TravelPhotoItem[] | null | undefined,
 ): TravelPhotoItem[] {
-  return (photos ?? []).filter((photo): photo is TravelPhotoItem =>
-    Boolean(photo?._id && photo.image),
-  );
+  return (photos ?? []).filter(photo => Boolean(photo?._id && photo.image));
 }
 
 export function groupPhotosByCountry(photos: TravelPhotoItem[]): Map<string, TravelPhotoItem[]> {
   const grouped = new Map<string, TravelPhotoItem[]>();
 
   for (const photo of photos) {
-    const key = photo.country?.trim();
+    const key = getTravelPhotoCountryKey(photo);
     if (!key) continue;
     const list = grouped.get(key) ?? [];
     list.push(photo);

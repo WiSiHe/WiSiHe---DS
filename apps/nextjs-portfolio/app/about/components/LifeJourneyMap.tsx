@@ -43,8 +43,8 @@ const TRAVEL_FIT_DURATION_MS = 1100;
 export type LifeJourneyMapMode = 'journey' | 'travel';
 
 export type TravelSelection =
-  | { type: 'city'; key: string }
-  | { type: 'adventure'; key: string }
+  | { type: 'city'; key: string; placeId?: string }
+  | { type: 'adventure'; key: string; placeId?: string }
   | null;
 
 type LifeJourneyMapProps = {
@@ -243,7 +243,11 @@ export function LifeJourneyMap({
   const selectCity = useCallback(
     (city: VisitedCityItem) => {
       if (!city.coordinates) return;
-      setTravelSelection({ type: 'city', key: city._key });
+      setTravelSelection({
+        type: 'city',
+        key: city._key,
+        placeId: city.placeId ?? undefined,
+      });
       flyToCoordinates(`city-${city._key}`, city.coordinates.lng, city.coordinates.lat);
     },
     [flyToCoordinates],
@@ -252,7 +256,11 @@ export function LifeJourneyMap({
   const selectAdventure = useCallback(
     (place: AdventurePlaceItem) => {
       if (!place.coordinates) return;
-      setTravelSelection({ type: 'adventure', key: place._key });
+      setTravelSelection({
+        type: 'adventure',
+        key: place._key,
+        placeId: place.placeId ?? undefined,
+      });
       flyToCoordinates(
         `adventure-${place._key}`,
         place.coordinates.lng,

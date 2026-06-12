@@ -2,9 +2,10 @@ import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
-import { aboutQuery } from '@/sanity/lib/queries';
+import { aboutQuery, aboutTravelPhotographyQuery } from '@/sanity/lib/queries';
 import AboutPageClient from './AboutPageClient';
 import { buildAboutStructuredData } from './buildAboutStructuredData';
+import { normalizeTravelPhotos } from './components/lifeJourneyTypes';
 
 const SITE_URL = 'https://www.wisihe.no';
 const DEFAULT_DESCRIPTION =
@@ -43,13 +44,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const { data: aboutData } = await sanityFetch({ query: aboutQuery });
+  const [{ data: aboutData }, { data: travelPhotosData }] = await Promise.all([
+    sanityFetch({ query: aboutQuery }),
+    sanityFetch({ query: aboutTravelPhotographyQuery }),
+  ]);
   const about = aboutData as AboutQueryResult;
+  const travelPhotos = normalizeTravelPhotos(
+    travelPhotosData as import('./components/lifeJourneyTypes').TravelPhotoItem[] | null,
+  );
 
   return (
     <>
       <JsonLd data={buildAboutStructuredData(about)} />
-      <AboutPageClient about={about} />
+      <AboutPageClient about={about} travelPhotos={travelPhotos} />
     </>
   );
 }

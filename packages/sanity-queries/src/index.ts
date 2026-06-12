@@ -42,7 +42,20 @@ export const aboutQuery = defineQuery(`
         notes,
         funFact,
         stats[] { label, value },
-        image { ..., "lqip": asset->metadata.lqip }
+        image { ..., "lqip": asset->metadata.lqip },
+        place-> {
+          _id,
+          name,
+          kind,
+          countryName,
+          countryCode,
+          coordinates,
+          isHighlight,
+          funFact,
+          notes,
+          stats[] { label, value },
+          image { ..., "lqip": asset->metadata.lqip }
+        }
       }
     },
     adventurePlaces[] {
@@ -53,7 +66,20 @@ export const aboutQuery = defineQuery(`
       notes,
       funFact,
       stats[] { label, value },
-      image { ..., "lqip": asset->metadata.lqip }
+      image { ..., "lqip": asset->metadata.lqip },
+      place-> {
+        _id,
+        name,
+        kind,
+        countryName,
+        countryCode,
+        coordinates,
+        isHighlight,
+        funFact,
+        notes,
+        stats[] { label, value },
+        image { ..., "lqip": asset->metadata.lqip }
+      }
     },
     ctaTitle,
     ctaDescription,
@@ -64,13 +90,24 @@ export const aboutQuery = defineQuery(`
 `);
 
 export const aboutTravelPhotographyQuery = defineQuery(`
-  *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {
+  *[_type == "photography" && (
+    defined(place) ||
+    defined(country) && country != "" ||
+    defined(countryCode) && countryCode != ""
+  )] | order(isFeatured desc, capturedAt desc) {
     _id,
     title,
     country,
+    countryCode,
     placeName,
     isFeatured,
     capturedAt,
+    place-> {
+      _id,
+      name,
+      countryName,
+      countryCode
+    },
     image {
       ...,
       "lqip": asset->metadata.lqip

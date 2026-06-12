@@ -57,6 +57,7 @@ const categories: CategoryItem[] = [
     icon: '⚙️',
     items: [
       { title: 'Tags', icon: '🏷️', schemaType: 'tag' },
+      { title: 'Travel places', icon: '🌍', schemaType: 'travelPlace' },
       { title: 'Redirects', icon: '🔀', schemaType: 'redirect' },
     ],
   },

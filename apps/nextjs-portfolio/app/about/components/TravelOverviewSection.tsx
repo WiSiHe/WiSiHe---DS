@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import { LifeJourneyMap, type TravelSelection } from './LifeJourneyMap';
-import type { AdventurePlaceItem, VisitedCountryItem } from './lifeJourneyTypes';
+import type { AdventurePlaceItem, TravelPhotoItem, VisitedCountryItem } from './lifeJourneyTypes';
 import { MapPlaceDetailCard } from './MapPlaceDetailCard';
+import { getPhotosForTravelSelection } from './travelPhotos';
 
 type TravelOverviewSectionProps = {
   visitedCountries: VisitedCountryItem[];
   adventurePlaces?: AdventurePlaceItem[];
+  travelPhotos?: TravelPhotoItem[];
   title?: string;
   description?: string;
 };
@@ -15,6 +17,7 @@ type TravelOverviewSectionProps = {
 export function TravelOverviewSection({
   visitedCountries,
   adventurePlaces = [],
+  travelPhotos = [],
   title = "Countries I've visited",
   description = 'Explore the map — pick a city to see country context, notes, and stats beside the map.',
 }: TravelOverviewSectionProps) {
@@ -35,6 +38,17 @@ export function TravelOverviewSection({
   }, [adventurePlaces, travelSelection]);
 
   if (visitedCountries.length === 0) return null;
+
+  const selectionPhotos = getPhotosForTravelSelection(
+    travelPhotos,
+    travelSelection,
+    selectedCity
+      ? {
+          country: selectedCity.country.country,
+          countryCode: selectedCity.country.countryCode,
+        }
+      : null,
+  );
 
   const detailProps = selectedCity
     ? {
@@ -92,6 +106,7 @@ export function TravelOverviewSection({
 
           <MapPlaceDetailCard
             {...(detailProps ?? {})}
+            travelPhotos={detailProps ? selectionPhotos : []}
             onClear={detailProps ? () => setTravelSelection(null) : undefined}
             className='max-lg:mt-0 lg:min-h-[min(62svh,600px)]'
           />
