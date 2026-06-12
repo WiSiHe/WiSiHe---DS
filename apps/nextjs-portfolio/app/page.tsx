@@ -3,27 +3,13 @@ import type {
   HomeExtrasQueryResult,
   HomePageQueryResult,
 } from '@wisihe/sanity-queries';
-import { shuffleArray } from '@wisihe/utils';
 import type { Metadata } from 'next';
-import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
+import { getHeroOverview } from '@/lib/homePageBuilder';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, homeExtrasQuery, homePageQuery } from '@/sanity/lib/queries';
 import { portableTextToPlainText } from '@/sanity/lib/utils';
-import AboutTeaserSection from './components/marketing/AboutTeaserSection/AboutTeaserSection';
-import ContactCtaSection from './components/marketing/ContactCtaSection/ContactCtaSection';
-import HeroImageSection from './components/marketing/HeroSection/HeroSection';
-import ShopTeaserSection from './components/marketing/ShopTeaserSection/ShopTeaserSection';
-import SkillsSection from './components/marketing/SkillsSection/SkillsSection';
-import VideosTeaserSection from './components/marketing/VideosTeaserSection/VideosTeaserSection';
-import PaintingsSection from './components/paintings/PaintingsSection/PaintingsSection';
-import FeaturedProjects from './components/projects/FeaturedProjects/FeaturedProjects';
-
-const HeroSkeleton = () => (
-  <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>
-    <div className='w-full h-96 bg-surface-elevated animate-pulse rounded-2xl' />
-  </div>
-);
+import HomePageSections from './components/marketing/HomePageSections/HomePageSections';
 
 const HOME_CANONICAL = 'https://www.wisihe.no';
 const HOME_DESCRIPTION_FALLBACK =
@@ -36,7 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   const home = data as HomePageQueryResult | null;
   const title = home?.title?.trim() || 'WiSiHe Portfolio';
-  const description = portableTextToPlainText(home?.overview, 160) || HOME_DESCRIPTION_FALLBACK;
+  const overview = getHeroOverview(home);
+  const description =
+    portableTextToPlainText(
+      overview as unknown as readonly Record<string, unknown>[] | null,
+      160,
+    ) || HOME_DESCRIPTION_FALLBACK;
 
   return {
     title: { absolute: title },
@@ -57,18 +48,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
-
-const SectionSkeleton = () => (
-  <div className='max-w-7xl mx-auto px-4 py-20'>
-    <div className='h-8 bg-surface-elevated animate-pulse rounded mb-4' />
-    <div className='h-4 bg-surface-elevated animate-pulse rounded mb-8' />
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-      {[1, 2, 3].map(i => (
-        <div key={i} className='h-64 bg-surface-elevated animate-pulse rounded' />
-      ))}
-    </div>
-  </div>
-);
 
 export default async function Home() {
   const [{ data: _homepageData }, { data: _aboutData }, { data: _extrasData }] = await Promise.all([
@@ -92,78 +71,17 @@ export default async function Home() {
     );
   }
 
-  const {
-    overview,
-    showcasePaintings,
-    showcaseProjects,
-    paintingsDescription,
-    projectsDescription,
-  } = homepage;
-
-  const shuffledHeroPaintings = showcasePaintings ? shuffleArray(showcasePaintings) : [];
-  const shuffledHeroProjects = showcaseProjects ? shuffleArray(showcaseProjects) : [];
-
-  // Interleave paintings and projects to ensure a balanced grid of both
-  const combinedHeroItems: any[] = [];
-  const maxLen = Math.max(shuffledHeroPaintings.length, shuffledHeroProjects.length);
-  for (let i = 0; i < maxLen; i++) {
-    if (i < shuffledHeroPaintings.length) {
-      combinedHeroItems.push(shuffledHeroPaintings[i]);
-    }
-    if (i < shuffledHeroProjects.length) {
-      combinedHeroItems.push(shuffledHeroProjects[i]);
-    }
-  }
-
   return (
     <div className='bg-background'>
-      <div className='bg-background'>
-        <Suspense fallback={<HeroSkeleton />}>
-          <HeroImageSection
-            items={combinedHeroItems}
-            overview={overview as PortableTextBlock[] | null}
-            heroEyebrow={about?.jobTitle}
-            heroName={about?.heroSubtitle}
-          />
-        </Suspense>
-
-        <section className='relative pt-24 pb-12'>
-          <Suspense fallback={<SectionSkeleton />}>
-            <FeaturedProjects
-              showcaseProjects={showcaseProjects}
-              projectsDescription={projectsDescription}
-            />
-          </Suspense>
-        </section>
-      </div>
-
-      <section className='bg-surface py-24 px-4 md:px-8'>
-        <Suspense fallback={<SectionSkeleton />}>
-          <PaintingsSection
-            paintingsDescription={paintingsDescription}
-            showcasePaintings={showcasePaintings}
-            paintingsSource={
-              homepage.showcasePaintingsCurated ? 'cms_showcase' : 'featured_fallback'
-            }
-          />
-        </Suspense>
-      </section>
-
-      <AboutTeaserSection home={homepage} about={about} />
-
-      {extras?.videos?.length ? (
-        <VideosTeaserSection home={homepage} videos={extras.videos} />
-      ) : null}
-
-      {extras?.forSalePaintings?.length ? (
-        <ShopTeaserSection home={homepage} paintings={extras.forSalePaintings} />
-      ) : null}
-
-      <Suspense fallback={<div className='h-64 bg-surface-elevated animate-pulse' />}>
-        <SkillsSection />
+      <Suspense fallback={null}>
+        <HomePageSections
+          home={homepage}
+          about={about}
+          extras={extras}
+          heroEyebrow={about?.jobTitle}
+          heroName={about?.heroSubtitle}
+        />
       </Suspense>
-
-      <ContactCtaSection home={homepage} about={about} />
     </div>
   );
 }

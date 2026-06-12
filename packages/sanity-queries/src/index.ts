@@ -230,11 +230,10 @@ export const pagesSlugs = defineQuery(`
 export const homeSectionCopyQuery = defineQuery(`
   *[_type == "home"][0]{
     title,
-    overview,
+    "overview": sections[_type == "homeHeroSection"][0].overview,
     paintingsTitle,
     paintingsDescription,
     projectsTitle,
-    projectsDescription,
     projectsListingDescription,
   }
 `);
@@ -243,79 +242,104 @@ export const homePageQuery = defineQuery(`
   *[_type == "home"][0]{
     _id,
     title,
-    overview,
     paintingsTitle,
     projectsTitle,
-    "paintingsCount": count(*[_type == "painting"]),
     paintingsDescription,
-    "showcasePaintingsCurated": count(showcasePaintings) > 0,
-    "showcasePaintings": coalesce(
-      showcasePaintings[]->{
-        _type, _id, altText,
-        "slug": slug.current,
-        title, format, isFeatured, isNSFW, medium, paintedAt,
-        tagsV2[]->{name},
-        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
-      },
-      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
-        _type, _id, altText,
-        "slug": slug.current,
-        title, format, isFeatured, isNSFW, medium, paintedAt,
-        tagsV2[]->{name},
-        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
-      }
-    ),
-    projectsDescription,
-    showcaseProjects[]->{
+    projectsListingDescription,
+    "paintingsCount": count(*[_type == "painting"]),
+    "overview": sections[_type == "homeHeroSection"][0].overview,
+    sections[]{
+      _key,
       _type,
-      _id,
-      title,
-      description,
-      seoDescription,
-      projectStart,
-      projectEnd,
-      status,
-      content,
-      "seo": {
-        "title": coalesce(seo.title, title, ""),
-        "description": coalesce(seo.description,  ""),
-        "image": seo.image,
-        "noIndex": seo.noIndex == true
+      _type == "homeHeroSection" => {
+        overview
       },
-      name,
-      "tags": tags[]->{name},
-      "slug": slug.current,
-      image{
-        ...,
-        "lqip": asset->metadata.lqip
+      _type == "homeProjectsSection" => {
+        description,
+        showcaseProjects[]->{
+          _type,
+          _id,
+          title,
+          description,
+          seoDescription,
+          projectStart,
+          projectEnd,
+          status,
+          content,
+          "seo": {
+            "title": coalesce(seo.title, title, ""),
+            "description": coalesce(seo.description, ""),
+            "image": seo.image,
+            "noIndex": seo.noIndex == true
+          },
+          name,
+          "tags": tags[]->{name},
+          "slug": slug.current,
+          image{
+            ...,
+            "lqip": asset->metadata.lqip
+          }
+        }
       },
-    },
-    aboutTeaserEyebrow,
-    aboutTeaserTitle,
-    aboutTeaserDescription,
-    aboutTeaserPrimaryLabel,
-    aboutTeaserSecondaryLabel,
-    aboutTeaserJourneyEyebrow,
-    aboutTeaserJourneyLinkLabel,
-    videosTeaser {
-      eyebrow,
-      title,
-      description,
-      linkLabel
-    },
-    shopTeaser {
-      eyebrow,
-      title,
-      description,
-      linkLabel
-    },
-    contactCtaEyebrow,
-    contactCtaTitle,
-    contactCtaDescription,
-    contactCtaPrimaryLabel,
-    contactCtaPrimaryUrl,
-    contactCtaSecondaryLabel,
-    contactCtaSecondaryUrl
+      _type == "homePaintingsSection" => {
+        description,
+        "showcasePaintingsCurated": count(showcasePaintings) > 0,
+        "showcasePaintings": coalesce(
+          showcasePaintings[]->{
+            _type, _id, altText,
+            "slug": slug.current,
+            title, format, isFeatured, isNSFW, medium, paintedAt,
+            tagsV2[]->{name},
+            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
+          },
+          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
+            _type, _id, altText,
+            "slug": slug.current,
+            title, format, isFeatured, isNSFW, medium, paintedAt,
+            tagsV2[]->{name},
+            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
+          }
+        )
+      },
+      _type == "homeAboutTeaserSection" => {
+        eyebrow,
+        title,
+        description,
+        primaryLabel,
+        secondaryLabel,
+        journeyEyebrow,
+        journeyLinkLabel
+      },
+      _type == "homeVideosTeaserSection" => {
+        intro {
+          eyebrow,
+          title,
+          description,
+          linkLabel
+        }
+      },
+      _type == "homeShopTeaserSection" => {
+        intro {
+          eyebrow,
+          title,
+          description,
+          linkLabel
+        }
+      },
+      _type == "homeSkillsSection" => {
+        eyebrow,
+        title
+      },
+      _type == "homeContactCtaSection" => {
+        eyebrow,
+        title,
+        description,
+        primaryLabel,
+        primaryUrl,
+        secondaryLabel,
+        secondaryUrl
+      }
+    }
   }
 `);
 

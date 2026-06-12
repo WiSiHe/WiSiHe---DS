@@ -1,4 +1,5 @@
-import type { AboutQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
+import type { HomeAboutTeaserSection, HomeContactCtaSection } from '@/lib/homePageBuilder';
 
 export type HomeSectionIntroCopy = {
   eyebrow?: string | null;
@@ -26,11 +27,13 @@ export function pickSectionIntro(
   };
 }
 
-export function buildAboutTeaserDescription(
-  home: HomePageQueryResult | null,
+export type AboutTeaserSectionData = HomeAboutTeaserSection;
+
+export function buildAboutTeaserCopy(
+  section: AboutTeaserSectionData | null,
   about: AboutQueryResult | null,
-): string {
-  const custom = home?.aboutTeaserDescription?.trim();
+) {
+  const custom = section?.description?.trim();
   if (custom) return custom;
 
   const name = about?.heroSubtitle?.trim() || 'Henrik Wilhelm Sissener';
@@ -42,21 +45,21 @@ export function buildAboutTeaserDescription(
   return `${name} — ${jobTitle}. ${bio}`;
 }
 
+export type ContactCtaSectionData = HomeContactCtaSection;
+
 export function buildContactCtaCopy(
-  home: HomePageQueryResult | null,
+  section: ContactCtaSectionData | null,
   about: AboutQueryResult | null,
 ) {
   return {
-    eyebrow: home?.contactCtaEyebrow?.trim() || '// Available for work',
-    title:
-      home?.contactCtaTitle?.trim() || about?.ctaTitle?.trim() || "Let's build something together.",
+    eyebrow: section?.eyebrow?.trim() || '// Available for work',
+    title: section?.title?.trim() || about?.ctaTitle?.trim() || "Let's build something together.",
     description:
-      home?.contactCtaDescription?.trim() ||
+      section?.description?.trim() ||
       'Open to freelance frontend work, design-engineering collaborations, and creative commissions.',
-    primaryLabel:
-      home?.contactCtaPrimaryLabel?.trim() || about?.ctaButtonText?.trim() || 'Get in touch',
-    primaryUrl: home?.contactCtaPrimaryUrl?.trim() || about?.ctaButtonUrl?.trim() || '/contact',
-    secondaryLabel: home?.contactCtaSecondaryLabel?.trim() || 'View projects',
-    secondaryUrl: home?.contactCtaSecondaryUrl?.trim() || '/projects',
+    primaryLabel: section?.primaryLabel?.trim() || about?.ctaButtonText?.trim() || 'Get in touch',
+    primaryUrl: section?.primaryUrl?.trim() || about?.ctaButtonUrl?.trim() || '/contact',
+    secondaryLabel: section?.secondaryLabel?.trim() || 'View projects',
+    secondaryUrl: section?.secondaryUrl?.trim() || '/projects',
   };
 }

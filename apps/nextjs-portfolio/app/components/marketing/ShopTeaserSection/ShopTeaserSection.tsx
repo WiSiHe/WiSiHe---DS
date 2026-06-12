@@ -1,13 +1,13 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { HomeExtrasQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import PaintingCard from '@/app/components/paintings/PaintingCard/PaintingCard';
-import { pickSectionIntro } from '@/lib/homeSectionCopy';
+import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
 type PaintingItem = NonNullable<HomeExtrasQueryResult>['forSalePaintings'][number];
@@ -21,11 +21,11 @@ const DEFAULT_COPY = {
 };
 
 type ShopTeaserSectionProps = {
-  home: HomePageQueryResult | null;
+  intro: HomeSectionIntroCopy | null | undefined;
   paintings: PaintingItem[];
 };
 
-export default function ShopTeaserSection({ home, paintings }: ShopTeaserSectionProps) {
+export default function ShopTeaserSection({ intro, paintings }: ShopTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
@@ -33,7 +33,7 @@ export default function ShopTeaserSection({ home, paintings }: ShopTeaserSection
 
   if (paintings.length === 0) return null;
 
-  const copy = pickSectionIntro(home?.shopTeaser, DEFAULT_COPY);
+  const copy = pickSectionIntro(intro, DEFAULT_COPY);
 
   return (
     <section

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { HomeExtrasQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion, useReducedMotion } from 'motion/react';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaPlay } from 'react-icons/fa';
-import { pickSectionIntro } from '@/lib/homeSectionCopy';
+import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
 import { urlForImage } from '@/sanity/lib/utils';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
@@ -23,7 +23,7 @@ const DEFAULT_COPY = {
 };
 
 type VideosTeaserSectionProps = {
-  home: HomePageQueryResult | null;
+  intro: HomeSectionIntroCopy | null | undefined;
   videos: VideoItem[];
 };
 
@@ -85,7 +85,7 @@ function VideoTeaserCard({ video, index }: { video: VideoItem; index: number }) 
   );
 }
 
-export default function VideosTeaserSection({ home, videos }: VideosTeaserSectionProps) {
+export default function VideosTeaserSection({ intro, videos }: VideosTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
@@ -93,7 +93,7 @@ export default function VideosTeaserSection({ home, videos }: VideosTeaserSectio
 
   if (videos.length === 0) return null;
 
-  const copy = pickSectionIntro(home?.videosTeaser, DEFAULT_COPY);
+  const copy = pickSectionIntro(intro, DEFAULT_COPY);
 
   return (
     <section

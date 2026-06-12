@@ -186,6 +186,20 @@ export type ProjectReference = {
   [internalGroqTypeReferenceTo]?: "project";
 };
 
+export type RecipeReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "recipe";
+};
+
+export type VideoReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "video";
+};
+
 export type BlockContent = Array<
   | {
       children?: Array<{
@@ -194,20 +208,33 @@ export type BlockContent = Array<
         _type: "span";
         _key: string;
       }>;
-      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+      style?: "normal" | "h2" | "h3" | "h4" | "blockquote";
       listItem?: "bullet" | "number";
       markDefs?: Array<{
-        linkType?: "href" | "slug" | "painting" | "project";
+        linkType?:
+          | "href"
+          | "slug"
+          | "painting"
+          | "project"
+          | "recipe"
+          | "video";
         href?: string;
         slug?: string;
         painting?: PaintingReference;
         project?: ProjectReference;
+        recipe?: RecipeReference;
+        video?: VideoReference;
         openInNewTab?: boolean;
         _type: "link";
         _key: string;
       }>;
       level?: number;
       _type: "block";
+      _key: string;
+    }
+  | {
+      style?: "line" | "space";
+      _type: "divider";
       _key: string;
     }
   | {
@@ -220,6 +247,9 @@ export type BlockContent = Array<
       _type: "image";
       _key: string;
     }
+  | ({
+      _key: string;
+    } & Code)
   | {
       code: string;
       language?:
@@ -357,78 +387,6 @@ export type PresentationCategory = {
     | "#14b8a6";
 };
 
-export type Recipe = {
-  _id: string;
-  _type: "recipe";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  description?: string;
-  mainImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  additionalImages?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
-  ingredientCategories?: Array<{
-    categoryName: string;
-    ingredients?: Array<{
-      ingredient: string;
-      photo?: {
-        asset?: SanityImageAssetReference;
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string;
-        _type: "image";
-      };
-      amount: string;
-      unit: string;
-      isDiscrete?: boolean;
-      notes?: string;
-      _key: string;
-    }>;
-    _key: string;
-  }>;
-  instructions?: Array<{
-    title?: string;
-    content: BlockContent;
-    _key: string;
-  }>;
-  tips?: Array<{
-    title?: string;
-    content: string;
-    icon?: string;
-    _key: string;
-  }>;
-  cookingTime?: number;
-  prepTime?: number;
-  totalTime?: number;
-  servings?: number;
-  difficulty?: "easy" | "medium" | "hard";
-  tags?: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
-  publishedAt?: string;
-  seo?: Seo1;
-};
-
 export type Social = {
   _type: "social";
   linkedIn?: string;
@@ -446,6 +404,32 @@ export type Redirect = {
   permanent?: boolean;
   isEnabled?: boolean;
 };
+
+export type BlockContentMinimal = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal";
+  listItem?: never;
+  markDefs?: Array<{
+    linkType?: "href" | "slug" | "painting" | "project" | "recipe" | "video";
+    href?: string;
+    slug?: string;
+    painting?: PaintingReference;
+    project?: ProjectReference;
+    recipe?: RecipeReference;
+    video?: VideoReference;
+    openInNewTab?: boolean;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
 
 export type Tag = {
   _id: string;
@@ -487,6 +471,69 @@ export type Post = {
     _type: "image";
   };
   body?: BlockContent;
+};
+
+export type HomeContactCtaSection = {
+  _type: "homeContactCtaSection";
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  primaryLabel?: string;
+  primaryUrl?: string;
+  secondaryLabel?: string;
+  secondaryUrl?: string;
+};
+
+export type HomeSkillsSection = {
+  _type: "homeSkillsSection";
+  eyebrow?: string;
+  title?: string;
+};
+
+export type HomeShopTeaserSection = {
+  _type: "homeShopTeaserSection";
+  intro?: HomeSectionIntro;
+};
+
+export type HomeVideosTeaserSection = {
+  _type: "homeVideosTeaserSection";
+  intro?: HomeSectionIntro;
+};
+
+export type HomeAboutTeaserSection = {
+  _type: "homeAboutTeaserSection";
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  primaryLabel?: string;
+  secondaryLabel?: string;
+  journeyEyebrow?: string;
+  journeyLinkLabel?: string;
+};
+
+export type HomePaintingsSection = {
+  _type: "homePaintingsSection";
+  description: BlockContentMinimal;
+  showcasePaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
+};
+
+export type HomeProjectsSection = {
+  _type: "homeProjectsSection";
+  description: BlockContentMinimal;
+  showcaseProjects?: Array<
+    {
+      _key: string;
+    } & ProjectReference
+  >;
+};
+
+export type HomeHeroSection = {
+  _type: "homeHeroSection";
+  overview: BlockContentMinimal;
 };
 
 export type HomeSectionIntro = {
@@ -597,87 +644,37 @@ export type Home = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: string;
-  overview: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
+  sections?: Array<
+    | ({
+        _key: string;
+      } & HomeHeroSection)
+    | ({
+        _key: string;
+      } & HomeProjectsSection)
+    | ({
+        _key: string;
+      } & HomePaintingsSection)
+    | ({
+        _key: string;
+      } & HomeAboutTeaserSection)
+    | ({
+        _key: string;
+      } & HomeVideosTeaserSection)
+    | ({
+        _key: string;
+      } & HomeShopTeaserSection)
+    | ({
+        _key: string;
+      } & HomeSkillsSection)
+    | ({
+        _key: string;
+      } & HomeContactCtaSection)
+  >;
   projectsTitle?: string;
-  projectsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<
-      | {
-          href?: string;
-          _type: "link";
-          _key: string;
-        }
-      | {
-          reference?: string;
-          _type: "internalLink";
-          _key: string;
-        }
-    >;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  projectsListingDescription: BlockContent;
-  showcaseProjects?: Array<
-    {
-      _key: string;
-    } & ProjectReference
-  >;
+  projectsListingDescription: BlockContentMinimal;
   paintingsTitle?: string;
-  paintingsDescription: BlockContent;
-  showcasePaintings?: Array<
-    {
-      _key: string;
-    } & PaintingReference
-  >;
-  aboutTeaserEyebrow?: string;
-  aboutTeaserTitle?: string;
-  aboutTeaserDescription?: string;
-  aboutTeaserPrimaryLabel?: string;
-  aboutTeaserSecondaryLabel?: string;
-  aboutTeaserJourneyEyebrow?: string;
-  aboutTeaserJourneyLinkLabel?: string;
-  videosTeaser?: HomeSectionIntro;
-  shopTeaser?: HomeSectionIntro;
-  contactCtaEyebrow?: string;
-  contactCtaTitle?: string;
-  contactCtaDescription?: string;
-  contactCtaPrimaryLabel?: string;
-  contactCtaPrimaryUrl?: string;
-  contactCtaSecondaryLabel?: string;
-  contactCtaSecondaryUrl?: string;
-};
-
-export type VideoReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "video";
+  paintingsDescription: BlockContentMinimal;
+  title: string;
 };
 
 export type Project = {
@@ -740,6 +737,78 @@ export type Project = {
     linkedIn?: string;
     x?: string;
   };
+};
+
+export type Recipe = {
+  _id: string;
+  _type: "recipe";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  additionalImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  ingredientCategories?: Array<{
+    categoryName: string;
+    ingredients?: Array<{
+      ingredient: string;
+      photo?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string;
+        _type: "image";
+      };
+      amount: string;
+      unit: string;
+      isDiscrete?: boolean;
+      notes?: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  instructions?: Array<{
+    title?: string;
+    content: BlockContent;
+    _key: string;
+  }>;
+  tips?: Array<{
+    title?: string;
+    content: string;
+    icon?: string;
+    _key: string;
+  }>;
+  cookingTime?: number;
+  prepTime?: number;
+  totalTime?: number;
+  servings?: number;
+  difficulty?: "easy" | "medium" | "hard";
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  publishedAt?: string;
+  seo?: Seo1;
 };
 
 export type Video = {
@@ -980,6 +1049,14 @@ export type SanityAssistSchemaTypeField = {
   >;
 };
 
+export type Code = {
+  _type: "code";
+  language?: string;
+  filename?: string;
+  code?: string;
+  highlightedLines?: Array<number>;
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -1085,6 +1162,8 @@ export type AllSanitySchemaTypes =
   | ContentSlide
   | PaintingReference
   | ProjectReference
+  | RecipeReference
+  | VideoReference
   | BlockContent
   | SanityImageCrop
   | SanityImageHotspot
@@ -1093,18 +1172,26 @@ export type AllSanitySchemaTypes =
   | PresentationTool
   | PresentationSource
   | PresentationCategory
-  | Recipe
   | Social
   | Redirect
+  | BlockContentMinimal
   | Tag
   | Post
+  | HomeContactCtaSection
+  | HomeSkillsSection
+  | HomeShopTeaserSection
+  | HomeVideosTeaserSection
+  | HomeAboutTeaserSection
+  | HomePaintingsSection
+  | HomeProjectsSection
+  | HomeHeroSection
   | HomeSectionIntro
   | About
   | Geopoint
   | Settings
   | Home
-  | VideoReference
   | Project
+  | Recipe
   | Video
   | Painting
   | MediaTag
@@ -1121,6 +1208,7 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
+  | Code
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1477,243 +1565,199 @@ export type PagesSlugsResult = Array<never>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: homeSectionCopyQuery
-// Query: *[_type == "home"][0]{    title,    overview,    paintingsTitle,    paintingsDescription,    projectsTitle,    projectsDescription,    projectsListingDescription,  }
+// Query: *[_type == "home"][0]{    title,    "overview": sections[_type == "homeHeroSection"][0].overview,    paintingsTitle,    paintingsDescription,    projectsTitle,    projectsListingDescription,  }
 export type HomeSectionCopyQueryResult = {
   title: string;
-  overview: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
+  overview: BlockContentMinimal | null;
   paintingsTitle: string | null;
-  paintingsDescription: BlockContent;
+  paintingsDescription: BlockContentMinimal;
   projectsTitle: string | null;
-  projectsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<
-      | {
-          reference?: string;
-          _type: "internalLink";
-          _key: string;
-        }
-      | {
-          href?: string;
-          _type: "link";
-          _key: string;
-        }
-    >;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  projectsListingDescription: BlockContent;
+  projectsListingDescription: BlockContentMinimal;
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    title,    overview,    paintingsTitle,    projectsTitle,    "paintingsCount": count(*[_type == "painting"]),    paintingsDescription,    "showcasePaintingsCurated": count(showcasePaintings) > 0,    "showcasePaintings": coalesce(      showcasePaintings[]->{        _type, _id, altText,        "slug": slug.current,        title, format, isFeatured, isNSFW, medium, paintedAt,        tagsV2[]->{name},        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }      },      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {        _type, _id, altText,        "slug": slug.current,        title, format, isFeatured, isNSFW, medium, paintedAt,        tagsV2[]->{name},        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }      }    ),    projectsDescription,    showcaseProjects[]->{      _type,      _id,      title,      description,      seoDescription,      projectStart,      projectEnd,      status,      content,      "seo": {        "title": coalesce(seo.title, title, ""),        "description": coalesce(seo.description,  ""),        "image": seo.image,        "noIndex": seo.noIndex == true      },      name,      "tags": tags[]->{name},      "slug": slug.current,      image{        ...,        "lqip": asset->metadata.lqip      },    },    aboutTeaserEyebrow,    aboutTeaserTitle,    aboutTeaserDescription,    aboutTeaserPrimaryLabel,    aboutTeaserSecondaryLabel,    aboutTeaserJourneyEyebrow,    aboutTeaserJourneyLinkLabel,    videosTeaser {      eyebrow,      title,      description,      linkLabel    },    shopTeaser {      eyebrow,      title,      description,      linkLabel    },    contactCtaEyebrow,    contactCtaTitle,    contactCtaDescription,    contactCtaPrimaryLabel,    contactCtaPrimaryUrl,    contactCtaSecondaryLabel,    contactCtaSecondaryUrl  }
+// Query: *[_type == "home"][0]{    _id,    title,    paintingsTitle,    projectsTitle,    paintingsDescription,    projectsListingDescription,    "paintingsCount": count(*[_type == "painting"]),    "overview": sections[_type == "homeHeroSection"][0].overview,    sections[]{      _key,      _type,      _type == "homeHeroSection" => {        overview      },      _type == "homeProjectsSection" => {        description,        showcaseProjects[]->{          _type,          _id,          title,          description,          seoDescription,          projectStart,          projectEnd,          status,          content,          "seo": {            "title": coalesce(seo.title, title, ""),            "description": coalesce(seo.description, ""),            "image": seo.image,            "noIndex": seo.noIndex == true          },          name,          "tags": tags[]->{name},          "slug": slug.current,          image{            ...,            "lqip": asset->metadata.lqip          }        }      },      _type == "homePaintingsSection" => {        description,        "showcasePaintingsCurated": count(showcasePaintings) > 0,        "showcasePaintings": coalesce(          showcasePaintings[]->{            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }          },          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }          }        )      },      _type == "homeAboutTeaserSection" => {        eyebrow,        title,        description,        primaryLabel,        secondaryLabel,        journeyEyebrow,        journeyLinkLabel      },      _type == "homeVideosTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeShopTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeSkillsSection" => {        eyebrow,        title      },      _type == "homeContactCtaSection" => {        eyebrow,        title,        description,        primaryLabel,        primaryUrl,        secondaryLabel,        secondaryUrl      }    }  }
 export type HomePageQueryResult = {
   _id: string;
   title: string;
-  overview: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
   paintingsTitle: string | null;
   projectsTitle: string | null;
+  paintingsDescription: BlockContentMinimal;
+  projectsListingDescription: BlockContentMinimal;
   paintingsCount: number;
-  paintingsDescription: BlockContent;
-  showcasePaintingsCurated: boolean | null;
-  showcasePaintings:
-    | Array<{
-        _type: "painting";
-        _id: string;
-        altText: null;
-        slug: string;
-        title: string;
-        format: "landscape" | "portrait" | "square";
-        isFeatured: true;
-        isNSFW: boolean | null;
-        medium:
-          | "Digital (Other)"
-          | "Digital (Photoshop)"
-          | "Digital (Procreate)"
-          | "Oil on canvas"
-          | "Pencil / Ink"
-          | "Watercolour"
-          | null;
-        paintedAt: string;
-        tagsV2: Array<{
+  overview: BlockContentMinimal | null;
+  sections: Array<
+    | {
+        _key: string;
+        _type: "homeAboutTeaserSection";
+        eyebrow: string | null;
+        title: string | null;
+        description: string | null;
+        primaryLabel: string | null;
+        secondaryLabel: string | null;
+        journeyEyebrow: string | null;
+        journeyLinkLabel: string | null;
+      }
+    | {
+        _key: string;
+        _type: "homeContactCtaSection";
+        eyebrow: string | null;
+        title: string | null;
+        description: string | null;
+        primaryLabel: string | null;
+        primaryUrl: string | null;
+        secondaryLabel: string | null;
+        secondaryUrl: string | null;
+      }
+    | {
+        _key: string;
+        _type: "homeHeroSection";
+        overview: BlockContentMinimal;
+      }
+    | {
+        _key: string;
+        _type: "homePaintingsSection";
+        description: BlockContentMinimal;
+        showcasePaintingsCurated: boolean | null;
+        showcasePaintings:
+          | Array<{
+              _type: "painting";
+              _id: string;
+              altText: null;
+              slug: string;
+              title: string;
+              format: "landscape" | "portrait" | "square";
+              isFeatured: true;
+              isNSFW: boolean | null;
+              medium:
+                | "Digital (Other)"
+                | "Digital (Photoshop)"
+                | "Digital (Procreate)"
+                | "Oil on canvas"
+                | "Pencil / Ink"
+                | "Watercolour"
+                | null;
+              paintedAt: string;
+              tagsV2: Array<{
+                name: string;
+              }>;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string;
+                _type: "image";
+                lqip: string | null;
+                aspectRatio: number | null;
+              };
+            }>
+          | Array<{
+              _type: "painting";
+              _id: string;
+              altText: null;
+              slug: string;
+              title: string;
+              format: "landscape" | "portrait" | "square";
+              isFeatured: boolean | null;
+              isNSFW: boolean | null;
+              medium:
+                | "Digital (Other)"
+                | "Digital (Photoshop)"
+                | "Digital (Procreate)"
+                | "Oil on canvas"
+                | "Pencil / Ink"
+                | "Watercolour"
+                | null;
+              paintedAt: string;
+              tagsV2: Array<{
+                name: string;
+              }>;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string;
+                _type: "image";
+                lqip: string | null;
+                aspectRatio: number | null;
+              };
+            }>;
+      }
+    | {
+        _key: string;
+        _type: "homeProjectsSection";
+        description: BlockContentMinimal;
+        showcaseProjects: Array<{
+          _type: "project";
+          _id: string;
+          title: null;
+          description: null;
+          seoDescription: null;
+          projectStart: string | null;
+          projectEnd: string | null;
+          status:
+            | "abandoned"
+            | "cancelled"
+            | "completed"
+            | "inProgress"
+            | "notStarted"
+            | "onHold"
+            | "planned"
+            | "unknown"
+            | null;
+          content: BlockContent | null;
+          seo: {
+            title: string | "";
+            description: string | "";
+            image: Image1 | null;
+            noIndex: boolean | false;
+          };
           name: string;
-        }>;
-        image: {
-          asset?: SanityImageAssetReference;
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt: string;
-          _type: "image";
-          lqip: string | null;
-          aspectRatio: number | null;
-        };
-      }>
-    | Array<{
-        _type: "painting";
-        _id: string;
-        altText: null;
-        slug: string;
-        title: string;
-        format: "landscape" | "portrait" | "square";
-        isFeatured: boolean | null;
-        isNSFW: boolean | null;
-        medium:
-          | "Digital (Other)"
-          | "Digital (Photoshop)"
-          | "Digital (Procreate)"
-          | "Oil on canvas"
-          | "Pencil / Ink"
-          | "Watercolour"
-          | null;
-        paintedAt: string;
-        tagsV2: Array<{
-          name: string;
-        }>;
-        image: {
-          asset?: SanityImageAssetReference;
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          alt: string;
-          _type: "image";
-          lqip: string | null;
-          aspectRatio: number | null;
-        };
-      }>;
-  projectsDescription: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<
-      | {
-          reference?: string;
-          _type: "internalLink";
-          _key: string;
-        }
-      | {
-          href?: string;
-          _type: "link";
-          _key: string;
-        }
-    >;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  showcaseProjects: Array<{
-    _type: "project";
-    _id: string;
-    title: null;
-    description: null;
-    seoDescription: null;
-    projectStart: string | null;
-    projectEnd: string | null;
-    status:
-      | "abandoned"
-      | "cancelled"
-      | "completed"
-      | "inProgress"
-      | "notStarted"
-      | "onHold"
-      | "planned"
-      | "unknown"
-      | null;
-    content: BlockContent | null;
-    seo: {
-      title: string | "";
-      description: string | "";
-      image: Image1 | null;
-      noIndex: boolean | false;
-    };
-    name: string;
-    tags: Array<{
-      name: string;
-    }>;
-    slug: string;
-    image: {
-      asset?: SanityImageAssetReference;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt: string;
-      _type: "image";
-      lqip: string | null;
-    } | null;
-  }> | null;
-  aboutTeaserEyebrow: string | null;
-  aboutTeaserTitle: string | null;
-  aboutTeaserDescription: string | null;
-  aboutTeaserPrimaryLabel: string | null;
-  aboutTeaserSecondaryLabel: string | null;
-  aboutTeaserJourneyEyebrow: string | null;
-  aboutTeaserJourneyLinkLabel: string | null;
-  videosTeaser: {
-    eyebrow: string | null;
-    title: string;
-    description: string | null;
-    linkLabel: string | null;
-  } | null;
-  shopTeaser: {
-    eyebrow: string | null;
-    title: string;
-    description: string | null;
-    linkLabel: string | null;
-  } | null;
-  contactCtaEyebrow: string | null;
-  contactCtaTitle: string | null;
-  contactCtaDescription: string | null;
-  contactCtaPrimaryLabel: string | null;
-  contactCtaPrimaryUrl: string | null;
-  contactCtaSecondaryLabel: string | null;
-  contactCtaSecondaryUrl: string | null;
+          tags: Array<{
+            name: string;
+          }>;
+          slug: string;
+          image: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt: string;
+            _type: "image";
+            lqip: string | null;
+          } | null;
+        }> | null;
+      }
+    | {
+        _key: string;
+        _type: "homeShopTeaserSection";
+        intro: {
+          eyebrow: string | null;
+          title: string;
+          description: string | null;
+          linkLabel: string | null;
+        } | null;
+      }
+    | {
+        _key: string;
+        _type: "homeSkillsSection";
+        eyebrow: string | null;
+        title: string | null;
+      }
+    | {
+        _key: string;
+        _type: "homeVideosTeaserSection";
+        intro: {
+          eyebrow: string | null;
+          title: string;
+          description: string | null;
+          linkLabel: string | null;
+        } | null;
+      }
+  > | null;
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -4960,8 +5004,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "painting" && defined(slug.current)]\n  {"slug": slug.current}\n': PaintingsSlugsResult;
     '\n  *[_type == "project" && defined(slug.current)]\n  {"slug": slug.current}\n': ProjectsSlugsResult;
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult;
-    '\n  *[_type == "home"][0]{\n    title,\n    overview,\n    paintingsTitle,\n    paintingsDescription,\n    projectsTitle,\n    projectsDescription,\n    projectsListingDescription,\n  }\n': HomeSectionCopyQueryResult;
-    '\n  *[_type == "home"][0]{\n    _id,\n    title,\n    overview,\n    paintingsTitle,\n    projectsTitle,\n    "paintingsCount": count(*[_type == "painting"]),\n    paintingsDescription,\n    "showcasePaintingsCurated": count(showcasePaintings) > 0,\n    "showcasePaintings": coalesce(\n      showcasePaintings[]->{\n        _type, _id, altText,\n        "slug": slug.current,\n        title, format, isFeatured, isNSFW, medium, paintedAt,\n        tagsV2[]->{name},\n        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n      },\n      *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {\n        _type, _id, altText,\n        "slug": slug.current,\n        title, format, isFeatured, isNSFW, medium, paintedAt,\n        tagsV2[]->{name},\n        image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n      }\n    ),\n    projectsDescription,\n    showcaseProjects[]->{\n      _type,\n      _id,\n      title,\n      description,\n      seoDescription,\n      projectStart,\n      projectEnd,\n      status,\n      content,\n      "seo": {\n        "title": coalesce(seo.title, title, ""),\n        "description": coalesce(seo.description,  ""),\n        "image": seo.image,\n        "noIndex": seo.noIndex == true\n      },\n      name,\n      "tags": tags[]->{name},\n      "slug": slug.current,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip\n      },\n    },\n    aboutTeaserEyebrow,\n    aboutTeaserTitle,\n    aboutTeaserDescription,\n    aboutTeaserPrimaryLabel,\n    aboutTeaserSecondaryLabel,\n    aboutTeaserJourneyEyebrow,\n    aboutTeaserJourneyLinkLabel,\n    videosTeaser {\n      eyebrow,\n      title,\n      description,\n      linkLabel\n    },\n    shopTeaser {\n      eyebrow,\n      title,\n      description,\n      linkLabel\n    },\n    contactCtaEyebrow,\n    contactCtaTitle,\n    contactCtaDescription,\n    contactCtaPrimaryLabel,\n    contactCtaPrimaryUrl,\n    contactCtaSecondaryLabel,\n    contactCtaSecondaryUrl\n  }\n': HomePageQueryResult;
+    '\n  *[_type == "home"][0]{\n    title,\n    "overview": sections[_type == "homeHeroSection"][0].overview,\n    paintingsTitle,\n    paintingsDescription,\n    projectsTitle,\n    projectsListingDescription,\n  }\n': HomeSectionCopyQueryResult;
+    '\n  *[_type == "home"][0]{\n    _id,\n    title,\n    paintingsTitle,\n    projectsTitle,\n    paintingsDescription,\n    projectsListingDescription,\n    "paintingsCount": count(*[_type == "painting"]),\n    "overview": sections[_type == "homeHeroSection"][0].overview,\n    sections[]{\n      _key,\n      _type,\n      _type == "homeHeroSection" => {\n        overview\n      },\n      _type == "homeProjectsSection" => {\n        description,\n        showcaseProjects[]->{\n          _type,\n          _id,\n          title,\n          description,\n          seoDescription,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          "seo": {\n            "title": coalesce(seo.title, title, ""),\n            "description": coalesce(seo.description, ""),\n            "image": seo.image,\n            "noIndex": seo.noIndex == true\n          },\n          name,\n          "tags": tags[]->{name},\n          "slug": slug.current,\n          image{\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        }\n      },\n      _type == "homePaintingsSection" => {\n        description,\n        "showcasePaintingsCurated": count(showcasePaintings) > 0,\n        "showcasePaintings": coalesce(\n          showcasePaintings[]->{\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n          },\n          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }\n          }\n        )\n      },\n      _type == "homeAboutTeaserSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        secondaryLabel,\n        journeyEyebrow,\n        journeyLinkLabel\n      },\n      _type == "homeVideosTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeShopTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeSkillsSection" => {\n        eyebrow,\n        title\n      },\n      _type == "homeContactCtaSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        primaryUrl,\n        secondaryLabel,\n        secondaryUrl\n      }\n    }\n  }\n': HomePageQueryResult;
     '{\n  "videos": *[_type == "video" && defined(slug.current)]\n    | order(featured desc, coalesce(date, _updatedAt) desc) [0...3] {\n      _id,\n      "slug": slug.current,\n      title,\n      "featured": featured == true,\n      description,\n      tags[]->{name},\n      thumbnail {\n        ...,\n        "lqip": asset->metadata.lqip\n      }\n    },\n  "forSalePaintings": *[_type == "painting" && defined(slug.current) && isNSFW != true && (\n      isForSale == true || defined(redbubbleUrl) || defined(gelatoUrl)\n    )] | order(paintedAt desc) [0...3] {\n      _id,\n      "slug": slug.current,\n      title,\n      isForSale,\n      redbubbleUrl,\n      gelatoUrl,\n      tagsV2[]->{name},\n      paintedAt,\n      image {\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }\n}': HomeExtrasQueryResult;
     '\n  {\n    "paintings": *[_type == "painting" && defined(slug.current)]\n      {\n        _id,\n        "slug": slug.current,\n        title,\n        medium,\n        isFeatured,\n        isFanArt,\n        isNSFW,\n        isForSale,\n        tagsV2[]->{name},\n        viewsCount,\n        paintedAt,\n        video,\n        "imagesCount": coalesce(count(images), 0),\n        image {\n          ...,\n          "lqip": asset->metadata.lqip,\n          "aspectRatio": asset->metadata.dimensions.aspectRatio\n        }\n      },\n    "tags": *[\n      _type == "tag" &&\n      count(*[_type == "painting" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)\n    }\n  }\n  ': GetAllPaintingsandTagsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    viewsCount,\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': GetPaginatedPaintingsResult;
