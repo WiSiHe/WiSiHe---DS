@@ -9,6 +9,7 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { requiredPortableTextMax } from '../validators/portableTextLength';
 
 const sectionPreview = (title: string, subtitle?: string) => ({
   prepare: () => ({ title, subtitle }),
@@ -26,7 +27,7 @@ export const homeHeroSection = defineType({
       type: 'blockContentMinimal',
       description:
         'Shown below your name in the hero. Also used for the home page meta description.',
-      validation: rule => rule.max(155).required(),
+      validation: requiredPortableTextMax(155),
     }),
   ],
   preview: sectionPreview('Hero', 'Intro + collage'),
@@ -42,7 +43,7 @@ export const homeProjectsSection = defineType({
       name: 'description',
       title: 'Section intro',
       type: 'blockContentMinimal',
-      validation: rule => rule.max(155).required(),
+      validation: requiredPortableTextMax(155),
     }),
     defineField({
       name: 'showcaseProjects',
@@ -65,7 +66,7 @@ export const homePaintingsSection = defineType({
       name: 'description',
       title: 'Section intro',
       type: 'blockContentMinimal',
-      validation: rule => rule.max(155).required(),
+      validation: requiredPortableTextMax(155),
     }),
     defineField({
       name: 'showcasePaintings',
