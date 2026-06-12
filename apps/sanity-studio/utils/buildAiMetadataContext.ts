@@ -5,6 +5,7 @@ import {
   formatCameraFromExif,
   summarizeAssetMetadata,
 } from './photographyFileMetadata';
+import { reverseGeocode } from './reverseGeocode';
 
 type GeopointValue = { lat?: number; lng?: number; alt?: number };
 
@@ -47,8 +48,31 @@ export async function buildAiMetadataContext(
   const placeName = document?.placeName as string | undefined;
   if (placeName?.trim()) lines.push(`Place (editor): ${placeName.trim()}`);
 
+  const travelName = document?.name as string | undefined;
+  if (travelName?.trim()) lines.push(`Place name (editor): ${travelName.trim()}`);
+
+  const countryName = document?.countryName as string | undefined;
+  if (countryName?.trim()) {
+    lines.push(
+      `Travel country (editor): ${countryName.trim()}${countryCode ? ` (${countryCode})` : ''}`,
+    );
+  }
+
+  const kind = document?.kind as string | undefined;
+  if (kind?.trim()) lines.push(`Place kind: ${kind}`);
+
   const region = document?.region as string | undefined;
   if (region?.trim()) lines.push(`Region (editor): ${region.trim()}`);
+
+  const geopoint = document?.coordinates as GeopointValue | undefined;
+  if (typeof geopoint?.lat === 'number' && typeof geopoint?.lng === 'number') {
+    try {
+      const resolved = await reverseGeocode(geopoint.lat, geopoint.lng);
+      if (resolved?.label) lines.push(`Resolved from GPS: ${resolved.label}`);
+    } catch {
+      // Nominatim unavailable — coordinates still listed above
+    }
+  }
 
   if (imageAssetRef) {
     const asset = await fetchImageAssetMetadata(client, imageAssetRef);
