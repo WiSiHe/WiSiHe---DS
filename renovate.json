@@ -1,33 +1,65 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":semanticCommits", ":semanticCommitTypeAll(chore)"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    "group:monorepos"
+  ],
+  "timezone": "Europe/Oslo",
+  "schedule": ["before 5am on Monday"],
+  "prHourlyLimit": 1,
+  "prConcurrentLimit": 5,
+  "rebaseWhen": "conflicted",
+  "minimumReleaseAge": "3 days",
+  "rangeStrategy": "bump",
+  "postUpdateOptions": ["pnpmDedupe"],
+  "labels": ["dependencies", "renovate"],
+  "constraints": {
+    "node": ">=22.0.0"
+  },
+  "ignorePaths": ["**/node_modules/**", "**/dist/**", "**/build/**"],
+  "ignoreDeps": ["lefthook"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on the first day of the month"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "schedule": ["at any time"],
+    "minimumReleaseAge": "0 days"
+  },
   "packageRules": [
     {
-      "description": "Disable major updates globally for all dependencies.",
-      "matchDepTypes": ["dependencies", "devDependencies"],
+      "description": "Disable major updates globally.",
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
-      "description": "Catch-all group for app dependencies. Placed early so ecosystem groups override it.",
-      "matchPaths": ["apps/**"],
-      "groupName": "app dependencies",
-      "groupSlug": "apps",
+      "description": "Require manual review; do not automerge dependency PRs.",
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
       "automerge": false
     },
     {
-      "description": "Catch-all group for package dependencies. Placed early so ecosystem groups override it.",
-      "matchPaths": ["packages/**"],
-      "groupName": "package dependencies",
-      "groupSlug": "packages",
-      "automerge": false
+      "description": "Weekly catch-all for ungrouped patch/minor updates. Ecosystem rules below override this.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "all other dependencies",
+      "groupSlug": "all-other"
     },
     {
-      "description": "Automatically merge patch updates for devDependencies as they are usually low risk.",
-      "matchUpdateTypes": ["patch"],
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true,
-      "automergeType": "pr"
+      "description": "Root monorepo tooling.",
+      "matchPaths": ["package.json"],
+      "matchPackageNames": ["turbo", "@biomejs/biome", "@changesets/cli", "knip"],
+      "groupName": "monorepo tooling",
+      "groupSlug": "monorepo-tooling"
+    },
+    {
+      "description": "Node.js in engines, .nvmrc, and GitHub Actions.",
+      "matchManagers": ["nvm", "nodenv", "node-version", "github-actions"],
+      "matchPackageNames": ["node"],
+      "groupName": "Node.js",
+      "groupSlug": "node"
     },
     {
       "description": "Group React ecosystem updates.",
@@ -93,25 +125,23 @@
     {
       "description": "Group TypeScript DefinitelyTyped updates.",
       "matchUpdateTypes": ["patch", "minor"],
-      "matchDepTypes": ["dependencies", "devDependencies"],
       "matchPackagePatterns": ["^@types/"],
       "groupName": "TypeScript types",
       "groupSlug": "types"
+    },
+    {
+      "description": "Group Storybook ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackagePatterns": ["^@storybook/", "^storybook"],
+      "groupName": "Storybook dependencies",
+      "groupSlug": "storybook"
+    },
+    {
+      "description": "Group TanStack ecosystem updates.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchPackagePatterns": ["^@tanstack/"],
+      "groupName": "TanStack dependencies",
+      "groupSlug": "tanstack"
     }
-  ],
-  "rangeStrategy": "bump",
-  "prHourlyLimit": 2,
-  "prConcurrentLimit": 10,
-  "labels": ["dependencies", "renovate"],
-  "schedule": ["before 4am on monday"],
-  "timezone": "UTC",
-  "vulnerabilityAlerts": {
-    "enabled": true,
-    "schedule": ["at any time"]
-  },
-  "ignorePaths": ["**/node_modules/**", "**/dist/**", "**/build/**"],
-  "ignoreDeps": ["lefthook"],
-  "constraints": {
-    "node": ">=22.0.0"
-  }
+  ]
 }
