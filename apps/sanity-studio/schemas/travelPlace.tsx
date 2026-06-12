@@ -4,6 +4,7 @@ import { CountryNameWithIsoField } from '../components/CountryNameWithIsoField';
 import GenericAIGenerator from '../components/GenericAIGenerator';
 import { GeopointAssistInput } from '../components/GeopointAssistInput';
 import { TravelPlaceAssistPanel } from '../components/TravelPlaceAssistPanel';
+import { TravelPlaceWorkflowIntro } from '../components/TravelPlaceWorkflowIntro';
 import { placeStatsField } from './objects/placeStats';
 import { TRAVEL_PLACE_FUN_FACT_PROMPT, TRAVEL_PLACE_NOTES_PROMPT } from './travelPlaceGuidance';
 
@@ -18,24 +19,14 @@ export default defineType({
   ],
   fields: [
     defineField({
-      name: 'name',
-      title: 'Name',
+      name: 'workflowIntro',
+      title: 'Workflow',
       type: 'string',
       group: 'location',
-      description: 'City, region, or adventure spot — e.g. Narbonne, Svalbard.',
-      validation: rule => rule.required(),
-    }),
-    defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      group: 'location',
-      options: {
-        source: 'name',
-        maxLength: 96,
-        isUnique: (value, context) => context.defaultIsUnique(value, context),
+      readOnly: true,
+      components: {
+        input: TravelPlaceWorkflowIntro,
       },
-      validation: rule => rule.required(),
     }),
     defineField({
       name: 'kind',
@@ -50,6 +41,35 @@ export default defineType({
         ],
         layout: 'radio',
       },
+      validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'image',
+      title: 'Hero image',
+      type: 'image',
+      group: 'location',
+      options: {
+        hotspot: true,
+        metadata: ['lqip', 'blurhash', 'exif', 'location'],
+      },
+      description: 'Upload first if the file has GPS — the assistant below can read it.',
+    }),
+    defineField({
+      name: 'locationAssistPanel',
+      title: 'Location assistant',
+      type: 'string',
+      group: 'location',
+      readOnly: true,
+      components: {
+        input: TravelPlaceAssistPanel,
+      },
+    }),
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      group: 'location',
+      description: 'Filled from GPS via the assistant, or type manually — e.g. Narbonne.',
       validation: rule => rule.required(),
     }),
     defineField({
@@ -78,35 +98,25 @@ export default defineType({
         }),
     }),
     defineField({
-      name: 'image',
-      title: 'Hero image',
-      type: 'image',
-      group: ['location', 'content'],
-      options: {
-        hotspot: true,
-        metadata: ['lqip', 'blurhash', 'exif', 'location'],
-      },
-      description:
-        'Optional on the map card. If the file has GPS, the location assistant can apply coordinates.',
-    }),
-    defineField({
-      name: 'locationAssistPanel',
-      title: 'Location assistant',
-      type: 'string',
-      group: 'location',
-      readOnly: true,
-      components: {
-        input: TravelPlaceAssistPanel,
-      },
-    }),
-    defineField({
       name: 'coordinates',
       title: 'Map coordinates',
       type: 'geopoint',
       group: 'location',
-      description: 'Usually filled from photo GPS — see location assistant above.',
+      description: 'Usually filled from photo GPS — see location assistant.',
       components: {
         input: GeopointAssistInput,
+      },
+      validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      group: 'location',
+      options: {
+        source: 'name',
+        maxLength: 96,
+        isUnique: (value, context) => context.defaultIsUnique(value, context),
       },
       validation: rule => rule.required(),
     }),
@@ -122,8 +132,7 @@ export default defineType({
       title: 'Fun fact',
       type: 'string',
       group: 'content',
-      description:
-        'Short hook for map tooltips and the detail card. Generate after GPS and name are set.',
+      description: 'Generate after name and country are set (Map card tab).',
       components: {
         input: props => (
           <GenericAIGenerator

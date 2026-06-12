@@ -128,14 +128,17 @@ export function buildPhotographyApplyPatches(
     existingCapturedAt?: string | null;
     existingCamera?: string | null;
     overwrite?: boolean;
+    /** Photography only applies EXIF fields — map location lives on travelPlace. */
+    exifOnly?: boolean;
   } = {},
 ): PhotographyApplyPatch[] {
   const patches: PhotographyApplyPatch[] = [];
   const overwrite = options.overwrite ?? false;
+  const exifOnly = options.exifOnly ?? false;
 
   const canSet = (hasExisting: boolean) => overwrite || !hasExisting;
 
-  if (extract.coordinates && canSet(Boolean(options.existingCoordinates))) {
+  if (!exifOnly && extract.coordinates && canSet(Boolean(options.existingCoordinates))) {
     patches.push({
       path: 'coordinates',
       value: extract.coordinates,
@@ -158,6 +161,8 @@ export function buildPhotographyApplyPatches(
       label: 'Camera from EXIF',
     });
   }
+
+  if (exifOnly) return patches;
 
   const iso =
     options.existingCountryCode?.trim().toUpperCase() || countryNameToIso(options.existingCountry);

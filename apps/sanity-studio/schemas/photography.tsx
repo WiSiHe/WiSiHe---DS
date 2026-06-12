@@ -1,14 +1,14 @@
 import { ImageIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
-import { GeopointAssistInput } from '../components/GeopointAssistInput';
-import { PhotographyCountryInput } from '../components/PhotographyCountryInput';
 import { PhotographyFileMetadataInput } from '../components/PhotographyFileMetadataInput';
+import {
+  PhotographyPlaceReferenceInput,
+  PhotographyWorkflowIntro,
+} from '../components/PhotographyPlaceInput';
 import {
   PHOTOGRAPHY_ALT_AI_PROMPT,
   PHOTOGRAPHY_CAPTION_AI_PROMPT,
-  PHOTOGRAPHY_PLACE_AI_PROMPT,
-  PHOTOGRAPHY_REGION_AI_PROMPT,
   PHOTOGRAPHY_TITLE_AI_PROMPT,
 } from './photographyGuidance';
 
@@ -18,49 +18,25 @@ export default defineType({
   icon: ImageIcon,
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
-    { name: 'location', title: 'Location' },
-    { name: 'seo', title: 'SEO' },
-    { name: 'AI', title: 'AI', icon: ImageIcon },
+    { name: 'content', title: 'Photo', default: true },
+    { name: 'details', title: 'Details' },
   ],
   fields: [
     defineField({
-      name: 'title',
-      title: 'Title',
+      name: 'workflowIntro',
+      title: 'Workflow',
       type: 'string',
-      group: ['content', 'AI'],
-      validation: rule => rule.required().max(120),
-      components: {
-        input: props => (
-          <GenericAIGenerator
-            {...props}
-            prompt={PHOTOGRAPHY_TITLE_AI_PROMPT}
-            imageField='image'
-            includeFileMetadata
-            characterLimit={80}
-            rows={2}
-            placeholder='Evocative title…'
-          />
-        ),
-      },
-    }),
-    defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
       group: 'content',
-      options: {
-        source: 'title',
-        maxLength: 96,
-        isUnique: (value, context) => context.defaultIsUnique(value, context),
+      readOnly: true,
+      components: {
+        input: PhotographyWorkflowIntro,
       },
-      validation: rule => rule.required(),
     }),
     defineField({
       name: 'image',
       title: 'Photo',
       type: 'image',
-      group: ['content', 'AI'],
+      group: 'content',
       options: {
         hotspot: true,
         metadata: ['lqip', 'blurhash', 'palette', 'exif', 'location'],
@@ -89,11 +65,66 @@ export default defineType({
       validation: rule => rule.required(),
     }),
     defineField({
+      name: 'fileMetadataPanel',
+      title: 'From uploaded file',
+      type: 'string',
+      group: 'content',
+      readOnly: true,
+      components: {
+        input: PhotographyFileMetadataInput,
+      },
+      hidden: ({ document }) => !document?.image?.asset,
+    }),
+    defineField({
+      name: 'place',
+      title: 'Travel place',
+      type: 'reference',
+      group: 'content',
+      to: [{ type: 'travelPlace' }],
+      description: 'Links this photo to the about travel map. Name and country live on the place.',
+      components: {
+        input: PhotographyPlaceReferenceInput,
+      },
+    }),
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      group: 'content',
+      validation: rule => rule.required().max(120),
+      description: 'Generate after the photo and travel place are set.',
+      components: {
+        input: props => (
+          <GenericAIGenerator
+            {...props}
+            prompt={PHOTOGRAPHY_TITLE_AI_PROMPT}
+            imageField='image'
+            includeFileMetadata
+            characterLimit={80}
+            rows={2}
+            placeholder='Evocative title…'
+          />
+        ),
+      },
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      group: 'content',
+      options: {
+        source: 'title',
+        maxLength: 96,
+        isUnique: (value, context) => context.defaultIsUnique(value, context),
+      },
+      validation: rule => rule.required(),
+    }),
+    defineField({
       name: 'caption',
       title: 'Caption',
       type: 'text',
       rows: 3,
-      group: ['content', 'AI'],
+      group: 'content',
       description: 'Short description shown in galleries and previews.',
       components: {
         input: props => (
@@ -110,154 +141,82 @@ export default defineType({
       },
     }),
     defineField({
-      name: 'place',
-      title: 'Travel place',
-      type: 'reference',
-      group: 'location',
-      to: [{ type: 'travelPlace' }],
-      description:
-        'Links this photo to a place on the about map (e.g. Narbonne). Preferred over typing country/place manually.',
-    }),
-    defineField({
-      name: 'placeName',
-      title: 'Place name',
-      type: 'string',
-      group: ['location', 'AI'],
-      description:
-        'Where the photo was taken — city, landmark, or area. AI guesses from the image; verify before publishing.',
-      components: {
-        input: props => (
-          <GenericAIGenerator
-            {...props}
-            prompt={PHOTOGRAPHY_PLACE_AI_PROMPT}
-            imageField='image'
-            includeFileMetadata
-            rows={2}
-            placeholder='Place name…'
-          />
-        ),
-      },
-    }),
-    defineField({
-      name: 'country',
-      title: 'Country',
-      type: 'string',
-      group: 'location',
-      description:
-        'Pick from the list — ISO code is saved automatically for the about page travel map.',
-      components: {
-        input: PhotographyCountryInput,
-      },
-    }),
-    defineField({
-      name: 'countryCode',
-      title: 'Country code (ISO)',
-      type: 'string',
-      group: 'location',
-      readOnly: true,
-      hidden: () => true,
-      description: 'Set automatically when you choose a country.',
-      validation: rule =>
-        rule.custom(value => {
-          if (!value) return true;
-          return /^[A-Za-z]{2}$/.test(value)
-            ? true
-            : 'Use a two-letter ISO country code (e.g. NO).';
-        }),
-    }),
-    defineField({
-      name: 'fileMetadataPanel',
-      title: 'From uploaded file',
-      type: 'string',
-      group: 'location',
-      readOnly: true,
-      components: {
-        input: PhotographyFileMetadataInput,
-      },
-      hidden: ({ document }) => !document?.image?.asset,
-    }),
-    defineField({
-      name: 'region',
-      title: 'Region / state',
-      type: 'string',
-      group: ['location', 'AI'],
-      description:
-        'Optional — county, province, or region. AI guesses from the image; verify before publishing.',
-      components: {
-        input: props => (
-          <GenericAIGenerator
-            {...props}
-            prompt={PHOTOGRAPHY_REGION_AI_PROMPT}
-            imageField='image'
-            includeFileMetadata
-            rows={2}
-            placeholder='Region…'
-          />
-        ),
-      },
-    }),
-    defineField({
-      name: 'coordinates',
-      title: 'Map coordinates',
-      type: 'geopoint',
-      group: 'location',
-      description: 'Usually from file GPS — use “From uploaded file” above.',
-      components: {
-        input: GeopointAssistInput,
-      },
-    }),
-    defineField({
       name: 'capturedAt',
       title: 'Captured at',
       type: 'datetime',
-      group: 'location',
-      description: 'When the photo was taken.',
+      group: 'details',
+      description: 'Optional — apply from file metadata on the Photo tab.',
     }),
     defineField({
       name: 'camera',
       title: 'Camera / equipment',
       type: 'string',
-      group: 'content',
-      description:
-        'Optional — body, lens, or phone model. Apply from file reads EXIF Make/Model/Lens when available.',
+      group: 'details',
+      description: 'Optional — apply from EXIF on the Photo tab.',
     }),
     defineField({
       name: 'isFeatured',
       title: 'Featured',
       type: 'boolean',
       initialValue: false,
-      group: 'content',
+      group: 'details',
     }),
     defineField({
       name: 'tagsV2',
       title: 'Tags',
       type: 'array',
-      group: 'content',
+      group: 'details',
       of: [{ type: 'reference', to: [{ type: 'tag' }] }],
       options: { layout: 'list' },
     }),
+    // Legacy location fields — kept for migrated content; hidden from editors.
     defineField({
-      name: 'seo',
-      title: 'SEO overrides',
-      type: 'seo',
-      group: 'seo',
-      description:
-        'SEO description supports AI generation from the photo, title, caption, and location fields.',
+      name: 'placeName',
+      title: 'Place name (legacy)',
+      type: 'string',
+      hidden: () => true,
+    }),
+    defineField({
+      name: 'country',
+      title: 'Country (legacy)',
+      type: 'string',
+      hidden: () => true,
+    }),
+    defineField({
+      name: 'countryCode',
+      title: 'Country code (legacy)',
+      type: 'string',
+      hidden: () => true,
+    }),
+    defineField({
+      name: 'region',
+      title: 'Region (legacy)',
+      type: 'string',
+      hidden: () => true,
+    }),
+    defineField({
+      name: 'coordinates',
+      title: 'Coordinates (legacy)',
+      type: 'geopoint',
+      hidden: () => true,
     }),
   ],
   preview: {
     select: {
       title: 'title',
-      country: 'country',
-      countryCode: 'countryCode',
-      placeName: 'placeName',
+      placeTitle: 'place.name',
+      placeCountry: 'place.countryName',
+      legacyPlace: 'placeName',
+      legacyCountry: 'country',
       media: 'image',
     },
-    prepare({ title, country, countryCode, placeName, media }) {
-      const where = [placeName, country ?? countryCode].filter(Boolean).join(', ');
+    prepare({ title, placeTitle, placeCountry, legacyPlace, legacyCountry, media }) {
+      const where = placeTitle
+        ? [placeTitle, placeCountry].filter(Boolean).join(', ')
+        : [legacyPlace, legacyCountry].filter(Boolean).join(', ');
       return {
         title: title ?? 'Untitled photo',
-        subtitle: where || 'No location set',
+        subtitle: where || 'No travel place linked',
         media,
       };
     },
