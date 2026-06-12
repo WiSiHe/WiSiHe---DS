@@ -122,12 +122,19 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
       </div>
 
       {/* View All Projects CTA */}
-      <div className='flex min-h-[50vh] items-center justify-center py-24 px-4 border-t border-border/10'>
-        <div className='text-center'>
-          <h2 className='mb-6 font-serif text-3xl md:text-5xl font-bold text-foreground'>
+      <div className='relative border-t border-border/20 bg-surface/30 px-4 py-24 md:py-32'>
+        <div
+          className='pointer-events-none absolute top-1/2 left-1/2 h-[320px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-[100px]'
+          aria-hidden
+        />
+        <div className='relative mx-auto max-w-2xl rounded-[2rem] border border-border/50 bg-surface/90 px-8 py-14 text-center shadow-xl backdrop-blur-md md:px-14 md:py-16'>
+          <span className='mb-4 inline-block font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent md:text-xs'>
+            {'// Full archive'}
+          </span>
+          <h2 className='mb-5 font-serif text-3xl font-bold text-foreground md:text-5xl'>
             More to explore
           </h2>
-          <p className='mb-10 text-base md:text-lg text-foreground-subtle max-w-lg mx-auto'>
+          <p className='mx-auto mb-10 max-w-lg text-base leading-relaxed text-foreground/80 md:text-lg'>
             I've worked on dozens of projects across engineering and design. Take a look at the full
             archive.
           </p>
@@ -138,7 +145,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
             size='large'
             Icon={IconArrowRight}
             iconPosition='right'
-            className='gap-2 rounded-full px-8 py-4 md:gap-3 md:px-10 md:py-5'
+            className='gap-2 rounded-full px-8 py-4 shadow-lg shadow-accent/25 md:gap-3 md:px-10 md:py-5'
             onClick={() =>
               trackEvent(AnalyticsEvent.EXPLORE_ALL_PROJECTS_CLICKED, { source: 'home_featured' })
             }
