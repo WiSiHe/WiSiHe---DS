@@ -409,7 +409,7 @@ export default defineType({
               title: 'Notes',
               type: 'text',
               rows: 3,
-              description: 'Optional longer memory — fun fact is shown first in the UI.',
+              description: 'Optional factual context — fun fact is shown first in the UI.',
             }),
             defineField({
               name: 'funFact',
