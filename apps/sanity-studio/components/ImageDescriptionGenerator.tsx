@@ -11,8 +11,15 @@ const client = new OpenAI({
   dangerouslyAllowBrowser: true, // This is the default and can be omitted
 });
 
-const BASE_PROMPT =
-  'You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.';
+const BASE_PROMPT = `You write museum wall labels for a digital art portfolio.
+
+Requirements:
+- 1–2 sentences, 40–240 characters total
+- Third person only (never "I", "my", "we", "me")
+- Do not repeat or quote the artwork title
+- Describe: subject, composition, colour or light, mood or theme
+- Tone: precise and calm, like a curator—not a blog post or social caption
+- Present tense; no exclamation marks`;
 
 const IMAGE_HEIGHT = 256;
 const IMAGE_WIDTH = 256;

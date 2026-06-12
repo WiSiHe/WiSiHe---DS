@@ -7,6 +7,12 @@ import { FaWeibo } from 'react-icons/fa';
 
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import {
+  PAINTING_DESCRIPTION_AI_PROMPT,
+  PAINTING_DESCRIPTION_GUIDE,
+  PAINTING_SEO_FROM_DESCRIPTION_PROMPT,
+  validatePaintingDescription,
+} from './descriptionGuidance';
 import { seoType } from './seoType';
 import { PAINTING_TAG_GUIDE, validateContentTags } from './tagGuidance';
 
@@ -100,29 +106,22 @@ export default defineType({
 
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Gallery label',
       type: 'text',
-      group: ['AI'],
       components: {
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt={` You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.
-
-Requirements:
-- 150-300 words maximum
-- Use present tense
-- Be objective and descriptive
-- Write in clear, flowing paragraphs
-- Focus on visual elements and artistic choices`}
+            prompt={PAINTING_DESCRIPTION_AI_PROMPT}
             imageField='image'
-            rows={6}
-            placeholder='Description will appear here...'
+            characterLimit={240}
+            rows={4}
+            placeholder='A figure reclines in a bath, rendered in loose warm strokes. Everyday stillness, unhurried and intimate.'
           />
         ),
       },
-      description: 'Description of the painting',
-      validation: rule => rule.required(),
+      description: PAINTING_DESCRIPTION_GUIDE,
+      validation: validatePaintingDescription,
     }),
     defineField({
       name: 'seo',
@@ -143,8 +142,9 @@ Requirements:
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt='You are an AI SEO expert writer. Re-write the following text into a good SEO description in 122 characters or less, it should never exceed 122: {description}'
+            prompt={PAINTING_SEO_FROM_DESCRIPTION_PROMPT}
             fieldDependencies={{
+              title: 'title',
               description: 'description',
             }}
             characterLimit={122}
