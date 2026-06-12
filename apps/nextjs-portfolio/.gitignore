@@ -29,10 +29,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# env files (never commit secrets; .env.example is tracked)
+# env secrets (do not use .env.* — it matches .env.example in some tools)
 .env
-.env.*
-!.env.example
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
 
 # vercel
 .vercel
