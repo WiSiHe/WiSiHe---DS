@@ -119,6 +119,55 @@ export async function fetchImageAssetMetadata(
   );
 }
 
+export type ImageFieldValue = {
+  asset?: { _ref?: string; _weak?: boolean };
+};
+
+/** Resolve Sanity image field asset id — works once upload has committed the asset reference. */
+export function getImageAssetRef(image: ImageFieldValue | null | undefined): string | undefined {
+  const ref = image?.asset?._ref;
+  return typeof ref === 'string' && ref.length > 0 ? ref : undefined;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function isAssetMetadataReady(record: SanityImageAssetRecord | null): boolean {
+  if (!record) return false;
+  const metadata = record.metadata;
+  if (!metadata) return false;
+  return Boolean(
+    metadata.dimensions || metadata.location || metadata.exif || record.originalFilename,
+  );
+}
+
+/**
+ * Poll until the asset document exists and Sanity has extracted metadata (EXIF/GPS can lag upload).
+ */
+export async function fetchImageAssetMetadataWhenReady(
+  client: SanityClient,
+  assetRef: string,
+  options?: { maxAttempts?: number; intervalMs?: number },
+): Promise<SanityImageAssetRecord | null> {
+  const maxAttempts = options?.maxAttempts ?? 15;
+  const intervalMs = options?.intervalMs ?? 1200;
+
+  let lastRecord: SanityImageAssetRecord | null = null;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    lastRecord = await fetchImageAssetMetadata(client, assetRef);
+    if (isAssetMetadataReady(lastRecord)) {
+      return lastRecord;
+    }
+    if (attempt < maxAttempts - 1) {
+      await sleep(intervalMs);
+    }
+  }
+
+  return lastRecord;
+}
+
 export function buildPhotographyApplyPatches(
   extract: PhotographyFileExtract,
   options: {
