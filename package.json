@@ -56,7 +56,7 @@
       "allowedVersions": {
         "react": "19",
         "react-dom": "19",
-        "sanity": "4"
+        "sanity": "6"
       },
       "ignoreMissing": [
         "react",

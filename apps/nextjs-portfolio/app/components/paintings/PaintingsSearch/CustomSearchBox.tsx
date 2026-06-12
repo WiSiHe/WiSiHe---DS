@@ -5,6 +5,8 @@ import * as React from 'react';
 import { IoCloseCircle, IoSearchOutline } from 'react-icons/io5';
 import { useSearchBox } from 'react-instantsearch';
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 type CustomSearchBoxProps = Parameters<typeof useSearchBox>[0] & {
   inputLabel?: string;
   placeholder?: string;
@@ -12,12 +14,25 @@ type CustomSearchBoxProps = Parameters<typeof useSearchBox>[0] & {
 
 export default function CustomSearchBox({
   inputLabel = 'Search paintings',
-  placeholder = 'Search... (press Enter)',
+  placeholder = 'Search paintings…',
   ...searchBoxProps
 }: CustomSearchBoxProps) {
-  const { query, refine } = useSearchBox(searchBoxProps);
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { query, refine } = useSearchBox({
+    ...searchBoxProps,
+    queryHook(queryValue, search) {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => search(queryValue), SEARCH_DEBOUNCE_MS);
+    },
+  });
   const [inputValue, setInputValue] = React.useState(query);
   const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   // Keep local value in sync with external query (e.g. cleared via URL)
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally only on query
@@ -25,14 +40,19 @@ export default function CustomSearchBox({
     if (query !== inputValue) setInputValue(query);
   }, [query]);
 
+  const searchImmediately = (value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    refine(value);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    refine(inputValue);
+    searchImmediately(inputValue);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      refine(inputValue);
+      searchImmediately(inputValue);
     }
     if (e.key === 'Escape') {
       handleClear();
@@ -41,7 +61,7 @@ export default function CustomSearchBox({
 
   const handleClear = () => {
     setInputValue('');
-    refine('');
+    searchImmediately('');
     inputRef.current?.focus();
   };
 

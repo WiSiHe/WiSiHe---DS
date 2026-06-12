@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { PresentationSlideDeck } from '@/app/components/presentations/PresentationSlideDeck';
+import { SITE_URL } from '@/lib/seo/constants';
+import { buildContentMetadata, resolveSeoCopy } from '@/lib/seo/metadata';
 import { client } from '@/sanity/lib/client';
 import { fetchPresentationSlides } from '@/sanity/lib/fetchPresentations';
 import { sanityFetch } from '@/sanity/lib/live';
 import { presentationQuery, presentationSlugsQuery } from '@/sanity/lib/queries';
 
-const SITE_URL = 'https://www.wisihe.no';
 const WORKSHOP_SLUG = 'houston-we-re-coding-3d';
 
 type Props = {
@@ -36,31 +37,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const presentation = data as {
     title?: string;
     description?: string | null;
+    seo?: {
+      title?: string | null;
+      description?: string | null;
+      image?: unknown;
+      noIndex?: boolean | null;
+    } | null;
   } | null;
 
   if (!presentation?.title) {
-    return { title: 'Presentation not found | WiSiHe' };
+    return { title: 'Presentation not found' };
   }
 
-  const title = `${presentation.title} | Presentation`;
-  const description =
-    presentation.description ??
-    `Slide deck: ${presentation.title} by Henrik Wilhelm Sissener (WiSiHe).`;
-  const url = `${SITE_URL}/presentations/${slug}`;
+  const { title, description, noIndex } = resolveSeoCopy(presentation.seo, {
+    title: presentation.title,
+    description:
+      presentation.description ??
+      `Slide deck: ${presentation.title} by Henrik Wilhelm Sissener (WiSiHe).`,
+  });
 
-  return {
+  return buildContentMetadata({
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: {
-      title: presentation.title,
-      description,
-      url,
-      siteName: 'WiSiHe',
-      type: 'article',
-    },
-    robots: { index: true, follow: true },
-  };
+    path: `/presentations/${slug}`,
+    seoImage: presentation.seo?.image,
+    noIndex,
+    openGraphType: 'article',
+  });
 }
 
 export default async function PresentationPage({ params }: Props) {

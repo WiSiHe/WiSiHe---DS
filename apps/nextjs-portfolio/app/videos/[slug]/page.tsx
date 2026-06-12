@@ -7,6 +7,8 @@ import { BiLogoYoutube } from 'react-icons/bi';
 import { BsEye, BsHeart } from 'react-icons/bs';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
+import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
+import { buildContentMetadata, resolveSeoCopy } from '@/lib/seo/metadata';
 import { formatCount, getYouTubeStats } from '@/lib/youtube';
 import { sanityFetch } from '@/sanity/lib/live';
 import { videoBySlugQuery, videosSlugs } from '@/sanity/lib/queries';
@@ -44,24 +46,34 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const { data } = await sanityFetch({
     query: videoBySlugQuery,
-    params: await props.params,
+    params,
     stega: false,
   });
   const video = data as VideoBySlugQueryResult;
-  if (!video) return { title: 'Video | WiSiHe' };
-  return {
-    title: `${video.title} | WiSiHe`,
+
+  if (!video?.title) {
+    return { title: 'Video not found' };
+  }
+
+  const { title, description, noIndex } = resolveSeoCopy(video.seo, {
+    title: video.title,
     description: video.description ?? `Watch ${video.title} by Henrik Sissener`,
-    alternates: { canonical: `https://www.wisihe.no/videos/${video.slug}` },
-    openGraph: {
-      title: video.title ?? undefined,
-      description: video.description ?? '',
-      url: `https://www.wisihe.no/videos/${video.slug}`,
-      type: 'video.other',
-    },
-  };
+  });
+
+  return buildContentMetadata({
+    title,
+    description,
+    path: `/videos/${video.slug}`,
+    seoImage: video.seo?.image,
+    fallbackImage: video.thumbnail,
+    imageAlt: video.thumbnail?.alt ?? video.title,
+    noIndex,
+    openGraphType: 'video.other',
+    keywords: video.tags?.map(tag => tag.name).filter(Boolean) as string[] | undefined,
+  });
 }
 
 export default async function VideoPage(props: Props) {
@@ -72,38 +84,26 @@ export default async function VideoPage(props: Props) {
   if (!video?._id) return notFound();
 
   const videoId = getYouTubeId(video.videoUrl ?? '');
-
-  // Fetch real YouTube stats server-side (cached 1 hour, key never sent to browser)
   const youtubeStats = videoId ? await getYouTubeStats(videoId) : null;
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
-    name: video.title,
-    description: video.description ?? '',
+    name: video.seo?.title?.trim() || video.title,
+    description: video.seo?.description?.trim() || video.description || '',
     thumbnailUrl: video.thumbnail
       ? urlForImage(video.thumbnail)?.width(640).height(360).url()
       : undefined,
-    uploadDate: undefined,
     contentUrl: video.videoUrl,
     embedUrl: videoId ? `https://www.youtube.com/embed/${videoId}` : undefined,
-    author: { '@type': 'Person', name: 'Henrik Sissener', url: 'https://www.wisihe.no' },
+    author: buildPersonReference(),
   };
 
-  const breadcrumbData = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.wisihe.no' },
-      { '@type': 'ListItem', position: 2, name: 'Videos', item: 'https://www.wisihe.no/videos' },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: video.title,
-        item: `https://www.wisihe.no/videos/${params.slug}`,
-      },
-    ],
-  };
+  const breadcrumbData = buildBreadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Videos', path: '/videos' },
+    { name: video.title ?? 'Video', path: `/videos/${params.slug}` },
+  ]);
 
   return (
     <>
@@ -119,7 +119,6 @@ export default async function VideoPage(props: Props) {
           ]}
         />
 
-        {/* Video embed */}
         <div className='aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-black mb-8'>
           {videoId ? (
             <iframe
@@ -136,12 +135,10 @@ export default async function VideoPage(props: Props) {
           )}
         </div>
 
-        {/* Info */}
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           <div className='lg:col-span-2 space-y-4'>
             <h1 className='text-2xl md:text-3xl font-bold text-foreground'>{video.title}</h1>
 
-            {/* YouTube stats — server-fetched, cached 1 hour */}
             {youtubeStats && (
               <div className='flex items-center gap-5 text-sm text-foreground-muted'>
                 <span className='flex items-center gap-1.5'>
@@ -198,7 +195,6 @@ export default async function VideoPage(props: Props) {
             )}
           </div>
 
-          {/* Linked painting */}
           {video.linkedPainting && (
             <div className='space-y-3'>
               <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>

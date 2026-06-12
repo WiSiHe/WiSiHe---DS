@@ -1,8 +1,10 @@
-import type { PaintingQueryResult } from '@wisihe/sanity-queries';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { PaintingQueryResult, PaintingsSlugsResult } from '@wisihe/sanity-queries';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import PaintingDetail from '@/app/components/paintings/PaintingDetails/PaintingsDetails';
+import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
+import { buildContentMetadata, resolveSeoCopy, truncateMetaDescription } from '@/lib/seo/metadata';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
@@ -11,16 +13,16 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const { data } = await sanityFetch({
     query: paintingsSlugs,
     perspective: 'published',
     stega: false,
   });
-  return data;
+  return ((data as PaintingsSlugsResult) ?? []).map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
 
   const { data: _paintingData } = await sanityFetch({
@@ -30,34 +32,30 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   });
   const painting = _paintingData as PaintingQueryResult;
 
-  const title = painting?.title || 'Untitled Painting';
-  const description = painting?.seoDescription || painting?.description || 'View this painting.';
-  const ogImage = resolveOpenGraphImage(painting?.image);
-  const previousImages = (await parent).openGraph?.images || [];
-  const url = `https://www.wisihe.no/paintings/${params.slug}`;
+  if (!painting?.title) {
+    return { title: 'Painting not found' };
+  }
 
-  return {
+  const fallbackDescription =
+    truncateMetaDescription(painting.description ?? '', 300) ||
+    `Digital painting: ${painting.title}`;
+
+  const { title, description, noIndex } = resolveSeoCopy(painting.seo, {
+    title: painting.title,
+    description: fallbackDescription,
+  });
+
+  return buildContentMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'WiSiHe',
-      locale: 'en_US',
-      type: 'article',
-      images: ogImage ? [ogImage, ...previousImages] : previousImages,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ogImage ? [ogImage] : undefined,
-    },
-  } satisfies Metadata;
+    path: `/paintings/${params.slug}`,
+    seoImage: painting.seo?.image,
+    fallbackImage: painting.image,
+    imageAlt: painting.image?.altText ?? painting.title,
+    noIndex,
+    openGraphType: 'article',
+    keywords: painting.tagsV2?.map(tag => tag.name).filter(Boolean) as string[] | undefined,
+  });
 }
 
 export default async function PaintingPage(props: Props) {
@@ -70,49 +68,41 @@ export default async function PaintingPage(props: Props) {
     return notFound();
   }
 
-  // Create structured data for the painting
+  const pageUrl = `https://www.wisihe.no/paintings/${params.slug}`;
+  const description =
+    painting.seo?.description?.trim() ||
+    painting.description ||
+    painting.seoDescription ||
+    `Digital painting: ${painting.title}`;
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
-    '@id': `https://www.wisihe.no/paintings/${params.slug}`,
-    name: painting.title,
-    description:
-      painting.description || painting.seoDescription || `Digital painting: ${painting.title}`,
+    '@id': pageUrl,
+    name: painting.seo?.title?.trim() || painting.title,
+    description: truncateMetaDescription(description, 300),
     contentUrl: painting.image ? resolveOpenGraphImage(painting.image)?.url : undefined,
-    creator: {
-      '@type': 'Person',
-      name: 'Henrik Sissener',
-      url: 'https://www.wisihe.no',
-    },
+    ...(painting.paintedAt ? { dateCreated: painting.paintedAt } : {}),
+    creator: buildPersonReference(),
     license: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
     acquireLicensePage: 'https://www.wisihe.no/contact',
     copyrightNotice: 'Henrik Sissener',
     creditText: 'Henrik Sissener',
-    ...(painting.tagsV2 &&
-      painting.tagsV2.length > 0 && {
-        keywords: painting.tagsV2.map(tag => tag.name ?? '').join(', '),
-      }),
+    ...(painting.tagsV2?.length
+      ? {
+          keywords: painting.tagsV2
+            .map(tag => tag.name ?? '')
+            .filter(Boolean)
+            .join(', '),
+        }
+      : {}),
   };
 
-  const breadcrumbData = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.wisihe.no' },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Paintings',
-        item: 'https://www.wisihe.no/paintings',
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: painting.title,
-        item: `https://www.wisihe.no/paintings/${params.slug}`,
-      },
-    ],
-  };
+  const breadcrumbData = buildBreadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Paintings', path: '/paintings' },
+    { name: painting.title ?? 'Painting', path: `/paintings/${params.slug}` },
+  ]);
 
   return (
     <>

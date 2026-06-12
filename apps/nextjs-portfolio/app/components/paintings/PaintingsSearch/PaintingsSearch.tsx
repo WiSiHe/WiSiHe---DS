@@ -15,7 +15,6 @@ import {
 } from 'react-icons/io5';
 import {
   Configure,
-  InstantSearch,
   Pagination,
   useCurrentRefinements,
   useInstantSearch,
@@ -23,10 +22,19 @@ import {
   useSortBy,
   useStats,
 } from 'react-instantsearch';
-import { indexName, searchClient } from './AlgoliaClient';
+import { InstantSearchNext } from 'react-instantsearch-nextjs';
+import {
+  ALGOLIA_INDEX_NAME,
+  PAINTING_HIT_ATTRIBUTES,
+  PAINTINGS_INDEX_FILTER,
+  replicaIndexName,
+} from '@/lib/algolia/constants';
+import { tagFacetTransformItems } from '@/lib/algolia/facets';
+import { searchClient } from '@/lib/algolia/searchClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
+import ForSaleFilter from './ForSaleFilter';
 
 // ── Colour swatch map ────────────────────────────────────────────────────────
 const COLOR_SWATCHES: Record<string, string> = {
@@ -267,6 +275,12 @@ function FiltersSidebar() {
         <CustomSearchBox />
       </div>
 
+      {/* For sale — always visible, pinned above tag facets */}
+      <div className='flex flex-col gap-1.5'>
+        <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Shop</p>
+        <ForSaleFilter />
+      </div>
+
       {/* Colour */}
       <div className='flex flex-col gap-2'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
@@ -278,11 +292,7 @@ function FiltersSidebar() {
       {/* Tags — CustomRefinementList handles its own expand/collapse */}
       <div className='flex flex-col gap-2'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Tags</p>
-        <CustomRefinementList
-          attribute='tags'
-          limit={50}
-          transformItems={items => items.filter(item => item.count >= 3 || item.isRefined)}
-        />
+        <CustomRefinementList attribute='tags' limit={50} transformItems={tagFacetTransformItems} />
       </div>
     </>
   );
@@ -303,23 +313,40 @@ export default function PaintingsSearch() {
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-3.5 h-3.5' /> },
+    {
+      label: 'Featured',
+      value: ALGOLIA_INDEX_NAME,
+      icon: <IoStarOutline className='w-3.5 h-3.5' />,
+    },
     {
       label: 'Newest',
-      value: `${indexName}_newest`,
+      value: replicaIndexName('newest'),
       icon: <IoTimeOutline className='w-3.5 h-3.5' />,
     },
     {
       label: 'Oldest',
-      value: `${indexName}_oldest`,
+      value: replicaIndexName('oldest'),
       icon: <IoHourglassOutline className='w-3.5 h-3.5' />,
     },
-    { label: 'Most Viewed', value: `${indexName}_views`, icon: <BsEye className='w-3.5 h-3.5' /> },
+    {
+      label: 'Most Viewed',
+      value: replicaIndexName('views'),
+      icon: <BsEye className='w-3.5 h-3.5' />,
+    },
   ];
 
   return (
-    <InstantSearch searchClient={searchClient} indexName={indexName} routing={true}>
-      <Configure hitsPerPage={18} filters='_type:"painting"' />
+    <InstantSearchNext
+      searchClient={searchClient}
+      indexName={ALGOLIA_INDEX_NAME}
+      routing
+      future={{ preserveSharedStateOnUnmount: true }}
+    >
+      <Configure
+        hitsPerPage={18}
+        filters={PAINTINGS_INDEX_FILTER}
+        attributesToRetrieve={[...PAINTING_HIT_ATTRIBUTES]}
+      />
       <ScrollToResults />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
@@ -415,6 +442,6 @@ export default function PaintingsSearch() {
           </div>
         </div>
       </div>
-    </InstantSearch>
+    </InstantSearchNext>
   );
 }

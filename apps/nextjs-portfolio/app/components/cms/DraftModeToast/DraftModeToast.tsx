@@ -1,14 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useDraftModeEnvironment, useIsPresentationTool } from 'next-sanity/hooks';
+import { useIsPresentationTool, useVisualEditingEnvironment } from 'next-sanity/hooks';
 import { useEffect, useTransition } from 'react';
 import { toast } from 'sonner';
 import { disableDraftMode } from '@/app/actions';
 
 export default function DraftModeToast() {
   const isPresentationTool = useIsPresentationTool();
-  const env = useDraftModeEnvironment();
+  const env = useVisualEditingEnvironment();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -19,7 +19,7 @@ export default function DraftModeToast() {
        */
       const toastId = toast('Draft Mode Enabled', {
         description:
-          env === 'live'
+          env === 'standalone'
             ? 'Content is live, refreshing automatically'
             : 'Refresh manually to see changes',
         duration: Infinity,

@@ -2805,35 +2805,19 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
-      "parent": {
+      "isFeatured": {
         "type": "objectAttribute",
         "value": {
-          "type": "inline",
-          "name": "tag.reference"
+          "type": "boolean"
         },
         "optional": true
       },
-      "children": {
+      "sortOrder": {
         "type": "objectAttribute",
         "value": {
-          "type": "array",
-          "of": {
-            "type": "object",
-            "attributes": {
-              "_key": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "string"
-                }
-              }
-            },
-            "rest": {
-              "type": "inline",
-              "name": "tag.reference"
-            }
-          }
+          "type": "number"
         },
         "optional": true
       },
@@ -2883,27 +2867,6 @@
               "value": "#14b8a6"
             }
           ]
-        },
-        "optional": true
-      },
-      "isFeatured": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "boolean"
-        },
-        "optional": true
-      },
-      "isRoot": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "boolean"
-        },
-        "optional": true
-      },
-      "sortOrder": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "number"
         },
         "optional": true
       }

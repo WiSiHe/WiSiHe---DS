@@ -7,6 +7,7 @@ import { FaWeibo } from 'react-icons/fa';
 
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { seoType } from './seoType';
 import { PAINTING_TAG_GUIDE, validateContentTags } from './tagGuidance';
 
 export default defineType({
@@ -124,11 +125,20 @@ Requirements:
       validation: rule => rule.required(),
     }),
     defineField({
+      name: 'seo',
+      title: 'SEO overrides',
+      type: 'seo',
+      group: 'seo',
+      description:
+        'Optional overrides for search and social previews. Falls back to title, image, and SEO description below.',
+    }),
+    defineField({
       name: 'seoDescription',
-      title: 'SEO Description',
+      title: 'SEO Description (legacy)',
       type: 'text',
       group: ['seo', 'AI'],
-      description: 'This description will be used in the meta description for SEO purposes',
+      description:
+        'Used when SEO overrides → description is empty. Prefer the SEO overrides field for new content.',
       components: {
         input: props => (
           <GenericAIGenerator
