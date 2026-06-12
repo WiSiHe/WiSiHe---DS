@@ -18,6 +18,7 @@ import {
   normalizeAdventurePlaces,
   normalizeJourneyItems,
   normalizeVisitedCountries,
+  type TravelPhotoItem,
 } from './components/lifeJourneyTypes';
 import { TravelOverviewSection } from './components/TravelOverviewSection';
 
@@ -34,7 +35,13 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   X: <BsTwitterX />,
 };
 
-export default function AboutPageClient({ about }: { about: AboutQueryResult }) {
+export default function AboutPageClient({
+  about,
+  travelPhotos = [],
+}: {
+  about: AboutQueryResult;
+  travelPhotos?: TravelPhotoItem[];
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -176,6 +183,7 @@ export default function AboutPageClient({ about }: { about: AboutQueryResult }) 
         <TravelOverviewSection
           visitedCountries={visitedCountries}
           adventurePlaces={adventurePlaces}
+          travelPhotos={travelPhotos}
         />
       ) : null}
 

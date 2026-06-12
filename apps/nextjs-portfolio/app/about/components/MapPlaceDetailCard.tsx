@@ -4,7 +4,8 @@ import { IconMapPin } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
-import type { PlaceImage, PlaceStat } from './lifeJourneyTypes';
+import { CountryPhotoStrip } from './CountryPhotoStrip';
+import type { PlaceImage, PlaceStat, TravelPhotoItem } from './lifeJourneyTypes';
 import { PlaceFactsGrid } from './PlaceFactsGrid';
 
 type MapPlaceDetailCardProps = {
@@ -15,6 +16,7 @@ type MapPlaceDetailCardProps = {
   funFact?: string | null;
   stats?: PlaceStat[] | null;
   image?: PlaceImage | null;
+  travelPhotos?: TravelPhotoItem[];
   onClear?: () => void;
   className?: string;
 };
@@ -32,6 +34,7 @@ export function MapPlaceDetailCard({
   funFact,
   stats,
   image,
+  travelPhotos = [],
   onClear,
   className,
 }: MapPlaceDetailCardProps) {
@@ -125,6 +128,10 @@ export function MapPlaceDetailCard({
               <p className='mt-5 text-sm leading-relaxed text-foreground-subtle text-pretty sm:mt-6'>
                 {notes}
               </p>
+            ) : null}
+
+            {travelPhotos.length > 0 ? (
+              <CountryPhotoStrip photos={travelPhotos} country={country ?? title ?? 'this place'} />
             ) : null}
           </div>
         </>

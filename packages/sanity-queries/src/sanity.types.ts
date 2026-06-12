@@ -473,6 +473,55 @@ export type Post = {
   body?: BlockContent;
 };
 
+export type TravelPlaceReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "travelPlace";
+};
+
+export type Photography = {
+  _id: string;
+  _type: "photography";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  caption?: string;
+  place?: TravelPlaceReference;
+  placeName?: string;
+  country?: string;
+  countryCode?: string;
+  fileMetadataPanel?: string;
+  region?: string;
+  coordinates?: Geopoint;
+  capturedAt?: string;
+  camera?: string;
+  isFeatured?: boolean;
+  tagsV2?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  seo?: Seo;
+};
+
+export type Geopoint = {
+  _type: "geopoint";
+  lat?: number;
+  lng?: number;
+  alt?: number;
+};
+
 export type HomeContactCtaSection = {
   _type: "homeContactCtaSection";
   eyebrow?: string;
@@ -550,10 +599,17 @@ export type About = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  heroTitle: string;
+  heroTitle?: string;
   heroSubtitle: string;
   bio?: string;
   jobTitle?: string;
+  portrait?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
   seoTitle?: string;
   seoDescription?: string;
   knowsAbout?: Array<string>;
@@ -578,9 +634,66 @@ export type About = {
       crop?: SanityImageCrop;
       _type: "image";
     };
+    funFact?: string;
+    stats?: Array<{
+      label: string;
+      value: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  visitedCountries?: Array<{
+    country: string;
+    countryCode?: string;
+    placeName?: string;
+    coordinates?: Geopoint;
+    notes?: string;
+    cities?: Array<{
+      place?: TravelPlaceReference;
+      name?: string;
+      coordinates?: Geopoint;
+      isHighlight?: boolean;
+      notes?: string;
+      funFact?: string;
+      image?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      stats?: Array<{
+        label: string;
+        value: string;
+        _key: string;
+      }>;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  adventurePlaces?: Array<{
+    place?: TravelPlaceReference;
+    name?: string;
+    placeName?: string;
+    coordinates?: Geopoint;
+    notes?: string;
+    funFact?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    stats?: Array<{
+      label: string;
+      value: string;
+      _key: string;
+    }>;
     _key: string;
   }>;
   ctaTitle?: string;
+  ctaDescription?: string;
   ctaButtonText?: string;
   ctaButtonUrl?: string;
   socialLinks?: Array<{
@@ -590,11 +703,33 @@ export type About = {
   }>;
 };
 
-export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
+export type TravelPlace = {
+  _id: string;
+  _type: "travelPlace";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  slug: Slug;
+  kind: "city" | "adventure";
+  countryName: string;
+  countryCode?: string;
+  coordinates: Geopoint;
+  isHighlight?: boolean;
+  funFact?: string;
+  notes?: string;
+  stats?: Array<{
+    label: string;
+    value: string;
+    _key: string;
+  }>;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
 };
 
 export type Settings = {
@@ -1177,6 +1312,9 @@ export type AllSanitySchemaTypes =
   | BlockContentMinimal
   | Tag
   | Post
+  | TravelPlaceReference
+  | Photography
+  | Geopoint
   | HomeContactCtaSection
   | HomeSkillsSection
   | HomeShopTeaserSection
@@ -1187,7 +1325,7 @@ export type AllSanitySchemaTypes =
   | HomeHeroSection
   | HomeSectionIntro
   | About
-  | Geopoint
+  | TravelPlace
   | Settings
   | Home
   | Project
@@ -1263,13 +1401,20 @@ export type SettingsQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: aboutQuery
-// Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    portrait { ..., "lqip": asset->metadata.lqip },    seoTitle,    seoDescription,    knowsAbout,    journeyItems[] {      _key,      year,      title,      content,      placeName,      locationType,      coordinates,      mapZoom,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip }    },    visitedCountries[] {      _key,      country,      countryCode,      placeName,      coordinates,      notes,      cities[] {        _key,        name,        coordinates,        isHighlight,        notes,        funFact,        stats[] { label, value },        image { ..., "lqip": asset->metadata.lqip }      }    },    adventurePlaces[] {      _key,      name,      placeName,      coordinates,      notes,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip }    },    ctaTitle,    ctaDescription,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
+// Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    portrait { ..., "lqip": asset->metadata.lqip },    seoTitle,    seoDescription,    knowsAbout,    journeyItems[] {      _key,      year,      title,      content,      placeName,      locationType,      coordinates,      mapZoom,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip }    },    visitedCountries[] {      _key,      country,      countryCode,      placeName,      coordinates,      notes,      cities[] {        _key,        name,        coordinates,        isHighlight,        notes,        funFact,        stats[] { label, value },        image { ..., "lqip": asset->metadata.lqip },        place-> {          _id,          name,          kind,          countryName,          countryCode,          coordinates,          isHighlight,          funFact,          notes,          stats[] { label, value },          image { ..., "lqip": asset->metadata.lqip }        }      }    },    adventurePlaces[] {      _key,      name,      placeName,      coordinates,      notes,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip },      place-> {        _id,        name,        kind,        countryName,        countryCode,        coordinates,        isHighlight,        funFact,        notes,        stats[] { label, value },        image { ..., "lqip": asset->metadata.lqip }      }    },    ctaTitle,    ctaDescription,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
 export type AboutQueryResult = {
-  heroTitle: string;
+  heroTitle: string | null;
   heroSubtitle: string;
   bio: string | null;
   jobTitle: string | null;
-  portrait: null;
+  portrait: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    lqip: string | null;
+  } | null;
   seoTitle: string | null;
   seoDescription: string | null;
   knowsAbout: Array<string> | null;
@@ -1289,8 +1434,11 @@ export type AboutQueryResult = {
       | null;
     coordinates: Geopoint | null;
     mapZoom: number | null;
-    funFact: null;
-    stats: null;
+    funFact: string | null;
+    stats: Array<{
+      label: string;
+      value: string;
+    }> | null;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;
@@ -1300,10 +1448,102 @@ export type AboutQueryResult = {
       lqip: string | null;
     } | null;
   }> | null;
-  visitedCountries: null;
-  adventurePlaces: null;
+  visitedCountries: Array<{
+    _key: string;
+    country: string;
+    countryCode: string | null;
+    placeName: string | null;
+    coordinates: Geopoint | null;
+    notes: string | null;
+    cities: Array<{
+      _key: string;
+      name: string | null;
+      coordinates: Geopoint | null;
+      isHighlight: boolean | null;
+      notes: string | null;
+      funFact: string | null;
+      stats: Array<{
+        label: string;
+        value: string;
+      }> | null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        lqip: string | null;
+      } | null;
+      place: {
+        _id: string;
+        name: string;
+        kind: "adventure" | "city";
+        countryName: string;
+        countryCode: string | null;
+        coordinates: Geopoint;
+        isHighlight: boolean | null;
+        funFact: string | null;
+        notes: string | null;
+        stats: Array<{
+          label: string;
+          value: string;
+        }> | null;
+        image: {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+          lqip: string | null;
+        } | null;
+      } | null;
+    }> | null;
+  }> | null;
+  adventurePlaces: Array<{
+    _key: string;
+    name: string | null;
+    placeName: string | null;
+    coordinates: Geopoint | null;
+    notes: string | null;
+    funFact: string | null;
+    stats: Array<{
+      label: string;
+      value: string;
+    }> | null;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      lqip: string | null;
+    } | null;
+    place: {
+      _id: string;
+      name: string;
+      kind: "adventure" | "city";
+      countryName: string;
+      countryCode: string | null;
+      coordinates: Geopoint;
+      isHighlight: boolean | null;
+      funFact: string | null;
+      notes: string | null;
+      stats: Array<{
+        label: string;
+        value: string;
+      }> | null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        lqip: string | null;
+      } | null;
+    } | null;
+  }> | null;
   ctaTitle: string | null;
-  ctaDescription: null;
+  ctaDescription: string | null;
   ctaButtonText: string | null;
   ctaButtonUrl: string | null;
   socialLinks: Array<{
@@ -1315,8 +1555,31 @@ export type AboutQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: aboutTravelPhotographyQuery
-// Query: *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {    _id,    title,    country,    placeName,    isFeatured,    capturedAt,    image {      ...,      "lqip": asset->metadata.lqip    }  }
-export type AboutTravelPhotographyQueryResult = Array<never>;
+// Query: *[_type == "photography" && (    defined(place) ||    defined(country) && country != "" ||    defined(countryCode) && countryCode != ""  )] | order(isFeatured desc, capturedAt desc) {    _id,    title,    country,    countryCode,    placeName,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      "lqip": asset->metadata.lqip    }  }
+export type AboutTravelPhotographyQueryResult = Array<{
+  _id: string;
+  title: string;
+  country: string | null;
+  countryCode: string | null;
+  placeName: string | null;
+  isFeatured: boolean | null;
+  capturedAt: string | null;
+  place: {
+    _id: string;
+    name: string;
+    countryName: string;
+    countryCode: string | null;
+  } | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    lqip: string | null;
+  };
+}>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPageQuery
@@ -2214,6 +2477,17 @@ export type OG_IMAGE_QUERY_RESULT =
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt: string;
+        _type: "image";
+        palette: SanityImagePalette | null;
+      } | null;
+    }
+  | {
+      title: null;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
         _type: "image";
         palette: SanityImagePalette | null;
       } | null;
@@ -5003,8 +5277,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
-    '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    portrait { ..., "lqip": asset->metadata.lqip },\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      countryCode,\n      placeName,\n      coordinates,\n      notes,\n      cities[] {\n        _key,\n        name,\n        coordinates,\n        isHighlight,\n        notes,\n        funFact,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip }\n      }\n    },\n    adventurePlaces[] {\n      _key,\n      name,\n      placeName,\n      coordinates,\n      notes,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    ctaTitle,\n    ctaDescription,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
-    '\n  *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {\n    _id,\n    title,\n    country,\n    placeName,\n    isFeatured,\n    capturedAt,\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': AboutTravelPhotographyQueryResult;
+    '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    portrait { ..., "lqip": asset->metadata.lqip },\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      countryCode,\n      placeName,\n      coordinates,\n      notes,\n      cities[] {\n        _key,\n        name,\n        coordinates,\n        isHighlight,\n        notes,\n        funFact,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip },\n        place-> {\n          _id,\n          name,\n          kind,\n          countryName,\n          countryCode,\n          coordinates,\n          isHighlight,\n          funFact,\n          notes,\n          stats[] { label, value },\n          image { ..., "lqip": asset->metadata.lqip }\n        }\n      }\n    },\n    adventurePlaces[] {\n      _key,\n      name,\n      placeName,\n      coordinates,\n      notes,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip },\n      place-> {\n        _id,\n        name,\n        kind,\n        countryName,\n        countryCode,\n        coordinates,\n        isHighlight,\n        funFact,\n        notes,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip }\n      }\n    },\n    ctaTitle,\n    ctaDescription,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
+    '\n  *[_type == "photography" && (\n    defined(place) ||\n    defined(country) && country != "" ||\n    defined(countryCode) && countryCode != ""\n  )] | order(isFeatured desc, capturedAt desc) {\n    _id,\n    title,\n    country,\n    countryCode,\n    placeName,\n    isFeatured,\n    capturedAt,\n    place-> {\n      _id,\n      name,\n      countryName,\n      countryCode\n    },\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': AboutTravelPhotographyQueryResult;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n,\n      }\n    },\n  }\n': GetPageQueryResult;
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult;
     '\n    *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        "date": coalesce(date, _updatedAt),\n    }\n    ': AllPaintingsQueryResult;
