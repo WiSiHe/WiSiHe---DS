@@ -1,13 +1,21 @@
-import type { AboutQueryResult, HomePageQueryResult } from '@wisihe/sanity-queries';
+import type {
+  AboutQueryResult,
+  HomeExtrasQueryResult,
+  HomePageQueryResult,
+} from '@wisihe/sanity-queries';
 import { shuffleArray } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import { sanityFetch } from '@/sanity/lib/live';
-import { aboutQuery, homePageQuery } from '@/sanity/lib/queries';
+import { aboutQuery, homeExtrasQuery, homePageQuery } from '@/sanity/lib/queries';
 import { portableTextToPlainText } from '@/sanity/lib/utils';
+import AboutTeaserSection from './components/marketing/AboutTeaserSection/AboutTeaserSection';
+import ContactCtaSection from './components/marketing/ContactCtaSection/ContactCtaSection';
 import HeroImageSection from './components/marketing/HeroSection/HeroSection';
+import ShopTeaserSection from './components/marketing/ShopTeaserSection/ShopTeaserSection';
 import SkillsSection from './components/marketing/SkillsSection/SkillsSection';
+import VideosTeaserSection from './components/marketing/VideosTeaserSection/VideosTeaserSection';
 import PaintingsSection from './components/paintings/PaintingsSection/PaintingsSection';
 import FeaturedProjects from './components/projects/FeaturedProjects/FeaturedProjects';
 
@@ -63,12 +71,14 @@ const SectionSkeleton = () => (
 );
 
 export default async function Home() {
-  const [{ data: _homepageData }, { data: _aboutData }] = await Promise.all([
+  const [{ data: _homepageData }, { data: _aboutData }, { data: _extrasData }] = await Promise.all([
     sanityFetch({ query: homePageQuery }),
     sanityFetch({ query: aboutQuery }),
+    sanityFetch({ query: homeExtrasQuery }),
   ]);
   const homepage = _homepageData as HomePageQueryResult;
   const about = _aboutData as AboutQueryResult | null;
+  const extras = _extrasData as HomeExtrasQueryResult | null;
 
   if (!homepage) {
     return (
@@ -139,9 +149,21 @@ export default async function Home() {
         </Suspense>
       </section>
 
+      <AboutTeaserSection home={homepage} about={about} />
+
+      {extras?.videos?.length ? (
+        <VideosTeaserSection home={homepage} videos={extras.videos} />
+      ) : null}
+
+      {extras?.forSalePaintings?.length ? (
+        <ShopTeaserSection home={homepage} paintings={extras.forSalePaintings} />
+      ) : null}
+
       <Suspense fallback={<div className='h-64 bg-surface-elevated animate-pulse' />}>
         <SkillsSection />
       </Suspense>
+
+      <ContactCtaSection home={homepage} about={about} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { TagIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { TAG_DESCRIPTION_AI_PROMPT } from './tagGuidance';
 import { tagIncomingReferencesDecoration } from './tagIncomingReferences';
 
 function ColorSwatch(color?: string) {
@@ -87,7 +88,7 @@ export const tag = defineType({
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt="Write a short description for the tag '{tagName}'. It categorizes paintings, projects, and recipes on a portfolio site. Explain what content belongs under this tag. Keep it under 150 characters."
+            prompt={`${TAG_DESCRIPTION_AI_PROMPT}\n\nTag name: "{tagName}"`}
             transformResponse={response =>
               response
                 .replace(/^["']|["']$/g, '')

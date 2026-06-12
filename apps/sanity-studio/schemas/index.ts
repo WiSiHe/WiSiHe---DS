@@ -1,4 +1,5 @@
 import blockContent from './blockContent';
+import homeSectionIntro from './objects/homeSectionIntro';
 import painting from './painting';
 import post from './post';
 import presentation, {
@@ -27,6 +28,7 @@ export const schemaTypes = [
   home,
   settings,
   about,
+  homeSectionIntro,
   painting,
   post,
   project,
