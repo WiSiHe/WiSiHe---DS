@@ -97,6 +97,7 @@ export const aboutTravelPhotographyQuery = defineQuery(`
   )] | order(isFeatured desc, capturedAt desc) {
     _id,
     title,
+    "slug": slug.current,
     country,
     countryCode,
     placeName,
@@ -113,6 +114,72 @@ export const aboutTravelPhotographyQuery = defineQuery(`
       "lqip": asset->metadata.lqip
     }
   }
+`);
+
+export const photographyListQuery = defineQuery(`
+  *[_type == "photography" && defined(slug.current) && defined(image)]
+  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    caption,
+    isFeatured,
+    capturedAt,
+    place-> {
+      _id,
+      name,
+      countryName,
+      countryCode
+    },
+    image {
+      ...,
+      alt,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    }
+  }
+`);
+
+export const photographyQuery = defineQuery(`
+  *[_type == "photography" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    caption,
+    capturedAt,
+    camera,
+    isFeatured,
+    place-> {
+      _id,
+      name,
+      countryName,
+      countryCode,
+      kind,
+      coordinates
+    },
+    tagsV2[]->{ _id, name },
+    image {
+      ...,
+      alt,
+      "lqip": asset->metadata.lqip,
+      "blurhash": asset->metadata.blurhash,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height,
+      "hasAlpha": asset->metadata.hasAlpha,
+      "isOpaque": asset->metadata.isOpaque,
+      "palette": asset->metadata.palette,
+      "location": asset->metadata.location,
+      "exif": asset->metadata.exif,
+      "mimeType": asset->mimeType,
+      "fileSize": asset->size,
+      "originalFilename": asset->originalFilename
+    }
+  }
+`);
+
+export const photographySlugs = defineQuery(`
+  *[_type == "photography" && defined(slug.current)]{ "slug": slug.current }
 `);
 
 const postFields = /* groq */ `
@@ -694,7 +761,7 @@ export const generateStaticSlugs = defineQuery(`
 
 export const indexableContentSlugs = defineQuery(`
   *[
-    _type in ["painting", "project", "recipe", "video", "presentation"]
+    _type in ["painting", "project", "recipe", "video", "presentation", "photography"]
     && defined(slug.current)
     && coalesce(seo.noIndex, false) != true
     && !(_type == "painting" && isNSFW == true)

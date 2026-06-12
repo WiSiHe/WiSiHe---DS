@@ -13,11 +13,13 @@ const { createClient } = require('@sanity/client');
 const { config } = require('dotenv');
 
 config({ path: path.join(studioRoot, '.env.local') });
+config({ path: path.join(studioRoot, '../nextjs-portfolio/.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || 'cbjsv7wi';
 const DATASET = process.env.SANITY_STUDIO_API_DATASET || 'production';
 const WRITE_TOKEN =
   process.env.SANITY_API_WRITE_TOKEN ||
+  process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN ||
   process.env.SANITY_API_READ_TOKEN ||
   process.env.SANITY_STUDIO_API_TOKEN;
 
@@ -70,9 +72,7 @@ async function ensurePlace({
   const code = countryCode || COUNTRY_ISO[countryName] || 'XX';
   const id = placeDocId(code, name);
   const existing = await client.getDocument(id);
-  const doc = {
-    _id: id,
-    _type: 'travelPlace',
+  const fields = {
     name,
     slug: { _type: 'slug', current: `${code.toLowerCase()}-${slugify(name)}` },
     kind,
@@ -80,15 +80,16 @@ async function ensurePlace({
     countryCode: code,
     coordinates,
     isHighlight: isHighlight ?? false,
-    funFact,
-    notes,
-    stats,
   };
+  if (funFact) fields.funFact = funFact;
+  if (notes) fields.notes = notes;
+  if (stats?.length) fields.stats = stats;
+
   if (existing) {
-    await client.patch(id).set(doc).commit();
+    await client.patch(id).set(fields).commit();
     console.log(`Updated place: ${name} (${code})`);
   } else {
-    await client.create(doc);
+    await client.create({ _id: id, _type: 'travelPlace', ...fields });
     console.log(`Created place: ${name} (${code})`);
   }
   return id;
@@ -123,12 +124,17 @@ for (const country of about.visitedCountries ?? []) {
 }
 
 const adventurePlaceIds = new Map();
+const ADVENTURE_COUNTRY = {
+  'adv-svalbard': { countryName: 'Norway', countryCode: 'NO' },
+};
+
 for (const adventure of about.adventurePlaces ?? []) {
   if (!adventure.name || !adventure.coordinates) continue;
+  const adventureCountry = ADVENTURE_COUNTRY[adventure._key];
   const id = await ensurePlace({
     name: adventure.name,
-    countryName: adventure.placeName?.split(',')[0]?.trim() || 'Adventure',
-    countryCode: 'XX',
+    countryName: adventureCountry?.countryName ?? adventure.countryName ?? 'Adventure',
+    countryCode: adventureCountry?.countryCode,
     coordinates: adventure.coordinates,
     kind: 'adventure',
     funFact: adventure.funFact,
@@ -143,9 +149,14 @@ let aboutPatch = client.patch('about');
 for (const country of about.visitedCountries ?? []) {
   for (const city of country.cities ?? []) {
     const placeId = placeIdByCityKey.get(city._key);
-    if (!placeId) continue;
+    if (!placeId || !country._key) continue;
     aboutPatch = aboutPatch.set(
-      { [`visitedCountries[_key=="${city._key}"].place`]: { _type: 'reference', _ref: placeId } },
+      {
+        [`visitedCountries[_key=="${country._key}"].cities[_key=="${city._key}"].place`]: {
+          _type: 'reference',
+          _ref: placeId,
+        },
+      },
     );
   }
 }

@@ -187,6 +187,7 @@ export interface VisitedCountryItem {
 export interface TravelPhotoItem {
   _id: string;
   title?: string | null;
+  slug?: string | null;
   country?: string | null;
   countryCode?: string | null;
   placeName?: string | null;

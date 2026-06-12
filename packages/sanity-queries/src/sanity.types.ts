@@ -486,8 +486,7 @@ export type Photography = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: string;
-  slug: Slug;
+  workflowIntro?: string;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -496,14 +495,11 @@ export type Photography = {
     alt: string;
     _type: "image";
   };
-  caption?: string;
-  place?: TravelPlaceReference;
-  placeName?: string;
-  country?: string;
-  countryCode?: string;
   fileMetadataPanel?: string;
-  region?: string;
-  coordinates?: Geopoint;
+  place?: TravelPlaceReference;
+  title: string;
+  slug: Slug;
+  caption?: string;
   capturedAt?: string;
   camera?: string;
   isFeatured?: boolean;
@@ -512,7 +508,11 @@ export type Photography = {
       _key: string;
     } & TagReference
   >;
-  seo?: Seo;
+  placeName?: string;
+  country?: string;
+  countryCode?: string;
+  region?: string;
+  coordinates?: Geopoint;
 };
 
 export type Geopoint = {
@@ -709,12 +709,21 @@ export type TravelPlace = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  workflowIntro?: string;
   kind: "city" | "adventure";
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  locationAssistPanel?: string;
+  name: string;
   countryName: string;
   countryCode?: string;
   coordinates: Geopoint;
+  slug: Slug;
   isHighlight?: boolean;
   funFact?: string;
   notes?: string;
@@ -723,13 +732,6 @@ export type TravelPlace = {
     value: string;
     _key: string;
   }>;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
 };
 
 export type Settings = {
@@ -1555,10 +1557,11 @@ export type AboutQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: aboutTravelPhotographyQuery
-// Query: *[_type == "photography" && (    defined(place) ||    defined(country) && country != "" ||    defined(countryCode) && countryCode != ""  )] | order(isFeatured desc, capturedAt desc) {    _id,    title,    country,    countryCode,    placeName,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      "lqip": asset->metadata.lqip    }  }
+// Query: *[_type == "photography" && (    defined(place) ||    defined(country) && country != "" ||    defined(countryCode) && countryCode != ""  )] | order(isFeatured desc, capturedAt desc) {    _id,    title,    "slug": slug.current,    country,    countryCode,    placeName,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      "lqip": asset->metadata.lqip    }  }
 export type AboutTravelPhotographyQueryResult = Array<{
   _id: string;
   title: string;
+  slug: string;
   country: string | null;
   countryCode: string | null;
   placeName: string | null;
@@ -1579,6 +1582,87 @@ export type AboutTravelPhotographyQueryResult = Array<{
     _type: "image";
     lqip: string | null;
   };
+}>;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: photographyListQuery
+// Query: *[_type == "photography" && defined(slug.current) && defined(image)]  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {    _id,    title,    "slug": slug.current,    caption,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    }  }
+export type PhotographyListQueryResult = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  caption: string | null;
+  isFeatured: boolean | null;
+  capturedAt: string | null;
+  place: {
+    _id: string;
+    name: string;
+    countryName: string;
+    countryCode: string | null;
+  } | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    lqip: string | null;
+    aspectRatio: number | null;
+  };
+}>;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: photographyQuery
+// Query: *[_type == "photography" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    caption,    capturedAt,    camera,    isFeatured,    place-> {      _id,      name,      countryName,      countryCode,      kind,      coordinates    },    tagsV2[]->{ _id, name },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "palette": asset->metadata.palette,      "location": asset->metadata.location,      "exif": asset->metadata.exif,      "mimeType": asset->mimeType,      "fileSize": asset->size,      "originalFilename": asset->originalFilename    }  }
+export type PhotographyQueryResult = {
+  _id: string;
+  title: string;
+  slug: string;
+  caption: string | null;
+  capturedAt: string | null;
+  camera: string | null;
+  isFeatured: boolean | null;
+  place: {
+    _id: string;
+    name: string;
+    countryName: string;
+    countryCode: string | null;
+    kind: "adventure" | "city";
+    coordinates: Geopoint;
+  } | null;
+  tagsV2: Array<{
+    _id: string;
+    name: string;
+  }> | null;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+    lqip: string | null;
+    blurhash: null;
+    aspectRatio: number | null;
+    width: number | null;
+    height: number | null;
+    hasAlpha: boolean | null;
+    isOpaque: boolean | null;
+    palette: SanityImagePalette | null;
+    location: Geopoint | null;
+    exif: null;
+    mimeType: string | null;
+    fileSize: number | null;
+    originalFilename: string | null;
+  };
+} | null;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: photographySlugs
+// Query: *[_type == "photography" && defined(slug.current)]{ "slug": slug.current }
+export type PhotographySlugsResult = Array<{
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -2403,10 +2487,15 @@ export type GenerateStaticSlugsResult = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: indexableContentSlugs
-// Query: *[    _type in ["painting", "project", "recipe", "video", "presentation"]    && defined(slug.current)    && coalesce(seo.noIndex, false) != true    && !(_type == "painting" && isNSFW == true)  ]{    _type,    "slug": slug.current,    _updatedAt  }
+// Query: *[    _type in ["painting", "project", "recipe", "video", "presentation", "photography"]    && defined(slug.current)    && coalesce(seo.noIndex, false) != true    && !(_type == "painting" && isNSFW == true)  ]{    _type,    "slug": slug.current,    _updatedAt  }
 export type IndexableContentSlugsResult = Array<
   | {
       _type: "painting";
+      slug: string;
+      _updatedAt: string;
+    }
+  | {
+      _type: "photography";
       slug: string;
       _updatedAt: string;
     }
@@ -5278,7 +5367,10 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
     '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    portrait { ..., "lqip": asset->metadata.lqip },\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      countryCode,\n      placeName,\n      coordinates,\n      notes,\n      cities[] {\n        _key,\n        name,\n        coordinates,\n        isHighlight,\n        notes,\n        funFact,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip },\n        place-> {\n          _id,\n          name,\n          kind,\n          countryName,\n          countryCode,\n          coordinates,\n          isHighlight,\n          funFact,\n          notes,\n          stats[] { label, value },\n          image { ..., "lqip": asset->metadata.lqip }\n        }\n      }\n    },\n    adventurePlaces[] {\n      _key,\n      name,\n      placeName,\n      coordinates,\n      notes,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip },\n      place-> {\n        _id,\n        name,\n        kind,\n        countryName,\n        countryCode,\n        coordinates,\n        isHighlight,\n        funFact,\n        notes,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip }\n      }\n    },\n    ctaTitle,\n    ctaDescription,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
-    '\n  *[_type == "photography" && (\n    defined(place) ||\n    defined(country) && country != "" ||\n    defined(countryCode) && countryCode != ""\n  )] | order(isFeatured desc, capturedAt desc) {\n    _id,\n    title,\n    country,\n    countryCode,\n    placeName,\n    isFeatured,\n    capturedAt,\n    place-> {\n      _id,\n      name,\n      countryName,\n      countryCode\n    },\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': AboutTravelPhotographyQueryResult;
+    '\n  *[_type == "photography" && (\n    defined(place) ||\n    defined(country) && country != "" ||\n    defined(countryCode) && countryCode != ""\n  )] | order(isFeatured desc, capturedAt desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    country,\n    countryCode,\n    placeName,\n    isFeatured,\n    capturedAt,\n    place-> {\n      _id,\n      name,\n      countryName,\n      countryCode\n    },\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': AboutTravelPhotographyQueryResult;
+    '\n  *[_type == "photography" && defined(slug.current) && defined(image)]\n  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    caption,\n    isFeatured,\n    capturedAt,\n    place-> {\n      _id,\n      name,\n      countryName,\n      countryCode\n    },\n    image {\n      ...,\n      alt,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': PhotographyListQueryResult;
+    '\n  *[_type == "photography" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    caption,\n    capturedAt,\n    camera,\n    isFeatured,\n    place-> {\n      _id,\n      name,\n      countryName,\n      countryCode,\n      kind,\n      coordinates\n    },\n    tagsV2[]->{ _id, name },\n    image {\n      ...,\n      alt,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "palette": asset->metadata.palette,\n      "location": asset->metadata.location,\n      "exif": asset->metadata.exif,\n      "mimeType": asset->mimeType,\n      "fileSize": asset->size,\n      "originalFilename": asset->originalFilename\n    }\n  }\n': PhotographyQueryResult;
+    '\n  *[_type == "photography" && defined(slug.current)]{ "slug": slug.current }\n': PhotographySlugsResult;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n,\n      }\n    },\n  }\n': GetPageQueryResult;
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult;
     '\n    *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        "date": coalesce(date, _updatedAt),\n    }\n    ': AllPaintingsQueryResult;
@@ -5303,7 +5395,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "video" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": coalesce(seo.image, thumbnail),\n      "noIndex": seo.noIndex == true\n    },\n    videoUrl,\n    "featured": featured == true,\n    "viewsCount": coalesce(viewsCount, 0),\n    "likesCount": count(likes),\n    "linkedPainting": coalesce(linkedPainting->{\n      _id,\n      "slug": slug.current,\n      title,\n      description,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }, null),\n    tags[]->{name},\n    thumbnail {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': VideoBySlugQueryResult;
     '\n  *[_type == "video" && defined(slug.current)] { "slug": slug.current }\n': VideosSlugsResult;
     '\n  *[\n    _type == $type\n    && defined(slug.current)\n    && coalesce(seo.noIndex, false) != true\n    && !(_type == "painting" && isNSFW == true)\n  ]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': GenerateStaticSlugsResult;
-    '\n  *[\n    _type in ["painting", "project", "recipe", "video", "presentation"]\n    && defined(slug.current)\n    && coalesce(seo.noIndex, false) != true\n    && !(_type == "painting" && isNSFW == true)\n  ]{\n    _type,\n    "slug": slug.current,\n    _updatedAt\n  }\n': IndexableContentSlugsResult;
+    '\n  *[\n    _type in ["painting", "project", "recipe", "video", "presentation", "photography"]\n    && defined(slug.current)\n    && coalesce(seo.noIndex, false) != true\n    && !(_type == "painting" && isNSFW == true)\n  ]{\n    _type,\n    "slug": slug.current,\n    _updatedAt\n  }\n': IndexableContentSlugsResult;
     '\n  *[_type == "redirect" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n': REDIRECTS_QUERY_RESULT;
     '\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      "palette": asset->metadata.palette,\n    },\n  }\n': OG_IMAGE_QUERY_RESULT;
     '\n  *[_type in ["page", "post"] && defined(slug.current)] {\n      "href": select(\n        _type == "page" => "/" + slug.current,\n        _type == "post" => "/posts/" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ': SITEMAP_QUERY_RESULT;
