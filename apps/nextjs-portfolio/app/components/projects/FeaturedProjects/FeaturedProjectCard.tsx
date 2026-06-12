@@ -63,8 +63,8 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
     <div className='relative w-full h-screen overflow-hidden flex items-center justify-center border-t border-border/20 dark:border-white/5 bg-card'>
       {/* 1. PARALLAX BACKGROUND IMAGE (Fills the Height of the Cell) */}
       <div className='absolute inset-0 z-0 overflow-hidden w-full h-full'>
-        {/* Modern dark dim overlay */}
-        <div className='absolute inset-0 bg-black/35 dark:bg-black/55 z-10 pointer-events-none transition-colors duration-300' />
+        {/* Stronger dim so the placard text stays readable over bright artwork */}
+        <div className='absolute inset-0 bg-black/50 dark:bg-black/60 z-10 pointer-events-none transition-colors duration-300' />
 
         {heroUrl ? (
           <Image
@@ -100,17 +100,19 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
         data-scroll
         data-scroll-speed='0.2'
       >
-        <GlassSurface className='w-full h-full p-8 md:p-10'>
+        <GlassSurface variant='overlay' className='w-full h-full p-8 md:p-10'>
           <div className='flex flex-col h-full'>
             {/* Modern Eyebrow Tags */}
             <div className='mb-3 font-mono text-[10px] md:text-xs tracking-wider text-accent uppercase font-bold flex flex-wrap gap-x-2 gap-y-1 items-center'>
               <span>EP-{String(index + 1).padStart(2, '0')}</span>
-              <span className='opacity-30 select-none'>•</span>
-              <span>{formatProjectStatusLabel(project.status || 'unknown')}</span>
+              <span className='text-white/40 select-none'>•</span>
+              <span className='text-white/90'>
+                {formatProjectStatusLabel(project.status || 'unknown')}
+              </span>
               {dateRange ? (
                 <>
-                  <span className='opacity-30 select-none'>•</span>
-                  <span>{dateRange}</span>
+                  <span className='text-white/40 select-none'>•</span>
+                  <span className='text-white/90'>{dateRange}</span>
                 </>
               ) : null}
             </div>
@@ -118,14 +120,14 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
             {/* Title - Clean modern sans-serif */}
             <h3
               id={titleId}
-              className='mb-4 font-sans text-2xl md:text-3xl font-bold leading-tight text-foreground'
+              className='mb-4 font-sans text-2xl md:text-3xl font-bold leading-tight text-white'
             >
               {headingText}
             </h3>
 
             {/* Description */}
             {summaryText ? (
-              <p className='text-sm md:text-base leading-relaxed text-foreground-subtle mb-8 line-clamp-3'>
+              <p className='text-sm md:text-base leading-relaxed text-white/80 mb-8 line-clamp-3'>
                 {summaryText}
               </p>
             ) : null}
@@ -138,7 +140,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
                   return (
                     <div
                       key={src.asset._ref}
-                      className='relative aspect-square overflow-hidden rounded-xl bg-muted border border-border/40 hover:scale-105 transition-transform duration-300'
+                      className='relative aspect-square overflow-hidden rounded-xl bg-white/10 border border-white/20 hover:scale-105 transition-transform duration-300'
                     >
                       <div className='relative w-full h-full overflow-hidden'>
                         {u ? (
