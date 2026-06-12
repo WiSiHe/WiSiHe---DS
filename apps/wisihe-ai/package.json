@@ -18,8 +18,8 @@
   "dependencies": {
     "@sanity/sdk": "^2.11.1",
     "@sanity/sdk-react": "^2.11.1",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^6.0.0",
