@@ -13,6 +13,7 @@ import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import { handleError } from './client-utils';
 import DraftModeToast from './components/cms/DraftModeToast';
+import AppToaster from './components/layout/AppToaster/AppToaster';
 import Footer from './components/layout/Footer/Footer';
 import './globals.css';
 import type React from 'react';
@@ -215,6 +216,7 @@ export default async function RootLayout({
               <Analytics />
               <SpeedInsights />
               <CustomCursor />
+              <AppToaster />
             </PostHogProvider>
           </ProgressBarProvider>
         </div>

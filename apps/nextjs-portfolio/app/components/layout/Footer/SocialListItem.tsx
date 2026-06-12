@@ -2,14 +2,27 @@
 
 import { BiLogoRedbubble } from 'react-icons/bi';
 import { BsTwitterX } from 'react-icons/bs';
-import { FaArtstation, FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import {
+  FaArtstation,
+  FaFacebook,
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+} from 'react-icons/fa';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
 const iconPlatform = {
   Instagram: <FaInstagram />,
   X: <BsTwitterX />,
+  Twitter: <BsTwitterX />,
   Facebook: <FaFacebook />,
   Linkedin: <FaLinkedin />,
+  LinkedIn: <FaLinkedin />,
+  GitHub: <FaGithub />,
+  Github: <FaGithub />,
+  YouTube: <FaYoutube />,
+  Youtube: <FaYoutube />,
   Redbubble: <BiLogoRedbubble />,
   Artstation: <FaArtstation />,
 };

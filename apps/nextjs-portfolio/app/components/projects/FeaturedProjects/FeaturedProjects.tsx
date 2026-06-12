@@ -145,7 +145,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
             size='large'
             Icon={IconArrowRight}
             iconPosition='right'
-            className='gap-2 rounded-full px-8 py-4 shadow-lg shadow-accent/25 md:gap-3 md:px-10 md:py-5'
+            className='mx-auto w-fit min-w-[14rem] rounded-full px-8 shadow-lg shadow-accent/20'
             onClick={() =>
               trackEvent(AnalyticsEvent.EXPLORE_ALL_PROJECTS_CLICKED, { source: 'home_featured' })
             }

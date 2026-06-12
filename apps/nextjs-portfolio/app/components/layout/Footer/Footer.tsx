@@ -220,6 +220,12 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
             © {currentYear} {displayName}
           </p>
           <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+            <Link
+              href='/privacy'
+              className='font-medium text-foreground-subtle transition-colors hover:text-accent'
+            >
+              Privacy
+            </Link>
             <span>Built in Oslo with Next.js & Sanity</span>
             <span className='font-mono text-[10px] tracking-wide text-foreground-muted/80'>
               v{APP_VERSION}

@@ -48,6 +48,15 @@ Install dependencies from the root:
 pnpm install
 ```
 
+### Environment variables
+
+Secrets are documented per app (`.env.example` files) and in **[`docs/doppler-setup.md`](docs/doppler-setup.md)** for Doppler + Vercel. For local dev without Doppler:
+
+```sh
+cp apps/nextjs-portfolio/.env.example apps/nextjs-portfolio/.env.local
+cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
+```
+
 ### Useful Commands
 
 - `pnpm dev` - Start all development servers (Next.js and Storybooks) concurrently.
