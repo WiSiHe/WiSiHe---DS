@@ -132,7 +132,8 @@ export default defineType({
       title: 'Fun fact',
       type: 'string',
       group: 'content',
-      description: 'Generate after name and country are set (Map card tab).',
+      description:
+        'Generate after name and country are set — objective fact, not personal narrative.',
       components: {
         input: props => (
           <GenericAIGenerator
@@ -143,7 +144,7 @@ export default defineType({
             includeFileMetadata
             characterLimit={120}
             rows={2}
-            placeholder='One surprising sentence about this place…'
+            placeholder='Objective fact about this place…'
           />
         ),
       },
@@ -154,7 +155,8 @@ export default defineType({
       type: 'text',
       rows: 3,
       group: 'content',
-      description: 'Optional longer memory — fun fact is shown first in the UI.',
+      description:
+        'Optional extra context — factual background shown after the fun fact on the map card.',
       components: {
         input: props => (
           <GenericAIGenerator
@@ -164,7 +166,7 @@ export default defineType({
             imageRequired={false}
             includeFileMetadata
             rows={4}
-            placeholder='A short personal memory…'
+            placeholder='Objective context about this place…'
           />
         ),
       },
