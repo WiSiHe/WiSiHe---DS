@@ -3,7 +3,7 @@
 import { Chip } from '@wisihe/ui-react';
 import { motion, type Variants } from 'motion/react';
 import React, { useMemo } from 'react';
-import { LogoLoop } from '../../ui/LogoLoop';
+import { type LogoItem, LogoLoop } from '../../ui/LogoLoop';
 
 const professionalSkills = [
   'Frontend Development',
@@ -52,23 +52,17 @@ const itemVariants: Variants = {
   },
 };
 
-const SkillsSection = React.memo(function SkillsSection() {
-  // Memoize chip arrays to prevent recreation on every render
-  const professionalChips = useMemo(
-    () =>
-      professionalSkills.map(skill => (
-        <Chip key={skill} label={skill} className='ml-2 pointer-events-none' interactive={false} />
-      )),
-    [],
-  );
+function skillsToLogos(skills: readonly string[]): LogoItem[] {
+  return skills.map(skill => ({
+    node: <Chip label={skill} className='shrink-0' interactive={false} />,
+    title: skill,
+    ariaLabel: skill,
+  }));
+}
 
-  const creativeChips = useMemo(
-    () =>
-      creativeSkills.map(skill => (
-        <Chip key={skill} label={skill} className='ml-2 pointer-events-none' interactive={false} />
-      )),
-    [],
-  );
+const SkillsSection = React.memo(function SkillsSection() {
+  const professionalLogos = useMemo(() => skillsToLogos(professionalSkills), []);
+  const creativeLogos = useMemo(() => skillsToLogos(creativeSkills), []);
 
   return (
     <motion.section
@@ -76,7 +70,7 @@ const SkillsSection = React.memo(function SkillsSection() {
       whileInView='visible'
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className='relative flex flex-col gap-8 py-20 text-foreground'
+      className='relative flex flex-col gap-8 overflow-hidden py-20 text-foreground'
     >
       <motion.div variants={itemVariants} className='z-10 pointer-events-none px-4 md:px-8'>
         <h2 className='text-4xl md:text-5xl font-bold mb-3'>Skills</h2>
@@ -86,15 +80,31 @@ const SkillsSection = React.memo(function SkillsSection() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <LogoLoop direction='left' speed={60}>
-          {professionalChips}
-        </LogoLoop>
+        <LogoLoop
+          logos={professionalLogos}
+          direction='left'
+          speed={90}
+          gap={16}
+          logoHeight={40}
+          fadeOut
+          fadeOutColor='var(--color-background)'
+          pauseOnHover
+          ariaLabel='Professional skills'
+        />
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <LogoLoop direction='right' speed={60}>
-          {creativeChips}
-        </LogoLoop>
+        <LogoLoop
+          logos={creativeLogos}
+          direction='right'
+          speed={75}
+          gap={16}
+          logoHeight={40}
+          fadeOut
+          fadeOutColor='var(--color-background)'
+          pauseOnHover
+          ariaLabel='Creative skills'
+        />
       </motion.div>
     </motion.section>
   );
