@@ -16,7 +16,6 @@ import {
 } from 'react-icons/io5';
 import {
   Configure,
-  Pagination,
   useCurrentRefinements,
   useInstantSearch,
   useRefinementList,
@@ -36,6 +35,7 @@ import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
 import ForSaleFilter from './ForSaleFilter';
+import PaintingsPagination from './PaintingsPagination';
 
 // ── Colour swatch map ────────────────────────────────────────────────────────
 const COLOR_SWATCHES: Record<string, string> = {
@@ -446,19 +446,7 @@ export default function PaintingsSearch() {
         <div id={RESULTS_ID} className='grow flex flex-col min-w-0'>
           <HitStatsWithSort sortItems={sortItems} />
           <CustomHits />
-
-          <div className='mt-12 flex justify-center w-full'>
-            <Pagination
-              classNames={{
-                root: 'flex justify-center',
-                list: 'flex items-center gap-1.5',
-                item: 'flex items-center',
-                link: 'min-w-10 px-2.5 py-2 text-sm rounded-md transition-all duration-200 text-center text-foreground-subtle hover:bg-surface-hover hover:text-foreground border border-transparent',
-                selectedItem: 'bg-accent/10 border-accent text-accent font-semibold',
-                disabledItem: 'opacity-50 cursor-not-allowed pointer-events-none',
-              }}
-            />
-          </div>
+          <PaintingsPagination />
         </div>
       </div>
     </InstantSearchNext>
