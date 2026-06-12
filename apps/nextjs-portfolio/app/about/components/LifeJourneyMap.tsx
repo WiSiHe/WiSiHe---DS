@@ -11,7 +11,7 @@ import {
   type LifeJourneyItem,
 } from './lifeJourneyTypes';
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+const MAPBOX_TOKEN = process.env['NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN'];
 const DEFAULT_CENTER = { longitude: 10.75, latitude: 59.91 };
 const DEFAULT_ZOOM = 4.2;
 

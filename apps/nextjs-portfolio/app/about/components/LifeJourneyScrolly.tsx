@@ -31,7 +31,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     () => {
       const sections = gsap.utils.toArray<HTMLElement>('[data-journey-step]');
       sections.forEach(section => {
-        const mapIndex = Number(section.dataset.mapIndex ?? -1);
+        const mapIndex = Number(section.dataset['mapIndex'] ?? -1);
 
         ScrollTrigger.create({
           trigger: section,
