@@ -14,9 +14,13 @@ type SocialLink = {
 
 type ContactPageClientProps = {
   socialLinks: SocialLink[];
+  emailDeliveryEnabled: boolean;
 };
 
-export default function ContactPageClient({ socialLinks }: ContactPageClientProps) {
+export default function ContactPageClient({
+  socialLinks,
+  emailDeliveryEnabled,
+}: ContactPageClientProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -40,8 +44,10 @@ export default function ContactPageClient({ socialLinks }: ContactPageClientProp
             transition={{ delay: 0.08 }}
             className='mb-10 text-lg leading-relaxed text-foreground-subtle text-pretty md:text-xl'
           >
-            Have a project in mind, want to license artwork, or just want to say hello? Send a
-            message below — or reach me on email and social media.
+            Have a project in mind, want to license artwork, or just want to say hello?
+            {emailDeliveryEnabled
+              ? ' Send a message below — or reach me on email and social media.'
+              : ' Reach me by email or social media — the online form will be back soon.'}
           </motion.p>
 
           <motion.div
@@ -112,7 +118,7 @@ export default function ContactPageClient({ socialLinks }: ContactPageClientProp
           <h2 className='relative z-10 mb-6 text-xl font-semibold text-foreground'>
             Send a message
           </h2>
-          <ContactForm />
+          <ContactForm emailDeliveryEnabled={emailDeliveryEnabled} />
         </motion.div>
       </div>
     </motion.div>
