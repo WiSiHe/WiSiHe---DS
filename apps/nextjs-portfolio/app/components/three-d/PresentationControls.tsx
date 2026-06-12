@@ -11,6 +11,7 @@ type PresentationControlsProps = Readonly<{
   onScrollToTop: () => void;
   onSkipToCoolPart: () => void;
   isVisible: boolean;
+  showSkipControl?: boolean;
 }>;
 
 export function PresentationControls({
@@ -21,6 +22,7 @@ export function PresentationControls({
   onScrollToTop,
   onSkipToCoolPart,
   isVisible,
+  showSkipControl = true,
 }: PresentationControlsProps) {
   const isFirstSlide = currentSlide === 0;
   const isLastSlide = currentSlide === totalSlides - 1;
@@ -89,20 +91,21 @@ export function PresentationControls({
 
           {/* Actions Group - Horizontal Label Buttons */}
           <div className='flex flex-col gap-2.5 items-end pointer-events-auto'>
-            {/* Skip to Cool Part Button */}
-            <motion.button
-              whileHover={{ scale: 1.02, x: -4 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onSkipToCoolPart}
-              className='group flex items-center gap-3 px-4 py-2 bg-surface border border-border rounded-2xl shadow-xl hover:shadow-accent/10 hover:border-accent-border transition-all duration-300 ring-1 ring-border/50'
-            >
-              <span className='text-xs font-bold text-foreground/60 group-hover:text-accent transition-colors uppercase tracking-wider pl-1'>
-                Skip to Cool Part
-              </span>
-              <div className='w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-contrast transition-all duration-300 shadow-inner'>
-                <HiRocketLaunch className='w-4 h-4' />
-              </div>
-            </motion.button>
+            {showSkipControl ? (
+              <motion.button
+                whileHover={{ scale: 1.02, x: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onSkipToCoolPart}
+                className='group flex items-center gap-3 px-4 py-2 bg-surface border border-border rounded-2xl shadow-xl hover:shadow-accent/10 hover:border-accent-border transition-all duration-300 ring-1 ring-border/50'
+              >
+                <span className='text-xs font-bold text-foreground/60 group-hover:text-accent transition-colors uppercase tracking-wider pl-1'>
+                  Skip to Cool Part
+                </span>
+                <div className='w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-contrast transition-all duration-300 shadow-inner'>
+                  <HiRocketLaunch className='w-4 h-4' />
+                </div>
+              </motion.button>
+            ) : null}
 
             {/* Scroll to Top Button */}
             <motion.button

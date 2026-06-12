@@ -1,147 +1,233 @@
 'use client';
 
-import { motion } from 'motion/react';
-import Link from 'next/link';
+import { IconArrowUpRight } from '@tabler/icons-react';
+import { footerLinks, footerSecondaryLinks } from '@wisihe/constants';
+import { Button } from '@wisihe/ui-react';
+import { cn } from '@wisihe/utils';
+import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import IconLogo from '../icons/IconLogo';
+import { Link } from '../ProgressLink';
 import { SocialListItem } from './SocialListItem';
 
 type FooterProps = {
   socialLinks: { _key: string; platform?: string | null; url?: string | null }[] | null | undefined;
-  /** Short bio from the About page Sanity document */
   bio?: string | null;
+  jobTitle?: string | null;
+  heroSubtitle?: string | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
 };
 
-// Navigation links visible in the public footer
-const NAVIGATION_LINKS = [
-  { name: 'Paintings', href: '/paintings' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'Videos', href: '/videos' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-  { name: 'Design System', href: '/design-system' },
-  { name: 'Presentations', href: '/three-d' },
-];
+const DEFAULT_BIO =
+  'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
 
-const Footer = ({ socialLinks, bio }: FooterProps) => {
-  if (!socialLinks || socialLinks.length === 0) return null;
+const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }: FooterProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = mounted && prefersReducedMotion;
 
   const currentYear = new Date().getFullYear();
+  const displayName = heroSubtitle?.trim() || 'Henrik Wilhelm Sissener';
+  const displayRole = jobTitle?.trim() || 'Frontend developer & digital artist';
+  const displayBio = bio?.trim() || DEFAULT_BIO;
+  const contactHref = ctaHref?.trim() || '/contact';
+  const contactLabel = ctaLabel?.trim() || 'Get in touch';
 
-  const displayBio =
-    bio ||
-    'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
+  const motionProps = reducedMotion
+    ? { initial: { opacity: 1, y: 0 }, whileInView: { opacity: 1, y: 0 } }
+    : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 } };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+  };
 
   return (
-    <footer className='relative w-full overflow-hidden border-t bg-background border-border'>
-      <div className='relative flex flex-col w-full max-w-7xl gap-12 px-4 py-16 mx-auto text-foreground sm:px-6 md:px-8 lg:px-12'>
-        <div className='grid grid-cols-1 gap-12 md:grid-cols-3'>
-          {/* Bio column */}
+    <footer className='relative w-full overflow-hidden border-t border-border bg-surface'>
+      <div
+        className='pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent'
+        aria-hidden
+      />
+      <div
+        className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_20%,transparent_100%)]'
+        aria-hidden
+      />
+
+      <div className='relative mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 py-16 sm:px-6 md:px-8 lg:px-12'>
+        <div className='grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10'>
+          {/* Brand + bio */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            {...motionProps}
             viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className='space-y-4'
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className='space-y-5 lg:col-span-5'
           >
-            <h3 className='text-2xl font-bold font-oswald sm:text-3xl'>
-              My name is <span className='text-accent'>Henrik Wilhelm Sissener</span>
-            </h3>
-            <p className='max-w-lg leading-relaxed text-foreground-subtle font-inter'>
-              {displayBio}
-            </p>
+            <Link
+              href='/'
+              aria-label='WiSiHe home'
+              className='group inline-flex items-center gap-3 text-foreground transition-colors hover:text-accent'
+            >
+              <IconLogo
+                size={44}
+                className='text-foreground transition-colors group-hover:text-accent'
+              />
+              <span className='font-serif text-2xl font-bold tracking-tight'>WiSiHe</span>
+            </Link>
+
+            <div className='space-y-3'>
+              <p className='font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-accent'>
+                {displayRole}
+              </p>
+              <h2 className='font-serif text-3xl font-bold leading-tight text-foreground sm:text-4xl'>
+                {displayName}
+              </h2>
+              <p className='max-w-md text-base leading-relaxed text-foreground-subtle text-pretty'>
+                {displayBio}
+              </p>
+            </div>
+
+            <Button
+              as={Link}
+              href={contactHref}
+              variant='primary'
+              size='large'
+              Icon={IconArrowUpRight}
+              iconPosition='right'
+              className='rounded-full'
+              onClick={() =>
+                trackEvent(AnalyticsEvent.FOOTER_CTA_CLICKED, {
+                  label: contactLabel,
+                  href: contactHref,
+                })
+              }
+            >
+              {contactLabel}
+            </Button>
           </motion.div>
 
-          {/* Explore column */}
-          <motion.nav
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className='space-y-5'
-            aria-label='Site navigation'
-          >
-            <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
-              Explore
-            </h3>
-            <ul className='space-y-2.5'>
-              {NAVIGATION_LINKS.map((link, index) => (
-                <motion.li
-                  key={link.name}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.06 }}
-                >
-                  <Link
-                    href={link.href}
-                    className='text-base font-medium text-foreground-subtle transition-all duration-200 hover:text-foreground hover:translate-x-1 inline-block font-inter'
-                  >
-                    {link.name}
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.nav>
+          {/* Navigation + social */}
+          <div className='grid grid-cols-1 gap-10 sm:grid-cols-2 lg:col-span-7 lg:grid-cols-3'>
+            <motion.nav
+              {...motionProps}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.05 }}
+              className='space-y-4'
+              aria-label='Site navigation'
+            >
+              <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
+                Explore
+              </h3>
+              <ul className='space-y-2'>
+                {footerLinks.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className='text-base font-medium text-foreground-subtle transition-colors hover:text-accent'
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
 
-          {/* Connect column */}
-          <motion.nav
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className='space-y-5'
-            aria-label='Social links'
-          >
-            <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
-              Connect
-            </h3>
-            <ul className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-              {socialLinks.map((link, index) => (
-                <motion.li
-                  key={link._key}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.06 }}
-                  className='group'
-                >
-                  <SocialListItem item={link} />
-                </motion.li>
-              ))}
-            </ul>
-          </motion.nav>
+            <motion.nav
+              {...motionProps}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.1 }}
+              className='space-y-4'
+              aria-label='Additional pages'
+            >
+              <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
+                More
+              </h3>
+              <ul className='space-y-2'>
+                {footerSecondaryLinks.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className='text-base font-medium text-foreground-subtle transition-colors hover:text-accent'
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+
+            <motion.div
+              {...motionProps}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.15 }}
+              className='space-y-4'
+            >
+              <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
+                Connect
+              </h3>
+              {socialLinks?.length ? (
+                <ul className='flex flex-wrap gap-2.5' aria-label='Social links'>
+                  {socialLinks.map(link => (
+                    <li key={link._key}>
+                      <SocialListItem item={link} variant='icon' />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className='text-sm text-foreground-muted'>
+                  <Link href='/contact' className='text-accent hover:underline'>
+                    Contact me
+                  </Link>{' '}
+                  for collaborations and inquiries.
+                </p>
+              )}
+            </motion.div>
+          </div>
         </div>
 
-        {/* Dev-only navigation strip */}
         {process.env.NODE_ENV === 'development' && (
-          <div className='pt-6 border-t border-dashed border-accent/20'>
-            <div className='flex flex-col items-center gap-3'>
-              <span className='text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded bg-accent text-accent-contrast'>
-                Dev Links
-              </span>
-              <nav className='flex flex-wrap justify-center gap-x-6 gap-y-2'>
-                {[
-                  { name: 'Design System', href: '/design-system' },
-                  { name: 'Presentation', href: '/three-d' },
-                  { name: 'Test', href: '/test' },
-                  { name: 'Data', href: '/data' },
-                ].map(link => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className='text-xs text-foreground-muted hover:text-accent transition-colors'
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
-            </div>
+          <div className='rounded-xl border border-dashed border-accent/25 bg-accent/5 px-4 py-3'>
+            <p className='mb-2 text-[10px] font-bold uppercase tracking-widest text-accent'>
+              Dev links
+            </p>
+            <nav className='flex flex-wrap gap-x-5 gap-y-2 text-xs text-foreground-muted'>
+              {[
+                { name: 'Design System', href: '/design-system' },
+                { name: 'Test', href: '/test' },
+                { name: 'Data', href: '/data' },
+              ].map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className='hover:text-accent transition-colors'
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
           </div>
         )}
 
-        {/* Copyright */}
-        <div className='pt-6 border-t border-border/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-foreground-muted font-inter'>
-          <span>© {currentYear} Henrik Wilhelm Sissener</span>
-          <span>Built in Oslo with Next.js & Sanity</span>
+        <div
+          className={cn(
+            'flex flex-col gap-3 border-t border-border/40 pt-6 text-xs text-foreground-muted',
+            'sm:flex-row sm:items-center sm:justify-between',
+          )}
+        >
+          <p>
+            © {currentYear} {displayName}
+          </p>
+          <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+            <span>Built in Oslo with Next.js & Sanity</span>
+            <button
+              type='button'
+              onClick={scrollToTop}
+              className='font-medium text-foreground-subtle transition-colors hover:text-accent'
+            >
+              Back to top
+            </button>
+          </div>
         </div>
       </div>
     </footer>

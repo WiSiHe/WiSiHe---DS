@@ -15,12 +15,12 @@ interface Ingredient {
 }
 
 interface Instruction {
-  title?: string;
-  content: PortableTextBlock[];
+  title?: string | null;
+  content: PortableTextBlock[] | readonly PortableTextBlock[];
 }
 
 interface RecipeInstructionsProps {
-  instructions?: Instruction[];
+  instructions?: Instruction[] | null;
   ingredients?: Ingredient[];
 }
 
@@ -43,8 +43,10 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
     });
   };
 
-  const processContent = (content: PortableTextBlock[]): PortableTextBlock[] => {
-    return content.map(block => {
+  const processContent = (
+    content: PortableTextBlock[] | readonly PortableTextBlock[],
+  ): PortableTextBlock[] => {
+    return [...content].map(block => {
       if (block._type === 'block' && block.children) {
         const processedChildren = block.children.flatMap(child => {
           if (child._type === 'span' && child.text && typeof child.text === 'string') {
@@ -105,6 +107,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
 
           return (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: static instruction steps
               key={index}
               className={`group relative flex gap-6 transition-all duration-300 ${
                 isCompleted ? 'opacity-60' : ''
@@ -118,6 +121,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
               <div className='shrink-0'>
                 {/* Step Number - Clickable */}
                 <button
+                  type='button'
                   onClick={() => toggleStep(index)}
                   className={`relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer shadow-md ${
                     isCompleted
@@ -170,6 +174,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
               </p>
             </div>
             <button
+              type='button'
               onClick={() => setCompletedSteps(new Set())}
               className='px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md bg-surface-hover border border-border/30 text-foreground-subtle hover:text-foreground hover:bg-surface-active'
             >

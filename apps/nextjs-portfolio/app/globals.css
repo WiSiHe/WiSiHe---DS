@@ -185,3 +185,23 @@
     cursor: none !important;
   }
 }
+
+/* Full-screen presentation decks use a nested scroll container */
+html[data-presentation-mode] {
+  overflow: hidden;
+}
+
+html[data-presentation-mode] footer {
+  display: none;
+}
+
+html[data-presentation-mode] #main-content {
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.presentation-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}

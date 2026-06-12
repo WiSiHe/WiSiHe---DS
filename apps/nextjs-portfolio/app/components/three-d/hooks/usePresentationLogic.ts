@@ -8,6 +8,21 @@ interface UsePresentationLogicProps {
   technicalSeparatorRef?: RefObject<HTMLElement | null>;
 }
 
+function getScrollRoot(mainRef?: RefObject<HTMLElement | null>): HTMLElement | null {
+  return mainRef?.current ?? null;
+}
+
+function scrollElementIntoRoot(
+  root: HTMLElement,
+  element: HTMLElement,
+  behavior: ScrollBehavior = 'smooth',
+) {
+  const rootRect = root.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+  const targetTop = root.scrollTop + elementRect.top - rootRect.top;
+  root.scrollTo({ top: targetTop, behavior });
+}
+
 export const usePresentationLogic = ({
   slides,
   mainRef,
@@ -24,13 +39,11 @@ export const usePresentationLogic = ({
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const previousCategoryRef = useRef<string | undefined>(undefined);
 
-  // Use refs to track current values and prevent unnecessary state updates
   const currentSlideRef = useRef(0);
   const previousSlideIndexRef = useRef(0);
   const isScrolledRef = useRef(false);
   const isTechnicalSectionVisibleRef = useRef(false);
 
-  // RAF-based throttling for state updates
   const rafIdRef = useRef<number | null>(null);
   const pendingUpdatesRef = useRef<{
     currentSlide?: number;
@@ -40,7 +53,6 @@ export const usePresentationLogic = ({
     isScrolled?: boolean;
   }>({});
 
-  // Batch state updates using requestAnimationFrame
   const flushPendingUpdates = useCallback(() => {
     if (rafIdRef.current !== null) {
       cancelAnimationFrame(rafIdRef.current);
@@ -83,15 +95,34 @@ export const usePresentationLogic = ({
     });
   }, []);
 
-  // Technical section visibility - optimized with throttling
+  const scrollToSlide = useCallback(
+    (index: number, behavior: ScrollBehavior = 'smooth') => {
+      const root = getScrollRoot(mainRef);
+      const slide = slideRefs.current[index];
+      if (!root || !slide) return;
+      scrollElementIntoRoot(root, slide, behavior);
+    },
+    [mainRef],
+  );
+
+  const scrollToElementInRoot = useCallback(
+    (element: HTMLElement | null | undefined, behavior: ScrollBehavior = 'smooth') => {
+      const root = getScrollRoot(mainRef);
+      if (!root || !element) return;
+      scrollElementIntoRoot(root, element, behavior);
+    },
+    [mainRef],
+  );
+
+  // Technical section visibility — observe within the deck scroll root
   useEffect(() => {
-    if (!technicalDeckRef?.current) return;
+    const root = getScrollRoot(mainRef);
+    if (!technicalDeckRef?.current || !root) return;
 
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           const isVisible = entry.isIntersecting;
-          // Only update if value actually changed
           if (isVisible !== isTechnicalSectionVisibleRef.current) {
             pendingUpdatesRef.current.isTechnicalSectionVisible = isVisible;
             flushPendingUpdates();
@@ -99,26 +130,28 @@ export const usePresentationLogic = ({
         });
       },
       {
+        root,
         threshold: 0.1,
         rootMargin: '-20% 0px -20% 0px',
       },
     );
 
-    if (technicalDeckRef?.current) {
-      observer.observe(technicalDeckRef.current);
-    }
+    observer.observe(technicalDeckRef.current);
     return () => {
       observer.disconnect();
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [technicalDeckRef, flushPendingUpdates]);
+  }, [technicalDeckRef, mainRef, flushPendingUpdates]);
 
-  // Slide tracking - optimized with throttling and change detection
+  // Slide tracking — root must be the same element that scrolls
   useEffect(() => {
+    const root = getScrollRoot(mainRef);
+    if (!root) return;
+
     const observers: IntersectionObserver[] = [];
-    let categoryTransitionTimeout: NodeJS.Timeout | null = null;
+    let categoryTransitionTimeout: ReturnType<typeof setTimeout> | null = null;
 
     slideRefs.current.forEach((slide, index) => {
       if (!slide) return;
@@ -126,12 +159,10 @@ export const usePresentationLogic = ({
       const observer = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
-            // Only process if significantly intersecting to reduce callback frequency
-            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.55) {
               const newCategory = slides[index]?.category;
               const previousCategory = previousCategoryRef.current;
 
-              // Only update state if values actually changed
               if (index !== currentSlideRef.current) {
                 pendingUpdatesRef.current.currentSlide = index;
 
@@ -139,11 +170,9 @@ export const usePresentationLogic = ({
                   pendingUpdatesRef.current.previousSlideIndex = index;
                 }
 
-                // Handle category transition
                 if (newCategory && newCategory !== previousCategory) {
                   pendingUpdatesRef.current.showCategoryTransition = true;
 
-                  // Clear existing timeout
                   if (categoryTransitionTimeout) {
                     clearTimeout(categoryTransitionTimeout);
                   }
@@ -161,10 +190,9 @@ export const usePresentationLogic = ({
           });
         },
         {
-          // Increased threshold to reduce callback frequency
-          threshold: [0.5, 0.6, 0.7],
-          // Reduced rootMargin to be less sensitive
-          rootMargin: '-15% 0px -15% 0px',
+          root,
+          threshold: [0.55, 0.65, 0.75],
+          rootMargin: '-12% 0px -12% 0px',
         },
       );
 
@@ -173,7 +201,9 @@ export const usePresentationLogic = ({
     });
 
     return () => {
-      observers.forEach(observer => observer.disconnect());
+      for (const observer of observers) {
+        observer.disconnect();
+      }
       if (categoryTransitionTimeout) {
         clearTimeout(categoryTransitionTimeout);
       }
@@ -181,36 +211,38 @@ export const usePresentationLogic = ({
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [slides.length, slides, flushPendingUpdates]);
+  }, [slides.length, slides, mainRef, flushPendingUpdates]);
 
-  // Keyboard navigation
+  // Keyboard navigation — scroll the deck container, not the window
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const root = getScrollRoot(mainRef);
+      if (!root) return;
+
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
         e.preventDefault();
-        if (currentSlide < slides.length - 1) {
-          slideRefs.current[currentSlide + 1]?.scrollIntoView({ behavior: 'smooth' });
+        if (currentSlideRef.current < slides.length - 1) {
+          scrollToSlide(currentSlideRef.current + 1);
         }
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
         e.preventDefault();
-        if (currentSlide > 0) {
-          slideRefs.current[currentSlide - 1]?.scrollIntoView({ behavior: 'smooth' });
+        if (currentSlideRef.current > 0) {
+          scrollToSlide(currentSlideRef.current - 1);
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide, slides.length]);
+  }, [slides.length, mainRef, scrollToSlide]);
 
-  // Scroll position - optimized with throttling and change detection
+  // Scroll position on the deck root (not the inner wrapper)
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const root = getScrollRoot(mainRef);
+    if (!root) return;
 
     const handleScroll = () => {
-      const scrolled = container.scrollTop > 50;
-      // Only update if value actually changed
+      const scrolled = root.scrollTop > 50;
       if (scrolled !== isScrolledRef.current) {
         pendingUpdatesRef.current.isScrolled = scrolled;
         flushPendingUpdates();
@@ -218,44 +250,41 @@ export const usePresentationLogic = ({
     };
 
     handleScroll();
-    container.addEventListener('scroll', handleScroll, { passive: true });
+    root.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      container.removeEventListener('scroll', handleScroll);
+      root.removeEventListener('scroll', handleScroll);
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [flushPendingUpdates]);
+  }, [mainRef, flushPendingUpdates]);
 
   const handleSkipToCoolPart = useCallback(() => {
     if (technicalSeparatorRef?.current) {
-      technicalSeparatorRef.current.scrollIntoView({ behavior: 'smooth' });
+      scrollToElementInRoot(technicalSeparatorRef.current);
     } else {
-      technicalDeckRef?.current?.scrollIntoView({ behavior: 'smooth' });
+      scrollToElementInRoot(technicalDeckRef?.current);
     }
-  }, [technicalSeparatorRef, technicalDeckRef]);
+  }, [technicalSeparatorRef, technicalDeckRef, scrollToElementInRoot]);
 
   const handleScrollToTop = useCallback(() => {
-    // Scroll the main element to top (the actual scroll container)
-    if (mainRef?.current) {
-      mainRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // Fallback: scroll window if main ref is not available
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const root = getScrollRoot(mainRef);
+    if (root) {
+      root.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [mainRef]);
 
   const handlePrevSlide = useCallback(() => {
     if (currentSlideRef.current > 0) {
-      slideRefs.current[currentSlideRef.current - 1]?.scrollIntoView({ behavior: 'smooth' });
+      scrollToSlide(currentSlideRef.current - 1);
     }
-  }, []);
+  }, [scrollToSlide]);
 
   const handleNextSlide = useCallback(() => {
     if (currentSlideRef.current < slides.length - 1) {
-      slideRefs.current[currentSlideRef.current + 1]?.scrollIntoView({ behavior: 'smooth' });
+      scrollToSlide(currentSlideRef.current + 1);
     }
-  }, [slides.length]);
+  }, [slides.length, scrollToSlide]);
 
   return {
     currentSlide,

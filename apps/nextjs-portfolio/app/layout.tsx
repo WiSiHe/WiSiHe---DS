@@ -20,6 +20,7 @@ import { JsonLd } from './components/cms/JsonLd/JsonLd';
 import { ReactScanDev } from './components/dev/ReactScanDev';
 import CustomCursor from './components/layout/CustomCursor';
 import SmoothScroll from './components/layout/SmoothScroll';
+import { PresentationMode } from './components/presentations/PresentationMode';
 import { PostHogProvider } from './providers';
 
 const geistSans = localFont({
@@ -158,7 +159,7 @@ export default async function RootLayout({
     sanityFetch({ query: aboutQuery, stega: false }),
   ]);
   const settings = _settings2 as SettingsQueryResult;
-  const aboutBio = (_aboutData as AboutQueryResult)?.bio ?? null;
+  const about = _aboutData as AboutQueryResult | null;
 
   if (!settings) {
     return (
@@ -190,6 +191,7 @@ export default async function RootLayout({
           <ProgressBarProvider>
             <ProgressBar className='fixed h-1 shadow-lg shadow-accent bg-accent top-0 z-50' />
             <PostHogProvider>
+              <PresentationMode />
               <SmoothScroll />
               {isDraftMode && (
                 <>
@@ -202,7 +204,14 @@ export default async function RootLayout({
               <main id='main-content' className='bg-transparent'>
                 {children}
               </main>
-              <Footer socialLinks={socialLinks} bio={aboutBio} />
+              <Footer
+                socialLinks={socialLinks}
+                bio={about?.bio}
+                jobTitle={about?.jobTitle}
+                heroSubtitle={about?.heroSubtitle}
+                ctaLabel={about?.ctaButtonText}
+                ctaHref={about?.ctaButtonUrl}
+              />
               <Analytics />
               <SpeedInsights />
               <CustomCursor />

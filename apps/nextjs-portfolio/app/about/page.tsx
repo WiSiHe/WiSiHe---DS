@@ -4,51 +4,51 @@ import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery } from '@/sanity/lib/queries';
 import AboutPageClient from './AboutPageClient';
+import { buildAboutStructuredData } from './buildAboutStructuredData';
 
-export const metadata: Metadata = {
-  title: 'About | WiSiHe — Henrik Sissener',
-  description:
-    'Frontend developer and digital artist based in Norway. I build performant web experiences and create digital paintings.',
-  alternates: { canonical: 'https://www.wisihe.no/about' },
-  openGraph: {
-    title: 'About | WiSiHe — Henrik Sissener',
-    description:
-      'Frontend developer and digital artist based in Norway. I build performant web experiences and create digital paintings.',
-    url: 'https://www.wisihe.no/about',
-    siteName: 'WiSiHe',
-    locale: 'en_US',
-    type: 'profile',
-  },
-};
+const SITE_URL = 'https://www.wisihe.no';
+const DEFAULT_DESCRIPTION =
+  'Meet Henrik Wilhelm Sissener (WiSiHe) — frontend developer, design engineer, and digital artist in Oslo. Explore his life map, creative work, and technical projects.';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await sanityFetch({ query: aboutQuery, stega: false });
+  const about = data as AboutQueryResult | null;
+  const name = about?.heroSubtitle ?? 'Henrik Wilhelm Sissener';
+  const title = about?.seoTitle ?? `About ${name} | WiSiHe`;
+  const description = about?.seoDescription ?? about?.bio ?? DEFAULT_DESCRIPTION;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/about` },
+    authors: [{ name, url: SITE_URL }],
+    creator: name,
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/about`,
+      siteName: 'WiSiHe',
+      locale: 'en_US',
+      type: 'profile',
+      images: [{ url: `${SITE_URL}/wisihe.png`, width: 1200, height: 630, alt: name }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/wisihe.png`],
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function AboutPage() {
   const { data } = await sanityFetch({ query: aboutQuery });
   const about = data as AboutQueryResult;
 
-  const personStructuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: about?.heroSubtitle ?? 'Henrik Sissener',
-    jobTitle: about?.jobTitle ?? 'Frontend Developer & Digital Artist',
-    description: about?.bio ?? '',
-    url: 'https://www.wisihe.no',
-    image: 'https://www.wisihe.no/wisihe.png',
-    sameAs: (about?.socialLinks ?? []).map((l: { url: string | null }) => l.url).filter(Boolean),
-    knowsAbout: [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Design Systems',
-      'Digital Painting',
-      'Procreate',
-      'Three.js',
-    ],
-    nationality: { '@type': 'Country', name: 'Norway' },
-  };
-
   return (
     <>
-      <JsonLd data={personStructuredData} />
+      <JsonLd data={buildAboutStructuredData(about)} />
       <AboutPageClient about={about} />
     </>
   );
