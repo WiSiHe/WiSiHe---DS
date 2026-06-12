@@ -318,27 +318,29 @@ const Masonry = ({
           onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
         >
-          <Link
-            href={item.url}
-            className='relative block h-full w-full'
-            aria-label={item.title ? `View painting: ${item.title}` : 'View painting'}
-          >
+          <Link href={item.url} className='relative block h-full w-full'>
+            <span className='sr-only'>
+              {item.title ? `View painting: ${item.title}` : 'View painting'}
+            </span>
             <div className='relative h-full w-full overflow-hidden rounded-[10px]'>
               <Image
                 src={item.img}
-                alt={item.title ?? ''}
+                alt=''
+                aria-hidden
                 fill
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
               />
               {item.strokeIndex !== undefined ? (
-                <HeroPaintingSvgHover
-                  {...getHeroStrokeColors(item.strokeIndex)}
-                  title={item.title ?? null}
-                  medium={item.medium ?? null}
-                  year={item.year ?? null}
-                  useMotion={false}
-                />
+                <div aria-hidden>
+                  <HeroPaintingSvgHover
+                    {...getHeroStrokeColors(item.strokeIndex)}
+                    title={item.title ?? null}
+                    medium={item.medium ?? null}
+                    year={item.year ?? null}
+                    useMotion={false}
+                  />
+                </div>
               ) : null}
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />

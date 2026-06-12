@@ -24,6 +24,13 @@ export const aboutQuery = defineQuery(`
       mapZoom,
       image { ..., "lqip": asset->metadata.lqip }
     },
+    visitedCountries[] {
+      _key,
+      country,
+      placeName,
+      coordinates,
+      notes
+    },
     ctaTitle,
     ctaButtonText,
     ctaButtonUrl,

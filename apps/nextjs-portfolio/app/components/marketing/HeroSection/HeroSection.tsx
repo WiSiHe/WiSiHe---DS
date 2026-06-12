@@ -303,7 +303,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
   return (
     <section
-      className='relative flex min-h-lvh w-full items-center justify-center transition-colors duration-500 bg-background-subtle overflow-x-clip'
+      className='relative flex min-h-lvh w-full items-center justify-center overflow-x-clip overflow-y-visible pb-24 transition-colors duration-500 bg-background-subtle md:pb-32'
       style={{ perspective: 1200 }}
     >
       {/* Background Cyber-Blueprint Dot Grid */}
@@ -672,33 +672,40 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                             : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
                         }}
                       >
+                        <span className='sr-only'>
+                          {isPainting ? 'View painting' : 'View project'}:{' '}
+                          {title || item.name || 'Portfolio item'}
+                        </span>
                         <Image
                           src={imageUrl}
-                          alt={item.title || 'Portfolio Item'}
+                          alt=''
+                          aria-hidden
                           fill
                           priority={isPriority}
                           className='object-cover'
                           sizes='(max-width: 768px) 40vw, 30vw'
                         />
 
-                        {isPainting ? (
-                          <HeroPaintingSvgHover
-                            useMotion
-                            accentColor={accentColor}
-                            secondaryColor={secondaryColor}
-                            title={title}
-                            medium={paintingMedium}
-                            year={paintingYear}
-                            tags={paintingTags}
-                          />
-                        ) : (
-                          <HeroProjectUiHover
-                            accentColor={accentColor}
-                            secondaryColor={secondaryColor}
-                            title={title || item.name}
-                            tags={projectTags}
-                          />
-                        )}
+                        <div aria-hidden>
+                          {isPainting ? (
+                            <HeroPaintingSvgHover
+                              useMotion
+                              accentColor={accentColor}
+                              secondaryColor={secondaryColor}
+                              title={title}
+                              medium={paintingMedium}
+                              year={paintingYear}
+                              tags={paintingTags}
+                            />
+                          ) : (
+                            <HeroProjectUiHover
+                              accentColor={accentColor}
+                              secondaryColor={secondaryColor}
+                              title={title || item.name}
+                              tags={projectTags}
+                            />
+                          )}
+                        </div>
                       </Link>
                     </motion.div>
                   </motion.div>

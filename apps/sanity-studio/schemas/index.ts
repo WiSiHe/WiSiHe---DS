@@ -3,6 +3,7 @@ import blockContentMinimal from './blockContentMinimal';
 import { homePageSectionTypes } from './objects/homePageSections';
 import homeSectionIntro from './objects/homeSectionIntro';
 import painting from './painting';
+import photography from './photography';
 import post from './post';
 import presentation, {
   contentSlideType,
@@ -33,6 +34,7 @@ export const schemaTypes = [
   homeSectionIntro,
   ...homePageSectionTypes,
   painting,
+  photography,
   post,
   project,
   video,

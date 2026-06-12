@@ -142,6 +142,49 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'visitedCountries',
+      title: 'Countries visited',
+      description:
+        'Travel destinations shown as map pins and a country list on the about page. Use a representative city or capital for coordinates.',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'country',
+              title: 'Country',
+              type: 'string',
+              validation: rule => rule.required(),
+            }),
+            defineField({
+              name: 'placeName',
+              title: 'City or region',
+              type: 'string',
+              description: 'Optional — e.g. a city you remember visiting.',
+            }),
+            defineField({
+              name: 'coordinates',
+              title: 'Map coordinates',
+              type: 'geopoint',
+            }),
+            defineField({
+              name: 'notes',
+              title: 'Notes',
+              type: 'string',
+              description: 'Optional — trip memory or year.',
+            }),
+          ],
+          preview: {
+            select: { title: 'country', subtitle: 'placeName' },
+            prepare({ title, subtitle }) {
+              return { title: title ?? 'Country', subtitle };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'ctaTitle',
       title: 'CTA Heading',
       type: 'string',
