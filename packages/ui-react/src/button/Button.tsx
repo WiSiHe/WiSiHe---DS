@@ -37,54 +37,65 @@ function LoadingIcon(): ReactElement {
 
 // --- Variants (Tailwind via CVA; consumers use their own theme tokens) ---
 
-const button = cva('button', {
-  variants: {
-    variant: {
-      primary: [
-        'bg-accent',
-        'text-accent-contrast',
-        'border-transparent',
-        'hover:bg-accent-hover',
-        'stroke-accent-contrast',
-      ],
-      secondary: ['bg-surface', 'text-foreground', 'border-border', 'hover:bg-surface-hover'],
-      tertiary: ['bg-transparent', 'text-accent', 'border-transparent', 'hover:bg-accent-subtle'],
-      destructive: [
-        'bg-danger',
-        'text-danger-contrast',
-        'border-transparent',
-        'hover:bg-danger-text',
-      ],
-      success: [
-        'bg-success',
-        'text-success-contrast',
-        'border-transparent',
-        'hover:bg-success-text',
-      ],
-      accent: ['bg-accent', 'text-accent-contrast', 'border-transparent', 'hover:bg-accent-hover'],
+const button = cva(
+  [
+    'inline-flex items-center justify-center gap-2',
+    'w-fit max-w-full',
+    'font-medium',
+    'border',
+    'rounded-xl',
+    'transition-colors duration-200',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+    'disabled:pointer-events-none',
+  ],
+  {
+    variants: {
+      variant: {
+        primary: [
+          'bg-accent',
+          'text-accent-contrast',
+          'border-transparent',
+          'hover:bg-accent-hover',
+          'stroke-accent-contrast',
+          'shadow-sm hover:shadow-md',
+        ],
+        secondary: ['bg-surface', 'text-foreground', 'border-border', 'hover:bg-surface-hover'],
+        tertiary: ['bg-transparent', 'text-accent', 'border-transparent', 'hover:bg-accent-subtle'],
+        destructive: [
+          'bg-danger',
+          'text-danger-contrast',
+          'border-transparent',
+          'hover:bg-danger-text',
+        ],
+        success: [
+          'bg-success',
+          'text-success-contrast',
+          'border-transparent',
+          'hover:bg-success-text',
+        ],
+        accent: [
+          'bg-accent',
+          'text-accent-contrast',
+          'border-transparent',
+          'hover:bg-accent-hover',
+        ],
+      },
+      size: {
+        small: ['text-sm', 'px-3', 'h-9'],
+        medium: ['text-sm', 'px-5', 'h-10'],
+        large: ['text-base', 'px-6', 'h-12'],
+        icon: ['p-2.5', 'h-10', 'w-10'],
+      },
+      isDisabled: {
+        true: ['opacity-50', 'cursor-not-allowed'],
+      },
     },
-    size: {
-      small: ['text-sm', 'py-1', 'px-2', 'h-8'],
-      medium: ['text-base', 'py-2', 'px-4', 'h-10'],
-      large: ['text-lg', 'py-3', 'px-6', 'h-12'],
-      icon: ['p-2', 'h-10', 'w-10'],
-    },
-    isDisabled: {
-      true: ['opacity-50', 'cursor-not-allowed'],
-    },
-  },
-  compoundVariants: [
-    {
+    defaultVariants: {
       variant: 'primary',
       size: 'medium',
-      class: 'uppercase',
     },
-  ],
-  defaultVariants: {
-    variant: 'primary',
-    size: 'medium',
   },
-});
+);
 
 type ButtonOwnProps = {
   /** Optional icon component (shown alongside the loading spinner when `isLoading`). */
@@ -164,7 +175,6 @@ export function Button<T extends ElementType = 'button'>({
   const { userOnClick, typeProp, nativeDisabled, restProps } = parseRestProps(rest);
 
   const mergedClassName = cn(
-    'flex items-center gap-1 rounded-sm',
     button({
       variant,
       size,

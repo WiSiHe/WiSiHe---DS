@@ -1,0 +1,198 @@
+# Doppler environment setup
+
+This guide covers managing secrets for **nextjs-portfolio** (Vercel), **sanity-studio**, and related scripts using [Doppler](https://www.doppler.com/).
+
+## Overview
+
+| App | Deploy target | Example file |
+|-----|---------------|--------------|
+| `apps/nextjs-portfolio` | Vercel (`www.wisihe.no`) | [`apps/nextjs-portfolio/.env.example`](../apps/nextjs-portfolio/.env.example) |
+| `apps/sanity-studio` | `sanity deploy` / local | [`apps/sanity-studio/.env.example`](../apps/sanity-studio/.env.example) |
+| `apps/wisihe-ai` | Sanity App SDK | [`apps/wisihe-ai/.env.example`](../apps/wisihe-ai/.env.example) |
+
+You can use **one Doppler project** with multiple **configs** (e.g. `dev`, `stg`, `prd`) or separate projects per app. The Vercel integration typically uses three configs synced to Preview / Production.
+
+---
+
+## 1. Create the Doppler project
+
+1. Sign in at [dashboard.doppler.com](https://dashboard.doppler.com).
+2. **Create Project** → e.g. `wisihe-portfolio`.
+3. Create configs:
+   - **`dev`** — local development
+   - **`stg`** — Vercel preview deployments (optional; can mirror `dev`)
+   - **`prd`** — Vercel production
+
+---
+
+## 2. Add secrets (production checklist)
+
+Copy variable **names** from [`.env.example`](../apps/nextjs-portfolio/.env.example). Values live only in Doppler.
+
+### Required for the live site
+
+| Secret | Notes |
+|--------|--------|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID |
+| `NEXT_PUBLIC_SANITY_DATASET` | Usually `production` |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | e.g. `2024-08-22` |
+| `NEXT_PUBLIC_SANITY_STUDIO_URL` | `https://wisihe.sanity.studio/` |
+| `NEXT_PUBLIC_SANITY_API_READ_TOKEN` | Read-only API token |
+| `NEXT_PUBLIC_ALGOLIA_APP_ID` | Algolia application ID |
+| `NEXT_PUBLIC_ALGOLIA_SEARCH_KEY` | **Search-only** key (never Admin) |
+| `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | `wisihe-search` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project API key |
+| `NEXT_PUBLIC_POSTHOG_HOST` | e.g. `https://us.i.posthog.com` |
+
+### Contact form (production)
+
+| Secret | Notes |
+|--------|--------|
+| `RESEND_API_KEY` | From [resend.com](https://resend.com) |
+| `CONTACT_TO_EMAIL` | `hws902@gmail.com` |
+| `CONTACT_FROM_EMAIL` | Verified domain sender, e.g. `WiSiHe Contact <contact@wisihe.no>` |
+
+### Optional
+
+| Secret | Feature |
+|--------|---------|
+| `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` | About page map |
+| `YOUTUBE_API_KEY` | YouTube metadata |
+| `OPENAI_API_KEY` | AI tag suggestions API |
+| `SANITY_AI_BULK_SECRET` | Shared secret Studio ↔ Next.js AI route |
+| `STATSIG_*` / `EXPERIMENTATION_*` | Feature flags (optional) |
+
+### Sanity Studio & Algolia (same Doppler project or a `studio` config)
+
+| Secret | Notes |
+|--------|--------|
+| `SANITY_STUDIO_PROJECT_ID` | Same as `NEXT_PUBLIC_SANITY_PROJECT_ID` |
+| `SANITY_STUDIO_DATASET` | Same as `NEXT_PUBLIC_SANITY_DATASET` |
+| `SANITY_STUDIO_PREVIEW_URL` | `https://www.wisihe.no` |
+| `SANITY_API_READ_TOKEN` | For `pnpm sync-algolia` scripts |
+| `ALGOLIA_APP_ID` | Same app ID as public |
+| `ALGOLIA_WRITE_KEY` | **Admin** key — server/scripts only |
+| `ALGOLIA_INDEX_NAME` | `wisihe-search` |
+
+> **Tip:** In Doppler, use **Shared secrets** or duplicate values across configs so Sanity IDs stay in sync between Studio and Next.js.
+
+---
+
+## 3. Connect Doppler to Vercel
+
+1. Doppler → **Integrations** → **Vercel**.
+2. Link the Vercel team and the **nextjs-portfolio** project.
+3. Map configs:
+   - Doppler `prd` → Vercel **Production**
+   - Doppler `stg` (or `dev`) → Vercel **Preview**
+4. After sync, Vercel shows `DOPPLER_PROJECT`, `DOPPLER_ENVIRONMENT`, and `DOPPLER_CONFIG` — leave those managed by the integration.
+
+**Important for Next.js:** `NEXT_PUBLIC_*` variables must exist in the **build** environment. Doppler’s Vercel sync injects them before `next build`. Trigger a redeploy after adding new public vars.
+
+---
+
+## 4. Local development with Doppler CLI
+
+### Install & login
+
+```bash
+brew install dopplerhq/cli/doppler   # or see https://docs.doppler.com/docs/install-cli
+doppler login
+```
+
+### Link the repo (once per machine)
+
+From the monorepo root:
+
+```bash
+doppler setup --project wisihe-portfolio --config dev
+```
+
+This writes `.doppler.yaml` (safe to commit — it only stores project/config names, not secrets).
+
+### Run apps with injected env
+
+```bash
+# Next.js portfolio (port 1992)
+doppler run -- pnpm --filter nextjs-portfolio dev
+
+# Sanity Studio
+doppler run -- pnpm --filter sanity-studio dev
+
+# One-off Algolia sync
+doppler run -- pnpm --filter sanity-studio sync-algolia
+```
+
+### Without Doppler CLI
+
+```bash
+cp apps/nextjs-portfolio/.env.example apps/nextjs-portfolio/.env.local
+cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
+# Fill in values manually
+```
+
+---
+
+## 5. PostHog cookieless mode (privacy)
+
+The site uses cookieless PostHog (`lib/posthog/config.ts`). In the PostHog dashboard:
+
+1. **Project Settings → Web analytics**
+2. Enable **Cookieless server hash mode**
+
+Without this, unique visitor counts may be under-reported. No extra Doppler variables are needed.
+
+---
+
+## 6. Resend (contact form)
+
+1. Create API key in Resend → store as `RESEND_API_KEY` in Doppler `prd`.
+2. Verify sending domain (e.g. `wisihe.no`) in Resend.
+3. Set `CONTACT_FROM_EMAIL` to an address on that domain.
+4. Redeploy production.
+
+---
+
+## 7. Algolia index maintenance
+
+After content or schema changes, from your machine (with Doppler `prd` or secrets that match production):
+
+```bash
+doppler run --config prd -- pnpm --filter sanity-studio sync-algolia
+doppler run --config prd -- pnpm --filter sanity-studio set-algolia-settings
+```
+
+Use **`dev`** config locally if your Algolia index name differs per environment.
+
+---
+
+## 8. Security notes
+
+- Never put **Algolia Admin** (`ALGOLIA_WRITE_KEY`) or **Resend** keys in `NEXT_PUBLIC_*`.
+- `NEXT_PUBLIC_SANITY_API_READ_TOKEN` is visible in the browser — use a token with **Viewer** permissions only.
+- Do not commit `.env`, `.env.local`, or downloaded secret files.
+- Rotate keys in Doppler; synced Vercel env updates on the next deploy.
+
+---
+
+## 9. Troubleshooting
+
+| Symptom | Check |
+|---------|--------|
+| `/paintings` search broken in production | `NEXT_PUBLIC_ALGOLIA_*` set in Doppler **prd** and redeployed |
+| Contact form “not configured” | `RESEND_API_KEY` in **prd** only (server secret) |
+| PostHog shows zero users | Cookieless hash mode enabled in PostHog UI |
+| Studio preview wrong site | `SANITY_STUDIO_PREVIEW_URL` matches deployed URL |
+| Local env not loading | Using `.env.local` in the **app folder**, not repo root |
+
+---
+
+## Quick reference: config → environment
+
+```
+Doppler dev  → local machine (doppler run)
+Doppler stg  → Vercel Preview deployments
+Doppler prd  → Vercel Production (www.wisihe.no)
+```
+
+For questions about variable names, always treat the app `.env.example` files as the source of truth.

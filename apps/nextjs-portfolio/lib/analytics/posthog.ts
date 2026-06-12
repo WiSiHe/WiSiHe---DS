@@ -19,6 +19,7 @@ export const AnalyticsEvent = {
   PROJECT_EXTERNAL_LINK_CLICKED: 'project_external_link_clicked',
   FOOTER_SOCIAL_CLICKED: 'footer_social_clicked',
   FOOTER_CTA_CLICKED: 'footer_cta_clicked',
+  CONTACT_FORM_SUBMITTED: 'contact_form_submitted',
 } as const;
 
 export type AnalyticsEventName = (typeof AnalyticsEvent)[keyof typeof AnalyticsEvent];
@@ -38,6 +39,8 @@ export function getPageType(pathname: string): string {
   if (pathname === '/paintings') return 'paintings_listing';
   if (pathname.startsWith('/paintings/')) return 'painting_detail';
   if (pathname === '/about') return 'about';
+  if (pathname === '/contact') return 'contact';
+  if (pathname === '/privacy') return 'privacy';
   if (pathname.startsWith('/videos/')) return 'video_detail';
   if (pathname.startsWith('/three-d')) return 'three_d';
   return 'other';

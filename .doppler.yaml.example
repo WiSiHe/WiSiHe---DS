@@ -1,0 +1,7 @@
+# Example Doppler linkage for local dev (no secrets).
+# Run: doppler setup --project wisihe-portfolio --config dev
+# Or copy this file to .doppler.yaml after replacing project/config names.
+#
+# setup:
+#   project: wisihe-portfolio
+#   config: dev
