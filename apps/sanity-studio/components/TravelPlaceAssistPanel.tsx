@@ -1,6 +1,6 @@
 import { EarthGlobeIcon, InfoOutlineIcon, WarningOutlineIcon } from '@sanity/icons';
 import { Badge, Button, Card, Flex, Spinner, Stack, Text } from '@sanity/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   PatchEvent,
   type StringInputProps,
@@ -12,13 +12,14 @@ import {
 import { countryNameToIso } from '../utils/countryCodes';
 import {
   extractPhotographyFileMetadata,
-  fetchImageAssetMetadata,
+  fetchImageAssetMetadataWhenReady,
+  getImageAssetRef,
+  type ImageFieldValue,
   summarizeAssetMetadata,
 } from '../utils/photographyFileMetadata';
 import { reverseGeocode } from '../utils/reverseGeocode';
 
 type GeopointValue = { lat?: number; lng?: number; alt?: number };
-type ImageValue = { asset?: { _ref?: string } };
 
 export function TravelPlaceAssistPanel(_props: StringInputProps) {
   const client = useClient({ apiVersion: '2024-10-28' });
@@ -28,9 +29,10 @@ export function TravelPlaceAssistPanel(_props: StringInputProps) {
   const countryName = useFormValue(['countryName']) as string | undefined;
   const countryCode = useFormValue(['countryCode']) as string | undefined;
   const coordinates = useFormValue(['coordinates']) as GeopointValue | undefined;
-  const image = useFormValue(['image']) as ImageValue | undefined;
+  const image = useFormValue(['image']) as ImageFieldValue | undefined;
 
-  const assetRef = image?.asset?._ref;
+  const assetRef = useMemo(() => getImageAssetRef(image), [image]);
+  const hasImageField = Boolean(image);
   const hasCoords = typeof coordinates?.lat === 'number' && typeof coordinates?.lng === 'number';
 
   const [resolvedLabel, setResolvedLabel] = useState<string | null>(null);
@@ -49,8 +51,11 @@ export function TravelPlaceAssistPanel(_props: StringInputProps) {
 
     let cancelled = false;
     setResolveLoading(true);
+    const lat = coordinates.lat;
+    const lng = coordinates.lng;
+    if (typeof lat !== 'number' || typeof lng !== 'number') return;
 
-    void reverseGeocode(coordinates.lat!, coordinates.lng!)
+    void reverseGeocode(lat, lng)
       .then(result => {
         if (!cancelled) setResolvedLabel(result?.label ?? null);
       })
@@ -70,13 +75,17 @@ export function TravelPlaceAssistPanel(_props: StringInputProps) {
     if (!assetRef) {
       setAssetSummary([]);
       setImageGps(null);
+      setAssetLoading(false);
       return;
     }
 
     let cancelled = false;
     setAssetLoading(true);
+    setAssetSummary(['Reading metadata from uploaded image…']);
+    setImageGps(null);
+    setError(null);
 
-    void fetchImageAssetMetadata(client, assetRef)
+    void fetchImageAssetMetadataWhenReady(client, assetRef)
       .then(record => {
         if (cancelled) return;
         const extract = extractPhotographyFileMetadata(record);
@@ -136,11 +145,15 @@ export function TravelPlaceAssistPanel(_props: StringInputProps) {
         return;
       }
 
+      const lat = coordinates?.lat;
+      const lng = coordinates?.lng;
+      if (typeof lat !== 'number' || typeof lng !== 'number') return;
+
       setError(null);
       setMessage(null);
 
       try {
-        const resolved = await reverseGeocode(coordinates!.lat!, coordinates!.lng!);
+        const resolved = await reverseGeocode(lat, lng);
         if (!resolved) {
           setError('Could not resolve a place name for these coordinates.');
           return;
@@ -223,43 +236,50 @@ export function TravelPlaceAssistPanel(_props: StringInputProps) {
           <Flex align='flex-start' gap={2}>
             <InfoOutlineIcon />
             <Text size={1} muted>
-              No map pin yet. Apply GPS from the hero image below, or set coordinates on the map.
+              No map pin yet. Apply GPS from the hero image above, or set coordinates on the map.
             </Text>
           </Flex>
         )}
 
-        {assetRef ? (
+        {hasImageField ? (
           <Stack space={2}>
             <Text size={1} weight='medium'>
               From hero image
             </Text>
-            {assetSummary.map(line => (
-              <Text key={line} size={1}>
-                {line}
+            {!assetRef ? (
+              <Text size={1} muted>
+                Waiting for upload to finish…
               </Text>
-            ))}
-            <Flex gap={2} wrap='wrap'>
-              <Button
-                text='Apply GPS from image'
-                disabled={!imageGps}
-                onClick={() => applyImageGps(false)}
-              />
-              <Button
-                text='Overwrite coordinates from image'
-                mode='ghost'
-                disabled={!imageGps}
-                onClick={() => applyImageGps(true)}
-              />
-            </Flex>
+            ) : (
+              <>
+                {assetSummary.map(line => (
+                  <Text key={line} size={1}>
+                    {line}
+                  </Text>
+                ))}
+                <Flex gap={2} wrap='wrap'>
+                  <Button
+                    text='Apply GPS from image'
+                    disabled={assetLoading || !imageGps}
+                    onClick={() => applyImageGps(false)}
+                  />
+                  <Button
+                    text='Overwrite coordinates from image'
+                    mode='ghost'
+                    disabled={assetLoading || !imageGps}
+                    onClick={() => applyImageGps(true)}
+                  />
+                </Flex>
+              </>
+            )}
           </Stack>
         ) : null}
 
-        {!assetRef && !hasCoords ? (
+        {!hasImageField && !hasCoords ? (
           <Flex align='flex-start' gap={2}>
             <WarningOutlineIcon />
             <Text size={1} muted>
-              Add a hero image with GPS embedded, or paste coordinates from a photo&apos;s metadata
-              panel in Photography.
+              Upload a hero image with GPS above, or set coordinates on the map.
             </Text>
           </Flex>
         ) : null}

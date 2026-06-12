@@ -1,6 +1,6 @@
 import { InfoOutlineIcon, WarningOutlineIcon } from '@sanity/icons';
 import { Badge, Button, Card, Flex, Spinner, Stack, Text } from '@sanity/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   PatchEvent,
   type StringInputProps,
@@ -12,23 +12,21 @@ import {
 import {
   buildPhotographyApplyPatches,
   extractPhotographyFileMetadata,
-  fetchImageAssetMetadata,
+  fetchImageAssetMetadataWhenReady,
+  getImageAssetRef,
+  type ImageFieldValue,
   type SanityImageAssetRecord,
   summarizeAssetMetadata,
 } from '../utils/photographyFileMetadata';
 
-type ImageValue = {
-  asset?: { _ref?: string };
-};
-
 export function PhotographyFileMetadataInput(_props: StringInputProps) {
   const client = useClient({ apiVersion: '2024-10-28' });
   const { onChange: patchDocument } = useFormCallbacks();
-  const image = useFormValue(['image']) as ImageValue | undefined;
+  const image = useFormValue(['image']) as ImageFieldValue | undefined;
   const capturedAt = useFormValue(['capturedAt']);
   const camera = useFormValue(['camera']);
 
-  const assetRef = image?.asset?._ref;
+  const assetRef = useMemo(() => getImageAssetRef(image), [image]);
   const [asset, setAsset] = useState<SanityImageAssetRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +44,7 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
     setError(null);
     setApplied(false);
 
-    void fetchImageAssetMetadata(client, assetRef)
+    void fetchImageAssetMetadataWhenReady(client, assetRef)
       .then(record => {
         if (!cancelled) setAsset(record);
       })
@@ -86,7 +84,7 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
       patchDocument(PatchEvent.from(patches.map(p => set(p.value, [p.path]))));
       setApplied(true);
     },
-    [capturedAt, camera, extract, patchDocument],
+    [extract, patchDocument, patchOptions],
   );
 
   const hasExif = Boolean(extract.capturedAt || extract.camera);
