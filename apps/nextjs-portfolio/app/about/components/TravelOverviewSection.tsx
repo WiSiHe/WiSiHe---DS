@@ -1,100 +1,100 @@
 'use client';
 
-import { cn } from '@wisihe/utils';
-import { CountryPhotoStrip } from './CountryPhotoStrip';
-import { LifeJourneyMap } from './LifeJourneyMap';
-import {
-  getLocationMeta,
-  groupPhotosByCountry,
-  type TravelPhotoItem,
-  type VisitedCountryItem,
-} from './lifeJourneyTypes';
+import { useMemo, useState } from 'react';
+import { LifeJourneyMap, type TravelSelection } from './LifeJourneyMap';
+import type { AdventurePlaceItem, VisitedCountryItem } from './lifeJourneyTypes';
+import { MapPlaceDetailCard } from './MapPlaceDetailCard';
 
 type TravelOverviewSectionProps = {
   visitedCountries: VisitedCountryItem[];
-  travelPhotos?: TravelPhotoItem[];
+  adventurePlaces?: AdventurePlaceItem[];
+  title?: string;
+  description?: string;
 };
 
 export function TravelOverviewSection({
   visitedCountries,
-  travelPhotos = [],
+  adventurePlaces = [],
+  title = "Countries I've visited",
+  description = 'Explore the map — pick a city to see country context, notes, and stats beside the map.',
 }: TravelOverviewSectionProps) {
+  const [travelSelection, setTravelSelection] = useState<TravelSelection>(null);
+
+  const selectedCity = useMemo(() => {
+    if (travelSelection?.type !== 'city') return null;
+    for (const country of visitedCountries) {
+      const city = country.cities?.find(c => c._key === travelSelection.key);
+      if (city) return { city, country };
+    }
+    return null;
+  }, [travelSelection, visitedCountries]);
+
+  const selectedAdventure = useMemo(() => {
+    if (travelSelection?.type !== 'adventure') return null;
+    return adventurePlaces.find(place => place._key === travelSelection.key) ?? null;
+  }, [adventurePlaces, travelSelection]);
+
   if (visitedCountries.length === 0) return null;
 
-  const photosByCountry = groupPhotosByCountry(travelPhotos);
-  const visitedMeta = getLocationMeta('visited');
+  const detailProps = selectedCity
+    ? {
+        title: selectedCity.city.name,
+        country: selectedCity.city.country ?? selectedCity.country.country,
+        subtitle: selectedCity.country.country
+          ? `Visited in ${selectedCity.country.country}`
+          : null,
+        notes: selectedCity.city.notes,
+        funFact: selectedCity.city.funFact,
+        stats: selectedCity.city.stats,
+        image: selectedCity.city.image,
+      }
+    : selectedAdventure
+      ? {
+          title: selectedAdventure.name,
+          subtitle: selectedAdventure.placeName,
+          notes: selectedAdventure.notes,
+          funFact: selectedAdventure.funFact,
+          stats: selectedAdventure.stats,
+          image: selectedAdventure.image,
+        }
+      : null;
 
   return (
     <section
+      id='travel-map-section'
       className='border-t border-border/40 bg-background'
       aria-label='Countries visited overview'
     >
       <div className='mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20'>
-        <header className='mb-10 max-w-2xl space-y-4 lg:mb-12'>
+        <header className='mb-8 max-w-2xl space-y-4'>
           <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-neon-yellow-500'>
             Travel
           </p>
           <h2 className='font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
-            Countries I&apos;ve visited
+            {title}
           </h2>
-          <p className='text-lg text-foreground-subtle text-pretty'>
-            Everywhere explored so far — all highlighted at once. Tag photography with a matching
-            country name to show photos in each card.
-          </p>
+          <p className='text-lg text-foreground-subtle text-pretty'>{description}</p>
         </header>
 
-        <div className='grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-10 xl:gap-14'>
-          {/* Map — 40%, sticky */}
-          <div className='order-1'>
-            <div className='sticky top-0 z-10 -mx-4 h-[36svh] overflow-hidden border-b border-border/40 bg-background sm:-mx-6 sm:h-[40svh] lg:top-8 lg:mx-0 lg:h-[min(72svh,640px)] lg:rounded-2xl lg:border lg:border-border/50 lg:shadow-xl'>
-              <LifeJourneyMap
-                items={[]}
-                visitedCountries={visitedCountries}
-                activeIndex={0}
-                mapMode='travel'
-                className='h-full'
-              />
-            </div>
+        <div className='grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:items-stretch'>
+          <div className='h-[min(48svh,400px)] overflow-hidden rounded-2xl border border-border/50 shadow-xl sm:h-[min(52svh,460px)] lg:h-[min(62svh,600px)]'>
+            <LifeJourneyMap
+              items={[]}
+              visitedCountries={visitedCountries}
+              adventurePlaces={adventurePlaces}
+              activeIndex={0}
+              mapMode='travel'
+              travelSelection={travelSelection}
+              onTravelSelectionChange={setTravelSelection}
+              className='h-full'
+            />
           </div>
 
-          {/* Country cards — 60% */}
-          <ul className='order-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2'>
-            {visitedCountries.map(country => {
-              const countryPhotos = country.country
-                ? (photosByCountry.get(country.country) ?? [])
-                : [];
-
-              return (
-                <li
-                  key={country._key}
-                  className='rounded-2xl border border-border/50 bg-surface/40 p-5'
-                >
-                  <span
-                    className={cn(
-                      'inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider',
-                      visitedMeta.chipClass,
-                    )}
-                  >
-                    Visited
-                  </span>
-                  <h3 className='mt-3 font-serif text-xl font-bold text-foreground'>
-                    {country.country}
-                  </h3>
-                  {country.placeName ? (
-                    <p className='mt-1 text-sm text-foreground-muted'>{country.placeName}</p>
-                  ) : null}
-                  {country.notes ? (
-                    <p className='mt-2 text-sm text-foreground-subtle text-pretty'>
-                      {country.notes}
-                    </p>
-                  ) : null}
-                  {country.country ? (
-                    <CountryPhotoStrip photos={countryPhotos} country={country.country} />
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
+          <MapPlaceDetailCard
+            {...(detailProps ?? {})}
+            onClear={detailProps ? () => setTravelSelection(null) : undefined}
+            className='max-lg:mt-0 lg:min-h-[min(62svh,600px)]'
+          />
         </div>
       </div>
     </section>

@@ -1,8 +1,8 @@
-import type { AboutQueryResult, AboutTravelPhotographyQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { sanityFetch } from '@/sanity/lib/live';
-import { aboutQuery, aboutTravelPhotographyQuery } from '@/sanity/lib/queries';
+import { aboutQuery } from '@/sanity/lib/queries';
 import AboutPageClient from './AboutPageClient';
 import { buildAboutStructuredData } from './buildAboutStructuredData';
 
@@ -43,17 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const [{ data: aboutData }, { data: travelPhotosData }] = await Promise.all([
-    sanityFetch({ query: aboutQuery }),
-    sanityFetch({ query: aboutTravelPhotographyQuery, stega: false }),
-  ]);
+  const { data: aboutData } = await sanityFetch({ query: aboutQuery });
   const about = aboutData as AboutQueryResult;
-  const travelPhotos = travelPhotosData as AboutTravelPhotographyQueryResult;
 
   return (
     <>
       <JsonLd data={buildAboutStructuredData(about)} />
-      <AboutPageClient about={about} travelPhotos={travelPhotos ?? []} />
+      <AboutPageClient about={about} />
     </>
   );
 }

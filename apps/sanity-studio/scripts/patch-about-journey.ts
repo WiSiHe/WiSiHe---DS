@@ -24,43 +24,43 @@ type VisitedCountry = {
 const JOURNEY_ITEMS: JourneyItem[] = [
   {
     _key: 'journey-hammerfest',
-    year: 'The beginning',
+    year: 'Youth',
     title: 'Born in the Arctic',
     content:
-      'I was born in Hammerfest — one of the northernmost towns in the world. Arctic light, harsh weather, and a small-town rhythm left an early mark on how I notice contrast, colour, and mood.',
+      'Born in Hammerfest — one of the northernmost towns in the world. I do not remember much from those earliest years, but it is where the map starts.',
     placeName: 'Hammerfest, Norway',
     locationType: 'birthplace',
     coordinates: { _type: 'geopoint', lat: 70.6634, lng: 23.6821 },
     mapZoom: 11,
   },
   {
-    _key: 'journey-setermoen',
-    year: 'Early years',
-    title: 'Setermoen',
-    content:
-      'Childhood in Setermoen — military-family postings and quiet Nordland landscapes. Lots of room to explore outdoors and build things with my hands.',
-    placeName: 'Setermoen, Norway',
-    locationType: 'lived',
-    coordinates: { _type: 'geopoint', lat: 68.411, lng: 17.059 },
-    mapZoom: 11,
-  },
-  {
     _key: 'journey-haslemoen',
-    year: 'Childhood',
+    year: 'Youth',
     title: 'Haslemoen',
     content:
-      'A stint at Haslemoen in inland Norway — another chapter of moving, adapting, and finding hobbies that stuck: drawing, games, and tinkering with computers.',
+      'Kindergarten years at Haslemoen — swimming in the local river and living through a huge flood that still feels larger than life when I think back.',
     placeName: 'Haslemoen, Norway',
     locationType: 'lived',
     coordinates: { _type: 'geopoint', lat: 60.7167, lng: 11.8333 },
     mapZoom: 11,
   },
   {
+    _key: 'journey-setermoen',
+    year: 'Youth',
+    title: 'Setermoen',
+    content:
+      'First grade in Setermoen. Skiing, fishing, long hikes, and drawing filled the days. Then my first video game — a 2D shooter — and my mind was blown.',
+    placeName: 'Setermoen, Norway',
+    locationType: 'lived',
+    coordinates: { _type: 'geopoint', lat: 68.411, lng: 17.059 },
+    mapZoom: 11,
+  },
+  {
     _key: 'journey-baerum',
-    year: 'Teen years',
+    year: 'Youth',
     title: 'Bærum',
     content:
-      'Growing up near Oslo in Bærum meant better access to culture, tech, and creative communities — while still keeping one foot in Norway’s quieter corners.',
+      'From first through third grade in Bærum: football, more skiing, and drawing. Our first family computer arrived — Flåklypa and Age of Empires — and I won a drawing contest that earned me a snowboard.',
     placeName: 'Bærum, Norway',
     locationType: 'lived',
     coordinates: { _type: 'geopoint', lat: 59.89, lng: 10.5267 },
@@ -68,10 +68,10 @@ const JOURNEY_ITEMS: JourneyItem[] = [
   },
   {
     _key: 'journey-arendal',
-    year: 'Raised on the coast',
+    year: 'Youth',
     title: 'Arendal & Agder',
     content:
-      'Arendal became home base for many formative years — summers by the sea, early curiosity for games and art, and the southern-coast sensibility that still shows up in my palette.',
+      'Arendal was home until I turned 19 — coast, sea, swimming, and family. Later I worked at Doorway and Joker while the southern shore still felt like the centre of the world.',
     placeName: 'Arendal, Norway',
     locationType: 'lived',
     coordinates: { _type: 'geopoint', lat: 58.461, lng: 8.7725 },
@@ -82,7 +82,7 @@ const JOURNEY_ITEMS: JourneyItem[] = [
     year: 'Studies',
     title: 'Tromsø & UiT',
     content:
-      'A year course in informatics at UiT — The Arctic University of Norway. Tromsø pushed me north again: polar nights, sharp focus, and proof that good work happens off the beaten path.',
+      'My first year living on my own. Beautiful nature and good people, though the dark winters were a bit long for my taste. The student culture, though — loved it.',
     placeName: 'Tromsø, Norway',
     locationType: 'studied',
     coordinates: { _type: 'geopoint', lat: 69.6492, lng: 18.9553 },
@@ -93,7 +93,7 @@ const JOURNEY_ITEMS: JourneyItem[] = [
     year: 'University',
     title: 'Bergen',
     content:
-      'At the University of Bergen I studied information and communication technologies — learning to think in systems, ship software, and collaborate across design and engineering.',
+      'I love Bergen — endless hikes, mountains to traverse, and friends who became part of the story. The rain never bothered me; it is part of the charm. Work at Eplehuset and Seaway Systems, plus Hove Festivalen along the way.',
     placeName: 'Bergen, Norway',
     locationType: 'studied',
     coordinates: { _type: 'geopoint', lat: 60.3913, lng: 5.3221 },
@@ -101,12 +101,12 @@ const JOURNEY_ITEMS: JourneyItem[] = [
   },
   {
     _key: 'journey-oslo',
-    year: 'Today',
+    year: 'Since 2016',
     title: 'Oslo',
     content:
-      'Oslo is where I build products by day — design systems, performance, accessibility — and paint, experiment in 3D, and ship side projects by night.',
+      "I was sceptical at first, but Oslo grew on me and I have come to love it here. I started a master's degree but never finished — instead I have built a career at Evry, Godtlevert, and now NoA Ignite.",
     placeName: 'Oslo, Norway',
-    locationType: 'worked',
+    locationType: 'lived',
     coordinates: { _type: 'geopoint', lat: 59.9139, lng: 10.7522 },
     mapZoom: 11,
   },
@@ -215,6 +215,30 @@ const VISITED_COUNTRIES: VisitedCountry[] = [
     placeName: 'Luxembourg City',
     coordinates: { _type: 'geopoint', lat: 49.6116, lng: 6.1319 },
   },
+  {
+    _key: 'visit-portugal',
+    country: 'Portugal',
+    placeName: 'Lisbon',
+    coordinates: { _type: 'geopoint', lat: 38.7223, lng: -9.1393 },
+  },
+  {
+    _key: 'visit-usa',
+    country: 'United States',
+    placeName: 'New York',
+    coordinates: { _type: 'geopoint', lat: 40.7128, lng: -74.006 },
+  },
+  {
+    _key: 'visit-canada',
+    country: 'Canada',
+    placeName: 'Toronto',
+    coordinates: { _type: 'geopoint', lat: 43.6532, lng: -79.3832 },
+  },
+  {
+    _key: 'visit-norway',
+    country: 'Norway',
+    placeName: 'Oslo',
+    coordinates: { _type: 'geopoint', lat: 59.9139, lng: 10.7522 },
+  },
 ];
 
 const KNOWS_ABOUT = [
@@ -236,10 +260,10 @@ async function main() {
   await client
     .patch('about')
     .set({
-      heroTitle: 'Story of WiSiHe',
+      heroTitle: 'Biography',
       heroSubtitle: 'Henrik Wilhelm Sissener',
       jobTitle: 'Senior Frontend Developer & Digital Artist',
-      bio: 'Design engineer, painter, and maker based in Oslo. Born in Hammerfest, raised across Norway, and curious about the world — I build accessible web products and make art on the side.',
+      bio: 'Design engineer, painter, and maker based in Oslo. Born in Hammerfest, raised across Norway — from military towns and the coast to Tromsø, Bergen, and the capital. I build accessible web products and make art on the side.',
       seoTitle: 'About Henrik Sissener | WiSiHe — Developer & Artist',
       seoDescription:
         'Life map of Henrik Wilhelm Sissener (WiSiHe): from Hammerfest and Arendal to Tromsø, Bergen, and Oslo — plus travels across Europe and beyond.',

@@ -10,6 +10,7 @@ export const aboutQuery = defineQuery(`
     heroSubtitle,
     bio,
     jobTitle,
+    portrait { ..., "lqip": asset->metadata.lqip },
     seoTitle,
     seoDescription,
     knowsAbout,
@@ -22,6 +23,8 @@ export const aboutQuery = defineQuery(`
       locationType,
       coordinates,
       mapZoom,
+      funFact,
+      stats[] { label, value },
       image { ..., "lqip": asset->metadata.lqip }
     },
     visitedCountries[] {
@@ -30,9 +33,30 @@ export const aboutQuery = defineQuery(`
       countryCode,
       placeName,
       coordinates,
-      notes
+      notes,
+      cities[] {
+        _key,
+        name,
+        coordinates,
+        isHighlight,
+        notes,
+        funFact,
+        stats[] { label, value },
+        image { ..., "lqip": asset->metadata.lqip }
+      }
+    },
+    adventurePlaces[] {
+      _key,
+      name,
+      placeName,
+      coordinates,
+      notes,
+      funFact,
+      stats[] { label, value },
+      image { ..., "lqip": asset->metadata.lqip }
     },
     ctaTitle,
+    ctaDescription,
     ctaButtonText,
     ctaButtonUrl,
     socialLinks[] { _key, platform, url }

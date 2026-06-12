@@ -3,11 +3,14 @@
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import type { LocationMeta } from './lifeJourneyTypes';
+import { MapMarkerTooltip } from './MapMarkerTooltip';
 
 type JourneyMapPinProps = {
   meta: LocationMeta;
   isActive: boolean;
+  isPast?: boolean;
   label: string;
+  tooltipDetail?: string | null;
   onClick?: () => void;
   size?: 'life' | 'visited';
   pulseDelay?: number;
@@ -16,7 +19,9 @@ type JourneyMapPinProps = {
 export function JourneyMapPin({
   meta,
   isActive,
+  isPast = false,
   label,
+  tooltipDetail,
   onClick,
   size = 'life',
   pulseDelay = 0,
@@ -45,36 +50,48 @@ export function JourneyMapPin({
     <motion.button
       type='button'
       aria-label={label}
-      onClick={onClick}
+      aria-pressed={isActive}
+      initial={{ scale: 0, opacity: 0 }}
       animate={{
-        scale: isActive ? 1.55 : 1,
-        opacity: isActive ? 1 : 0.72,
+        scale: isActive ? 1.6 : isPast ? 0.92 : 1,
+        opacity: isActive ? 1 : isPast ? 0.38 : 0.85,
       }}
-      transition={{ type: 'spring', stiffness: 320, damping: 22 }}
-      className='relative flex items-center justify-center'
+      transition={{
+        type: 'spring',
+        stiffness: 420,
+        damping: 18,
+        mass: 0.65,
+      }}
+      onClick={event => {
+        event.stopPropagation();
+        onClick?.();
+      }}
+      className='group/marker relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50'
     >
+      <MapMarkerTooltip
+        title={label}
+        detail={tooltipDetail ?? 'Click for details'}
+        className='mb-3'
+      />
       {isActive ? (
         <>
-          <span className='absolute size-10 rounded-full bg-accent/25 blur-md' aria-hidden />
-          <span className='absolute size-6 animate-ping rounded-full bg-accent/35' aria-hidden />
+          <motion.span
+            className='absolute size-12 rounded-full bg-accent-subtle blur-md'
+            aria-hidden
+            animate={{ scale: [1, 1.35, 1], opacity: [0.35, 0.55, 0.35] }}
+            transition={{ duration: 2.4, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+          />
+          <span className='absolute size-7 animate-ping rounded-full bg-accent/40' aria-hidden />
         </>
       ) : null}
       <span
         className={cn(
-          'relative z-10 block size-3.5 rounded-full ring-2 shadow-lg',
+          'relative z-10 block size-3.5 rounded-full ring-2 shadow-lg transition-shadow',
           meta.markerClass,
-          isActive && 'ring-accent shadow-accent/40',
+          isActive && 'ring-accent ring-4 shadow-lg shadow-accent/55',
+          isPast && 'shadow-none',
         )}
       />
-      {isActive ? (
-        <motion.span
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          className='pointer-events-none absolute -top-9 left-1/2 z-20 max-w-[9rem] -translate-x-1/2 truncate rounded-md border border-border/60 bg-background/90 px-2 py-0.5 text-[10px] font-semibold text-foreground backdrop-blur-sm'
-        >
-          {label}
-        </motion.span>
-      ) : null}
     </motion.button>
   );
 }

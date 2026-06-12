@@ -2,90 +2,47 @@
 
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
-import { motion, type Variants } from 'motion/react';
+import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import type { JSX } from 'react';
-import { FaBrush, FaCube, FaFolder, FaMailBulk, FaTv, FaUser } from 'react-icons/fa';
+import { FaBrush, FaFolder, FaTv, FaUser } from 'react-icons/fa';
+import { Dock } from '@/app/components/ui/Dock';
 import IconLogo from '../icons/IconLogo';
 import { Link } from '../ProgressLink';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
-const container: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.2,
-      bounce: 0.05,
-      type: 'spring',
-    },
-  },
-};
-
-const listItem: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
+const NAV_ICONS: Record<string, JSX.Element> = {
+  Paintings: <FaBrush />,
+  Projects: <FaFolder />,
+  Videos: <FaTv />,
+  About: <FaUser />,
 };
 
 interface iNavigationProps {
   isAbsolute?: boolean;
 }
+
 const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
-  /** Design system routes use their own bottom nav on small screens — hide ours to avoid overlap. */
-  const hideBottomNav = pathName?.startsWith('/design-system') ?? false;
+  /** Immersive routes use their own chrome — hide dock to avoid overlap. */
+  const hideBottomNav =
+    pathName?.startsWith('/design-system') ||
+    pathName === '/three-d' ||
+    pathName?.startsWith('/three-d/') ||
+    (pathName?.startsWith('/presentations/') && pathName !== '/presentations');
 
-  const navCluster = (
-    <div className='flex items-stretch justify-center gap-1 sm:gap-2 pointer-events-auto'>
-      <motion.ul
-        key='nav'
-        variants={container}
-        initial='hidden'
-        animate='show'
-        className={cn(
-          'p-2 gap-2',
-          'flex text-foreground bg-surface border border-border rounded-full shadow-lg',
-          'overflow-x-auto overflow-y-hidden overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
-        )}
-        style={{ isolation: 'isolate' }}
-      >
-        {navigationItems.map(item => {
-          const isActive = pathName?.includes(item.href);
-          const { href, label } = item;
+  const dockItems = navigationItems.map(item => {
+    const isActive =
+      pathName === item.href || (item.href !== '/' && pathName?.startsWith(item.href));
 
-          const navIcon = {
-            Paintings: <FaBrush />,
-            Projects: <FaFolder />,
-            Videos: <FaTv />,
-            '3D': <FaCube />,
-            About: <FaUser />,
-            Contact: <FaMailBulk />,
-          }[label];
-
-          return (
-            <motion.li key={href} variants={listItem}>
-              <Link
-                href={href}
-                aria-label={`Navigate to ${label}`}
-                className={cn(
-                  'px-4 py-2',
-                  'transition-all gap-2 md:gap-2 flex items-center ease-in-out duration-300 text-sm md:text-base rounded-full border justify-center',
-                  isActive
-                    ? 'bg-accent text-accent-contrast border-accent-border'
-                    : 'text-foreground-subtle bg-transparent border-transparent hover:bg-surface-hover hover:text-accent hover:border-border',
-                )}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <span>{navIcon}</span>
-                <strong>{label}</strong>
-              </Link>
-            </motion.li>
-          );
-        })}
-      </motion.ul>
-    </div>
-  );
+    return {
+      href: item.href,
+      label: item.label,
+      icon: NAV_ICONS[item.label] ?? null,
+      isActive,
+      ariaLabel: `Navigate to ${item.label}`,
+    };
+  });
 
   return (
     <header className='pointer-events-none'>
@@ -119,8 +76,11 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.E
       </div>
 
       {!hideBottomNav ? (
-        <nav aria-label='Main Navigation' className='fixed bottom-4 left-0 right-0 z-40 px-4'>
-          {navCluster}
+        <nav
+          aria-label='Main navigation'
+          className='pointer-events-auto fixed bottom-0 left-0 right-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-4'
+        >
+          <Dock items={dockItems} aria-label='Main navigation' />
         </nav>
       ) : null}
     </header>

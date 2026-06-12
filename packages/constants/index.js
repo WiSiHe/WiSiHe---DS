@@ -10,6 +10,7 @@ export const navigationItems = [
     description: 'Projects',
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
+  { label: 'About', href: '/about', description: 'About' },
 ];
 
 export const footerLinks = [

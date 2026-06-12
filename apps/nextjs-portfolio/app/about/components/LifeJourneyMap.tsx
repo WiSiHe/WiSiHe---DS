@@ -3,68 +3,129 @@
 import { cn } from '@wisihe/utils';
 import type { FilterSpecification } from 'mapbox-gl';
 import mapboxgl from 'mapbox-gl';
-import { motion } from 'motion/react';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { MapRef } from 'react-map-gl/mapbox';
 import MapboxMap, { Layer, Marker, Source } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useTheme } from '@/app/providers';
 import { buildCountryBoundaryFilter, resolveCountryIsoCode } from './countryCodes';
 import { JourneyMapPin } from './JourneyMapPin';
+import { useJourneyMapColors } from './journeyMapColors';
+import { LifeJourneyMapControls } from './LifeJourneyMapControls';
 import {
   buildLineFeature,
-  collectVisitedCountryPoints,
-  journeyRouteCoordinates,
+  collectTravelMapPoints,
+  journeyCurvedRouteCoordinates,
   journeyScrollZoom,
 } from './lifeJourneyGeo';
 import {
+  type AdventurePlaceItem,
+  flattenVisitedCities,
   getJourneyItemsWithCoordinates,
-  getLocationMeta,
+  LIVED_PLACE_PIN_META,
   type LifeJourneyItem,
+  type VisitedCityItem,
   type VisitedCountryItem,
 } from './lifeJourneyTypes';
+import { MapPlaceSidePanel } from './MapPlaceSidePanel';
+import { formatCityLabel } from './PlaceFactsGrid';
+import { TravelCityDot } from './TravelCityDot';
 
 const MAPBOX_TOKEN = process.env['NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN'];
 const DEFAULT_CENTER = { longitude: 10.75, latitude: 59.91 };
 const DEFAULT_ZOOM = 4.8;
+const MAP_STYLE_DARK = 'mapbox://styles/mapbox/dark-v11';
+const MAP_STYLE_LIGHT = 'mapbox://styles/mapbox/light-v11';
+const JOURNEY_PAN_DURATION_MS = 700;
+const TRAVEL_FLY_DURATION_MS = 650;
+const TRAVEL_FIT_DURATION_MS = 1100;
 
 export type LifeJourneyMapMode = 'journey' | 'travel';
+
+export type TravelSelection =
+  | { type: 'city'; key: string }
+  | { type: 'adventure'; key: string }
+  | null;
 
 type LifeJourneyMapProps = {
   items: LifeJourneyItem[];
   visitedCountries?: VisitedCountryItem[];
+  adventurePlaces?: AdventurePlaceItem[];
   activeIndex: number;
   mapMode?: LifeJourneyMapMode;
+  travelSelection?: TravelSelection;
+  onTravelSelectionChange?: (selection: TravelSelection) => void;
   onSelectStop?: (index: number) => void;
   className?: string;
   fullBleed?: boolean;
 };
 
-function enableMapAtmosphere(map: mapboxgl.Map) {
-  if (typeof map.setFog !== 'function') return;
+function enableMapAtmosphere(map: mapboxgl.Map, isDark: boolean) {
+  if (typeof map.setFog !== 'function' || !map.isStyleLoaded()) return;
 
-  map.setFog({
-    color: 'rgb(10, 14, 22)',
-    'high-color': 'rgb(28, 72, 120)',
-    'horizon-blend': 0.04,
-    'space-color': 'rgb(6, 8, 14)',
-    'star-intensity': 0.35,
-  });
+  const fog = isDark
+    ? {
+        color: 'rgb(10, 14, 22)',
+        'high-color': 'rgb(28, 72, 120)',
+        'horizon-blend': 0.04,
+        'space-color': 'rgb(6, 8, 14)',
+        'star-intensity': 0.35,
+      }
+    : {
+        color: 'rgb(236, 242, 248)',
+        'high-color': 'rgb(191, 219, 254)',
+        'horizon-blend': 0.06,
+        'space-color': 'rgb(248, 250, 252)',
+        'star-intensity': 0,
+      };
+
+  try {
+    map.setFog(fog);
+  } catch {
+    // Mapbox throws if the style is still loading — handled by applyMapAtmosphereWhenReady.
+  }
+}
+
+function applyMapAtmosphereWhenReady(map: mapboxgl.Map, isDark: boolean) {
+  const apply = () => enableMapAtmosphere(map, isDark);
+
+  if (map.isStyleLoaded()) {
+    apply();
+    return undefined;
+  }
+
+  map.once('style.load', apply);
+  return () => {
+    map.off('style.load', apply);
+  };
 }
 
 export function LifeJourneyMap({
   items,
   visitedCountries = [],
+  adventurePlaces = [],
   activeIndex,
   mapMode = 'journey',
+  travelSelection: travelSelectionProp,
+  onTravelSelectionChange,
   onSelectStop,
   className,
   fullBleed = false,
 }: LifeJourneyMapProps) {
+  const { resolvedTheme } = useTheme();
+  const [themeMounted, setThemeMounted] = useState(false);
   const mapRef = useRef<MapRef>(null);
-  const pendingTargetRef = useRef<string | null>(null);
-  const mappedItems = getJourneyItemsWithCoordinates(items);
+  const hasFittedTravelRef = useRef(false);
+  const [internalTravelSelection, setInternalTravelSelection] = useState<TravelSelection>(null);
+  const travelSelection = travelSelectionProp ?? internalTravelSelection;
+  const setTravelSelection = onTravelSelectionChange ?? setInternalTravelSelection;
+  const [journeyDetailKey, setJourneyDetailKey] = useState<string | null>(null);
+  const isTravel = mapMode === 'travel';
+  const isDarkMap = themeMounted ? resolvedTheme !== 'light' : true;
+  const mapStyle = isDarkMap ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
+  const journeyColors = useJourneyMapColors(themeMounted ? (resolvedTheme ?? 'dark') : 'dark');
+  const mappedItems = useMemo(() => getJourneyItemsWithCoordinates(items), [items]);
   const activeItem = mappedItems[activeIndex];
-  const routeCoordinates = useMemo(() => journeyRouteCoordinates(mappedItems), [mappedItems]);
 
   const visitedIsoCodes = useMemo(
     () =>
@@ -79,19 +140,42 @@ export function LifeJourneyMap({
     [visitedIsoCodes],
   );
 
-  const fullRoute = useMemo(() => buildLineFeature(routeCoordinates), [routeCoordinates]);
+  const fadedFullRoute = useMemo(() => {
+    if (activeIndex < 1) return null;
+    return buildLineFeature(journeyCurvedRouteCoordinates(mappedItems.slice(0, activeIndex + 1)));
+  }, [mappedItems, activeIndex]);
 
-  const activeRoute = useMemo(() => {
-    const coords = routeCoordinates.slice(0, activeIndex + 1);
-    return buildLineFeature(coords);
-  }, [routeCoordinates, activeIndex]);
+  const activeSegmentRoute = useMemo(() => {
+    if (activeIndex < 1) return null;
+    return buildLineFeature(
+      journeyCurvedRouteCoordinates(mappedItems.slice(activeIndex - 1, activeIndex + 1)),
+    );
+  }, [mappedItems, activeIndex]);
+
+  const [routeGlowPulse, setRouteGlowPulse] = useState(0);
+
+  const visitedCities = useMemo(() => flattenVisitedCities(visitedCountries), [visitedCountries]);
+
+  const selectedJourneyItem = useMemo(() => {
+    if (!journeyDetailKey) return null;
+    return mappedItems.find(item => item._key === journeyDetailKey) ?? null;
+  }, [journeyDetailKey, mappedItems]);
+
+  const hasJourneyPlacePanel = !isTravel && selectedJourneyItem;
+
+  const closePlacePanel = useCallback(() => {
+    setTravelSelection(null);
+    setJourneyDetailKey(null);
+  }, [setTravelSelection]);
 
   const easeToNorth = useCallback(
-    (targetKey: string, options: { center: [number, number]; zoom: number; duration?: number }) => {
+    (
+      _targetKey: string,
+      options: { center: [number, number]; zoom: number; duration?: number },
+    ) => {
       const map = mapRef.current?.getMap();
       if (!map) return;
 
-      pendingTargetRef.current = targetKey;
       map.stop();
 
       map.easeTo({
@@ -99,7 +183,7 @@ export function LifeJourneyMap({
         zoom: options.zoom,
         bearing: 0,
         pitch: 0,
-        duration: options.duration ?? 2400,
+        duration: options.duration ?? JOURNEY_PAN_DURATION_MS,
         essential: true,
         easing: t => t * (2 - t),
         padding: { top: 36, bottom: 36, left: 20, right: 20 },
@@ -108,8 +192,8 @@ export function LifeJourneyMap({
     [],
   );
 
-  const flyToItem = useCallback(
-    (item: LifeJourneyItem | undefined, duration = 2400) => {
+  const panToJourneyItem = useCallback(
+    (item: LifeJourneyItem | undefined, duration = JOURNEY_PAN_DURATION_MS) => {
       if (!item?.coordinates) return;
       easeToNorth(`journey-${item._key}`, {
         center: [item.coordinates.lng, item.coordinates.lat],
@@ -120,13 +204,23 @@ export function LifeJourneyMap({
     [easeToNorth],
   );
 
+  const flyToCoordinates = useCallback(
+    (key: string, lng: number, lat: number, zoom = 8.5) => {
+      easeToNorth(key, {
+        center: [lng, lat],
+        zoom,
+        duration: TRAVEL_FLY_DURATION_MS,
+      });
+    },
+    [easeToNorth],
+  );
+
   const fitTravelOverview = useCallback(
-    (duration = 2200) => {
+    (duration = TRAVEL_FIT_DURATION_MS) => {
       const map = mapRef.current?.getMap();
-      const points = collectVisitedCountryPoints(visitedCountries);
+      const points = collectTravelMapPoints(visitedCountries, adventurePlaces);
       if (!map || points.length === 0) return;
 
-      pendingTargetRef.current = 'travel-overview';
       map.stop();
 
       const bounds = points.reduce(
@@ -140,19 +234,98 @@ export function LifeJourneyMap({
         bearing: 0,
         pitch: 0,
         essential: true,
-        maxZoom: 5.5,
+        maxZoom: 6,
       });
     },
-    [visitedCountries],
+    [adventurePlaces, visitedCountries],
   );
 
+  const selectCity = useCallback(
+    (city: VisitedCityItem) => {
+      if (!city.coordinates) return;
+      setTravelSelection({ type: 'city', key: city._key });
+      flyToCoordinates(`city-${city._key}`, city.coordinates.lng, city.coordinates.lat);
+    },
+    [flyToCoordinates],
+  );
+
+  const selectAdventure = useCallback(
+    (place: AdventurePlaceItem) => {
+      if (!place.coordinates) return;
+      setTravelSelection({ type: 'adventure', key: place._key });
+      flyToCoordinates(
+        `adventure-${place._key}`,
+        place.coordinates.lng,
+        place.coordinates.lat,
+        7.5,
+      );
+    },
+    [flyToCoordinates],
+  );
+
+  const lastPannedIndexRef = useRef(-1);
+
   useEffect(() => {
-    if (mapMode === 'travel') {
-      fitTravelOverview();
+    lastPannedIndexRef.current = -1;
+  }, [items]);
+
+  useEffect(() => {
+    if (isTravel) {
+      if (!hasFittedTravelRef.current) {
+        fitTravelOverview();
+        hasFittedTravelRef.current = true;
+      }
       return;
     }
-    flyToItem(activeItem);
-  }, [activeItem, flyToItem, fitTravelOverview, mapMode]);
+
+    if (lastPannedIndexRef.current === activeIndex) return;
+
+    const item = mappedItems[activeIndex];
+    if (!item?.coordinates) return;
+
+    lastPannedIndexRef.current = activeIndex;
+    panToJourneyItem(item);
+  }, [activeIndex, fitTravelOverview, isTravel, mappedItems, panToJourneyItem]);
+
+  useEffect(() => {
+    if (isTravel) return;
+
+    let frame = 0;
+    const start = performance.now();
+
+    const step = (now: number) => {
+      const seconds = (now - start) / 1000;
+      setRouteGlowPulse((Math.sin(seconds * 2.4) + 1) / 2);
+      frame = requestAnimationFrame(step);
+    };
+
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [isTravel]);
+
+  useEffect(() => {
+    setThemeMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || !themeMounted) return;
+    return applyMapAtmosphereWhenReady(map, isDarkMap);
+  }, [isDarkMap, themeMounted]);
+
+  useEffect(() => {
+    hasFittedTravelRef.current = false;
+    setTravelSelection(null);
+    setJourneyDetailKey(null);
+  }, [mapMode, setTravelSelection]);
+
+  useEffect(() => {
+    if (isTravel) return;
+    const activeKey = activeItem?._key;
+    if (activeKey && journeyDetailKey && journeyDetailKey !== activeKey) {
+      setJourneyDetailKey(null);
+    }
+  }, [activeItem?._key, isTravel, journeyDetailKey]);
 
   if (!MAPBOX_TOKEN) {
     return (
@@ -185,7 +358,7 @@ export function LifeJourneyMap({
       }
     : { ...DEFAULT_CENTER, zoom: DEFAULT_ZOOM, bearing: 0, pitch: 0 };
 
-  const showCountries = mapMode === 'travel' && visitedIsoCodes.length > 0;
+  const showCountries = isTravel && visitedIsoCodes.length > 0;
 
   return (
     <div
@@ -197,26 +370,35 @@ export function LifeJourneyMap({
         className,
       )}
     >
-      <div
-        className='pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/4 bg-linear-to-t from-background/40 to-transparent'
-        aria-hidden
-      />
-
       <MapboxMap
+        key={mapStyle}
         ref={mapRef}
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={initialView}
-        mapStyle='mapbox://styles/mapbox/dark-v11'
+        mapStyle={mapStyle}
         style={{ width: '100%', height: '100%' }}
         attributionControl={false}
-        reuseMaps
+        reuseMaps={false}
+        cooperativeGestures
+        scrollZoom={false}
+        doubleClickZoom={false}
+        dragRotate={false}
+        touchPitch={false}
         onLoad={event => {
-          enableMapAtmosphere(event.target);
-          if (mapMode === 'travel') {
+          const map = event.target;
+          map.scrollZoom.disable();
+          applyMapAtmosphereWhenReady(map, isDarkMap);
+          if (isTravel) {
             fitTravelOverview(0);
+            hasFittedTravelRef.current = true;
           } else {
-            flyToItem(activeItem ?? initialItem, 0);
+            lastPannedIndexRef.current = activeIndex;
+            panToJourneyItem(activeItem ?? initialItem, 0);
           }
+        }}
+        onClick={() => {
+          if (isTravel) setTravelSelection(null);
+          else closePlacePanel();
         }}
       >
         {showCountries ? (
@@ -245,41 +427,151 @@ export function LifeJourneyMap({
           </Source>
         ) : null}
 
-        {fullRoute && mapMode === 'journey' ? (
-          <Source id='journey-route-full' type='geojson' data={fullRoute}>
+        {fadedFullRoute && !isTravel ? (
+          <Source id='journey-route-faded' type='geojson' data={fadedFullRoute} lineMetrics>
             <Layer
-              id='journey-route-dim'
+              id='journey-route-faded-shadow'
               type='line'
               paint={{
-                'line-color': '#94a3b8',
-                'line-width': 2,
-                'line-opacity': 0.35,
-                'line-dasharray': [2, 2],
+                'line-color': journeyColors.routeShadow,
+                'line-width': 6,
+                'line-opacity': 0.2,
+                'line-blur': 1,
+              }}
+              layout={{
+                'line-cap': 'round',
+                'line-join': 'round',
+              }}
+            />
+            <Layer
+              id='journey-route-faded-line'
+              type='line'
+              paint={{
+                'line-color': journeyColors.routeFaded,
+                'line-width': 3.5,
+                'line-opacity': 0.3,
+              }}
+              layout={{
+                'line-cap': 'round',
+                'line-join': 'round',
               }}
             />
           </Source>
         ) : null}
 
-        {activeRoute && mapMode === 'journey' ? (
-          <Source id='journey-route-active' type='geojson' data={activeRoute}>
+        {activeSegmentRoute && !isTravel ? (
+          <Source id='journey-route-segment' type='geojson' data={activeSegmentRoute} lineMetrics>
             <Layer
-              id='journey-route-active-line'
+              id='journey-route-segment-aura'
               type='line'
               paint={{
-                'line-color': '#ff7442',
-                'line-width': 3,
-                'line-opacity': 0.95,
+                'line-color': journeyColors.accent,
+                'line-width': 10 + routeGlowPulse * 10,
+                'line-opacity': 0.1 + routeGlowPulse * 0.28,
+                'line-blur': 2 + routeGlowPulse * 4,
+              }}
+              layout={{
+                'line-cap': 'round',
+                'line-join': 'round',
+              }}
+            />
+            <Layer
+              id='journey-route-segment-glow'
+              type='line'
+              paint={{
+                'line-color': journeyColors.accentBright,
+                'line-width': 7 + routeGlowPulse * 5,
+                'line-opacity': 0.22 + routeGlowPulse * 0.38,
+                'line-blur': 1 + routeGlowPulse * 2,
+              }}
+              layout={{
+                'line-cap': 'round',
+                'line-join': 'round',
+              }}
+            />
+            <Layer
+              id='journey-route-segment-line'
+              type='line'
+              paint={{
+                'line-gradient': [
+                  'interpolate',
+                  ['linear'],
+                  ['line-progress'],
+                  0,
+                  journeyColors.accentSoft,
+                  0.35,
+                  journeyColors.accent,
+                  1,
+                  journeyColors.accentBright,
+                ],
+                'line-width': 4.5 + routeGlowPulse * 1.5,
+                'line-opacity': 0.82 + routeGlowPulse * 0.18,
+              }}
+              layout={{
+                'line-cap': 'round',
+                'line-join': 'round',
               }}
             />
           </Source>
         ) : null}
 
-        {mapMode === 'journey'
+        {isTravel
+          ? visitedCities.map(city => {
+              if (!city.coordinates) return null;
+              const label = [city.name, city.country].filter(Boolean).join(', ');
+              const isSelected =
+                travelSelection?.type === 'city' && travelSelection.key === city._key;
+
+              return (
+                <Marker
+                  key={city._key}
+                  longitude={city.coordinates.lng}
+                  latitude={city.coordinates.lat}
+                  anchor='center'
+                >
+                  <TravelCityDot
+                    label={label}
+                    tooltipDetail={city.funFact ?? city.notes ?? city.stats?.[0]?.value}
+                    selected={isSelected}
+                    onClick={() => selectCity(city)}
+                  />
+                </Marker>
+              );
+            })
+          : null}
+
+        {isTravel
+          ? adventurePlaces.map(place => {
+              if (!place.coordinates) return null;
+              const label = place.placeName
+                ? `${place.name} — ${place.placeName}`
+                : (place.name ?? '');
+              const isSelected =
+                travelSelection?.type === 'adventure' && travelSelection.key === place._key;
+
+              return (
+                <Marker
+                  key={place._key}
+                  longitude={place.coordinates.lng}
+                  latitude={place.coordinates.lat}
+                  anchor='center'
+                >
+                  <TravelCityDot
+                    label={label}
+                    tooltipDetail={place.funFact ?? place.notes ?? place.stats?.[0]?.value}
+                    selected={isSelected}
+                    onClick={() => selectAdventure(place)}
+                  />
+                </Marker>
+              );
+            })
+          : null}
+
+        {!isTravel
           ? mappedItems.map((item, index) => {
-              if (!item.coordinates) return null;
-              const meta = getLocationMeta(item.locationType);
+              if (!item.coordinates || index > activeIndex) return null;
               const isActive = index === activeIndex;
-              const label = item.placeName ?? item.title ?? 'Location';
+              const label = formatCityLabel(item.placeName, item.title);
 
               return (
                 <Marker
@@ -289,10 +581,15 @@ export function LifeJourneyMap({
                   anchor='center'
                 >
                   <JourneyMapPin
-                    meta={meta}
+                    meta={LIVED_PLACE_PIN_META}
                     isActive={isActive}
+                    isPast={index < activeIndex}
                     label={label}
-                    onClick={() => onSelectStop?.(index)}
+                    tooltipDetail={item.funFact ?? 'Tap for city facts'}
+                    onClick={() => {
+                      onSelectStop?.(index);
+                      setJourneyDetailKey(item._key);
+                    }}
                   />
                 </Marker>
               );
@@ -300,31 +597,38 @@ export function LifeJourneyMap({
           : null}
       </MapboxMap>
 
-      {activeItem && mapMode === 'journey' ? (
-        <motion.div
-          key={activeItem._key}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className='pointer-events-none absolute left-4 right-4 top-4 z-20 rounded-xl border border-border/60 bg-background/88 p-3 backdrop-blur-md sm:max-w-xs'
-          aria-live='polite'
-        >
-          <p className='font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent'>
-            {activeItem.year}
-          </p>
-          <p className='mt-1 font-serif text-base font-bold text-foreground sm:text-lg'>
-            {activeItem.placeName ?? activeItem.title}
-          </p>
-        </motion.div>
-      ) : mapMode === 'travel' ? (
-        <div className='pointer-events-none absolute left-4 right-4 top-4 z-20 rounded-xl border border-neon-yellow-500/30 bg-background/88 p-3 backdrop-blur-md sm:max-w-xs'>
-          <p className='font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-neon-yellow-500'>
-            Travel
-          </p>
-          <p className='mt-1 font-serif text-base font-bold text-foreground sm:text-lg'>
-            {visitedIsoCodes.length} countries
-          </p>
-        </div>
+      {hasJourneyPlacePanel ? (
+        <button
+          type='button'
+          className='absolute inset-0 z-20 bg-background/50 backdrop-blur-[2px] sm:hidden'
+          onClick={closePlacePanel}
+          aria-label='Close place details'
+        />
+      ) : null}
+
+      <LifeJourneyMapControls
+        mapRef={mapRef}
+        showFitOverview={isTravel}
+        onFitOverview={() => fitTravelOverview(900)}
+        className={cn(
+          !isTravel && 'max-lg:top-3 max-lg:bottom-auto max-lg:right-3',
+          hasJourneyPlacePanel && 'max-sm:top-3 max-sm:bottom-auto max-sm:right-3',
+        )}
+      />
+
+      {!isTravel && selectedJourneyItem ? (
+        <MapPlaceSidePanel
+          title={formatCityLabel(selectedJourneyItem.placeName, selectedJourneyItem.title)}
+          subtitle={
+            selectedJourneyItem.placeName?.includes(',')
+              ? selectedJourneyItem.placeName.split(',')[1]?.trim()
+              : 'Norway'
+          }
+          funFact={selectedJourneyItem.funFact}
+          stats={selectedJourneyItem.stats}
+          image={selectedJourneyItem.image}
+          onClose={() => setJourneyDetailKey(null)}
+        />
       ) : null}
     </div>
   );

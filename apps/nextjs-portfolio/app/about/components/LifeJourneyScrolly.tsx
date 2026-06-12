@@ -4,16 +4,14 @@ import { useGSAP } from '@gsap/react';
 import { cn } from '@wisihe/utils';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getGlobalLenis } from '@/app/lib/lenis-registry';
-import { urlForImage } from '@/sanity/lib/utils';
+import { JourneyCityCard } from './JourneyCityCard';
+import { JourneyMobileCarousel } from './JourneyMobileCarousel';
+import { JourneyMobileNav } from './JourneyMobileNav';
 import { LifeJourneyMap } from './LifeJourneyMap';
-import {
-  getJourneyItemsWithCoordinates,
-  getLocationMeta,
-  type LifeJourneyItem,
-} from './lifeJourneyTypes';
+import { getJourneyItemsWithCoordinates, type LifeJourneyItem } from './lifeJourneyTypes';
+import { formatCityLabel } from './PlaceFactsGrid';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -29,18 +27,30 @@ const journeyIntro = (
       Life map
     </p>
     <h2 className='mt-3 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]'>
-      Places that shaped me
+      Places I&apos;ve lived
     </h2>
     <p className='mt-3 max-w-xl text-base text-foreground-subtle text-pretty sm:text-lg'>
-      Scroll the timeline — the map follows along, always north up, while each chapter comes into
-      focus.
+      <span className='lg:hidden'>
+        Use the arrows to move between cities — the map follows along.
+      </span>
+      <span className='hidden lg:inline'>
+        Scroll or use the arrows — the map sweeps between cities. Tap a pin for city facts.
+      </span>
     </p>
   </>
 );
 
+const DESKTOP_MQ = '(min-width: 1024px)';
+const SCROLL_SYNC_LINE_RATIO = 0.52;
+const NAV_SCROLL_DURATION_S = 1.1;
+
 export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const storyRef = useRef<HTMLDivElement>(null);
+  const mapColRef = useRef<HTMLDivElement>(null);
   const lastMapIndexRef = useRef(0);
+  const navigationLockRef = useRef(false);
+  const navigationUnlockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeMapIndex, setActiveMapIndex] = useState(0);
   const mappedItems = getJourneyItemsWithCoordinates(items);
 
@@ -51,25 +61,77 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     setActiveMapIndex(index);
   }, []);
 
-  const scrollToChapter = useCallback(
+  const syncActiveFromScroll = useCallback(() => {
+    if (navigationLockRef.current) return;
+    if (!window.matchMedia(DESKTOP_MQ).matches) return;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const syncLine = window.innerHeight * SCROLL_SYNC_LINE_RATIO;
+    const sections = container.querySelectorAll<HTMLElement>('[data-journey-step][data-map-index]');
+
+    let bestIndex = lastMapIndexRef.current;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (const section of sections) {
+      const mapIndex = Number(section.dataset['mapIndex'] ?? -1);
+      if (mapIndex < 0) continue;
+
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom < syncLine || rect.top > window.innerHeight) continue;
+
+      const center = rect.top + rect.height / 2;
+      const distance = Math.abs(center - syncLine);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestIndex = mapIndex;
+      }
+    }
+
+    setActiveIndexIfChanged(bestIndex);
+  }, [setActiveIndexIfChanged]);
+
+  const releaseNavigationLock = useCallback(() => {
+    navigationLockRef.current = false;
+    if (navigationUnlockTimerRef.current) {
+      clearTimeout(navigationUnlockTimerRef.current);
+      navigationUnlockTimerRef.current = null;
+    }
+    syncActiveFromScroll();
+  }, [syncActiveFromScroll]);
+
+  const goToIndex = useCallback(
     (index: number) => {
       if (!mappedItems[index]) return;
       setActiveIndexIfChanged(index);
+
+      const isDesktop = window.matchMedia(DESKTOP_MQ).matches;
+      if (!isDesktop) return;
 
       const target = containerRef.current?.querySelector<HTMLElement>(
         `[data-journey-step][data-map-index="${index}"]`,
       );
       if (!target) return;
 
+      navigationLockRef.current = true;
+      if (navigationUnlockTimerRef.current) {
+        clearTimeout(navigationUnlockTimerRef.current);
+      }
+      navigationUnlockTimerRef.current = setTimeout(
+        releaseNavigationLock,
+        NAV_SCROLL_DURATION_S * 1000 + 150,
+      );
+
       const lenis = getGlobalLenis();
       if (lenis) {
-        lenis.scrollTo(target, { offset: -120, duration: 1.2 });
+        lenis.scrollTo(target, { offset: -120, duration: NAV_SCROLL_DURATION_S });
         return;
       }
 
       target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
-    [mappedItems, setActiveIndexIfChanged],
+    [mappedItems, releaseNavigationLock, setActiveIndexIfChanged],
   );
 
   useEffect(() => {
@@ -79,44 +141,90 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     };
   }, [items.length]);
 
+  useEffect(() => {
+    let detach: (() => void) | undefined;
+    let attachRaf = 0;
+
+    const attachScrollSync = () => {
+      const lenis = getGlobalLenis();
+      if (!lenis) {
+        attachRaf = requestAnimationFrame(attachScrollSync);
+        return;
+      }
+
+      const onScroll = () => syncActiveFromScroll();
+      lenis.on('scroll', onScroll);
+      syncActiveFromScroll();
+      detach = () => lenis.off('scroll', onScroll);
+    };
+
+    attachScrollSync();
+
+    return () => {
+      cancelAnimationFrame(attachRaf);
+      detach?.();
+      if (navigationUnlockTimerRef.current) {
+        clearTimeout(navigationUnlockTimerRef.current);
+      }
+    };
+  }, [items.length, syncActiveFromScroll]);
+
   useGSAP(
     () => {
-      const journeySections = gsap.utils.toArray<HTMLElement>('[data-journey-step]');
+      const story = storyRef.current;
+      const mapCol = mapColRef.current;
 
-      journeySections.forEach(section => {
-        const mapIndex = Number(section.dataset['mapIndex'] ?? -1);
+      ScrollTrigger.matchMedia({
+        '(min-width: 1024px)': () => {
+          const journeySections = gsap.utils.toArray<HTMLElement>(
+            '[data-journey-step]',
+            containerRef.current,
+          );
 
-        ScrollTrigger.create({
-          trigger: section,
-          start: 'top 55%',
-          end: 'bottom 45%',
-          onEnter: () => setActiveIndexIfChanged(mapIndex),
-          onEnterBack: () => setActiveIndexIfChanged(mapIndex),
-        });
-
-        const card = section.querySelector('[data-journey-card]');
-        if (card) {
-          gsap.from(card, {
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 88%',
-              toggleActions: 'play none none reverse',
-            },
-            y: 16,
-            opacity: 0,
-            duration: 0.45,
-            ease: 'power2.out',
+          journeySections.forEach(section => {
+            const card = section.querySelector('[data-journey-card]');
+            if (card) {
+              gsap.from(card, {
+                scrollTrigger: {
+                  trigger: section,
+                  start: 'top 88%',
+                  toggleActions: 'play none none reverse',
+                },
+                y: 16,
+                opacity: 0,
+                duration: 0.45,
+                ease: 'power2.out',
+              });
+            }
           });
-        }
-      });
 
-      ScrollTrigger.refresh();
+          if (story && mapCol) {
+            ScrollTrigger.create({
+              trigger: story,
+              start: 'top top+=2rem',
+              end: 'bottom bottom',
+              pin: mapCol,
+              pinSpacing: false,
+              invalidateOnRefresh: true,
+              anticipatePin: 1,
+            });
+          }
+
+          ScrollTrigger.refresh();
+        },
+      });
     },
     {
       scope: containerRef,
-      dependencies: [items.length, mappedItems.length, setActiveIndexIfChanged],
+      dependencies: [items.length, mappedItems.length],
     },
   );
+
+  const activeMappedItem = mappedItems[activeMapIndex];
+  const activeCityLabel = formatCityLabel(activeMappedItem?.placeName, activeMappedItem?.title);
+  const activeDisplayIndex = activeMappedItem
+    ? items.findIndex(item => item._key === activeMappedItem._key)
+    : 0;
 
   if (!items.length) return null;
 
@@ -124,26 +232,51 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     <section
       ref={containerRef}
       className='border-t border-border/40 bg-background'
-      aria-label='Life journey map story'
+      aria-label='Places lived map story'
     >
-      <div className='mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20'>
-        <div className='grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-10 xl:gap-14'>
-          {/* Story column — 60% on desktop */}
-          <div className='order-2 lg:order-1'>
-            <header className='mb-10 lg:mb-12'>{journeyIntro}</header>
+      <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-20'>
+        <header className='mb-6 max-w-2xl lg:mb-10'>
+          {journeyIntro}
+          <a
+            href='#travel-map-section'
+            className='mt-4 inline-flex font-mono text-[10px] uppercase tracking-wider text-foreground-muted underline-offset-4 hover:text-accent hover:underline lg:hidden'
+          >
+            Skip to countries visited
+          </a>
+        </header>
 
-            <div className='relative'>
-              <div
-                className='absolute bottom-0 left-4 top-0 hidden w-px bg-border/50 lg:block'
-                aria-hidden
+        <div className='grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-8 xl:gap-10'>
+          <div ref={mapColRef} className='lg:self-start'>
+            <div className='relative h-[min(36svh,280px)] overflow-hidden rounded-2xl border border-border/50 shadow-lg sm:h-[min(40svh,320px)] lg:h-[calc(100svh-4rem)]'>
+              <LifeJourneyMap
+                items={items}
+                activeIndex={activeMapIndex}
+                onSelectStop={goToIndex}
+                className='h-full'
               />
+              <JourneyMobileNav
+                className='absolute bottom-3 left-3 right-3 z-10'
+                activeIndex={activeMapIndex}
+                total={mappedItems.length}
+                label={activeCityLabel}
+                onPrev={() => goToIndex(activeMapIndex - 1)}
+                onNext={() => goToIndex(activeMapIndex + 1)}
+              />
+            </div>
+
+            <JourneyMobileCarousel
+              item={activeMappedItem ?? null}
+              displayIndex={activeDisplayIndex >= 0 ? activeDisplayIndex : 0}
+              total={items.length}
+            />
+          </div>
+
+          <div ref={storyRef} className='hidden lg:block'>
+            <div className='relative'>
+              <div className='absolute bottom-0 left-4 top-0 w-px bg-border/50' aria-hidden />
 
               {items.map((item, index) => {
-                const meta = getLocationMeta(item.locationType);
                 const mapIndex = mappedItems.findIndex(j => j._key === item._key);
-                const imageUrl = item.image
-                  ? urlForImage(item.image)?.width(900).quality(80).url()
-                  : null;
                 const isActive = mapIndex === activeMapIndex;
 
                 return (
@@ -152,91 +285,30 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
                     data-journey-step
                     data-map-index={mapIndex}
                     className={cn(
-                      'relative min-h-[44svh] py-8 lg:min-h-[52svh] lg:py-12 lg:pl-10',
-                      mapIndex >= 0 && !isActive && 'opacity-65',
+                      'relative min-h-[46svh] py-10 pl-8',
+                      mapIndex >= 0 && !isActive && 'opacity-55',
                     )}
                     id={`journey-${item._key}`}
                   >
                     <span
                       className={cn(
-                        'absolute left-0 top-10 hidden size-2.5 -translate-x-1/2 rounded-full lg:block',
-                        isActive ? 'bg-accent ring-4 ring-accent/20' : 'bg-border',
+                        'absolute left-0 top-10 size-2.5 -translate-x-1/2 rounded-full',
+                        isActive
+                          ? 'bg-accent ring-4 ring-accent-border shadow-sm shadow-accent/35'
+                          : 'bg-border',
                       )}
                       aria-hidden
                     />
 
-                    <div
-                      data-journey-card
-                      className={cn(
-                        'rounded-2xl border p-5 transition-colors sm:p-6',
-                        isActive
-                          ? 'border-accent/35 bg-surface/60'
-                          : 'border-border/50 bg-surface/30',
-                      )}
-                    >
-                      <div className='mb-4 flex items-center justify-between gap-3'>
-                        <div className='flex flex-wrap items-center gap-2'>
-                          <span className='font-mono text-xs font-semibold uppercase tracking-[0.25em] text-accent'>
-                            {item.year}
-                          </span>
-                          <span
-                            className={cn(
-                              'rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider',
-                              meta.chipClass,
-                            )}
-                          >
-                            {meta.label}
-                          </span>
-                        </div>
-                        <span className='font-mono text-[10px] tabular-nums text-foreground-muted'>
-                          {String(index + 1).padStart(2, '0')} /{' '}
-                          {String(items.length).padStart(2, '0')}
-                        </span>
-                      </div>
-
-                      {item.placeName ? (
-                        <p className='text-sm text-foreground-muted'>{item.placeName}</p>
-                      ) : null}
-
-                      <h3 className='mt-1 font-serif text-2xl font-bold leading-tight text-foreground sm:text-3xl'>
-                        {item.title}
-                      </h3>
-
-                      {item.content ? (
-                        <p className='mt-3 text-base leading-relaxed text-foreground-subtle text-pretty'>
-                          {item.content}
-                        </p>
-                      ) : null}
-
-                      {imageUrl ? (
-                        <div className='relative mt-5 aspect-16/10 overflow-hidden rounded-xl border border-border/50'>
-                          <Image
-                            src={imageUrl}
-                            alt={item.title ?? item.placeName ?? 'Journey photo'}
-                            fill
-                            className='object-cover'
-                            sizes='(max-width: 1024px) 100vw, 480px'
-                            placeholder={item.image?.lqip ? 'blur' : 'empty'}
-                            blurDataURL={item.image?.lqip ?? undefined}
-                          />
-                        </div>
-                      ) : null}
-                    </div>
+                    <JourneyCityCard
+                      item={item}
+                      index={index}
+                      total={items.length}
+                      isActive={isActive}
+                    />
                   </article>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Map column — 40%, sticky (~38–42svh mobile, full height desktop) */}
-          <div className='order-1 lg:order-2'>
-            <div className='sticky top-0 z-10 -mx-4 h-[38svh] overflow-hidden border-b border-border/40 bg-background sm:-mx-6 sm:h-[42svh] lg:top-8 lg:mx-0 lg:h-[calc(100svh-4rem)] lg:rounded-2xl lg:border lg:border-border/50 lg:shadow-xl'>
-              <LifeJourneyMap
-                items={items}
-                activeIndex={activeMapIndex}
-                onSelectStop={scrollToChapter}
-                className='h-full'
-              />
             </div>
           </div>
         </div>

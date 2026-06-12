@@ -1,4 +1,6 @@
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
+import { enrichJourneyItem } from './journeyCityDefaults';
+import { enrichAdventurePlace, enrichVisitedCity } from './visitedCityDefaults';
 
 type AboutDocument = NonNullable<AboutQueryResult>;
 type RawJourneyItem = NonNullable<AboutDocument['journeyItems']>[number];
@@ -17,6 +19,8 @@ export interface LifeJourneyItem {
   locationType?: string | null;
   coordinates?: GeoCoordinates | null;
   mapZoom?: number | null;
+  funFact?: string | null;
+  stats?: PlaceStat[] | null;
   image?: RawJourneyItem['image'];
 }
 
@@ -75,6 +79,13 @@ export function getLocationMeta(typeKey: string | null | undefined): LocationMet
   return LOCATION_TYPE_META[typeKey] ?? FALLBACK_META;
 }
 
+/** Unified map pin style for lived places — semantic accent, not per-type palette. */
+export const LIVED_PLACE_PIN_META: LocationMeta = {
+  label: 'Lived',
+  markerClass: 'bg-accent ring-accent-border',
+  chipClass: 'bg-accent/15 text-accent-text border-accent-border/40',
+};
+
 function parseCoordinates(value: unknown): GeoCoordinates | null {
   if (!value || typeof value !== 'object') return null;
   const { lat, lng } = value as { lat?: unknown; lng?: unknown };
@@ -85,17 +96,21 @@ function parseCoordinates(value: unknown): GeoCoordinates | null {
 export function normalizeJourneyItems(
   items: AboutDocument['journeyItems'] | null | undefined,
 ): LifeJourneyItem[] {
-  return (items ?? []).map(item => ({
-    _key: item._key,
-    year: item.year,
-    title: item.title,
-    content: item.content,
-    placeName: (item as { placeName?: string | null }).placeName,
-    locationType: (item as { locationType?: string | null }).locationType,
-    coordinates: parseCoordinates((item as { coordinates?: unknown }).coordinates),
-    mapZoom: (item as { mapZoom?: number | null }).mapZoom,
-    image: item.image,
-  }));
+  return (items ?? []).map(item =>
+    enrichJourneyItem({
+      _key: item._key,
+      year: item.year,
+      title: item.title,
+      content: item.content,
+      placeName: (item as { placeName?: string | null }).placeName,
+      locationType: (item as { locationType?: string | null }).locationType,
+      coordinates: parseCoordinates((item as { coordinates?: unknown }).coordinates),
+      mapZoom: (item as { mapZoom?: number | null }).mapZoom,
+      funFact: (item as { funFact?: string | null }).funFact,
+      stats: (item as { stats?: PlaceStat[] | null }).stats,
+      image: item.image,
+    }),
+  );
 }
 
 export function hasMapCoordinates(item: LifeJourneyItem): boolean {
@@ -108,6 +123,41 @@ export function getJourneyItemsWithCoordinates(
   return (items ?? []).filter(hasMapCoordinates);
 }
 
+export type PlaceStat = {
+  label?: string | null;
+  value?: string | null;
+};
+
+export type PlaceImage = {
+  asset?: { _ref: string };
+  lqip?: string | null;
+  alt?: string;
+} | null;
+
+export interface VisitedCityItem {
+  _key: string;
+  name?: string | null;
+  coordinates?: GeoCoordinates | null;
+  isHighlight?: boolean | null;
+  country?: string | null;
+  countryCode?: string | null;
+  notes?: string | null;
+  funFact?: string | null;
+  stats?: PlaceStat[] | null;
+  image?: PlaceImage;
+}
+
+export interface AdventurePlaceItem {
+  _key: string;
+  name?: string | null;
+  placeName?: string | null;
+  coordinates?: GeoCoordinates | null;
+  notes?: string | null;
+  funFact?: string | null;
+  stats?: PlaceStat[] | null;
+  image?: PlaceImage;
+}
+
 export interface VisitedCountryItem {
   _key: string;
   country?: string | null;
@@ -115,6 +165,7 @@ export interface VisitedCountryItem {
   placeName?: string | null;
   coordinates?: GeoCoordinates | null;
   notes?: string | null;
+  cities?: VisitedCityItem[];
 }
 
 export interface TravelPhotoItem {
@@ -131,6 +182,17 @@ export interface TravelPhotoItem {
   } | null;
 }
 
+type RawVisitedCity = {
+  _key: string;
+  name?: string | null;
+  coordinates?: unknown;
+  isHighlight?: boolean | null;
+  notes?: string | null;
+  funFact?: string | null;
+  stats?: PlaceStat[] | null;
+  image?: PlaceImage;
+};
+
 type RawVisitedCountry = {
   _key: string;
   country?: string | null;
@@ -138,6 +200,18 @@ type RawVisitedCountry = {
   placeName?: string | null;
   coordinates?: unknown;
   notes?: string | null;
+  cities?: RawVisitedCity[] | null;
+};
+
+type RawAdventurePlace = {
+  _key: string;
+  name?: string | null;
+  placeName?: string | null;
+  coordinates?: unknown;
+  notes?: string | null;
+  funFact?: string | null;
+  stats?: PlaceStat[] | null;
+  image?: PlaceImage;
 };
 
 export function normalizeVisitedCountries(
@@ -149,8 +223,45 @@ export function normalizeVisitedCountries(
     countryCode: item.countryCode,
     placeName: item.placeName,
     notes: item.notes,
-    coordinates: parseCoordinates((item as { coordinates?: unknown }).coordinates),
+    coordinates: parseCoordinates(item.coordinates),
+    cities: (item.cities ?? []).map(city =>
+      enrichVisitedCity({
+        _key: city._key,
+        name: city.name,
+        coordinates: parseCoordinates(city.coordinates),
+        isHighlight: city.isHighlight,
+        country: item.country,
+        countryCode: item.countryCode,
+        notes: city.notes,
+        funFact: city.funFact,
+        stats: city.stats,
+        image: city.image,
+      }),
+    ),
   }));
+}
+
+export function normalizeAdventurePlaces(
+  places: RawAdventurePlace[] | null | undefined,
+): AdventurePlaceItem[] {
+  return (places ?? []).map(place =>
+    enrichAdventurePlace({
+      _key: place._key,
+      name: place.name,
+      placeName: place.placeName,
+      notes: place.notes,
+      funFact: place.funFact,
+      stats: place.stats,
+      image: place.image,
+      coordinates: parseCoordinates(place.coordinates),
+    }),
+  );
+}
+
+export function flattenVisitedCities(countries: VisitedCountryItem[]): VisitedCityItem[] {
+  return countries.flatMap(country =>
+    (country.cities ?? []).filter(city => Boolean(city.coordinates)),
+  );
 }
 
 export function normalizeTravelPhotos(

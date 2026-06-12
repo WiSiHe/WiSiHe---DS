@@ -52,12 +52,13 @@ export function buildContactCtaCopy(
   about: AboutQueryResult | null,
 ) {
   return {
-    eyebrow: section?.eyebrow?.trim() || '// Available for work',
-    title: section?.title?.trim() || about?.ctaTitle?.trim() || "Let's build something together.",
+    eyebrow: section?.eyebrow?.trim() || '// Contact',
+    title: section?.title?.trim() || about?.ctaTitle?.trim() || 'Say hello',
     description:
       section?.description?.trim() ||
-      'Open to freelance frontend work, design-engineering collaborations, and creative commissions.',
-    primaryLabel: section?.primaryLabel?.trim() || about?.ctaButtonText?.trim() || 'Get in touch',
+      about?.ctaDescription?.trim() ||
+      'Questions about the work, licensing, or anything else — I read every message.',
+    primaryLabel: section?.primaryLabel?.trim() || about?.ctaButtonText?.trim() || 'Send a message',
     primaryUrl: section?.primaryUrl?.trim() || about?.ctaButtonUrl?.trim() || '/contact',
     secondaryLabel: section?.secondaryLabel?.trim() || 'View projects',
     secondaryUrl: section?.secondaryUrl?.trim() || '/projects',

@@ -1,19 +1,22 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import type { AboutQueryResult, AboutTravelPhotographyQueryResult } from '@wisihe/sanity-queries';
+import { IconArrowRight } from '@tabler/icons-react';
+import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { BsTwitterX } from 'react-icons/bs';
 import { FaChevronDown, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { urlForImage } from '@/sanity/lib/utils';
 import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 import { LifeJourneyScrolly } from './components/LifeJourneyScrolly';
 import {
+  normalizeAdventurePlaces,
   normalizeJourneyItems,
-  normalizeTravelPhotos,
   normalizeVisitedCountries,
 } from './components/lifeJourneyTypes';
 import { TravelOverviewSection } from './components/TravelOverviewSection';
@@ -31,29 +34,31 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   X: <BsTwitterX />,
 };
 
-export default function AboutPageClient({
-  about,
-  travelPhotos = [],
-}: {
-  about: AboutQueryResult;
-  travelPhotos?: AboutTravelPhotographyQueryResult;
-}) {
+export default function AboutPageClient({ about }: { about: AboutQueryResult }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  const heroTitle = about?.heroTitle ?? 'Story of WiSiHe';
-  const heroSubtitle = about?.heroSubtitle ?? 'Henrik Wilhelm Sissener';
+  const name = about?.heroSubtitle ?? 'Henrik Wilhelm Sissener';
+  const heroEyebrow = about?.heroTitle?.trim() || 'Biography';
   const jobTitle = about?.jobTitle ?? 'Frontend developer & digital artist';
   const bio =
     about?.bio ??
     'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
   const journeyItems = normalizeJourneyItems(about?.journeyItems);
   const visitedCountries = normalizeVisitedCountries(about?.visitedCountries);
-  const travelPhotosNormalized = normalizeTravelPhotos(travelPhotos);
-  const ctaTitle = about?.ctaTitle ?? "Let's create the Future together.";
-  const ctaButtonText = about?.ctaButtonText ?? 'Start a Conversation';
+  const adventurePlaces = normalizeAdventurePlaces(about?.adventurePlaces);
+  const ctaTitle = about?.ctaTitle ?? 'Say hello';
+  const ctaDescription =
+    about?.ctaDescription ??
+    'Questions about the work, licensing, or anything else — I read every message.';
+  const ctaButtonText = about?.ctaButtonText ?? 'Send a message';
   const ctaButtonUrl = about?.ctaButtonUrl ?? '/contact';
   const socialLinks = about?.socialLinks ?? [];
+  type AboutPortrait = NonNullable<NonNullable<AboutQueryResult>['journeyItems']>[number]['image'];
+  const portrait = about?.portrait as AboutPortrait | null | undefined;
+  const portraitUrl = portrait
+    ? urlForImage(portrait)?.width(640).height(800).quality(85).url()
+    : null;
 
   useGSAP(
     () => {
@@ -80,7 +85,10 @@ export default function AboutPageClient({
   );
 
   return (
-    <div ref={containerRef} className='overflow-x-hidden bg-background text-foreground'>
+    <div
+      ref={containerRef}
+      className='bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-foreground'
+    >
       <section
         ref={heroRef}
         className='relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden border-b border-border/30 px-4 py-20'
@@ -91,36 +99,67 @@ export default function AboutPageClient({
           aria-hidden
         />
 
-        <div className='relative z-10 mx-auto max-w-4xl text-center'>
-          <p className='hero-text font-mono text-xs font-semibold uppercase tracking-[0.3em] text-accent'>
-            {jobTitle}
-          </p>
-          <h1 className='hero-text mt-4 font-serif text-5xl font-bold tracking-tight text-foreground sm:text-7xl md:text-8xl'>
-            {heroTitle}
-          </h1>
-          <p className='hero-text mt-3 text-xl font-medium text-foreground-subtle sm:text-2xl'>
-            {heroSubtitle}
-          </p>
-          <p className='hero-text mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground-muted text-pretty'>
-            {bio}
-          </p>
+        <div className='relative z-10 mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,260px)_1fr] lg:items-center lg:gap-14'>
+          <figure className='hero-text mx-auto w-full max-w-[220px] sm:max-w-[260px] lg:mx-0'>
+            {portraitUrl ? (
+              <div className='relative aspect-4/5 overflow-hidden rounded-2xl border border-border/60 shadow-xl'>
+                <Image
+                  src={portraitUrl}
+                  alt={`Portrait of ${name}`}
+                  fill
+                  className='object-cover'
+                  sizes='(max-width: 1024px) 220px, 260px'
+                  priority
+                  placeholder={portrait?.lqip ? 'blur' : 'empty'}
+                  blurDataURL={portrait?.lqip ?? undefined}
+                />
+              </div>
+            ) : (
+              <div
+                className='relative flex aspect-4/5 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-dashed border-border/70 bg-surface/40'
+                aria-label='Portrait placeholder'
+              >
+                <span className='font-serif text-5xl font-bold text-accent/35' aria-hidden>
+                  HWS
+                </span>
+                <span className='font-mono text-[10px] uppercase tracking-[0.22em] text-foreground-muted'>
+                  Portrait
+                </span>
+              </div>
+            )}
+          </figure>
 
-          {socialLinks.length > 0 ? (
-            <div className='hero-text mt-10 flex justify-center gap-4'>
-              {socialLinks.map(social => (
-                <a
-                  key={social.url ?? social.platform}
-                  href={social.url ?? undefined}
-                  target='_blank'
-                  rel='noopener noreferrer author'
-                  className='flex size-11 items-center justify-center rounded-full border border-border text-xl text-foreground-subtle transition-colors hover:border-accent-border hover:text-accent'
-                  aria-label={social.platform ?? 'Social profile'}
-                >
-                  {PLATFORM_ICONS[social.platform ?? ''] ?? social.platform?.[0]}
-                </a>
-              ))}
-            </div>
-          ) : null}
+          <div className='text-center lg:text-left'>
+            <p className='hero-text font-mono text-xs font-semibold uppercase tracking-[0.3em] text-accent'>
+              {heroEyebrow}
+            </p>
+            <h1 className='hero-text mt-4 font-serif text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl'>
+              {name}
+            </h1>
+            <p className='hero-text mt-4 text-lg font-medium text-foreground-subtle sm:text-xl'>
+              {jobTitle}
+            </p>
+            <p className='hero-text mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground-muted text-pretty lg:mx-0'>
+              {bio}
+            </p>
+
+            {socialLinks.length > 0 ? (
+              <div className='hero-text mt-10 flex justify-center gap-4 lg:justify-start'>
+                {socialLinks.map(social => (
+                  <a
+                    key={social.url ?? social.platform}
+                    href={social.url ?? undefined}
+                    target='_blank'
+                    rel='noopener noreferrer author'
+                    className='flex size-11 items-center justify-center rounded-full border border-border text-xl text-foreground-subtle transition-colors hover:border-accent-border hover:text-accent'
+                    aria-label={social.platform ?? 'Social profile'}
+                  >
+                    {PLATFORM_ICONS[social.platform ?? ''] ?? social.platform?.[0]}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
 
         <div
@@ -136,7 +175,7 @@ export default function AboutPageClient({
       {visitedCountries.length > 0 ? (
         <TravelOverviewSection
           visitedCountries={visitedCountries}
-          travelPhotos={travelPhotosNormalized}
+          adventurePlaces={adventurePlaces}
         />
       ) : null}
 
@@ -144,30 +183,38 @@ export default function AboutPageClient({
         <SkillsSection />
       </section>
 
-      <section className='border-t border-border/30 bg-surface/30 px-4 py-24 text-center sm:py-32'>
-        <div className='mx-auto max-w-3xl space-y-8'>
-          <h2 className='font-serif text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl'>
-            {ctaTitle.includes('Future') ? (
-              <>
-                {ctaTitle.split('Future')[0]}
-                <span className='text-accent italic'>Future</span>
-                {ctaTitle.split('Future')[1]}
-              </>
-            ) : (
-              ctaTitle
-            )}
-          </h2>
-          <div className='flex justify-center'>
-            <Button
-              as={Link}
-              href={ctaButtonUrl}
-              variant='primary'
-              size='large'
-              className='rounded-full'
+      <section
+        className='border-t border-border/40 bg-background px-4 py-16 sm:px-6 sm:py-20 lg:px-8'
+        aria-labelledby='about-contact-heading'
+      >
+        <div className='mx-auto flex max-w-7xl flex-col gap-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12'>
+          <div className='max-w-xl space-y-3'>
+            <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-accent'>
+              Contact
+            </p>
+            <h2
+              id='about-contact-heading'
+              className='font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance'
             >
-              {ctaButtonText}
-            </Button>
+              {ctaTitle}
+            </h2>
+            {ctaDescription ? (
+              <p className='text-base leading-relaxed text-foreground-subtle text-pretty sm:text-lg'>
+                {ctaDescription}
+              </p>
+            ) : null}
           </div>
+          <Button
+            as={Link}
+            href={ctaButtonUrl}
+            variant='secondary'
+            size='large'
+            Icon={IconArrowRight}
+            iconPosition='right'
+            className='shrink-0 self-start sm:self-auto'
+          >
+            {ctaButtonText}
+          </Button>
         </div>
       </section>
     </div>

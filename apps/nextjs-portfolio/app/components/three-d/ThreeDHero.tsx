@@ -95,22 +95,15 @@ export function ThreeDHero() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: isVisible ? 1 : 0.3, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className='w-full h-full absolute inset-0 pointer-events-none'
-            style={{
-              pointerEvents: isVisible ? 'auto' : 'none',
-              transition: 'opacity 0.3s ease-out',
-            }}
+            className='pointer-events-none absolute inset-0 lg:inset-y-0 lg:left-1/2 lg:right-0'
+            aria-hidden
           >
-            {/* @ts-ignore */}
+            {/* @ts-ignore — pointer-events-none so wheel scroll reaches the deck container */}
             <spline-viewer
               loading-anim-type='spinner-small-dark'
               url='https://prod.spline.design/5dGiBg0kllGtEOHL/scene.splinecode'
-              style={{
-                width: '100%',
-                height: '100%',
-                pointerEvents: isVisible ? 'auto' : 'none',
-              }}
-              className='w-full h-full'
+              style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
+              className='pointer-events-none h-full w-full'
             />
           </motion.div>
         )}

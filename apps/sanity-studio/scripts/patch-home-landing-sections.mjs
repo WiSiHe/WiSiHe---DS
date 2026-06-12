@@ -61,9 +61,9 @@ async function main() {
           'Selected works available through print-on-demand — take a piece of the gallery home.',
         linkLabel: 'Browse gallery',
       },
-      contactCtaEyebrow: '// Available for work',
+      contactCtaEyebrow: '// Contact',
       contactCtaDescription:
-        'Open to freelance frontend work, design-engineering collaborations, and creative commissions.',
+        'Questions about the work, licensing, or anything else — I read every message.',
       contactCtaSecondaryLabel: 'View projects',
       contactCtaSecondaryUrl: '/projects',
     })

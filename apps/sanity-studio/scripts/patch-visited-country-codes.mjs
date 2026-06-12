@@ -46,6 +46,9 @@ const COUNTRY_NAME_TO_ISO = {
   Greece: 'GR',
   Luxembourg: 'LU',
   Norway: 'NO',
+  Portugal: 'PT',
+  'United States': 'US',
+  Canada: 'CA',
 };
 
 const client = createClient({
