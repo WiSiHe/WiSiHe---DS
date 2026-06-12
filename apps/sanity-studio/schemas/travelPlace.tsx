@@ -1,7 +1,11 @@
 import { EarthGlobeIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import { CountryNameWithIsoField } from '../components/CountryNameWithIsoField';
+import GenericAIGenerator from '../components/GenericAIGenerator';
+import { GeopointAssistInput } from '../components/GeopointAssistInput';
+import { TravelPlaceAssistPanel } from '../components/TravelPlaceAssistPanel';
 import { placeStatsField } from './objects/placeStats';
+import { TRAVEL_PLACE_FUN_FACT_PROMPT, TRAVEL_PLACE_NOTES_PROMPT } from './travelPlaceGuidance';
 
 export default defineType({
   name: 'travelPlace',
@@ -74,10 +78,36 @@ export default defineType({
         }),
     }),
     defineField({
+      name: 'image',
+      title: 'Hero image',
+      type: 'image',
+      group: ['location', 'content'],
+      options: {
+        hotspot: true,
+        metadata: ['lqip', 'blurhash', 'exif', 'location'],
+      },
+      description:
+        'Optional on the map card. If the file has GPS, the location assistant can apply coordinates.',
+    }),
+    defineField({
+      name: 'locationAssistPanel',
+      title: 'Location assistant',
+      type: 'string',
+      group: 'location',
+      readOnly: true,
+      components: {
+        input: TravelPlaceAssistPanel,
+      },
+    }),
+    defineField({
       name: 'coordinates',
       title: 'Map coordinates',
       type: 'geopoint',
       group: 'location',
+      description: 'Usually filled from photo GPS — see location assistant above.',
+      components: {
+        input: GeopointAssistInput,
+      },
       validation: rule => rule.required(),
     }),
     defineField({
@@ -92,7 +122,22 @@ export default defineType({
       title: 'Fun fact',
       type: 'string',
       group: 'content',
-      description: 'Short hook for map tooltips and the detail card.',
+      description:
+        'Short hook for map tooltips and the detail card. Generate after GPS and name are set.',
+      components: {
+        input: props => (
+          <GenericAIGenerator
+            {...props}
+            prompt={TRAVEL_PLACE_FUN_FACT_PROMPT}
+            imageField='image'
+            imageRequired={false}
+            includeFileMetadata
+            characterLimit={120}
+            rows={2}
+            placeholder='One surprising sentence about this place…'
+          />
+        ),
+      },
     }),
     defineField({
       name: 'notes',
@@ -101,16 +146,21 @@ export default defineType({
       rows: 3,
       group: 'content',
       description: 'Optional longer memory — fun fact is shown first in the UI.',
+      components: {
+        input: props => (
+          <GenericAIGenerator
+            {...props}
+            prompt={TRAVEL_PLACE_NOTES_PROMPT}
+            imageField='image'
+            imageRequired={false}
+            includeFileMetadata
+            rows={4}
+            placeholder='A short personal memory…'
+          />
+        ),
+      },
     }),
     placeStatsField,
-    defineField({
-      name: 'image',
-      title: 'Hero image',
-      type: 'image',
-      group: 'content',
-      options: { hotspot: true },
-      description: 'Optional — shown on the about travel map card.',
-    }),
   ],
   preview: {
     select: {

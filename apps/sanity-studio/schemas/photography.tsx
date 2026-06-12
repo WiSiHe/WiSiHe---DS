@@ -1,6 +1,7 @@
 import { ImageIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { GeopointAssistInput } from '../components/GeopointAssistInput';
 import { PhotographyCountryInput } from '../components/PhotographyCountryInput';
 import { PhotographyFileMetadataInput } from '../components/PhotographyFileMetadataInput';
 import {
@@ -200,7 +201,10 @@ export default defineType({
       title: 'Map coordinates',
       type: 'geopoint',
       group: 'location',
-      description: 'Pin the capture location on a map.',
+      description: 'Usually from file GPS — use “From uploaded file” above.',
+      components: {
+        input: GeopointAssistInput,
+      },
     }),
     defineField({
       name: 'capturedAt',
