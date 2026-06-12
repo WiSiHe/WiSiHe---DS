@@ -8,3 +8,22 @@ export const CONTACT_FROM_EMAIL =
 export const CONTACT_DISPLAY_EMAIL = 'hws902@gmail.com';
 
 export const CONTACT_LOCATION = 'Oslo, Norway';
+
+/** True when Resend is configured and the server can deliver contact form emails. */
+export function isContactEmailConfigured(): boolean {
+  return Boolean(process.env.RESEND_API_KEY?.trim());
+}
+
+export function buildContactMailtoUrl(data: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): string {
+  const params = new URLSearchParams({
+    subject: data.subject,
+    body: [`Name: ${data.name}`, `Reply-to: ${data.email}`, '', data.message].join('\n'),
+  });
+
+  return `mailto:${CONTACT_DISPLAY_EMAIL}?${params.toString()}`;
+}

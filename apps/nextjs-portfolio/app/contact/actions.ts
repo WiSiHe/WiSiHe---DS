@@ -1,6 +1,10 @@
 'use server';
 
-import { CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL } from '@/lib/contact/config';
+import {
+  CONTACT_FROM_EMAIL,
+  CONTACT_TO_EMAIL,
+  isContactEmailConfigured,
+} from '@/lib/contact/config';
 
 export type ContactFormState = {
   ok: boolean;
@@ -52,12 +56,20 @@ async function sendContactEmail(data: {
   subject: string;
   message: string;
 }): Promise<{ ok: true } | { ok: false; message: string }> {
+  if (!isContactEmailConfigured()) {
+    return {
+      ok: false,
+      message:
+        'The contact form is not available yet. Please use the email link or social profiles instead.',
+    };
+  }
+
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) {
     return {
       ok: false,
       message:
-        'Email delivery is not configured yet. Please use the email link or social profiles instead.',
+        'The contact form is not available yet. Please use the email link or social profiles instead.',
     };
   }
 

@@ -1,5 +1,6 @@
 import type { AboutQueryResult, SettingsQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
+import { isContactEmailConfigured } from '@/lib/contact/config';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import ContactPageClient from './ContactPageClient';
@@ -44,5 +45,10 @@ export default async function ContactPage() {
       ? settings.socialLinks
       : (about?.socialLinks ?? []);
 
-  return <ContactPageClient socialLinks={socialLinks} />;
+  return (
+    <ContactPageClient
+      socialLinks={socialLinks}
+      emailDeliveryEnabled={isContactEmailConfigured()}
+    />
+  );
 }
