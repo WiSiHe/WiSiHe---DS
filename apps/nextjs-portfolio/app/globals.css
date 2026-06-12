@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "locomotive-scroll/dist/locomotive-scroll.css";
 /* Import design tokens from package exports */
 @import "@wisihe/tokens/tailwind-v4";
 @import "@wisihe/tokens/css";

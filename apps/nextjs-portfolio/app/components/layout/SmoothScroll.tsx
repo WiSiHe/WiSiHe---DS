@@ -2,15 +2,14 @@
 
 /**
  * Locomotive Scroll v5 + GSAP ScrollTrigger sync.
- * Initializes Locomotive Scroll (built on Lenis) on the client side
- * and registers it globally for scroll-linked components.
+ * @see https://scroll.locomotive.ca/docs/documentation/options
  */
 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { setGlobalLenis } from '@/app/lib/lenis-registry';
+import { setGlobalLenis, setGlobalLocomotive } from '@/app/lib/lenis-registry';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,14 +27,13 @@ export default function SmoothScroll() {
   useEffect(() => {
     if (disabled) {
       setGlobalLenis(null);
+      setGlobalLocomotive(null);
       return;
     }
-    // biome-ignore lint/suspicious/noExplicitAny: dynamic import reference
-    let locomotiveScroll: any;
 
-    // Dynamically import to prevent SSR reference errors
-    import('locomotive-scroll').then(module => {
-      const LocomotiveScroll = module.default;
+    let locomotiveScroll: import('locomotive-scroll').default | undefined;
+
+    import('locomotive-scroll').then(({ default: LocomotiveScroll }) => {
       locomotiveScroll = new LocomotiveScroll({
         lenisOptions: {
           lerp: 0.1,
@@ -43,35 +41,36 @@ export default function SmoothScroll() {
           smoothWheel: true,
           wheelMultiplier: 1.1,
           touchMultiplier: 1.5,
-          infinite: false,
+        },
+        scrollCallback: () => {
+          ScrollTrigger.update();
+        },
+        initCustomTicker: render => {
+          gsap.ticker.add(render);
+        },
+        destroyCustomTicker: render => {
+          gsap.ticker.remove(render);
         },
       });
 
-      // Synchronize GSAP ScrollTrigger with the underlying Lenis instance scroll events
-      if (locomotiveScroll.lenis) {
-        locomotiveScroll.lenis.on('scroll', () => {
-          ScrollTrigger.update();
-        });
+      const lenis = locomotiveScroll.lenisInstance;
+      if (lenis) {
+        setGlobalLenis(lenis);
       }
+      setGlobalLocomotive(locomotiveScroll);
 
-      // Register the underlying Lenis instance globally
-      if (locomotiveScroll.lenis) {
-        setGlobalLenis(locomotiveScroll.lenis);
-        // Refresh GSAP ScrollTrigger once Locomotive Scroll is fully initialized
-        // to ensure all sticky and animated positions are calculated correctly.
-        setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 150);
-      }
+      gsap.ticker.lagSmoothing(0);
+
+      requestAnimationFrame(() => {
+        locomotiveScroll?.resize();
+        ScrollTrigger.refresh();
+      });
     });
 
-    gsap.ticker.lagSmoothing(0);
-
     return () => {
-      if (locomotiveScroll) {
-        locomotiveScroll.destroy();
-      }
+      locomotiveScroll?.destroy();
       setGlobalLenis(null);
+      setGlobalLocomotive(null);
     };
   }, [disabled]);
 

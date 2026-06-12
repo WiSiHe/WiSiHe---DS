@@ -25,6 +25,16 @@ declare module 'lenis' {
     constructor(options?: LenisOptions);
     on(event: 'scroll' | string, callback: (...args: unknown[]) => void): void;
     off(event: 'scroll' | string, callback: (...args: unknown[]) => void): void;
+    scrollTo(
+      target: number | string | HTMLElement,
+      options?: {
+        offset?: number;
+        duration?: number;
+        immediate?: boolean;
+        lock?: boolean;
+        force?: boolean;
+      },
+    ): void;
     raf(time: number): void;
     destroy(): void;
   }

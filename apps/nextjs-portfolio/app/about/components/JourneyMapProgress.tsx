@@ -21,9 +21,18 @@ export function JourneyMapProgress({ items, activeIndex, onSelect }: JourneyMapP
         <p className='font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent'>
           Route
         </p>
-        <p className='text-[10px] text-foreground-muted'>
-          {activeIndex + 1} / {items.length}
+        <p className='font-mono text-[10px] tabular-nums text-foreground-muted'>
+          {String(activeIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
         </p>
+      </div>
+      <div className='mb-2 h-1 overflow-hidden rounded-full bg-border/40'>
+        <div
+          className='h-full origin-left rounded-full bg-gradient-to-r from-accent to-accent/60 transition-transform duration-500 ease-out'
+          style={{
+            transform: `scaleX(${items.length > 1 ? (activeIndex + 1) / items.length : 1})`,
+          }}
+          aria-hidden
+        />
       </div>
       <ol className='flex flex-col gap-1'>
         {items.map((item, index) => {

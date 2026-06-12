@@ -1,6 +1,7 @@
 import { HomeIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import { defaultHomeSections, homePageSectionInsertMenu } from '../objects/homePageSections';
+import { requiredPortableTextMax } from '../validators/portableTextLength';
 
 export default defineType({
   name: 'home',
@@ -50,7 +51,7 @@ export default defineType({
       description: 'Meta description for /projects.',
       type: 'blockContentMinimal',
       group: 'archive',
-      validation: rule => rule.max(155).required(),
+      validation: requiredPortableTextMax(155),
     }),
     defineField({
       name: 'paintingsTitle',
@@ -65,7 +66,7 @@ export default defineType({
       description: 'Meta description for /paintings.',
       type: 'blockContentMinimal',
       group: 'archive',
-      validation: rule => rule.max(155).required(),
+      validation: requiredPortableTextMax(155),
     }),
 
     // ── SEO ─────────────────────────────────────────────────────────────────
