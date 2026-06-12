@@ -69,6 +69,15 @@ export const urlForImage = (source: SanityImageSource | null | undefined) => {
   return imageBuilder?.image(source).auto('format').fit('max');
 };
 
+/** Full-frame photo URL — ignores hotspot/crop so the entire image is shown. */
+export const urlForFullImage = (source: SanityImageSource | null | undefined) => {
+  if (!source?.asset?._ref) {
+    return undefined;
+  }
+
+  return imageBuilder?.image({ asset: source.asset }).auto('format').fit('max');
+};
+
 /** Flatten Sanity portable text blocks into a plain string (e.g. meta descriptions). */
 export function portableTextToPlainText(
   blocks: readonly Record<string, unknown>[] | null | undefined,

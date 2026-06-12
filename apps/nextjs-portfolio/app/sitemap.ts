@@ -11,6 +11,7 @@ const CONTENT_PATH: Record<string, (slug: string) => string> = {
   recipe: slug => `/recipes/${slug}`,
   video: slug => `/videos/${slug}`,
   presentation: slug => `/presentations/${slug}`,
+  photography: slug => `/photography/${slug}`,
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -36,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${SITE_URL}/videos`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/photography`,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
       lastModified: new Date(),

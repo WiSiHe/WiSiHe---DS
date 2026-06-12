@@ -54,9 +54,10 @@ export function TravelOverviewSection({
     ? {
         title: selectedCity.city.name,
         country: selectedCity.city.country ?? selectedCity.country.country,
-        subtitle: selectedCity.country.country
-          ? `Visited in ${selectedCity.country.country}`
-          : null,
+        subtitle:
+          selectedCity.city.stats?.find(s => s.label?.toLowerCase() === 'region')?.value ??
+          selectedCity.city.stats?.find(s => s.label?.toLowerCase() === 'known for')?.value ??
+          null,
         notes: selectedCity.city.notes,
         funFact: selectedCity.city.funFact,
         stats: selectedCity.city.stats,

@@ -1,6 +1,6 @@
 'use client';
 
-import { IconMapPin } from '@tabler/icons-react';
+import { IconMapPin, IconX } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -23,7 +23,7 @@ type MapPlaceDetailCardProps = {
 
 function resolveImageUrl(image: PlaceImage | null | undefined) {
   if (!image) return null;
-  return urlForImage(image)?.width(800).height(520).quality(82).url() ?? null;
+  return urlForImage(image)?.width(960).height(640).quality(88).auto('format').url() ?? null;
 }
 
 export function MapPlaceDetailCard({
@@ -46,23 +46,28 @@ export function MapPlaceDetailCard({
   return (
     <aside
       className={cn(
-        'flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-surface/30 shadow-sm',
+        'relative flex flex-col overflow-hidden rounded-2xl border border-border/40 bg-surface/50 shadow-lg shadow-black/[0.04] ring-1 ring-white/10',
         'max-lg:min-h-0',
         'lg:min-h-0 lg:h-full',
         className,
       )}
       aria-label={hasContent ? `Details for ${title}` : 'Place details'}
     >
+      <div
+        className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,var(--color-accent)_0%,transparent_55%)] opacity-[0.07]'
+        aria-hidden
+      />
+
       {!hasContent ? (
-        <div className='flex min-h-[min(240px,36svh)] flex-col items-center justify-center gap-4 px-6 py-10 text-center sm:min-h-[280px] sm:px-8 sm:py-12 lg:min-h-0 lg:flex-1'>
-          <div className='flex size-12 items-center justify-center rounded-full border border-border/60 bg-background/80'>
-            <IconMapPin className='size-5 text-foreground-muted' stroke={1.75} aria-hidden />
+        <div className='relative flex min-h-[min(240px,36svh)] flex-col items-center justify-center gap-4 px-6 py-10 text-center sm:min-h-[280px] sm:px-8 sm:py-12 lg:min-h-0 lg:flex-1'>
+          <div className='flex size-14 items-center justify-center rounded-2xl border border-border/50 bg-background/80 shadow-sm'>
+            <IconMapPin className='size-6 text-accent' stroke={1.5} aria-hidden />
           </div>
           <div className='space-y-2 max-w-xs'>
-            <p className='font-mono text-[10px] uppercase tracking-[0.24em] text-accent'>
+            <p className='font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-accent'>
               Pick a place
             </p>
-            <p className='font-serif text-xl font-bold text-foreground'>Where did you stop?</p>
+            <p className='font-serif text-2xl font-bold text-foreground'>Where did you stop?</p>
             <p className='text-sm leading-relaxed text-foreground-subtle text-pretty'>
               Tap a dot on the map to see the city, country, and any photos or facts saved for that
               stop.
@@ -70,45 +75,51 @@ export function MapPlaceDetailCard({
           </div>
         </div>
       ) : (
-        <>
+        <div className='relative flex min-h-0 flex-1 flex-col'>
           {imageUrl ? (
-            <div className='relative aspect-16/10 w-full shrink-0 border-b border-border/50 lg:aspect-5/4'>
-              <Image
-                src={imageUrl}
-                alt={title ?? 'Place'}
-                fill
-                className='object-cover'
-                sizes='(max-width: 1024px) 100vw, 400px'
-                placeholder={image?.lqip ? 'blur' : 'empty'}
-                blurDataURL={image?.lqip ?? undefined}
-              />
+            <div className='shrink-0 p-4 pb-0 sm:p-5 sm:pb-0'>
+              <div className='relative aspect-16/10 overflow-hidden rounded-xl ring-1 ring-border/50 shadow-md'>
+                <Image
+                  src={imageUrl}
+                  alt={title ?? 'Place'}
+                  fill
+                  className='object-cover'
+                  sizes='(max-width: 1024px) 100vw, 420px'
+                  placeholder={image?.lqip ? 'blur' : 'empty'}
+                  blurDataURL={image?.lqip ?? undefined}
+                />
+                <div
+                  className='absolute inset-0 bg-linear-to-t from-background/50 via-transparent to-transparent'
+                  aria-hidden
+                />
+              </div>
             </div>
           ) : null}
 
-          <div className='flex min-h-0 flex-1 flex-col overflow-y-auto px-5 py-6 sm:px-6 sm:py-7'>
-            <div className='flex items-start justify-between gap-4'>
-              <div className='min-w-0 space-y-1.5'>
+          <div className='flex min-h-0 flex-1 flex-col overflow-y-auto px-5 py-5 sm:px-6 sm:py-6'>
+            <div className='flex items-start justify-between gap-3'>
+              <div className='min-w-0 space-y-1'>
                 {country ? (
-                  <p className='font-mono text-[10px] uppercase tracking-[0.24em] text-neon-yellow-500'>
+                  <p className='inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent'>
+                    <span className='size-1.5 rounded-full bg-accent shadow-[0_0_8px_var(--color-accent)]' />
                     {country}
                   </p>
                 ) : null}
-                <h3 className='font-serif text-2xl font-bold leading-tight text-foreground sm:text-[1.65rem]'>
+                <h3 className='font-serif text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-[1.75rem]'>
                   {title}
                 </h3>
                 {subtitle ? (
-                  <p className='text-sm leading-relaxed text-foreground-muted text-pretty'>
-                    {subtitle}
-                  </p>
+                  <p className='text-sm text-foreground-muted text-pretty'>{subtitle}</p>
                 ) : null}
               </div>
               {onClear ? (
                 <button
                   type='button'
                   onClick={onClear}
-                  className='shrink-0 rounded-lg px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-foreground-muted transition-colors hover:bg-surface hover:text-foreground -mr-1'
+                  className='flex size-9 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background/80 text-foreground-muted shadow-sm transition-all hover:border-border hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+                  aria-label='Clear selection'
                 >
-                  Clear
+                  <IconX className='size-4' stroke={2} aria-hidden />
                 </button>
               ) : null}
             </div>
@@ -116,7 +127,7 @@ export function MapPlaceDetailCard({
             {hasFacts ? (
               <PlaceFactsGrid funFact={funFact} stats={stats} className='mt-5 sm:mt-6' />
             ) : (
-              <div className='mt-5 rounded-xl border border-dashed border-border/60 bg-background/60 px-4 py-4 sm:mt-6 sm:px-5 sm:py-4'>
+              <div className='mt-5 rounded-xl border border-dashed border-border/50 bg-background/40 px-4 py-5 sm:mt-6'>
                 <p className='text-sm leading-relaxed text-foreground-subtle text-pretty'>
                   No notes saved for this stop yet — pick another pin or explore a different country
                   on the map.
@@ -125,16 +136,20 @@ export function MapPlaceDetailCard({
             )}
 
             {notes ? (
-              <p className='mt-5 text-sm leading-relaxed text-foreground-subtle text-pretty sm:mt-6'>
+              <p className='mt-5 border-t border-border/40 pt-5 text-sm leading-relaxed text-foreground-subtle text-pretty'>
                 {notes}
               </p>
             ) : null}
 
             {travelPhotos.length > 0 ? (
-              <CountryPhotoStrip photos={travelPhotos} country={country ?? title ?? 'this place'} />
+              <CountryPhotoStrip
+                photos={travelPhotos}
+                country={country ?? title ?? 'this place'}
+                className='mt-auto border-t border-border/40 pt-5 sm:pt-6'
+              />
             ) : null}
           </div>
-        </>
+        </div>
       )}
     </aside>
   );
