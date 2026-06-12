@@ -31,7 +31,7 @@ import {
   replicaIndexName,
 } from '@/lib/algolia/constants';
 import { tagFacetTransformItems } from '@/lib/algolia/facets';
-import { searchClient } from '@/lib/algolia/searchClient';
+import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomHits from './CustomHits';
 import CustomRefinementList from './CustomRefinementList';
 import CustomSearchBox from './CustomSearchBox';
@@ -312,6 +312,19 @@ export default function PaintingsSearch() {
       document.body.style.overflow = '';
     };
   }, [isMobileFiltersOpen]);
+
+  if (!isAlgoliaConfigured || !searchClient) {
+    return (
+      <div className='mt-4 rounded-xl border border-border bg-surface px-6 py-10 text-center'>
+        <p className='text-lg font-medium text-foreground'>Gallery search is unavailable</p>
+        <p className='mt-2 text-sm text-foreground-subtle'>
+          Algolia environment variables are missing. Add{' '}
+          <code className='text-xs'>NEXT_PUBLIC_ALGOLIA_APP_ID</code> and{' '}
+          <code className='text-xs'>NEXT_PUBLIC_ALGOLIA_SEARCH_KEY</code> to your environment.
+        </p>
+      </div>
+    );
+  }
 
   const sortItems = [
     {

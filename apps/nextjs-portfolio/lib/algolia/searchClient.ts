@@ -1,15 +1,10 @@
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 
-function requirePublicEnv(name: string): string {
-  const value = process.env[name]?.trim();
-  if (!value) {
-    throw new Error(`Missing ${name}. Add it to apps/nextjs-portfolio/.env.local`);
-  }
-  return value;
-}
+// Literal property access — required so Next.js inlines these at build time in the client bundle.
+const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID?.trim() ?? '';
+const searchKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY?.trim() ?? '';
 
-const appId = requirePublicEnv('NEXT_PUBLIC_ALGOLIA_APP_ID');
-const searchKey = requirePublicEnv('NEXT_PUBLIC_ALGOLIA_SEARCH_KEY');
+export const isAlgoliaConfigured = appId.length > 0 && searchKey.length > 0;
 
 /** Search-only lite client — never use the admin/write key in the browser. */
-export const searchClient = algoliasearch(appId, searchKey);
+export const searchClient = isAlgoliaConfigured ? algoliasearch(appId, searchKey) : null;
