@@ -162,9 +162,9 @@ export function HeroProjectUiHover({
             <span className='font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 block'>
               {'// PROJECT DETAILS'}
             </span>
-            <h3 className='line-clamp-2 text-left font-sans text-xl font-black leading-tight tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] uppercase'>
+            <p className='line-clamp-2 text-left font-sans text-xl font-black leading-tight tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] uppercase'>
               {title}
-            </h3>
+            </p>
           </motion.div>
         ) : null}
       </div>

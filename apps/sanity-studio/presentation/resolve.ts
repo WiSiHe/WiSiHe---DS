@@ -88,6 +88,13 @@ export const presentationResolve: PresentationPluginOptions['resolve'] = {
         slugLocations(doc, '/paintings', { title: 'Paintings gallery', href: '/paintings' }),
     }),
 
+    photography: defineLocations({
+      select: { title: 'title', slug: 'slug.current' },
+      resolve: () => ({
+        locations: [{ title: 'About', href: '/about' }],
+      }),
+    }),
+
     project: defineLocations({
       select: { title: 'name', slug: 'slug.current' },
       resolve: doc => slugLocations(doc, '/projects', { title: 'Projects', href: '/projects' }),

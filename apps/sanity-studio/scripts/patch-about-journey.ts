@@ -1,5 +1,7 @@
 import { getCliClient } from 'sanity/cli';
 
+type GeoPoint = { _type: 'geopoint'; lat: number; lng: number };
+
 type JourneyItem = {
   _key: string;
   year: string;
@@ -7,87 +9,211 @@ type JourneyItem = {
   content: string;
   placeName: string;
   locationType: string;
-  coordinates: { _type: 'geopoint'; lat: number; lng: number };
+  coordinates: GeoPoint;
   mapZoom: number;
+};
+
+type VisitedCountry = {
+  _key: string;
+  country: string;
+  placeName?: string;
+  coordinates: GeoPoint;
+  notes?: string;
 };
 
 const JOURNEY_ITEMS: JourneyItem[] = [
   {
-    _key: 'journey-arendal',
-    year: 'Growing up',
-    title: 'Roots on the southern coast',
+    _key: 'journey-hammerfest',
+    year: 'The beginning',
+    title: 'Born in the Arctic',
     content:
-      'I spent formative years around Arendal and the Agder coast — long summers by the sea, early curiosity for games, drawing, and how things are built. That mix of craft and technology still defines how I work today.',
-    placeName: 'Arendal, Norway',
+      'I was born in Hammerfest — one of the northernmost towns in the world. Arctic light, harsh weather, and a small-town rhythm left an early mark on how I notice contrast, colour, and mood.',
+    placeName: 'Hammerfest, Norway',
     locationType: 'birthplace',
+    coordinates: { _type: 'geopoint', lat: 70.6634, lng: 23.6821 },
+    mapZoom: 11,
+  },
+  {
+    _key: 'journey-setermoen',
+    year: 'Early years',
+    title: 'Setermoen',
+    content:
+      'Childhood in Setermoen — military-family postings and quiet Nordland landscapes. Lots of room to explore outdoors and build things with my hands.',
+    placeName: 'Setermoen, Norway',
+    locationType: 'lived',
+    coordinates: { _type: 'geopoint', lat: 68.411, lng: 17.059 },
+    mapZoom: 11,
+  },
+  {
+    _key: 'journey-haslemoen',
+    year: 'Childhood',
+    title: 'Haslemoen',
+    content:
+      'A stint at Haslemoen in inland Norway — another chapter of moving, adapting, and finding hobbies that stuck: drawing, games, and tinkering with computers.',
+    placeName: 'Haslemoen, Norway',
+    locationType: 'lived',
+    coordinates: { _type: 'geopoint', lat: 60.7167, lng: 11.8333 },
+    mapZoom: 11,
+  },
+  {
+    _key: 'journey-baerum',
+    year: 'Teen years',
+    title: 'Bærum',
+    content:
+      'Growing up near Oslo in Bærum meant better access to culture, tech, and creative communities — while still keeping one foot in Norway’s quieter corners.',
+    placeName: 'Bærum, Norway',
+    locationType: 'lived',
+    coordinates: { _type: 'geopoint', lat: 59.89, lng: 10.5267 },
+    mapZoom: 11,
+  },
+  {
+    _key: 'journey-arendal',
+    year: 'Raised on the coast',
+    title: 'Arendal & Agder',
+    content:
+      'Arendal became home base for many formative years — summers by the sea, early curiosity for games and art, and the southern-coast sensibility that still shows up in my palette.',
+    placeName: 'Arendal, Norway',
+    locationType: 'lived',
     coordinates: { _type: 'geopoint', lat: 58.461, lng: 8.7725 },
     mapZoom: 11,
   },
   {
-    _key: 'journey-bergen',
-    year: '2012 – 2016',
-    title: 'Studying in Bergen',
-    content:
-      'At the University of Bergen I studied information and communication technologies — learning to think in systems, ship software, and collaborate across design and engineering.',
-    placeName: 'University of Bergen',
-    locationType: 'studied',
-    coordinates: { _type: 'geopoint', lat: 60.3913, lng: 5.3221 },
-    mapZoom: 12,
-  },
-  {
     _key: 'journey-tromso',
-    year: 'Year course',
-    title: 'Arctic detour at UiT',
+    year: 'Studies',
+    title: 'Tromsø & UiT',
     content:
-      'A year course in informatics at UiT — The Arctic University of Norway pushed me north to Tromsø. Harsh light, sharp focus, and a reminder that great work often happens off the beaten path.',
+      'A year course in informatics at UiT — The Arctic University of Norway. Tromsø pushed me north again: polar nights, sharp focus, and proof that good work happens off the beaten path.',
     placeName: 'Tromsø, Norway',
     locationType: 'studied',
     coordinates: { _type: 'geopoint', lat: 69.6492, lng: 18.9553 },
     mapZoom: 11,
   },
   {
-    _key: 'journey-oslo-early',
-    year: '2016 – 2019',
-    title: 'Building in Oslo',
+    _key: 'journey-bergen',
+    year: 'University',
+    title: 'Bergen',
     content:
-      'Oslo became my base for frontend development — consulting, product work, and side projects in games and creative tech. I learned to bridge design systems, performance, and storytelling on the web.',
-    placeName: 'Oslo, Norway',
-    locationType: 'lived',
-    coordinates: { _type: 'geopoint', lat: 59.9139, lng: 10.7522 },
-    mapZoom: 11,
-  },
-  {
-    _key: 'journey-oslo-work',
-    year: '2019 – today',
-    title: 'Design engineering at scale',
-    content:
-      'From product teams to leading frontend at NoA Ignite, I architect accessible, high-performance experiences for brands across Norway — while still making time for paintings, 3D experiments, and game jams.',
-    placeName: 'Oslo — NoA Ignite',
-    locationType: 'worked',
-    coordinates: { _type: 'geopoint', lat: 59.917, lng: 10.727 },
+      'At the University of Bergen I studied information and communication technologies — learning to think in systems, ship software, and collaborate across design and engineering.',
+    placeName: 'Bergen, Norway',
+    locationType: 'studied',
+    coordinates: { _type: 'geopoint', lat: 60.3913, lng: 5.3221 },
     mapZoom: 12,
   },
   {
-    _key: 'journey-iceland',
-    year: 'Adventure',
-    title: 'Iceland under midnight sun',
+    _key: 'journey-oslo',
+    year: 'Today',
+    title: 'Oslo',
     content:
-      'Road trips through lava fields and black beaches — the kind of trip that resets your sense of scale. I collect these moments for color, mood, and the stories behind my landscape paintings.',
-    placeName: 'South Iceland',
-    locationType: 'trip',
-    coordinates: { _type: 'geopoint', lat: 63.4194, lng: -19.0086 },
-    mapZoom: 8,
+      'Oslo is where I build products by day — design systems, performance, accessibility — and paint, experiment in 3D, and ship side projects by night.',
+    placeName: 'Oslo, Norway',
+    locationType: 'worked',
+    coordinates: { _type: 'geopoint', lat: 59.9139, lng: 10.7522 },
+    mapZoom: 11,
+  },
+];
+
+const VISITED_COUNTRIES: VisitedCountry[] = [
+  {
+    _key: 'visit-ukraine',
+    country: 'Ukraine',
+    placeName: 'Kyiv',
+    coordinates: { _type: 'geopoint', lat: 50.4501, lng: 30.5234 },
   },
   {
-    _key: 'journey-japan',
-    year: 'Adventure',
-    title: 'Neon, temples, and sketchbooks',
-    content:
-      'Japan fused hyper-modern cities with quiet craft — exactly the tension I love in interface design. I still reference those trips when thinking about rhythm, contrast, and detail in both code and art.',
-    placeName: 'Tokyo, Japan',
-    locationType: 'trip',
-    coordinates: { _type: 'geopoint', lat: 35.6762, lng: 139.6503 },
-    mapZoom: 10,
+    _key: 'visit-denmark',
+    country: 'Denmark',
+    placeName: 'Copenhagen',
+    coordinates: { _type: 'geopoint', lat: 55.6761, lng: 12.5683 },
+  },
+  {
+    _key: 'visit-sweden',
+    country: 'Sweden',
+    placeName: 'Stockholm',
+    coordinates: { _type: 'geopoint', lat: 59.3293, lng: 18.0686 },
+  },
+  {
+    _key: 'visit-monaco',
+    country: 'Monaco',
+    placeName: 'Monaco',
+    coordinates: { _type: 'geopoint', lat: 43.7384, lng: 7.4246 },
+  },
+  {
+    _key: 'visit-france',
+    country: 'France',
+    placeName: 'Paris',
+    coordinates: { _type: 'geopoint', lat: 48.8566, lng: 2.3522 },
+  },
+  {
+    _key: 'visit-spain',
+    country: 'Spain',
+    placeName: 'Madrid',
+    coordinates: { _type: 'geopoint', lat: 40.4168, lng: -3.7038 },
+  },
+  {
+    _key: 'visit-poland',
+    country: 'Poland',
+    placeName: 'Warsaw',
+    coordinates: { _type: 'geopoint', lat: 52.2297, lng: 21.0122 },
+  },
+  {
+    _key: 'visit-germany',
+    country: 'Germany',
+    placeName: 'Berlin',
+    coordinates: { _type: 'geopoint', lat: 52.52, lng: 13.405 },
+  },
+  {
+    _key: 'visit-uk',
+    country: 'United Kingdom',
+    placeName: 'London',
+    coordinates: { _type: 'geopoint', lat: 51.5074, lng: -0.1278 },
+  },
+  {
+    _key: 'visit-belgium',
+    country: 'Belgium',
+    placeName: 'Brussels',
+    coordinates: { _type: 'geopoint', lat: 50.8503, lng: 4.3517 },
+  },
+  {
+    _key: 'visit-netherlands',
+    country: 'Netherlands',
+    placeName: 'Amsterdam',
+    coordinates: { _type: 'geopoint', lat: 52.3676, lng: 4.9041 },
+  },
+  {
+    _key: 'visit-czechia',
+    country: 'Czech Republic',
+    placeName: 'Prague',
+    coordinates: { _type: 'geopoint', lat: 50.0755, lng: 14.4378 },
+  },
+  {
+    _key: 'visit-italy',
+    country: 'Italy',
+    placeName: 'Rome',
+    coordinates: { _type: 'geopoint', lat: 41.9028, lng: 12.4964 },
+  },
+  {
+    _key: 'visit-hungary',
+    country: 'Hungary',
+    placeName: 'Budapest',
+    coordinates: { _type: 'geopoint', lat: 47.4979, lng: 19.0402 },
+  },
+  {
+    _key: 'visit-turkey',
+    country: 'Turkey',
+    placeName: 'Istanbul',
+    coordinates: { _type: 'geopoint', lat: 41.0082, lng: 28.9784 },
+  },
+  {
+    _key: 'visit-greece',
+    country: 'Greece',
+    placeName: 'Athens',
+    coordinates: { _type: 'geopoint', lat: 37.9838, lng: 23.7275 },
+  },
+  {
+    _key: 'visit-luxembourg',
+    country: 'Luxembourg',
+    placeName: 'Luxembourg City',
+    coordinates: { _type: 'geopoint', lat: 49.6116, lng: 6.1319 },
   },
 ];
 
@@ -98,9 +224,9 @@ const KNOWS_ABOUT = [
   'Design Systems',
   'Accessibility',
   'Digital Painting',
+  'Photography',
   'Three.js',
   'Creative Technology',
-  'Unreal Engine',
   'Sanity CMS',
 ];
 
@@ -113,16 +239,19 @@ async function main() {
       heroTitle: 'Story of WiSiHe',
       heroSubtitle: 'Henrik Wilhelm Sissener',
       jobTitle: 'Senior Frontend Developer & Digital Artist',
-      bio: 'Design engineer, painter, and maker based in Oslo. I build fast, accessible web products by day and explore color, 3D, and game worlds by night.',
+      bio: 'Design engineer, painter, and maker based in Oslo. Born in Hammerfest, raised across Norway, and curious about the world — I build accessible web products and make art on the side.',
       seoTitle: 'About Henrik Sissener | WiSiHe — Developer & Artist',
       seoDescription:
-        'Life map of Henrik Wilhelm Sissener (WiSiHe): frontend lead in Oslo, digital artist, and creative technologist. From Agder to Bergen, Tromsø, and adventures abroad.',
+        'Life map of Henrik Wilhelm Sissener (WiSiHe): from Hammerfest and Arendal to Tromsø, Bergen, and Oslo — plus travels across Europe and beyond.',
       knowsAbout: KNOWS_ABOUT,
       journeyItems: JOURNEY_ITEMS,
+      visitedCountries: VISITED_COUNTRIES,
     })
     .commit();
 
-  console.log('Patched about document with journey map content.');
+  console.log(
+    `Patched about document: ${JOURNEY_ITEMS.length} journey stops, ${VISITED_COUNTRIES.length} countries visited.`,
+  );
 }
 
 main().catch(err => {

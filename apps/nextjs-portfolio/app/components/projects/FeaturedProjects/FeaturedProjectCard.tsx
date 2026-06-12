@@ -156,8 +156,8 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
               <Link
                 href={`projects/${project.slug}`}
                 className='inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-contrast transition-colors hover:bg-accent-hover shadow-md z-20'
-                aria-label={`View project: ${headingText}`}
               >
+                <span className='sr-only'>{headingText}. </span>
                 View Project
                 <IconArrowRight aria-hidden className='h-4 w-4' />
               </Link>

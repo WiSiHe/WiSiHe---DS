@@ -3,15 +3,11 @@
     "source.organizeImports.biome": "explicit"
   },
   "files.exclude": {
-    "**/.env": true,
-    "**/.env.local": true,
     "**/.env.development.local": true,
     "**/.env.test.local": true,
     "**/.env.production.local": true
   },
   "search.exclude": {
-    "**/.env": true,
-    "**/.env.local": true,
     "**/.env.development.local": true,
     "**/.env.test.local": true,
     "**/.env.production.local": true

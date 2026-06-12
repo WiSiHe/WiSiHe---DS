@@ -57,6 +57,11 @@ export const LOCATION_TYPE_META: Record<string, LocationMeta> = {
     markerClass: 'bg-foreground-muted ring-border',
     chipClass: 'bg-surface text-foreground-subtle border-border',
   },
+  visited: {
+    label: 'Visited',
+    markerClass: 'bg-neon-yellow-500 ring-neon-yellow-400',
+    chipClass: 'bg-neon-yellow-500/15 text-neon-yellow-500 border-neon-yellow-500/30',
+  },
 };
 
 const FALLBACK_META: LocationMeta = {
@@ -101,4 +106,38 @@ export function getJourneyItemsWithCoordinates(
   items: LifeJourneyItem[] | null | undefined,
 ): LifeJourneyItem[] {
   return (items ?? []).filter(hasMapCoordinates);
+}
+
+export interface VisitedCountryItem {
+  _key: string;
+  country?: string | null;
+  placeName?: string | null;
+  coordinates?: GeoCoordinates | null;
+  notes?: string | null;
+}
+
+type RawVisitedCountry = {
+  _key: string;
+  country?: string | null;
+  placeName?: string | null;
+  coordinates?: unknown;
+  notes?: string | null;
+};
+
+export function normalizeVisitedCountries(
+  countries: RawVisitedCountry[] | null | undefined,
+): VisitedCountryItem[] {
+  return (countries ?? []).map((item: RawVisitedCountry) => ({
+    _key: item._key,
+    country: item.country,
+    placeName: item.placeName,
+    notes: item.notes,
+    coordinates: parseCoordinates((item as { coordinates?: unknown }).coordinates),
+  }));
+}
+
+export function getVisitedCountriesWithCoordinates(
+  countries: VisitedCountryItem[] | null | undefined,
+): VisitedCountryItem[] {
+  return (countries ?? []).filter(country => Boolean(country.coordinates));
 }

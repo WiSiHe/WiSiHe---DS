@@ -11,7 +11,7 @@ import { BsTwitterX } from 'react-icons/bs';
 import { FaChevronDown, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 import { LifeJourneyScrolly } from './components/LifeJourneyScrolly';
-import { normalizeJourneyItems } from './components/lifeJourneyTypes';
+import { normalizeJourneyItems, normalizeVisitedCountries } from './components/lifeJourneyTypes';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -37,6 +37,7 @@ export default function AboutPageClient({ about }: { about: AboutQueryResult }) 
     about?.bio ??
     'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
   const journeyItems = normalizeJourneyItems(about?.journeyItems);
+  const visitedCountries = normalizeVisitedCountries(about?.visitedCountries);
   const ctaTitle = about?.ctaTitle ?? "Let's create the Future together.";
   const ctaButtonText = about?.ctaButtonText ?? 'Start a Conversation';
   const ctaButtonUrl = about?.ctaButtonUrl ?? '/contact';
@@ -118,7 +119,9 @@ export default function AboutPageClient({ about }: { about: AboutQueryResult }) 
         </div>
       </section>
 
-      {journeyItems.length > 0 ? <LifeJourneyScrolly items={journeyItems} /> : null}
+      {journeyItems.length > 0 ? (
+        <LifeJourneyScrolly items={journeyItems} visitedCountries={visitedCountries} />
+      ) : null}
 
       <section className='border-t border-border/30 bg-background py-20 lg:py-32'>
         <SkillsSection />

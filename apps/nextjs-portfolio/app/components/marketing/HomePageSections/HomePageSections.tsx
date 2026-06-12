@@ -49,7 +49,7 @@ function renderSection(
   switch (section._type) {
     case 'homeHeroSection':
       return (
-        <div key={key} className='bg-background'>
+        <div key={key} className='overflow-visible bg-background'>
           <Suspense fallback={<HeroSkeleton />}>
             <HeroImageSection
               items={heroItems}

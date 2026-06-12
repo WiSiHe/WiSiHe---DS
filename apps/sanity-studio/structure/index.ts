@@ -31,6 +31,7 @@ const categories: CategoryItem[] = [
     icon: '🎨',
     items: [
       { title: 'Paintings', icon: '🖼️', schemaType: 'painting' },
+      { title: 'Photography', icon: '📷', schemaType: 'photography' },
       { title: 'Projects', icon: '💼', schemaType: 'project' },
     ],
   },
@@ -98,7 +99,7 @@ const createTagsListItem = (S: StructureBuilder) =>
                 .title('Unused tags')
                 .apiVersion(STRUCTURE_API_VERSION)
                 .filter(
-                  '!defined(*[references(^._id) && _type in ["painting", "project", "recipe", "video", "presentation"]][0])',
+                  '!defined(*[references(^._id) && _type in ["painting", "photography", "project", "recipe", "video", "presentation"]][0])',
                 ),
             ),
         ]),

@@ -37,6 +37,7 @@ const LEGACY_HOME_QUERY = `*[_id == "home"][0]{
   sections,
   overview,
   projectsDescription,
+  projectsListingDescription,
   showcaseProjects,
   paintingsDescription,
   showcasePaintings,
@@ -123,14 +124,23 @@ async function main() {
 
   const sections = buildSections(doc);
 
+  const archiveCopy = {
+    paintingsDescription:
+      doc.paintingsDescription ??
+      sections.find(section => section._type === 'homePaintingsSection')?.description,
+    projectsListingDescription:
+      doc.projectsListingDescription ??
+      doc.projectsDescription ??
+      sections.find(section => section._type === 'homeProjectsSection')?.description,
+  };
+
   await client
     .patch('home')
-    .set({ sections })
+    .set({ sections, ...archiveCopy })
     .unset([
       'overview',
       'projectsDescription',
       'showcaseProjects',
-      'paintingsDescription',
       'showcasePaintings',
       'aboutTeaserEyebrow',
       'aboutTeaserTitle',

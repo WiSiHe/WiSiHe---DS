@@ -252,18 +252,16 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Hover footer / link                                                */}
       {/* ------------------------------------------------------------------ */}
-      <LinkEl
-        href={href}
-        className='before:absolute before:inset-0 before:z-0'
-        aria-label={`View painting: ${title}`}
-      >
+      <LinkEl href={href} className='before:absolute before:inset-0 before:z-0'>
+        <span className='sr-only'>View painting: {title}</span>
         <div
+          aria-hidden
           className={cn(
             'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
             alwaysShowTags && 'opacity-100 translate-y-0',
           )}
         >
-          <motion.h2
+          <motion.p
             layoutId={`title-${title}`}
             className={cn(
               'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
@@ -271,7 +269,7 @@ export function PaintingCard({
             )}
           >
             {title}
-          </motion.h2>
+          </motion.p>
           {(medium || paintedAt) && (
             <div className='mt-1 flex flex-wrap items-center gap-1.5 text-xs text-foreground-subtle'>
               {paintedAt && (
