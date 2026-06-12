@@ -97,7 +97,7 @@ export function ThreeDSlideDeckClient({
       <StructuredData />
       <div
         ref={mainRef}
-        className='presentation-scroll h-[100dvh] w-full overflow-x-hidden overflow-y-auto snap-y snap-mandatory bg-background text-foreground overscroll-y-contain'
+        className='presentation-scroll h-[100dvh] w-full overflow-x-hidden overflow-y-auto snap-y snap-proximity bg-background text-foreground overscroll-y-contain touch-pan-y'
       >
         {/* Hero Section */}
         <section className='snap-start shrink-0 h-screen w-full relative'>

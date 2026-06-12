@@ -203,7 +203,7 @@ export const homeContactCtaSection = defineType({
       name: 'eyebrow',
       title: 'Eyebrow',
       type: 'string',
-      initialValue: '// Available for work',
+      initialValue: '// Contact',
     }),
     defineField({
       name: 'title',
@@ -216,8 +216,7 @@ export const homeContactCtaSection = defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
-      initialValue:
-        'Open to freelance frontend work, design-engineering collaborations, and creative commissions.',
+      initialValue: 'Questions about the work, licensing, or anything else — I read every message.',
     }),
     defineField({
       name: 'primaryLabel',

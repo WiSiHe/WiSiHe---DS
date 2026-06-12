@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { setGlobalLenis, setGlobalLocomotive } from '@/app/lib/lenis-registry';
+import { bindScrollTriggerToLenis } from '@/app/lib/scrollTriggerLenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +33,7 @@ export default function SmoothScroll() {
     }
 
     let locomotiveScroll: import('locomotive-scroll').default | undefined;
+    let unbindScrollTrigger: (() => void) | undefined;
 
     import('locomotive-scroll').then(({ default: LocomotiveScroll }) => {
       locomotiveScroll = new LocomotiveScroll({
@@ -56,6 +58,7 @@ export default function SmoothScroll() {
       const lenis = locomotiveScroll.lenisInstance;
       if (lenis) {
         setGlobalLenis(lenis);
+        unbindScrollTrigger = bindScrollTriggerToLenis(lenis);
       }
       setGlobalLocomotive(locomotiveScroll);
 
@@ -68,6 +71,7 @@ export default function SmoothScroll() {
     });
 
     return () => {
+      unbindScrollTrigger?.();
       locomotiveScroll?.destroy();
       setGlobalLenis(null);
       setGlobalLocomotive(null);

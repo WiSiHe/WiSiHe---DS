@@ -19,12 +19,17 @@ export const COUNTRY_NAME_TO_ISO: Record<string, string> = {
   Italy: 'IT',
   Hungary: 'HU',
   Turkey: 'TR',
+  Türkiye: 'TR',
   Greece: 'GR',
   Luxembourg: 'LU',
   Norway: 'NO',
   Finland: 'FI',
   Iceland: 'IS',
   Portugal: 'PT',
+  USA: 'US',
+  'United States': 'US',
+  'United States of America': 'US',
+  Canada: 'CA',
   Austria: 'AT',
   Switzerland: 'CH',
   Ireland: 'IE',
@@ -48,6 +53,10 @@ export function resolveCountryIsoCode(
   return COUNTRY_NAME_TO_ISO[countryName.trim()] ?? null;
 }
 
+/**
+ * Mapbox country-boundaries-v1 filter.
+ * Uses multiple worldviews so UA / GR / TR polygons are not dropped by US-only + disputed rules.
+ */
 export function buildCountryBoundaryFilter(isoCodes: string[]): FilterSpecification {
   if (isoCodes.length === 0) {
     return ['boolean', false];
@@ -55,8 +64,13 @@ export function buildCountryBoundaryFilter(isoCodes: string[]): FilterSpecificat
 
   return [
     'all',
-    ['match', ['get', 'worldview'], ['all', 'US'], true, false],
-    ['match', ['get', 'disputed'], 'true', false, true],
+    [
+      'any',
+      ['==', ['get', 'worldview'], 'all'],
+      ['in', 'US', ['get', 'worldview']],
+      ['in', 'TR', ['get', 'worldview']],
+      ['in', 'RU', ['get', 'worldview']],
+    ],
     ['in', ['get', 'iso_3166_1'], ['literal', isoCodes]],
   ];
 }

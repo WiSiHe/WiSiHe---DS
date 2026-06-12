@@ -17,17 +17,18 @@ export default defineType({
   fields: [
     defineField({
       name: 'heroTitle',
-      title: 'Hero Title',
+      title: 'Hero eyebrow',
       type: 'string',
-      initialValue: 'Story of WiSiHe',
-      validation: r => r.required(),
+      initialValue: 'Biography',
+      description:
+        'Small label above your name on the about page. Leave as “Biography” or customize.',
     }),
     defineField({
       name: 'heroSubtitle',
-      title: 'Hero Subtitle',
+      title: 'Your name',
       type: 'string',
-      initialValue: 'Henrik Sissener',
-      description: 'Full name — used in Person schema and page headings.',
+      initialValue: 'Henrik Wilhelm Sissener',
+      description: 'Full name — main heading and Person schema.',
       validation: r => r.required(),
     }),
     defineField({
@@ -42,6 +43,13 @@ export default defineType({
       title: 'Job Title',
       type: 'string',
       initialValue: 'Frontend Developer & Digital Artist',
+    }),
+    defineField({
+      name: 'portrait',
+      title: 'Portrait',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Photo for the biography hero. Shown beside your name when set.',
     }),
     defineField({
       name: 'seoTitle',
@@ -71,7 +79,7 @@ export default defineType({
       name: 'journeyItems',
       title: 'Life Journey (map story)',
       description:
-        'Scroll chapters for the about page. Add coordinates so Mapbox flies to each place as users scroll.',
+        'Cities you have lived in. Add coordinates, fun facts, and stats — personal narrative is not shown on the map.',
       type: 'array',
       of: [
         {
@@ -89,7 +97,13 @@ export default defineType({
               type: 'string',
               description: 'e.g. "Roots in the south"',
             }),
-            defineField({ name: 'content', title: 'Content', type: 'text', rows: 5 }),
+            defineField({
+              name: 'content',
+              title: 'Content (legacy)',
+              type: 'text',
+              rows: 5,
+              description: 'Not shown on the about page — use fun fact and place stats instead.',
+            }),
             defineField({
               name: 'placeName',
               title: 'Place name',
@@ -121,6 +135,40 @@ export default defineType({
               type: 'image',
               options: { hotspot: true },
             }),
+            defineField({
+              name: 'funFact',
+              title: 'Fun fact',
+              type: 'string',
+              description: 'Short hook for map tooltips and the place panel — one sentence.',
+            }),
+            defineField({
+              name: 'stats',
+              title: 'Place stats',
+              description: 'Quick facts — years lived, population, favourites, etc.',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    defineField({
+                      name: 'label',
+                      title: 'Label',
+                      type: 'string',
+                      validation: rule => rule.required(),
+                    }),
+                    defineField({
+                      name: 'value',
+                      title: 'Value',
+                      type: 'string',
+                      validation: rule => rule.required(),
+                    }),
+                  ],
+                  preview: {
+                    select: { title: 'label', subtitle: 'value' },
+                  },
+                },
+              ],
+            }),
           ],
           preview: {
             select: {
@@ -145,7 +193,7 @@ export default defineType({
       name: 'visitedCountries',
       title: 'Countries visited',
       description:
-        'Travel destinations highlighted as full countries on the map. Set Country code (ISO) for reliable map fills. Tag photography with the same country name to show photos in each card.',
+        'Travel destinations highlighted as full countries on the travel map. Set Country code (ISO) for reliable map fills.',
       type: 'array',
       of: [
         {
@@ -188,27 +236,206 @@ export default defineType({
               type: 'string',
               description: 'Optional — trip memory or year.',
             }),
+            defineField({
+              name: 'cities',
+              title: 'Cities visited',
+              description: 'Dots on the travel map for cities explored in this country.',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    defineField({
+                      name: 'name',
+                      title: 'City',
+                      type: 'string',
+                      validation: rule => rule.required(),
+                    }),
+                    defineField({
+                      name: 'coordinates',
+                      title: 'Coordinates',
+                      type: 'geopoint',
+                      validation: rule => rule.required(),
+                    }),
+                    defineField({
+                      name: 'isHighlight',
+                      title: 'Highlight',
+                      type: 'boolean',
+                      description: 'Stand-out marker (e.g. Chernobyl).',
+                      initialValue: false,
+                    }),
+                    defineField({
+                      name: 'notes',
+                      title: 'Notes',
+                      type: 'text',
+                      rows: 3,
+                      description: 'Optional longer memory — fun fact is shown first in the UI.',
+                    }),
+                    defineField({
+                      name: 'funFact',
+                      title: 'Fun fact',
+                      type: 'string',
+                      description: 'Short hook for map tooltips and the detail card.',
+                    }),
+                    defineField({
+                      name: 'image',
+                      title: 'Image',
+                      type: 'image',
+                      options: { hotspot: true },
+                    }),
+                    defineField({
+                      name: 'stats',
+                      title: 'Stats',
+                      description: 'Optional facts — e.g. year visited, trips, favourites.',
+                      type: 'array',
+                      of: [
+                        {
+                          type: 'object',
+                          fields: [
+                            defineField({
+                              name: 'label',
+                              title: 'Label',
+                              type: 'string',
+                              validation: rule => rule.required(),
+                            }),
+                            defineField({
+                              name: 'value',
+                              title: 'Value',
+                              type: 'string',
+                              validation: rule => rule.required(),
+                            }),
+                          ],
+                          preview: {
+                            select: { title: 'label', subtitle: 'value' },
+                          },
+                        },
+                      ],
+                    }),
+                  ],
+                  preview: {
+                    select: { title: 'name', highlight: 'isHighlight' },
+                    prepare({ title, highlight }) {
+                      return {
+                        title: title ?? 'City',
+                        subtitle: highlight ? '★ Highlight' : undefined,
+                      };
+                    },
+                  },
+                },
+              ],
+            }),
           ],
           preview: {
-            select: { title: 'country', subtitle: 'placeName' },
-            prepare({ title, subtitle }) {
-              return { title: title ?? 'Country', subtitle };
+            select: { title: 'country', subtitle: 'placeName', cities: 'cities' },
+            prepare({ title, subtitle, cities }) {
+              const cityCount = Array.isArray(cities) ? cities.length : 0;
+              const parts = [subtitle, cityCount > 0 ? `${cityCount} cities` : null].filter(
+                Boolean,
+              );
+              return { title: title ?? 'Country', subtitle: parts.join(' · ') || undefined };
             },
           },
         },
       ],
     }),
     defineField({
+      name: 'adventurePlaces',
+      title: 'Adventure places',
+      description: 'Stand-out travel spots on the map (e.g. Svalbard).',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+              validation: rule => rule.required(),
+            }),
+            defineField({
+              name: 'placeName',
+              title: 'Location detail',
+              type: 'string',
+              description: 'Optional — e.g. Longyearbyen.',
+            }),
+            defineField({
+              name: 'coordinates',
+              title: 'Coordinates',
+              type: 'geopoint',
+              validation: rule => rule.required(),
+            }),
+            defineField({
+              name: 'notes',
+              title: 'Notes',
+              type: 'text',
+              rows: 3,
+              description: 'Optional longer memory — fun fact is shown first in the UI.',
+            }),
+            defineField({
+              name: 'funFact',
+              title: 'Fun fact',
+              type: 'string',
+              description: 'Short hook for map tooltips and the detail card.',
+            }),
+            defineField({
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              options: { hotspot: true },
+            }),
+            defineField({
+              name: 'stats',
+              title: 'Stats',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    defineField({
+                      name: 'label',
+                      title: 'Label',
+                      type: 'string',
+                      validation: rule => rule.required(),
+                    }),
+                    defineField({
+                      name: 'value',
+                      title: 'Value',
+                      type: 'string',
+                      validation: rule => rule.required(),
+                    }),
+                  ],
+                  preview: {
+                    select: { title: 'label', subtitle: 'value' },
+                  },
+                },
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: 'name', subtitle: 'placeName' },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'ctaTitle',
-      title: 'CTA Heading',
+      title: 'CTA heading',
       type: 'string',
-      initialValue: 'Lets create the Future together.',
+      initialValue: 'Say hello',
+    }),
+    defineField({
+      name: 'ctaDescription',
+      title: 'CTA description',
+      type: 'text',
+      rows: 3,
+      initialValue: 'Questions about the work, licensing, or anything else — I read every message.',
     }),
     defineField({
       name: 'ctaButtonText',
-      title: 'CTA Button Text',
+      title: 'CTA button text',
       type: 'string',
-      initialValue: 'Start a Conversation',
+      initialValue: 'Send a message',
     }),
     defineField({
       name: 'ctaButtonUrl',

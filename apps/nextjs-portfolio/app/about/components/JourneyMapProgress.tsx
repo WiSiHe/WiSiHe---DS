@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { getLocationMeta, type LifeJourneyItem } from './lifeJourneyTypes';
+import { LIVED_PLACE_PIN_META, type LifeJourneyItem } from './lifeJourneyTypes';
 
 type JourneyMapProgressProps = {
   items: LifeJourneyItem[];
@@ -36,7 +36,6 @@ export function JourneyMapProgress({ items, activeIndex, onSelect }: JourneyMapP
       </div>
       <ol className='flex flex-col gap-1'>
         {items.map((item, index) => {
-          const meta = getLocationMeta(item.locationType);
           const isActive = index === activeIndex;
           const isPast = index < activeIndex;
 
@@ -48,16 +47,16 @@ export function JourneyMapProgress({ items, activeIndex, onSelect }: JourneyMapP
                 className={cn(
                   'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors',
                   isActive
-                    ? 'bg-accent/10 text-foreground'
+                    ? 'bg-accent-subtle text-foreground'
                     : 'text-foreground-muted hover:bg-surface-hover hover:text-foreground',
                 )}
               >
                 <span
                   className={cn(
                     'size-2 shrink-0 rounded-full ring-1',
-                    meta.markerClass,
+                    LIVED_PLACE_PIN_META.markerClass,
                     isPast && 'opacity-50',
-                    isActive && 'scale-125 ring-2',
+                    isActive && 'scale-125 ring-2 ring-accent shadow-sm shadow-accent/40',
                   )}
                   aria-hidden
                 />

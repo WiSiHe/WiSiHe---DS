@@ -13,18 +13,6 @@ type ContactCtaSectionProps = {
   about: AboutQueryResult | null;
 };
 
-function renderCtaTitle(title: string) {
-  if (!title.includes('Future')) return title;
-  const [before, after] = title.split('Future');
-  return (
-    <>
-      {before}
-      <span className='text-accent italic'>Future</span>
-      {after}
-    </>
-  );
-}
-
 export default function ContactCtaSection({ section, about }: ContactCtaSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -57,7 +45,7 @@ export default function ContactCtaSection({ section, about }: ContactCtaSectionP
           id='contact-cta-heading'
           className='mt-4 font-serif text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl text-balance'
         >
-          {renderCtaTitle(copy.title)}
+          {copy.title}
         </h2>
         <p className='mx-auto mt-5 max-w-xl text-base leading-relaxed text-foreground-subtle md:text-lg'>
           {copy.description}
