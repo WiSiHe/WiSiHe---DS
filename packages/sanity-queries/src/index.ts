@@ -10,11 +10,18 @@ export const aboutQuery = defineQuery(`
     heroSubtitle,
     bio,
     jobTitle,
+    seoTitle,
+    seoDescription,
+    knowsAbout,
     journeyItems[] {
       _key,
       year,
       title,
       content,
+      placeName,
+      locationType,
+      coordinates,
+      mapZoom,
       image { ..., "lqip": asset->metadata.lqip }
     },
     ctaTitle,
@@ -558,6 +565,12 @@ export const getRecipe = defineQuery(`
     "slug": slug.current,
     title,
     description,
+    "seo": {
+      "title": coalesce(seo.title, title, ""),
+      "description": coalesce(seo.description, description, ""),
+      "image": seo.image,
+      "noIndex": seo.noIndex == true
+    },
     mainImage {
       ...,
       "lqip": asset->metadata.lqip,
@@ -762,17 +775,37 @@ export const presentationQuery = defineQuery(`
 `);
 
 export const allPresentationsQuery = defineQuery(`
-  *[_type == "presentation"] | order(_createdAt desc) {
+  *[_type == "presentation" && defined(slug.current)] | order(_createdAt desc) {
     _id,
     title,
     description,
     "slug": slug.current,
     "slidesCount": count(slides),
+    _createdAt,
     tags[]->{
       _id,
       name
-    }
+    },
+    "coverImage": coalesce(
+      slides[_type == "titleSlide" && media.mediaType == "image"][0].media.image {
+        ...,
+        alt,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      },
+      slides[_type == "contentSlide" && media.mediaType == "image"][0].media.image {
+        ...,
+        alt,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio
+      },
+      null
+    )
   }
+`);
+
+export const presentationSlugsQuery = defineQuery(`
+  *[_type == "presentation" && defined(slug.current)] { "slug": slug.current }
 `);
 export const getPaginatedProjects = defineQuery(`
   *[_type == "project" && defined(slug.current)]

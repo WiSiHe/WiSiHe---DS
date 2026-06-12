@@ -1,5 +1,14 @@
 import { defineField, defineType } from 'sanity';
 
+const LOCATION_TYPES = [
+  { title: 'Born here', value: 'birthplace' },
+  { title: 'Lived here', value: 'lived' },
+  { title: 'Studied here', value: 'studied' },
+  { title: 'Worked here', value: 'worked' },
+  { title: 'Adventure / trip', value: 'trip' },
+  { title: 'Other', value: 'other' },
+] as const;
+
 export default defineType({
   name: 'about',
   title: 'About Page',
@@ -18,6 +27,7 @@ export default defineType({
       title: 'Hero Subtitle',
       type: 'string',
       initialValue: 'Henrik Sissener',
+      description: 'Full name — used in Person schema and page headings.',
       validation: r => r.required(),
     }),
     defineField({
@@ -34,8 +44,34 @@ export default defineType({
       initialValue: 'Frontend Developer & Digital Artist',
     }),
     defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+      validation: rule =>
+        rule.max(60).warning('SEO titles over 60 characters may be truncated in search results'),
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'SEO Description',
+      type: 'text',
+      rows: 3,
+      validation: rule =>
+        rule
+          .max(160)
+          .warning('SEO descriptions over 160 characters may be truncated in search results'),
+    }),
+    defineField({
+      name: 'knowsAbout',
+      title: 'Expertise (knowsAbout)',
+      type: 'array',
+      description: 'Topics for Person schema — skills, tools, and creative disciplines.',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
       name: 'journeyItems',
-      title: 'Journey Sections',
+      title: 'Life Journey (map story)',
+      description:
+        'Scroll chapters for the about page. Add coordinates so Mapbox flies to each place as users scroll.',
       type: 'array',
       of: [
         {
@@ -45,15 +81,40 @@ export default defineType({
               name: 'year',
               title: 'Era Label',
               type: 'string',
-              description: 'e.g. "The Beginning"',
+              description: 'e.g. "1990s" or "The Beginning"',
             }),
             defineField({
               name: 'title',
               title: 'Section Title',
               type: 'string',
-              description: 'e.g. "The Spark"',
+              description: 'e.g. "Roots in the south"',
             }),
             defineField({ name: 'content', title: 'Content', type: 'text', rows: 5 }),
+            defineField({
+              name: 'placeName',
+              title: 'Place name',
+              type: 'string',
+              description: 'Displayed on the map marker and in structured data.',
+            }),
+            defineField({
+              name: 'locationType',
+              title: 'Location type',
+              type: 'string',
+              options: { list: LOCATION_TYPES.map(t => ({ title: t.title, value: t.value })) },
+            }),
+            defineField({
+              name: 'coordinates',
+              title: 'Map coordinates',
+              type: 'geopoint',
+              description: 'Click the map to set lat/lng. Required for the scrolly map.',
+            }),
+            defineField({
+              name: 'mapZoom',
+              title: 'Map zoom',
+              type: 'number',
+              initialValue: 10,
+              validation: rule => rule.min(1).max(18),
+            }),
             defineField({
               name: 'image',
               title: 'Image',
@@ -62,7 +123,20 @@ export default defineType({
             }),
           ],
           preview: {
-            select: { title: 'title', subtitle: 'year' },
+            select: {
+              title: 'title',
+              subtitle: 'placeName',
+              year: 'year',
+              locationType: 'locationType',
+            },
+            prepare({ title, subtitle, year, locationType }) {
+              const typeLabel =
+                LOCATION_TYPES.find(t => t.value === locationType)?.title ?? locationType;
+              return {
+                title: title ?? 'Journey chapter',
+                subtitle: [year, subtitle, typeLabel].filter(Boolean).join(' · '),
+              };
+            },
           },
         },
       ],

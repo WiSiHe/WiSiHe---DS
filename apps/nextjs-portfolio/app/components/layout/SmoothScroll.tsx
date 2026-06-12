@@ -8,13 +8,28 @@
 
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { setGlobalLenis } from '@/app/lib/lenis-registry';
 
 gsap.registerPlugin(ScrollTrigger);
 
+function shouldDisableSmoothScroll(pathname: string | null): boolean {
+  if (!pathname) return false;
+  if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
+  if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
+  return false;
+}
+
 export default function SmoothScroll() {
+  const pathname = usePathname();
+  const disabled = shouldDisableSmoothScroll(pathname);
+
   useEffect(() => {
+    if (disabled) {
+      setGlobalLenis(null);
+      return;
+    }
     // biome-ignore lint/suspicious/noExplicitAny: dynamic import reference
     let locomotiveScroll: any;
 
@@ -58,7 +73,7 @@ export default function SmoothScroll() {
       }
       setGlobalLenis(null);
     };
-  }, []);
+  }, [disabled]);
 
   return null;
 }

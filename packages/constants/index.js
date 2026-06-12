@@ -20,6 +20,11 @@ export const footerLinks = [
   { name: 'Contact', href: '/contact' },
 ];
 
+export const footerSecondaryLinks = [
+  { name: 'Presentations', href: '/presentations' },
+  { name: '3D Workshop', href: '/three-d' },
+];
+
 export const socialMediaLinks = [
   {
     label: 'Redbubble',

@@ -1,173 +1,101 @@
+import type { GetAllRecipesResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FiBarChart, FiThermometer, FiUsers } from 'react-icons/fi';
+import { Suspense } from 'react';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import { RecipesListing } from '@/app/components/recipes/RecipesListing/RecipesListing';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllRecipes } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
+import { buildRecipesListStructuredData } from './buildRecipeStructuredData';
 
-interface Recipe {
-  _id: string;
-  slug: string;
-  title: string;
-  description?: string;
-  mainImage?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-    };
-    alt: string;
-    lqip?: string;
-    aspectRatio?: number;
-  };
-  cookingTime?: number;
-  prepTime?: number;
-  totalTime?: number;
-  servings?: number;
-  difficulty?: 'easy' | 'medium' | 'hard';
-  publishedAt?: string;
-  tags?: Array<{ name: string }>;
-}
-
-interface RecipesQueryResult {
-  data: Recipe[];
-}
+const SITE_URL = 'https://www.wisihe.no';
+const RECIPES_URL = `${SITE_URL}/recipes`;
+const DEFAULT_DESCRIPTION =
+  'Home-cooked recipes from Henrik Sissener — weeknight-friendly dishes, comfort food, and experiments worth repeating.';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const result = (await sanityFetch({ query: getAllRecipes })) as RecipesQueryResult;
-  const recipes = result.data;
-
+  const { data } = await sanityFetch({ query: getAllRecipes, stega: false });
+  const recipes = (data ?? []) as GetAllRecipesResult;
+  const count = recipes.length;
   const title = 'Recipes | WiSiHe';
-  const description = `A collection of ${recipes?.length || 0} delicious recipes I've tried and enjoyed. From quick weeknight meals to special occasion dishes, find inspiration for your next culinary adventure.`;
+  const description =
+    count > 0
+      ? `${count} recipes I've cooked, tweaked, and loved — from quick dinners to slow weekend projects.`
+      : DEFAULT_DESCRIPTION;
+
+  const ogImage = recipes[0]?.mainImage
+    ? urlForImage(recipes[0].mainImage)?.width(1200).height(630).quality(85).url()
+    : `${SITE_URL}/og-image.jpg`;
 
   return {
     title,
     description,
+    alternates: { canonical: RECIPES_URL },
     openGraph: {
       title,
       description,
       type: 'website',
-      url: 'https://www.wisihe.no/recipes',
+      url: RECIPES_URL,
       siteName: 'WiSiHe',
-      images: [
-        {
-          url: 'https://www.wisihe.no/og-image.jpg', // Replace with your actual OG image
-          width: 1200,
-          height: 630,
-          alt: 'WiSiHe Recipes',
-        },
-      ],
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: 'WiSiHe Recipes' }] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://www.wisihe.no/og-image.jpg'], // Replace with your actual OG image
+      images: ogImage ? [ogImage] : [],
     },
-    alternates: {
-      canonical: 'https://www.wisihe.no/recipes',
-    },
+    robots: { index: true, follow: true },
   };
 }
 
 export default async function RecipesPage() {
-  const result = (await sanityFetch({ query: getAllRecipes })) as RecipesQueryResult;
-  const recipes = result.data;
-
-  const itemListJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Recipes Collection',
-    description: "A collection of recipes I've tried and enjoyed",
-    numberOfItems: recipes?.length || 0,
-    itemListElement:
-      recipes?.map((recipe, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        item: {
-          '@type': 'Recipe',
-          '@id': `https://www.wisihe.no/recipes/${recipe.slug}`,
-          name: recipe.title,
-          description: recipe.description,
-          image: recipe.mainImage ? urlForImage(recipe.mainImage)?.url() : undefined,
-          cookTime: recipe.cookingTime ? `PT${recipe.cookingTime}M` : undefined,
-          prepTime: recipe.prepTime ? `PT${recipe.prepTime}M` : undefined,
-          totalTime: recipe.totalTime ? `PT${recipe.totalTime}M` : undefined,
-          recipeYield: recipe.servings ? `${recipe.servings} servings` : undefined,
-          difficulty: recipe.difficulty,
-          datePublished: recipe.publishedAt,
-          keywords: recipe.tags?.map(tag => tag.name).join(', '),
-        },
-      })) || [],
-  };
+  const { data } = await sanityFetch({ query: getAllRecipes });
+  const recipes = (data ?? []) as GetAllRecipesResult;
 
   return (
     <>
-      <JsonLd data={itemListJsonLd} />
-      <div className='w-full min-h-screen bg-background p-4 pt-32 mx-auto max-w-7xl'>
-        <div className='w-full pb-6'>
-          <h1 className='text-3xl md:text-4xl font-bold font-serif text-foreground mb-3'>
-            Recipes
-          </h1>
-          <p className='text-base md:text-lg text-foreground-subtle max-w-prose text-pretty leading-relaxed'>
-            A collection of recipes I&apos;ve tried and enjoyed.
-          </p>
+      <JsonLd data={buildRecipesListStructuredData(recipes)} />
+      <div className='min-h-screen bg-background'>
+        <header className='relative overflow-hidden border-b border-border/40 pt-28 pb-16 sm:pt-32'>
+          <div className='pointer-events-none absolute inset-0 bg-accent/5' aria-hidden />
+          <div
+            className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_25%,transparent_100%)]'
+            aria-hidden
+          />
+          <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-accent'>
+              Kitchen notes
+            </p>
+            <h1 className='mt-3 font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl'>
+              Recipes
+            </h1>
+            <p className='mt-4 max-w-2xl text-lg leading-relaxed text-foreground-subtle text-pretty'>
+              Dishes I actually make at home — tested, annotated, and shared so you can steal the
+              ideas without the guesswork.
+            </p>
+            {recipes.length > 0 ? (
+              <p className='mt-6 text-sm font-medium text-foreground-muted'>
+                {recipes.length} recipe{recipes.length === 1 ? '' : 's'} in the collection
+              </p>
+            ) : null}
+          </div>
+        </header>
+
+        <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
+          {recipes.length > 0 ? (
+            <Suspense fallback={<p className='text-foreground-muted'>Loading recipes…</p>}>
+              <RecipesListing recipes={recipes} />
+            </Suspense>
+          ) : (
+            <div className='rounded-2xl border border-dashed border-border bg-surface/40 px-6 py-20 text-center'>
+              <p className='font-serif text-2xl font-bold text-foreground'>Recipes coming soon</p>
+              <p className='mt-2 text-foreground-muted'>
+                New dishes will land here as they get written up in Sanity Studio.
+              </p>
+            </div>
+          )}
         </div>
-        <ul className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
-          {recipes?.map((recipe: Recipe) => (
-            <li key={recipe._id}>
-              <article className='group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl border border-border/30 bg-surface hover:border-accent/30'>
-                {recipe.mainImage && (
-                  <div className='aspect-video overflow-hidden relative'>
-                    <Image
-                      src={urlForImage(recipe.mainImage)?.url() || ''}
-                      alt={recipe.mainImage.alt}
-                      width={640}
-                      height={360}
-                      className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
-                    />
-                  </div>
-                )}
-                <div className='p-5 flex flex-col gap-3'>
-                  <Link
-                    href={`/recipes/${recipe.slug}`}
-                    className='before:absolute before:inset-0 before:z-0'
-                  >
-                    <h2 className='text-lg font-semibold text-foreground group-hover:text-accent transition-colors'>
-                      {recipe.title}
-                    </h2>
-                  </Link>
-                  {recipe.description && (
-                    <p className='text-sm text-foreground-subtle line-clamp-2'>
-                      {recipe.description}
-                    </p>
-                  )}
-                  <div className='flex flex-wrap gap-4 text-xs text-foreground-muted'>
-                    {recipe.cookingTime && (
-                      <span className='flex items-center gap-1.5'>
-                        <FiThermometer className='w-3.5 h-3.5 text-accent' />
-                        {recipe.cookingTime} min
-                      </span>
-                    )}
-                    {recipe.servings && (
-                      <span className='flex items-center gap-1.5'>
-                        <FiUsers className='w-3.5 h-3.5 text-success' />
-                        {recipe.servings} servings
-                      </span>
-                    )}
-                    {recipe.difficulty && (
-                      <span className='flex items-center gap-1.5'>
-                        <FiBarChart className='w-3.5 h-3.5 text-info' />
-                        {recipe.difficulty}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ul>
       </div>
     </>
   );

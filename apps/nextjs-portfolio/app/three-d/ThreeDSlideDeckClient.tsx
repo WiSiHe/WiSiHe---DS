@@ -97,20 +97,7 @@ export function ThreeDSlideDeckClient({
       <StructuredData />
       <div
         ref={mainRef}
-        className='w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-background text-foreground overflow-x-hidden'
-        style={
-          {
-            scrollBehavior: 'smooth',
-            // Performance optimizations for smooth scrolling
-            willChange: 'scroll-position',
-            // Prevent scroll chaining to improve performance
-            overscrollBehavior: 'contain',
-            // Use GPU acceleration for scrolling
-            transform: 'translateZ(0)',
-            // Smooth scrolling on iOS
-            WebkitOverflowScrolling: 'touch',
-          } as React.CSSProperties
-        }
+        className='presentation-scroll h-[100dvh] w-full overflow-x-hidden overflow-y-auto snap-y snap-mandatory bg-background text-foreground overscroll-y-contain'
       >
         {/* Hero Section */}
         <section className='snap-start shrink-0 h-screen w-full relative'>
