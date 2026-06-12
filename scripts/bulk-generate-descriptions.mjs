@@ -1,28 +1,49 @@
 /**
- * Bulk generate painting descriptions and seoDescriptions using OpenAI.
- *
- * - Generates `description` (150-300 words, vision) for all paintings missing it
- * - Generates `seoDescription` (≤122 chars) for paintings missing it
+ * Bulk generate painting gallery labels and seoDescriptions using OpenAI.
  *
  * Run: node scripts/bulk-generate-descriptions.mjs
+ * Rewrite existing first-person labels: node scripts/bulk-generate-descriptions.mjs --rewrite
  */
 
-import { createClient } from '@sanity/client';
-import { config } from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-config({ path: path.join(__dirname, '../apps/sanity-studio/.env.local') });
+const studioRoot = path.join(__dirname, '../apps/sanity-studio');
+const require = createRequire(path.join(studioRoot, 'package.json'));
+const { createClient } = require('@sanity/client');
+const { config } = require('dotenv');
+
+const PAINTING_DESCRIPTION_AI_PROMPT = `You write museum wall labels for a digital art portfolio.
+
+Requirements:
+- 1–2 sentences, 40–240 characters total
+- Third person only (never "I", "my", "we", "me")
+- Do not repeat or quote the artwork title
+- Describe: subject, composition, colour or light, mood or theme
+- Tone: precise and calm, like a curator—not a blog post or social caption
+- Present tense; no exclamation marks
+
+Example:
+"A figure reclines in a bath, rendered in loose warm strokes. Everyday stillness, unhurried and intimate."`;
+
+// Keep in sync with apps/sanity-studio/schemas/descriptionGuidance.ts
+
+config({ path: path.join(studioRoot, '.env.local') });
 
 const PROJECT_ID = 'cbjsv7wi';
 const DATASET = 'production';
 const OPENAI_KEY = process.env.SANITY_STUDIO_OPENAI_API_KEY;
-const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
+const WRITE_TOKEN =
+  process.env.SANITY_API_WRITE_TOKEN ||
+  process.env.SANITY_API_READ_TOKEN ||
+  process.env.SANITY_STUDIO_API_TOKEN;
 
 if (!OPENAI_KEY) throw new Error('Missing SANITY_STUDIO_OPENAI_API_KEY');
-if (!WRITE_TOKEN) throw new Error('Missing SANITY_API_WRITE_TOKEN');
+if (!WRITE_TOKEN) {
+  throw new Error('Missing SANITY_API_WRITE_TOKEN (or SANITY_API_READ_TOKEN with write access)');
+}
 
 const client = createClient({
   projectId: PROJECT_ID,
@@ -61,38 +82,34 @@ async function openai(messages, maxTokens = 600) {
   return data.choices[0].message.content.trim();
 }
 
-// Generate long description from image
+// Generate curator-style gallery label from image
 async function generateDescription(imageRef, title) {
   const url = imageUrl(imageRef);
-  return openai([
-    {
-      role: 'user',
-      content: [
-        {
-          type: 'text',
-          text: `You are an AI expert at describing images, vividly describe this image, be as creative as you would like. Describe the style, colors, characters, what the motive might be and so on.
+  const text = await openai(
+    [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: `${PAINTING_DESCRIPTION_AI_PROMPT}\n\nThe artwork title (do not repeat in the label): "${title}"`,
+          },
+          { type: 'image_url', image_url: { url, detail: 'low' } },
+        ],
+      },
+    ],
+    120,
+  );
 
-Requirements:
-- 150-300 words maximum
-- Use present tense
-- Be objective and descriptive
-- Write in clear, flowing paragraphs
-- Focus on visual elements and artistic choices
-
-The painting is titled: "${title}"`,
-        },
-        { type: 'image_url', image_url: { url, detail: 'low' } },
-      ],
-    },
-  ]);
+  return text.replace(/^["']|["']$/g, '').slice(0, 240);
 }
 
-// Generate seoDescription from existing description text
+// Generate seoDescription from gallery label
 async function generateSeoDescription(description, title) {
-  const text = `You are an AI SEO expert writer. Re-write the following text into a good SEO description in 122 characters or less, it should never exceed 122 characters. Just return the SEO description, nothing else.
+  const text = `Turn this gallery label into an SEO meta description in 122 characters or less. Keep third person. Return only the meta description, nothing else.
 
 Title: "${title}"
-Description: ${description}`;
+Label: ${description}`;
   const result = await openai([{ role: 'user', content: text }], 100);
   return result.slice(0, 122);
 }
@@ -112,7 +129,9 @@ async function throttle(items, fn, concurrency = 5) {
 }
 
 async function main() {
-  // ── Step 1: Fix 2 missing seoDescriptions ──────────────────────────────────
+  const rewriteExisting = process.argv.includes('--rewrite');
+
+  // ── Step 1: Fix missing seoDescriptions ──────────────────────────────────
   console.log('\n📝 Step 1: Generating missing seoDescriptions...\n');
 
   const missingSeo = await client.fetch(
@@ -133,30 +152,43 @@ async function main() {
     }
   }
 
-  // ── Step 2: Bulk-generate descriptions for 163 paintings ───────────────────
-  console.log('\n🎨 Step 2: Bulk-generating descriptions for paintings...\n');
-
-  const missingDesc = await client.fetch(
-    `*[_type == "painting" && !defined(description)] { _id, title, "imageRef": image.asset._ref } | order(title asc)`,
+  // ── Step 2: Generate or rewrite gallery labels ───────────────────────────
+  console.log(
+    `\n🎨 Step 2: ${rewriteExisting ? 'Rewriting' : 'Generating'} gallery labels...\n`,
   );
 
-  console.log(`Found ${missingDesc.length} paintings to process.\n`);
+  const missingDesc = await client.fetch(
+    rewriteExisting
+      ? `*[_type == "painting" && defined(image.asset._ref)] { _id, title, description, "imageRef": image.asset._ref } | order(title asc)`
+      : `*[_type == "painting" && !defined(description)] { _id, title, "imageRef": image.asset._ref } | order(title asc)`,
+  );
+
+  const toProcess = rewriteExisting
+    ? missingDesc.filter(
+        doc =>
+          !doc.description ||
+          doc.description.length > 240 ||
+          /\b(I|my|me|we)\b/i.test(doc.description),
+      )
+    : missingDesc;
+
+  console.log(`Found ${toProcess.length} paintings to process.\n`);
 
   let done = 0;
   let failed = 0;
 
   await throttle(
-    missingDesc,
+    toProcess,
     async (doc, idx) => {
       try {
         const description = await generateDescription(doc.imageRef, doc.title);
         const seoDescription = await generateSeoDescription(description, doc.title);
         await client.patch(doc._id).set({ description, seoDescription }).commit();
         done++;
-        console.log(`  ✅ [${done}/${missingDesc.length}] "${doc.title}"`);
+        console.log(`  ✅ [${done}/${toProcess.length}] "${doc.title}"`);
       } catch (e) {
         failed++;
-        console.error(`  ❌ [${idx + 1}/${missingDesc.length}] "${doc.title}": ${e.message}`);
+        console.error(`  ❌ [${idx + 1}/${toProcess.length}] "${doc.title}": ${e.message}`);
       }
     },
     5, // 5 concurrent requests

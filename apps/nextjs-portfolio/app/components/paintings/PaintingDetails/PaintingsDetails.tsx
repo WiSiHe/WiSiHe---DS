@@ -393,21 +393,51 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                   {title}
                 </h1>
 
-                {/* Views + likes inline */}
-                <div className='flex items-center gap-4 text-sm text-foreground-muted'>
-                  <span className='flex items-center gap-1.5'>
-                    <BsEye className='w-3.5 h-3.5' /> {viewsCount?.toString() ?? '0'} views
-                  </span>
-                  <span
-                    className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-red-500')}
-                  >
-                    {hasLikedLocal ? (
-                      <BsHeartFill className='w-3.5 h-3.5' />
-                    ) : (
-                      <BsHeart className='w-3.5 h-3.5' />
-                    )}
-                    {localLikesCount} likes
-                  </span>
+                {/* Stats + primary actions */}
+                <div className='flex items-center flex-wrap gap-3 pt-1'>
+                  <div className='flex items-center gap-4 text-sm text-foreground-muted'>
+                    <span className='flex items-center gap-1.5'>
+                      <BsEye className='w-3.5 h-3.5' /> {viewsCount?.toString() ?? '0'} views
+                    </span>
+                    <span
+                      className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-red-500')}
+                    >
+                      {hasLikedLocal ? (
+                        <BsHeartFill className='w-3.5 h-3.5' />
+                      ) : (
+                        <BsHeart className='w-3.5 h-3.5' />
+                      )}
+                      {localLikesCount} likes
+                    </span>
+                  </div>
+
+                  <div className='flex items-center gap-2 sm:ml-auto'>
+                    <Button
+                      onClick={handleLike}
+                      variant='secondary'
+                      className={cn(
+                        'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
+                        hasLikedLocal
+                          ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
+                          : '',
+                      )}
+                    >
+                      {hasLikedLocal ? (
+                        <BsHeartFill className='w-4 h-4' />
+                      ) : (
+                        <BsHeart className='w-4 h-4' />
+                      )}
+                      {hasLikedLocal ? 'Liked' : 'Like'}
+                    </Button>
+                    <Button
+                      onClick={handleShare}
+                      variant='secondary'
+                      className='gap-2 w-fit rounded-full px-4 shadow-sm'
+                    >
+                      <BsShare className='w-4 h-4' />
+                      {shareText}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
@@ -508,39 +538,17 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
 
               <hr className='border-border/40' />
 
-              {/* Description */}
+              {/* Gallery label */}
               {description && (
-                <p className='text-sm text-foreground-subtle leading-relaxed'>{description}</p>
+                <figure className='space-y-2'>
+                  <figcaption className='text-[11px] font-medium uppercase tracking-widest text-foreground-muted'>
+                    About the work
+                  </figcaption>
+                  <blockquote className='border-l-2 border-accent/35 pl-4 font-serif text-sm italic leading-relaxed text-foreground-subtle text-pretty'>
+                    {description}
+                  </blockquote>
+                </figure>
               )}
-
-              {/* Actions */}
-              <div className='flex items-center flex-wrap gap-2'>
-                <Button
-                  onClick={handleLike}
-                  variant='secondary'
-                  className={cn(
-                    'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
-                    hasLikedLocal
-                      ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
-                      : '',
-                  )}
-                >
-                  {hasLikedLocal ? (
-                    <BsHeartFill className='w-4 h-4' />
-                  ) : (
-                    <BsHeart className='w-4 h-4' />
-                  )}
-                  {hasLikedLocal ? 'Liked' : 'Like'}
-                </Button>
-                <Button
-                  onClick={handleShare}
-                  variant='secondary'
-                  className='gap-2 w-fit rounded-full px-4 shadow-sm'
-                >
-                  <BsShare className='w-4 h-4' />
-                  {shareText}
-                </Button>
-              </div>
 
               {/* Buy CTA — shows when at least one store is configured */}
               {storeLinks.length > 0 && (
