@@ -3,12 +3,13 @@
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { PhotographyCard } from './PhotographyCard';
 
 type PhotographyListingProps = {
   photos: PhotographyListQueryResult;
+  activeCountry: string | null;
 };
 
 type CountryFilter = {
@@ -36,22 +37,17 @@ function buildCountryFilters(photos: PhotographyListQueryResult): CountryFilter[
   return [...counts.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
-export function PhotographyListing({ photos }: PhotographyListingProps) {
+export function PhotographyListing({ photos, activeCountry }: PhotographyListingProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeCountry = searchParams.get('country')?.toUpperCase() ?? null;
 
   const countryFilters = useMemo(() => buildCountryFilters(photos), [photos]);
 
   const setCountryFilter = useCallback(
     (code: string | null) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (code) params.set('country', code);
-      else params.delete('country');
-      const query = params.toString();
-      router.push(query ? `/photography?${query}` : '/photography', { scroll: false });
+      const query = code ? `/photography?country=${encodeURIComponent(code)}` : '/photography';
+      router.push(query, { scroll: false });
     },
-    [router, searchParams],
+    [router],
   );
 
   const filteredPhotos = useMemo(() => {
@@ -138,11 +134,13 @@ export function PhotographyListing({ photos }: PhotographyListingProps) {
           {featuredPhoto ? <PhotographyCard photo={featuredPhoto} priority size='large' /> : null}
 
           {gridPhotos.length > 0 ? (
-            <div className='columns-1 gap-6 sm:columns-2 lg:columns-3 [column-gap:1.5rem]'>
+            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
               {gridPhotos.map((photo, index) => (
-                <div key={photo._id} className='mb-6 break-inside-avoid'>
-                  <PhotographyCard photo={photo} priority={!featuredPhoto && index < 2} />
-                </div>
+                <PhotographyCard
+                  key={photo._id}
+                  photo={photo}
+                  priority={!featuredPhoto && index < 2}
+                />
               ))}
             </div>
           ) : null}

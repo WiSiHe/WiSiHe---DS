@@ -21,12 +21,18 @@ function formatPlaceLabel(photo: PhotographyListItem): string | null {
   return null;
 }
 
-function getDisplayAspectRatio(photo: PhotographyListItem): number {
-  const raw = photo.image?.aspectRatio;
-  if (typeof raw === 'number' && raw > 0) {
-    return Math.min(1.9, Math.max(0.62, raw));
+function getImageDimensions(photo: PhotographyListItem): { width: number; height: number } {
+  const width = photo.image?.width;
+  const height = photo.image?.height;
+  if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
+    return { width, height };
   }
-  return 4 / 3;
+
+  const rawRatio = photo.image?.aspectRatio;
+  const aspectRatio =
+    typeof rawRatio === 'number' && rawRatio > 0 ? Math.min(1.9, Math.max(0.62, rawRatio)) : 4 / 3;
+
+  return { width: 1200, height: Math.round(1200 / aspectRatio) };
 }
 
 function getYear(capturedAt?: string | null): string | null {
@@ -51,7 +57,8 @@ export function PhotographyCard({
 
   const placeLabel = formatPlaceLabel(photo);
   const alt = photo.image?.alt ?? photo.title ?? 'Photograph';
-  const aspectRatio = getDisplayAspectRatio(photo);
+  const { width: imageWidth, height: imageHeight } = getImageDimensions(photo);
+  const aspectRatio = imageWidth / imageHeight;
   const year = getYear(photo.capturedAt);
 
   return (
@@ -63,7 +70,7 @@ export function PhotographyCard({
       >
         <div
           className={cn(
-            'relative overflow-hidden rounded-2xl bg-surface/60 ring-1 ring-border/45 shadow-sm transition-all duration-500',
+            'relative w-full overflow-hidden rounded-2xl bg-surface/60 ring-1 ring-border/45 shadow-sm transition-all duration-500',
             'group-hover:ring-accent/35 group-hover:shadow-xl group-hover:shadow-black/[0.08]',
           )}
           style={{ aspectRatio }}
@@ -71,6 +78,8 @@ export function PhotographyCard({
           <Image
             src={imageUrl}
             alt={alt}
+            width={imageWidth}
+            height={imageHeight}
             fill
             priority={priority}
             className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]'

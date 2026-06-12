@@ -135,7 +135,9 @@ export const photographyListQuery = defineQuery(`
       ...,
       alt,
       "lqip": asset->metadata.lqip,
-      "aspectRatio": asset->metadata.dimensions.aspectRatio
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
     }
   }
 `);

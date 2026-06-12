@@ -50,7 +50,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function PhotographyPage() {
+type PhotographyPageProps = {
+  searchParams: Promise<{ country?: string }>;
+};
+
+export default async function PhotographyPage({ searchParams }: PhotographyPageProps) {
+  const { country } = await searchParams;
+  const activeCountry = country?.trim().toUpperCase() || null;
+
   const { data } = await sanityFetch({ query: photographyListQuery });
   const photos = (data ?? []) as PhotographyListQueryResult;
 
@@ -88,7 +95,7 @@ export default async function PhotographyPage() {
 
         <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
           {photos.length > 0 ? (
-            <PhotographyGallery photos={photos} />
+            <PhotographyGallery photos={photos} activeCountry={activeCountry} />
           ) : (
             <div className='rounded-2xl border border-dashed border-border bg-surface/40 px-6 py-20 text-center'>
               <p className='font-serif text-2xl font-bold text-foreground'>Gallery coming soon</p>

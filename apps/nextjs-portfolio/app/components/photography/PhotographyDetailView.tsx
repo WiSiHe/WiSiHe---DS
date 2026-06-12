@@ -16,6 +16,22 @@ type PhotographyDetailViewProps = {
   photo: NonNullable<PhotographyQueryResult>;
 };
 
+function resolveDetailImageDimensions(image: NonNullable<PhotographyQueryResult>['image']): {
+  width: number;
+  height: number;
+} {
+  const width = image?.width;
+  const height = image?.height;
+  if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
+    return { width, height };
+  }
+
+  const rawRatio = image?.aspectRatio;
+  const aspectRatio = typeof rawRatio === 'number' && rawRatio > 0 ? rawRatio : 4 / 3;
+
+  return { width: 1600, height: Math.round(1600 / aspectRatio) };
+}
+
 function MetaGrid({ rows }: { rows: { label: string; value: string }[] }) {
   if (!rows.length) return null;
 
@@ -37,8 +53,8 @@ function MetaGrid({ rows }: { rows: { label: string; value: string }[] }) {
 
 export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
   const image = photo.image;
-  const width = image?.width ?? undefined;
-  const height = image?.height ?? undefined;
+  const { width: imageWidth, height: imageHeight } = resolveDetailImageDimensions(image);
+  const imageAspectRatio = imageWidth / imageHeight;
 
   const imageUrl = image ? urlForFullImage(image)?.width(2400).quality(92).url() : null;
 
@@ -83,7 +99,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
           {imageUrl ? (
             <div
               className={cn(
-                'flex items-center justify-center overflow-hidden rounded-2xl border border-border/40 p-3 shadow-lg shadow-black/[0.04] sm:p-4 lg:sticky lg:top-28',
+                'overflow-hidden rounded-2xl border border-border/40 p-3 shadow-lg shadow-black/[0.04] sm:p-4 lg:sticky lg:top-28',
               )}
               style={{
                 backgroundColor: dominantColor
@@ -91,17 +107,26 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                   : undefined,
               }}
             >
-              <Image
-                src={imageUrl}
-                alt={image?.alt ?? photo.title ?? 'Photograph'}
-                width={width ?? 1600}
-                height={height ?? 1200}
-                className='h-auto max-h-[min(88vh,calc(100vh-9rem))] w-auto max-w-full object-contain'
-                sizes='(max-width: 1024px) 100vw, 70vw'
-                priority
-                placeholder={image?.lqip ? 'blur' : 'empty'}
-                blurDataURL={image?.lqip ?? undefined}
-              />
+              <div
+                className='relative mx-auto w-full max-w-full'
+                style={{
+                  aspectRatio: imageAspectRatio,
+                  maxHeight: 'min(88vh, calc(100vh - 9rem))',
+                }}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={image?.alt ?? photo.title ?? 'Photograph'}
+                  width={imageWidth}
+                  height={imageHeight}
+                  fill
+                  className='object-contain'
+                  sizes='(max-width: 1024px) 100vw, 70vw'
+                  priority
+                  placeholder={image?.lqip ? 'blur' : 'empty'}
+                  blurDataURL={image?.lqip ?? undefined}
+                />
+              </div>
             </div>
           ) : null}
 
