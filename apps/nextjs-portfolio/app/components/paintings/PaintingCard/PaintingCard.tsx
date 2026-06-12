@@ -5,7 +5,7 @@ import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
-import { FaExclamation, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { FaExclamation, FaStar } from 'react-icons/fa';
 import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import {
   getHeroStrokeColors,
@@ -129,19 +129,12 @@ const PaintingCardAdapter = ({
       imageEl
     );
 
-  // Build the badges array — pinned badge goes first (always visible)
+  // Pinned badge (top-right) — featured only. For-sale uses the accent ring + Store tag chip.
   const badges: PaintingCardBadge[] = [];
-  if (availableForSale) {
-    badges.push({
-      key: 'store',
-      icon: <FaShoppingCart className='w-4 h-4 text-accent' />,
-      label: 'Available for sale',
-    });
-  }
   if (isFeatured === true) {
     badges.push({
       key: 'featured',
-      icon: <FaStar className='w-4 h-4 text-yellow-400' />,
+      icon: <FaStar className='w-4 h-4 text-yellow-300' />,
       label: 'Featured painting',
     });
   }

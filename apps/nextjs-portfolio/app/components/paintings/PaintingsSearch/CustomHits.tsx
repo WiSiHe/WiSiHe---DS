@@ -2,12 +2,11 @@
 
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import { isNsfwFacetActive } from '@/lib/algolia/facets';
 import PaintingCard from '../PaintingCard/PaintingCard';
 
-// Skeleton card — varied heights to mimic the masonry feel
 function PaintingCardSkeleton({ index }: { index: number }) {
   const aspects = [
     'aspect-[3/4]',
@@ -34,6 +33,23 @@ function PaintingCardSkeleton({ index }: { index: number }) {
   );
 }
 
+function SkeletonGrid() {
+  return (
+    <div
+      className='columns-2 sm:columns-3 gap-2 mt-4'
+      aria-busy='true'
+      aria-label='Loading paintings'
+    >
+      {Array.from({ length: 18 }).map((_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: skeletons have no stable key
+        <div key={i} className='break-inside-avoid'>
+          <PaintingCardSkeleton index={i} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Aspect class based on painting format
 function aspectClass(format: string): string {
   if (format === 'landscape') return 'aspect-[4/3]';
@@ -41,75 +57,31 @@ function aspectClass(format: string): string {
   return 'aspect-square';
 }
 
-const SKELETON_COUNT = 18;
-// Maximum time to show skeleton before giving up and showing empty state
-const SKELETON_TIMEOUT_MS = 6000;
-
 export default function CustomHits() {
   const { items } = useHits();
   const { status, results, refresh } = useInstantSearch();
   const { items: refinements } = useCurrentRefinements();
+  const refreshAttempted = useRef(false);
 
-  // Flip to true the first time items arrive after this mount
-  const hasReceivedResultsThisMount = useRef(false);
-  if (items.length > 0) hasReceivedResultsThisMount.current = true;
+  const nbHits = results?.nbHits ?? 0;
+  const queryId = results?.queryID;
+  const isLoading = status === 'loading' || status === 'stalled';
+  const awaitingFirstResponse = items.length === 0 && queryId == null && status !== 'error';
 
-  // Safety valve: if skeleton has shown for too long, stop waiting.
-  // This catches cases where the search never fires (routing/hydration issues).
-  const [skeletonTimedOut, setSkeletonTimedOut] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+  // If the first search never returns, retry once while keeping the skeleton visible.
   useEffect(() => {
-    // Reset timeout on every mount
-    setSkeletonTimedOut(false);
-    timeoutRef.current = setTimeout(() => {
-      setSkeletonTimedOut(true);
-    }, SKELETON_TIMEOUT_MS);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  // If we received results, clear the timeout
-  useEffect(() => {
-    if (hasReceivedResultsThisMount.current && timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  }, [items.length]);
-
-  // Force a search refresh if we've been idle too long with no results.
-  // This handles cases where the search failed to fire on initial mount.
-  useEffect(() => {
-    if (skeletonTimedOut && !hasReceivedResultsThisMount.current && status === 'idle') {
-      refresh();
-    }
-  }, [skeletonTimedOut, status, refresh]);
+    if (!awaitingFirstResponse || refreshAttempted.current || status !== 'idle') return;
+    refreshAttempted.current = true;
+    refresh();
+  }, [awaitingFirstResponse, refresh, status]);
 
   const isNsfwFilterActive = isNsfwFacetActive(refinements);
 
-  // `processingTimeMS` is set after Algolia responds — distinguishes
-  // "no search fired yet" from "search returned 0 results"
-  const searchHasCompleted = results?.processingTimeMS !== undefined;
-
-  // Show skeleton while: loading, stalled, or first search not yet complete
-  // BUT stop after timeout to avoid infinite skeleton
-  const showSkeleton =
-    !skeletonTimedOut && (!searchHasCompleted || status === 'loading' || status === 'stalled');
-
-  if (items.length === 0 && showSkeleton) {
-    return (
-      <div className='columns-2 sm:columns-3 gap-2 mt-4'>
-        {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: skeletons have no stable key
-          <div key={i} className='break-inside-avoid'>
-            <PaintingCardSkeleton index={i} />
-          </div>
-        ))}
-      </div>
-    );
+  if (isLoading || awaitingFirstResponse) {
+    return <SkeletonGrid />;
   }
 
-  if (items.length === 0) {
+  if (items.length === 0 && nbHits === 0) {
     return (
       <div className='w-full py-20 flex flex-col justify-center items-center text-foreground-subtle'>
         <p className='text-lg'>No paintings found matching your search.</p>
@@ -152,7 +124,6 @@ export default function CustomHits() {
                   paintingData={adaptedPaintingData as any}
                   shouldBeLazy={index < 6}
                   isNsfwFilterActive={isNsfwFilterActive}
-                  // Pass aspect class so tailwind-merge overrides the hardcoded aspect-3/4
                   className={aspectClass(format)}
                 />
               </motion.div>
