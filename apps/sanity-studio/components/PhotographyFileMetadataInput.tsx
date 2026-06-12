@@ -25,9 +25,6 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
   const client = useClient({ apiVersion: '2024-10-28' });
   const { onChange: patchDocument } = useFormCallbacks();
   const image = useFormValue(['image']) as ImageValue | undefined;
-  const country = useFormValue(['country']) as string | undefined;
-  const countryCode = useFormValue(['countryCode']) as string | undefined;
-  const coordinates = useFormValue(['coordinates']);
   const capturedAt = useFormValue(['capturedAt']);
   const camera = useFormValue(['camera']);
 
@@ -69,29 +66,19 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
 
   const summaryLines = summarizeAssetMetadata(asset);
   const extract = extractPhotographyFileMetadata(asset);
-  const pendingPatches = buildPhotographyApplyPatches(extract, {
-    existingCountry: country,
-    existingCountryCode: countryCode,
-    existingCoordinates: coordinates,
+  const patchOptions = {
     existingCapturedAt: capturedAt as string | undefined,
     existingCamera: camera as string | undefined,
-  });
+    exifOnly: true,
+  };
+  const pendingPatches = buildPhotographyApplyPatches(extract, patchOptions);
 
   const applyMetadata = useCallback(
     (overwrite: boolean) => {
-      const patches = buildPhotographyApplyPatches(extract, {
-        existingCountry: country,
-        existingCountryCode: countryCode,
-        existingCoordinates: coordinates,
-        existingCapturedAt: capturedAt as string | undefined,
-        existingCamera: camera as string | undefined,
-        overwrite,
-      });
+      const patches = buildPhotographyApplyPatches(extract, { ...patchOptions, overwrite });
 
       if (patches.length === 0) {
-        setError(
-          'Nothing to apply from this file. Add GPS/EXIF to the image or set country for ISO code.',
-        );
+        setError('Nothing to apply from this file — no capture date or camera EXIF found.');
         return;
       }
 
@@ -99,16 +86,14 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
       patchDocument(PatchEvent.from(patches.map(p => set(p.value, [p.path]))));
       setApplied(true);
     },
-    [capturedAt, camera, coordinates, country, countryCode, extract, patchDocument],
+    [capturedAt, camera, extract, patchDocument],
   );
 
-  const hasGps = Boolean(extract.coordinates);
   const hasExif = Boolean(extract.capturedAt || extract.camera);
+  const hasGps = Boolean(extract.coordinates);
   const fieldAlreadySet = {
-    coordinates: Boolean(coordinates),
     capturedAt: Boolean(capturedAt),
     camera: Boolean(camera),
-    countryCode: Boolean(countryCode?.trim()),
   };
 
   return (
@@ -130,8 +115,9 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
         </Flex>
 
         <Text size={1} muted>
-          EXIF and GPS are extracted when the file contains them. Enable re-upload if you added
-          metadata options after the original upload.
+          Applies capture date and camera from EXIF. GPS from the file is shown for reference — set
+          map location on the linked <strong>Travel place</strong> document (use its location
+          assistant).
         </Text>
 
         <Stack space={2}>
@@ -142,25 +128,31 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
           ))}
         </Stack>
 
+        {hasGps && extract.coordinates ? (
+          <Text size={1} muted>
+            GPS in file: {extract.coordinates.lat.toFixed(5)}, {extract.coordinates.lng.toFixed(5)}—
+            copy to a new Travel place if this photo defines a new map pin.
+          </Text>
+        ) : null}
+
         {!hasGps && !hasExif ? (
           <Flex align='flex-start' gap={2}>
             <WarningOutlineIcon />
             <Text size={1} muted>
-              No GPS or camera EXIF detected. AI fields can still suggest place and copy;
-              coordinates must be set manually or from a file with location data.
+              No EXIF detected. You can still link a travel place and generate title and caption.
             </Text>
           </Flex>
         ) : null}
 
         <Flex gap={2} wrap='wrap'>
           <Button
-            text='Apply from file'
+            text='Apply date & camera'
             tone='primary'
             disabled={loading || pendingPatches.length === 0}
             onClick={() => applyMetadata(false)}
           />
           <Button
-            text='Apply and overwrite'
+            text='Overwrite date & camera'
             mode='ghost'
             disabled={loading || pendingPatches.length === 0}
             onClick={() => applyMetadata(true)}
@@ -170,7 +162,7 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
         {pendingPatches.length > 0 ? (
           <Text size={0} muted>
             Will set: {pendingPatches.map(p => p.label).join(' · ')}
-            {fieldAlreadySet.coordinates || fieldAlreadySet.capturedAt || fieldAlreadySet.camera
+            {fieldAlreadySet.capturedAt || fieldAlreadySet.camera
               ? ' (filled fields are skipped unless you overwrite)'
               : ''}
           </Text>
@@ -184,7 +176,7 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
 
         {applied ? (
           <Text size={1} style={{ color: 'var(--card-success-fg-color)' }}>
-            Document fields updated from file metadata.
+            Capture date and camera updated from file.
           </Text>
         ) : null}
       </Stack>

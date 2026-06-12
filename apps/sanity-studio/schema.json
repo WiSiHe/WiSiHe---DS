@@ -2916,20 +2916,12 @@
           "type": "string"
         }
       },
-      "title": {
+      "workflowIntro": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
-      },
-      "slug": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "slug"
-        },
-        "optional": false
+        "optional": true
       },
       "image": {
         "type": "objectAttribute",
@@ -2985,7 +2977,7 @@
         },
         "optional": false
       },
-      "caption": {
+      "fileMetadataPanel": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -3000,46 +2992,25 @@
         },
         "optional": true
       },
-      "placeName": {
+      "title": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
-      "country": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "countryCode": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "fileMetadataPanel": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "region": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "coordinates": {
+      "slug": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
-          "name": "geopoint"
+          "name": "slug"
+        },
+        "optional": false
+      },
+      "caption": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },
@@ -3086,11 +3057,39 @@
         },
         "optional": true
       },
-      "seo": {
+      "placeName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "country": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "countryCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "region": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "coordinates": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
-          "name": "seo"
+          "name": "geopoint"
         },
         "optional": true
       }
@@ -4288,20 +4287,12 @@
           "type": "string"
         }
       },
-      "name": {
+      "workflowIntro": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
-      },
-      "slug": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "slug"
-        },
-        "optional": false
+        "optional": true
       },
       "kind": {
         "type": "objectAttribute",
@@ -4319,20 +4310,6 @@
           ]
         },
         "optional": false
-      },
-      "countryName": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": false
-      },
-      "countryCode": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
       },
       "image": {
         "type": "objectAttribute",
@@ -4388,11 +4365,40 @@
         },
         "optional": true
       },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "countryName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "countryCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "coordinates": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
           "name": "geopoint"
+        },
+        "optional": false
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
         },
         "optional": false
       },

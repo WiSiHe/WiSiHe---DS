@@ -207,9 +207,10 @@ export interface TravelPhotoItem {
 
 /** Stable key for grouping photos with visited countries (ISO preferred). */
 export function getTravelPhotoCountryKey(photo: TravelPhotoItem): string | null {
-  const code = photo.countryCode?.trim().toUpperCase();
+  const code =
+    photo.place?.countryCode?.trim().toUpperCase() || photo.countryCode?.trim().toUpperCase();
   if (code) return code;
-  const name = photo.country?.trim();
+  const name = photo.place?.countryName?.trim() || photo.country?.trim();
   return name || null;
 }
 

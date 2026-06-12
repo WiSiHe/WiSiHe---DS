@@ -45,6 +45,20 @@ export async function buildAiMetadataContext(
     lines.push(`Country (editor): ${country.trim()}${countryCode ? ` (${countryCode})` : ''}`);
   }
 
+  const placeRef = document?.place as { _ref?: string } | undefined;
+  if (placeRef?._ref) {
+    const linked = await client.fetch<{
+      name?: string;
+      countryName?: string;
+      countryCode?: string;
+    } | null>(`*[_id == $id][0]{ name, countryName, countryCode }`, { id: placeRef._ref });
+    if (linked?.name) {
+      lines.push(
+        `Travel place (linked): ${linked.name}${linked.countryName ? `, ${linked.countryName}` : ''}${linked.countryCode ? ` (${linked.countryCode})` : ''}`,
+      );
+    }
+  }
+
   const placeName = document?.placeName as string | undefined;
   if (placeName?.trim()) lines.push(`Place (editor): ${placeName.trim()}`);
 
