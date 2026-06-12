@@ -1,32 +1,10 @@
 import type { HomeSectionCopyQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homeSectionCopyQuery } from '@/sanity/lib/queries';
 import { portableTextToPlainText } from '@/sanity/lib/utils';
 import ScrollToTopButton from '../components/layout/ScrollToTop/ScrollToTop';
-
-const PaintingsSearch = dynamic(
-  () => import('../components/paintings/PaintingsSearch/PaintingsSearch'),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className='columns-2 sm:columns-3 gap-2 mt-4 animate-pulse'
-        aria-busy='true'
-        aria-label='Loading paintings'
-      >
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton placeholders
-            key={i}
-            className='break-inside-avoid mb-2 aspect-[3/4] rounded-xl bg-surface border border-border'
-          />
-        ))}
-      </div>
-    ),
-  },
-);
+import PaintingsSearchDynamic from '../components/paintings/PaintingsSearch/PaintingsSearchDynamic';
 
 const PAINTINGS_CANONICAL = 'https://www.wisihe.no/paintings';
 const PAINTINGS_TITLE_FALLBACK = 'Digital Art Gallery';
@@ -87,7 +65,7 @@ export default async function PaintingsPage() {
         <div className='pb-5 flex items-baseline gap-3'>
           <h1 className='font-semibold text-foreground text-2xl md:text-3xl'>{pageTitle}</h1>
         </div>
-        <PaintingsSearch />
+        <PaintingsSearchDynamic />
       </div>
       <ScrollToTopButton />
     </>
