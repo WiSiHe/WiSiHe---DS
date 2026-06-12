@@ -18,7 +18,7 @@ import ResolvedLink from '../ResolvedLink/ResolvedLink';
 type LinkMark = {
   _type: 'link';
   _key: string;
-  linkType?: 'href' | 'slug' | 'painting' | 'project';
+  linkType?: 'href' | 'slug' | 'painting' | 'project' | 'recipe' | 'video';
   href?: string;
   slug?: string;
   painting?: {
@@ -26,6 +26,14 @@ type LinkMark = {
     _type: 'reference';
   };
   project?: {
+    _ref: string;
+    _type: 'reference';
+  };
+  recipe?: {
+    _ref: string;
+    _type: 'reference';
+  };
+  video?: {
     _ref: string;
     _type: 'reference';
   };
@@ -206,6 +214,18 @@ const PortableTextVideo = ({
 export default function CustomPortableText({ className, value }: CustomPortableTextProps) {
   const components: PortableTextComponents = {
     types: {
+      divider: ({ value }) => (
+        <hr
+          className={
+            (value as { style?: string })?.style === 'space'
+              ? 'my-10 border-0'
+              : 'my-8 border-border'
+          }
+        />
+      ),
+      code: ({ value }) => (
+        <PortableTextCode value={value as { code: string; language?: string; filename?: string }} />
+      ),
       image: ({ value }) => <PortableTextImage value={value as SanityImage} />,
       codeBlock: ({ value }) => (
         <PortableTextCode value={value as { code: string; language?: string }} />

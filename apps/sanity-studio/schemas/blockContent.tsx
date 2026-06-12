@@ -1,14 +1,25 @@
-import { defineArrayMember, defineField, defineType, type ValidationContext } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
+import { portableTextLinkAnnotation } from './objects/portableTextLink';
+
+const bodyBlockStyles = [
+  { title: 'Normal', value: 'normal' },
+  { title: 'H2', value: 'h2' },
+  { title: 'H3', value: 'h3' },
+  { title: 'H4', value: 'h4' },
+  { title: 'Quote', value: 'blockquote' },
+];
+
+const bodyDecorators = [
+  { title: 'Strong', value: 'strong' },
+  { title: 'Emphasis', value: 'em' },
+  { title: 'Code', value: 'code' },
+  { title: 'Underline', value: 'underline' },
+  { title: 'Strike-through', value: 'strike-through' },
+];
 
 /**
- * This is the schema definition for the rich text fields used for
- * for this blog studio. When you import it in schemas.js it can be
- * reused in other parts of the studio with:
- *  {
- *    name: 'someName',
- *    title: 'Some title',
- *    type: 'blockContent'
- *  }
+ * Rich text for long-form content (posts, recipes, project bodies).
+ * Use `blockContentMinimal` for short intros and section blurbs.
  */
 export default defineType({
   title: 'Block Content',
@@ -18,134 +29,48 @@ export default defineType({
     defineArrayMember({
       title: 'Block',
       type: 'block',
-      // Styles let you set what your user can mark up blocks with. These
-      // correspond with HTML tags, but you can set any title or value
-      // you want and decide how you want to deal with it where you want to
-      // use your content.
-      styles: [
-        { title: 'Normal', value: 'normal' },
-        { title: 'H1', value: 'h1' },
-        { title: 'H2', value: 'h2' },
-        { title: 'H3', value: 'h3' },
-        { title: 'H4', value: 'h4' },
-        { title: 'Quote', value: 'blockquote' },
-      ],
+      styles: bodyBlockStyles,
       lists: [
         { title: 'Bullet', value: 'bullet' },
         { title: 'Numbered', value: 'number' },
       ],
-      // Marks let you mark up inline text in the block editor.
       marks: {
-        // Decorators usually describe a single property – e.g. a typographic
-        // preference or highlighting by editors.
-        decorators: [
-          { title: 'Strong', value: 'strong' },
-          { title: 'Emphasis', value: 'em' },
-          { title: 'Code', value: 'code' },
-          { title: 'Underline', value: 'underline' },
-          { title: 'Strike-through', value: 'strike-through' },
-        ],
-        // Annotations can be any object structure – e.g. a link or a footnote.
-        annotations: [
-          {
-            name: 'link',
-            type: 'object',
-            title: 'Link',
-            fields: [
-              defineField({
-                name: 'linkType',
-                title: 'Link Type',
-                type: 'string',
-                initialValue: 'href',
-                options: {
-                  list: [
-                    { title: 'URL', value: 'href' },
-                    { title: 'slug', value: 'slug' },
-                    { title: 'Painting', value: 'painting' },
-                    { title: 'Project', value: 'project' },
-                  ],
-                  layout: 'radio',
-                },
-              }),
-              defineField({
-                name: 'href',
-                title: 'URL',
-                type: 'url',
-                hidden: ({ parent }: { parent?: { linkType?: string } }) =>
-                  parent?.linkType !== 'href' && parent?.linkType != null,
-                validation: Rule =>
-                  Rule.custom((value, context: ValidationContext) => {
-                    const parent = context.parent as { linkType?: string } | undefined;
-                    if (parent?.linkType === 'href' && !value) {
-                      return 'URL is required when Link Type is URL';
-                    }
-                    return true;
-                  }),
-              }),
-              defineField({
-                name: 'slug',
-                title: 'Slug',
-                type: 'string',
-                hidden: ({ parent }: { parent?: { linkType?: string } }) =>
-                  parent?.linkType !== 'slug',
-                validation: Rule =>
-                  Rule.custom((value, context: ValidationContext) => {
-                    const parent = context.parent as { linkType?: string } | undefined;
-                    if (parent?.linkType === 'slug' && !value) {
-                      return 'Slug is required when Link Type is Slug';
-                    }
-                    return true;
-                  }),
-              }),
-              defineField({
-                name: 'painting',
-                title: 'Painting',
-                type: 'reference',
-                to: [{ type: 'painting' }],
-                hidden: ({ parent }: { parent?: { linkType?: string } }) =>
-                  parent?.linkType !== 'painting',
-                validation: Rule =>
-                  Rule.custom((value, context: ValidationContext) => {
-                    const parent = context.parent as { linkType?: string } | undefined;
-                    if (parent?.linkType === 'painting' && !value) {
-                      return 'Painting reference is required when Link Type is Painting';
-                    }
-                    return true;
-                  }),
-              }),
-              defineField({
-                name: 'project',
-                title: 'Project',
-                type: 'reference',
-                to: [{ type: 'project' }],
-                hidden: ({ parent }: { parent?: { linkType?: string } }) =>
-                  parent?.linkType !== 'project',
-                validation: Rule =>
-                  Rule.custom((value, context: ValidationContext) => {
-                    const parent = context.parent as { linkType?: string } | undefined;
-                    if (parent?.linkType === 'project' && !value) {
-                      return 'Project reference is required when Link Type is Project';
-                    }
-                    return true;
-                  }),
-              }),
-              defineField({
-                name: 'openInNewTab',
-                title: 'Open in new tab',
-                type: 'boolean',
-                initialValue: false,
-              }),
-            ],
-          },
-        ],
+        decorators: bodyDecorators,
+        annotations: [portableTextLinkAnnotation],
       },
     }),
-    // Add image support to Portable Text
+    defineArrayMember({
+      type: 'object',
+      name: 'divider',
+      title: 'Divider',
+      fields: [
+        defineField({
+          name: 'style',
+          title: 'Style',
+          type: 'string',
+          initialValue: 'line',
+          options: {
+            list: [
+              { title: 'Line', value: 'line' },
+              { title: 'Space', value: 'space' },
+            ],
+            layout: 'radio',
+          },
+        }),
+      ],
+      preview: {
+        select: { style: 'style' },
+        prepare({ style }: { style?: string }) {
+          return {
+            title: 'Divider',
+            subtitle: style === 'space' ? 'Spacing' : 'Horizontal line',
+          };
+        },
+      },
+    }),
     defineArrayMember({
       type: 'image',
-      options: {
-        hotspot: true, // Enables the hotspot feature for better image cropping
-      },
+      options: { hotspot: true },
       fields: [
         defineField({
           name: 'alt',
@@ -158,15 +83,30 @@ export default defineType({
           name: 'caption',
           type: 'string',
           title: 'Caption',
-          description: 'Optional caption to display below the image.',
         }),
       ],
     }),
-    // Add code block support
+    defineArrayMember({
+      type: 'code',
+      title: 'Code',
+      options: {
+        withFilename: true,
+        languageAlternatives: [
+          { title: 'TypeScript', value: 'typescript' },
+          { title: 'JavaScript', value: 'javascript' },
+          { title: 'HTML', value: 'html' },
+          { title: 'CSS', value: 'css' },
+          { title: 'JSON', value: 'json' },
+          { title: 'Python', value: 'python' },
+          { title: 'Bash', value: 'bash' },
+          { title: 'Plain text', value: 'text' },
+        ],
+      },
+    }),
     defineArrayMember({
       type: 'object',
       name: 'codeBlock',
-      title: 'Code Block',
+      title: 'Code block (legacy)',
       fields: [
         defineField({
           name: 'code',
@@ -194,22 +134,18 @@ export default defineType({
         }),
       ],
       preview: {
-        select: {
-          code: 'code',
-          language: 'language',
-        },
+        select: { code: 'code', language: 'language' },
         prepare({ code, language }: { code?: string; language?: string }) {
           const preview = code
             ? code.substring(0, 50) + (code.length > 50 ? '...' : '')
             : 'No code';
           return {
-            title: `Code Block (${language || 'javascript'})`,
+            title: `Code (${language || 'javascript'})`,
             subtitle: preview,
           };
         },
       },
     }),
-    // Add callout/alert blocks
     defineArrayMember({
       type: 'object',
       name: 'callout',
@@ -242,10 +178,7 @@ export default defineType({
         }),
       ],
       preview: {
-        select: {
-          title: 'title',
-          type: 'type',
-        },
+        select: { title: 'title', type: 'type' },
         prepare({ title, type }: { title?: string; type?: string }) {
           return {
             title: title || 'Callout',
@@ -254,7 +187,6 @@ export default defineType({
         },
       },
     }),
-    // Add recipe tip blocks
     defineArrayMember({
       type: 'object',
       name: 'recipeTip',
@@ -270,7 +202,6 @@ export default defineType({
           name: 'title',
           title: 'Tip Title',
           type: 'string',
-          description: 'e.g., "Pro Tip", "Time Saver", "Flavor Boost"',
         }),
         defineField({
           name: 'content',
@@ -296,11 +227,7 @@ export default defineType({
         }),
       ],
       preview: {
-        select: {
-          title: 'title',
-          icon: 'icon',
-          type: 'type',
-        },
+        select: { title: 'title', icon: 'icon', type: 'type' },
         prepare({ title, icon, type }: { title?: string; icon?: string; type?: string }) {
           return {
             title: `${icon || '💡'} ${title || 'Recipe Tip'}`,
@@ -309,7 +236,6 @@ export default defineType({
         },
       },
     }),
-    // Add video embed support
     defineArrayMember({
       type: 'object',
       name: 'videoEmbed',
@@ -326,20 +252,15 @@ export default defineType({
           name: 'title',
           title: 'Title',
           type: 'string',
-          description: 'Optional title for the video',
         }),
         defineField({
           name: 'caption',
           title: 'Caption',
           type: 'text',
-          description: 'Optional caption below the video',
         }),
       ],
       preview: {
-        select: {
-          title: 'title',
-          url: 'url',
-        },
+        select: { title: 'title', url: 'url' },
         prepare({ title, url }: { title?: string; url?: string }) {
           return {
             title: title || 'Video',
@@ -350,3 +271,6 @@ export default defineType({
     }),
   ],
 });
+
+// Re-export for schemas that need inline validation on link fields
+export { portableTextLinkAnnotation };

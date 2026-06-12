@@ -7,6 +7,7 @@ import { createSchema } from 'sanity';
 
 // Import all schema types
 import blockContent from './schemas/blockContent';
+import blockContentMinimal from './schemas/blockContentMinimal';
 import homeSectionIntro from './schemas/objects/homeSectionIntro';
 import painting from './schemas/painting';
 import post from './schemas/post';
@@ -43,6 +44,7 @@ const schemaTypes = [
   video,
   tag,
   blockContent,
+  blockContentMinimal,
   seoType,
   redirectType,
   socialType,

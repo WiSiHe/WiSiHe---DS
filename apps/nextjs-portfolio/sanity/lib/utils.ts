@@ -6,7 +6,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 
 export type Link = {
   _type: 'link';
-  linkType?: 'href' | 'page' | 'post' | 'painting' | 'project' | 'slug';
+  linkType?: 'href' | 'page' | 'post' | 'painting' | 'project' | 'recipe' | 'video' | 'slug';
   href?: string;
   page?: {
     _ref: string;
@@ -32,6 +32,18 @@ export type Link = {
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'project';
+  };
+  recipe?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'recipe';
+  };
+  video?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'video';
   };
   openInNewTab?: boolean;
 };
@@ -128,6 +140,16 @@ export function linkResolver(link: Link | undefined) {
     case 'project':
       if (link?.project?._ref) {
         return `/projects/${link.project._ref}`;
+      }
+      return null;
+    case 'recipe':
+      if (link?.recipe?._ref) {
+        return `/recipes/${link.recipe._ref}`;
+      }
+      return null;
+    case 'video':
+      if (link?.video?._ref) {
+        return `/videos/${link.video._ref}`;
       }
       return null;
     default:

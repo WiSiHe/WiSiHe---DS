@@ -1,11 +1,13 @@
 /* global process */
 
 import { assist } from '@sanity/assist';
+import { codeInput } from '@sanity/code-input';
 import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
 import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
+import { presentationResolve } from './presentation/resolve';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
 
@@ -44,6 +46,7 @@ const config = defineConfig({
 
         // Live preview and presentation
         presentationTool({
+          resolve: presentationResolve,
           previewUrl: {
             origin: previewUrl,
             previewMode: {
@@ -52,6 +55,8 @@ const config = defineConfig({
           },
           allowOrigins: allowedOrigins,
         }),
+
+        codeInput(),
 
         // AI-powered content assistance
         assist(),
