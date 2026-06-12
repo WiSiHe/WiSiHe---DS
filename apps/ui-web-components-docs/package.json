@@ -1,7 +1,7 @@
 {
   "name": "ui-web-components-docs",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6009",

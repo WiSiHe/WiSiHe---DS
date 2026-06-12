@@ -9,6 +9,7 @@ import {
   IoChevronDown,
   IoClose,
   IoFilterOutline,
+  IoHeartOutline,
   IoHourglassOutline,
   IoStarOutline,
   IoTimeOutline,
@@ -332,6 +333,11 @@ export default function PaintingsSearch() {
       label: 'Most Viewed',
       value: replicaIndexName('views'),
       icon: <BsEye className='w-3.5 h-3.5' />,
+    },
+    {
+      label: 'Most Liked',
+      value: replicaIndexName('likes'),
+      icon: <IoHeartOutline className='w-3.5 h-3.5' />,
     },
   ];
 

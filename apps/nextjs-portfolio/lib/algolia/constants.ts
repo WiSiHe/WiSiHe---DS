@@ -5,6 +5,7 @@ export const ALGOLIA_REPLICA_SUFFIX = {
   newest: 'newest',
   oldest: 'oldest',
   views: 'views',
+  likes: 'likes',
 } as const;
 
 export function replicaIndexName(suffix: keyof typeof ALGOLIA_REPLICA_SUFFIX): string {
