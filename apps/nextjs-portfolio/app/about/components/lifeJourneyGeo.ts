@@ -49,3 +49,15 @@ export function collectMapPoints(
 
   return points;
 }
+
+export function collectVisitedCountryPoints(visitedCountries: VisitedCountryItem[]): LngLat[] {
+  return visitedCountries
+    .filter(country => country.coordinates)
+    .map(country => toLngLat(country.coordinates as GeoCoordinates));
+}
+
+/** Gentle zoom for scrolly — never too close. */
+export function journeyScrollZoom(item: LifeJourneyItem): number {
+  const cms = item.mapZoom ?? 6;
+  return Math.min(Math.max(cms, 4.5), 6.8);
+}

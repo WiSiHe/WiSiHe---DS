@@ -16,6 +16,7 @@ import {
   normalizeTravelPhotos,
   normalizeVisitedCountries,
 } from './components/lifeJourneyTypes';
+import { TravelOverviewSection } from './components/TravelOverviewSection';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -130,9 +131,10 @@ export default function AboutPageClient({
         </div>
       </section>
 
-      {journeyItems.length > 0 ? (
-        <LifeJourneyScrolly
-          items={journeyItems}
+      {journeyItems.length > 0 ? <LifeJourneyScrolly items={journeyItems} /> : null}
+
+      {visitedCountries.length > 0 ? (
+        <TravelOverviewSection
           visitedCountries={visitedCountries}
           travelPhotos={travelPhotosNormalized}
         />
