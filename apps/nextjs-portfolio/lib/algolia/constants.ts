@@ -1,5 +1,5 @@
 export const ALGOLIA_INDEX_NAME =
-  process.env['NEXT_PUBLIC_ALGOLIA_INDEX_NAME']?.trim() || 'wisihe-search';
+  process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME?.trim() || 'wisihe-search';
 
 export const ALGOLIA_REPLICA_SUFFIX = {
   newest: 'newest',

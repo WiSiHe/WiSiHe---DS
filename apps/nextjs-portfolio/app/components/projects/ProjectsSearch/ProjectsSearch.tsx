@@ -14,7 +14,7 @@ import {
 import { Configure, Pagination, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { ALGOLIA_INDEX_NAME, replicaIndexName } from '@/lib/algolia/constants';
-import { searchClient } from '@/lib/algolia/searchClient';
+import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomRefinementList from '../../paintings/PaintingsSearch/CustomRefinementList';
 import CustomSearchBox from '../../paintings/PaintingsSearch/CustomSearchBox';
 import CustomSortBy from '../../paintings/PaintingsSearch/CustomSortBy';
@@ -111,6 +111,10 @@ export default function ProjectsSearch() {
       document.body.style.overflow = '';
     };
   }, [isMobileFiltersOpen]);
+
+  if (!isAlgoliaConfigured || !searchClient) {
+    return null;
+  }
 
   const sortItems = [
     {
