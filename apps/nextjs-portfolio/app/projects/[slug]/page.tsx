@@ -1,4 +1,4 @@
-import type { ProjectQueryResult } from '@wisihe/sanity-queries';
+import type { ProjectQueryResult, ProjectsSlugsResult } from '@wisihe/sanity-queries';
 import { isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -12,6 +12,8 @@ import {
   ProjectImage,
   ProjectInformation,
 } from '@/app/components/projects/Project';
+import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
+import { buildContentMetadata, resolveSeoCopy } from '@/lib/seo/metadata';
 import { sanityFetch } from '@/sanity/lib/live';
 import { projectQuery, projectsSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -41,14 +43,14 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
     const { data } = await sanityFetch({
       query: projectsSlugs,
       perspective: 'published',
       stega: false,
     });
-    return data || [];
+    return ((data as ProjectsSlugsResult) ?? []).map(({ slug }) => ({ slug }));
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];
@@ -73,51 +75,29 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     }
 
     const { seo, _id, name } = project;
-    const { image } = seo ?? {};
+    const defaultOgImage = `https://www.wisihe.no/api/og?id=${_id}`;
+    const seoImage =
+      seo?.image && isNotEmptyObject(seo.image)
+        ? urlForImage(seo.image)?.width(1200).height(630).url()
+        : undefined;
 
-    const defaultOgImage = `/api/og?id=${_id}`;
-    const imageUrl =
-      image && isNotEmptyObject(image)
-        ? urlForImage(image)?.width(1200).height(630).url()
-        : defaultOgImage;
+    const { title, description, noIndex } = resolveSeoCopy(seo, {
+      title: name ?? 'Project',
+      description: seo?.description?.trim() || `Project case study: ${name}`,
+    });
 
-    const url = `https://www.wisihe.no/projects/${project.slug}`;
-
-    const metadata: Metadata = {
-      title: seo?.title || name,
-      description: seo?.description || `Project: ${name}`,
-      alternates: {
-        canonical: url,
-      },
-      openGraph: {
-        title: seo?.title || name,
-        description: seo?.description || `Project: ${name}`,
-        url,
-        type: 'article',
-        locale: 'no_NO',
-        siteName: 'WiSiHe',
-        images: [
-          {
-            url: imageUrl || defaultOgImage,
-            width: 1200,
-            height: 630,
-            alt: seo?.title || name,
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: seo?.title || name,
-        description: seo?.description || `Project: ${name}`,
-        images: [imageUrl || defaultOgImage],
-      },
-    };
-
-    if (seo?.noIndex) {
-      metadata.robots = 'noindex';
-    }
-
-    return metadata;
+    return buildContentMetadata({
+      title,
+      description,
+      path: `/projects/${project.slug}`,
+      seoImage: seo?.image,
+      fallbackImage: project.image,
+      imageAlt: title,
+      imageUrlOverride: seoImage ?? defaultOgImage,
+      noIndex,
+      openGraphType: 'article',
+      keywords: project.tags?.map(t => t.name).filter(Boolean) as string[] | undefined,
+    });
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {
@@ -157,40 +137,18 @@ export default async function ProjectPage(props: Props) {
       ...(imageUrl ? { image: imageUrl } : {}),
       ...(project.projectStart ? { dateCreated: project.projectStart } : {}),
       ...(project.projectEnd ? { datePublished: project.projectEnd } : {}),
-      author: {
-        '@type': 'Person',
-        name: 'Henrik Sissener',
-        url: 'https://www.wisihe.no',
-      },
-      creator: {
-        '@type': 'Person',
-        name: 'Henrik Sissener',
-        url: 'https://www.wisihe.no',
-      },
+      author: buildPersonReference(),
+      creator: buildPersonReference(),
       ...(project.tags?.length
         ? { keywords: project.tags.map((t: { name: string }) => t.name).join(', ') }
         : {}),
     };
 
-    const breadcrumbData = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.wisihe.no' },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'Projects',
-          item: 'https://www.wisihe.no/projects',
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: project.name,
-          item: `https://www.wisihe.no/projects/${project.slug}`,
-        },
-      ],
-    };
+    const breadcrumbData = buildBreadcrumbJsonLd([
+      { name: 'Home', path: '/' },
+      { name: 'Projects', path: '/projects' },
+      { name: project.name ?? 'Project', path: `/projects/${project.slug}` },
+    ]);
 
     return (
       <div className='min-h-screen pt-32'>

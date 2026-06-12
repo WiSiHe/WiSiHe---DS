@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { StructureBuilder } from 'sanity/structure';
 
+/** Required on document lists with custom GROQ filters in Studio v6+. */
+const STRUCTURE_API_VERSION = '2024-10-28';
+
 // Type definitions for better type safety
 interface DocumentItem {
   title: string;
@@ -66,13 +69,51 @@ const createSingletonItem = (S: StructureBuilder, item: DocumentItem) =>
     // biome-ignore lint/style/noNonNullAssertion: documentId is guaranteed for singletons
     .child(S.document().schemaType(item.schemaType).documentId(item.documentId!));
 
-const createDocumentListItem = (S: StructureBuilder, item: DocumentItem) =>
+const createTagsListItem = (S: StructureBuilder) =>
   S.listItem()
+    .title('Tags')
+    .icon(() => '🏷️')
+    .child(
+      S.list()
+        .title('Tags')
+        .items([
+          S.listItem()
+            .title('Featured')
+            .icon(() => '⭐')
+            .child(
+              S.documentTypeList('tag')
+                .title('Featured tags')
+                .apiVersion(STRUCTURE_API_VERSION)
+                .filter('isFeatured == true'),
+            ),
+          S.listItem()
+            .title('All tags')
+            .icon(() => '🏷️')
+            .child(S.documentTypeList('tag').title('All tags')),
+          S.listItem()
+            .title('Unused')
+            .icon(() => '🗑️')
+            .child(
+              S.documentTypeList('tag')
+                .title('Unused tags')
+                .apiVersion(STRUCTURE_API_VERSION)
+                .filter(
+                  '!defined(*[references(^._id) && _type in ["painting", "project", "recipe", "video", "presentation"]][0])',
+                ),
+            ),
+        ]),
+    );
+
+const createDocumentListItem = (S: StructureBuilder, item: DocumentItem) => {
+  if (item.schemaType === 'tag') {
+    return createTagsListItem(S);
+  }
+
+  return S.listItem()
     .title(item.title)
     .icon(() => item.icon)
-    .child(
-      S.documentTypeList(item.schemaType).title(item.title).filter(`_type == "${item.schemaType}"`),
-    );
+    .child(S.documentTypeList(item.schemaType).title(item.title));
+};
 
 const createCategoryItem = (S: StructureBuilder, category: CategoryItem) =>
   S.listItem()

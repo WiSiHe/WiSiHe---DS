@@ -16,6 +16,7 @@ export const footerLinks = [
   { name: 'Paintings', href: '/paintings' },
   { name: 'Projects', href: '/projects' },
   { name: 'Videos', href: '/videos' },
+  { name: 'Recipes', href: '/recipes' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
 ];

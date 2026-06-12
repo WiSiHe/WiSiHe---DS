@@ -127,6 +127,12 @@ export const paintingQuery = defineQuery(`
     'slug': slug.current,
     description,
     seoDescription,
+    "seo": {
+      "title": coalesce(seo.title, title, ""),
+      "description": coalesce(seo.description, seoDescription, ""),
+      "image": coalesce(seo.image, image),
+      "noIndex": seo.noIndex == true
+    },
     format,
     medium,
     isFeatured,
@@ -474,6 +480,12 @@ export const videoBySlugQuery = defineQuery(`
     title,
     "slug": slug.current,
     description,
+    "seo": {
+      "title": coalesce(seo.title, title, ""),
+      "description": coalesce(seo.description, description, ""),
+      "image": coalesce(seo.image, thumbnail),
+      "noIndex": seo.noIndex == true
+    },
     videoUrl,
     "featured": featured == true,
     "viewsCount": coalesce(viewsCount, 0),
@@ -502,7 +514,25 @@ export const videosSlugs = defineQuery(`
 `);
 
 export const generateStaticSlugs = defineQuery(`
-  *[_type == $type && defined(slug.current)]{
+  *[
+    _type == $type
+    && defined(slug.current)
+    && coalesce(seo.noIndex, false) != true
+    && !(_type == "painting" && isNSFW == true)
+  ]{
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const indexableContentSlugs = defineQuery(`
+  *[
+    _type in ["painting", "project", "recipe", "video", "presentation"]
+    && defined(slug.current)
+    && coalesce(seo.noIndex, false) != true
+    && !(_type == "painting" && isNSFW == true)
+  ]{
+    _type,
     "slug": slug.current,
     _updatedAt
   }
@@ -642,6 +672,12 @@ export const presentationQuery = defineQuery(`
     title,
     description,
     "slug": slug.current,
+    "seo": {
+      "title": coalesce(seo.title, title, ""),
+      "description": coalesce(seo.description, description, ""),
+      "image": seo.image,
+      "noIndex": seo.noIndex == true
+    },
     tags[]->{
       _id,
       name

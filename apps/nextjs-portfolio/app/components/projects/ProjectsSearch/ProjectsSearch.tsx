@@ -13,7 +13,8 @@ import {
 } from 'react-icons/io5';
 import { Configure, Pagination, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
-import { indexName, searchClient } from '../../paintings/PaintingsSearch/AlgoliaClient';
+import { ALGOLIA_INDEX_NAME, replicaIndexName } from '@/lib/algolia/constants';
+import { searchClient } from '@/lib/algolia/searchClient';
 import CustomRefinementList from '../../paintings/PaintingsSearch/CustomRefinementList';
 import CustomSearchBox from '../../paintings/PaintingsSearch/CustomSearchBox';
 import CustomSortBy from '../../paintings/PaintingsSearch/CustomSortBy';
@@ -112,22 +113,30 @@ export default function ProjectsSearch() {
   }, [isMobileFiltersOpen]);
 
   const sortItems = [
-    { label: 'Featured', value: indexName, icon: <IoStarOutline className='w-4 h-4' /> },
-    { label: 'Newest', value: `${indexName}_newest`, icon: <IoTimeOutline className='w-4 h-4' /> },
+    {
+      label: 'Featured',
+      value: ALGOLIA_INDEX_NAME,
+      icon: <IoStarOutline className='w-4 h-4' />,
+    },
+    {
+      label: 'Newest',
+      value: replicaIndexName('newest'),
+      icon: <IoTimeOutline className='w-4 h-4' />,
+    },
     {
       label: 'Oldest',
-      value: `${indexName}_oldest`,
+      value: replicaIndexName('oldest'),
       icon: <IoHourglassOutline className='w-4 h-4' />,
     },
     {
       label: 'Most viewed',
-      value: `${indexName}_views`,
+      value: replicaIndexName('views'),
       icon: <IoEyeOutline className='w-4 h-4' />,
     },
   ];
 
   return (
-    <InstantSearchNext searchClient={searchClient} indexName={indexName} routing={false}>
+    <InstantSearchNext searchClient={searchClient} indexName={ALGOLIA_INDEX_NAME} routing={false}>
       <Configure hitsPerPage={12} filters='_type:"project"' />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>

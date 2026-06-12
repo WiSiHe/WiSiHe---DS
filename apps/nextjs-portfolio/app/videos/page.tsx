@@ -41,13 +41,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Videos() {
-  const [{ data }] = await Promise.all([sanityFetch({ query: getAllVideos })]);
+  const [{ data: rawData }] = await Promise.all([sanityFetch({ query: getAllVideos })]);
+  const data = rawData as GetAllVideosResult;
 
   if (isEmptyObject(data)) {
     return notFound();
   }
 
-  const { videos } = data as GetAllVideosResult;
+  const { videos } = data;
 
   // Create structured data for video collection
   const structuredData = {

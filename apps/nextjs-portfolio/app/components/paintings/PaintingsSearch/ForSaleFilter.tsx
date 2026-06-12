@@ -1,0 +1,38 @@
+'use client';
+
+import { Checkbox } from '@wisihe/ui-react';
+import { cn } from '@wisihe/utils';
+import { FaShoppingCart } from 'react-icons/fa';
+import { useToggleRefinement } from 'react-instantsearch';
+
+export default function ForSaleFilter() {
+  const { value, refine } = useToggleRefinement({ attribute: 'isForSale' });
+
+  return (
+    <button
+      type='button'
+      onClick={() => refine(value)}
+      className={cn(
+        'flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm transition-colors',
+        value.isRefined
+          ? 'border-accent/40 bg-accent/10 text-foreground'
+          : 'border-border bg-surface text-muted-foreground hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
+      )}
+    >
+      <Checkbox
+        inputSize='sm'
+        checked={value.isRefined}
+        onChange={() => refine(value)}
+        label='For sale'
+        labelClassName='grow text-left text-sm font-medium cursor-pointer'
+      />
+      <FaShoppingCart
+        className={cn(
+          'h-3.5 w-3.5 shrink-0',
+          value.isRefined ? 'text-accent' : 'text-muted-foreground/60',
+        )}
+        aria-hidden
+      />
+    </button>
+  );
+}

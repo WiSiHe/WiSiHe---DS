@@ -35,6 +35,22 @@ export const Default: Story = {
   },
 };
 
+export const ForSale: Story = {
+  name: 'For sale (highlighted)',
+  args: {
+    title: 'Available Painting',
+    href: '/paintings/available-painting',
+    image: <DemoImage />,
+    tags: ['Store', 'Landscape'],
+    isForSale: true,
+    badges: [
+      { key: 'store', icon: <IconShoppingCart className='w-4 h-4' />, label: 'Available for sale' },
+      { key: 'video', icon: <IconVideo className='w-4 h-4' />, label: 'Has video' },
+      { key: 'multi', icon: <IconStack2 className='w-4 h-4' />, label: 'Multiple images' },
+    ],
+  },
+};
+
 export const WithBadges: Story = {
   args: {
     title: 'Available Painting',

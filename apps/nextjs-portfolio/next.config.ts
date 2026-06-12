@@ -39,7 +39,14 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['motion', '@tabler/icons-react', 'react-icons'],
+    optimizePackageImports: [
+      'motion',
+      '@tabler/icons-react',
+      'react-icons',
+      'algoliasearch',
+      'react-instantsearch',
+      'react-instantsearch-nextjs',
+    ],
   },
 
   transpilePackages: [

@@ -1,5 +1,6 @@
 import { DocumentVideoIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import { seoType } from './seoType';
 
 // import tagType from './tag'
 // import VideoDescriptionGenerator from 'components/sanity/VideoDescriptionGenerator'
@@ -84,6 +85,12 @@ export default defineType({
       of: [{ type: 'reference', to: { type: 'tag' } }],
       description: 'Tags for the video',
       validation: rule => rule.required(),
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      description: 'Optional overrides for search and social previews.',
     }),
     defineField({
       name: 'viewsCount',

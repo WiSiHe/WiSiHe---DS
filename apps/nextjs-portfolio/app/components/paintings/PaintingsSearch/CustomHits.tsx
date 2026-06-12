@@ -4,6 +4,7 @@ import { cn } from '@wisihe/utils';
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
+import { isNsfwFacetActive } from '@/lib/algolia/facets';
 import PaintingCard from '../PaintingCard/PaintingCard';
 
 // Skeleton card — varied heights to mimic the masonry feel
@@ -84,9 +85,7 @@ export default function CustomHits() {
     }
   }, [skeletonTimedOut, status, refresh]);
 
-  const isNsfwFilterActive = refinements.some(
-    r => r.attribute === 'tags' && r.refinements.some(v => v.label === 'NSFW'),
-  );
+  const isNsfwFilterActive = isNsfwFacetActive(refinements);
 
   // `processingTimeMS` is set after Algolia responds — distinguishes
   // "no search fired yet" from "search returned 0 results"
@@ -130,6 +129,9 @@ export default function CustomHits() {
               ...hit,
               _id: hit.objectID,
               slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
+              isNSFW: hit['isNSFW'] === true,
+              isForSale: hit['isForSale'] === true,
+              hasStoreLink: hit['hasStoreLink'] === true,
               tagsV2: hit['tags']
                 ? (hit['tags'] as string[]).map((t: string) => ({ name: t }))
                 : [],

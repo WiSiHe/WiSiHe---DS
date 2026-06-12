@@ -63,10 +63,16 @@ const PaintingCardAdapter = ({
     isFanArt,
     isNSFW,
     isForSale,
+    hasStoreLink,
+    redbubbleUrl,
+    gelatoUrl,
     tagsV2,
     medium,
     paintedAt,
   } = paintingData as any;
+
+  const availableForSale =
+    isForSale === true || hasStoreLink === true || Boolean(redbubbleUrl || gelatoUrl);
 
   // Extract year from paintedAt date string safely
   let yearString: string | undefined;
@@ -125,18 +131,18 @@ const PaintingCardAdapter = ({
 
   // Build the badges array — pinned badge goes first (always visible)
   const badges: PaintingCardBadge[] = [];
+  if (availableForSale) {
+    badges.push({
+      key: 'store',
+      icon: <FaShoppingCart className='w-4 h-4 text-accent' />,
+      label: 'Available for sale',
+    });
+  }
   if (isFeatured === true) {
     badges.push({
       key: 'featured',
       icon: <FaStar className='w-4 h-4 text-yellow-400' />,
       label: 'Featured painting',
-    });
-  }
-  if (isForSale === true) {
-    badges.push({
-      key: 'store',
-      icon: <FaShoppingCart className='w-4 h-4' />,
-      label: 'Available for sale',
     });
   }
   if (isFanArt === true) {
@@ -175,6 +181,7 @@ const PaintingCardAdapter = ({
       tags={cleanedTags}
       isNsfw={isNsfw}
       isNsfwVisible={isNsfwFilterActive}
+      isForSale={availableForSale}
       badges={badges}
       alwaysShowTags={alwaysShowTags}
       className={className}

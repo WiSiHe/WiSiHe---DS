@@ -1,8 +1,8 @@
 import { TagIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
+import { tagIncomingReferencesDecoration } from './tagIncomingReferences';
 
-// A small inline component that returns a color-filled box
 function ColorSwatch(color?: string) {
   if (!color) return null;
   return (
@@ -11,7 +11,7 @@ function ColorSwatch(color?: string) {
         width: '100%',
         height: '100%',
         backgroundColor: color,
-        borderRadius: '4px', // or '50%' if you want a circle
+        borderRadius: '4px',
       }}
     />
   );
@@ -22,70 +22,106 @@ export const tag = defineType({
   title: 'Tag',
   icon: TagIcon,
   type: 'document',
+  orderings: [
+    {
+      title: 'Name, A–Z',
+      name: 'nameAsc',
+      by: [{ field: 'name', direction: 'asc' }],
+    },
+    {
+      title: 'Featured first',
+      name: 'featuredNameAsc',
+      by: [
+        { field: 'isFeatured', direction: 'desc' },
+        { field: 'name', direction: 'asc' },
+      ],
+    },
+  ],
+  renderMembers: members => [tagIncomingReferencesDecoration, ...members],
   fields: [
     defineField({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: rule => rule.required(),
+      description:
+        'Used on the site for filters, cards, and search. Reuse existing tags instead of creating near-duplicates.',
+      validation: rule =>
+        rule
+          .required()
+          .min(2)
+          .max(50)
+          .custom(async (name, context) => {
+            if (typeof name !== 'string') return true;
+
+            const trimmed = name.trim();
+            if (trimmed !== name) {
+              return 'Remove leading or trailing spaces';
+            }
+
+            const documentId = context.document?._id?.replace(/^drafts\./, '');
+            if (!documentId) return true;
+
+            const client = context.getClient({ apiVersion: '2024-10-28' });
+            const duplicates = await client.fetch<number>(
+              `count(*[
+                _type == "tag" &&
+                name == $name &&
+                !(_id in [$draftId, $publishedId])
+              ])`,
+              {
+                name: trimmed,
+                draftId: `drafts.${documentId}`,
+                publishedId: documentId,
+              },
+            );
+
+            return duplicates > 0 ? 'A tag with this name already exists' : true;
+          }),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
-      validation: rule => rule.required(),
+      description: 'Optional note for editors and AI — not shown on the website.',
       components: {
         input: props => (
           <GenericAIGenerator
             {...props}
-            prompt="Create a clear, concise description for a tag named '{tagName}'{parentContext}. This tag will be used to categorize content like paintings, projects, and recipes. The description should explain what this tag represents and help users understand what kind of content it applies to. If there's a parent tag, consider how this tag relates to and specializes the parent category. Keep it under 150 characters and focus on being helpful for content discovery and organization."
-            transformResponse={response => {
-              // Clean up the response and ensure it's concise
-              let cleaned = response
-                .replace(/^["']|["']$/g, '') // Remove surrounding quotes
-                .replace(/\n/g, ' ') // Replace newlines with spaces
-                .trim();
-
-              // Handle parent context in the prompt
-              if (cleaned.includes('{parentContext}')) {
-                cleaned = cleaned.replace('{parentContext}', '');
-              }
-
-              return cleaned.substring(0, 150); // Ensure it's under 150 characters
-            }}
-            fieldDependencies={{
-              name: 'tagName',
-              'parent.name': 'parentContext',
-            }}
+            prompt="Write a short description for the tag '{tagName}'. It categorizes paintings, projects, and recipes on a portfolio site. Explain what content belongs under this tag. Keep it under 150 characters."
+            transformResponse={response =>
+              response
+                .replace(/^["']|["']$/g, '')
+                .replace(/\n/g, ' ')
+                .trim()
+                .substring(0, 150)
+            }
+            fieldDependencies={{ name: 'tagName' }}
             characterLimit={150}
             rows={3}
-            placeholder='Enter a description for this tag or use AI to generate one...'
+            placeholder='Optional — helps when picking or generating tags...'
           />
         ),
       },
     }),
     defineField({
-      name: 'parent',
-      title: 'Parent Tag',
-      type: 'reference',
-      to: [{ type: 'tag' }],
-      description:
-        'Optional parent tag to create a hierarchy (e.g., "Digital Art" could be parent of "Concept Art")',
+      name: 'isFeatured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Featured tags appear first in project filters on the website.',
+      initialValue: false,
     }),
     defineField({
-      name: 'children',
-      title: 'Child Tags',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'tag' }] }],
-      description:
-        'Child tags that belong under this tag (auto-populated based on parent references)',
-      readOnly: true,
+      name: 'sortOrder',
+      title: 'Sort order',
+      type: 'number',
+      description: 'Lower numbers sort first in Studio tag lists.',
+      initialValue: 0,
     }),
     defineField({
       name: 'color',
       title: 'Color',
       type: 'string',
-      description: 'Enter a CSS color (e.g. #FF0000, rgb(255, 0, 0), or "hotpink")',
+      description: 'Swatch color in Studio lists only.',
       options: {
         list: [
           { title: 'Red', value: '#ef4444' },
@@ -101,48 +137,17 @@ export const tag = defineType({
         ],
       },
     }),
-    defineField({
-      name: 'isFeatured',
-      title: 'Featured Tag',
-      type: 'boolean',
-      description: 'Featured tags appear more prominently in filters and navigation',
-      initialValue: false,
-    }),
-    defineField({
-      name: 'isRoot',
-      title: 'Root Tag',
-      type: 'boolean',
-      description: 'Root tags are top-level tags that can be used as main categories',
-      initialValue: false,
-    }),
-    defineField({
-      name: 'sortOrder',
-      title: 'Sort Order',
-      type: 'number',
-      description: 'Order in which this tag appears in lists (lower numbers appear first)',
-      initialValue: 0,
-    }),
   ],
   preview: {
     select: {
       title: 'name',
       subtitle: 'description',
       color: 'color',
-      parent: 'parent.name',
       isFeatured: 'isFeatured',
-      isRoot: 'isRoot',
-      childrenCount: 'children',
     },
-    prepare({ title, subtitle, color, parent, isFeatured, isRoot, childrenCount }) {
-      const badges = [];
-      if (isFeatured) badges.push('⭐');
-      if (isRoot) badges.push('🌳');
-      if (parent) badges.push(`📁 ${parent}`);
-      if (childrenCount && Array.isArray(childrenCount) && childrenCount.length > 0)
-        badges.push(`📂 ${childrenCount.length} children`);
-
+    prepare({ title, subtitle, color, isFeatured }) {
       return {
-        title: `${title}${badges.length > 0 ? ` ${badges.join(' ')}` : ''}`,
+        title: isFeatured ? `${title} ⭐` : title,
         subtitle: subtitle as string,
         media: color ? ColorSwatch(color as string) : TagIcon,
       };

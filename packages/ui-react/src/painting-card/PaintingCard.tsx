@@ -116,6 +116,8 @@ export interface PaintingCardProps {
   isNsfw?: boolean;
   /** When true, the NSFW blur is lifted (e.g. user has actively filtered for NSFW content) */
   isNsfwVisible?: boolean;
+  /** Highlights the card when the work is available to buy (store link or for-sale flag) */
+  isForSale?: boolean;
   /**
    * Extra icon badges rendered in the top-right corner.
    * The first badge is always visible; subsequent ones animate in on hover.
@@ -146,6 +148,7 @@ export function PaintingCard({
   tags = [],
   isNsfw = false,
   isNsfwVisible = false,
+  isForSale = false,
   badges = [],
   alwaysShowTags = false,
   className,
@@ -167,6 +170,8 @@ export function PaintingCard({
         'bg-surface border border-border',
         'transition-all duration-300',
         'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
+        isForSale &&
+          'ring-2 ring-accent/50 border-accent/40 shadow-md shadow-accent/15 hover:ring-accent/70',
         className,
       )}
       whileHover='hover'

@@ -453,13 +453,9 @@ export type Tag = {
   _updatedAt: string;
   _rev: string;
   name: string;
-  description: string;
-  parent?: TagReference;
-  children?: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
+  description?: string;
+  isFeatured?: boolean;
+  sortOrder?: number;
   color?:
     | "#ef4444"
     | "#f97316"
@@ -471,9 +467,6 @@ export type Tag = {
     | "#6b7280"
     | "#a16207"
     | "#14b8a6";
-  isFeatured?: boolean;
-  isRoot?: boolean;
-  sortOrder?: number;
 };
 
 export type Post = {
@@ -1266,13 +1259,26 @@ export type PostQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: paintingQuery
-// Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    format,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    "likesCount": count(likes),    viewsCount,    paintedAt,    format,    redbubbleUrl,    gelatoUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "altText": altText,      "palette": asset->metadata.palette    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
+// Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, seoDescription, ""),      "image": coalesce(seo.image, image),      "noIndex": seo.noIndex == true    },    format,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    "likesCount": count(likes),    viewsCount,    paintedAt,    format,    redbubbleUrl,    gelatoUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "altText": altText,      "palette": asset->metadata.palette    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
 export type PaintingQueryResult = {
   _id: string;
   title: string;
   slug: string;
   description: string;
   seoDescription: string | null;
+  seo: {
+    title: string;
+    description: string | "";
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      _type: "image";
+    };
+    noIndex: false;
+  };
   format: "landscape" | "portrait" | "square";
   medium:
     | "Digital (Other)"
@@ -1904,12 +1910,25 @@ export type GetAllVideosResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: videoBySlugQuery
-// Query: *[_type == "video" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    description,    videoUrl,    "featured": featured == true,    "viewsCount": coalesce(viewsCount, 0),    "likesCount": count(likes),    "linkedPainting": coalesce(linkedPainting->{      _id,      "slug": slug.current,      title,      description,      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    }, null),    tags[]->{name},    thumbnail {      ...,      "lqip": asset->metadata.lqip    }  }
+// Query: *[_type == "video" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    description,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": coalesce(seo.image, thumbnail),      "noIndex": seo.noIndex == true    },    videoUrl,    "featured": featured == true,    "viewsCount": coalesce(viewsCount, 0),    "likesCount": count(likes),    "linkedPainting": coalesce(linkedPainting->{      _id,      "slug": slug.current,      title,      description,      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    }, null),    tags[]->{name},    thumbnail {      ...,      "lqip": asset->metadata.lqip    }  }
 export type VideoBySlugQueryResult = {
   _id: string;
   title: string;
   slug: string;
   description: string;
+  seo: {
+    title: string;
+    description: string;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      _type: "image";
+    };
+    noIndex: false;
+  };
   videoUrl: string;
   featured: boolean | false;
   viewsCount: number | 0;
@@ -1953,11 +1972,42 @@ export type VideosSlugsResult = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: generateStaticSlugs
-// Query: *[_type == $type && defined(slug.current)]{    "slug": slug.current,    _updatedAt  }
+// Query: *[    _type == $type    && defined(slug.current)    && coalesce(seo.noIndex, false) != true    && !(_type == "painting" && isNSFW == true)  ]{    "slug": slug.current,    _updatedAt  }
 export type GenerateStaticSlugsResult = Array<{
   slug: string;
   _updatedAt: string;
 }>;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: indexableContentSlugs
+// Query: *[    _type in ["painting", "project", "recipe", "video", "presentation"]    && defined(slug.current)    && coalesce(seo.noIndex, false) != true    && !(_type == "painting" && isNSFW == true)  ]{    _type,    "slug": slug.current,    _updatedAt  }
+export type IndexableContentSlugsResult = Array<
+  | {
+      _type: "painting";
+      slug: string;
+      _updatedAt: string;
+    }
+  | {
+      _type: "presentation";
+      slug: string;
+      _updatedAt: string;
+    }
+  | {
+      _type: "project";
+      slug: string;
+      _updatedAt: string;
+    }
+  | {
+      _type: "recipe";
+      slug: string;
+      _updatedAt: string;
+    }
+  | {
+      _type: "video";
+      slug: string;
+      _updatedAt: string;
+    }
+>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: REDIRECTS_QUERY
@@ -2143,12 +2193,18 @@ export type RandomPaintingsQueryResult = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: presentationQuery
-// Query: *[_type == "presentation" && slug.current == $slug][0] {    _id,    title,    description,    "slug": slug.current,    tags[]->{      _id,      name    },    slides[] {      _type,      status,      _type == "contentSlide" => {        title,        subtitle,        content,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        },        category->{          _id,          name,          description,          color        },        sources[] {          text,          url        },        tools[] {          name,          description,          url,          category,          workshopUrl,          nerdLevel        },        examples[] {          name,          description,          image {            ...,            "url": asset->url,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          iframe,          url        }      },      _type == "titleSlide" => {        title,        subtitle,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        }      },      _type == "separatorSlide" => {        title,        slideDesign,        category->{          _id,          name,          description,          color        }      }    }  }
+// Query: *[_type == "presentation" && slug.current == $slug][0] {    _id,    title,    description,    "slug": slug.current,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },    tags[]->{      _id,      name    },    slides[] {      _type,      status,      _type == "contentSlide" => {        title,        subtitle,        content,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        },        category->{          _id,          name,          description,          color        },        sources[] {          text,          url        },        tools[] {          name,          description,          url,          category,          workshopUrl,          nerdLevel        },        examples[] {          name,          description,          image {            ...,            "url": asset->url,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          iframe,          url        }      },      _type == "titleSlide" => {        title,        subtitle,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        }      },      _type == "separatorSlide" => {        title,        slideDesign,        category->{          _id,          name,          description,          color        }      }    }  }
 export type PresentationQueryResult = {
   _id: string;
   title: string;
   description: string | null;
   slug: string;
+  seo: {
+    title: string;
+    description: string | "";
+    image: null;
+    noIndex: false;
+  };
   tags: Array<{
     _id: string;
     name: string;
@@ -4793,7 +4849,7 @@ declare module "@sanity/client" {
     '\n    *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        "date": coalesce(date, _updatedAt),\n    }\n    ': AllPaintingsQueryResult;
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult;
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult;
-    '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    viewsCount,\n    paintedAt,\n    format,\n    redbubbleUrl,\n    gelatoUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "altText": altText,\n      "palette": asset->metadata.palette\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
+    '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, seoDescription, ""),\n      "image": coalesce(seo.image, image),\n      "noIndex": seo.noIndex == true\n    },\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    viewsCount,\n    paintedAt,\n    format,\n    redbubbleUrl,\n    gelatoUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "altText": altText,\n      "palette": asset->metadata.palette\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
     '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  {"slug": slug.current}\n': PaintingsSlugsResult;
@@ -4808,9 +4864,10 @@ declare module "@sanity/client" {
     '\n  count(*[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )])\n': GetFilteredPaintingsCountResult;
     '\n    {\n      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]\n        | order(projectStart desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]\n        | order(projectEnd desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "tags": *[\n        _type == "tag" &&\n        count(*[_type == "project" && references(^._id)]) > 0\n      ]\n      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        isFeatured,\n        "count": count(*[_type == "project" && references(^._id)]),\n        "projectsCount": count(*[_type == "project" && references(^._id)])\n      }\n    }\n    ': GetAllProjectsResult;
     '\n      {\n        "videos": *[_type == "video" && defined(slug.current)]\n        | order(date desc, _updatedAt desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "featured": featured == true,\n          description,\n          videoUrl,\n          "linkedPainting": coalesce(linkedPainting->{\n            _id,\n            "slug": slug.current,\n            title,\n            image{\n              ...,\n              "lqip": asset->metadata.lqip\n            }\n          }, null),\n          tags[]->{name},\n          thumbnail {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        }\n      }\n    ': GetAllVideosResult;
-    '\n  *[_type == "video" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    videoUrl,\n    "featured": featured == true,\n    "viewsCount": coalesce(viewsCount, 0),\n    "likesCount": count(likes),\n    "linkedPainting": coalesce(linkedPainting->{\n      _id,\n      "slug": slug.current,\n      title,\n      description,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }, null),\n    tags[]->{name},\n    thumbnail {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': VideoBySlugQueryResult;
+    '\n  *[_type == "video" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": coalesce(seo.image, thumbnail),\n      "noIndex": seo.noIndex == true\n    },\n    videoUrl,\n    "featured": featured == true,\n    "viewsCount": coalesce(viewsCount, 0),\n    "likesCount": count(likes),\n    "linkedPainting": coalesce(linkedPainting->{\n      _id,\n      "slug": slug.current,\n      title,\n      description,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }, null),\n    tags[]->{name},\n    thumbnail {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': VideoBySlugQueryResult;
     '\n  *[_type == "video" && defined(slug.current)] { "slug": slug.current }\n': VideosSlugsResult;
-    '\n  *[_type == $type && defined(slug.current)]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': GenerateStaticSlugsResult;
+    '\n  *[\n    _type == $type\n    && defined(slug.current)\n    && coalesce(seo.noIndex, false) != true\n    && !(_type == "painting" && isNSFW == true)\n  ]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': GenerateStaticSlugsResult;
+    '\n  *[\n    _type in ["painting", "project", "recipe", "video", "presentation"]\n    && defined(slug.current)\n    && coalesce(seo.noIndex, false) != true\n    && !(_type == "painting" && isNSFW == true)\n  ]{\n    _type,\n    "slug": slug.current,\n    _updatedAt\n  }\n': IndexableContentSlugsResult;
     '\n  *[_type == "redirect" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n': REDIRECTS_QUERY_RESULT;
     '\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      "palette": asset->metadata.palette,\n    },\n  }\n': OG_IMAGE_QUERY_RESULT;
     '\n  *[_type in ["page", "post"] && defined(slug.current)] {\n      "href": select(\n        _type == "page" => "/" + slug.current,\n        _type == "post" => "/posts/" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ': SITEMAP_QUERY_RESULT;
@@ -4818,7 +4875,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "recipe" && slug.current == $slug][0] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    ingredientCategories[]{\n      categoryName,\n              ingredients[]{\n          ingredient,\n          photo {\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          amount,\n          unit,\n          isDiscrete,\n          notes\n        }\n    },\n    instructions[]{\n      title,\n      content\n    },\n    tips[]{\n      title,\n      content,\n      icon\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetRecipeResult;
     '\n  *[_type == "recipe" && defined(slug.current)]\n  {"slug": slug.current}\n': GetRecipeSlugsResult;
     '\n  *[\n    _type == "painting" &&\n    defined(slug.current) &&\n    defined(image) &&\n    isNSFW != true\n  ] | order(_createdAt desc) [0...50] {\n    _id,\n    title,\n    "slug": slug.current,\n    isFeatured,\n    tagsV2[]->{name},\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    }\n  }\n': RandomPaintingsQueryResult;
-    '\n  *[_type == "presentation" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      name\n    },\n    slides[] {\n      _type,\n      status,\n      _type == "contentSlide" => {\n        title,\n        subtitle,\n        content,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        },\n        category->{\n          _id,\n          name,\n          description,\n          color\n        },\n        sources[] {\n          text,\n          url\n        },\n        tools[] {\n          name,\n          description,\n          url,\n          category,\n          workshopUrl,\n          nerdLevel\n        },\n        examples[] {\n          name,\n          description,\n          image {\n            ...,\n            "url": asset->url,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          iframe,\n          url\n        }\n      },\n      _type == "titleSlide" => {\n        title,\n        subtitle,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        }\n      },\n      _type == "separatorSlide" => {\n        title,\n        slideDesign,\n        category->{\n          _id,\n          name,\n          description,\n          color\n        }\n      }\n    }\n  }\n': PresentationQueryResult;
+    '\n  *[_type == "presentation" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    tags[]->{\n      _id,\n      name\n    },\n    slides[] {\n      _type,\n      status,\n      _type == "contentSlide" => {\n        title,\n        subtitle,\n        content,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        },\n        category->{\n          _id,\n          name,\n          description,\n          color\n        },\n        sources[] {\n          text,\n          url\n        },\n        tools[] {\n          name,\n          description,\n          url,\n          category,\n          workshopUrl,\n          nerdLevel\n        },\n        examples[] {\n          name,\n          description,\n          image {\n            ...,\n            "url": asset->url,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          iframe,\n          url\n        }\n      },\n      _type == "titleSlide" => {\n        title,\n        subtitle,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        }\n      },\n      _type == "separatorSlide" => {\n        title,\n        slideDesign,\n        category->{\n          _id,\n          name,\n          description,\n          color\n        }\n      }\n    }\n  }\n': PresentationQueryResult;
     '\n  *[_type == "presentation" && defined(slug.current)] | order(_createdAt desc) {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "slidesCount": count(slides),\n    _createdAt,\n    tags[]->{\n      _id,\n      name\n    },\n    "coverImage": coalesce(\n      slides[_type == "titleSlide" && media.mediaType == "image"][0].media.image {\n        ...,\n        alt,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      },\n      slides[_type == "contentSlide" && media.mediaType == "image"][0].media.image {\n        ...,\n        alt,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      },\n      null\n    )\n  }\n': AllPresentationsQueryResult;
     '\n  *[_type == "presentation" && defined(slug.current)] { "slug": slug.current }\n': PresentationSlugsQueryResult;
     '\n  *[_type == "project" && defined(slug.current)]\n  | order(projectStart desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    seoDescription,\n    projectType,\n    projectStart,\n    projectEnd,\n    status,\n    content,\n    name,\n    "tags": tags[]->{name},\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': GetPaginatedProjectsResult;

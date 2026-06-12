@@ -1,8 +1,2 @@
-import { liteClient as algoliasearch } from 'algoliasearch/lite';
-
-export const searchClient = algoliasearch(
-  process.env['NEXT_PUBLIC_ALGOLIA_APP_ID'] as string,
-  process.env['NEXT_PUBLIC_ALGOLIA_SEARCH_KEY'] as string,
-);
-
-export const indexName = process.env['NEXT_PUBLIC_ALGOLIA_INDEX_NAME'] || 'wisihe-search';
+export { ALGOLIA_INDEX_NAME as indexName, replicaIndexName } from '@/lib/algolia/constants';
+export { searchClient } from '@/lib/algolia/searchClient';

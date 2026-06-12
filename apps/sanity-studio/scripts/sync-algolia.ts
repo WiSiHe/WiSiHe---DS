@@ -41,24 +41,31 @@ if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_KEY) {
 }
 
 const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_KEY);
-const ALGOLIA_INDEX_NAME = 'wisihe-search';
+const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME?.trim() || 'wisihe-search';
 
 // 3. Define the GROQ Query
-// Projects are now server-rendered via GROQ — no longer synced to Algolia.
-// We only sync paintings and recipes.
+// Projects are server-rendered via GROQ — not synced to Algolia.
+// Exclude drafts and noIndex. NSFW paintings are indexed but blurred on /paintings until filtered.
 const query = `
-  *[_type in ["painting", "recipe"] && !(_id in path("drafts.**")) && hideFromSearch != true && defined(slug.current)] {
+  *[
+    _type in ["painting", "recipe"]
+    && !(_id in path("drafts.**"))
+    && defined(slug.current)
+    && coalesce(seo.noIndex, false) != true
+  ] {
     _id,
     _type,
     _createdAt,
     title,
     name,
     "description": coalesce(description, seo.description),
-    slug,
-    views,
-    status,
-    projectType,
+    "slug": slug.current,
+    "views": coalesce(viewsCount, 0),
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
+    isNSFW,
+    isForSale,
+    redbubbleUrl,
+    gelatoUrl,
     format,
     medium,
     paintedAt,
@@ -150,30 +157,37 @@ async function syncToAlgolia() {
     // 4. Map Sanity data to Algolia objects
     // biome-ignore lint/suspicious/noExplicitAny: Document type is dynamic from Sanity query
     const objects = documents.map((doc: any) => {
-      // Safely count views if it's an array or number
-      let popularity = 0;
-      if (typeof doc.views === 'number') {
-        popularity = doc.views;
-      } else if (Array.isArray(doc.views)) {
-        popularity = doc.views.length;
-      }
-
       const createdAtDate = doc._createdAt ? new Date(doc._createdAt).getTime() : 0;
+      const views = typeof doc.views === 'number' ? doc.views : 0;
+      const isNsfw = doc._type === 'painting' && doc.isNSFW === true;
+      const hasStoreLink = Boolean(doc.redbubbleUrl || doc.gelatoUrl);
+      const isForSale = doc._type === 'painting' && (doc.isForSale === true || hasStoreLink);
+      const baseTags: string[] = Array.isArray(doc.tags) ? doc.tags : [];
+      let tags = [...baseTags];
+      if (isForSale && !tags.some((t: string) => ['STORE', 'FOR SALE'].includes(t.toUpperCase()))) {
+        tags = [...tags, 'Store'];
+      }
+      if (isNsfw && !tags.some((t: string) => t.toUpperCase() === 'NSFW')) {
+        tags = [...tags, 'NSFW'];
+      }
 
       return {
         objectID: doc._id,
         _type: doc._type,
-        title: doc.title || 'Untitled',
+        title: doc.title || doc.name || 'Untitled',
         description: doc.description || '',
         slug: doc.slug,
-        tags: doc.tags,
+        tags,
+        isNSFW: isNsfw,
+        isForSale,
+        hasStoreLink,
         format: doc.format || 'square',
         medium: doc.medium || null,
         paintedAt: doc.paintedAt || null,
         isFeatured: doc.isFeatured === true,
         dominantColors: extractColors(doc.palette),
         image: doc.image || null,
-        views: popularity,
+        views,
         createdAt: createdAtDate,
       };
     });

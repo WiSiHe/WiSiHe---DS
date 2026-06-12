@@ -1,72 +1,82 @@
-// app/sitemap.ts
-
+import { indexableContentSlugs } from '@wisihe/sanity-queries';
 import type { MetadataRoute } from 'next';
-import { getStaticSlugs } from '@/sanity/lib/queries';
+import { SITE_URL } from '@/lib/seo/constants';
+import { client } from '@/sanity/lib/client';
 
-export const revalidate = 86400; // revalidate every 24 hours
+export const revalidate = 86400;
+
+const CONTENT_PATH: Record<string, (slug: string) => string> = {
+  painting: slug => `/paintings/${slug}`,
+  project: slug => `/projects/${slug}`,
+  recipe: slug => `/recipes/${slug}`,
+  video: slug => `/videos/${slug}`,
+  presentation: slug => `/presentations/${slug}`,
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.wisihe.no';
-
-  // Static pages with appropriate change frequencies
-  const staticPages = [
-    { loc: '/', priority: 1, changeFrequency: 'daily' as const },
-    { loc: '/paintings', priority: 0.9, changeFrequency: 'daily' as const },
-    { loc: '/projects', priority: 0.9, changeFrequency: 'weekly' as const },
-    { loc: '/recipes', priority: 0.8, changeFrequency: 'weekly' as const },
-    { loc: '/videos', priority: 0.8, changeFrequency: 'weekly' as const },
-    { loc: '/contact', priority: 0.6, changeFrequency: 'monthly' as const },
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: SITE_URL, changeFrequency: 'daily' as const, priority: 1, lastModified: new Date() },
+    {
+      url: `${SITE_URL}/paintings`,
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/projects`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/recipes`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/videos`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/presentations`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/about`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
   ];
 
-  // Initialize the sitemap array with static pages
-  const sitemapEntries: MetadataRoute.Sitemap = staticPages.map(page => ({
-    url: `${baseUrl}${page.loc}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: page.changeFrequency,
-    priority: page.priority,
-  }));
-
   try {
-    // Fetch dynamic slugs for paintings, projects, and recipes from Sanity
-    const [allPaintings, allProjects, allRecipes] = await Promise.all([
-      getStaticSlugs('painting'),
-      getStaticSlugs('project'),
-      getStaticSlugs('recipe'),
-    ]);
+    const entries = await client
+      .withConfig({ perspective: 'published', useCdn: true, stega: false })
+      .fetch(indexableContentSlugs);
 
-    // Add dynamic paintings
-    sitemapEntries.push(
-      ...allPaintings.map((painting: any) => ({
-        url: `${baseUrl}/paintings/${painting.slug}`,
-        lastModified: painting._updatedAt,
+    const dynamicPages: MetadataRoute.Sitemap = (entries ?? [])
+      .filter((entry: { _type?: string; slug?: string }) => entry._type && entry.slug)
+      .map((entry: { _type: string; slug: string; _updatedAt?: string }) => ({
+        url: `${SITE_URL}${CONTENT_PATH[entry._type]?.(entry.slug) ?? `/${entry.slug}`}`,
+        lastModified: entry._updatedAt ? new Date(entry._updatedAt) : new Date(),
         changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      })),
-    );
+        priority: entry._type === 'painting' || entry._type === 'project' ? 0.7 : 0.6,
+      }));
 
-    // Add dynamic projects
-    sitemapEntries.push(
-      ...allProjects.map((project: any) => ({
-        url: `${baseUrl}/projects/${project.slug}`,
-        lastModified: project._updatedAt,
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      })),
-    );
-
-    // Add dynamic recipes
-    sitemapEntries.push(
-      ...allRecipes.map((recipe: any) => ({
-        url: `${baseUrl}/recipes/${recipe.slug}`,
-        lastModified: recipe._updatedAt,
-        changeFrequency: 'monthly' as const,
-        priority: 0.6,
-      })),
-    );
+    return [...staticPages, ...dynamicPages];
   } catch (error) {
     console.error('Error generating sitemap:', error);
-    // Still return static pages if dynamic content fails
+    return staticPages;
   }
-
-  return sitemapEntries;
 }

@@ -16,6 +16,7 @@ import {
   FaPalette,
   FaPaw,
   FaRocket,
+  FaShoppingCart,
   FaSkull,
   FaSnowflake,
   FaStar,
@@ -60,6 +61,9 @@ const TAG_ICONS: Record<string, React.ReactNode> = {
   'Comic Book': <FaBook className='w-3 h-3' />,
   Dragon: <FaDragon className='w-3 h-3' />,
   Fanart: <FaStar className='w-3 h-3' />,
+  Store: <FaShoppingCart className='w-3 h-3' />,
+  'For Sale': <FaShoppingCart className='w-3 h-3' />,
+  NSFW: <FaSkull className='w-3 h-3' />,
 };
 
 export default function CustomRefinementList(props: Parameters<typeof useRefinementList>[0]) {

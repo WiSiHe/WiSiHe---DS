@@ -1,5 +1,6 @@
 import { PresentationIcon } from '@sanity/icons';
 import { defineField, defineType, type ValidationContext } from 'sanity';
+import { seoType } from './seoType';
 import { tag } from './tag';
 
 // Source object type (inline)
@@ -783,6 +784,12 @@ export default defineType({
       type: 'text',
       rows: 3,
       description: 'Optional description of the presentation',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      description: 'Optional overrides for search and social previews.',
     }),
     defineField({
       name: 'tags',
