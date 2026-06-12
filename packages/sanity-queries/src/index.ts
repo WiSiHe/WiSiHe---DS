@@ -27,6 +27,7 @@ export const aboutQuery = defineQuery(`
     visitedCountries[] {
       _key,
       country,
+      countryCode,
       placeName,
       coordinates,
       notes
@@ -35,6 +36,21 @@ export const aboutQuery = defineQuery(`
     ctaButtonText,
     ctaButtonUrl,
     socialLinks[] { _key, platform, url }
+  }
+`);
+
+export const aboutTravelPhotographyQuery = defineQuery(`
+  *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {
+    _id,
+    title,
+    country,
+    placeName,
+    isFeatured,
+    capturedAt,
+    image {
+      ...,
+      "lqip": asset->metadata.lqip
+    }
   }
 `);
 

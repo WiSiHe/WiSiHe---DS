@@ -111,14 +111,30 @@ export function getJourneyItemsWithCoordinates(
 export interface VisitedCountryItem {
   _key: string;
   country?: string | null;
+  countryCode?: string | null;
   placeName?: string | null;
   coordinates?: GeoCoordinates | null;
   notes?: string | null;
 }
 
+export interface TravelPhotoItem {
+  _id: string;
+  title?: string | null;
+  country?: string | null;
+  placeName?: string | null;
+  isFeatured?: boolean | null;
+  capturedAt?: string | null;
+  image?: {
+    asset?: { _ref: string };
+    lqip?: string | null;
+    alt?: string;
+  } | null;
+}
+
 type RawVisitedCountry = {
   _key: string;
   country?: string | null;
+  countryCode?: string | null;
   placeName?: string | null;
   coordinates?: unknown;
   notes?: string | null;
@@ -130,10 +146,44 @@ export function normalizeVisitedCountries(
   return (countries ?? []).map((item: RawVisitedCountry) => ({
     _key: item._key,
     country: item.country,
+    countryCode: item.countryCode,
     placeName: item.placeName,
     notes: item.notes,
     coordinates: parseCoordinates((item as { coordinates?: unknown }).coordinates),
   }));
+}
+
+export function normalizeTravelPhotos(
+  photos:
+    | Array<{
+        _id: string;
+        title?: string | null;
+        country?: string | null;
+        placeName?: string | null;
+        isFeatured?: boolean | null;
+        capturedAt?: string | null;
+        image?: TravelPhotoItem['image'];
+      }>
+    | null
+    | undefined,
+): TravelPhotoItem[] {
+  return (photos ?? []).filter((photo): photo is TravelPhotoItem =>
+    Boolean(photo?._id && photo.image),
+  );
+}
+
+export function groupPhotosByCountry(photos: TravelPhotoItem[]): Map<string, TravelPhotoItem[]> {
+  const grouped = new Map<string, TravelPhotoItem[]>();
+
+  for (const photo of photos) {
+    const key = photo.country?.trim();
+    if (!key) continue;
+    const list = grouped.get(key) ?? [];
+    list.push(photo);
+    grouped.set(key, list);
+  }
+
+  return grouped;
 }
 
 export function getVisitedCountriesWithCoordinates(

@@ -145,7 +145,7 @@ export default defineType({
       name: 'visitedCountries',
       title: 'Countries visited',
       description:
-        'Travel destinations shown as map pins and a country list on the about page. Use a representative city or capital for coordinates.',
+        'Travel destinations highlighted as full countries on the map. Set Country code (ISO) for reliable map fills. Tag photography with the same country name to show photos in each card.',
       type: 'array',
       of: [
         {
@@ -156,6 +156,20 @@ export default defineType({
               title: 'Country',
               type: 'string',
               validation: rule => rule.required(),
+            }),
+            defineField({
+              name: 'countryCode',
+              title: 'Country code (ISO)',
+              type: 'string',
+              description:
+                'Two-letter ISO code for map highlighting — e.g. FR, DE, NO. Auto-guessed when empty.',
+              validation: rule =>
+                rule.custom(value => {
+                  if (!value) return true;
+                  return /^[A-Za-z]{2}$/.test(value)
+                    ? true
+                    : 'Use a two-letter ISO country code (e.g. FR).';
+                }),
             }),
             defineField({
               name: 'placeName',

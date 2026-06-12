@@ -1,7 +1,7 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import type { AboutQueryResult } from '@wisihe/sanity-queries';
+import type { AboutQueryResult, AboutTravelPhotographyQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
@@ -11,7 +11,11 @@ import { BsTwitterX } from 'react-icons/bs';
 import { FaChevronDown, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 import { LifeJourneyScrolly } from './components/LifeJourneyScrolly';
-import { normalizeJourneyItems, normalizeVisitedCountries } from './components/lifeJourneyTypes';
+import {
+  normalizeJourneyItems,
+  normalizeTravelPhotos,
+  normalizeVisitedCountries,
+} from './components/lifeJourneyTypes';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +30,13 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   X: <BsTwitterX />,
 };
 
-export default function AboutPageClient({ about }: { about: AboutQueryResult }) {
+export default function AboutPageClient({
+  about,
+  travelPhotos = [],
+}: {
+  about: AboutQueryResult;
+  travelPhotos?: AboutTravelPhotographyQueryResult;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +48,7 @@ export default function AboutPageClient({ about }: { about: AboutQueryResult }) 
     'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
   const journeyItems = normalizeJourneyItems(about?.journeyItems);
   const visitedCountries = normalizeVisitedCountries(about?.visitedCountries);
+  const travelPhotosNormalized = normalizeTravelPhotos(travelPhotos);
   const ctaTitle = about?.ctaTitle ?? "Let's create the Future together.";
   const ctaButtonText = about?.ctaButtonText ?? 'Start a Conversation';
   const ctaButtonUrl = about?.ctaButtonUrl ?? '/contact';
@@ -120,7 +131,11 @@ export default function AboutPageClient({ about }: { about: AboutQueryResult }) 
       </section>
 
       {journeyItems.length > 0 ? (
-        <LifeJourneyScrolly items={journeyItems} visitedCountries={visitedCountries} />
+        <LifeJourneyScrolly
+          items={journeyItems}
+          visitedCountries={visitedCountries}
+          travelPhotos={travelPhotosNormalized}
+        />
       ) : null}
 
       <section className='border-t border-border/30 bg-background py-20 lg:py-32'>
