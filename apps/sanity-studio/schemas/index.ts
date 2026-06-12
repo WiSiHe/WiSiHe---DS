@@ -1,4 +1,5 @@
 import blockContent from './blockContent';
+import blockContentMinimal from './blockContentMinimal';
 import homeSectionIntro from './objects/homeSectionIntro';
 import painting from './painting';
 import post from './post';
@@ -35,6 +36,7 @@ export const schemaTypes = [
   video,
   tag,
   blockContent,
+  blockContentMinimal,
   seoType,
   redirectType,
   socialType,

@@ -29,35 +29,8 @@ export default defineType({
       description:
         'Shown in the home page hero below your name, and used for the home page meta description.',
       title: 'Home intro',
-      type: 'array',
+      type: 'blockContentMinimal',
       group: 'hero',
-      of: [
-        defineArrayMember({
-          lists: [],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
-            ],
-            decorators: [
-              { title: 'Italic', value: 'em' },
-              { title: 'Strong', value: 'strong' },
-            ],
-          },
-          styles: [],
-          type: 'block',
-        }),
-      ],
       validation: rule => rule.max(155).required(),
     }),
     defineField({
@@ -72,35 +45,8 @@ export default defineType({
       name: 'projectsDescription',
       title: 'Projects description',
       description: 'Intro copy above the featured projects section on the home page.',
-      type: 'array',
+      type: 'blockContentMinimal',
       group: 'projects',
-      of: [
-        defineArrayMember({
-          lists: [],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [{ name: 'href', type: 'url', title: 'Url' }],
-              },
-              {
-                name: 'internalLink',
-                title: 'Internal link',
-                type: 'object',
-                fields: [{ name: 'reference', type: 'string', title: 'Reference' }],
-              },
-            ],
-            decorators: [
-              { title: 'Italic', value: 'em' },
-              { title: 'Strong', value: 'strong' },
-            ],
-          },
-          styles: [],
-          type: 'block',
-        }),
-      ],
       validation: rule => rule.max(155).required(),
     }),
     defineField({
@@ -108,7 +54,7 @@ export default defineType({
       title: 'Projects listing description',
       description:
         'Intro copy on the /projects archive page. Also used for the projects page meta description when set.',
-      type: 'blockContent',
+      type: 'blockContentMinimal',
       group: 'projects',
       validation: rule => rule.max(155).required(),
     }),
@@ -138,7 +84,7 @@ export default defineType({
       title: 'Paintings description',
       description:
         'Intro copy on the home page paintings section. Also used for the paintings page meta description when set.',
-      type: 'blockContent',
+      type: 'blockContentMinimal',
       group: 'paintings',
       validation: rule => rule.max(155).required(),
     }),
