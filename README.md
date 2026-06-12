@@ -60,11 +60,13 @@ pnpm install
 
 ## 📦 Versioning & Publishing
 
-This repository uses [Changesets](https://github.com/changesets/changesets) for automated versioning and npm publishing.
+This repository uses [Changesets](https://github.com/changesets/changesets) for versioning. **All workspace packages and apps share one linked semver** via the `fixed` group in `.changeset/config.json` (the live site footer reads `nextjs-portfolio`'s version).
 
-1. **Create a changeset:** Run `pnpm changeset` and answer the prompts to describe your changes and mark packages for major/minor/patch bumps.
+We intentionally do **not** also use [release-please](https://github.com/googleapis/release-please): it would duplicate the existing Release workflow on `main`.
+
+1. **Create a changeset:** Run `pnpm changeset` and pick any package in the fixed group plus the bump type (minor/patch/major) — every linked package moves together.
 2. **Commit:** Commit the generated Markdown file in the `.changeset` directory.
-3. **Release:** When merged to the main branch, a GitHub Action will automatically open a "Version Packages" PR. Merging that PR publishes the packages to npm.
+3. **Release:** When merged to `main`, the Release workflow opens a "Version Packages" PR. Merging it bumps all linked versions and publishes public packages to npm; private apps are versioned but not published.
 
 ## 🤝 Pre-commit Hooks
 

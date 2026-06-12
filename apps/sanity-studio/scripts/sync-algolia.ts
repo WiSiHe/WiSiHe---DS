@@ -61,6 +61,7 @@ const query = `
     "description": coalesce(description, seo.description),
     "slug": slug.current,
     "views": coalesce(viewsCount, 0),
+    "likes": select(_type == "painting" => count(likes), 0),
     "tags": coalesce(tagsV2[]->name, tags[]->name, []),
     isNSFW,
     isForSale,
@@ -159,6 +160,7 @@ async function syncToAlgolia() {
     const objects = documents.map((doc: any) => {
       const createdAtDate = doc._createdAt ? new Date(doc._createdAt).getTime() : 0;
       const views = typeof doc.views === 'number' ? doc.views : 0;
+      const likes = typeof doc.likes === 'number' ? doc.likes : 0;
       const isNsfw = doc._type === 'painting' && doc.isNSFW === true;
       const hasStoreLink = Boolean(doc.redbubbleUrl || doc.gelatoUrl);
       const isForSale = doc._type === 'painting' && (doc.isForSale === true || hasStoreLink);
@@ -188,6 +190,7 @@ async function syncToAlgolia() {
         dominantColors: extractColors(doc.palette),
         image: doc.image || null,
         views,
+        likes,
         createdAt: createdAtDate,
       };
     });

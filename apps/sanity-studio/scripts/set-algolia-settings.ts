@@ -33,7 +33,13 @@ async function setSettings() {
           'filterOnly(isNSFW)',
           'filterOnly(isForSale)',
         ],
-        customRanking: ['desc(isFeatured)', 'desc(isForSale)', 'desc(views)', 'desc(createdAt)'],
+        customRanking: [
+          'desc(isFeatured)',
+          'desc(isForSale)',
+          'desc(views)',
+          'desc(likes)',
+          'desc(createdAt)',
+        ],
         attributesToRetrieve: [
           'objectID',
           'title',
@@ -53,6 +59,7 @@ async function setSettings() {
           `virtual(${INDEX}_newest)`,
           `virtual(${INDEX}_oldest)`,
           `virtual(${INDEX}_views)`,
+          `virtual(${INDEX}_likes)`,
         ],
       },
     });
@@ -75,6 +82,13 @@ async function setSettings() {
       indexName: `${INDEX}_views`,
       indexSettings: {
         customRanking: ['desc(views)'],
+      },
+    });
+
+    await client.setSettings({
+      indexName: `${INDEX}_likes`,
+      indexSettings: {
+        customRanking: ['desc(likes)'],
       },
     });
 

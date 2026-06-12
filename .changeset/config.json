@@ -2,9 +2,33 @@
   "$schema": "https://unpkg.com/@changesets/config@2.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@wisihe/constants",
+      "@wisihe/sanity-bulk-ai",
+      "@wisihe/sanity-queries",
+      "@wisihe/tokens",
+      "@wisihe/typescript-config",
+      "@wisihe/ui-react",
+      "@wisihe/ui-svelte",
+      "@wisihe/ui-web-components",
+      "@wisihe/utils",
+      "apps-astro-portfolio",
+      "nextjs-portfolio",
+      "sanity-studio",
+      "tanstack-start-portfolio",
+      "ui-docs",
+      "ui-svelte-docs",
+      "ui-web-components-docs",
+      "wisihe-ai"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "updateInternalDependencies": "patch",
+  "privatePackages": {
+    "version": true,
+    "tag": false
+  },
   "ignore": []
 }

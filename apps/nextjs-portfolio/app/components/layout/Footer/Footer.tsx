@@ -7,6 +7,7 @@ import { cn } from '@wisihe/utils';
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import { APP_VERSION } from '@/lib/version';
 import IconLogo from '../icons/IconLogo';
 import { Link } from '../ProgressLink';
 import { SocialListItem } from './SocialListItem';
@@ -220,6 +221,9 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
           </p>
           <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
             <span>Built in Oslo with Next.js & Sanity</span>
+            <span className='font-mono text-[10px] tracking-wide text-foreground-muted/80'>
+              v{APP_VERSION}
+            </span>
             <button
               type='button'
               onClick={scrollToTop}
