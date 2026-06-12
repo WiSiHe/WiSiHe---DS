@@ -67,6 +67,8 @@ export default defineType({
       title: 'Country',
       type: 'string',
       group: 'location',
+      description:
+        'Used on the about page travel map when the country name matches a visited country.',
     }),
     defineField({
       name: 'region',

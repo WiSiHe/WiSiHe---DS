@@ -1263,7 +1263,7 @@ export type SettingsQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: aboutQuery
-// Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    seoTitle,    seoDescription,    knowsAbout,    journeyItems[] {      _key,      year,      title,      content,      placeName,      locationType,      coordinates,      mapZoom,      image { ..., "lqip": asset->metadata.lqip }    },    visitedCountries[] {      _key,      country,      placeName,      coordinates,      notes    },    ctaTitle,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
+// Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    seoTitle,    seoDescription,    knowsAbout,    journeyItems[] {      _key,      year,      title,      content,      placeName,      locationType,      coordinates,      mapZoom,      image { ..., "lqip": asset->metadata.lqip }    },    visitedCountries[] {      _key,      country,      countryCode,      placeName,      coordinates,      notes    },    ctaTitle,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
 export type AboutQueryResult = {
   heroTitle: string;
   heroSubtitle: string;
@@ -1307,6 +1307,11 @@ export type AboutQueryResult = {
     url: string | null;
   }> | null;
 } | null;
+
+// Source: ../../packages/sanity-queries/src/index.ts
+// Variable: aboutTravelPhotographyQuery
+// Query: *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {    _id,    title,    country,    placeName,    isFeatured,    capturedAt,    image {      ...,      "lqip": asset->metadata.lqip    }  }
+export type AboutTravelPhotographyQueryResult = Array<never>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPageQuery
@@ -4993,7 +4998,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
-    '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      placeName,\n      coordinates,\n      notes\n    },\n    ctaTitle,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
+    '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      countryCode,\n      placeName,\n      coordinates,\n      notes\n    },\n    ctaTitle,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
+    '\n  *[_type == "photography" && defined(country) && country != ""] | order(isFeatured desc, capturedAt desc) {\n    _id,\n    title,\n    country,\n    placeName,\n    isFeatured,\n    capturedAt,\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': AboutTravelPhotographyQueryResult;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n,\n      }\n    },\n  }\n': GetPageQueryResult;
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult;
     '\n    *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n        _id,\n        title,\n        slug,\n        image,\n        "date": coalesce(date, _updatedAt),\n    }\n    ': AllPaintingsQueryResult;
