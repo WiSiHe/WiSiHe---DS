@@ -92,12 +92,13 @@ export default function AboutPageClient({
   );
 
   return (
-    <div
+    <main
       ref={containerRef}
       className='bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-foreground'
     >
       <section
         ref={heroRef}
+        aria-labelledby='about-hero-heading'
         className='relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden border-b border-border/30 px-4 py-20'
       >
         <div className='hero-bg pointer-events-none absolute inset-0 bg-accent/10' aria-hidden />
@@ -140,7 +141,10 @@ export default function AboutPageClient({
             <p className='hero-text font-mono text-xs font-semibold uppercase tracking-[0.3em] text-accent'>
               {heroEyebrow}
             </p>
-            <h1 className='hero-text mt-4 font-serif text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl'>
+            <h1
+              id='about-hero-heading'
+              className='hero-text mt-4 font-serif text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl'
+            >
               {name}
             </h1>
             <p className='hero-text mt-4 text-lg font-medium text-foreground-subtle sm:text-xl'>
@@ -152,18 +156,20 @@ export default function AboutPageClient({
 
             {socialLinks.length > 0 ? (
               <div className='hero-text mt-10 flex justify-center gap-4 lg:justify-start'>
-                {socialLinks.map(social => (
-                  <a
-                    key={social.url ?? social.platform}
-                    href={social.url ?? undefined}
-                    target='_blank'
-                    rel='noopener noreferrer author'
-                    className='flex size-11 items-center justify-center rounded-full border border-border text-xl text-foreground-subtle transition-colors hover:border-accent-border hover:text-accent'
-                    aria-label={social.platform ?? 'Social profile'}
-                  >
-                    {PLATFORM_ICONS[social.platform ?? ''] ?? social.platform?.[0]}
-                  </a>
-                ))}
+                {socialLinks.map(social =>
+                  social.url ? (
+                    <a
+                      key={social.url}
+                      href={social.url}
+                      target='_blank'
+                      rel='noopener noreferrer author'
+                      className='flex size-11 items-center justify-center rounded-full border border-border text-xl text-foreground-subtle transition-colors hover:border-accent-border hover:text-accent'
+                      aria-label={`${social.platform ?? 'Social profile'} (opens in new tab)`}
+                    >
+                      {PLATFORM_ICONS[social.platform ?? ''] ?? social.platform?.[0]}
+                    </a>
+                  ) : null,
+                )}
               </div>
             ) : null}
           </div>
@@ -225,6 +231,6 @@ export default function AboutPageClient({
           </Button>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

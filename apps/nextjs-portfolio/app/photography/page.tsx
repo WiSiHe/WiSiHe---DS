@@ -1,3 +1,4 @@
+import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { Link } from '@/app/components/layout/ProgressLink';
@@ -63,7 +64,7 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
 
   return (
     <>
-      <div className='min-h-screen bg-background'>
+      <main className='min-h-screen bg-background'>
         <header className='relative overflow-hidden border-b border-border/40 pt-28 pb-16 sm:pt-32'>
           <div className='pointer-events-none absolute inset-0 bg-accent/5' aria-hidden />
           <div
@@ -78,12 +79,18 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
               Photography
             </h1>
             <p className='mt-4 max-w-2xl text-lg leading-relaxed text-foreground-subtle text-pretty'>
-              Travel shots and quiet frames from places I&apos;ve been — linked to the same stops on
-              the{' '}
-              <Link href='/about#travel-map-section' className='text-accent hover:underline'>
-                about map
-              </Link>
-              .
+              Travel shots and quiet frames from places I&apos;ve been
+              {ABOUT_PAGE_ENABLED
+                ? ' — linked to the same stops on the '
+                : ' — grouped by country in the gallery below.'}
+              {ABOUT_PAGE_ENABLED ? (
+                <>
+                  <Link href='/about#travel-map-section' className='text-accent hover:underline'>
+                    about map
+                  </Link>
+                  .
+                </>
+              ) : null}
             </p>
             {photos.length > 0 ? (
               <p className='mt-6 text-sm font-medium text-foreground-muted'>
@@ -105,7 +112,7 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
             </div>
           )}
         </div>
-      </div>
+      </main>
       <ScrollToTopButton />
     </>
   );

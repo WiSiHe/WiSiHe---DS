@@ -1,3 +1,4 @@
+import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
 import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
@@ -89,6 +90,7 @@ function renderSection(
       );
 
     case 'homeAboutTeaserSection':
+      if (!ABOUT_PAGE_ENABLED) return null;
       return <AboutTeaserSection key={key} section={section} about={about} />;
 
     case 'homeVideosTeaserSection':

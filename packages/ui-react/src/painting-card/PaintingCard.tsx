@@ -83,6 +83,8 @@ export interface PaintingCardBadge {
   icon: React.ReactNode;
   /** Accessible label for screen readers */
   label: string;
+  /** Optional visual variant — defaults to accent */
+  variant?: import('../icon-badge/IconBadge').IconBadgeProps['variant'];
 }
 
 export interface PaintingCardProps {
@@ -198,7 +200,12 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {pinnedBadge && (
         <div className='absolute z-20 right-2 top-2'>
-          <PaintingCardBadgeItem icon={pinnedBadge.icon} label={pinnedBadge.label} pinned />
+          <PaintingCardBadgeItem
+            icon={pinnedBadge.icon}
+            label={pinnedBadge.label}
+            variant={pinnedBadge.variant}
+            pinned
+          />
         </div>
       )}
 
@@ -218,6 +225,7 @@ export function PaintingCard({
               key={badge.key}
               icon={badge.icon}
               label={badge.label}
+              variant={badge.variant}
               alwaysVisible={alwaysShowTags}
             />
           ))}
