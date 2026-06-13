@@ -23,6 +23,7 @@ import {
   useStats,
 } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
+import { getGlobalLenis } from '@/app/lib/lenis-registry';
 import {
   ALGOLIA_INDEX_NAME,
   PAINTING_HIT_ATTRIBUTES,
@@ -208,30 +209,74 @@ function HitStatsWithSort({ sortItems }: HitStatsProps) {
 }
 
 // ---------------------------------------------------------------------------
-// ScrollToResults — scrolls the results area into view after every search
+// ScrollToResults — scroll after user-driven search changes (not initial load)
 // ---------------------------------------------------------------------------
 const RESULTS_ID = 'paintings-results';
+const PAGE_HEADER_OFFSET = -128;
+
+type SearchSnapshot = {
+  page: number;
+  query: string;
+  refinements: string;
+};
+
+function scrollPageToTop() {
+  const lenis = getGlobalLenis();
+  if (lenis) {
+    lenis.scrollTo(0, { duration: 0.6 });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function scrollResultsIntoView() {
+  const el = document.getElementById(RESULTS_ID);
+  if (!el) return;
+
+  const lenis = getGlobalLenis();
+  if (lenis) {
+    lenis.scrollTo(el, { offset: PAGE_HEADER_OFFSET, duration: 0.6 });
+  } else {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 
 function ScrollToResults() {
   const { results } = useInstantSearch();
-  const isFirstRender = useRef(true);
+  const snapshotRef = useRef<SearchSnapshot | null>(null);
 
   useEffect(() => {
-    // Skip the very first render — only scroll on subsequent state changes
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (!results) return;
+
+    const page = results.page ?? 0;
+    const query = results.query ?? '';
+    const refinements = JSON.stringify(results._state?.disjunctiveFacetsRefinements ?? {});
+
+    const previous = snapshotRef.current;
+    if (previous === null) {
+      snapshotRef.current = { page, query, refinements };
       return;
     }
-    const el = document.getElementById(RESULTS_ID);
-    if (el) {
-      // Small delay so the DOM has updated before we scroll
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 80);
+
+    const pageChanged = previous.page !== page;
+    const queryChanged = previous.query !== query;
+    const refinementsChanged = previous.refinements !== refinements;
+
+    snapshotRef.current = { page, query, refinements };
+
+    if (!pageChanged && !queryChanged && !refinementsChanged) {
+      return;
     }
-    // results._state changes on every new search / page turn / filter toggle
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [results?.queryID, results?.page, results?._state?.disjunctiveFacetsRefinements]);
+
+    // Let InstantSearch paint the new hits before scrolling.
+    window.setTimeout(() => {
+      if (pageChanged) {
+        scrollPageToTop();
+      } else {
+        scrollResultsIntoView();
+      }
+    }, 80);
+  }, [results]);
 
   return null;
 }
