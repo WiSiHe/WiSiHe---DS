@@ -1,3 +1,4 @@
+import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
 import type { PhotographyQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
@@ -5,6 +6,7 @@ import Image from 'next/image';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { urlForFullImage } from '@/sanity/lib/utils';
+import { PhotographyActions } from './PhotographyActions';
 import { PhotographyLocationMapSlot } from './PhotographyLocationMapSlot';
 import {
   buildPhotographyMetaRows,
@@ -85,7 +87,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
   });
 
   return (
-    <div className='min-h-screen bg-background pt-28 pb-20 sm:pt-32'>
+    <main className='min-h-screen bg-background pt-28 pb-20 sm:pt-32'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <Breadcrumbs
           crumbs={[
@@ -95,7 +97,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
           ]}
         />
 
-        <div className='mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)] lg:items-start lg:gap-10 xl:gap-12'>
+        <article className='mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)] lg:items-start lg:gap-10 xl:gap-12'>
           {imageUrl ? (
             <div
               className={cn(
@@ -137,12 +139,16 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               </h1>
               {place?.name ? (
                 <p className='text-foreground-subtle'>
-                  <Link
-                    href='/about#travel-map-section'
-                    className='font-medium text-foreground transition-colors hover:text-accent'
-                  >
-                    {place.name}
-                  </Link>
+                  {ABOUT_PAGE_ENABLED ? (
+                    <Link
+                      href='/about#travel-map-section'
+                      className='font-medium text-foreground transition-colors hover:text-accent'
+                    >
+                      {place.name}
+                    </Link>
+                  ) : (
+                    <span className='font-medium text-foreground'>{place.name}</span>
+                  )}
                   {place.countryName ? (
                     <span className='text-foreground-muted'> · {place.countryName}</span>
                   ) : null}
@@ -156,6 +162,13 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               </p>
             ) : null}
 
+            <PhotographyActions
+              photoId={photo._id}
+              title={photo.title ?? 'Photograph'}
+              viewsCount={photo.viewsCount ?? 0}
+              likesCount={photo.likesCount ?? 0}
+            />
+
             {mapPoint ? <PhotographyLocationMapSlot point={mapPoint} /> : null}
 
             {paletteSwatches.length > 0 ? (
@@ -166,11 +179,12 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                 <div className='flex flex-wrap gap-3'>
                   {paletteSwatches.map(swatch => (
                     <div key={swatch.key} className='group flex flex-col items-center gap-1.5'>
-                      <div
+                      <span
+                        role='img'
+                        aria-label={`${swatch.label}: ${swatch.color.toUpperCase()}`}
                         className='size-11 rounded-xl border border-border/50 shadow-sm transition-transform duration-200 group-hover:scale-105'
                         style={{ backgroundColor: swatch.color }}
                         title={`${swatch.label}: ${swatch.color.toUpperCase()}`}
-                        aria-label={swatch.color}
                       />
                       <span className='text-[10px] text-foreground-muted'>{swatch.label}</span>
                       <span className='font-mono text-[9px] text-foreground-muted/70'>
@@ -217,7 +231,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               >
                 All photos
               </Link>
-              {place?.name && !mapPoint ? (
+              {place?.name && !mapPoint && ABOUT_PAGE_ENABLED ? (
                 <Link
                   href='/about#travel-map-section'
                   className='rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:text-accent'
@@ -227,8 +241,8 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               ) : null}
             </div>
           </div>
-        </div>
+        </article>
       </div>
-    </div>
+    </main>
   );
 }

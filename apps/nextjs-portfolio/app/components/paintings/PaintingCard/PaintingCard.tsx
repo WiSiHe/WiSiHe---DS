@@ -134,8 +134,9 @@ const PaintingCardAdapter = ({
   if (isFeatured === true) {
     badges.push({
       key: 'featured',
-      icon: <FaStar className='w-4 h-4 text-yellow-300' />,
+      icon: <FaStar className='w-4 h-4 text-amber-600 dark:text-amber-300' />,
       label: 'Featured painting',
+      variant: 'surface',
     });
   }
   if (isFanArt === true) {

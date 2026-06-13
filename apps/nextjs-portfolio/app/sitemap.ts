@@ -1,3 +1,4 @@
+import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
 import { indexableContentSlugs } from '@wisihe/sanity-queries';
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo/constants';
@@ -53,12 +54,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
       lastModified: new Date(),
     },
-    {
-      url: `${SITE_URL}/about`,
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-      lastModified: new Date(),
-    },
+    ...(ABOUT_PAGE_ENABLED
+      ? [
+          {
+            url: `${SITE_URL}/about`,
+            changeFrequency: 'monthly' as const,
+            priority: 0.7,
+            lastModified: new Date(),
+          },
+        ]
+      : []),
     {
       url: `${SITE_URL}/contact`,
       changeFrequency: 'monthly' as const,

@@ -133,6 +133,45 @@ export async function removeVideoLike(videoId: string, likerId: string) {
   }
 }
 
+export async function incrementPhotographyView(photographyId: string) {
+  try {
+    await client.patch(photographyId).inc({ viewsCount: 1 }).commit();
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to increment photography view:', error);
+    return { success: false };
+  }
+}
+
+export async function incrementPhotographyLike(photographyId: string, likerId: string) {
+  try {
+    await client
+      .patch(photographyId)
+      .setIfMissing({ likes: [] })
+      .insert('after', 'likes[-1]', [
+        { _key: crypto.randomUUID(), likerId, timestamp: new Date().toISOString() },
+      ])
+      .commit({ autoGenerateArrayKeys: true });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to increment photography like:', error);
+    return { success: false };
+  }
+}
+
+export async function removePhotographyLike(photographyId: string, likerId: string) {
+  try {
+    await client
+      .patch(photographyId)
+      .unset([`likes[likerId=="${likerId}"]`])
+      .commit({ autoGenerateArrayKeys: true });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to remove photography like:', error);
+    return { success: false };
+  }
+}
+
 export async function disableDraftMode() {
   (await draftMode()).disable();
 }

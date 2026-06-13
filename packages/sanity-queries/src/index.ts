@@ -151,6 +151,8 @@ export const photographyQuery = defineQuery(`
     capturedAt,
     camera,
     isFeatured,
+    "likesCount": count(likes),
+    viewsCount,
     place-> {
       _id,
       name,

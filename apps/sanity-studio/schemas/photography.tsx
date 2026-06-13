@@ -162,6 +162,32 @@ export default defineType({
       group: 'details',
     }),
     defineField({
+      name: 'viewsCount',
+      title: 'Views',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      group: 'details',
+      description: 'Tracked on the site — do not edit manually',
+    }),
+    defineField({
+      name: 'likes',
+      title: 'Likes',
+      type: 'array',
+      readOnly: true,
+      group: 'details',
+      description: 'Toggled by visitors — do not edit manually',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'likerId', type: 'string', title: 'Liker ID' },
+            { name: 'timestamp', type: 'datetime', title: 'Timestamp' },
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: 'tagsV2',
       title: 'Tags',
       type: 'array',

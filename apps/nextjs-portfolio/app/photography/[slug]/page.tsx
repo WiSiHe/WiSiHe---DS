@@ -65,18 +65,29 @@ export default async function PhotographyDetailPage(props: Props) {
     truncateMetaDescription(photo.caption ?? '', 300) || `Photograph: ${photo.title}`;
 
   const place = photo.place;
+  const image = photo.image;
+  const contentUrl = image ? resolveOpenGraphImage(image)?.url : undefined;
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'ImageObject',
     '@id': pageUrl,
+    url: pageUrl,
     name: photo.title,
     description,
-    contentUrl: photo.image ? resolveOpenGraphImage(photo.image)?.url : undefined,
+    ...(image?.alt ? { alternateName: image.alt } : {}),
+    ...(contentUrl ? { contentUrl, thumbnailUrl: contentUrl } : {}),
+    ...(image?.width && image?.height
+      ? { width: { '@type': 'QuantitativeValue', value: image.width, unitCode: 'PX' } }
+      : {}),
+    ...(image?.width && image?.height
+      ? { height: { '@type': 'QuantitativeValue', value: image.height, unitCode: 'PX' } }
+      : {}),
     ...(photo.capturedAt ? { dateCreated: photo.capturedAt } : {}),
     creator: buildPersonReference(),
     copyrightNotice: 'Henrik Sissener',
     creditText: 'Henrik Sissener',
+    representativeOfPage: { '@type': 'WebPage', '@id': pageUrl },
     ...(place?.name
       ? {
           contentLocation: {

@@ -1,6 +1,7 @@
 'use client';
 
 import { IconMapPin } from '@tabler/icons-react';
+import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
 import MapboxMap, { Marker } from 'react-map-gl/mapbox';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { useTheme } from '@/app/providers';
@@ -59,11 +60,16 @@ export function PhotographyLocationMap({ point }: PhotographyLocationMapProps) {
         </MapboxMap>
       </div>
 
-      <p className='text-xs text-foreground-muted'>
-        <Link href='/about#travel-map-section' className='font-medium text-accent hover:underline'>
-          Explore all places on the about map
-        </Link>
-      </p>
+      {ABOUT_PAGE_ENABLED ? (
+        <p className='text-xs text-foreground-muted'>
+          <Link
+            href='/about#travel-map-section'
+            className='font-medium text-accent hover:underline'
+          >
+            Explore all places on the about map
+          </Link>
+        </p>
+      ) : null}
     </section>
   );
 }
