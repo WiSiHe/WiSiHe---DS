@@ -114,15 +114,14 @@ export interface PaintingCardProps {
    * Passed as plain strings so the component is data-source agnostic.
    */
   tags?: string[];
-  /** Whether the painting is marked NSFW — shows a blur overlay and an exclamation badge */
+  /** Whether the painting is marked NSFW — shows a soft blur overlay until the user filters for mature content */
   isNsfw?: boolean;
   /** When true, the NSFW blur is lifted (e.g. user has actively filtered for NSFW content) */
   isNsfwVisible?: boolean;
   /** Highlights the card when the work is available to buy (store link or for-sale flag) */
   isForSale?: boolean;
   /**
-   * Extra icon badges rendered in the top-right corner.
-   * The first badge is always visible; subsequent ones animate in on hover.
+   * Extra icon badges revealed on hover in the top-right corner (fan art, video, etc.).
    */
   badges?: PaintingCardBadge[];
   /**
@@ -158,7 +157,7 @@ export function PaintingCard({
   paintedAt,
 }: PaintingCardProps) {
   const showBlur = isNsfw && !isNsfwVisible;
-  const [pinnedBadge, ...animatedBadges] = badges;
+  const displayTags = showBlur ? tags.filter(tag => !/^nsfw$/i.test(tag.trim())) : tags;
   const tagVariants = alwaysShowTags ? alwaysVisibleTagVariants : listVariants;
   const iconBadgeVariants = alwaysShowTags ? alwaysVisibleIconsVariants : iconsListVariants;
 
@@ -173,6 +172,7 @@ export function PaintingCard({
         'transition-all duration-300',
         'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
         isForSale &&
+          !showBlur &&
           'ring-2 ring-accent/50 border-accent/40 shadow-md shadow-accent/15 hover:ring-accent/70',
         className,
       )}
@@ -184,48 +184,30 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Tag chips                                                           */}
       {/* ------------------------------------------------------------------ */}
-      {tags.length > 0 && (
+      {displayTags.length > 0 && (
         <motion.ul
-          className='absolute z-20 flex flex-wrap items-start gap-1 pr-16 text-xs top-2 left-2 right-2'
+          className='absolute z-20 flex flex-wrap items-start gap-1 pr-10 text-xs top-2 left-2 right-2'
           variants={tagVariants}
         >
-          {tags.map(tag => (
+          {displayTags.map(tag => (
             <PaintingCardTag key={tag} label={tag} alwaysVisible={alwaysShowTags} />
           ))}
         </motion.ul>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Pinned badge                                                        */}
-      {/* ------------------------------------------------------------------ */}
-      {pinnedBadge && (
-        <div className='absolute z-20 right-2 top-2'>
-          <PaintingCardBadgeItem
-            icon={pinnedBadge.icon}
-            label={pinnedBadge.label}
-            variant={pinnedBadge.variant}
-            pinned
-          />
-        </div>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Animated secondary badges                                          */}
-      {/* ------------------------------------------------------------------ */}
-      {animatedBadges.length > 0 && (
+      {badges.length > 0 && (
         <motion.ul
-          className={cn(
-            'absolute z-20 flex flex-col gap-1 text-xs right-2',
-            pinnedBadge ? 'top-12' : 'top-2',
-          )}
+          className='absolute z-20 flex flex-col gap-1 text-xs right-2 top-2'
           variants={iconBadgeVariants}
         >
-          {animatedBadges.map(badge => (
+          {badges.map(badge => (
             <PaintingCardBadgeItem
               key={badge.key}
               icon={badge.icon}
               label={badge.label}
-              variant={badge.variant}
+              variant={badge.variant ?? 'surface'}
+              size='sm'
+              shadow='none'
               alwaysVisible={alwaysShowTags}
             />
           ))}
@@ -252,7 +234,7 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {showBlur && (
         <div
-          className='absolute inset-0 w-full h-full bg-background/60 backdrop-blur-xl z-10'
+          className='absolute inset-0 w-full h-full bg-background/40 backdrop-blur-lg z-10'
           aria-hidden='true'
         />
       )}
@@ -261,7 +243,10 @@ export function PaintingCard({
       {/* Hover footer / link                                                */}
       {/* ------------------------------------------------------------------ */}
       <LinkEl href={href} className='before:absolute before:inset-0 before:z-0'>
-        <span className='sr-only'>View painting: {title}</span>
+        <span className='sr-only'>
+          View painting: {title}
+          {isNsfw ? ' (mature content)' : ''}
+        </span>
         <div
           aria-hidden
           className={cn(

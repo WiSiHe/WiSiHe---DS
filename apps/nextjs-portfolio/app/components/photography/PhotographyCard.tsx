@@ -100,11 +100,6 @@ export function PhotographyCard({
               {year}
             </span>
           ) : null}
-          {photo.isFeatured ? (
-            <span className='absolute right-3 top-3 rounded-md border border-accent/40 bg-background/85 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent backdrop-blur-md'>
-              Featured
-            </span>
-          ) : null}
         </div>
 
         <div className='px-0.5'>

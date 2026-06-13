@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { IconAlertTriangle, IconShoppingCart, IconStack2, IconVideo } from '@tabler/icons-react';
+import { IconShoppingCart, IconStack2, IconVideo } from '@tabler/icons-react';
 import { PaintingCard } from './PaintingCard';
 
 // picsum.photos works from any origin (no referrer policy) — id 1103 is a colourful abstract
@@ -74,9 +74,6 @@ export const NSFW_Blurred: Story = {
     tags: ['NSFW'],
     isNsfw: true,
     isNsfwVisible: false,
-    badges: [
-      { key: 'nsfw', icon: <IconAlertTriangle className='w-4 h-4' />, label: 'NSFW content' },
-    ],
   },
 };
 
@@ -89,9 +86,6 @@ export const NSFW_Visible: Story = {
     tags: ['NSFW'],
     isNsfw: true,
     isNsfwVisible: true,
-    badges: [
-      { key: 'nsfw', icon: <IconAlertTriangle className='w-4 h-4' />, label: 'NSFW content' },
-    ],
   },
 };
 
