@@ -449,7 +449,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
             'w-40 md:w-64 lg:max-w-[18vw]',
             'w-52 md:w-80 lg:max-w-[20vw]',
           ];
-          const isPriority = index < 4;
+          const isPriority = index === 0;
           const aspectRatio = aspectRatios[index % aspectRatios.length];
           const size = sizes[index % sizes.length];
 
@@ -713,6 +713,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                           aria-hidden
                           fill
                           priority={isPriority}
+                          fetchPriority={isPriority ? 'high' : undefined}
                           className='object-cover'
                           sizes='(max-width: 768px) 40vw, 30vw'
                         />

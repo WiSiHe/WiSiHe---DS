@@ -243,7 +243,11 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             )}
             <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               {filteredPast.map((project, index) => (
-                <PastProjectCard key={project._id} project={project} index={index} />
+                <PastProjectCard
+                  key={project._id}
+                  project={project}
+                  isLcpCandidate={filteredOngoing.length === 0 && index === 0}
+                />
               ))}
             </ul>
           </motion.div>

@@ -6,7 +6,7 @@ import { urlForImage } from '@/sanity/lib/utils';
 
 type PastProjectCardProps = {
   project: GetAllProjectsResult['pastProjects'][number];
-  index: number;
+  isLcpCandidate?: boolean;
 };
 
 const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
@@ -24,7 +24,7 @@ const TYPE_LABEL: Record<string, string> = {
   other: 'Other',
 };
 
-const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
+const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardProps) => {
   const { name, image, slug, tags, status, projectEnd, projectType, seoDescription } = project;
 
   const projectTitle = name;
@@ -55,8 +55,11 @@ const PastProjectCard = ({ project, index }: PastProjectCardProps) => {
                 src={imageSrc}
                 alt={projectTitle ?? ''}
                 fill
-                priority={index < 4}
+                priority={isLcpCandidate}
+                fetchPriority={isLcpCandidate ? 'high' : undefined}
                 sizes='(max-width: 768px) 100vw, 50vw'
+                placeholder={image?.lqip ? 'blur' : 'empty'}
+                blurDataURL={image?.lqip ?? undefined}
                 className='object-cover transition-transform duration-500 group-hover:scale-105'
               />
             ) : (

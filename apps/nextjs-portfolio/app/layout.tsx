@@ -179,6 +179,7 @@ export default async function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
+        <link rel='preconnect' href='https://cdn.sanity.io' crossOrigin='anonymous' />
         <link rel='manifest' href='/manifest.json' />
         <link rel='mask-icon' href='/wisihe.svg' color='oklch(65% 0.15 180)' />
 
