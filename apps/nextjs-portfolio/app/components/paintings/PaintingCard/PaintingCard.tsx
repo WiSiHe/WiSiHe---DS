@@ -5,7 +5,6 @@ import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
-import { FaExclamation, FaStar } from 'react-icons/fa';
 import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import {
   getHeroStrokeColors,
@@ -59,7 +58,6 @@ const PaintingCardAdapter = ({
     video = '',
     imagesCount = 0,
     slug,
-    isFeatured,
     isFanArt,
     isNSFW,
     isForSale,
@@ -129,16 +127,8 @@ const PaintingCardAdapter = ({
       imageEl
     );
 
-  // Pinned badge (top-right) — featured only. For-sale uses the accent ring + Store tag chip.
+  // Secondary badges — reveal on hover only (no pinned featured / NSFW icons).
   const badges: PaintingCardBadge[] = [];
-  if (isFeatured === true) {
-    badges.push({
-      key: 'featured',
-      icon: <FaStar className='w-4 h-4 text-amber-600 dark:text-amber-300' />,
-      label: 'Featured painting',
-      variant: 'surface',
-    });
-  }
   if (isFanArt === true) {
     badges.push({
       key: 'fanart',
@@ -155,13 +145,6 @@ const PaintingCardAdapter = ({
   }
   if (video) {
     badges.push({ key: 'video', icon: <BsYoutube className='w-4 h-4' />, label: 'Has video' });
-  }
-  if (isNsfw) {
-    badges.push({
-      key: 'nsfw',
-      icon: <FaExclamation className='w-4 h-4' />,
-      label: 'NSFW content',
-    });
   }
 
   const normalized = slug ?? '';
