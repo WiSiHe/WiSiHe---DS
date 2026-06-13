@@ -78,9 +78,12 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
                 <Image
                   src={urlForImage(image)?.width(800).height(600).quality(80).url() || ''}
                   alt={image?.alt || projectTitle || ''}
-                  priority={index < 2}
+                  priority={index === 0}
+                  fetchPriority={index === 0 ? 'high' : undefined}
                   fill
                   sizes='(max-width: 768px) 100vw, 384px'
+                  placeholder={image?.lqip ? 'blur' : 'empty'}
+                  blurDataURL={image?.lqip ?? undefined}
                   className='object-cover transition-transform duration-500 group-hover:scale-105'
                 />
                 <div className='absolute inset-0 bg-linear-to-r from-surface/20 to-transparent md:block hidden' />
