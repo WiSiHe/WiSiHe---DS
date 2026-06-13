@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 
 import { getHeroStrokeColors, HeroPaintingSvgHover } from './HeroPaintingSvgHover';
@@ -102,11 +102,39 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [flares, setFlares] = useState<
-    Array<{ id: number; top: string; left: string; color: string }>
-  >([]);
   const [activeFlareId, setActiveFlareId] = useState<number | null>(null);
-  const [cardOffsets, setCardOffsets] = useState<Array<{ x: number; y: number; rotate: number }>>(
+
+  const flares = useMemo(
+    () =>
+      Array.from({ length: 18 }).map((_, i) => ({
+        id: i,
+        top: `${Math.random() * 80 + 10}%`,
+        left: `${Math.random() * 80 + 10}%`,
+        color: i % 2 === 0 ? 'var(--color-accent)' : 'var(--color-brand-2-500)',
+      })),
+    [],
+  );
+
+  const cardOffsets = useMemo(
+    () =>
+      Array.from({ length: 15 }).map(() => ({
+        x: (Math.random() - 0.5) * 50,
+        y: (Math.random() - 0.5) * 50,
+        rotate: (Math.random() - 0.5) * 20,
+      })),
+    [],
+  );
+
+  /** Per-card float loop — must be stable across renders so Motion does not restart. */
+  const floatKeyframes = useMemo(
+    () =>
+      Array.from({ length: 15 }).map((_, i) => ({
+        y: [0, Math.random() * 20 + 10, 0] as [number, number, number],
+        x: [0, Math.random() * 10 - 5, 0] as [number, number, number],
+        rotate: [0, Math.random() * 6 - 3, 0] as [number, number, number],
+        duration: Math.random() * 3 + 4,
+        delay: i * 0.1,
+      })),
     [],
   );
 
@@ -133,24 +161,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
       setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     };
     checkTouch();
-  }, []);
-
-  // Initialize background spark coordinates and organic card offsets once on mount
-  useEffect(() => {
-    const generated = Array.from({ length: 18 }).map((_, i) => ({
-      id: i,
-      top: `${Math.random() * 80 + 10}%`,
-      left: `${Math.random() * 80 + 10}%`,
-      color: i % 2 === 0 ? 'var(--color-accent)' : 'var(--color-brand-2-500)',
-    }));
-    setFlares(generated);
-
-    const offsets = Array.from({ length: 15 }).map(() => ({
-      x: (Math.random() - 0.5) * 50, // ±25px translation
-      y: (Math.random() - 0.5) * 50, // ±25px translation
-      rotate: (Math.random() - 0.5) * 20, // ±10 degrees rotation
-    }));
-    setCardOffsets(offsets);
   }, []);
 
   // Trigger coordinate sparks at random intervals during active floating
@@ -494,9 +504,31 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
             }
           };
 
-          const parallax = getParallaxValues(index);
+          const parallax =
+            stage === 'floating'
+              ? getParallaxValues(index)
+              : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
+
           const isCurrentlyHovered = hoveredIndex === index;
-          const offset = cardOffsets[index] || { x: 0, y: 0, rotate: 0 };
+          const offset = cardOffsets[index] ?? { x: 0, y: 0, rotate: 0 };
+          const floatMotion = floatKeyframes[index] ?? {
+            y: [0, 12, 0] as [number, number, number],
+            x: [0, 0, 0] as [number, number, number],
+            rotate: [0, 0, 0] as [number, number, number],
+            duration: 5,
+            delay: 0,
+          };
+
+          const stackY = `calc(-50% + ${stackOffsetY}px)`;
+
+          const cardZIndex =
+            stage === 'loading'
+              ? index + 1
+              : stage === 'exploding'
+                ? 1
+                : isCurrentlyHovered
+                  ? 50
+                  : parallax.zIndex;
 
           // Animations
           const outerAnimate =
@@ -505,12 +537,11 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                   left: '50%',
                   top: '50%',
                   x: '-50%',
-                  y: `calc(-50% + ${stackOffsetY}px)`,
+                  y: stackY,
                   scale: stackScale,
                   rotate: stackRotation,
                   opacity: 1,
                   filter: 'blur(0px)',
-                  zIndex: index + 1,
                 }
               : stage === 'exploding'
                 ? {
@@ -522,7 +553,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                     rotate: pos.rotation + offset.rotate,
                     opacity: 1,
                     filter: 'blur(0px)',
-                    zIndex: 1,
                   }
                 : {
                     left: pos.left,
@@ -533,7 +563,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                     rotate: pos.rotation + offset.rotate,
                     opacity: 1,
                     filter: 'blur(0px)',
-                    zIndex: isCurrentlyHovered ? 50 : parallax.zIndex, // Raise zIndex dynamically
                   };
 
           // Soft watercolor bleed for loading stage, snappy spring wobble for explosion stage
@@ -556,13 +585,13 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                     ease: 'easeOut' as const,
                   };
 
-          // Float animation loop values
+          // Float animation loop values (stable keyframes from useMemo)
           const floatAnimate =
             stage === 'floating'
               ? {
-                  y: [0, Math.random() * 20 + 10, 0],
-                  x: [0, Math.random() * 10 - 5, 0],
-                  rotate: [0, Math.random() * 6 - 3, 0],
+                  y: floatMotion.y,
+                  x: floatMotion.x,
+                  rotate: floatMotion.rotate,
                 }
               : {
                   y: 0,
@@ -571,10 +600,10 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                 };
 
           const floatTransition = {
-            duration: Math.random() * 3 + 4,
-            repeat: Infinity,
+            duration: floatMotion.duration,
+            repeat: stage === 'floating' ? Infinity : 0,
             ease: 'easeInOut' as const,
-            delay: index * 0.1,
+            delay: floatMotion.delay,
           };
 
           const href = item._type === 'painting' ? `paintings/${slug}` : `projects/${slug}`;
@@ -606,11 +635,11 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                   : {
                       opacity: 0,
                       scale: 0.3,
-                      filter: 'blur(30px)', // Watercolor dissolve start
+                      filter: 'blur(30px)',
                       left: '50%',
                       top: '50%',
                       x: '-50%',
-                      y: stackOffsetY,
+                      y: stackY,
                       rotate: stackRotation,
                     }
               }
@@ -623,7 +652,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                 if (stage === 'floating') setHoveredIndex(null);
               }}
               className={`absolute pointer-events-auto ${size} ${aspectRatio} will-change-transform`}
-              style={{ transformStyle: 'preserve-3d' }}
+              style={{ transformStyle: 'preserve-3d', zIndex: cardZIndex }}
             >
               {/* Organic client-side scattering offset wrapper */}
               <motion.div
