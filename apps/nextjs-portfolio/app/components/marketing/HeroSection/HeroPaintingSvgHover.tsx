@@ -5,7 +5,7 @@
  * GSAP targets `[data-hero-svg] path`. Parent should use `overflow-hidden` + radius so strokes clip to the image.
  */
 
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 
 import {
   type BrushStrokeLayer,
@@ -14,13 +14,15 @@ import {
 } from './brushStrokeVariants';
 
 /** Prepare paths for dash-offset animation (call once per card root that contains `[data-hero-svg]`). */
-export function initHeroSvgStrokePaths(root: HTMLElement | null): void {
+export function initHeroSvgStrokePaths(root: HTMLElement | null, strokeScale = 1): void {
   if (!root) return;
+  const restWidth = HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
   const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
   paths.forEach(path => {
     const len = path.getTotalLength();
     path.style.strokeDasharray = `${len}`;
     path.style.strokeDashoffset = `${len}`;
+    path.setAttribute('stroke-width', String(restWidth));
   });
 }
 
@@ -104,6 +106,8 @@ type HeroPaintingSvgHoverProps = {
   accentColor: string;
   secondaryColor: string;
   strokeVariantIndex?: number;
+  /** Multiplier for stroke width (card grids use ~0.4). */
+  strokeScale?: number;
   title?: string | null;
   medium?: string | null;
   year?: string | null;
@@ -132,10 +136,7 @@ function BrushStrokeSvg({
   color: string;
   className: string;
   useMotion: boolean;
-  pathVariants?: {
-    initial: object;
-    hover: object;
-  };
+  pathVariants?: Variants;
   strokeWidthRest: number;
 }) {
   return (
@@ -171,16 +172,68 @@ function BrushStrokeSvg({
   );
 }
 
+function BrushStrokeTags({
+  tags,
+  accentColor,
+  motionTags = false,
+  tagVariants,
+}: {
+  tags: string[];
+  accentColor: string;
+  motionTags?: boolean;
+  tagVariants?: Variants;
+}) {
+  const visibleTags = tags.slice(0, 4);
+  if (visibleTags.length === 0) return null;
+
+  const chipClass =
+    'rounded-md bg-black/45 px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/15 sm:text-[10px]';
+
+  const chips = visibleTags.map((tag, idx) => (
+    <span
+      key={`${tag}-${idx}`}
+      className={chipClass}
+      style={{ boxShadow: `0 0 8px ${accentColor}33` }}
+    >
+      {tag}
+    </span>
+  ));
+
+  if (motionTags && tagVariants) {
+    return (
+      <motion.div
+        variants={tagVariants}
+        className='pointer-events-none absolute top-2 left-2 right-2 z-3 flex flex-wrap gap-1 pr-8'
+      >
+        {chips}
+      </motion.div>
+    );
+  }
+
+  return (
+    <div
+      data-hero-tags
+      className='pointer-events-none absolute top-2 left-2 right-2 z-3 flex flex-wrap gap-1 pr-8 opacity-0'
+    >
+      {chips}
+    </div>
+  );
+}
+
 export function HeroPaintingSvgHover({
   accentColor,
   secondaryColor,
   strokeVariantIndex = 0,
+  strokeScale = 1,
   title,
   medium,
   year,
+  tags,
   useMotion = false,
 }: HeroPaintingSvgHoverProps) {
   const variant = getBrushStrokeVariant(strokeVariantIndex);
+  const restStrokeWidth = HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
+  const displayTags = (tags ?? []).filter(Boolean);
   if (useMotion) {
     const pathVariants = {
       initial: {
@@ -208,11 +261,20 @@ export function HeroPaintingSvgHover({
       },
     };
 
+    const tagVariants = {
+      initial: { opacity: 0, y: -8 },
+      hover: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.45, ease: 'easeOut' as const, delay: 0.15 },
+      },
+    };
+
     return (
       <>
         <div
           data-hero-svg
-          className='pointer-events-none absolute inset-0 z-2 overflow-hidden'
+          className='pointer-events-none absolute inset-0 z-[15] overflow-hidden'
           aria-hidden
           style={{ transform: `scale(${variant.scale})` }}
         >
@@ -222,7 +284,7 @@ export function HeroPaintingSvgHover({
             className={`${LAYER_BASE_CLASS} svg-stroke-1`}
             useMotion
             pathVariants={pathVariants}
-            strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+            strokeWidthRest={restStrokeWidth}
           />
           <BrushStrokeSvg
             layer={variant.layers[1]}
@@ -230,9 +292,17 @@ export function HeroPaintingSvgHover({
             className={`${LAYER_BASE_CLASS} svg-stroke-2`}
             useMotion
             pathVariants={pathVariants}
-            strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+            strokeWidthRest={restStrokeWidth}
           />
         </div>
+        {displayTags.length > 0 ? (
+          <BrushStrokeTags
+            tags={displayTags}
+            accentColor={accentColor}
+            motionTags
+            tagVariants={tagVariants}
+          />
+        ) : null}
         {title ? (
           <motion.div
             variants={detailsVariants}
@@ -263,7 +333,7 @@ export function HeroPaintingSvgHover({
     <>
       <div
         data-hero-svg
-        className='pointer-events-none absolute inset-0 z-2 overflow-hidden'
+        className='pointer-events-none absolute inset-0 z-[15] overflow-hidden'
         aria-hidden
         style={{ transform: `scale(${variant.scale})` }}
       >
@@ -272,20 +342,23 @@ export function HeroPaintingSvgHover({
           color={accentColor}
           className={`${LAYER_BASE_CLASS} svg-stroke-1`}
           useMotion={false}
-          strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+          strokeWidthRest={restStrokeWidth}
         />
         <BrushStrokeSvg
           layer={variant.layers[1]}
           color={secondaryColor}
           className={`${LAYER_BASE_CLASS} svg-stroke-2`}
           useMotion={false}
-          strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+          strokeWidthRest={restStrokeWidth}
         />
       </div>
+      {displayTags.length > 0 ? (
+        <BrushStrokeTags tags={displayTags} accentColor={accentColor} />
+      ) : null}
       {title ? (
         <div
           data-hero-title
-          className='pointer-events-none absolute bottom-2 left-2 right-2 z-3 opacity-0 flex flex-col items-start text-left space-y-0.5'
+          className='pointer-events-none absolute bottom-2 left-2 right-2 z-[16] opacity-0 flex flex-col items-start text-left space-y-0.5'
         >
           <p className='line-clamp-2 font-serif text-base font-medium leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] sm:text-lg italic'>
             {title}

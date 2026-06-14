@@ -16,6 +16,7 @@ import {
   initHeroSvgStrokePaths,
 } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
 import {
+  CARD_BRUSH_STROKE_SCALE,
   paintingSvgBrushEnter,
   paintingSvgBrushLeave,
 } from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
@@ -246,7 +247,7 @@ const Masonry = ({
       const tile = containerRef.current?.querySelector<HTMLElement>(
         `[data-masonry-key="${CSS.escape(item.id)}"]`,
       );
-      if (tile) initHeroSvgStrokePaths(tile);
+      if (tile) initHeroSvgStrokePaths(tile, CARD_BRUSH_STROKE_SCALE);
     });
   }, [grid, imagesReady]);
 
@@ -260,7 +261,7 @@ const Masonry = ({
     const item = grid.find(g => g.id === id);
     if (item) {
       svgHoverTlByIdRef.current.get(id)?.kill();
-      const tl = paintingSvgBrushEnter(el);
+      const tl = paintingSvgBrushEnter(el, CARD_BRUSH_STROKE_SCALE);
       svgHoverTlByIdRef.current.set(id, tl);
     }
     if (!scaleOnHover) return;
@@ -286,7 +287,7 @@ const Masonry = ({
     if (item) {
       svgHoverTlByIdRef.current.get(id)?.kill();
       svgHoverTlByIdRef.current.delete(id);
-      paintingSvgBrushLeave(el);
+      paintingSvgBrushLeave(el, CARD_BRUSH_STROKE_SCALE);
     }
     if (!scaleOnHover) return;
     gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
@@ -330,10 +331,11 @@ const Masonry = ({
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
               />
-              <div aria-hidden>
+              <div className='pointer-events-none absolute inset-0 z-[15]' aria-hidden>
                 <HeroPaintingSvgHover
                   {...getHeroStrokeColors(item.strokeIndex)}
                   strokeVariantIndex={item.strokeIndex}
+                  strokeScale={CARD_BRUSH_STROKE_SCALE}
                   title={item.title ?? null}
                   medium={item.medium ?? null}
                   year={item.year ?? null}
