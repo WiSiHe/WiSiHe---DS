@@ -3,8 +3,8 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
+import { paintingBrushSeed } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
 import { urlForImage } from '@/sanity/lib/utils';
-
 import Masonry, { type MasonryItem } from './Masonry';
 
 type PaintingsDesktopShowcaseProps = {
@@ -58,7 +58,7 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         url: `/paintings/${p.slug}`,
         height,
         title: p.title ?? undefined,
-        strokeIndex: index,
+        strokeIndex: paintingBrushSeed(p._id),
         medium: p.medium ?? undefined,
         year,
       });

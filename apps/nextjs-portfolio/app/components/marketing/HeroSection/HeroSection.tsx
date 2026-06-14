@@ -6,9 +6,11 @@ import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import { useEffect, useMemo, useState } from 'react';
+import {
+  getHeroStrokeColors,
+  HeroPaintingSvgHover,
+} from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
 import { urlForImage } from '@/sanity/lib/utils';
-
-import { getHeroStrokeColors, HeroPaintingSvgHover } from './HeroPaintingSvgHover';
 import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 
@@ -724,6 +726,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                               useMotion
                               accentColor={accentColor}
                               secondaryColor={secondaryColor}
+                              strokeVariantIndex={index}
                               title={title}
                               medium={paintingMedium}
                               year={paintingYear}
