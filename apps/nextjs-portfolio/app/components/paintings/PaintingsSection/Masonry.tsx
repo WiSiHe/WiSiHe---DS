@@ -27,8 +27,8 @@ export type MasonryItem = {
   /** Logical height used for column packing (pixels) */
   height: number;
   title?: string;
-  /** Index for {@link getHeroStrokeColors} when SVG brush hover is enabled */
-  strokeIndex?: number;
+  /** Seed for brush stroke color + shape variant */
+  strokeIndex: number;
   medium?: string;
   year?: string;
 };
@@ -243,7 +243,6 @@ const Masonry = ({
   useLayoutEffect(() => {
     if (!imagesReady || !grid.length) return;
     grid.forEach(item => {
-      if (item.strokeIndex === undefined) return;
       const tile = containerRef.current?.querySelector<HTMLElement>(
         `[data-masonry-key="${CSS.escape(item.id)}"]`,
       );
@@ -259,7 +258,7 @@ const Masonry = ({
       return;
     }
     const item = grid.find(g => g.id === id);
-    if (item?.strokeIndex !== undefined) {
+    if (item) {
       svgHoverTlByIdRef.current.get(id)?.kill();
       const tl = paintingSvgBrushEnter(el);
       svgHoverTlByIdRef.current.set(id, tl);
@@ -284,7 +283,7 @@ const Masonry = ({
       return;
     }
     const item = grid.find(g => g.id === id);
-    if (item?.strokeIndex !== undefined) {
+    if (item) {
       svgHoverTlByIdRef.current.get(id)?.kill();
       svgHoverTlByIdRef.current.delete(id);
       paintingSvgBrushLeave(el);
@@ -331,17 +330,16 @@ const Masonry = ({
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
               />
-              {item.strokeIndex !== undefined ? (
-                <div aria-hidden>
-                  <HeroPaintingSvgHover
-                    {...getHeroStrokeColors(item.strokeIndex)}
-                    title={item.title ?? null}
-                    medium={item.medium ?? null}
-                    year={item.year ?? null}
-                    useMotion={false}
-                  />
-                </div>
-              ) : null}
+              <div aria-hidden>
+                <HeroPaintingSvgHover
+                  {...getHeroStrokeColors(item.strokeIndex)}
+                  strokeVariantIndex={item.strokeIndex}
+                  title={item.title ?? null}
+                  medium={item.medium ?? null}
+                  year={item.year ?? null}
+                  useMotion={false}
+                />
+              </div>
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />
               ) : null}

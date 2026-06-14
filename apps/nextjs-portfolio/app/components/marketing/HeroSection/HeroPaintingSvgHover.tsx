@@ -1,9 +1,17 @@
 'use client';
 
 /**
- * CodeGrid-style SVG brush strokes: two organic paths (different viewBoxes), dash reveal + stroke-width.
+ * CodeGrid-style SVG brush strokes: organic paths, dash reveal + stroke-width.
  * GSAP targets `[data-hero-svg] path`. Parent should use `overflow-hidden` + radius so strokes clip to the image.
  */
+
+import { motion } from 'motion/react';
+
+import {
+  type BrushStrokeLayer,
+  getBrushStrokeVariant,
+  paintingBrushSeed,
+} from './brushStrokeVariants';
 
 /** Prepare paths for dash-offset animation (call once per card root that contains `[data-hero-svg]`). */
 export function initHeroSvgStrokePaths(root: HTMLElement | null): void {
@@ -16,12 +24,7 @@ export function initHeroSvgStrokePaths(root: HTMLElement | null): void {
   });
 }
 
-/** Organic stroke paths from CodeGrid “SVG Image Hover” example (brush-like, not circular). */
-const BRUSH_PATH_PRIMARY =
-  'M227.549 1818.76C227.549 1818.76 406.016 2207.75 569.049 2130.26C843.431 1999.85 -264.104 1002.3 227.549 876.262C552.918 792.849 773.647 2456.11 1342.05 2130.26C1885.43 1818.76 14.9644 455.772 760.548 137.262C1342.05 -111.152 1663.5 2266.35 2209.55 1972.76C2755.6 1679.18 1536.63 384.467 1826.55 137.262C2013.5 -22.1463 2209.55 381.262 2209.55 381.262';
-
-const BRUSH_PATH_SECONDARY =
-  'M1661.28 2255.51C1661.28 2255.51 2311.09 1960.37 2111.78 1817.01C1944.47 1696.67 718.456 2870.17 499.781 2255.51C308.969 1719.17 2457.51 1613.83 2111.78 963.512C1766.05 313.198 427.949 2195.17 132.281 1455.51C-155.219 736.292 2014.78 891.514 1708.78 252.012C1437.81 -314.29 369.471 909.169 132.281 566.512C18.1772 401.672 244.781 193.012 244.781 193.012';
+export { getBrushStrokeVariant, paintingBrushSeed };
 
 /** Initial / rest stroke width (matches example markup). */
 export const HERO_BRUSH_STROKE_WIDTH_REST = 200;
@@ -97,11 +100,10 @@ export function getHeroStrokeColors(index: number): {
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
 
-import { motion } from 'motion/react';
-
 type HeroPaintingSvgHoverProps = {
   accentColor: string;
   secondaryColor: string;
+  strokeVariantIndex?: number;
   title?: string | null;
   medium?: string | null;
   year?: string | null;
@@ -109,14 +111,76 @@ type HeroPaintingSvgHoverProps = {
   useMotion?: boolean;
 };
 
+const LAYER_BASE_CLASS =
+  'svg-stroke absolute left-1/2 top-1/2 h-[135%] w-[135%] -translate-x-1/2 -translate-y-1/2 origin-center';
+
+function layerTransform(layer: BrushStrokeLayer): string {
+  return layer.mirror
+    ? `rotate(${layer.rotateDeg}deg) scaleX(-1)`
+    : `rotate(${layer.rotateDeg}deg)`;
+}
+
+function BrushStrokeSvg({
+  layer,
+  color,
+  className,
+  useMotion,
+  pathVariants,
+  strokeWidthRest,
+}: {
+  layer: BrushStrokeLayer;
+  color: string;
+  className: string;
+  useMotion: boolean;
+  pathVariants?: {
+    initial: object;
+    hover: object;
+  };
+  strokeWidthRest: number;
+}) {
+  return (
+    <div className={className} style={{ transform: layerTransform(layer) }}>
+      <svg
+        className='block h-full w-full'
+        viewBox={layer.viewBox}
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        preserveAspectRatio='xMidYMid slice'
+      >
+        <title>Decorative brush stroke</title>
+        {useMotion && pathVariants ? (
+          <motion.path
+            variants={pathVariants}
+            d={layer.d}
+            stroke={color}
+            strokeLinecap='round'
+            fill='none'
+          />
+        ) : (
+          <path
+            d={layer.d}
+            stroke={color}
+            strokeWidth={strokeWidthRest}
+            strokeLinecap='round'
+            fill='none'
+            style={{ opacity: 0 }}
+          />
+        )}
+      </svg>
+    </div>
+  );
+}
+
 export function HeroPaintingSvgHover({
   accentColor,
   secondaryColor,
+  strokeVariantIndex = 0,
   title,
   medium,
   year,
   useMotion = false,
 }: HeroPaintingSvgHoverProps) {
+  const variant = getBrushStrokeVariant(strokeVariantIndex);
   if (useMotion) {
     const pathVariants = {
       initial: {
@@ -146,43 +210,28 @@ export function HeroPaintingSvgHover({
 
     return (
       <>
-        <div data-hero-svg className='pointer-events-none absolute inset-0 z-2' aria-hidden>
-          <div className='svg-stroke svg-stroke-1 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
-            <svg
-              className='block h-full w-full'
-              viewBox='0 0 2453 2273'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-              preserveAspectRatio='xMidYMid meet'
-            >
-              <title>Decorative brush stroke</title>
-              <motion.path
-                variants={pathVariants}
-                d={BRUSH_PATH_PRIMARY}
-                stroke={accentColor}
-                strokeLinecap='round'
-                fill='none'
-              />
-            </svg>
-          </div>
-          <div className='svg-stroke svg-stroke-2 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
-            <svg
-              className='block h-full w-full'
-              viewBox='0 0 2250 2535'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-              preserveAspectRatio='xMidYMid meet'
-            >
-              <title>Decorative brush stroke</title>
-              <motion.path
-                variants={pathVariants}
-                d={BRUSH_PATH_SECONDARY}
-                stroke={secondaryColor}
-                strokeLinecap='round'
-                fill='none'
-              />
-            </svg>
-          </div>
+        <div
+          data-hero-svg
+          className='pointer-events-none absolute inset-0 z-2 overflow-hidden'
+          aria-hidden
+          style={{ transform: `scale(${variant.scale})` }}
+        >
+          <BrushStrokeSvg
+            layer={variant.layers[0]}
+            color={accentColor}
+            className={`${LAYER_BASE_CLASS} svg-stroke-1`}
+            useMotion
+            pathVariants={pathVariants}
+            strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+          />
+          <BrushStrokeSvg
+            layer={variant.layers[1]}
+            color={secondaryColor}
+            className={`${LAYER_BASE_CLASS} svg-stroke-2`}
+            useMotion
+            pathVariants={pathVariants}
+            strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+          />
         </div>
         {title ? (
           <motion.div
@@ -212,45 +261,26 @@ export function HeroPaintingSvgHover({
 
   return (
     <>
-      <div data-hero-svg className='pointer-events-none absolute inset-0 z-2' aria-hidden>
-        <div className='svg-stroke svg-stroke-1 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
-          <svg
-            className='block h-full w-full'
-            viewBox='0 0 2453 2273'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-            preserveAspectRatio='xMidYMid meet'
-          >
-            <title>Decorative brush stroke</title>
-            <path
-              d={BRUSH_PATH_PRIMARY}
-              stroke={accentColor}
-              strokeWidth={HERO_BRUSH_STROKE_WIDTH_REST}
-              strokeLinecap='round'
-              fill='none'
-              style={{ opacity: 0 }}
-            />
-          </svg>
-        </div>
-        <div className='svg-stroke svg-stroke-2 absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-150'>
-          <svg
-            className='block h-full w-full'
-            viewBox='0 0 2250 2535'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-            preserveAspectRatio='xMidYMid meet'
-          >
-            <title>Decorative brush stroke</title>
-            <path
-              d={BRUSH_PATH_SECONDARY}
-              stroke={secondaryColor}
-              strokeWidth={HERO_BRUSH_STROKE_WIDTH_REST}
-              strokeLinecap='round'
-              fill='none'
-              style={{ opacity: 0 }}
-            />
-          </svg>
-        </div>
+      <div
+        data-hero-svg
+        className='pointer-events-none absolute inset-0 z-2 overflow-hidden'
+        aria-hidden
+        style={{ transform: `scale(${variant.scale})` }}
+      >
+        <BrushStrokeSvg
+          layer={variant.layers[0]}
+          color={accentColor}
+          className={`${LAYER_BASE_CLASS} svg-stroke-1`}
+          useMotion={false}
+          strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+        />
+        <BrushStrokeSvg
+          layer={variant.layers[1]}
+          color={secondaryColor}
+          className={`${LAYER_BASE_CLASS} svg-stroke-2`}
+          useMotion={false}
+          strokeWidthRest={HERO_BRUSH_STROKE_WIDTH_REST}
+        />
       </div>
       {title ? (
         <div

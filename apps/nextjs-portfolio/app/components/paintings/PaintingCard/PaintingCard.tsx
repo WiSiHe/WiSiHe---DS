@@ -9,7 +9,9 @@ import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import {
   getHeroStrokeColors,
   HeroPaintingSvgHover,
+  paintingBrushSeed,
 } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
+import { PaintingCardSvgHoverWrap } from '@/app/components/paintings/PaintingCard/PaintingCardSvgHoverWrap';
 import { urlForImage } from '@/sanity/lib/utils';
 
 // ---------------------------------------------------------------------------
@@ -29,7 +31,7 @@ type PaintingCardAdapterProps = {
   shouldBeLazy?: boolean;
   /** Set true when the user has actively filtered for NSFW in InstantSearch */
   isNsfwFilterActive?: boolean;
-  /** When set, brush-stroke SVG hover (home hero) is drawn over the image; pair with `PaintingCardSvgHoverWrap`. */
+  /** Optional override for brush color/variant; defaults to a stable hash from painting id */
   svgHoverIndex?: number;
   /** Tags + title strip stay visible without hover (e.g. touch / mobile carousel). */
   alwaysShowTags?: boolean;
@@ -116,18 +118,24 @@ const PaintingCardAdapter = ({
     />
   ) : undefined;
 
-  // Build the image ReactNode that will be passed to the generic card
-  const imageNode =
-    imageEl && svgHoverIndex !== undefined ? (
-      <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
-        {imageEl}
-        <HeroPaintingSvgHover {...getHeroStrokeColors(svgHoverIndex)} title={title || null} />
-      </div>
-    ) : (
-      imageEl
-    );
+  const brushSeed = paintingBrushSeed(String(paintingData._id ?? slug ?? title ?? 'painting'));
+  const brushIndex = svgHoverIndex ?? brushSeed;
+  const normalized = slug ?? '';
 
-  // Secondary badges — reveal on hover only (no pinned featured / NSFW icons).
+  const imageNode = imageEl ? (
+    <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
+      {imageEl}
+      <HeroPaintingSvgHover
+        {...getHeroStrokeColors(brushIndex)}
+        strokeVariantIndex={brushIndex}
+        title={title || null}
+        medium={medium ?? null}
+        year={yearString ?? null}
+        useMotion={false}
+      />
+    </div>
+  ) : undefined;
+
   const badges: PaintingCardBadge[] = [];
   if (isFanArt === true) {
     badges.push({
@@ -147,9 +155,7 @@ const PaintingCardAdapter = ({
     badges.push({ key: 'video', icon: <BsYoutube className='w-4 h-4' />, label: 'Has video' });
   }
 
-  const normalized = slug ?? '';
-
-  return (
+  const card = (
     <PaintingCard
       title={title}
       href={`/paintings/${normalized}`}
@@ -166,6 +172,12 @@ const PaintingCardAdapter = ({
       paintedAt={yearString}
     />
   );
+
+  if (!imageEl) {
+    return card;
+  }
+
+  return <PaintingCardSvgHoverWrap>{card}</PaintingCardSvgHoverWrap>;
 };
 
 export default PaintingCardAdapter;
