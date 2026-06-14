@@ -43,7 +43,7 @@ export default function SmoothScroll() {
     let unbindScrollTrigger: (() => void) | undefined;
     let cancelled = false;
     let idleCallbackId: number | undefined;
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let timeoutId: number | undefined;
 
     const initSmoothScroll = () => {
       if (cancelled) return;
