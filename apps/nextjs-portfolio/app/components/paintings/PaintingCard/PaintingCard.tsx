@@ -11,6 +11,7 @@ import {
   HeroPaintingSvgHover,
   paintingBrushSeed,
 } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
+import { CARD_BRUSH_STROKE_SCALE } from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
 import { PaintingCardSvgHoverWrap } from '@/app/components/paintings/PaintingCard/PaintingCardSvgHoverWrap';
 import { urlForImage } from '@/sanity/lib/utils';
 
@@ -125,14 +126,18 @@ const PaintingCardAdapter = ({
   const imageNode = imageEl ? (
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
       {imageEl}
-      <HeroPaintingSvgHover
-        {...getHeroStrokeColors(brushIndex)}
-        strokeVariantIndex={brushIndex}
-        title={title || null}
-        medium={medium ?? null}
-        year={yearString ?? null}
-        useMotion={false}
-      />
+      <div className='pointer-events-none absolute inset-0 z-[15]'>
+        <HeroPaintingSvgHover
+          {...getHeroStrokeColors(brushIndex)}
+          strokeVariantIndex={brushIndex}
+          strokeScale={CARD_BRUSH_STROKE_SCALE}
+          title={title || null}
+          medium={medium ?? null}
+          year={yearString ?? null}
+          tags={cleanedTags}
+          useMotion={false}
+        />
+      </div>
     </div>
   ) : undefined;
 
@@ -167,6 +172,7 @@ const PaintingCardAdapter = ({
       isForSale={availableForSale}
       badges={badges}
       alwaysShowTags={alwaysShowTags}
+      brushReveal
       className={className}
       medium={medium}
       paintedAt={yearString}
@@ -177,7 +183,11 @@ const PaintingCardAdapter = ({
     return card;
   }
 
-  return <PaintingCardSvgHoverWrap>{card}</PaintingCardSvgHoverWrap>;
+  return (
+    <PaintingCardSvgHoverWrap strokeScale={CARD_BRUSH_STROKE_SCALE}>
+      {card}
+    </PaintingCardSvgHoverWrap>
+  );
 };
 
 export default PaintingCardAdapter;

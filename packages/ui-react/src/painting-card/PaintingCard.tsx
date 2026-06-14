@@ -129,6 +129,10 @@ export interface PaintingCardProps {
    * Use on touch-first layouts (e.g. mobile carousel) where hover metadata would stay hidden.
    */
   alwaysShowTags?: boolean;
+  /**
+   * SVG brush reveal on the image — hides default tag/footer hover UI so metadata appears in the brush overlay.
+   */
+  brushReveal?: boolean;
   /** The medium used to create the painting */
   medium?: string;
   /** Year or date the painting was completed */
@@ -152,12 +156,16 @@ export function PaintingCard({
   isForSale = false,
   badges = [],
   alwaysShowTags = false,
+  brushReveal = false,
   className,
   medium,
   paintedAt,
 }: PaintingCardProps) {
   const showBlur = isNsfw && !isNsfwVisible;
   const displayTags = showBlur ? tags.filter(tag => !/^nsfw$/i.test(tag.trim())) : tags;
+  const showDefaultTags = !brushReveal && displayTags.length > 0;
+  const showDefaultBadges = !brushReveal && badges.length > 0;
+  const showHoverFooter = !brushReveal;
   const tagVariants = alwaysShowTags ? alwaysVisibleTagVariants : listVariants;
   const iconBadgeVariants = alwaysShowTags ? alwaysVisibleIconsVariants : iconsListVariants;
 
@@ -170,13 +178,14 @@ export function PaintingCard({
         'focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background',
         'bg-surface border border-border',
         'transition-all duration-300',
-        'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
+        !brushReveal &&
+          'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
         isForSale &&
           !showBlur &&
           'ring-2 ring-accent/50 border-accent/40 shadow-md shadow-accent/15 hover:ring-accent/70',
         className,
       )}
-      whileHover='hover'
+      whileHover={brushReveal ? undefined : 'hover'}
       initial='rest'
       animate='rest'
       layout
@@ -184,7 +193,7 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Tag chips                                                           */}
       {/* ------------------------------------------------------------------ */}
-      {displayTags.length > 0 && (
+      {showDefaultTags && (
         <motion.ul
           className='absolute z-20 flex flex-wrap items-start gap-1 pr-10 text-xs top-2 left-2 right-2'
           variants={tagVariants}
@@ -195,7 +204,7 @@ export function PaintingCard({
         </motion.ul>
       )}
 
-      {badges.length > 0 && (
+      {showDefaultBadges && (
         <motion.ul
           className='absolute z-20 flex flex-col gap-1 text-xs right-2 top-2'
           variants={iconBadgeVariants}
@@ -220,10 +229,14 @@ export function PaintingCard({
       <motion.div
         className='relative w-full h-full'
         layoutId={`image-${title}`}
-        variants={{
-          rest: { scale: 1 },
-          hover: showBlur ? { scale: 1 } : { scale: 1.05 },
-        }}
+        variants={
+          brushReveal
+            ? undefined
+            : {
+                rest: { scale: 1 },
+                hover: showBlur ? { scale: 1 } : { scale: 1.05 },
+              }
+        }
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {image ?? <ImagePlaceholder />}
@@ -242,42 +255,50 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Hover footer / link                                                */}
       {/* ------------------------------------------------------------------ */}
-      <LinkEl href={href} className='before:absolute before:inset-0 before:z-0'>
+      <LinkEl
+        href={href}
+        className={cn(
+          brushReveal && 'absolute inset-0 z-[30]',
+          !brushReveal && 'before:absolute before:inset-0 before:z-0',
+        )}
+      >
         <span className='sr-only'>
           View painting: {title}
           {isNsfw ? ' (mature content)' : ''}
         </span>
-        <div
-          aria-hidden
-          className={cn(
-            'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
-            alwaysShowTags && 'opacity-100 translate-y-0',
-          )}
-        >
-          <motion.p
-            layoutId={`title-${title}`}
+        {showHoverFooter ? (
+          <div
+            aria-hidden
             className={cn(
-              'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
-              alwaysShowTags && 'text-accent',
+              'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
+              alwaysShowTags && 'opacity-100 translate-y-0',
             )}
           >
-            {title}
-          </motion.p>
-          {(medium || paintedAt) && (
-            <div className='mt-1 flex flex-wrap items-center gap-1.5 text-xs text-foreground-subtle'>
-              {paintedAt && (
-                <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
-                  {paintedAt}
-                </span>
+            <motion.p
+              layoutId={`title-${title}`}
+              className={cn(
+                'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
+                alwaysShowTags && 'text-accent',
               )}
-              {medium && (
-                <span className='font-mono text-[9px] uppercase tracking-wider font-semibold truncate max-w-[180px]'>
-                  {medium}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+            >
+              {title}
+            </motion.p>
+            {(medium || paintedAt) && (
+              <div className='mt-1 flex flex-wrap items-center gap-1.5 text-xs text-foreground-subtle'>
+                {paintedAt && (
+                  <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
+                    {paintedAt}
+                  </span>
+                )}
+                {medium && (
+                  <span className='font-mono text-[9px] uppercase tracking-wider font-semibold truncate max-w-[180px]'>
+                    {medium}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        ) : null}
       </LinkEl>
     </motion.article>
   );
