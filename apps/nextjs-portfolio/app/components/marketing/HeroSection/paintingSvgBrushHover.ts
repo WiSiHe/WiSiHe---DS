@@ -31,11 +31,17 @@ function fadeOutOverlay(el: Element) {
   });
 }
 
+function isNsfwBlurredRoot(root: HTMLElement): boolean {
+  return root.querySelector('[data-nsfw-blur]') !== null;
+}
+
 /**
  * Brush-stroke hover — strokes draw like paint being laid on the canvas; metadata fades in above.
  */
 export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.core.Timeline {
   const { rest, hover } = strokeWidths(strokeScale);
+  const nsfwBlurred = isNsfwBlurredRoot(root);
+  const strokeOpacity = nsfwBlurred ? 0.98 : 0.92;
   const tl = gsap.timeline();
   const paths = Array.from(root.querySelectorAll<SVGPathElement>('[data-hero-svg] path'));
 
@@ -57,7 +63,7 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
       path,
       {
         strokeDashoffset: 0,
-        opacity: 0.92,
+        opacity: strokeOpacity,
         attr: { 'stroke-width': hover },
         duration: 1.15,
         ease: 'power1.inOut',

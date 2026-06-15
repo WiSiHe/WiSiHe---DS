@@ -245,7 +245,8 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* NSFW blur overlay                                                  */}
       {/* ------------------------------------------------------------------ */}
-      {showBlur && (
+      {/* NSFW blur lives inside brushReveal image stack; only use card-level blur otherwise. */}
+      {showBlur && !brushReveal && (
         <div
           className='absolute inset-0 w-full h-full bg-background/40 backdrop-blur-lg z-10'
           aria-hidden='true'

@@ -121,6 +121,8 @@ type HeroPaintingSvgHoverProps = {
   medium?: string | null;
   year?: string | null;
   tags?: string[] | null;
+  /** Image is covered by NSFW frost — strokes/metadata render on top of blur, not the artwork. */
+  isNsfwBlurred?: boolean;
   useMotion?: boolean;
 };
 
@@ -195,6 +197,7 @@ function BrushMetadataOverlay({
   year,
   medium,
   accentColor,
+  isNsfwBlurred = false,
   motionOverlay = false,
   overlayVariants,
 }: {
@@ -203,6 +206,7 @@ function BrushMetadataOverlay({
   year?: string | null;
   medium?: string | null;
   accentColor: string;
+  isNsfwBlurred?: boolean;
   motionOverlay?: boolean;
   overlayVariants?: Variants;
 }) {
@@ -212,19 +216,24 @@ function BrushMetadataOverlay({
 
   const content = (
     <>
-      {visibleTags.length > 0 ? (
-        <div className='flex flex-wrap gap-1 pr-6' data-hero-tags>
-          {visibleTags.map(tag => (
-            <span
-              key={tag}
-              className={chipClass}
-              style={{ boxShadow: `0 0 10px ${accentColor}44` }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      ) : null}
+      <div className='flex flex-wrap items-start gap-1 pr-6'>
+        {isNsfwBlurred ? (
+          <span className={`${chipClass} border-white/25 bg-black/65`}>Mature content</span>
+        ) : null}
+        {visibleTags.length > 0 ? (
+          <div className='flex flex-wrap gap-1' data-hero-tags>
+            {visibleTags.map(tag => (
+              <span
+                key={tag}
+                className={chipClass}
+                style={{ boxShadow: `0 0 10px ${accentColor}44` }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
       {title ? (
         <div data-hero-title className='mt-auto flex flex-col items-start text-left space-y-0.5'>
           <p className='line-clamp-2 font-serif text-base font-medium leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:text-lg italic'>
@@ -277,12 +286,14 @@ export function HeroPaintingSvgHover({
   year,
   tags,
   useMotion = false,
+  isNsfwBlurred = false,
 }: HeroPaintingSvgHoverProps) {
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const isCard = strokeScale < 1;
   const restStrokeWidth = isCard ? 30 : HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
   const hoverStrokeWidth = isCard ? 46 : HERO_BRUSH_STROKE_WIDTH_HOVER * strokeScale;
   const displayTags = (tags ?? []).filter(Boolean);
+  const strokePeakOpacity = isNsfwBlurred ? 0.98 : 0.92;
   const filterId = useId().replace(/:/g, '');
   const scale = coverScale(variant.scale, strokeScale);
 
@@ -295,7 +306,7 @@ export function HeroPaintingSvgHover({
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: 0.92,
+      opacity: strokePeakOpacity,
       transition: {
         pathLength: { duration: 1.15, ease: 'easeInOut' },
         strokeWidth: { duration: 1.15, ease: 'easeInOut' },
@@ -313,7 +324,7 @@ export function HeroPaintingSvgHover({
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: 0.92,
+      opacity: strokePeakOpacity,
       transition: {
         pathLength: { duration: 1.15, ease: 'easeInOut', delay: 0.22 },
         strokeWidth: { duration: 1.15, ease: 'easeInOut', delay: 0.22 },
@@ -333,13 +344,16 @@ export function HeroPaintingSvgHover({
 
   const strokeLayer = (
     <>
-      <div
-        data-hero-vignette
-        className='pointer-events-none absolute inset-0 z-[5] bg-black/40 opacity-0'
-        aria-hidden
-      />
+      {!isNsfwBlurred ? (
+        <div
+          data-hero-vignette
+          className='pointer-events-none absolute inset-0 z-[5] bg-black/40 opacity-0'
+          aria-hidden
+        />
+      ) : null}
       <div
         data-hero-svg
+        data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
         className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
         aria-hidden
         style={{ transform: `scale(${scale})` }}
@@ -387,6 +401,7 @@ export function HeroPaintingSvgHover({
           year={year}
           medium={medium}
           accentColor={accentColor}
+          isNsfwBlurred={isNsfwBlurred}
           motionOverlay
           overlayVariants={overlayVariants}
         />
@@ -403,6 +418,7 @@ export function HeroPaintingSvgHover({
         year={year}
         medium={medium}
         accentColor={accentColor}
+        isNsfwBlurred={isNsfwBlurred}
       />
     </>
   );
