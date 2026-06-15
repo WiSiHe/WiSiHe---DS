@@ -258,7 +258,7 @@ export function PaintingCard({
       <LinkEl
         href={href}
         className={cn(
-          brushReveal && 'absolute inset-0 z-[30]',
+          brushReveal && 'absolute inset-0 z-[1]',
           !brushReveal && 'before:absolute before:inset-0 before:z-0',
         )}
       >

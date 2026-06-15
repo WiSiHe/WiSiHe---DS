@@ -1,5 +1,6 @@
 'use client';
 
+import { cleanTagName } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -52,6 +53,11 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
 
       const year = p.paintedAt ? new Date(p.paintedAt).getFullYear().toString() : undefined;
 
+      const tags =
+        p.tagsV2
+          ?.map((t: { name?: string | null }) => cleanTagName(t.name ?? ''))
+          .filter(Boolean) ?? [];
+
       out.push({
         id: p._id,
         img,
@@ -61,6 +67,7 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         strokeIndex: paintingBrushSeed(p._id),
         medium: p.medium ?? undefined,
         year,
+        tags: tags.length > 0 ? tags : undefined,
       });
     });
     return out;
