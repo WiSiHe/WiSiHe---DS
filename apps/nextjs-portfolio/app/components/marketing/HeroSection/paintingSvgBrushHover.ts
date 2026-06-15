@@ -5,9 +5,16 @@ import {
   HERO_BRUSH_STROKE_WIDTH_REST,
 } from './HeroPaintingSvgHover';
 
+/** Card grids use thinner, paint-like strokes (not hero-scale neon tubes). */
 export const CARD_BRUSH_STROKE_SCALE = 0.4;
 
 function strokeWidths(strokeScale: number) {
+  if (strokeScale < 1) {
+    // ~30–46px at card size — reads as paint, not outline glow
+    const cardRest = 30;
+    const cardHover = 46;
+    return { rest: cardRest, hover: cardHover };
+  }
   return {
     rest: HERO_BRUSH_STROKE_WIDTH_REST * strokeScale,
     hover: HERO_BRUSH_STROKE_WIDTH_HOVER * strokeScale,
@@ -18,71 +25,82 @@ function fadeOutOverlay(el: Element) {
   gsap.to(el, {
     opacity: 0,
     y: 6,
-    duration: 0.35,
+    duration: 0.4,
     ease: 'power2.in',
     overwrite: 'auto',
   });
 }
 
 /**
- * Brush-stroke hover (paths + title) — same motion as the hero floating images, without hero-only scale/z-index.
+ * Brush-stroke hover — strokes draw like paint being laid on the canvas; metadata fades in above.
  */
 export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.core.Timeline {
   const { rest, hover } = strokeWidths(strokeScale);
   const tl = gsap.timeline();
-  const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-  paths.forEach(path => {
+  const paths = Array.from(root.querySelectorAll<SVGPathElement>('[data-hero-svg] path'));
+
+  const vignette = root.querySelector('[data-hero-vignette]');
+  if (vignette) {
+    tl.to(vignette, { opacity: 0.55, duration: 0.35, ease: 'power1.out' }, 0);
+  }
+
+  paths.forEach((path, index) => {
     const len = path.getTotalLength();
-    gsap.set(path, { strokeDasharray: len, strokeDashoffset: len, attr: { 'stroke-width': rest } });
+    const start = index * 0.22;
+    gsap.set(path, {
+      strokeDasharray: len,
+      strokeDashoffset: len,
+      opacity: 0,
+      attr: { 'stroke-width': rest * 0.85 },
+    });
     tl.to(
       path,
       {
         strokeDashoffset: 0,
-        opacity: 1,
+        opacity: 0.92,
         attr: { 'stroke-width': hover },
-        duration: 1.5,
-        ease: 'power2.out',
+        duration: 1.15,
+        ease: 'power1.inOut',
       },
-      0,
+      start,
     );
   });
-  const titleEl = root.querySelector('[data-hero-title]');
-  if (titleEl) {
+
+  const overlay = root.querySelector('[data-hero-overlay]');
+  if (overlay) {
     tl.fromTo(
-      titleEl,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-      0.25,
+      overlay,
+      { opacity: 0, y: 8 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+      0.45,
     );
   }
-  const tagsEl = root.querySelector('[data-hero-tags]');
-  if (tagsEl) {
-    tl.fromTo(
-      tagsEl,
-      { opacity: 0, y: -8 },
-      { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' },
-      0.2,
-    );
-  }
+
   return tl;
 }
 
 export function paintingSvgBrushLeave(root: HTMLElement, strokeScale = 1): void {
   const { rest } = strokeWidths(strokeScale);
   const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
-  paths.forEach(path => {
+
+  const vignette = root.querySelector('[data-hero-vignette]');
+  if (vignette) {
+    gsap.to(vignette, { opacity: 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+  }
+
+  paths.forEach((path, index) => {
     const len = path.getTotalLength();
     gsap.to(path, {
       strokeDashoffset: len,
       opacity: 0,
-      attr: { 'stroke-width': rest },
-      duration: 1,
-      ease: 'power2.out',
+      attr: { 'stroke-width': rest * 0.85 },
+      duration: 0.85,
+      ease: 'power2.inOut',
+      delay: index * 0.06,
       overwrite: 'auto',
     });
   });
-  const titleEl = root.querySelector('[data-hero-title]');
-  if (titleEl) fadeOutOverlay(titleEl);
-  const tagsEl = root.querySelector('[data-hero-tags]');
-  if (tagsEl) fadeOutOverlay(tagsEl);
+
+  const overlay = root.querySelector('[data-hero-overlay]');
+  if (overlay) fadeOutOverlay(overlay);
 }

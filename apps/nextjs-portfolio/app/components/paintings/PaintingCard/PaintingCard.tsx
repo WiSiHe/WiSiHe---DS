@@ -126,18 +126,16 @@ const PaintingCardAdapter = ({
   const imageNode = imageEl ? (
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
       {imageEl}
-      <div className='pointer-events-none absolute inset-0 z-[15]'>
-        <HeroPaintingSvgHover
-          {...getHeroStrokeColors(brushIndex)}
-          strokeVariantIndex={brushIndex}
-          strokeScale={CARD_BRUSH_STROKE_SCALE}
-          title={title || null}
-          medium={medium ?? null}
-          year={yearString ?? null}
-          tags={cleanedTags}
-          useMotion={false}
-        />
-      </div>
+      <HeroPaintingSvgHover
+        {...getHeroStrokeColors(brushIndex)}
+        strokeVariantIndex={brushIndex}
+        strokeScale={CARD_BRUSH_STROKE_SCALE}
+        title={title || null}
+        medium={medium ?? null}
+        year={yearString ?? null}
+        tags={cleanedTags}
+        useMotion={false}
+      />
     </div>
   ) : undefined;
 

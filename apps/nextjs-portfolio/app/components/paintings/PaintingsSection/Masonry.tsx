@@ -32,6 +32,7 @@ export type MasonryItem = {
   strokeIndex: number;
   medium?: string;
   year?: string;
+  tags?: string[];
 };
 
 type MasonryProps = {
@@ -331,17 +332,16 @@ const Masonry = ({
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
               />
-              <div className='pointer-events-none absolute inset-0 z-[15]' aria-hidden>
-                <HeroPaintingSvgHover
-                  {...getHeroStrokeColors(item.strokeIndex)}
-                  strokeVariantIndex={item.strokeIndex}
-                  strokeScale={CARD_BRUSH_STROKE_SCALE}
-                  title={item.title ?? null}
-                  medium={item.medium ?? null}
-                  year={item.year ?? null}
-                  useMotion={false}
-                />
-              </div>
+              <HeroPaintingSvgHover
+                {...getHeroStrokeColors(item.strokeIndex)}
+                strokeVariantIndex={item.strokeIndex}
+                strokeScale={CARD_BRUSH_STROKE_SCALE}
+                title={item.title ?? null}
+                medium={item.medium ?? null}
+                year={item.year ?? null}
+                tags={item.tags}
+                useMotion={false}
+              />
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />
               ) : null}
