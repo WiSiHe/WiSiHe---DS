@@ -98,6 +98,10 @@ const PaintingCardAdapter = ({
   const cleanedTags = filteredTags.map(t => cleanTagName(t.name));
 
   const isNsfw = isNSFW === true;
+  const showNsfwBlur = isNsfw && !isNsfwFilterActive;
+  const brushTags = showNsfwBlur
+    ? cleanedTags.filter(tag => !/^nsfw$/i.test(tag.trim()))
+    : cleanedTags;
 
   // urlForImage needs asset._ref — the Algolia sync now stores it correctly.
   const imageSrc = image
@@ -126,6 +130,13 @@ const PaintingCardAdapter = ({
   const imageNode = imageEl ? (
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
       {imageEl}
+      {showNsfwBlur ? (
+        <div
+          data-nsfw-blur
+          className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+          aria-hidden
+        />
+      ) : null}
       <HeroPaintingSvgHover
         {...getHeroStrokeColors(brushIndex)}
         strokeVariantIndex={brushIndex}
@@ -133,7 +144,8 @@ const PaintingCardAdapter = ({
         title={title || null}
         medium={medium ?? null}
         year={yearString ?? null}
-        tags={cleanedTags}
+        tags={brushTags}
+        isNsfwBlurred={showNsfwBlur}
         useMotion={false}
       />
     </div>
