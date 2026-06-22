@@ -8,7 +8,11 @@ import type { PostHogConfig } from 'posthog-js';
  */
 export function getPostHogInitOptions(apiHost: string): Partial<PostHogConfig> {
   return {
-    api_host: apiHost,
+    // Route ingestion through the same-origin /ingest proxy (see next.config.ts
+    // rewrites) so ad blockers that block *.posthog.com don't drop events.
+    api_host: '/ingest',
+    // Point the toolbar/links at the real region host (e.g. https://us.posthog.com).
+    ui_host: apiHost.replace('.i.posthog.com', '.posthog.com'),
     capture_pageview: false,
     capture_pageleave: true,
     person_profiles: 'identified_only',
