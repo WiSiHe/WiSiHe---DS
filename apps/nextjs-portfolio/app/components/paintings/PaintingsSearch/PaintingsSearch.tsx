@@ -23,6 +23,7 @@ import {
   useStats,
 } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
+import SearchAnalytics from '@/app/components/search/SearchAnalytics';
 import { getGlobalLenis } from '@/app/lib/lenis-registry';
 import {
   ALGOLIA_INDEX_NAME,
@@ -411,6 +412,7 @@ export default function PaintingsSearch() {
         filters={PAINTINGS_INDEX_FILTER}
         attributesToRetrieve={[...PAINTING_HIT_ATTRIBUTES]}
       />
+      <SearchAnalytics section='paintings' />
       <ScrollToResults />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>

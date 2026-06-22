@@ -23,6 +23,10 @@ export const AnalyticsEvent = {
   FOOTER_SOCIAL_CLICKED: 'footer_social_clicked',
   FOOTER_CTA_CLICKED: 'footer_cta_clicked',
   CONTACT_FORM_SUBMITTED: 'contact_form_submitted',
+  SEARCH_PERFORMED: 'search_performed',
+  SEARCH_NO_RESULTS: 'search_no_results',
+  FOR_SALE_FILTER_TOGGLED: 'for_sale_filter_toggled',
+  PAINTING_STORE_LINK_CLICKED: 'painting_store_link_clicked',
 } as const;
 
 export type AnalyticsEventName = (typeof AnalyticsEvent)[keyof typeof AnalyticsEvent];
