@@ -15,7 +15,9 @@ export { useTheme } from 'next-themes';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    if (posthogKey && posthogHost) {
+    // Only initialize analytics in production builds so localhost/dev traffic
+    // never reaches the PostHog project.
+    if (process.env.NODE_ENV === 'production' && posthogKey && posthogHost) {
       posthog.init(posthogKey, getPostHogInitOptions(posthogHost));
     }
   }, []);
