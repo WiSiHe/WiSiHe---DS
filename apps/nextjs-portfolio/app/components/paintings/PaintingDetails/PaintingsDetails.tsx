@@ -571,6 +571,13 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                         href={store.url}
                         target='_blank'
                         rel='noreferrer'
+                        onClick={() =>
+                          trackEvent(AnalyticsEvent.PAINTING_STORE_LINK_CLICKED, {
+                            painting_id: _id,
+                            title,
+                            store: store.label,
+                          })
+                        }
                         className='flex items-center justify-between gap-2 w-full px-4 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-accent-contrast font-semibold text-sm transition-colors shadow-sm hover:shadow-md focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none'
                       >
                         <span className='flex items-center gap-2'>

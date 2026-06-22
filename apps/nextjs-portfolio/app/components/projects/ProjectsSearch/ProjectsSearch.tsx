@@ -14,6 +14,7 @@ import {
 import { Configure, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import InstantSearchPagination from '@/app/components/search/InstantSearchPagination';
+import SearchAnalytics from '@/app/components/search/SearchAnalytics';
 import { ALGOLIA_INDEX_NAME, replicaIndexName } from '@/lib/algolia/constants';
 import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomRefinementList from '../../paintings/PaintingsSearch/CustomRefinementList';
@@ -143,6 +144,7 @@ export default function ProjectsSearch() {
   return (
     <InstantSearchNext searchClient={searchClient} indexName={ALGOLIA_INDEX_NAME} routing={false}>
       <Configure hitsPerPage={12} filters='_type:"project"' />
+      <SearchAnalytics section='projects' />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
         <div className='md:hidden w-full'>
