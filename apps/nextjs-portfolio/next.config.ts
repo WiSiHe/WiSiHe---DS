@@ -52,7 +52,6 @@ const nextConfig: NextConfig = {
     qualities: [30, 75, 80],
   },
 
-  // Performance optimizations
   experimental: {
     optimizePackageImports: [
       'motion',
@@ -61,6 +60,8 @@ const nextConfig: NextConfig = {
       'algoliasearch',
       'react-instantsearch',
       'react-instantsearch-nextjs',
+      '@wisihe/ui-react',
+      '@wisihe/utils',
     ],
   },
 

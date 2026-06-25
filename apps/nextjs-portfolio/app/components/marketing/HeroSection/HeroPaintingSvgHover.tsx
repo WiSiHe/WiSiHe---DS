@@ -124,6 +124,10 @@ type HeroPaintingSvgHoverProps = {
   /** Image is covered by NSFW frost — strokes/metadata render on top of blur, not the artwork. */
   isNsfwBlurred?: boolean;
   useMotion?: boolean;
+  imageSrc?: string;
+  imageAlt?: string;
+  imageSizes?: string;
+  imagePriority?: boolean;
 };
 
 const LAYER_BASE_CLASS =
@@ -287,14 +291,15 @@ export function HeroPaintingSvgHover({
   tags,
   useMotion = false,
   isNsfwBlurred = false,
+  imageSrc,
 }: HeroPaintingSvgHoverProps) {
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const isCard = strokeScale < 1;
   const restStrokeWidth = isCard ? 30 : HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
   const hoverStrokeWidth = isCard ? 46 : HERO_BRUSH_STROKE_WIDTH_HOVER * strokeScale;
   const displayTags = (tags ?? []).filter(Boolean);
-  const strokePeakOpacity = isNsfwBlurred ? 0.98 : 0.92;
   const filterId = useId().replace(/:/g, '');
+  const maskId = `brush-mask-${filterId}`;
   const scale = coverScale(variant.scale, strokeScale);
 
   const pathVariants: Variants = {
@@ -303,14 +308,19 @@ export function HeroPaintingSvgHover({
       strokeWidth: restStrokeWidth * 0.85,
       opacity: 0,
     },
+    rest: {
+      pathLength: 0,
+      strokeWidth: restStrokeWidth * 0.85,
+      opacity: 0,
+    },
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: strokePeakOpacity,
+      opacity: 1,
       transition: {
-        pathLength: { duration: 1.15, ease: 'easeInOut' },
-        strokeWidth: { duration: 1.15, ease: 'easeInOut' },
-        opacity: { duration: 0.15 },
+        pathLength: { duration: 0.9, ease: 'easeOut' },
+        strokeWidth: { duration: 0.9, ease: 'easeOut' },
+        opacity: { duration: 0.1 },
       },
     },
   };
@@ -321,26 +331,188 @@ export function HeroPaintingSvgHover({
       strokeWidth: restStrokeWidth * 0.85,
       opacity: 0,
     },
+    rest: {
+      pathLength: 0,
+      strokeWidth: restStrokeWidth * 0.85,
+      opacity: 0,
+    },
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: strokePeakOpacity,
+      opacity: 1,
       transition: {
-        pathLength: { duration: 1.15, ease: 'easeInOut', delay: 0.22 },
-        strokeWidth: { duration: 1.15, ease: 'easeInOut', delay: 0.22 },
-        opacity: { duration: 0.15, delay: 0.22 },
+        pathLength: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
+        strokeWidth: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
+        opacity: { duration: 0.1, delay: 0.15 },
       },
     },
   };
 
   const overlayVariants: Variants = {
     initial: { opacity: 0, y: 8 },
+    rest: { opacity: 0, y: 8 },
     hover: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const, delay: 0.35 },
+      transition: { duration: 0.5, ease: 'easeOut' as const, delay: 0.3 },
     },
   };
+
+  if (imageSrc) {
+    return (
+      <>
+        {!isNsfwBlurred ? (
+          <div
+            data-hero-vignette
+            className='pointer-events-none absolute inset-0 z-[5] bg-black/40 opacity-0'
+            aria-hidden
+          />
+        ) : null}
+        <div
+          data-hero-svg
+          data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
+          className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
+          aria-hidden
+          style={{ transform: `scale(${scale})` }}
+        >
+          <svg
+            viewBox='0 0 800 1066'
+            className='w-full h-full block'
+            preserveAspectRatio='xMidYMid slice'
+          >
+            <defs>
+              <filter id={filterId} x='-20%' y='-20%' width='140%' height='140%'>
+                <feGaussianBlur
+                  in='SourceGraphic'
+                  stdDeviation={isCard ? 1.2 : 2.5}
+                  result='blur'
+                />
+                <feMerge>
+                  <feMergeNode in='blur' />
+                  <feMergeNode in='SourceGraphic' />
+                </feMerge>
+              </filter>
+              <mask id={maskId}>
+                <rect width='100%' height='100%' fill='black' />
+                <g
+                  style={{
+                    transform: layerTransform(variant.layers[0]),
+                    transformOrigin: 'center',
+                  }}
+                >
+                  <svg
+                    viewBox={variant.layers[0].viewBox}
+                    x='-20%'
+                    y='-20%'
+                    width='140%'
+                    height='140%'
+                    preserveAspectRatio='xMidYMid slice'
+                  >
+                    {useMotion ? (
+                      <motion.path
+                        variants={pathVariants}
+                        d={variant.layers[0].d}
+                        stroke='white'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        fill='none'
+                        filter={`url(#${filterId})`}
+                      />
+                    ) : (
+                      <path
+                        d={variant.layers[0].d}
+                        stroke='white'
+                        strokeWidth={restStrokeWidth}
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        fill='none'
+                        filter={`url(#${filterId})`}
+                        style={{ opacity: 0 }}
+                      />
+                    )}
+                  </svg>
+                </g>
+                <g
+                  style={{
+                    transform: layerTransform(variant.layers[1]),
+                    transformOrigin: 'center',
+                  }}
+                >
+                  <svg
+                    viewBox={variant.layers[1].viewBox}
+                    x='-20%'
+                    y='-20%'
+                    width='140%'
+                    height='140%'
+                    preserveAspectRatio='xMidYMid slice'
+                  >
+                    {useMotion ? (
+                      <motion.path
+                        variants={pathVariantsDelayed}
+                        d={variant.layers[1].d}
+                        stroke='white'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        fill='none'
+                        filter={`url(#${filterId})`}
+                      />
+                    ) : (
+                      <path
+                        d={variant.layers[1].d}
+                        stroke='white'
+                        strokeWidth={restStrokeWidth}
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        fill='none'
+                        filter={`url(#${filterId})`}
+                        style={{ opacity: 0 }}
+                      />
+                    )}
+                  </svg>
+                </g>
+              </mask>
+            </defs>
+
+            <image
+              href={imageSrc}
+              width='100%'
+              height='100%'
+              preserveAspectRatio='xMidYMid slice'
+              className='transition-all duration-300'
+              style={{ filter: 'grayscale(100%)', opacity: 0.35 }}
+            />
+
+            <image
+              href={imageSrc}
+              width='100%'
+              height='100%'
+              preserveAspectRatio='xMidYMid slice'
+              mask={`url(#${maskId})`}
+            />
+          </svg>
+        </div>
+
+        {isNsfwBlurred ? (
+          <div
+            data-nsfw-blur
+            className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+            aria-hidden
+          />
+        ) : null}
+
+        <BrushMetadataOverlay
+          tags={displayTags}
+          title={title}
+          year={year}
+          medium={medium}
+          accentColor={accentColor}
+          isNsfwBlurred={isNsfwBlurred}
+          motionOverlay={useMotion}
+          overlayVariants={useMotion ? overlayVariants : undefined}
+        />
+      </>
+    );
+  }
 
   const strokeLayer = (
     <>
@@ -391,24 +563,6 @@ export function HeroPaintingSvgHover({
     </>
   );
 
-  if (useMotion) {
-    return (
-      <>
-        {strokeLayer}
-        <BrushMetadataOverlay
-          tags={displayTags}
-          title={title}
-          year={year}
-          medium={medium}
-          accentColor={accentColor}
-          isNsfwBlurred={isNsfwBlurred}
-          motionOverlay
-          overlayVariants={overlayVariants}
-        />
-      </>
-    );
-  }
-
   return (
     <>
       {strokeLayer}
@@ -419,6 +573,8 @@ export function HeroPaintingSvgHover({
         medium={medium}
         accentColor={accentColor}
         isNsfwBlurred={isNsfwBlurred}
+        motionOverlay={useMotion}
+        overlayVariants={useMotion ? overlayVariants : undefined}
       />
     </>
   );

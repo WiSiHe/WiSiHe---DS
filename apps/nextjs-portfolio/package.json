@@ -8,7 +8,8 @@
     "dev:quick": "next dev --turbo -p 1992",
     "prebuild": "pnpm --filter @wisihe/tokens build && pnpm --filter @wisihe/sanity-bulk-ai build && pnpm --filter sanity-studio typegen",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@flags-sdk/statsig": "^0.2.5",
