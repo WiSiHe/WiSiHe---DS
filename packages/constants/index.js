@@ -1,5 +1,8 @@
-/** Set false to hide /about from nav, sitemap, and return 404 on the route. */
-export const ABOUT_PAGE_ENABLED = false;
+/** Set false to return 404 on the route. */
+export const ABOUT_PAGE_ENABLED = true;
+
+/** Set false to hide /about from nav, sitemap, and other page links. */
+export const ABOUT_PAGE_LINKS_ENABLED = false;
 
 const aboutNavItem = { label: 'About', href: '/about', description: 'About' };
 
@@ -15,7 +18,7 @@ export const navigationItems = [
     description: 'Projects',
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
-  ...(ABOUT_PAGE_ENABLED ? [aboutNavItem] : []),
+  ...(ABOUT_PAGE_LINKS_ENABLED ? [aboutNavItem] : []),
 ];
 
 export const footerLinks = [
@@ -24,7 +27,7 @@ export const footerLinks = [
   { name: 'Videos', href: '/videos' },
   { name: 'Photography', href: '/photography' },
   { name: 'Recipes', href: '/recipes' },
-  ...(ABOUT_PAGE_ENABLED ? [{ name: 'About', href: '/about' }] : []),
+  ...(ABOUT_PAGE_LINKS_ENABLED ? [{ name: 'About', href: '/about' }] : []),
   { name: 'Contact', href: '/contact' },
 ];
 

@@ -1,4 +1,4 @@
-import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
+import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { PhotographyQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
@@ -139,7 +139,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               </h1>
               {place?.name ? (
                 <p className='text-foreground-subtle'>
-                  {ABOUT_PAGE_ENABLED ? (
+                  {ABOUT_PAGE_LINKS_ENABLED ? (
                     <Link
                       href='/about#travel-map-section'
                       className='font-medium text-foreground transition-colors hover:text-accent'
@@ -231,7 +231,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               >
                 All photos
               </Link>
-              {place?.name && !mapPoint && ABOUT_PAGE_ENABLED ? (
+              {place?.name && !mapPoint && ABOUT_PAGE_LINKS_ENABLED ? (
                 <Link
                   href='/about#travel-map-section'
                   className='rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:text-accent'

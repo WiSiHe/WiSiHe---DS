@@ -1,7 +1,7 @@
 'use client';
 
 import { IconMapPin } from '@tabler/icons-react';
-import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
+import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import MapboxMap, { Marker } from 'react-map-gl/mapbox';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { useTheme } from '@/app/providers';
@@ -60,7 +60,7 @@ export function PhotographyLocationMap({ point }: PhotographyLocationMapProps) {
         </MapboxMap>
       </div>
 
-      {ABOUT_PAGE_ENABLED ? (
+      {ABOUT_PAGE_LINKS_ENABLED ? (
         <p className='text-xs text-foreground-muted'>
           <Link
             href='/about#travel-map-section'

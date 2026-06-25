@@ -1,6 +1,6 @@
 'use client';
 
-import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
+import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { GetRecipeResult } from '@wisihe/sanity-queries';
 import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
@@ -236,7 +236,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
 
         <p className='mt-16 text-center text-sm text-foreground-muted'>
           Recipe by{' '}
-          {ABOUT_PAGE_ENABLED ? (
+          {ABOUT_PAGE_LINKS_ENABLED ? (
             <Link href='/about' className='font-medium text-accent hover:underline'>
               Henrik Wilhelm Sissener
             </Link>
