@@ -1,4 +1,4 @@
-import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
+import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { Link } from '@/app/components/layout/ProgressLink';
@@ -80,10 +80,10 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
             </h1>
             <p className='mt-4 max-w-2xl text-lg leading-relaxed text-foreground-subtle text-pretty'>
               Travel shots and quiet frames from places I&apos;ve been
-              {ABOUT_PAGE_ENABLED
+              {ABOUT_PAGE_LINKS_ENABLED
                 ? ' — linked to the same stops on the '
                 : ' — grouped by country in the gallery below.'}
-              {ABOUT_PAGE_ENABLED ? (
+              {ABOUT_PAGE_LINKS_ENABLED ? (
                 <>
                   <Link href='/about#travel-map-section' className='text-accent hover:underline'>
                     about map
