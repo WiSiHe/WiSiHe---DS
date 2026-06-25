@@ -127,16 +127,8 @@ const PaintingCardAdapter = ({
   const brushIndex = svgHoverIndex ?? brushSeed;
   const normalized = slug ?? '';
 
-  const imageNode = imageEl ? (
+  const imageNode = imageSrc ? (
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
-      {imageEl}
-      {showNsfwBlur ? (
-        <div
-          data-nsfw-blur
-          className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-          aria-hidden
-        />
-      ) : null}
       <HeroPaintingSvgHover
         {...getHeroStrokeColors(brushIndex)}
         strokeVariantIndex={brushIndex}
@@ -147,6 +139,10 @@ const PaintingCardAdapter = ({
         tags={brushTags}
         isNsfwBlurred={showNsfwBlur}
         useMotion={false}
+        imageSrc={imageSrc}
+        imageAlt={title || 'Painting'}
+        imageSizes='(min-width: 1040px) 20vw, 50vw'
+        imagePriority={shouldBeLazy}
       />
     </div>
   ) : undefined;

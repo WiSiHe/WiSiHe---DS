@@ -709,38 +709,44 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                             (item._type === 'project' ? item.name : null) ||
                             'Portfolio item'}
                         </span>
-                        <Image
-                          src={imageUrl}
-                          alt=''
-                          aria-hidden
-                          fill
-                          priority={isPriority}
-                          fetchPriority={isPriority ? 'high' : undefined}
-                          className='object-cover'
-                          sizes='(max-width: 768px) 40vw, 30vw'
-                        />
+                        {!isPainting && (
+                          <Image
+                            src={imageUrl}
+                            alt=''
+                            aria-hidden
+                            fill
+                            priority={isPriority}
+                            fetchPriority={isPriority ? 'high' : undefined}
+                            className='object-cover'
+                            sizes='(max-width: 768px) 40vw, 30vw'
+                          />
+                        )}
 
-                        <div aria-hidden>
-                          {isPainting ? (
-                            <HeroPaintingSvgHover
-                              useMotion
-                              accentColor={accentColor}
-                              secondaryColor={secondaryColor}
-                              strokeVariantIndex={index}
-                              title={title}
-                              medium={paintingMedium}
-                              year={paintingYear}
-                              tags={paintingTags}
-                            />
-                          ) : (
+                        {isPainting ? (
+                          <HeroPaintingSvgHover
+                            useMotion
+                            accentColor={accentColor}
+                            secondaryColor={secondaryColor}
+                            strokeVariantIndex={index}
+                            title={title}
+                            medium={paintingMedium}
+                            year={paintingYear}
+                            tags={paintingTags}
+                            imageSrc={imageUrl}
+                            imageAlt={title || 'Painting'}
+                            imageSizes='(max-width: 768px) 40vw, 30vw'
+                            imagePriority={isPriority}
+                          />
+                        ) : (
+                          <div aria-hidden>
                             <HeroProjectUiHover
                               accentColor={accentColor}
                               secondaryColor={secondaryColor}
                               title={title || item.name}
                               tags={projectTags}
                             />
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </Link>
                     </motion.div>
                   </motion.div>

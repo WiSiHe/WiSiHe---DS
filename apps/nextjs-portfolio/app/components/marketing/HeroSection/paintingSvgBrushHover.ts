@@ -31,17 +31,11 @@ function fadeOutOverlay(el: Element) {
   });
 }
 
-function isNsfwBlurredRoot(root: HTMLElement): boolean {
-  return root.querySelector('[data-nsfw-blur]') !== null;
-}
-
 /**
  * Brush-stroke hover — strokes draw like paint being laid on the canvas; metadata fades in above.
  */
 export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.core.Timeline {
   const { rest, hover } = strokeWidths(strokeScale);
-  const nsfwBlurred = isNsfwBlurredRoot(root);
-  const strokeOpacity = nsfwBlurred ? 0.98 : 0.92;
   const tl = gsap.timeline();
   const paths = Array.from(root.querySelectorAll<SVGPathElement>('[data-hero-svg] path'));
 
@@ -63,10 +57,10 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
       path,
       {
         strokeDashoffset: 0,
-        opacity: strokeOpacity,
+        opacity: 1,
         attr: { 'stroke-width': hover },
-        duration: 1.15,
-        ease: 'power1.inOut',
+        duration: 0.9,
+        ease: 'power2.out',
       },
       start,
     );
@@ -78,7 +72,7 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
       overlay,
       { opacity: 0, y: 8 },
       { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-      0.45,
+      0.35,
     );
   }
 
@@ -100,8 +94,8 @@ export function paintingSvgBrushLeave(root: HTMLElement, strokeScale = 1): void 
       strokeDashoffset: len,
       opacity: 0,
       attr: { 'stroke-width': rest * 0.85 },
-      duration: 0.85,
-      ease: 'power2.inOut',
+      duration: 0.65,
+      ease: 'power2.out',
       delay: index * 0.06,
       overwrite: 'auto',
     });
