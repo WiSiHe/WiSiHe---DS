@@ -128,6 +128,7 @@ type HeroPaintingSvgHoverProps = {
   imageAlt?: string;
   imageSizes?: string;
   imagePriority?: boolean;
+  aspectRatio?: number;
 };
 
 const LAYER_BASE_CLASS =
@@ -167,7 +168,6 @@ function BrushStrokeSvg({
     strokeLinejoin: 'round' as const,
     fill: 'none' as const,
     filter: `url(#${filterId})`,
-    style: { mixBlendMode: 'soft-light' as const },
   };
 
   return (
@@ -183,12 +183,7 @@ function BrushStrokeSvg({
         {useMotion && pathVariants ? (
           <motion.path variants={pathVariants} d={layer.d} {...paintProps} />
         ) : (
-          <path
-            d={layer.d}
-            strokeWidth={strokeWidthRest}
-            {...paintProps}
-            style={{ mixBlendMode: 'soft-light', opacity: 0 }}
-          />
+          <path d={layer.d} strokeWidth={strokeWidthRest} {...paintProps} style={{ opacity: 0 }} />
         )}
       </svg>
     </div>
@@ -292,6 +287,7 @@ export function HeroPaintingSvgHover({
   useMotion = false,
   isNsfwBlurred = false,
   imageSrc,
+  aspectRatio = 3 / 4,
 }: HeroPaintingSvgHoverProps) {
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const isCard = strokeScale < 1;
@@ -299,7 +295,6 @@ export function HeroPaintingSvgHover({
   const hoverStrokeWidth = isCard ? 46 : HERO_BRUSH_STROKE_WIDTH_HOVER * strokeScale;
   const displayTags = (tags ?? []).filter(Boolean);
   const filterId = useId().replace(/:/g, '');
-  const maskId = `brush-mask-${filterId}`;
   const scale = coverScale(variant.scale, strokeScale);
 
   const pathVariants: Variants = {
@@ -316,7 +311,7 @@ export function HeroPaintingSvgHover({
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: 1,
+      opacity: 0.85,
       transition: {
         pathLength: { duration: 0.9, ease: 'easeOut' },
         strokeWidth: { duration: 0.9, ease: 'easeOut' },
@@ -339,7 +334,7 @@ export function HeroPaintingSvgHover({
     hover: {
       pathLength: 1,
       strokeWidth: hoverStrokeWidth,
-      opacity: 1,
+      opacity: 0.85,
       transition: {
         pathLength: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
         strokeWidth: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
@@ -376,7 +371,7 @@ export function HeroPaintingSvgHover({
           style={{ transform: `scale(${scale})` }}
         >
           <svg
-            viewBox='0 0 800 1066'
+            viewBox={`0 0 800 ${800 / aspectRatio}`}
             className='w-full h-full block'
             preserveAspectRatio='xMidYMid slice'
           >
@@ -392,103 +387,96 @@ export function HeroPaintingSvgHover({
                   <feMergeNode in='SourceGraphic' />
                 </feMerge>
               </filter>
-              <mask id={maskId}>
-                <rect width='100%' height='100%' fill='black' />
-                <g
-                  style={{
-                    transform: layerTransform(variant.layers[0]),
-                    transformOrigin: 'center',
-                  }}
-                >
-                  <svg
-                    viewBox={variant.layers[0].viewBox}
-                    x='-20%'
-                    y='-20%'
-                    width='140%'
-                    height='140%'
-                    preserveAspectRatio='xMidYMid slice'
-                  >
-                    {useMotion ? (
-                      <motion.path
-                        variants={pathVariants}
-                        d={variant.layers[0].d}
-                        stroke='white'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        fill='none'
-                        filter={`url(#${filterId})`}
-                      />
-                    ) : (
-                      <path
-                        d={variant.layers[0].d}
-                        stroke='white'
-                        strokeWidth={restStrokeWidth}
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        fill='none'
-                        filter={`url(#${filterId})`}
-                        style={{ opacity: 0 }}
-                      />
-                    )}
-                  </svg>
-                </g>
-                <g
-                  style={{
-                    transform: layerTransform(variant.layers[1]),
-                    transformOrigin: 'center',
-                  }}
-                >
-                  <svg
-                    viewBox={variant.layers[1].viewBox}
-                    x='-20%'
-                    y='-20%'
-                    width='140%'
-                    height='140%'
-                    preserveAspectRatio='xMidYMid slice'
-                  >
-                    {useMotion ? (
-                      <motion.path
-                        variants={pathVariantsDelayed}
-                        d={variant.layers[1].d}
-                        stroke='white'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        fill='none'
-                        filter={`url(#${filterId})`}
-                      />
-                    ) : (
-                      <path
-                        d={variant.layers[1].d}
-                        stroke='white'
-                        strokeWidth={restStrokeWidth}
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        fill='none'
-                        filter={`url(#${filterId})`}
-                        style={{ opacity: 0 }}
-                      />
-                    )}
-                  </svg>
-                </g>
-              </mask>
             </defs>
 
+            {/* Base Image: Full color, normal opacity by default */}
             <image
               href={imageSrc}
               width='100%'
               height='100%'
               preserveAspectRatio='xMidYMid slice'
               className='transition-all duration-300'
-              style={{ filter: 'grayscale(100%)', opacity: 0.35 }}
             />
 
-            <image
-              href={imageSrc}
-              width='100%'
-              height='100%'
-              preserveAspectRatio='xMidYMid slice'
-              mask={`url(#${maskId})`}
-            />
+            {/* Accent Paint Stroke Layer 1 */}
+            <g
+              style={{
+                transform: layerTransform(variant.layers[0]),
+                transformOrigin: 'center',
+              }}
+            >
+              <svg
+                viewBox={variant.layers[0].viewBox}
+                x='-20%'
+                y='-20%'
+                width='140%'
+                height='140%'
+                preserveAspectRatio='xMidYMid slice'
+              >
+                {useMotion ? (
+                  <motion.path
+                    variants={pathVariants}
+                    d={variant.layers[0].d}
+                    stroke={accentColor}
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    fill='none'
+                    filter={`url(#${filterId})`}
+                  />
+                ) : (
+                  <path
+                    d={variant.layers[0].d}
+                    stroke={accentColor}
+                    strokeWidth={restStrokeWidth}
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    fill='none'
+                    filter={`url(#${filterId})`}
+                    style={{ opacity: 0 }}
+                  />
+                )}
+              </svg>
+            </g>
+
+            {/* Accent Paint Stroke Layer 2 */}
+            <g
+              style={{
+                transform: layerTransform(variant.layers[1]),
+                transformOrigin: 'center',
+              }}
+            >
+              <svg
+                viewBox={variant.layers[1].viewBox}
+                x='-20%'
+                y='-20%'
+                width='140%'
+                height='140%'
+                preserveAspectRatio='xMidYMid slice'
+              >
+                {useMotion ? (
+                  <motion.path
+                    variants={pathVariantsDelayed}
+                    d={variant.layers[1].d}
+                    stroke={secondaryColor}
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    fill='none'
+                    filter={`url(#${filterId})`}
+                  />
+                ) : (
+                  <path
+                    d={variant.layers[1].d}
+                    stroke={secondaryColor}
+                    strokeWidth={restStrokeWidth}
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    fill='none'
+                    filter={`url(#${filterId})`}
+                    style={{ opacity: 0 }}
+                  />
+                )}
+              </svg>
+            </g>
           </svg>
         </div>
 

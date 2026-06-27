@@ -57,7 +57,7 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
       path,
       {
         strokeDashoffset: 0,
-        opacity: 1,
+        opacity: 0.85,
         attr: { 'stroke-width': hover },
         duration: 0.9,
         ease: 'power2.out',

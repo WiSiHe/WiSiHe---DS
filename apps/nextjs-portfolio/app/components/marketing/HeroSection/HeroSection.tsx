@@ -81,18 +81,12 @@ const FIXED_POSITIONS_DESKTOP = [
 const FIXED_POSITIONS_MOBILE = [
   // Above text (top area)
   { top: '10%', left: '15%', rotation: -12, scale: 0.8 },
-  { top: '15%', left: '85%', rotation: 15, scale: 0.75 },
-  { top: '8%', left: '50%', rotation: -8, scale: 0.8 },
-  { top: '20%', left: '20%', rotation: -10, scale: 0.75 },
-  { top: '25%', left: '80%', rotation: 12, scale: 0.8 },
-  { top: '12%', left: '30%', rotation: -5, scale: 0.75 },
+  { top: '14%', left: '80%', rotation: 15, scale: 0.75 },
+  { top: '6%', left: '50%', rotation: -8, scale: 0.8 },
   // Below text (bottom area)
-  { top: '70%', left: '20%', rotation: -15, scale: 0.8 },
-  { top: '75%', left: '80%', rotation: 5, scale: 0.75 },
-  { top: '85%', left: '50%', rotation: 12, scale: 0.8 },
-  { top: '80%', left: '15%', rotation: -8, scale: 0.75 },
-  { top: '78%', left: '85%', rotation: 10, scale: 0.8 },
-  { top: '88%', left: '30%', rotation: -12, scale: 0.75 },
+  { top: '72%', left: '20%', rotation: -15, scale: 0.8 },
+  { top: '78%', left: '80%', rotation: 5, scale: 0.75 },
+  { top: '86%', left: '50%', rotation: 12, scale: 0.8 },
 ];
 
 const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageSectionProps) => {
@@ -257,7 +251,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
   const visibleItems = items
     ? isMobile
-      ? items.slice(0, 12)
+      ? items.slice(0, 6)
       : isTablet
         ? items.slice(0, 7)
         : items.slice(0, 8)
@@ -280,7 +274,14 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     return <div className='text-center py-20'>No items available.</div>;
   }
 
-  const positions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
+  const basePositions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
+  const [positions, setPositions] = useState(basePositions);
+
+  useEffect(() => {
+    // Shuffle positions on client mount/resize to randomize collage layout safely
+    const shuffled = [...basePositions].sort(() => Math.random() - 0.5);
+    setPositions(shuffled);
+  }, [basePositions]);
 
   // Variants for central text stagger entrance
   const textContainerVariants = {
@@ -628,6 +629,8 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               ? new Date(item.paintedAt).getFullYear().toString()
               : null;
 
+          const naturalAspectRatio = isPainting ? item.image?.aspectRatio || 3 / 4 : null;
+
           return (
             <motion.div
               key={`${item._type}-${item._id}`}
@@ -653,8 +656,12 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               onMouseLeave={() => {
                 if (stage === 'floating') setHoveredIndex(null);
               }}
-              className={`absolute pointer-events-auto ${size} ${aspectRatio} will-change-transform`}
-              style={{ transformStyle: 'preserve-3d', zIndex: cardZIndex }}
+              className={`absolute pointer-events-auto ${size} ${naturalAspectRatio ? '' : aspectRatio} will-change-transform`}
+              style={{
+                transformStyle: 'preserve-3d',
+                zIndex: cardZIndex,
+                aspectRatio: naturalAspectRatio || undefined,
+              }}
             >
               {/* Organic client-side scattering offset wrapper */}
               <motion.div
@@ -736,6 +743,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                             imageAlt={title || 'Painting'}
                             imageSizes='(max-width: 768px) 40vw, 30vw'
                             imagePriority={isPriority}
+                            aspectRatio={naturalAspectRatio || undefined}
                           />
                         ) : (
                           <div aria-hidden>
