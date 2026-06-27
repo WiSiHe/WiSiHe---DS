@@ -13,7 +13,7 @@ import {
 } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
 import { CARD_BRUSH_STROKE_SCALE } from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
 import { PaintingCardSvgHoverWrap } from '@/app/components/paintings/PaintingCard/PaintingCardSvgHoverWrap';
-import { urlForImage } from '@/sanity/lib/utils';
+import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -73,8 +73,13 @@ const PaintingCardAdapter = ({
     format,
   } = paintingData as any;
 
-  const imageAspectRatio =
-    image?.aspectRatio || (format === 'landscape' ? 4 / 3 : format === 'square' ? 1 : 3 / 4);
+  const imageAspectRatio = image
+    ? getCroppedAspectRatio(image)
+    : format === 'landscape'
+      ? 4 / 3
+      : format === 'square'
+        ? 1
+        : 3 / 4;
 
   const availableForSale =
     isForSale === true || hasStoreLink === true || Boolean(redbubbleUrl || gelatoUrl);
@@ -107,9 +112,10 @@ const PaintingCardAdapter = ({
     ? cleanedTags.filter(tag => !/^nsfw$/i.test(tag.trim()))
     : cleanedTags;
 
-  // urlForImage needs asset._ref — the Algolia sync now stores it correctly.
+  const width = 800;
+  const height = Math.round(width / imageAspectRatio);
   const imageSrc = image
-    ? urlForImage(image)?.width(800).height(1066).quality(80).auto('format').url()
+    ? urlForImage(image)?.width(width).height(height).fit('crop').quality(80).auto('format').url()
     : null;
 
   const imageEl = imageSrc ? (
