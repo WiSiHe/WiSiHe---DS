@@ -9,7 +9,11 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import { defineArrayMember, defineField, defineType } from 'sanity';
-import { requiredPortableTextMax } from '../validators/portableTextLength';
+import {
+  HERO_INTRO_MAX_CHARS,
+  requiredPortableTextMax,
+  SECTION_INTRO_MAX_CHARS,
+} from '../validators/portableTextLength';
 
 const sectionPreview = (title: string, subtitle?: string) => ({
   prepare: () => ({ title, subtitle }),
@@ -27,7 +31,7 @@ export const homeHeroSection = defineType({
       type: 'blockContentMinimal',
       description:
         'Shown below your name in the hero. Also used for the home page meta description.',
-      validation: requiredPortableTextMax(155),
+      validation: requiredPortableTextMax(HERO_INTRO_MAX_CHARS),
     }),
   ],
   preview: sectionPreview('Hero', 'Intro + collage'),
@@ -43,7 +47,8 @@ export const homeProjectsSection = defineType({
       name: 'description',
       title: 'Section intro',
       type: 'blockContentMinimal',
-      validation: requiredPortableTextMax(155),
+      description: `Intro copy above the featured projects grid. Max ${SECTION_INTRO_MAX_CHARS} characters.`,
+      validation: requiredPortableTextMax(SECTION_INTRO_MAX_CHARS),
     }),
     defineField({
       name: 'showcaseProjects',
@@ -66,7 +71,8 @@ export const homePaintingsSection = defineType({
       name: 'description',
       title: 'Section intro',
       type: 'blockContentMinimal',
-      validation: requiredPortableTextMax(155),
+      description: `Intro copy above the paintings gallery. Max ${SECTION_INTRO_MAX_CHARS} characters.`,
+      validation: requiredPortableTextMax(SECTION_INTRO_MAX_CHARS),
     }),
     defineField({
       name: 'showcasePaintings',
@@ -277,7 +283,6 @@ export const homePageSectionInsertMenu = {
         'homeVideosTeaserSection',
         'homeShopTeaserSection',
         'homeSkillsSection',
-        'homeContactCtaSection',
       ],
     },
   ],
@@ -293,5 +298,4 @@ export const defaultHomeSections = [
   { _type: 'homeVideosTeaserSection' as const },
   { _type: 'homeShopTeaserSection' as const },
   { _type: 'homeSkillsSection' as const },
-  { _type: 'homeContactCtaSection' as const },
 ];

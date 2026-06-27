@@ -153,9 +153,7 @@ async function main() {
   }
 
   // ── Step 2: Generate or rewrite gallery labels ───────────────────────────
-  console.log(
-    `\n🎨 Step 2: ${rewriteExisting ? 'Rewriting' : 'Generating'} gallery labels...\n`,
-  );
+  console.log(`\n🎨 Step 2: ${rewriteExisting ? 'Rewriting' : 'Generating'} gallery labels...\n`);
 
   const missingDesc = await client.fetch(
     rewriteExisting

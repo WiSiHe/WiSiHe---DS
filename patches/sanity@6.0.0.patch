@@ -1,0 +1,31 @@
+diff --git a/lib/_chunks-es/presentation.js b/lib/_chunks-es/presentation.js
+index 0000000..1111111 100644
+--- a/lib/_chunks-es/presentation.js
++++ b/lib/_chunks-es/presentation.js
+@@ -311,7 +311,7 @@
+   let t1;
+   if ($[4] !== contextOptions || $[5] !== documentId || $[6] !== resolvers || $[7] !== schemaType || $[8] !== version) {
+     let t22;
+-    $[10] !== contextOptions.length || $[11] !== documentId || $[12] !== resolvers || $[13] !== schemaType || $[14] !== version ? (t22 = (_options, idx) => /* @__PURE__ */ jsx(LocationsBanner, { documentId, options: _options, resolvers: resolvers[idx], schemaType, showPresentationTitle: contextOptions.length > 1, version }, idx), $[10] = contextOptions.length, $[11] = documentId, $[12] = resolvers, $[13] = schemaType, $[14] = version, $[15] = t22) : t22 = $[15], t1 = contextOptions.map(t22), $[4] = contextOptions, $[5] = documentId, $[6] = resolvers, $[7] = schemaType, $[8] = version, $[9] = t1;
++    $[10] !== contextOptions.length || $[11] !== documentId || $[12] !== resolvers || $[13] !== schemaType || $[14] !== version ? (t22 = (_options, idx) => /* @__PURE__ */ jsx(LocationsBanner, { documentId, options: _options, resolvers: resolvers[idx], schemaType, showPresentationTitle: contextOptions.length > 1, version }, idx), $[10] = contextOptions.length, $[11] = documentId, $[12] = resolvers, $[13] = schemaType, $[14] = version, $[15] = t22) : t22 = $[15], t1 = contextOptions.slice(0, 1).map(t22), $[4] = contextOptions, $[5] = documentId, $[6] = resolvers, $[7] = schemaType, $[8] = version, $[9] = t1;
+   } else
+     t1 = $[9];
+   let t2;
+@@ -326,7 +326,7 @@
+     options
+   } = props, parent = useContext(PresentationDocumentContext), parentRegister = parent?.register, [optionsArray, setOptionsArray] = useState(_temp);
+   let t0;
+-  $[0] !== parentRegister ? (t0 = (options_0) => parentRegister ? parentRegister(options_0) : (setOptionsArray((prev) => [options_0].concat(prev)), () => {
++  $[0] !== parentRegister ? (t0 = (options_0) => parentRegister ? parentRegister(options_0) : (setOptionsArray((prev) => prev.includes(options_0) ? prev : [options_0].concat(prev)), () => {
+     setOptionsArray((prev_0) => prev_0.filter((o) => o !== options_0));
+   }), $[0] = parentRegister, $[1] = t0) : t0 = $[1];
+   const register = t0, t1 = parent?.options || optionsArray;
+@@ -340,7 +340,7 @@
+   $[5] !== register ? (t3 = (options_1) => register(options_1), $[5] = register, $[6] = t3) : t3 = $[6];
+   const registerEffectEvent = useEffectEvent(t3);
+   let t4;
+-  $[7] !== options || $[8] !== registerEffectEvent ? (t4 = () => registerEffectEvent(options), $[7] = options, $[8] = registerEffectEvent, $[9] = t4) : t4 = $[9];
++  $[7] !== options || $[8] !== register ? (t4 = () => register(options), $[7] = options, $[8] = register, $[9] = t4) : t4 = $[9];
+   let t5;
+   $[10] !== options ? (t5 = [options], $[10] = options, $[11] = t5) : t5 = $[11], useLayoutEffect(t4, t5);
+   let t6;

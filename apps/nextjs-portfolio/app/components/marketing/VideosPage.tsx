@@ -113,7 +113,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
           className='grid grid-cols-12 gap-4 lg:gap-6'
         >
           {filteredVideos.map((video, index) => {
-            const { thumbnail, _id, featured, title, description, tags } = video;
+            const { thumbnail, _id, featured, title, tags } = video;
             const thumbnailUrl = urlForImage(thumbnail);
             const common = { alt: title ?? '', fill: true, className: 'object-cover' };
             const desktopWidth = featured ? 1280 : 800;
@@ -210,7 +210,7 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     </picture>
                   </div>
 
-                  {/* Title + description */}
+                  {/* Title */}
                   <div className='p-4 text-left flex-1 flex flex-col'>
                     <h3
                       className={cn(
@@ -220,11 +220,6 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     >
                       {title}
                     </h3>
-                    {description && (
-                      <p className='text-xs text-foreground-muted mt-1 line-clamp-2 leading-relaxed'>
-                        {description}
-                      </p>
-                    )}
                     {video.linkedPainting && (
                       <div className='mt-auto pt-3 flex items-center gap-1.5'>
                         <span className='text-xs text-foreground-muted'>↗</span>

@@ -96,8 +96,7 @@ async function main() {
   );
   const patchedCities = visitedCountries.reduce(
     (sum, country) =>
-      sum +
-      (country.cities ?? []).filter(city => factsData.cities[city._key]).length,
+      sum + (country.cities ?? []).filter(city => factsData.cities[city._key]).length,
     0,
   );
 

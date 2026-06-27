@@ -83,10 +83,7 @@ async function main() {
   const patch = {};
 
   if (!doc.paintingsDescription?.length) {
-    patch.paintingsDescription = toMinimalBlocks(
-      doc.paintingsSection,
-      DEFAULT_PAINTINGS_ARCHIVE,
-    );
+    patch.paintingsDescription = toMinimalBlocks(doc.paintingsSection, DEFAULT_PAINTINGS_ARCHIVE);
   }
 
   if (!doc.projectsListingDescription?.length) {

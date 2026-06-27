@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { type ReactNode, useCallback, useLayoutEffect, useRef } from 'react';
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 import {
   brushRevealInstant,
@@ -16,12 +16,19 @@ type BrushRevealWrapProps = {
   children: ReactNode;
   className?: string;
   enabled?: boolean;
+  /** When set, pointer handlers are skipped and hover is driven externally (hero cards). */
+  hovered?: boolean;
 };
 
 /**
  * Drives GSAP brush reveal on painting cards (desktop fine pointer only).
  */
-export function BrushRevealWrap({ children, className, enabled = true }: BrushRevealWrapProps) {
+export function BrushRevealWrap({
+  children,
+  className,
+  enabled = true,
+  hovered,
+}: BrushRevealWrapProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<globalThis.gsap.core.Timeline | null>(null);
 
@@ -67,6 +74,14 @@ export function BrushRevealWrap({ children, className, enabled = true }: BrushRe
     runLeave();
   };
 
+  const isControlled = hovered !== undefined;
+
+  useEffect(() => {
+    if (!enabled || !isControlled) return;
+    if (hovered) runEnter();
+    else runLeave();
+  }, [enabled, hovered, isControlled, runEnter, runLeave]);
+
   if (!enabled) {
     return <div className={cn('h-full w-full', className)}>{children}</div>;
   }
@@ -75,8 +90,12 @@ export function BrushRevealWrap({ children, className, enabled = true }: BrushRe
     <div
       ref={rootRef}
       className={cn('h-full w-full', className)}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
+      {...(isControlled
+        ? {}
+        : {
+            onPointerEnter,
+            onPointerLeave,
+          })}
     >
       {children}
     </div>

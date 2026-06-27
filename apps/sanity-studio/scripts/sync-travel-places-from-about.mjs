@@ -150,22 +150,20 @@ for (const country of about.visitedCountries ?? []) {
   for (const city of country.cities ?? []) {
     const placeId = placeIdByCityKey.get(city._key);
     if (!placeId || !country._key) continue;
-    aboutPatch = aboutPatch.set(
-      {
-        [`visitedCountries[_key=="${country._key}"].cities[_key=="${city._key}"].place`]: {
-          _type: 'reference',
-          _ref: placeId,
-        },
+    aboutPatch = aboutPatch.set({
+      [`visitedCountries[_key=="${country._key}"].cities[_key=="${city._key}"].place`]: {
+        _type: 'reference',
+        _ref: placeId,
       },
-    );
+    });
   }
 }
 for (const adventure of about.adventurePlaces ?? []) {
   const placeId = adventurePlaceIds.get(adventure._key);
   if (!placeId) continue;
-  aboutPatch = aboutPatch.set(
-    { [`adventurePlaces[_key=="${adventure._key}"].place`]: { _type: 'reference', _ref: placeId } },
-  );
+  aboutPatch = aboutPatch.set({
+    [`adventurePlaces[_key=="${adventure._key}"].place`]: { _type: 'reference', _ref: placeId },
+  });
 }
 await aboutPatch.commit();
 console.log('Patched about with travel place references');
@@ -183,7 +181,10 @@ for (const photo of photos) {
     { name: placeName, code },
   );
   if (!candidates) continue;
-  await client.patch(photo._id).set({ place: { _type: 'reference', _ref: candidates } }).commit();
+  await client
+    .patch(photo._id)
+    .set({ place: { _type: 'reference', _ref: candidates } })
+    .commit();
   console.log(`Linked photo ${photo._id} → ${candidates}`);
 }
 

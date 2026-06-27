@@ -29,6 +29,8 @@ type PaintingCardAdapterProps = {
   isNsfwFilterActive?: boolean;
   svgHoverIndex?: number;
   alwaysShowTags?: boolean;
+  /** Carousel / touch layouts — skip SVG brush reveal even on fine-pointer devices */
+  disableBrushReveal?: boolean;
   className?: string;
 };
 
@@ -38,9 +40,10 @@ const PaintingCardAdapter = ({
   isNsfwFilterActive = false,
   svgHoverIndex,
   alwaysShowTags = false,
+  disableBrushReveal = false,
   className,
 }: PaintingCardAdapterProps) => {
-  const canBrushReveal = useCanBrushReveal();
+  const canBrushReveal = !disableBrushReveal && useCanBrushReveal();
 
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 

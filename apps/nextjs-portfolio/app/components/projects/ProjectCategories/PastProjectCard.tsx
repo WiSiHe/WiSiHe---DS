@@ -9,14 +9,6 @@ type PastProjectCardProps = {
   isLcpCandidate?: boolean;
 };
 
-const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
-  completed: { label: 'Completed', dot: 'bg-green-500' },
-  cancelled: { label: 'Cancelled', dot: 'bg-foreground-muted' },
-  abandoned: { label: 'Abandoned', dot: 'bg-foreground-muted' },
-  inProgress: { label: 'In Progress', dot: 'bg-blue-500 animate-pulse' },
-  onHold: { label: 'On Hold', dot: 'bg-yellow-500' },
-};
-
 const TYPE_LABEL: Record<string, string> = {
   development: 'Development',
   gameDevelopment: 'Game Dev',
@@ -31,8 +23,6 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
   const year = projectEnd ? new Date(projectEnd).getFullYear() : null;
   const displayTags = (tags ?? []).slice(0, 3);
   const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
-  const statusConfig = (status && STATUS_CONFIG[status]) ||
-    STATUS_CONFIG['completed'] || { label: 'Completed', dot: 'bg-green-500' };
   const typeLabel = projectType ? (TYPE_LABEL[projectType] ?? null) : null;
   const isDeprecated = status === 'cancelled' || status === 'abandoned';
   const excerpt = seoDescription ?? '';
@@ -66,49 +56,38 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
               <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle to-surface' />
             )}
 
-            {/* Year badge top-right */}
-            {year && (
+            {year ? (
               <div className='absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
                 {year}
               </div>
-            )}
+            ) : null}
 
-            {/* Type badge top-left */}
-            {typeLabel && (
+            {typeLabel ? (
               <div className='absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
                 {typeLabel}
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Content */}
           <div className='flex flex-col flex-1 p-4 gap-2'>
-            {/* Status + title row */}
-            <div className='flex items-start gap-2'>
-              <span
-                className={cn('mt-1.5 w-2 h-2 rounded-full shrink-0', statusConfig.dot)}
-                title={statusConfig.label}
-              />
-              <h3
-                className={cn(
-                  'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 leading-snug',
-                  isDeprecated && 'text-foreground-subtle',
-                )}
-              >
-                {projectTitle}
-              </h3>
-            </div>
+            <h3
+              className={cn(
+                'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 leading-snug',
+                isDeprecated && 'text-foreground-subtle',
+              )}
+            >
+              {projectTitle}
+            </h3>
 
-            {/* Description */}
-            {excerpt && (
-              <p className='text-xs text-foreground-muted line-clamp-1 leading-relaxed pl-4'>
+            {excerpt ? (
+              <p className='text-xs text-foreground-muted line-clamp-1 leading-relaxed'>
                 {excerpt}
               </p>
-            )}
+            ) : null}
 
-            {/* Tags */}
-            {displayTags.length > 0 && (
-              <div className='flex flex-wrap items-center gap-1 pl-4 mt-auto pt-1'>
+            {displayTags.length > 0 ? (
+              <div className='flex flex-wrap items-center gap-1 mt-auto pt-1'>
                 {displayTags.map((tag: { name?: string | null }) => (
                   <span
                     key={tag.name}
@@ -117,11 +96,11 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
                     {tag.name}
                   </span>
                 ))}
-                {remainingTagsCount > 0 && (
+                {remainingTagsCount > 0 ? (
                   <span className='text-xs text-foreground-muted'>+{remainingTagsCount}</span>
-                )}
+                ) : null}
               </div>
-            )}
+            ) : null}
           </div>
         </article>
       </Link>

@@ -62,8 +62,7 @@ const client = createClient({
   useCdn: false,
 });
 
-const SPAMMY_TAG_RE =
-  /Explore my|Discover my art|Discover more today|Discover more!/i;
+const SPAMMY_TAG_RE = /Explore my|Discover my art|Discover more today|Discover more!/i;
 
 function imageUrl(ref) {
   const match = ref.match(/^image-(.+)-(\d+x\d+)-(\w+)$/);
@@ -150,14 +149,15 @@ const PROJECT_STACK_TAG_NAMES = new Set([
   'Hackathon',
   'Workshop',
 ]);
-  return text
+return text
     .replace(/^["']|["']$/g, '')
     .replace(/\n/g, ' ')
     .trim()
     .slice(0, 150);
 }
 
-async function generateTagDescription(tagName) {
+async
+function generateTagDescription(tagName) {
   const text = await openaiText([
     {
       role: 'user',
@@ -300,7 +300,9 @@ async function main() {
 
     const toProcess = rewrite
       ? paintings
-      : paintings.filter(p => p.tagCount < 3 || SPAMMY_TAG_RE.test((p.currentTags || []).join(' ')));
+      : paintings.filter(
+          p => p.tagCount < 3 || SPAMMY_TAG_RE.test((p.currentTags || []).join(' ')),
+        );
 
     console.log(`Catalog: ${catalog.length} tags. Paintings to process: ${toProcess.length}.\n`);
 
@@ -334,7 +336,10 @@ async function main() {
             .filter(Boolean)
             .join(', ');
 
-          await client.patch(doc._id).set({ tagsV2: tagsToReferences(suggested) }).commit();
+          await client
+            .patch(doc._id)
+            .set({ tagsV2: tagsToReferences(suggested) })
+            .commit();
           paintDone++;
           console.log(`  ✅ [${paintDone}/${toProcess.length}] "${doc.title}" → ${tagNames}`);
         } catch (e) {

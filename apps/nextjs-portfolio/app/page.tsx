@@ -72,7 +72,7 @@ export default async function Home() {
   }
 
   return (
-    <div className='bg-background'>
+    <div className='overflow-visible bg-background'>
       <Suspense fallback={null}>
         <HomePageSections
           home={homepage}

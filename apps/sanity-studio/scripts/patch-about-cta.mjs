@@ -49,7 +49,7 @@ async function main() {
   console.log('Patched about CTA:', doc._id, CTA);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error(err);
   process.exit(1);
 });
