@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { paintingBrushSeed } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import { urlForImage } from '@/sanity/lib/utils';
+import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
 import Masonry, { type MasonryItem } from './Masonry';
 
 type PaintingsDesktopShowcaseProps = {
@@ -45,9 +45,18 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
     if (!paintings?.length) return [];
     const out: MasonryItem[] = [];
     paintings.forEach((p, index) => {
-      const height = masonryLogicalHeight(p.image?.aspectRatio ?? null, p._id, index);
+      const croppedAr = getCroppedAspectRatio(p.image);
+      const height = masonryLogicalHeight(croppedAr, p._id, index);
+      const width = 900;
+      const heightPx = Math.round(width / croppedAr);
       const img = p.image
-        ? urlForImage(p.image)?.width(900).height(1200).quality(85).auto('format').url()
+        ? urlForImage(p.image)
+            ?.width(width)
+            .height(heightPx)
+            .fit('crop')
+            .quality(85)
+            .auto('format')
+            .url()
         : null;
       if (!img || !p.slug) return;
 

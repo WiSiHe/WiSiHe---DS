@@ -10,7 +10,7 @@ import {
   getHeroStrokeColors,
   HeroPaintingSvgHover,
 } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import { urlForImage } from '@/sanity/lib/utils';
+import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
 import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 
@@ -442,7 +442,20 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           const { image, slug, title } = item;
           if (!image) return null;
 
-          const imageUrl = urlForImage(image)?.width(800).auto('format').quality(85).url() || '';
+          const isPainting = item._type === 'painting';
+          const naturalAspectRatio = isPainting ? getCroppedAspectRatio(item.image) : null;
+          const imageUrl =
+            (item.image
+              ? naturalAspectRatio
+                ? urlForImage(item.image)
+                    ?.width(800)
+                    .height(Math.round(800 / naturalAspectRatio))
+                    .fit('crop')
+                    .auto('format')
+                    .quality(85)
+                    .url()
+                : urlForImage(item.image)?.width(800).auto('format').quality(85).url()
+              : '') || '';
 
           // Deterministic styling based on index (aspectRatios, sizes)
           const aspectRatios = ['aspect-square', 'aspect-video', 'aspect-[3/4]', 'aspect-[4/5]'];
@@ -610,7 +623,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           };
 
           const href = item._type === 'painting' ? `paintings/${slug}` : `projects/${slug}`;
-          const isPainting = item._type === 'painting';
 
           // Extract project properties if type is project
           const projectTags =
@@ -629,7 +641,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               ? new Date(item.paintedAt).getFullYear().toString()
               : null;
 
-          const naturalAspectRatio = isPainting ? item.image?.aspectRatio || 3 / 4 : null;
+          // naturalAspectRatio is already calculated above
 
           return (
             <motion.div
