@@ -50,13 +50,6 @@ function SkeletonGrid() {
   );
 }
 
-// Aspect class based on painting format — used by skeleton only
-function aspectClass(format: string): string {
-  if (format === 'landscape') return 'aspect-[4/3]';
-  if (format === 'portrait') return 'aspect-[3/4]';
-  return 'aspect-square';
-}
-
 export default function CustomHits() {
   const { items } = useHits();
   const { status, results, refresh } = useInstantSearch();

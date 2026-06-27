@@ -89,7 +89,7 @@ export function urlForPaintingCard(
   if (!image?.asset?._ref) return null;
 
   return (
-    urlForImage(image)
+    urlForImage(image as Parameters<typeof urlForImage>[0])
       ?.width(layout.cropWidth)
       .height(layout.cropHeight)
       .fit('crop')
