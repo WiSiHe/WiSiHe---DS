@@ -70,7 +70,11 @@ const PaintingCardAdapter = ({
     tagsV2,
     medium,
     paintedAt,
+    format,
   } = paintingData as any;
+
+  const imageAspectRatio =
+    image?.aspectRatio || (format === 'landscape' ? 4 / 3 : format === 'square' ? 1 : 3 / 4);
 
   const availableForSale =
     isForSale === true || hasStoreLink === true || Boolean(redbubbleUrl || gelatoUrl);
@@ -143,6 +147,7 @@ const PaintingCardAdapter = ({
         imageAlt={title || 'Painting'}
         imageSizes='(min-width: 1040px) 20vw, 50vw'
         imagePriority={shouldBeLazy}
+        aspectRatio={imageAspectRatio}
       />
     </div>
   ) : undefined;

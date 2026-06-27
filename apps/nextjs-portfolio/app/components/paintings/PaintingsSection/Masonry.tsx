@@ -341,6 +341,7 @@ const Masonry = ({
                 year={item.year ?? null}
                 tags={item.tags}
                 useMotion={false}
+                aspectRatio={item.w / item.h}
               />
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />
