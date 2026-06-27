@@ -1,11 +1,17 @@
 'use client';
 
 import { cleanTagName } from '@wisihe/utils';
-import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { paintingBrushSeed } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
+import { BsYoutube } from 'react-icons/bs';
+import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
+import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
+import {
+  paintingBrushSeed,
+  resolvePaintingCardLayout,
+  urlForPaintingCard,
+} from '@/lib/paintings/paintingCardImage';
+import { getCroppedAspectRatio } from '@/sanity/lib/utils';
 import Masonry, { type MasonryItem } from './Masonry';
 
 type PaintingsDesktopShowcaseProps = {
@@ -13,11 +19,6 @@ type PaintingsDesktopShowcaseProps = {
   paintings: any[];
 };
 
-/**
- * Logical height for masonry packing (`Masonry` uses `height / 2` as the rendered row height).
- * Uses Sanity `aspectRatio` (width ÷ height): portraits get taller tiles, landscapes shorter,
- * with a stable per-id jitter and occasional “hero” emphasis so the grid feels less uniform.
- */
 function masonryLogicalHeight(
   aspectRatio: number | null | undefined,
   id: string,
@@ -27,7 +28,6 @@ function masonryLogicalHeight(
     typeof aspectRatio === 'number' && Number.isFinite(aspectRatio) && aspectRatio > 0.05
       ? aspectRatio
       : 1;
-  /** Taller when image is portrait-ish, shorter when landscape-ish */
   const tallness = 1 / ar;
   let salt = 0;
   for (let i = 0; i < id.length; i++) {
@@ -44,41 +44,68 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
   const items = useMemo<MasonryItem[]>(() => {
     if (!paintings?.length) return [];
     const out: MasonryItem[] = [];
+
     paintings.forEach((p, index) => {
-      const croppedAr = getCroppedAspectRatio(p.image);
-      const height = masonryLogicalHeight(croppedAr, p._id, index);
-      const width = 900;
-      const heightPx = Math.round(width / croppedAr);
-      const img = p.image
-        ? urlForImage(p.image)
-            ?.width(width)
-            .height(heightPx)
-            .fit('crop')
-            .quality(85)
-            .auto('format')
-            .url()
-        : null;
+      const croppedAr = p.image ? getCroppedAspectRatio(p.image) : null;
+      const height = masonryLogicalHeight(croppedAr ?? p.image?.aspectRatio ?? null, p._id, index);
+
+      const layout = resolvePaintingCardLayout({
+        format: p.format,
+        aspectRatio: croppedAr ?? p.image?.aspectRatio ?? null,
+      });
+      const img = p.image ? urlForPaintingCard(p.image, layout, 85) : null;
+
       if (!img || !p.slug) return;
 
       const year = p.paintedAt ? new Date(p.paintedAt).getFullYear().toString() : undefined;
-
       const tags =
         p.tagsV2
           ?.map((t: { name?: string | null }) => cleanTagName(t.name ?? ''))
           .filter(Boolean) ?? [];
 
+      const strokeIndex = paintingBrushSeed(p._id);
+      const strokeColors = getBrushStrokeColors(strokeIndex, p.image?.palette ?? p.palette);
+
+      const badges: MasonryItem['badges'] = [];
+      if (p.isFanArt === true) {
+        badges.push({
+          key: 'fanart',
+          icon: <TbMasksTheater className='h-4 w-4' />,
+          label: 'Fan art',
+        });
+      }
+      if (Number(p.images?.length ?? p.imagesCount ?? 0) > 0) {
+        badges.push({
+          key: 'multi',
+          icon: <TbBoxMultiple className='h-4 w-4' />,
+          label: 'Multiple images',
+        });
+      }
+      if (p.video) {
+        badges.push({
+          key: 'video',
+          icon: <BsYoutube className='h-4 w-4' />,
+          label: 'Has video',
+        });
+      }
+
       out.push({
         id: p._id,
         img,
+        lqip: p.image?.lqip ?? p.image?.asset?.lqip,
         url: `/paintings/${p.slug}`,
         height,
         title: p.title ?? undefined,
-        strokeIndex: paintingBrushSeed(p._id),
+        strokeIndex,
+        ...strokeColors,
         medium: p.medium ?? undefined,
         year,
         tags: tags.length > 0 ? tags : undefined,
+        badges: badges.length > 0 ? badges : undefined,
+        isNsfwBlurred: p.isNSFW === true,
       });
     });
+
     return out;
   }, [paintings]);
 
@@ -102,13 +129,7 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
-        className='mt-16 flex flex-col items-center justify-center gap-4 text-foreground'
-      >
+      <div className='mt-16 flex flex-col items-center justify-center gap-4 text-foreground motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4'>
         <p>Like what you see?</p>
         <Link
           href='/paintings'
@@ -116,7 +137,7 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
         >
           Explore all paintings
         </Link>
-      </motion.div>
+      </div>
     </section>
   );
 };

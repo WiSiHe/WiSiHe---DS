@@ -31,7 +31,8 @@ export type BrushStrokeLayer = {
 
 export type BrushStrokeVariant = {
   id: string;
-  layers: [BrushStrokeLayer, BrushStrokeLayer];
+  /** Four overlapping strokes for full card coverage */
+  layers: [BrushStrokeLayer, BrushStrokeLayer, BrushStrokeLayer, BrushStrokeLayer];
   /** Extra scale on the cover box so strokes reach card edges */
   scale: number;
 };
@@ -42,6 +43,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 0 },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 0 },
+      { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: -8 },
+      { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: 12 },
     ],
     scale: 2,
   },
@@ -50,6 +53,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -16 },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 12 },
+      { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: 6 },
+      { d: BRUSH_PATH_CROSS_B, viewBox: '0 0 1000 1000', rotateDeg: -4, mirror: true },
     ],
     scale: 2.25,
   },
@@ -58,6 +63,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 10, mirror: true },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: -8 },
+      { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: -14 },
+      { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: 18 },
     ],
     scale: 2.4,
   },
@@ -66,6 +73,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: -6 },
       { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: 14 },
+      { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -22 },
+      { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
     ],
     scale: 2.35,
   },
@@ -74,6 +83,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: 4 },
       { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: -10 },
+      { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 16 },
+      { d: BRUSH_PATH_SPIRAL_B, viewBox: '0 0 1000 1000', rotateDeg: -6 },
     ],
     scale: 2.5,
   },
@@ -82,6 +93,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: -12 },
       { d: BRUSH_PATH_SPIRAL_B, viewBox: '0 0 1000 1000', rotateDeg: 18 },
+      { d: BRUSH_PATH_CROSS_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
+      { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: -10 },
     ],
     scale: 2.3,
   },
@@ -90,6 +103,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_CROSS_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
       { d: BRUSH_PATH_CROSS_B, viewBox: '0 0 1000 1000', rotateDeg: 0, mirror: true },
+      { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -12 },
+      { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: 20 },
     ],
     scale: 2.45,
   },
@@ -98,14 +113,15 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: -20 },
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 15 },
+      { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
+      { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: -16, mirror: true },
     ],
     scale: 2.55,
   },
 ];
 
 export function getBrushStrokeVariant(index: number): BrushStrokeVariant {
-  const variant = BRUSH_STROKE_VARIANTS[index % BRUSH_STROKE_VARIANTS.length];
-  return variant ?? BRUSH_STROKE_VARIANTS[0]!;
+  return BRUSH_STROKE_VARIANTS[index % BRUSH_STROKE_VARIANTS.length] as BrushStrokeVariant;
 }
 
 /** Stable numeric seed from painting id/slug for color + stroke variant selection. */
@@ -117,3 +133,6 @@ export function paintingBrushSeed(seed: string): number {
   }
   return Math.abs(hash);
 }
+
+/** Card stroke layer count (hero uses first two only). */
+export const CARD_BRUSH_LAYER_COUNT = 4;
