@@ -7,6 +7,8 @@ import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import PaintingCard from '@/app/components/paintings/PaintingCard/PaintingCard';
+import PaintingsCarousel from '@/app/components/paintings/PaintingsSection/PaintingsCarousel';
+import { paintingsShopHref } from '@/lib/algolia/constants';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
@@ -20,12 +22,29 @@ const DEFAULT_COPY = {
   linkLabel: 'Browse gallery',
 };
 
+function formatForSaleCount(count: number): string {
+  if (count === 1) return '1 work is currently available as a print';
+  return `${count} works are currently available as prints`;
+}
+
+function buildShopDescription(baseDescription: string, forSaleCount: number): string {
+  const countPhrase = formatForSaleCount(forSaleCount);
+  const trimmed = baseDescription.trim();
+  if (!trimmed) return `${countPhrase}.`;
+  return `${trimmed} ${countPhrase}.`;
+}
+
 type ShopTeaserSectionProps = {
   intro: HomeSectionIntroCopy | null | undefined;
   paintings: PaintingItem[];
+  forSaleCount: number;
 };
 
-export default function ShopTeaserSection({ intro, paintings }: ShopTeaserSectionProps) {
+export default function ShopTeaserSection({
+  intro,
+  paintings,
+  forSaleCount,
+}: ShopTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
@@ -34,6 +53,7 @@ export default function ShopTeaserSection({ intro, paintings }: ShopTeaserSectio
   if (paintings.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
+  const description = buildShopDescription(copy.description, forSaleCount);
 
   return (
     <section
@@ -45,13 +65,13 @@ export default function ShopTeaserSection({ intro, paintings }: ShopTeaserSectio
           <HomeSectionHeader
             eyebrow={copy.eyebrow}
             title={copy.title}
-            description={copy.description}
+            description={description}
             headingId='shop-teaser-heading'
             align='left'
           />
           <Button
             as={Link}
-            href='/paintings'
+            href={paintingsShopHref()}
             variant='secondary'
             size='medium'
             Icon={IconArrowRight}
@@ -62,7 +82,9 @@ export default function ShopTeaserSection({ intro, paintings }: ShopTeaserSectio
           </Button>
         </div>
 
-        <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        <PaintingsCarousel paintings={paintings} showFooter={false} />
+
+        <ul className='hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3'>
           {paintings.map((painting, index) => (
             <motion.li
               key={painting._id}

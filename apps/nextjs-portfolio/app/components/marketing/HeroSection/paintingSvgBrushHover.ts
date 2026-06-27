@@ -1,16 +1,18 @@
 import gsap from 'gsap';
 
 import {
+  type BrushStrokeProfile,
+  getBrushProfileConfig,
   HERO_BRUSH_STROKE_WIDTH_HOVER,
   HERO_BRUSH_STROKE_WIDTH_REST,
-} from './HeroPaintingSvgHover';
+} from './brushStrokeConstants';
 
-/** Card grids use paint-like strokes scaled for card frames. */
-export const CARD_BRUSH_STROKE_SCALE = 0.4;
+export { type BrushStrokeProfile, getBrushProfileConfig } from './brushStrokeConstants';
 
-function strokeWidths(strokeScale: number) {
+function strokeWidths(profile: BrushStrokeProfile, strokeScale = 1) {
   if (strokeScale < 1) {
-    return { rest: 72, hover: 112 };
+    const config = getBrushProfileConfig(profile);
+    return { rest: config.rest, hover: config.hover };
   }
   return {
     rest: HERO_BRUSH_STROKE_WIDTH_REST * strokeScale,
@@ -28,10 +30,6 @@ function fadeOutOverlay(el: Element) {
   });
 }
 
-function isNsfwBlurredRoot(root: HTMLElement): boolean {
-  return root.querySelector('[data-nsfw-blur]') !== null;
-}
-
 function isReducedMotion(): boolean {
   return (
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -39,9 +37,12 @@ function isReducedMotion(): boolean {
 }
 
 /** Prepare paths + wash for dash-offset animation. */
-export function initBrushRevealPaths(root: HTMLElement | null, strokeScale = 1): void {
+export function initBrushRevealPaths(
+  root: HTMLElement | null,
+  profile: BrushStrokeProfile = 'masonry',
+): void {
   if (!root) return;
-  const { rest } = strokeWidths(strokeScale);
+  const { rest } = strokeWidths(profile);
   const paths = root.querySelectorAll<SVGPathElement>('[data-brush-svg] path');
   paths.forEach(path => {
     const len = path.getTotalLength();
@@ -69,7 +70,7 @@ export function brushRevealInstant(root: HTMLElement): void {
   const wash = root.querySelector('[data-brush-wash]');
 
   if (wash instanceof HTMLElement) {
-    gsap.set(wash, { opacity: 0.45 });
+    gsap.set(wash, { opacity: 1 });
   }
   if (overlay instanceof HTMLElement) {
     gsap.set(overlay, { opacity: 1, y: 0 });
@@ -87,28 +88,30 @@ export function brushRevealInstantLeave(root: HTMLElement): void {
 }
 
 /**
- * Brush-stroke hover — wash dims canvas, thick strokes draw on, metadata fades in above.
+ * Brush-stroke hover — wash covers canvas, strokes draw on, metadata fades in above.
  */
-export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.core.Timeline {
+export function paintingSvgBrushEnter(
+  root: HTMLElement,
+  profile: BrushStrokeProfile = 'masonry',
+): gsap.core.Timeline {
   if (isReducedMotion()) {
     brushRevealInstant(root);
     return gsap.timeline();
   }
 
-  const { rest, hover } = strokeWidths(strokeScale);
-  const nsfwBlurred = isNsfwBlurredRoot(root);
-  const strokeOpacity = nsfwBlurred ? 0.96 : 0.9;
+  const { rest, hover } = strokeWidths(profile);
+  const strokeOpacity = getBrushProfileConfig(profile).strokeOpacity;
   const tl = gsap.timeline();
   const paths = Array.from(root.querySelectorAll<SVGPathElement>('[data-brush-svg] path'));
 
   const wash = root.querySelector('[data-brush-wash]');
   if (wash) {
-    tl.to(wash, { opacity: 0.48, duration: 0.28, ease: 'power1.out' }, 0);
+    tl.to(wash, { opacity: 1, duration: 0.52, ease: 'sine.out' }, 0);
   }
 
   paths.forEach((path, index) => {
     const len = path.getTotalLength();
-    const start = index * 0.14;
+    const start = 0.1 + index * 0.15;
     gsap.set(path, {
       strokeDasharray: len,
       strokeDashoffset: len,
@@ -121,8 +124,8 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
         strokeDashoffset: 0,
         opacity: strokeOpacity,
         attr: { 'stroke-width': hover },
-        duration: 1.05,
-        ease: 'power1.inOut',
+        duration: profile === 'masonry' ? 1.22 : 1.35,
+        ease: 'sine.inOut',
       },
       start,
     );
@@ -133,26 +136,29 @@ export function paintingSvgBrushEnter(root: HTMLElement, strokeScale = 1): gsap.
     tl.fromTo(
       overlay,
       { opacity: 0, y: 8 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-      0.4,
+      { opacity: 1, y: 0, duration: 0.62, ease: 'sine.out' },
+      0.55,
     );
   }
 
   return tl;
 }
 
-export function paintingSvgBrushLeave(root: HTMLElement, strokeScale = 1): void {
+export function paintingSvgBrushLeave(
+  root: HTMLElement,
+  profile: BrushStrokeProfile = 'masonry',
+): void {
   if (isReducedMotion()) {
     brushRevealInstantLeave(root);
     return;
   }
 
-  const { rest } = strokeWidths(strokeScale);
+  const { rest } = strokeWidths(profile);
   const paths = root.querySelectorAll<SVGPathElement>('[data-brush-svg] path');
 
   const wash = root.querySelector('[data-brush-wash]');
   if (wash) {
-    gsap.to(wash, { opacity: 0, duration: 0.55, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to(wash, { opacity: 0, duration: 0.72, ease: 'sine.inOut', overwrite: 'auto' });
   }
 
   paths.forEach((path, index) => {
@@ -161,9 +167,9 @@ export function paintingSvgBrushLeave(root: HTMLElement, strokeScale = 1): void 
       strokeDashoffset: len,
       opacity: 0,
       attr: { 'stroke-width': rest * 0.85 },
-      duration: 0.8,
-      ease: 'power2.inOut',
-      delay: index * 0.05,
+      duration: 1.05,
+      ease: 'sine.inOut',
+      delay: index * 0.07,
       overwrite: 'auto',
     });
   });
@@ -174,5 +180,5 @@ export function paintingSvgBrushLeave(root: HTMLElement, strokeScale = 1): void 
 
 /** @deprecated Use initBrushRevealPaths — kept for hero section compatibility */
 export function initHeroSvgStrokePathsLegacy(root: HTMLElement | null, strokeScale = 1): void {
-  initBrushRevealPaths(root, strokeScale);
+  initBrushRevealPaths(root, strokeScale < 1 ? 'heroCard' : 'masonry');
 }

@@ -156,10 +156,7 @@ async function main() {
     return cities.length > 0 ? { ...entry, cities } : entry;
   });
 
-  await client
-    .patch('about')
-    .set({ visitedCountries, adventurePlaces: ADVENTURE_PLACES })
-    .commit();
+  await client.patch('about').set({ visitedCountries, adventurePlaces: ADVENTURE_PLACES }).commit();
 
   const cityCount = visitedCountries.reduce(
     (sum, country) => sum + (country.cities?.length ?? 0),

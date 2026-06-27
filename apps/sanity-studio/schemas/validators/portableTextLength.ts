@@ -29,3 +29,9 @@ export function requiredPortableTextMax(
       return true;
     });
 }
+
+/** Hero intro — also used for home meta description. */
+export const HERO_INTRO_MAX_CHARS = 155;
+
+/** Section intros on the home page (featured projects, paintings gallery). */
+export const SECTION_INTRO_MAX_CHARS = 280;

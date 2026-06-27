@@ -5,8 +5,11 @@
  * Driven by GSAP via `BrushRevealWrap` / `useBrushReveal`.
  */
 
-import { type ReactNode, useId } from 'react';
-
+import { type CSSProperties, type ReactNode, useId } from 'react';
+import {
+  type BrushStrokeProfile,
+  getBrushProfileConfig,
+} from '@/app/components/marketing/HeroSection/brushStrokeConstants';
 import {
   type BrushStrokeLayer,
   getBrushStrokeVariant,
@@ -15,17 +18,17 @@ import {
 
 export { getBrushStrokeVariant, paintingBrushSeed };
 
-const LAYER_BASE_CLASS =
-  'svg-stroke absolute left-1/2 top-1/2 h-[155%] w-[155%] -translate-x-1/2 -translate-y-1/2 origin-center';
+const LAYER_BASE_CLASS = `svg-stroke absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center`;
+
+function layerSizeStyle(layerSizePercent: number): CSSProperties {
+  const size = `${layerSizePercent}%`;
+  return { width: size, height: size };
+}
 
 function layerTransform(layer: BrushStrokeLayer): string {
   return layer.mirror
     ? `rotate(${layer.rotateDeg}deg) scaleX(-1)`
     : `rotate(${layer.rotateDeg}deg)`;
-}
-
-function cardCoverScale(variantScale: number): number {
-  return Math.min(variantScale * 0.88, 2.35);
 }
 
 function BrushStrokeSvg({
@@ -34,15 +37,20 @@ function BrushStrokeSvg({
   className,
   filterId,
   strokeWidthRest,
+  layerSizePercent,
 }: {
   layer: BrushStrokeLayer;
   color: string;
   className: string;
   filterId: string;
   strokeWidthRest: number;
+  layerSizePercent: number;
 }) {
   return (
-    <div className={className} style={{ transform: layerTransform(layer) }}>
+    <div
+      className={className}
+      style={{ ...layerSizeStyle(layerSizePercent), transform: layerTransform(layer) }}
+    >
       <svg
         className='block h-full w-full'
         viewBox={layer.viewBox}
@@ -59,7 +67,7 @@ function BrushStrokeSvg({
           strokeLinejoin='round'
           fill='none'
           filter={`url(#${filterId})`}
-          style={{ mixBlendMode: 'multiply', opacity: 0 }}
+          style={{ opacity: 0 }}
         />
       </svg>
     </div>
@@ -83,9 +91,8 @@ export type BrushRevealLayerProps = {
   tags?: string[] | null;
   badges?: BrushRevealBadge[];
   isNsfwBlurred?: boolean;
+  profile?: BrushStrokeProfile;
 };
-
-const REST_STROKE_WIDTH = 72;
 
 export function BrushRevealLayer({
   accentColor,
@@ -98,9 +105,11 @@ export function BrushRevealLayer({
   tags,
   badges = [],
   isNsfwBlurred = false,
+  profile = 'masonry',
 }: BrushRevealLayerProps) {
+  const brushProfile = getBrushProfileConfig(profile);
   const variant = getBrushStrokeVariant(strokeVariantIndex);
-  const scale = cardCoverScale(variant.scale);
+  const scale = brushProfile.coverScale(variant.scale);
   const displayTags = (tags ?? []).filter(Boolean);
   const visibleTags = displayTags.slice(0, 4);
   const filterId = useId().replace(/:/g, '');
@@ -130,7 +139,11 @@ export function BrushRevealLayer({
           <title>Brush stroke filters</title>
           <defs>
             <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
-              <feGaussianBlur in='SourceGraphic' stdDeviation={2.4} result='blur' />
+              <feGaussianBlur
+                in='SourceGraphic'
+                stdDeviation={brushProfile.strokeBlur}
+                result='blur'
+              />
               <feMerge>
                 <feMergeNode in='blur' />
                 <feMergeNode in='SourceGraphic' />
@@ -139,14 +152,15 @@ export function BrushRevealLayer({
           </defs>
         </svg>
 
-        {variant.layers.map((layer, index) => (
+        {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
           <BrushStrokeSvg
             key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
             layer={layer}
             color={layerColors[index % layerColors.length] ?? accentColor}
             filterId={filterId}
             className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
-            strokeWidthRest={REST_STROKE_WIDTH}
+            strokeWidthRest={brushProfile.rest}
+            layerSizePercent={brushProfile.layerSizePercent}
           />
         ))}
       </div>

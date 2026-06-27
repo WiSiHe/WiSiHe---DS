@@ -124,9 +124,7 @@ function resolveCode(country, existingCode) {
 }
 
 async function main() {
-  const doc = await client.fetch(
-    '*[_id == "about"][0]{ journeyItems, visitedCountries }',
-  );
+  const doc = await client.fetch('*[_id == "about"][0]{ journeyItems, visitedCountries }');
   if (!doc) throw new Error('About document not found');
 
   const journeyItems = (doc.journeyItems ?? []).map(item => {

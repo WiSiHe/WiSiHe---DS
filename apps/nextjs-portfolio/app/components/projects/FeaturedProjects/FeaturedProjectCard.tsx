@@ -1,13 +1,42 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { GlassSurface } from '@/app/components/ui/GlassSurface';
+import { registerScrollElements } from '@/app/lib/lenis-registry';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
 import { portableTextToPlainText, urlForImage } from '@/sanity/lib/utils';
-import { GlassSurface } from '../../ui/GlassSurface';
-
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
+
+const panelEase = [0.22, 1, 0.36, 1] as const;
+
+const panelContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.11, delayChildren: 0.08 },
+  },
+};
+
+function panelItemVariants(fromX: number) {
+  return {
+    hidden: {
+      opacity: 0,
+      x: fromX,
+      y: 28,
+      filter: 'blur(10px)',
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.75, ease: panelEase },
+    },
+  };
+}
 
 export type FeaturedProject = NonNullable<HomeProjectsSection['showcaseProjects']>[number];
 
@@ -34,8 +63,31 @@ type FeaturedProjectCardProps = {
   panelColor: string;
 };
 
+function parallaxAttrs(mounted: boolean, speed: string) {
+  return mounted ? { 'data-scroll': true, 'data-scroll-speed': speed } : {};
+}
+
 const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  useLayoutEffect(() => {
+    if (!mounted || !cardRef.current) return;
+    registerScrollElements(cardRef.current);
+  }, [mounted]);
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(mounted && prefersReducedMotion);
+  const isCardInView = useInView(cardRef, {
+    once: true,
+    amount: 0.38,
+    margin: '0px 0px -12% 0px',
+  });
+
   const isEven = index % 2 === 0;
+  const panelFromX = isEven ? -52 : 52;
+  const panelAnimate = reducedMotion ? false : isCardInView ? 'visible' : 'hidden';
   const titleId = `featured-project-title-${project._id}`;
   const titleTrimmed = (project.title as unknown as string | undefined)?.trim();
   const nameTrimmed = (project.name as string | undefined)?.trim();
@@ -53,116 +105,124 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
     null;
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
   const heroUrl = project.image
-    ? urlForImage(project.image)?.width(1200).height(900).quality(85).url()
+    ? urlForImage(project.image)?.width(1400).height(1050).quality(85).url()
     : null;
   const previewSources = collectPreviewSources(project);
+  const backdropAlt = project.seo?.title || project.title || project.name || 'Project backdrop';
 
   return (
-    <div className='relative w-full h-screen overflow-hidden flex items-center justify-center border-t border-border/20 dark:border-white/5 bg-card'>
-      {/* 1. PARALLAX BACKGROUND IMAGE (Fills the Height of the Cell) */}
-      <div className='absolute inset-0 z-0 overflow-hidden w-full h-full'>
-        {/* Stronger dim so the placard text stays readable over bright artwork */}
-        <div className='absolute inset-0 bg-black/50 dark:bg-black/60 z-10 pointer-events-none transition-colors duration-300' />
+    <div
+      ref={cardRef}
+      className='relative flex h-screen w-full items-center justify-center overflow-hidden border-t border-border/20 bg-card dark:border-white/5'
+    >
+      <div className='absolute inset-0 z-0 h-full w-full overflow-hidden'>
+        <div className='pointer-events-none absolute inset-0 z-10 bg-black/50 transition-colors duration-300 dark:bg-black/60' />
 
         {heroUrl ? (
-          <Image
-            src={heroUrl}
-            alt={project.seo?.title || project.title || project.name || 'Project backdrop'}
-            fill
-            className='object-cover scale-115 select-none z-0'
-            sizes='(max-width: 768px) 100vw, 60vw'
-            priority={index === 0}
-            data-scroll
-            data-scroll-speed='-0.5'
-          />
+          <div className='absolute inset-0 z-0' {...parallaxAttrs(mounted, '-0.5')}>
+            <Image
+              src={heroUrl}
+              alt={backdropAlt}
+              fill
+              className='z-0 scale-115 object-cover select-none'
+              sizes='(max-width: 768px) 100vw, 60vw'
+              priority={index === 0}
+            />
+          </div>
         ) : (
-          <div className='w-full h-full bg-muted' />
+          <div className='h-full w-full bg-muted' />
         )}
       </div>
 
-      {/* Modern Floating Corner Fig Label (Desktop only) */}
-      <div className='absolute bottom-4 right-4 z-10 font-mono text-[9px] tracking-widest text-white/40 bg-black/20 backdrop-blur-sm px-2.5 py-1.5 border border-white/5 select-none uppercase hidden md:block rounded-md'>
+      <div className='absolute bottom-4 right-4 z-10 hidden select-none rounded-md border border-white/10 bg-black/25 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white/45 backdrop-blur-sm md:block'>
         Fig. {String(index + 1).padStart(2, '0')}
         {' // '}
         {project.slug || 'Specimen'}
       </div>
 
-      {/* 2. MODERN FLOATING GLASSMORPHIC PLACARD CARD */}
       <div
-        className={`relative z-20 w-full max-w-[90%] md:w-[480px] md:absolute md:top-1/2 md:-translate-y-1/2 my-auto mx-4 md:mx-0
-          ${
-            isEven
-              ? 'md:left-[10%] lg:left-[15%] md:right-auto'
-              : 'md:right-[10%] lg:right-[15%] md:left-auto'
-          }`}
-        data-scroll
-        data-scroll-speed='0.2'
+        className={`relative z-20 mx-4 my-auto w-full max-w-[90%] md:absolute md:inset-y-0 md:flex md:items-center md:w-[480px] md:mx-0 ${
+          isEven
+            ? 'md:left-[10%] lg:left-[15%] md:right-auto'
+            : 'md:right-[10%] lg:right-[15%] md:left-auto'
+        }`}
       >
-        <GlassSurface variant='overlay' className='w-full h-full p-8 md:p-10'>
-          <div className='flex flex-col h-full'>
-            {/* Modern Eyebrow Tags */}
-            <div className='mb-3 font-mono text-[10px] md:text-xs tracking-wider text-accent uppercase font-bold flex flex-wrap gap-x-2 gap-y-1 items-center'>
+        <GlassSurface variant='backdrop' className='w-full rounded-3xl p-8 md:p-10'>
+          <motion.div
+            className='flex flex-col'
+            variants={reducedMotion ? undefined : panelContainerVariants}
+            initial={reducedMotion ? false : 'hidden'}
+            animate={panelAnimate}
+          >
+            <motion.div
+              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+              className='mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] font-bold uppercase tracking-wider text-accent md:text-xs'
+            >
               <span>EP-{String(index + 1).padStart(2, '0')}</span>
-              <span className='text-white/40 select-none'>•</span>
+              <span className='select-none text-white/35'>•</span>
               <span className='text-white/90'>
                 {formatProjectStatusLabel(project.status || 'unknown')}
               </span>
               {dateRange ? (
                 <>
-                  <span className='text-white/40 select-none'>•</span>
+                  <span className='select-none text-white/35'>•</span>
                   <span className='text-white/90'>{dateRange}</span>
                 </>
               ) : null}
-            </div>
+            </motion.div>
 
-            {/* Title - Clean modern sans-serif */}
-            <h3
+            <motion.h3
               id={titleId}
-              className='mb-4 font-sans text-2xl md:text-3xl font-bold leading-tight text-white'
+              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+              className='mb-4 font-sans text-2xl font-bold leading-tight text-white md:text-3xl'
             >
               {headingText}
-            </h3>
+            </motion.h3>
 
-            {/* Description */}
             {summaryText ? (
-              <p className='text-sm md:text-base leading-relaxed text-white/80 mb-8 line-clamp-3'>
+              <motion.p
+                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                className='mb-8 line-clamp-3 text-sm leading-relaxed text-white/78 md:text-base'
+              >
                 {summaryText}
-              </p>
+              </motion.p>
             ) : null}
 
-            {/* Sub-specimens (Thumbnails) styled as clean rounded-lg items */}
             {previewSources.length > 1 ? (
-              <div className='grid grid-cols-4 gap-3 mb-8'>
+              <motion.div
+                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                className='mb-8 grid grid-cols-4 gap-3'
+              >
                 {previewSources.slice(0, 4).map(src => {
                   const u = urlForImage(src)?.width(160).height(160).quality(70).url();
                   return (
                     <div
                       key={src.asset._ref}
-                      className='relative aspect-square overflow-hidden rounded-xl bg-white/10 border border-white/20 hover:scale-105 transition-transform duration-300'
+                      className='relative aspect-square overflow-hidden rounded-xl border border-white/15 bg-white/5 transition-transform duration-300 hover:scale-105'
                     >
-                      <div className='relative w-full h-full overflow-hidden'>
-                        {u ? (
-                          <Image src={u} alt='' fill className='object-cover' sizes='60px' />
-                        ) : null}
-                      </div>
+                      {u ? (
+                        <Image src={u} alt='' fill className='object-cover' sizes='60px' />
+                      ) : null}
                     </div>
                   );
                 })}
-              </div>
+              </motion.div>
             ) : null}
 
-            {/* Button - Standard modern pill button */}
-            <div className='flex items-center justify-between mt-auto pt-2'>
+            <motion.div
+              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+              className='flex items-center justify-between pt-2'
+            >
               <Link
                 href={`projects/${project.slug}`}
-                className='inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-contrast transition-colors hover:bg-accent-hover shadow-md z-20'
+                className='z-20 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-contrast shadow-md transition-colors hover:bg-accent-hover'
               >
                 <span className='sr-only'>{headingText}. </span>
                 View Project
                 <IconArrowRight aria-hidden className='h-4 w-4' />
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </GlassSurface>
       </div>
     </div>

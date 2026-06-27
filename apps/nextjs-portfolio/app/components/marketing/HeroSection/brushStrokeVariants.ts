@@ -6,21 +6,40 @@ const BRUSH_PATH_PRIMARY =
 const BRUSH_PATH_SECONDARY =
   'M1661.28 2255.51C1661.28 2255.51 2311.09 1960.37 2111.78 1817.01C1944.47 1696.67 718.456 2870.17 499.781 2255.51C308.969 1719.17 2457.51 1613.83 2111.78 963.512C1766.05 313.198 427.949 2195.17 132.281 1455.51C-155.219 736.292 2014.78 891.514 1708.78 252.012C1437.81 -314.29 369.471 909.169 132.281 566.512C18.1772 401.672 244.781 193.012 244.781 193.012';
 
-const BRUSH_PATH_RIBBON_A = 'M 60 940 C 280 80, 520 880, 760 120 S 980 720, 940 40';
+/** Flowing ribbon — multiple soft bends, no straight diagonals. */
+const BRUSH_PATH_RIBBON_A =
+  'M 60 920 C 220 640, 360 280, 560 420 S 760 720, 680 920 S 420 980, 240 860 S 80 1040, 60 920';
 
-const BRUSH_PATH_RIBBON_B = 'M 40 60 C 420 320, 580 680, 960 940 S 720 520, 80 880';
+const BRUSH_PATH_RIBBON_B =
+  'M 40 120 C 280 360, 520 640, 720 480 S 920 240, 880 520 S 640 820, 420 760 S 120 680, 40 120';
 
-const BRUSH_PATH_WAVE_A = 'M 0 520 C 220 80, 780 920, 1000 480';
+/** Gentle meander across the canvas. */
+const BRUSH_PATH_MEANDER_A =
+  'M 0 580 C 160 420, 280 220, 460 340 S 640 560, 780 420 S 920 280, 1000 520';
 
-const BRUSH_PATH_WAVE_B = 'M 0 380 C 360 860, 640 140, 1000 620';
+const BRUSH_PATH_MEANDER_B =
+  'M 0 420 C 200 620, 320 820, 520 680 S 720 460, 860 620 S 960 780, 1000 360';
 
-const BRUSH_PATH_SPIRAL_A = 'M 120 880 C 400 200, 600 800, 880 120 S 200 400, 520 920';
+/** Playful curls — figure-eight energy. */
+const BRUSH_PATH_LOOP_A =
+  'M 140 860 C 300 660, 420 340, 620 460 S 860 720, 740 900 S 500 940, 340 780 S 180 980, 140 860';
 
-const BRUSH_PATH_SPIRAL_B = 'M 880 80 C 600 360, 400 640, 120 920 S 800 600, 480 100';
+const BRUSH_PATH_LOOP_B =
+  'M 860 140 C 700 340, 580 660, 380 540 S 140 280, 260 100 S 500 60, 660 220 S 920 40, 860 140';
 
-const BRUSH_PATH_CROSS_A = 'M 80 200 C 320 900, 680 100, 920 800';
+/** Wide swoosh — loose painterly arc. */
+const BRUSH_PATH_SWOOSH_A =
+  'M 80 900 C 240 520, 420 180, 640 320 S 880 680, 760 900 S 520 980, 320 860 S 120 980, 80 900';
 
-const BRUSH_PATH_CROSS_B = 'M 920 200 C 680 900, 320 100, 80 800';
+const BRUSH_PATH_SWOOSH_B =
+  'M 920 100 C 760 480, 580 820, 360 680 S 120 340, 240 120 S 480 40, 680 200 S 960 20, 920 100';
+
+/** Blobby daub — round, playful stroke. */
+const BRUSH_PATH_DAUB_A =
+  'M 120 500 C 260 320, 420 680, 560 460 S 760 280, 860 480 S 720 760, 540 820 S 280 760, 120 500';
+
+const BRUSH_PATH_DAUB_B =
+  'M 880 500 C 740 680, 580 320, 440 540 S 240 720, 140 520 S 280 240, 460 180 S 720 240, 880 500';
 
 export type BrushStrokeLayer = {
   d: string;
@@ -43,7 +62,7 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 0 },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 0 },
-      { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: -8 },
+      { d: BRUSH_PATH_MEANDER_A, viewBox: '0 0 1000 1000', rotateDeg: -8 },
       { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: 12 },
     ],
     scale: 2,
@@ -53,8 +72,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -16 },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 12 },
-      { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: 6 },
-      { d: BRUSH_PATH_CROSS_B, viewBox: '0 0 1000 1000', rotateDeg: -4, mirror: true },
+      { d: BRUSH_PATH_LOOP_A, viewBox: '0 0 1000 1000', rotateDeg: 6 },
+      { d: BRUSH_PATH_SWOOSH_B, viewBox: '0 0 1000 1000', rotateDeg: -4, mirror: true },
     ],
     scale: 2.25,
   },
@@ -63,7 +82,7 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 10, mirror: true },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: -8 },
-      { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: -14 },
+      { d: BRUSH_PATH_MEANDER_B, viewBox: '0 0 1000 1000', rotateDeg: -14 },
       { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: 18 },
     ],
     scale: 2.4,
@@ -74,37 +93,37 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
       { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: -6 },
       { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: 14 },
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -22 },
-      { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
+      { d: BRUSH_PATH_MEANDER_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
     ],
     scale: 2.35,
   },
   {
     id: 'wave',
     layers: [
-      { d: BRUSH_PATH_WAVE_A, viewBox: '0 0 1000 1000', rotateDeg: 4 },
-      { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: -10 },
+      { d: BRUSH_PATH_MEANDER_A, viewBox: '0 0 1000 1000', rotateDeg: 4 },
+      { d: BRUSH_PATH_MEANDER_B, viewBox: '0 0 1000 1000', rotateDeg: -10 },
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: 16 },
-      { d: BRUSH_PATH_SPIRAL_B, viewBox: '0 0 1000 1000', rotateDeg: -6 },
+      { d: BRUSH_PATH_LOOP_B, viewBox: '0 0 1000 1000', rotateDeg: -6 },
     ],
     scale: 2.5,
   },
   {
     id: 'spiral',
     layers: [
-      { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: -12 },
-      { d: BRUSH_PATH_SPIRAL_B, viewBox: '0 0 1000 1000', rotateDeg: 18 },
-      { d: BRUSH_PATH_CROSS_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
+      { d: BRUSH_PATH_LOOP_A, viewBox: '0 0 1000 1000', rotateDeg: -12 },
+      { d: BRUSH_PATH_LOOP_B, viewBox: '0 0 1000 1000', rotateDeg: 18 },
+      { d: BRUSH_PATH_SWOOSH_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
       { d: BRUSH_PATH_RIBBON_B, viewBox: '0 0 1000 1000', rotateDeg: -10 },
     ],
     scale: 2.3,
   },
   {
-    id: 'cross',
+    id: 'swirl',
     layers: [
-      { d: BRUSH_PATH_CROSS_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
-      { d: BRUSH_PATH_CROSS_B, viewBox: '0 0 1000 1000', rotateDeg: 0, mirror: true },
+      { d: BRUSH_PATH_SWOOSH_A, viewBox: '0 0 1000 1000', rotateDeg: 0 },
+      { d: BRUSH_PATH_SWOOSH_B, viewBox: '0 0 1000 1000', rotateDeg: 0, mirror: true },
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: -12 },
-      { d: BRUSH_PATH_WAVE_B, viewBox: '0 0 1000 1000', rotateDeg: 20 },
+      { d: BRUSH_PATH_DAUB_A, viewBox: '0 0 1000 1000', rotateDeg: 20 },
     ],
     scale: 2.45,
   },
@@ -113,8 +132,8 @@ export const BRUSH_STROKE_VARIANTS: ReadonlyArray<BrushStrokeVariant> = [
     layers: [
       { d: BRUSH_PATH_SECONDARY, viewBox: '0 0 2250 2535', rotateDeg: -20 },
       { d: BRUSH_PATH_PRIMARY, viewBox: '0 0 2453 2273', rotateDeg: 15 },
-      { d: BRUSH_PATH_SPIRAL_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
-      { d: BRUSH_PATH_RIBBON_A, viewBox: '0 0 1000 1000', rotateDeg: -16, mirror: true },
+      { d: BRUSH_PATH_LOOP_A, viewBox: '0 0 1000 1000', rotateDeg: 8 },
+      { d: BRUSH_PATH_DAUB_B, viewBox: '0 0 1000 1000', rotateDeg: -16, mirror: true },
     ],
     scale: 2.55,
   },

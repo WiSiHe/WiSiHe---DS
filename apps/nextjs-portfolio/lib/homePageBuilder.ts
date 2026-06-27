@@ -23,7 +23,9 @@ export type HomeSkillsSection = Extract<HomePageSection, { _type: 'homeSkillsSec
 export type HomeContactCtaSection = Extract<HomePageSection, { _type: 'homeContactCtaSection' }>;
 
 export function getHomeSections(home: HomePageQueryResult | null): HomePageSection[] {
-  return (home?.sections ?? []) as HomePageSection[];
+  return (home?.sections ?? []).filter(
+    section => section._type !== 'homeContactCtaSection',
+  ) as HomePageSection[];
 }
 
 export function findHomeSection<T extends HomePageSection['_type']>(

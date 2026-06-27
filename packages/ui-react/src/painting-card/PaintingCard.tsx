@@ -173,6 +173,7 @@ export function PaintingCard({
 
   return (
     <motion.article
+      inherit={false}
       className={cn(
         'relative aspect-3/4 group overflow-hidden rounded-xl',
         'focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background',
@@ -226,21 +227,24 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Image container                                                    */}
       {/* ------------------------------------------------------------------ */}
-      <motion.div
-        className='relative w-full h-full'
-        layoutId={`image-${title}`}
-        variants={
-          brushReveal
-            ? undefined
-            : {
-                rest: { scale: 1 },
-                hover: showBlur ? { scale: 1 } : { scale: 1.05 },
-              }
-        }
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {image ?? <ImagePlaceholder />}
-      </motion.div>
+      {brushReveal ? (
+        <motion.div
+          className='absolute inset-0'
+          layoutId={`image-${title}`}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {image ?? <ImagePlaceholder />}
+        </motion.div>
+      ) : (
+        <div
+          className={cn(
+            'absolute inset-0 transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
+            !showBlur && 'group-hover:scale-105',
+          )}
+        >
+          {image ?? <ImagePlaceholder />}
+        </div>
+      )}
 
       {/* ------------------------------------------------------------------ */}
       {/* NSFW blur overlay                                                  */}

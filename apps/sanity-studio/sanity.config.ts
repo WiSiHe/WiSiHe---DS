@@ -7,7 +7,7 @@ import { defineConfig } from 'sanity';
 import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
-import { presentationResolve } from './presentation/resolve';
+import { presentationToolOptions } from './presentation/toolOptions';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
 
@@ -16,16 +16,6 @@ const dataset = process.env.SANITY_STUDIO_DATASET;
 
 // Environment configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
-const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://www.wisihe.no';
-
-// Allowed origins for preview/presentation tools
-const allowedOrigins = [
-  'https://wisihe.no',
-  'https://www.wisihe.no',
-  'http://localhost:3000',
-  'http://localhost:3001',
-];
-
 // Skip plugins when running CLI tools (schema extract, typegen)
 // Plugins cause esbuild to fail silently during schema extraction
 const isCliMode = process.env.SANITY_CLI_MODE === 'true';
@@ -45,16 +35,7 @@ const config = defineConfig({
         structureTool({ structure }),
 
         // Live preview and presentation
-        presentationTool({
-          resolve: presentationResolve,
-          previewUrl: {
-            origin: previewUrl,
-            previewMode: {
-              enable: '/api/draft-mode/enable',
-            },
-          },
-          allowOrigins: allowedOrigins,
-        }),
+        presentationTool(presentationToolOptions),
 
         codeInput(),
 

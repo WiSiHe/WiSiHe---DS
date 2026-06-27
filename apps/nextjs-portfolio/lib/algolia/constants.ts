@@ -15,6 +15,13 @@ export function replicaIndexName(suffix: keyof typeof ALGOLIA_REPLICA_SUFFIX): s
 /** Default filter for the paintings gallery — paintings only (NSFW included, blurred in UI). */
 export const PAINTINGS_INDEX_FILTER = '_type:"painting"';
 
+/** Paintings gallery with the Algolia “For sale” shop toggle pre-applied. */
+export function paintingsShopHref(): string {
+  const params = new URLSearchParams();
+  params.set(`${ALGOLIA_INDEX_NAME}[toggle][isForSale]`, 'true');
+  return `/paintings?${params.toString()}`;
+}
+
 /** Fields returned to the browser — keeps Algolia responses small. */
 export const PAINTING_HIT_ATTRIBUTES = [
   'objectID',

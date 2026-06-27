@@ -1,24 +1,33 @@
 'use client';
 
 /**
- * SVG brush strokes: organic paths draw on hover like paint; metadata sits above strokes.
- * GSAP targets `[data-hero-svg] path`. Parent should use `overflow-hidden` + radius.
+ * Hero painting hover — blend (full strokes + mix-blend), spotlight (accent), paintOver (opaque).
  */
 
 import { motion, type Variants } from 'motion/react';
-import { useId } from 'react';
+import { type CSSProperties, useId } from 'react';
 
+import {
+  type BrushStrokeProfile,
+  getBrushProfileConfig,
+  HERO_BRUSH_STROKE_WIDTH_REST,
+} from './brushStrokeConstants';
 import {
   type BrushStrokeLayer,
   getBrushStrokeVariant,
   paintingBrushSeed,
 } from './brushStrokeVariants';
 
+export {
+  HERO_BRUSH_STROKE_WIDTH_HOVER,
+  HERO_BRUSH_STROKE_WIDTH_REST,
+} from './brushStrokeConstants';
+
 /** Prepare paths for dash-offset animation (call once per card root that contains `[data-hero-svg]`). */
 export function initHeroSvgStrokePaths(root: HTMLElement | null, strokeScale = 1): void {
   if (!root) return;
-  const isCard = strokeScale < 1;
-  const restWidth = isCard ? 30 : HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
+  const profile = strokeScale < 1 ? getBrushProfileConfig('heroSpotlight') : null;
+  const restWidth = profile ? profile.rest : HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
   const paths = root.querySelectorAll<SVGPathElement>('[data-hero-svg] path');
   paths.forEach(path => {
     const len = path.getTotalLength();
@@ -31,18 +40,9 @@ export function initHeroSvgStrokePaths(root: HTMLElement | null, strokeScale = 1
   if (overlay instanceof HTMLElement) {
     overlay.style.opacity = '0';
   }
-  const vignette = root.querySelector('[data-hero-vignette]');
-  if (vignette instanceof HTMLElement) {
-    vignette.style.opacity = '0';
-  }
 }
 
 export { getBrushStrokeVariant, paintingBrushSeed };
-
-/** Initial / rest stroke width (hero). */
-export const HERO_BRUSH_STROKE_WIDTH_REST = 200;
-/** Peak stroke width on hover (hero). */
-export const HERO_BRUSH_STROKE_WIDTH_HOVER = 700;
 
 /**
  * Stroke colors for hero SVG hover — hex values taken from `@wisihe/tokens` primitives.
@@ -111,28 +111,30 @@ export function getHeroStrokeColors(index: number): {
   return { accentColor: pair.accent, secondaryColor: pair.secondary };
 }
 
+export type HeroPaintingHoverMode = 'spotlight' | 'paintOver' | 'blend';
+
 type HeroPaintingSvgHoverProps = {
   accentColor: string;
   secondaryColor: string;
   strokeVariantIndex?: number;
-  /** Multiplier for stroke width (card grids use ~0.4). */
-  strokeScale?: number;
   title?: string | null;
-  medium?: string | null;
-  year?: string | null;
-  tags?: string[] | null;
-  /** Image is covered by NSFW frost — strokes/metadata render on top of blur, not the artwork. */
   isNsfwBlurred?: boolean;
   useMotion?: boolean;
-  imageSrc?: string;
-  imageAlt?: string;
-  imageSizes?: string;
-  imagePriority?: boolean;
-  aspectRatio?: number;
+  /** Palette wash — paintOver (opaque) and blend (multiply). */
+  washColor?: string;
+  isHovered?: boolean;
+  titleOnly?: boolean;
+  /** blend: full strokes + mix-blend; spotlight: thin accent; paintOver: opaque grid-style. */
+  hoverMode?: HeroPaintingHoverMode;
 };
 
 const LAYER_BASE_CLASS =
-  'svg-stroke absolute left-1/2 top-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 origin-center';
+  'svg-stroke absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center';
+
+function layerSizeStyle(layerSizePercent: number): CSSProperties {
+  const size = `${layerSizePercent}%`;
+  return { width: size, height: size };
+}
 
 function layerTransform(layer: BrushStrokeLayer): string {
   return layer.mirror
@@ -140,9 +142,38 @@ function layerTransform(layer: BrushStrokeLayer): string {
     : `rotate(${layer.rotateDeg}deg)`;
 }
 
-function coverScale(variantScale: number, strokeScale: number): number {
-  if (strokeScale < 1) return Math.min(variantScale * 0.72, 1.65);
-  return variantScale;
+/** Smooth, calm draw — slow ease-in-out with soft opacity bloom. */
+const STROKE_DRAW_EASE = [0.42, 0.03, 0.58, 0.97] as const;
+const STROKE_WIDTH_EASE = [0.33, 0, 0.18, 1] as const;
+
+function strokePathVariants(
+  restStrokeWidth: number,
+  hoverStrokeWidth: number,
+  peakOpacity: number,
+  delay = 0,
+  drawDuration = 0.85,
+): Variants {
+  return {
+    initial: {
+      pathLength: 0,
+      strokeWidth: restStrokeWidth * 0.85,
+      opacity: 0,
+    },
+    hover: {
+      pathLength: 1,
+      strokeWidth: hoverStrokeWidth,
+      opacity: peakOpacity,
+      transition: {
+        pathLength: { duration: drawDuration, ease: STROKE_DRAW_EASE, delay },
+        strokeWidth: {
+          duration: drawDuration * 1.15,
+          ease: STROKE_WIDTH_EASE,
+          delay: delay + 0.06,
+        },
+        opacity: { duration: drawDuration * 0.65, ease: 'easeOut', delay: delay + 0.1 },
+      },
+    },
+  };
 }
 
 function BrushStrokeSvg({
@@ -153,6 +184,9 @@ function BrushStrokeSvg({
   useMotion,
   pathVariants,
   strokeWidthRest,
+  layerSizePercent,
+  motionState,
+  strokeBlendMode,
 }: {
   layer: BrushStrokeLayer;
   color: string;
@@ -161,6 +195,9 @@ function BrushStrokeSvg({
   useMotion: boolean;
   pathVariants?: Variants;
   strokeWidthRest: number;
+  layerSizePercent: number;
+  motionState?: 'initial' | 'hover';
+  strokeBlendMode?: CSSProperties['mixBlendMode'];
 }) {
   const paintProps = {
     stroke: color,
@@ -171,7 +208,14 @@ function BrushStrokeSvg({
   };
 
   return (
-    <div className={className} style={{ transform: layerTransform(layer) }}>
+    <div
+      className={className}
+      style={{
+        ...layerSizeStyle(layerSizePercent),
+        transform: layerTransform(layer),
+        ...(strokeBlendMode ? { mixBlendMode: strokeBlendMode } : {}),
+      }}
+    >
       <svg
         className='block h-full w-full'
         viewBox={layer.viewBox}
@@ -180,8 +224,14 @@ function BrushStrokeSvg({
         preserveAspectRatio='xMidYMid slice'
       >
         <title>Decorative brush stroke</title>
-        {useMotion && pathVariants ? (
-          <motion.path variants={pathVariants} d={layer.d} {...paintProps} />
+        {useMotion && pathVariants && motionState ? (
+          <motion.path
+            variants={pathVariants}
+            animate={motionState}
+            initial='initial'
+            d={layer.d}
+            {...paintProps}
+          />
         ) : (
           <path d={layer.d} strokeWidth={strokeWidthRest} {...paintProps} style={{ opacity: 0 }} />
         )}
@@ -190,79 +240,48 @@ function BrushStrokeSvg({
   );
 }
 
-function BrushMetadataOverlay({
-  tags,
+function TitleOverlay({
   title,
-  year,
-  medium,
-  accentColor,
-  isNsfwBlurred = false,
-  motionOverlay = false,
+  motionOverlay,
   overlayVariants,
+  motionState,
+  blendCaption = false,
 }: {
-  tags: string[];
   title?: string | null;
-  year?: string | null;
-  medium?: string | null;
-  accentColor: string;
-  isNsfwBlurred?: boolean;
   motionOverlay?: boolean;
   overlayVariants?: Variants;
+  motionState?: 'initial' | 'hover';
+  /** Blend hovers: scrim + shadow stack only. */
+  blendCaption?: boolean;
 }) {
-  const visibleTags = tags.slice(0, 4);
-  const chipClass =
-    'rounded-md bg-black/55 px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-sm sm:text-[10px]';
+  if (!title) return null;
 
   const content = (
-    <>
-      <div className='flex flex-wrap items-start gap-1 pr-6'>
-        {isNsfwBlurred ? (
-          <span className={`${chipClass} border-white/25 bg-black/65`}>Mature content</span>
-        ) : null}
-        {visibleTags.length > 0 ? (
-          <div className='flex flex-wrap gap-1' data-hero-tags>
-            {visibleTags.map(tag => (
-              <span
-                key={tag}
-                className={chipClass}
-                style={{ boxShadow: `0 0 10px ${accentColor}44` }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
-      {title ? (
-        <div data-hero-title className='mt-auto flex flex-col items-start text-left space-y-0.5'>
-          <p className='line-clamp-2 font-serif text-base font-medium leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:text-lg italic'>
-            {title}
-          </p>
-          {(year || medium) && (
-            <div className='flex flex-wrap items-center gap-1.5'>
-              {year && (
-                <span className='font-sans text-[9px] font-bold text-white/90 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10'>
-                  {year}
-                </span>
-              )}
-              {medium && (
-                <span className='font-mono text-[8px] uppercase tracking-wider text-white/80 drop-shadow-sm font-semibold truncate max-w-[150px]'>
-                  {medium}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-      ) : null}
-    </>
+    <div data-hero-title className='relative z-20 mt-auto text-left'>
+      <p
+        className={
+          blendCaption
+            ? 'line-clamp-2 font-serif text-base font-medium italic leading-tight text-white sm:text-lg [text-shadow:0_0_1px_rgba(0,0,0,1),0_1px_4px_rgba(0,0,0,0.92),0_6px_20px_rgba(0,0,0,0.78),0_14px_36px_rgba(0,0,0,0.55)] [-webkit-text-stroke:0.35px_rgba(0,0,0,0.45)]'
+            : 'line-clamp-2 font-serif text-base font-medium italic leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:text-lg'
+        }
+      >
+        {title}
+      </p>
+    </div>
   );
 
   const className =
-    'pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2 sm:p-2.5 opacity-0';
+    'pointer-events-none absolute inset-0 z-[22] flex flex-col justify-end p-2 sm:p-3';
 
-  if (motionOverlay && overlayVariants) {
+  if (motionOverlay && overlayVariants && motionState) {
     return (
-      <motion.div data-hero-overlay variants={overlayVariants} className={className}>
+      <motion.div
+        data-hero-overlay
+        variants={overlayVariants}
+        animate={motionState}
+        initial='initial'
+        className={className}
+      >
         {content}
       </motion.div>
     );
@@ -275,253 +294,119 @@ function BrushMetadataOverlay({
   );
 }
 
+function profileForMode(mode: HeroPaintingHoverMode): BrushStrokeProfile {
+  if (mode === 'paintOver') return 'heroCard';
+  if (mode === 'blend') return 'heroBlend';
+  return 'heroSpotlight';
+}
+
 export function HeroPaintingSvgHover({
   accentColor,
   secondaryColor,
   strokeVariantIndex = 0,
-  strokeScale = 1,
   title,
-  medium,
-  year,
-  tags,
   useMotion = false,
   isNsfwBlurred = false,
-  imageSrc,
-  aspectRatio = 3 / 4,
+  washColor,
+  isHovered = false,
+  titleOnly = true,
+  hoverMode = 'blend',
 }: HeroPaintingSvgHoverProps) {
+  const brushProfile = getBrushProfileConfig(profileForMode(hoverMode));
   const variant = getBrushStrokeVariant(strokeVariantIndex);
-  const isCard = strokeScale < 1;
-  const restStrokeWidth = isCard ? 30 : HERO_BRUSH_STROKE_WIDTH_REST * strokeScale;
-  const hoverStrokeWidth = isCard ? 46 : HERO_BRUSH_STROKE_WIDTH_HOVER * strokeScale;
-  const displayTags = (tags ?? []).filter(Boolean);
   const filterId = useId().replace(/:/g, '');
-  const scale = coverScale(variant.scale, strokeScale);
-
-  const pathVariants: Variants = {
-    initial: {
-      pathLength: 0,
-      strokeWidth: restStrokeWidth * 0.85,
-      opacity: 0,
-    },
-    rest: {
-      pathLength: 0,
-      strokeWidth: restStrokeWidth * 0.85,
-      opacity: 0,
-    },
-    hover: {
-      pathLength: 1,
-      strokeWidth: hoverStrokeWidth,
-      opacity: 0.85,
-      transition: {
-        pathLength: { duration: 0.9, ease: 'easeOut' },
-        strokeWidth: { duration: 0.9, ease: 'easeOut' },
-        opacity: { duration: 0.1 },
-      },
-    },
-  };
-
-  const pathVariantsDelayed: Variants = {
-    initial: {
-      pathLength: 0,
-      strokeWidth: restStrokeWidth * 0.85,
-      opacity: 0,
-    },
-    rest: {
-      pathLength: 0,
-      strokeWidth: restStrokeWidth * 0.85,
-      opacity: 0,
-    },
-    hover: {
-      pathLength: 1,
-      strokeWidth: hoverStrokeWidth,
-      opacity: 0.85,
-      transition: {
-        pathLength: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
-        strokeWidth: { duration: 0.9, ease: 'easeOut', delay: 0.15 },
-        opacity: { duration: 0.1, delay: 0.15 },
-      },
-    },
-  };
+  const scale = brushProfile.coverScale(variant.scale);
+  const layerColors = [accentColor, secondaryColor, accentColor, secondaryColor] as const;
+  const motionState = useMotion ? (isHovered ? 'hover' : 'initial') : undefined;
+  const isSpotlight = hoverMode === 'spotlight';
+  const isBlend = hoverMode === 'blend';
+  const isOpaquePaintOver = hoverMode === 'paintOver';
+  const layers = variant.layers.slice(0, brushProfile.layerCount);
+  const strokeDrawDuration = isBlend ? 0.82 : isSpotlight ? 0.68 : 0.95;
+  const layerStagger = isBlend ? 0.14 : 0.14;
 
   const overlayVariants: Variants = {
-    initial: { opacity: 0, y: 8 },
-    rest: { opacity: 0, y: 8 },
+    initial: { opacity: 0, y: 10 },
     hover: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const, delay: 0.3 },
+      transition: {
+        duration: isBlend ? 0.48 : 0.45,
+        ease: [0.33, 0, 0.2, 1],
+        delay: isSpotlight ? 0.12 : isBlend ? 0.28 : 0.3,
+      },
     },
   };
 
-  if (imageSrc) {
-    return (
-      <>
-        {!isNsfwBlurred ? (
-          <div
-            data-hero-vignette
-            className='pointer-events-none absolute inset-0 z-[5] bg-black/40 opacity-0'
-            aria-hidden
-          />
-        ) : null}
-        <div
-          data-hero-svg
-          data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
-          className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
-          aria-hidden
-          style={{ transform: `scale(${scale})` }}
-        >
-          <svg
-            viewBox={`0 0 800 ${800 / aspectRatio}`}
-            className='w-full h-full block'
-            preserveAspectRatio='xMidYMid slice'
-          >
-            <defs>
-              <filter id={filterId} x='-20%' y='-20%' width='140%' height='140%'>
-                <feGaussianBlur
-                  in='SourceGraphic'
-                  stdDeviation={isCard ? 1.2 : 2.5}
-                  result='blur'
-                />
-                <feMerge>
-                  <feMergeNode in='blur' />
-                  <feMergeNode in='SourceGraphic' />
-                </feMerge>
-              </filter>
-            </defs>
+  const washVariants: Variants = {
+    initial: { opacity: 0 },
+    hover: {
+      opacity: 1,
+      transition: { duration: 0.38, ease: [0.33, 0, 0.2, 1] },
+    },
+  };
 
-            {/* Base Image: Full color, normal opacity by default */}
-            <image
-              href={imageSrc}
-              width='100%'
-              height='100%'
-              preserveAspectRatio='xMidYMid slice'
-              className='transition-all duration-300'
-            />
+  const scrimVariants: Variants = {
+    initial: { opacity: 0 },
+    hover: { opacity: 1, transition: { duration: 0.35, ease: 'easeOut' } },
+  };
 
-            {/* Accent Paint Stroke Layer 1 */}
-            <g
-              style={{
-                transform: layerTransform(variant.layers[0]),
-                transformOrigin: 'center',
-              }}
-            >
-              <svg
-                viewBox={variant.layers[0].viewBox}
-                x='-20%'
-                y='-20%'
-                width='140%'
-                height='140%'
-                preserveAspectRatio='xMidYMid slice'
-              >
-                {useMotion ? (
-                  <motion.path
-                    variants={pathVariants}
-                    d={variant.layers[0].d}
-                    stroke={accentColor}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    fill='none'
-                    filter={`url(#${filterId})`}
-                  />
-                ) : (
-                  <path
-                    d={variant.layers[0].d}
-                    stroke={accentColor}
-                    strokeWidth={restStrokeWidth}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    fill='none'
-                    filter={`url(#${filterId})`}
-                    style={{ opacity: 0 }}
-                  />
-                )}
-              </svg>
-            </g>
+  const titleScrimVariants: Variants = {
+    initial: { opacity: 0 },
+    hover: { opacity: 1, transition: { duration: 0.28, ease: 'easeOut', delay: 0.1 } },
+  };
 
-            {/* Accent Paint Stroke Layer 2 */}
-            <g
-              style={{
-                transform: layerTransform(variant.layers[1]),
-                transformOrigin: 'center',
-              }}
-            >
-              <svg
-                viewBox={variant.layers[1].viewBox}
-                x='-20%'
-                y='-20%'
-                width='140%'
-                height='140%'
-                preserveAspectRatio='xMidYMid slice'
-              >
-                {useMotion ? (
-                  <motion.path
-                    variants={pathVariantsDelayed}
-                    d={variant.layers[1].d}
-                    stroke={secondaryColor}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    fill='none'
-                    filter={`url(#${filterId})`}
-                  />
-                ) : (
-                  <path
-                    d={variant.layers[1].d}
-                    stroke={secondaryColor}
-                    strokeWidth={restStrokeWidth}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    fill='none'
-                    filter={`url(#${filterId})`}
-                    style={{ opacity: 0 }}
-                  />
-                )}
-              </svg>
-            </g>
-          </svg>
-        </div>
-
-        {isNsfwBlurred ? (
-          <div
-            data-nsfw-blur
-            className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-            aria-hidden
-          />
-        ) : null}
-
-        <BrushMetadataOverlay
-          tags={displayTags}
-          title={title}
-          year={year}
-          medium={medium}
-          accentColor={accentColor}
-          isNsfwBlurred={isNsfwBlurred}
-          motionOverlay={useMotion}
-          overlayVariants={useMotion ? overlayVariants : undefined}
-        />
-      </>
-    );
-  }
-
-  const strokeLayer = (
+  return (
     <>
-      {!isNsfwBlurred ? (
-        <div
-          data-hero-vignette
-          className='pointer-events-none absolute inset-0 z-[5] bg-black/40 opacity-0'
+      {isSpotlight && !isNsfwBlurred ? (
+        <motion.div
+          data-hero-scrim
+          variants={useMotion ? scrimVariants : undefined}
+          animate={motionState}
+          initial='initial'
+          className='pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[48%] bg-gradient-to-t from-black/85 via-black/40 to-transparent'
           aria-hidden
         />
       ) : null}
+
+      {isBlend && !isNsfwBlurred ? (
+        <motion.div
+          data-hero-title-scrim
+          variants={useMotion ? titleScrimVariants : undefined}
+          animate={motionState}
+          initial='initial'
+          className='pointer-events-none absolute inset-x-0 bottom-0 z-[14] h-[40%] bg-gradient-to-t from-black/80 via-black/45 to-transparent'
+          aria-hidden
+        />
+      ) : null}
+
+      {isOpaquePaintOver && !isNsfwBlurred && washColor ? (
+        <motion.div
+          data-brush-wash
+          variants={useMotion ? washVariants : undefined}
+          animate={motionState}
+          initial='initial'
+          className='pointer-events-none absolute inset-0 z-[6]'
+          style={{ backgroundColor: washColor }}
+          aria-hidden
+        />
+      ) : null}
+
       <div
         data-hero-svg
         data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
-        className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
+        className={`pointer-events-none absolute inset-0 z-10 ${isOpaquePaintOver ? 'overflow-visible' : 'overflow-hidden'}`}
         aria-hidden
         style={{ transform: `scale(${scale})` }}
       >
         <svg className='absolute h-0 w-0' aria-hidden>
           <defs>
             <filter id={filterId} x='-20%' y='-20%' width='140%' height='140%'>
-              <feGaussianBlur in='SourceGraphic' stdDeviation={isCard ? 1.2 : 2.5} result='blur' />
+              <feGaussianBlur
+                in='SourceGraphic'
+                stdDeviation={brushProfile.strokeBlur}
+                result='blur'
+              />
               <feMerge>
                 <feMergeNode in='blur' />
                 <feMergeNode in='SourceGraphic' />
@@ -529,41 +414,50 @@ export function HeroPaintingSvgHover({
             </filter>
           </defs>
         </svg>
-        <BrushStrokeSvg
-          layer={variant.layers[0]}
-          color={accentColor}
-          filterId={filterId}
-          className={`${LAYER_BASE_CLASS} svg-stroke-1`}
-          useMotion={useMotion}
-          pathVariants={useMotion ? pathVariants : undefined}
-          strokeWidthRest={restStrokeWidth}
-        />
-        <BrushStrokeSvg
-          layer={variant.layers[1]}
-          color={secondaryColor}
-          filterId={filterId}
-          className={`${LAYER_BASE_CLASS} svg-stroke-2`}
-          useMotion={useMotion}
-          pathVariants={useMotion ? pathVariantsDelayed : undefined}
-          strokeWidthRest={restStrokeWidth}
-        />
+        {layers.map((layer, index) => (
+          <BrushStrokeSvg
+            key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+            layer={layer}
+            color={layerColors[index % layerColors.length] ?? accentColor}
+            filterId={filterId}
+            className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
+            useMotion={useMotion}
+            pathVariants={
+              useMotion
+                ? strokePathVariants(
+                    brushProfile.rest,
+                    brushProfile.hover,
+                    brushProfile.strokeOpacity,
+                    index * layerStagger,
+                    strokeDrawDuration,
+                  )
+                : undefined
+            }
+            strokeWidthRest={brushProfile.rest}
+            layerSizePercent={brushProfile.layerSizePercent}
+            motionState={motionState}
+            strokeBlendMode={isBlend ? 'hard-light' : undefined}
+          />
+        ))}
       </div>
-    </>
-  );
 
-  return (
-    <>
-      {strokeLayer}
-      <BrushMetadataOverlay
-        tags={displayTags}
-        title={title}
-        year={year}
-        medium={medium}
-        accentColor={accentColor}
-        isNsfwBlurred={isNsfwBlurred}
-        motionOverlay={useMotion}
-        overlayVariants={useMotion ? overlayVariants : undefined}
-      />
+      {isNsfwBlurred ? (
+        <div
+          data-nsfw-blur
+          className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+          aria-hidden
+        />
+      ) : null}
+
+      {titleOnly ? (
+        <TitleOverlay
+          title={title}
+          motionOverlay={useMotion}
+          overlayVariants={useMotion ? overlayVariants : undefined}
+          motionState={motionState}
+          blendCaption={isBlend}
+        />
+      ) : null}
     </>
   );
 }

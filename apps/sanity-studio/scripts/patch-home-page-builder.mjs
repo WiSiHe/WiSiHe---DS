@@ -102,16 +102,6 @@ function buildSections(doc) {
       eyebrow: '// Skills',
       title: 'What I work with',
     },
-    {
-      _type: 'homeContactCtaSection',
-      eyebrow: doc.contactCtaEyebrow,
-      title: doc.contactCtaTitle,
-      description: doc.contactCtaDescription,
-      primaryLabel: doc.contactCtaPrimaryLabel,
-      primaryUrl: doc.contactCtaPrimaryUrl,
-      secondaryLabel: doc.contactCtaSecondaryLabel,
-      secondaryUrl: doc.contactCtaSecondaryUrl,
-    },
   ].filter(Boolean);
 }
 

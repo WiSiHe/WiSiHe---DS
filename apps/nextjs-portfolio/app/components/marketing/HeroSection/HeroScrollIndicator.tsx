@@ -1,5 +1,6 @@
 'use client';
 
+import { IconChevronDown } from '@tabler/icons-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 type HeroScrollIndicatorProps = {
@@ -7,7 +8,7 @@ type HeroScrollIndicatorProps = {
 };
 
 /**
- * Decorative “scroll for more” hint above the fixed bottom nav (see HeaderNavigation).
+ * Icon-only scroll hint above the fixed bottom nav (see HeaderNavigation).
  */
 export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) {
   const reduceMotion = useReducedMotion();
@@ -17,33 +18,31 @@ export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) 
       {show && (
         <motion.div
           key='hero-scroll-indicator'
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
+          exit={{ opacity: 0, y: 8 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className='pointer-events-none absolute bottom-[calc(6.25rem+env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3'
+          className='pointer-events-none absolute bottom-[calc(6.25rem+env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-foreground/35'
           aria-hidden
         >
-          <span className='text-[10px] uppercase tracking-[0.3em] text-foreground/40 font-semibold select-none'>
-            Scroll
-          </span>
-          <div className='relative flex h-16 w-[1px] items-start justify-center overflow-hidden bg-foreground/10'>
-            <motion.div
-              className='h-1/2 w-full bg-accent shadow-[0_0_12px_var(--color-accent)]'
-              animate={
-                reduceMotion
-                  ? undefined
-                  : {
-                      y: ['-100%', '200%'],
-                    }
-              }
-              transition={{
-                duration: 1.5,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: 'linear',
-              }}
-            />
-          </div>
+          <motion.div
+            className='flex flex-col items-center -space-y-4'
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    y: [0, 5, 0],
+                  }
+            }
+            transition={{
+              duration: 1.8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'easeInOut',
+            }}
+          >
+            <IconChevronDown className='size-5 stroke-[1.75]' aria-hidden />
+            <IconChevronDown className='size-5 stroke-[1.75] opacity-50' aria-hidden />
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

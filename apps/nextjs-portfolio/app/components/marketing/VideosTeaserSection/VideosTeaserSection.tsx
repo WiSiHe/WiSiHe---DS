@@ -1,25 +1,31 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
-import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
-import { Button } from '@wisihe/ui-react';
-import { cn } from '@wisihe/utils';
 import { motion, useReducedMotion } from 'motion/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaPlay } from 'react-icons/fa';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
-import { urlForImage } from '@/sanity/lib/utils';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
-
-type VideoItem = NonNullable<HomeExtrasQueryResult>['videos'][number];
+import VideosMobileCarousel from './VideosMobileCarousel';
+import { VideoTeaserCard } from './VideoTeaserCard';
+import type { VideoItem } from './videoTeaserShared';
 
 const DEFAULT_COPY = {
   eyebrow: '// Motion',
   title: 'Process & playback',
-  description: 'Timelapses, animation tests, and game dev clips — a look behind the still frames.',
+  description: 'Timelapses, trailers, and process reels from painting and game work.',
   linkLabel: 'All videos',
+};
+
+const sectionEase = [0.22, 1, 0.36, 1] as const;
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: sectionEase, delay: index * 0.08 },
+  }),
 };
 
 type VideosTeaserSectionProps = {
@@ -27,77 +33,21 @@ type VideosTeaserSectionProps = {
   videos: VideoItem[];
 };
 
-function VideoTeaserCard({ video, index }: { video: VideoItem; index: number }) {
-  const thumbnailUrl = urlForImage(video.thumbnail);
-  const src = thumbnailUrl?.width(800).height(450).url();
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.35, delay: index * 0.08 }}
-    >
-      <Link
-        href={`/videos/${video.slug}`}
-        className={cn(
-          'group relative flex flex-col overflow-hidden rounded-2xl',
-          'border border-border bg-surface',
-          'transition-all duration-300 hover:-translate-y-1 hover:border-accent-border hover:shadow-xl',
-        )}
-      >
-        <div className='relative aspect-video w-full overflow-hidden'>
-          {src ? (
-            <Image
-              src={src}
-              alt={video.title ?? 'Video thumbnail'}
-              fill
-              sizes='(max-width: 768px) 100vw, 33vw'
-              className='object-cover transition-transform duration-500 group-hover:scale-105'
-              placeholder={video.thumbnail?.lqip ? 'blur' : 'empty'}
-              blurDataURL={video.thumbnail?.lqip ?? undefined}
-            />
-          ) : (
-            <div className='absolute inset-0 bg-surface-elevated' />
-          )}
-          <div className='absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/40' />
-          <div className='absolute inset-0 flex items-center justify-center'>
-            <div className='flex size-12 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm transition-transform group-hover:scale-110'>
-              <FaPlay className='ml-0.5 size-4 text-white' aria-hidden />
-            </div>
-          </div>
-          {video.featured ? (
-            <span className='absolute left-3 top-3 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-contrast'>
-              Featured
-            </span>
-          ) : null}
-        </div>
-        <div className='flex flex-col gap-1 p-4'>
-          <h3 className='font-semibold text-foreground transition-colors group-hover:text-accent'>
-            {video.title}
-          </h3>
-          {video.description ? (
-            <p className='line-clamp-2 text-sm text-foreground-subtle'>{video.description}</p>
-          ) : null}
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
 export default function VideosTeaserSection({ intro, videos }: VideosTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = mounted && prefersReducedMotion;
+  const reducedMotion = Boolean(mounted && prefersReducedMotion);
 
   if (videos.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
+  const [heroVideo, ...secondaryVideos] = videos;
+  if (!heroVideo) return null;
 
   return (
     <section
-      className='border-t border-border/20 bg-surface py-24 px-4 md:px-8'
+      className='border-t border-border/20 bg-background py-24 px-4 md:px-8'
       aria-labelledby='videos-teaser-heading'
     >
       <div className='mx-auto max-w-7xl'>
@@ -109,29 +59,59 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
             headingId='videos-teaser-heading'
             align='left'
           />
-          <Button
-            as={Link}
+          <Link
             href='/videos'
-            variant='secondary'
-            size='medium'
-            Icon={IconArrowRight}
-            iconPosition='right'
-            className='shrink-0 rounded-full'
+            className='group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-border/60 bg-surface px-5 py-2.5 text-sm font-semibold uppercase tracking-wider text-foreground transition-[border-color,background-color,color,transform] duration-300 hover:border-accent/45 hover:bg-accent hover:text-accent-contrast'
           >
             {copy.linkLabel}
-          </Button>
+            <IconArrowRight
+              aria-hidden
+              className='size-4 transition-transform duration-300 group-hover:translate-x-0.5'
+            />
+          </Link>
         </div>
 
-        <div
-          className={cn(
-            'grid gap-6',
-            videos.length === 1 ? 'grid-cols-1 max-w-xl mx-auto' : 'md:grid-cols-2 lg:grid-cols-3',
-          )}
-        >
-          {videos.map((video, index) => (
-            <VideoTeaserCard key={video._id} video={video} index={reducedMotion ? 0 : index} />
-          ))}
-        </div>
+        <VideosMobileCarousel videos={videos} />
+
+        {videos.length === 1 ? (
+          <div className='hidden lg:block'>
+            <motion.div
+              custom={0}
+              variants={reducedMotion ? undefined : cardVariants}
+              initial={reducedMotion ? false : 'hidden'}
+              whileInView={reducedMotion ? undefined : 'visible'}
+              viewport={{ once: true, margin: '-40px' }}
+            >
+              <VideoTeaserCard video={heroVideo} index={0} featuredLayout />
+            </motion.div>
+          </div>
+        ) : (
+          <ul className='hidden gap-6 lg:grid lg:grid-cols-12'>
+            <motion.li
+              className='lg:col-span-8'
+              custom={0}
+              variants={reducedMotion ? undefined : cardVariants}
+              initial={reducedMotion ? false : 'hidden'}
+              whileInView={reducedMotion ? undefined : 'visible'}
+              viewport={{ once: true, margin: '-40px' }}
+            >
+              <VideoTeaserCard video={heroVideo} index={0} featuredLayout />
+            </motion.li>
+            {secondaryVideos.map((video, i) => (
+              <motion.li
+                key={video._id}
+                className='lg:col-span-4'
+                custom={i + 1}
+                variants={reducedMotion ? undefined : cardVariants}
+                initial={reducedMotion ? false : 'hidden'}
+                whileInView={reducedMotion ? undefined : 'visible'}
+                viewport={{ once: true, margin: '-40px' }}
+              >
+                <VideoTeaserCard video={video} index={i + 1} />
+              </motion.li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

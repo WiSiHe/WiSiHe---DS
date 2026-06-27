@@ -96,6 +96,16 @@
     hyphens: none;
   }
 
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  ::-moz-selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
   /* Accessibility - focus rings use semantic ring token */
   :where(button, a, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-ring);

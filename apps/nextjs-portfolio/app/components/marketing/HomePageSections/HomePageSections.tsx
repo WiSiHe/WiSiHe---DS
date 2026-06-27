@@ -3,7 +3,6 @@ import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-que
 import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import AboutTeaserSection from '@/app/components/marketing/AboutTeaserSection/AboutTeaserSection';
-import ContactCtaSection from '@/app/components/marketing/ContactCtaSection/ContactCtaSection';
 import HeroImageSection from '@/app/components/marketing/HeroSection/HeroSection';
 import ShopTeaserSection from '@/app/components/marketing/ShopTeaserSection/ShopTeaserSection';
 import SkillsSection from '@/app/components/marketing/SkillsSection/SkillsSection';
@@ -50,7 +49,7 @@ function renderSection(
   switch (section._type) {
     case 'homeHeroSection':
       return (
-        <div key={key} className='overflow-visible bg-background'>
+        <div key={key} className='relative overflow-visible'>
           <Suspense fallback={<HeroSkeleton />}>
             <HeroImageSection
               items={heroItems}
@@ -64,14 +63,12 @@ function renderSection(
 
     case 'homeProjectsSection':
       return (
-        <section key={key} className='relative bg-background pt-24 pb-12'>
-          <Suspense fallback={<SectionSkeleton />}>
-            <FeaturedProjects
-              showcaseProjects={section.showcaseProjects}
-              projectsDescription={section.description}
-            />
-          </Suspense>
-        </section>
+        <Suspense key={key} fallback={<SectionSkeleton />}>
+          <FeaturedProjects
+            showcaseProjects={section.showcaseProjects}
+            projectsDescription={section.description}
+          />
+        </Suspense>
       );
 
     case 'homePaintingsSection':
@@ -100,7 +97,12 @@ function renderSection(
     case 'homeShopTeaserSection':
       if (!extras?.forSalePaintings?.length) return null;
       return (
-        <ShopTeaserSection key={key} intro={section.intro} paintings={extras.forSalePaintings} />
+        <ShopTeaserSection
+          key={key}
+          intro={section.intro}
+          paintings={extras.forSalePaintings}
+          forSaleCount={extras.forSalePaintingsCount}
+        />
       );
 
     case 'homeSkillsSection':
@@ -111,7 +113,7 @@ function renderSection(
       );
 
     case 'homeContactCtaSection':
-      return <ContactCtaSection key={key} section={section} about={about} />;
+      return null;
 
     default:
       return null;

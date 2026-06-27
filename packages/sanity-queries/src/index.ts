@@ -432,7 +432,8 @@ export const homePageQuery = defineQuery(`
           "slug": slug.current,
           image{
             ...,
-            "lqip": asset->metadata.lqip
+            "lqip": asset->metadata.lqip,
+            "aspectRatio": asset->metadata.dimensions.aspectRatio
           }
         }
       },
@@ -445,14 +446,14 @@ export const homePageQuery = defineQuery(`
             "slug": slug.current,
             title, format, isFeatured, isNSFW, medium, paintedAt,
             tagsV2[]->{name},
-            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
+            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }
           },
           *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
             _type, _id, altText,
             "slug": slug.current,
             title, format, isFeatured, isNSFW, medium, paintedAt,
             tagsV2[]->{name},
-            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio }
+            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }
           }
         )
       },
@@ -528,7 +529,10 @@ export const homeExtrasQuery = defineQuery(`{
         "lqip": asset->metadata.lqip,
         "aspectRatio": asset->metadata.dimensions.aspectRatio
       }
-    }
+    },
+  "forSalePaintingsCount": count(*[_type == "painting" && defined(slug.current) && isNSFW != true && (
+      isForSale == true || defined(redbubbleUrl) || defined(gelatoUrl)
+    )])
 }`);
 
 export const getAllPaintingsandTags = defineQuery(`
@@ -551,7 +555,8 @@ export const getAllPaintingsandTags = defineQuery(`
         image {
           ...,
           "lqip": asset->metadata.lqip,
-          "aspectRatio": asset->metadata.dimensions.aspectRatio
+          "aspectRatio": asset->metadata.dimensions.aspectRatio,
+          "palette": asset->metadata.palette
         }
       },
     "tags": *[
@@ -585,7 +590,8 @@ export const getPaginatedPaintings = defineQuery(`
     image {
       ...,
       "lqip": asset->metadata.lqip,
-      "aspectRatio": asset->metadata.dimensions.aspectRatio
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "palette": asset->metadata.palette
     }
   }
 `);
@@ -619,7 +625,8 @@ export const getFilteredPaginatedPaintings = defineQuery(`
     image {
       ...,
       "lqip": asset->metadata.lqip,
-      "aspectRatio": asset->metadata.dimensions.aspectRatio
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "palette": asset->metadata.palette
     }
   }
 `);
@@ -899,7 +906,8 @@ export const randomPaintingsQuery = defineQuery(`
     image{
       ...,
       "lqip": asset->metadata.lqip,
-      "aspectRatio": asset->metadata.dimensions.aspectRatio
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      "palette": asset->metadata.palette
     }
   }
 `);
