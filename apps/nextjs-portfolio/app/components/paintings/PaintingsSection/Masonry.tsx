@@ -9,30 +9,35 @@ import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-
 import {
-  getHeroStrokeColors,
-  HeroPaintingSvgHover,
-  initHeroSvgStrokePaths,
-} from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import {
-  CARD_BRUSH_STROKE_SCALE,
+  brushRevealInstant,
+  brushRevealInstantLeave,
+  initBrushRevealPaths,
   paintingSvgBrushEnter,
   paintingSvgBrushLeave,
 } from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
+import {
+  type BrushRevealBadge,
+  BrushRevealLayer,
+} from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
+import { prefersReducedMotion } from '@/lib/paintings/mediaCapabilities';
 
 export type MasonryItem = {
   id: string;
   img: string;
+  lqip?: string;
   url: string;
-  /** Logical height used for column packing (pixels) */
   height: number;
   title?: string;
-  /** Seed for brush stroke color + shape variant */
   strokeIndex: number;
+  accentColor: string;
+  secondaryColor: string;
+  washColor: string;
   medium?: string;
   year?: string;
   tags?: string[];
+  badges?: BrushRevealBadge[];
+  isNsfwBlurred?: boolean;
 };
 
 type MasonryProps = {
@@ -200,9 +205,7 @@ const Masonry = ({
   useLayoutEffect(() => {
     if (!imagesReady || !grid.length) return;
 
-    const reduced =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = prefersReducedMotion();
 
     grid.forEach((item, index) => {
       const selector = `[data-masonry-key="${CSS.escape(item.id)}"]`;
@@ -248,23 +251,32 @@ const Masonry = ({
       const tile = containerRef.current?.querySelector<HTMLElement>(
         `[data-masonry-key="${CSS.escape(item.id)}"]`,
       );
-      if (tile) initHeroSvgStrokePaths(tile, CARD_BRUSH_STROKE_SCALE);
+      if (tile) initBrushRevealPaths(tile);
     });
   }, [grid, imagesReady]);
 
-  const handleMouseEnter = (id: string, el: HTMLElement) => {
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
+  const runBrushEnter = (id: string, el: HTMLElement) => {
+    svgHoverTlByIdRef.current.get(id)?.kill();
+    if (prefersReducedMotion()) {
+      brushRevealInstant(el);
       return;
     }
-    const item = grid.find(g => g.id === id);
-    if (item) {
-      svgHoverTlByIdRef.current.get(id)?.kill();
-      const tl = paintingSvgBrushEnter(el, CARD_BRUSH_STROKE_SCALE);
-      svgHoverTlByIdRef.current.set(id, tl);
+    const tl = paintingSvgBrushEnter(el);
+    svgHoverTlByIdRef.current.set(id, tl);
+  };
+
+  const runBrushLeave = (id: string, el: HTMLElement) => {
+    svgHoverTlByIdRef.current.get(id)?.kill();
+    svgHoverTlByIdRef.current.delete(id);
+    if (prefersReducedMotion()) {
+      brushRevealInstantLeave(el);
+      return;
     }
+    paintingSvgBrushLeave(el);
+  };
+
+  const handleMouseEnter = (id: string, el: HTMLElement) => {
+    runBrushEnter(id, el);
     if (!scaleOnHover) return;
     gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
       scale: hoverScale,
@@ -278,18 +290,7 @@ const Masonry = ({
   };
 
   const handleMouseLeave = (id: string, el: HTMLElement) => {
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      return;
-    }
-    const item = grid.find(g => g.id === id);
-    if (item) {
-      svgHoverTlByIdRef.current.get(id)?.kill();
-      svgHoverTlByIdRef.current.delete(id);
-      paintingSvgBrushLeave(el, CARD_BRUSH_STROKE_SCALE);
-    }
+    runBrushLeave(id, el);
     if (!scaleOnHover) return;
     gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
       scale: 1,
@@ -331,17 +332,27 @@ const Masonry = ({
                 fill
                 className='object-cover'
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
+                placeholder={item.lqip ? 'blur' : 'empty'}
+                blurDataURL={item.lqip}
               />
-              <HeroPaintingSvgHover
-                {...getHeroStrokeColors(item.strokeIndex)}
+              {item.isNsfwBlurred ? (
+                <div
+                  data-nsfw-blur
+                  className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+                  aria-hidden
+                />
+              ) : null}
+              <BrushRevealLayer
+                accentColor={item.accentColor}
+                secondaryColor={item.secondaryColor}
+                washColor={item.washColor}
                 strokeVariantIndex={item.strokeIndex}
-                strokeScale={CARD_BRUSH_STROKE_SCALE}
                 title={item.title ?? null}
                 medium={item.medium ?? null}
                 year={item.year ?? null}
                 tags={item.tags}
-                useMotion={false}
-                aspectRatio={item.w / item.h}
+                badges={item.badges}
+                isNsfwBlurred={item.isNsfwBlurred}
               />
               {colorShiftOnHover ? (
                 <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />

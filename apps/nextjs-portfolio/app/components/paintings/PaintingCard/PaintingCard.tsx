@@ -6,21 +6,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
 import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
+import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
+import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
+import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
+import { useCanBrushReveal } from '@/lib/paintings/mediaCapabilities';
 import {
-  getHeroStrokeColors,
-  HeroPaintingSvgHover,
+  getPaintingImageLqip,
   paintingBrushSeed,
-} from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import { CARD_BRUSH_STROKE_SCALE } from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
-import { PaintingCardSvgHoverWrap } from '@/app/components/paintings/PaintingCard/PaintingCardSvgHoverWrap';
-import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
+  resolvePaintingCardLayout,
+  urlForPaintingCard,
+} from '@/lib/paintings/paintingCardImage';
 
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
-// Loose type so this adapter works with both Sanity GROQ results and Algolia hits
-// (avoids brittle dependency on generated types that resolve to `never` when typegen fails)
 type PaintingData = Record<string, unknown> & {
   _id?: string;
   slug?: string | null;
@@ -30,19 +26,11 @@ type PaintingData = Record<string, unknown> & {
 type PaintingCardAdapterProps = {
   paintingData: PaintingData;
   shouldBeLazy?: boolean;
-  /** Set true when the user has actively filtered for NSFW in InstantSearch */
   isNsfwFilterActive?: boolean;
-  /** Optional override for brush color/variant; defaults to a stable hash from painting id */
   svgHoverIndex?: number;
-  /** Tags + title strip stay visible without hover (e.g. touch / mobile carousel). */
   alwaysShowTags?: boolean;
-  /** Passed through to PaintingCard — use to override aspect ratio via tailwind-merge */
   className?: string;
 };
-
-// ---------------------------------------------------------------------------
-// Adapter
-// ---------------------------------------------------------------------------
 
 const PaintingCardAdapter = ({
   paintingData,
@@ -52,9 +40,10 @@ const PaintingCardAdapter = ({
   alwaysShowTags = false,
   className,
 }: PaintingCardAdapterProps) => {
+  const canBrushReveal = useCanBrushReveal();
+
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
-  // biome-ignore lint/suspicious/noExplicitAny: Sanity result shape varies by query
   const {
     image,
     title = '',
@@ -71,26 +60,19 @@ const PaintingCardAdapter = ({
     medium,
     paintedAt,
     format,
+    palette,
+    // biome-ignore lint/suspicious/noExplicitAny: Sanity / Algolia hit shape varies by query
   } = paintingData as any;
-
-  const imageAspectRatio = image
-    ? getCroppedAspectRatio(image)
-    : format === 'landscape'
-      ? 4 / 3
-      : format === 'square'
-        ? 1
-        : 3 / 4;
 
   const availableForSale =
     isForSale === true || hasStoreLink === true || Boolean(redbubbleUrl || gelatoUrl);
 
-  // Extract year from paintedAt date string safely
   let yearString: string | undefined;
   if (paintedAt) {
     if (typeof paintedAt === 'string') {
       if (paintedAt.includes('-')) {
         const d = new Date(paintedAt);
-        if (!isNaN(d.getTime())) {
+        if (!Number.isNaN(d.getTime())) {
           yearString = d.getFullYear().toString();
         }
       } else {
@@ -112,11 +94,13 @@ const PaintingCardAdapter = ({
     ? cleanedTags.filter(tag => !/^nsfw$/i.test(tag.trim()))
     : cleanedTags;
 
-  const width = 800;
-  const height = Math.round(width / imageAspectRatio);
-  const imageSrc = image
-    ? urlForImage(image)?.width(width).height(height).fit('crop').quality(80).auto('format').url()
-    : null;
+  const layout = resolvePaintingCardLayout({
+    format,
+    aspectRatio: image?.aspectRatio ?? null,
+  });
+
+  const imageSrc = urlForPaintingCard(image, layout);
+  const lqip = getPaintingImageLqip(image);
 
   const imageEl = imageSrc ? (
     <Image
@@ -126,8 +110,8 @@ const PaintingCardAdapter = ({
       sizes='(min-width: 1040px) 20vw, 50vw'
       priority={shouldBeLazy}
       fetchPriority={shouldBeLazy ? 'high' : 'auto'}
-      placeholder={image?.lqip ? 'blur' : 'empty'}
-      blurDataURL={image?.lqip ?? undefined}
+      placeholder={lqip ? 'blur' : 'empty'}
+      blurDataURL={lqip}
       quality={80}
       className='object-cover w-full h-full'
     />
@@ -135,28 +119,8 @@ const PaintingCardAdapter = ({
 
   const brushSeed = paintingBrushSeed(String(paintingData._id ?? slug ?? title ?? 'painting'));
   const brushIndex = svgHoverIndex ?? brushSeed;
+  const strokeColors = getBrushStrokeColors(brushIndex, palette ?? image?.palette);
   const normalized = slug ?? '';
-
-  const imageNode = imageSrc ? (
-    <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
-      <HeroPaintingSvgHover
-        {...getHeroStrokeColors(brushIndex)}
-        strokeVariantIndex={brushIndex}
-        strokeScale={CARD_BRUSH_STROKE_SCALE}
-        title={title || null}
-        medium={medium ?? null}
-        year={yearString ?? null}
-        tags={brushTags}
-        isNsfwBlurred={showNsfwBlur}
-        useMotion={false}
-        imageSrc={imageSrc}
-        imageAlt={title || 'Painting'}
-        imageSizes='(min-width: 1040px) 20vw, 50vw'
-        imagePriority={shouldBeLazy}
-        aspectRatio={imageAspectRatio}
-      />
-    </div>
-  ) : undefined;
 
   const badges: PaintingCardBadge[] = [];
   if (isFanArt === true) {
@@ -177,6 +141,33 @@ const PaintingCardAdapter = ({
     badges.push({ key: 'video', icon: <BsYoutube className='w-4 h-4' />, label: 'Has video' });
   }
 
+  const showTagsWithoutBrush = alwaysShowTags || !canBrushReveal;
+
+  const imageNode = imageEl ? (
+    <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
+      {imageEl}
+      {showNsfwBlur ? (
+        <div
+          data-nsfw-blur
+          className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+          aria-hidden
+        />
+      ) : null}
+      {canBrushReveal ? (
+        <BrushRevealLayer
+          {...strokeColors}
+          strokeVariantIndex={brushIndex}
+          title={title || null}
+          medium={medium ?? null}
+          year={yearString ?? null}
+          tags={brushTags}
+          badges={badges}
+          isNsfwBlurred={showNsfwBlur}
+        />
+      ) : null}
+    </div>
+  ) : undefined;
+
   const card = (
     <PaintingCard
       title={title}
@@ -188,23 +179,19 @@ const PaintingCardAdapter = ({
       isNsfwVisible={isNsfwFilterActive}
       isForSale={availableForSale}
       badges={badges}
-      alwaysShowTags={alwaysShowTags}
-      brushReveal
-      className={className}
+      alwaysShowTags={showTagsWithoutBrush}
+      brushReveal={canBrushReveal}
+      className={className ?? layout.aspectClass}
       medium={medium}
       paintedAt={yearString}
     />
   );
 
-  if (!imageEl) {
+  if (!imageEl || !canBrushReveal) {
     return card;
   }
 
-  return (
-    <PaintingCardSvgHoverWrap strokeScale={CARD_BRUSH_STROKE_SCALE}>
-      {card}
-    </PaintingCardSvgHoverWrap>
-  );
+  return <BrushRevealWrap>{card}</BrushRevealWrap>;
 };
 
 export default PaintingCardAdapter;

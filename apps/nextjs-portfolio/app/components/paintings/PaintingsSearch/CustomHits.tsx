@@ -50,7 +50,7 @@ function SkeletonGrid() {
   );
 }
 
-// Aspect class based on painting format
+// Aspect class based on painting format — used by skeleton only
 function aspectClass(format: string): string {
   if (format === 'landscape') return 'aspect-[4/3]';
   if (format === 'portrait') return 'aspect-[3/4]';
@@ -95,7 +95,6 @@ export default function CustomHits() {
       <motion.div layout className='columns-2 sm:columns-3 gap-2 mt-4'>
         <AnimatePresence mode='popLayout'>
           {items.map((hit, index) => {
-            const format = (hit['format'] as string) || 'square';
             const rawSlug = hit['slug'] as string | { current?: string } | undefined;
             const adaptedPaintingData = {
               ...hit,
@@ -104,6 +103,9 @@ export default function CustomHits() {
               isNSFW: hit['isNSFW'] === true,
               isForSale: hit['isForSale'] === true,
               hasStoreLink: hit['hasStoreLink'] === true,
+              isFanArt: hit['isFanArt'] === true,
+              video: hit['video'] ?? '',
+              imagesCount: hit['imagesCount'] ?? 0,
               tagsV2: hit['tags']
                 ? (hit['tags'] as string[]).map((t: string) => ({ name: t }))
                 : [],
@@ -124,7 +126,6 @@ export default function CustomHits() {
                   paintingData={adaptedPaintingData as any}
                   shouldBeLazy={index < 6}
                   isNsfwFilterActive={isNsfwFilterActive}
-                  className={aspectClass(format)}
                 />
               </motion.div>
             );

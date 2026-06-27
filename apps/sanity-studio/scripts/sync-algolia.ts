@@ -71,22 +71,33 @@ const query = `
     medium,
     paintedAt,
     isFeatured,
+    isFanArt,
+    video,
+    "imagesCount": count(coalesce(images, [])),
     "palette": image.asset->metadata.palette,
     "image": coalesce(
       image{
         ...,
+        hotspot,
+        crop,
+        alt,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio,
         "asset": {
           "_ref": asset._ref,
-          "_type": "reference",
-          "lqip": asset->metadata.lqip
+          "_type": "reference"
         }
       },
       mainImage{
         ...,
+        hotspot,
+        crop,
+        alt,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio,
         "asset": {
           "_ref": asset._ref,
-          "_type": "reference",
-          "lqip": asset->metadata.lqip
+          "_type": "reference"
         }
       }
     )
@@ -187,6 +198,10 @@ async function syncToAlgolia() {
         medium: doc.medium || null,
         paintedAt: doc.paintedAt || null,
         isFeatured: doc.isFeatured === true,
+        isFanArt: doc.isFanArt === true,
+        video: doc.video || null,
+        imagesCount: typeof doc.imagesCount === 'number' ? doc.imagesCount : 0,
+        palette: doc.palette || null,
         dominantColors: extractColors(doc.palette),
         image: doc.image || null,
         views,
