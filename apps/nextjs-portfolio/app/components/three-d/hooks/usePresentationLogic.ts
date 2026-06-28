@@ -1,15 +1,9 @@
-import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PresentationSlide } from '../../../three-d/types';
 
 interface UsePresentationLogicProps {
   slides: PresentationSlide[];
-  mainRef?: RefObject<HTMLElement | null>;
-  technicalDeckRef?: RefObject<HTMLDivElement | null>;
-  technicalSeparatorRef?: RefObject<HTMLElement | null>;
-}
-
-function getScrollRoot(mainRef?: RefObject<HTMLElement | null>): HTMLElement | null {
-  return mainRef?.current ?? null;
+  scrollRoot: HTMLElement | null;
 }
 
 function scrollElementIntoRoot(
@@ -23,16 +17,10 @@ function scrollElementIntoRoot(
   root.scrollTo({ top: targetTop, behavior });
 }
 
-export const usePresentationLogic = ({
-  slides,
-  mainRef,
-  technicalDeckRef,
-  technicalSeparatorRef,
-}: UsePresentationLogicProps) => {
+export const usePresentationLogic = ({ slides, scrollRoot }: UsePresentationLogicProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showCategoryTransition, setShowCategoryTransition] = useState(false);
   const [previousSlideIndex, setPreviousSlideIndex] = useState(0);
-  const [isTechnicalSectionVisible, setIsTechnicalSectionVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,16 +30,18 @@ export const usePresentationLogic = ({
   const currentSlideRef = useRef(0);
   const previousSlideIndexRef = useRef(0);
   const isScrolledRef = useRef(false);
-  const isTechnicalSectionVisibleRef = useRef(false);
 
   const rafIdRef = useRef<number | null>(null);
   const pendingUpdatesRef = useRef<{
     currentSlide?: number;
     previousSlideIndex?: number;
     showCategoryTransition?: boolean;
-    isTechnicalSectionVisible?: boolean;
     isScrolled?: boolean;
   }>({});
+
+  const technicalDeckIndex = slides.findIndex(s => s.customComponent === 'TechnicalDeck');
+  const technicalSeparatorIndex = slides.findIndex(s => s.customComponent === 'TechnicalSeparator');
+  const isTechnicalSectionVisible = currentSlide === technicalDeckIndex;
 
   const flushPendingUpdates = useCallback(() => {
     if (rafIdRef.current !== null) {
@@ -77,14 +67,6 @@ export const usePresentationLogic = ({
         setShowCategoryTransition(updates.showCategoryTransition);
       }
 
-      if (
-        updates.isTechnicalSectionVisible !== undefined &&
-        updates.isTechnicalSectionVisible !== isTechnicalSectionVisibleRef.current
-      ) {
-        isTechnicalSectionVisibleRef.current = updates.isTechnicalSectionVisible;
-        setIsTechnicalSectionVisible(updates.isTechnicalSectionVisible);
-      }
-
       if (updates.isScrolled !== undefined && updates.isScrolled !== isScrolledRef.current) {
         isScrolledRef.current = updates.isScrolled;
         setIsScrolled(updates.isScrolled);
@@ -97,58 +79,19 @@ export const usePresentationLogic = ({
 
   const scrollToSlide = useCallback(
     (index: number, behavior: ScrollBehavior = 'smooth') => {
-      const root = getScrollRoot(mainRef);
       const slide = slideRefs.current[index];
-      if (!root || !slide) return;
-      scrollElementIntoRoot(root, slide, behavior);
+      if (!scrollRoot || !slide) return;
+      scrollElementIntoRoot(scrollRoot, slide, behavior);
     },
-    [mainRef],
+    [scrollRoot],
   );
-
-  const scrollToElementInRoot = useCallback(
-    (element: HTMLElement | null | undefined, behavior: ScrollBehavior = 'smooth') => {
-      const root = getScrollRoot(mainRef);
-      if (!root || !element) return;
-      scrollElementIntoRoot(root, element, behavior);
-    },
-    [mainRef],
-  );
-
-  // Technical section visibility — observe within the deck scroll root
-  useEffect(() => {
-    const root = getScrollRoot(mainRef);
-    if (!technicalDeckRef?.current || !root) return;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          const isVisible = entry.isIntersecting;
-          if (isVisible !== isTechnicalSectionVisibleRef.current) {
-            pendingUpdatesRef.current.isTechnicalSectionVisible = isVisible;
-            flushPendingUpdates();
-          }
-        });
-      },
-      {
-        root,
-        threshold: 0.1,
-        rootMargin: '-20% 0px -20% 0px',
-      },
-    );
-
-    observer.observe(technicalDeckRef.current);
-    return () => {
-      observer.disconnect();
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
-    };
-  }, [technicalDeckRef, mainRef, flushPendingUpdates]);
 
   // Slide tracking — root must be the same element that scrolls
   useEffect(() => {
-    const root = getScrollRoot(mainRef);
-    if (!root) return;
+    if (!scrollRoot) return;
+
+    // Rescale slideRefs array length to avoid stale refs if slide list changes length
+    slideRefs.current = slideRefs.current.slice(0, slides.length);
 
     const observers: IntersectionObserver[] = [];
     let categoryTransitionTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -159,7 +102,8 @@ export const usePresentationLogic = ({
       const observer = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.55) {
+            // Lower threshold (0.5) to reliably fire on smaller viewports where h-[100dvh] is slightly truncated
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
               const newCategory = slides[index]?.category;
               const previousCategory = previousCategoryRef.current;
 
@@ -190,9 +134,9 @@ export const usePresentationLogic = ({
           });
         },
         {
-          root,
-          threshold: [0.55, 0.65, 0.75],
-          rootMargin: '-12% 0px -12% 0px',
+          root: scrollRoot,
+          threshold: [0.5, 0.6, 0.7],
+          rootMargin: '-10% 0px -10% 0px',
         },
       );
 
@@ -211,13 +155,23 @@ export const usePresentationLogic = ({
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [slides.length, slides, mainRef, flushPendingUpdates]);
+  }, [slides, scrollRoot, flushPendingUpdates]);
 
   // Keyboard navigation — scroll the deck container, not the window
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const root = getScrollRoot(mainRef);
-      if (!root) return;
+      if (!scrollRoot) return;
+
+      // Ignore key events when the user is typing in form inputs
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          (activeEl instanceof HTMLElement && activeEl.isContentEditable))
+      ) {
+        return;
+      }
 
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
         e.preventDefault();
@@ -234,15 +188,14 @@ export const usePresentationLogic = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [slides.length, mainRef, scrollToSlide]);
+  }, [slides.length, scrollRoot, scrollToSlide]);
 
   // Scroll position on the deck root (not the inner wrapper)
   useEffect(() => {
-    const root = getScrollRoot(mainRef);
-    if (!root) return;
+    if (!scrollRoot) return;
 
     const handleScroll = () => {
-      const scrolled = root.scrollTop > 50;
+      const scrolled = scrollRoot.scrollTop > 50;
       if (scrolled !== isScrolledRef.current) {
         pendingUpdatesRef.current.isScrolled = scrolled;
         flushPendingUpdates();
@@ -250,29 +203,28 @@ export const usePresentationLogic = ({
     };
 
     handleScroll();
-    root.addEventListener('scroll', handleScroll, { passive: true });
+    scrollRoot.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      root.removeEventListener('scroll', handleScroll);
+      scrollRoot.removeEventListener('scroll', handleScroll);
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [mainRef, flushPendingUpdates]);
+  }, [scrollRoot, flushPendingUpdates]);
 
   const handleSkipToCoolPart = useCallback(() => {
-    if (technicalSeparatorRef?.current) {
-      scrollToElementInRoot(technicalSeparatorRef.current);
-    } else {
-      scrollToElementInRoot(technicalDeckRef?.current);
+    if (technicalSeparatorIndex !== -1) {
+      scrollToSlide(technicalSeparatorIndex);
+    } else if (technicalDeckIndex !== -1) {
+      scrollToSlide(technicalDeckIndex);
     }
-  }, [technicalSeparatorRef, technicalDeckRef, scrollToElementInRoot]);
+  }, [technicalSeparatorIndex, technicalDeckIndex, scrollToSlide]);
 
   const handleScrollToTop = useCallback(() => {
-    const root = getScrollRoot(mainRef);
-    if (root) {
-      root.scrollTo({ top: 0, behavior: 'smooth' });
+    if (scrollRoot) {
+      scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [mainRef]);
+  }, [scrollRoot]);
 
   const handlePrevSlide = useCallback(() => {
     if (currentSlideRef.current > 0) {

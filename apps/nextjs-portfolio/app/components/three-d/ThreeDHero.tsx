@@ -38,7 +38,7 @@ export function ThreeDHero() {
   return (
     <section
       ref={sectionRef}
-      className='snap-start h-screen w-full relative overflow-hidden bg-black flex items-center shrink-0 z-10'
+      className='snap-start h-[100dvh] w-full relative overflow-hidden bg-black flex items-center shrink-0 z-10'
       aria-label='3D Hero Section'
     >
       {shouldLoadSpline && (

@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const presentation = data as {
     title?: string;
     description?: string | null;
+    noIndex?: boolean | null;
     seo?: {
       title?: string | null;
       description?: string | null;
@@ -61,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     path: `/presentations/${slug}`,
     seoImage: presentation.seo?.image,
-    noIndex,
+    noIndex: presentation.noIndex === true || noIndex,
     openGraphType: 'article',
   });
 }
@@ -82,6 +83,9 @@ export default async function PresentationPage({ params }: Props) {
     title?: string;
     description?: string | null;
     slug?: string;
+    noIndex?: boolean | null;
+    tldr?: string | null;
+    tldrPosition?: 'top' | 'bottom' | null;
   } | null;
 
   if (!presentation?.title) {
@@ -125,7 +129,12 @@ export default async function PresentationPage({ params }: Props) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <PresentationSlideDeck slides={slides} showSkipControl={false} />
+      <PresentationSlideDeck
+        slides={slides}
+        showSkipControl={false}
+        tldr={presentation.tldr}
+        tldrPosition={presentation.tldrPosition}
+      />
     </>
   );
 }

@@ -194,7 +194,6 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
             </p>
             <nav className='flex flex-wrap gap-x-5 gap-y-2 text-xs text-foreground-muted'>
               {[
-                { name: 'Design System', href: '/design-system' },
                 { name: 'Test', href: '/test' },
                 { name: 'Data', href: '/data' },
               ].map(link => (

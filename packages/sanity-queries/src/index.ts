@@ -953,6 +953,9 @@ export const presentationQuery = defineQuery(`
     title,
     description,
     "slug": slug.current,
+    noIndex,
+    tldr,
+    tldrPosition,
     "seo": {
       "title": coalesce(seo.title, title, ""),
       "description": coalesce(seo.description, description, ""),
