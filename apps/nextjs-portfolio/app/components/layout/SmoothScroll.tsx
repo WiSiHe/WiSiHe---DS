@@ -14,12 +14,13 @@ import { bindScrollTriggerToLenis } from '@/app/lib/scrollTriggerLenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LISTING_PATHS = new Set(['/paintings', '/projects', '/photography', '/videos']);
+const LISTING_PATHS = new Set(['/projects', '/photography', '/videos']);
 
 function shouldDisableSmoothScroll(pathname: string | null): boolean {
   if (!pathname) return false;
   if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
   if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
+  if (pathname === '/paintings') return true;
   return false;
 }
 

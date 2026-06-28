@@ -46,7 +46,7 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.E
 
   return (
     <header className='pointer-events-none'>
-      <div className='fixed top-4 left-4 z-20'>
+      <div className='fixed top-4 left-4 z-[60]'>
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}

@@ -1,48 +1,76 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
-import { isNsfwFacetActive } from '@/lib/algolia/facets';
-import { SearchGridCard, type SearchGridHit } from './SearchGridCard';
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react';
+import { memo, useMemo } from 'react';
+import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
+import type { PaintingAlgoliaHit } from '@/lib/algolia/paintingsSearch/types';
+import PaintingCard from '../PaintingCard/PaintingCard';
 
-type AlgoliaHit = ReturnType<typeof useHits>['items'][number];
+function slugFromHit(rawSlug: unknown): string {
+  if (typeof rawSlug === 'string') return rawSlug;
+  if (rawSlug && typeof rawSlug === 'object' && 'current' in rawSlug) {
+    const current = (rawSlug as { current?: string }).current;
+    return typeof current === 'string' ? current : '';
+  }
+  return '';
+}
 
-function adaptSearchHit(hit: AlgoliaHit): SearchGridHit {
-  const rawSlug = hit['slug'] as string | { current?: string } | undefined;
+function adaptPaintingData(hit: PaintingAlgoliaHit) {
+  const tags = hit['tags'];
   return {
-    objectID: hit.objectID,
-    slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
-    title: hit['title'] as string | undefined,
-    image: hit['image'] as SearchGridHit['image'],
-    format: hit['format'] as string | null | undefined,
+    ...hit,
+    _id: hit.objectID,
+    slug: slugFromHit(hit['slug']),
     isNSFW: hit['isNSFW'] === true,
     isForSale: hit['isForSale'] === true,
     hasStoreLink: hit['hasStoreLink'] === true,
+    isFanArt: hit['isFanArt'] === true,
+    video: hit['video'] ?? '',
+    imagesCount: hit['imagesCount'] ?? 0,
+    tagsV2: Array.isArray(tags) ? (tags as string[]).map(name => ({ name })) : [],
   };
 }
 
 type PaintingHitProps = {
-  hit: AlgoliaHit;
+  hit: PaintingAlgoliaHit;
   index: number;
-  nsfwRevealed?: boolean;
+  isNsfwFilterActive: boolean;
+  reducedMotion: boolean;
 };
 
 const PaintingHit = memo(
-  function PaintingHit({ hit, index, nsfwRevealed }: PaintingHitProps) {
-    const adapted = useMemo(() => adaptSearchHit(hit), [hit]);
+  function PaintingHit({ hit, index, isNsfwFilterActive, reducedMotion }: PaintingHitProps) {
+    const paintingData = useMemo(() => adaptPaintingData(hit), [hit]);
 
     return (
-      <div className='[content-visibility:auto] [contain-intrinsic-size:auto_280px]'>
-        <SearchGridCard hit={adapted} index={index} nsfwRevealed={nsfwRevealed} />
-      </div>
+      <motion.div
+        layout={!reducedMotion}
+        initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
+        animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
+        exit={reducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { duration: 0.2, ease: 'easeOut', delay: Math.min(index * 0.015, 0.2) }
+        }
+        className='break-inside-avoid mb-2'
+      >
+        <PaintingCard
+          // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
+          paintingData={paintingData as any}
+          shouldBeLazy={index < 6}
+          isNsfwFilterActive={isNsfwFilterActive}
+          lightNsfwBlur
+        />
+      </motion.div>
     );
   },
-  (prev, next) => {
-    if (prev.hit !== next.hit || prev.index !== next.index) return false;
-    if (prev.hit['isNSFW'] !== true) return true;
-    return prev.nsfwRevealed === next.nsfwRevealed;
-  },
+  (prev, next) =>
+    prev.hit === next.hit &&
+    prev.index === next.index &&
+    prev.isNsfwFilterActive === next.isNsfwFilterActive &&
+    prev.reducedMotion === next.reducedMotion,
 );
 
 function PaintingCardSkeleton({ index }: { index: number }) {
@@ -55,84 +83,81 @@ function PaintingCardSkeleton({ index }: { index: number }) {
     'aspect-square',
   ];
   const aspect = aspects[index % aspects.length];
+
   return (
     <div
       className={cn(
-        'w-full rounded-xl bg-surface border border-border overflow-hidden animate-pulse relative',
+        'relative mb-2 w-full overflow-hidden rounded-xl border border-border bg-surface animate-pulse',
         aspect,
       )}
       style={{ animationDelay: `${index * 40}ms` }}
     >
-      <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle via-surface to-surface-subtle' />
+      <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
+      <div className='absolute right-0 bottom-0 left-0 h-10 border-t border-border bg-surface/80 px-3 py-2.5'>
+        <div className='h-2.5 w-2/5 rounded-full bg-surface-subtle' />
+      </div>
     </div>
   );
 }
 
 function SkeletonGrid() {
   return (
-    <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4' aria-busy='true'>
+    <div
+      className='mt-4 columns-2 gap-2 sm:columns-3'
+      aria-busy='true'
+      aria-label='Loading paintings'
+    >
       {Array.from({ length: 18 }).map((_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: skeletons have no stable key
-        <PaintingCardSkeleton key={i} index={i} />
+        // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
+        <div key={i} className='break-inside-avoid'>
+          <PaintingCardSkeleton index={i} />
+        </div>
       ))}
     </div>
   );
 }
 
 export default function CustomHits() {
-  const { items } = useHits();
-  const { status, results, refresh } = useInstantSearch();
-  const { items: refinements } = useCurrentRefinements();
-  const refreshAttempted = useRef(false);
+  const { hits, nbHits, status, nsfwFilterActive } = usePaintingsSearchContext();
+  const reducedMotion = useReducedMotion() ?? false;
 
-  const settledItemsRef = useRef(items);
-  const settledNsfwRevealedRef = useRef(isNsfwFacetActive(refinements));
-
-  const isSearchPending = status === 'loading' || status === 'stalled';
-  const isNsfwFilterActive = isNsfwFacetActive(refinements);
-
-  if (!isSearchPending) {
-    settledItemsRef.current = items;
-    settledNsfwRevealedRef.current = isNsfwFilterActive;
-  }
-
-  const displayItems = isSearchPending ? settledItemsRef.current : items;
-  const displayNsfwRevealed = settledNsfwRevealedRef.current;
-
-  const nbHits = results?.nbHits ?? 0;
-  const queryId = results?.queryID;
-  const awaitingFirstResponse = items.length === 0 && queryId == null && status !== 'error';
-  const showInitialSkeleton = items.length === 0 && (isSearchPending || awaitingFirstResponse);
-
-  useEffect(() => {
-    if (!awaitingFirstResponse || refreshAttempted.current || status !== 'idle') return;
-    refreshAttempted.current = true;
-    refresh();
-  }, [awaitingFirstResponse, refresh, status]);
+  const showInitialSkeleton = status === 'loading' && hits.length === 0;
 
   if (showInitialSkeleton) {
     return <SkeletonGrid />;
   }
 
-  if (displayItems.length === 0 && nbHits === 0) {
+  if (hits.length === 0 && nbHits === 0) {
     return (
-      <div className='w-full py-20 flex flex-col justify-center items-center text-foreground-subtle'>
+      <div className='flex w-full flex-col items-center justify-center py-20 text-foreground-subtle'>
         <p className='text-lg'>No paintings found matching your search.</p>
-        <p className='text-sm mt-2'>Try adjusting your filters or search terms.</p>
+        <p className='mt-2 text-sm'>Try adjusting your filters or search terms.</p>
       </div>
     );
   }
 
   return (
-    <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4' aria-busy={isSearchPending}>
-      {displayItems.map((hit, index) => (
-        <PaintingHit
-          key={hit.objectID}
-          hit={hit}
-          index={index}
-          nsfwRevealed={hit['isNSFW'] === true ? displayNsfwRevealed : undefined}
-        />
-      ))}
-    </div>
+    <LayoutGroup id='paintings-search-masonry'>
+      <motion.div
+        layout={!reducedMotion}
+        className={cn(
+          'mt-4 columns-2 gap-2 sm:columns-3 transition-opacity duration-150',
+          status === 'loading' && 'pointer-events-none opacity-60',
+        )}
+        aria-busy={status === 'loading'}
+      >
+        <AnimatePresence mode='popLayout'>
+          {hits.map((hit, index) => (
+            <PaintingHit
+              key={hit.objectID}
+              hit={hit}
+              index={index}
+              isNsfwFilterActive={nsfwFilterActive}
+              reducedMotion={reducedMotion}
+            />
+          ))}
+        </AnimatePresence>
+      </motion.div>
+    </LayoutGroup>
   );
 }

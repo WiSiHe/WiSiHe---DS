@@ -13,18 +13,10 @@ function SidebarBlock({ lines = 1 }: { lines?: number }) {
   );
 }
 
-function PaintingCardSkeleton({ index }: { index: number }) {
-  const aspects = ['aspect-[3/4]', 'aspect-square', 'aspect-[4/3]', 'aspect-[3/5]'];
-  const aspect = aspects[index % aspects.length];
+function PaintingCardSkeleton() {
   return (
-    <div
-      className={`w-full rounded-xl bg-surface border border-border overflow-hidden animate-pulse mb-2 relative ${aspect}`}
-      style={{ animationDelay: `${index * 40}ms` }}
-    >
-      <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
-      <div className='absolute bottom-0 left-0 right-0 h-10 bg-surface/80 border-t border-border px-3 py-2.5'>
-        <div className='h-2.5 w-2/5 rounded-full bg-surface-subtle' />
-      </div>
+    <div className='aspect-square w-full rounded-xl border border-border bg-surface overflow-hidden animate-pulse'>
+      <div className='size-full bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
     </div>
   );
 }
@@ -48,15 +40,10 @@ export default function PaintingsSearchSkeleton() {
           <div className='h-4 w-40 rounded bg-surface-subtle animate-pulse' />
           <div className='h-9 w-28 rounded-full bg-surface-subtle animate-pulse' />
         </div>
-        <div className='columns-2 sm:columns-3 gap-2 mt-4'>
+        <div className='mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3'>
           {Array.from({ length: 18 }).map((_, i) => (
-            <div
-              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton placeholders
-              key={i}
-              className='break-inside-avoid'
-            >
-              <PaintingCardSkeleton index={i} />
-            </div>
+            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton placeholders
+            <PaintingCardSkeleton key={i} />
           ))}
         </div>
       </div>
