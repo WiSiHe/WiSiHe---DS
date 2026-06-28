@@ -21,14 +21,36 @@ function getClient(): OpenAI {
   return _client;
 }
 
+function getValueAtPath(obj: any, path: any[]): any {
+  let current = obj;
+  for (const segment of path) {
+    if (current == null) return undefined;
+    if (typeof segment === 'string') {
+      current = current[segment];
+    } else if (typeof segment === 'object' && segment._key) {
+      if (Array.isArray(current)) {
+        current = current.find((item: any) => item._key === segment._key);
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  }
+  return current;
+}
+
 export default function AIImageGenerator(props: ObjectInputProps) {
   const { renderDefault, onChange, path } = props;
 
   const client = useClient({ apiVersion: '2024-10-28' });
 
-  // Get ingredient name from parent object path
-  const parentPath = path.slice(0, -1);
-  const parentValue = useFormValue(parentPath) as { ingredient?: string } | undefined;
+  // Get ingredient name from parent object path safely via root document
+  const documentValue = useFormValue([]) as Record<string, unknown> | undefined;
+  const parentValue = useMemo(() => {
+    if (!documentValue) return undefined;
+    return getValueAtPath(documentValue, path.slice(0, -1));
+  }, [documentValue, path]) as { ingredient?: string } | undefined;
   const ingredientName = parentValue?.ingredient || '';
 
   const defaultPrompt = useMemo(() => {
