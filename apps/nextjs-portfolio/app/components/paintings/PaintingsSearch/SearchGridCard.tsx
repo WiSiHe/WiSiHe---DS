@@ -63,7 +63,6 @@ function SearchGridCardInner({ hit, index, nsfwRevealed = false }: SearchGridCar
   const slug = hit.slug ?? '';
   const isNsfw = hit.isNSFW === true;
   const showNsfwCover = isNsfw && !nsfwRevealed;
-  const isForSale = hit.isForSale === true || hit.hasStoreLink === true;
   const imageSrc = hit.imageSrc ?? getSearchGridImageUrl(hit.image);
   const lqip = getPaintingImageLqip(hit.image);
 
@@ -71,9 +70,9 @@ function SearchGridCardInner({ hit, index, nsfwRevealed = false }: SearchGridCar
     <Link
       href={`/paintings/${slug}`}
       className={cn(
-        'relative block w-full overflow-hidden rounded-xl bg-surface border border-border',
+        'relative block w-full overflow-hidden rounded-xl bg-surface border border-border/40',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-        isForSale && !showNsfwCover && 'ring-2 ring-accent/50 border-accent/40',
+        'transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-md',
         SEARCH_GRID_LAYOUT.aspectClass,
       )}
     >
