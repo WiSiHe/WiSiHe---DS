@@ -1,13 +1,13 @@
 'use client';
 
-import { Checkbox } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { memo, startTransition, useDeferredValue, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useRefinementList } from 'react-instantsearch';
-import { getFacetIcon } from '@/lib/facetIcons';
+import { useFacetItemsWithSettledCounts } from '@/lib/algolia/useFacetItemsWithSettledCounts';
+import { useStableRefine } from '@/lib/algolia/useStableRefine';
 
 /** How many items to show initially */
-const DEFAULT_VISIBLE = 10;
+const DEFAULT_VISIBLE = 8;
 
 type FacetItem = {
   label: string;
@@ -21,70 +21,85 @@ type FacetRowProps = {
   onRefine: (value: string) => void;
 };
 
-const FacetRow = memo(function FacetRow({ item, onRefine }: FacetRowProps) {
-  const icon = getFacetIcon(item.label);
-
-  return (
-    <li className='w-full'>
-      <button
-        type='button'
-        onClick={() => startTransition(() => onRefine(item.value))}
-        className={cn(
-          'flex items-center gap-2.5 cursor-pointer group w-full text-sm transition-colors py-1.5 px-2 rounded-lg',
-          item.isRefined
-            ? 'bg-accent/10 text-foreground'
-            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-        )}
-      >
-        <Checkbox
-          inputSize='sm'
-          checked={item.isRefined}
-          className='pointer-events-none'
-          label={item.label}
-          labelClassName='grow truncate min-w-0 text-sm cursor-pointer pointer-events-none'
-        />
-        <span
+const FacetRow = memo(
+  function FacetRow({ item, onRefine }: FacetRowProps) {
+    return (
+      <li className='w-full'>
+        <button
+          type='button'
+          onClick={() => onRefine(item.value)}
           className={cn(
-            'shrink-0 transition-colors',
+            'flex w-full items-center gap-2.5 cursor-pointer group text-sm transition-colors py-1.5 px-2 rounded-lg',
             item.isRefined
-              ? 'text-accent'
-              : 'text-muted-foreground/50 group-hover:text-muted-foreground',
-          )}
-          aria-hidden
-        >
-          {icon}
-        </span>
-        <span
-          className={cn(
-            'text-xs px-1.5 py-0.5 rounded-full font-medium transition-colors shrink-0 min-w-[1.5rem] text-center',
-            item.isRefined ? 'bg-accent/20 text-accent' : 'text-muted-foreground',
+              ? 'bg-accent/10 text-foreground'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
           )}
         >
-          {item.count}
-        </span>
-      </button>
-    </li>
-  );
-});
+          <span
+            aria-hidden
+            className={cn(
+              'flex size-4 shrink-0 items-center justify-center rounded border transition-colors',
+              item.isRefined
+                ? 'border-accent bg-accent text-accent-contrast'
+                : 'border-border bg-surface group-hover:border-foreground-muted',
+            )}
+          >
+            {item.isRefined ? (
+              <svg
+                viewBox='0 0 12 12'
+                className='size-2.5'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                aria-hidden
+              >
+                <path d='M2 6l3 3 5-5' />
+              </svg>
+            ) : null}
+          </span>
+          <span className='grow truncate min-w-0 text-left text-sm'>{item.label}</span>
+          <span
+            className={cn(
+              'text-xs px-1.5 py-0.5 rounded-full font-medium transition-colors shrink-0 min-w-6 text-center tabular-nums',
+              item.isRefined ? 'bg-accent/20 text-accent' : 'text-muted-foreground',
+            )}
+          >
+            {item.count}
+          </span>
+        </button>
+      </li>
+    );
+  },
+  (prev, next) =>
+    prev.item.value === next.item.value &&
+    prev.item.isRefined === next.item.isRefined &&
+    prev.item.count === next.item.count &&
+    prev.item.label === next.item.label &&
+    prev.onRefine === next.onRefine,
+);
 
 export default function CustomRefinementList(props: Parameters<typeof useRefinementList>[0]) {
   const { items, refine } = useRefinementList(props);
-  const deferredItems = useDeferredValue(items);
+  const stableRefine = useStableRefine(refine);
+  const displayItems = useFacetItemsWithSettledCounts(items);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const visibleItems = isExpanded ? deferredItems : deferredItems.slice(0, DEFAULT_VISIBLE);
-  const hiddenCount = deferredItems.length - DEFAULT_VISIBLE;
-  const canToggle = deferredItems.length > DEFAULT_VISIBLE;
+  const visibleItems = useMemo(
+    () => (isExpanded ? displayItems : displayItems.slice(0, DEFAULT_VISIBLE)),
+    [displayItems, isExpanded],
+  );
+  const hiddenCount = displayItems.length - DEFAULT_VISIBLE;
+  const canToggle = displayItems.length > DEFAULT_VISIBLE;
 
   return (
     <div className='flex flex-col gap-1'>
       <ul className='flex flex-col gap-0.5 w-full'>
         {visibleItems.map(item => (
-          <FacetRow key={item.value} item={item} onRefine={refine} />
+          <FacetRow key={item.value} item={item} onRefine={stableRefine} />
         ))}
       </ul>
 
-      {canToggle && (
+      {canToggle ? (
         <button
           type='button'
           onClick={() => setIsExpanded(v => !v)}
@@ -92,7 +107,7 @@ export default function CustomRefinementList(props: Parameters<typeof useRefinem
         >
           {isExpanded ? '↑ Show fewer' : `↓ Show ${hiddenCount} more`}
         </button>
-      )}
+      ) : null}
     </div>
   );
 }

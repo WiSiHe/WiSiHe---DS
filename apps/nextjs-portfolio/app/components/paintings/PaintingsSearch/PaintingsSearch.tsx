@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { memo, startTransition, useDeferredValue, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { BsEye } from 'react-icons/bs';
 import {
   IoCheckmark,
@@ -14,31 +14,17 @@ import {
   IoTimeOutline,
 } from 'react-icons/io5';
 import {
-  Configure,
-  useCurrentRefinements,
-  useInstantSearch,
-  useRefinementList,
-  useSortBy,
-  useStats,
-} from 'react-instantsearch';
-import { InstantSearchNext } from 'react-instantsearch-nextjs';
-import SearchAnalytics from '@/app/components/search/SearchAnalytics';
-import { getGlobalLenis } from '@/app/lib/lenis-registry';
-import {
-  ALGOLIA_INDEX_NAME,
-  PAINTING_HIT_ATTRIBUTES,
-  PAINTINGS_INDEX_FILTER,
-  replicaIndexName,
-} from '@/lib/algolia/constants';
-import { tagFacetTransformItems } from '@/lib/algolia/facets';
+  PaintingsSearchProvider,
+  usePaintingsSearchContext,
+} from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
+import type { PaintingsSortKey } from '@/lib/algolia/paintingsSearch/types';
 import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomHits from './CustomHits';
-import CustomRefinementList from './CustomRefinementList';
-import CustomSearchBox from './CustomSearchBox';
-import ForSaleFilter from './ForSaleFilter';
-import PaintingsPagination from './PaintingsPagination';
+import PaintingsFacetList from './PaintingsFacetList';
+import PaintingsForSaleFilter from './PaintingsForSaleFilter';
+import PaintingsSearchBox from './PaintingsSearchBox';
+import PaintingsSearchPagination from './PaintingsSearchPagination';
 
-// ── Colour swatch map ────────────────────────────────────────────────────────
 const COLOR_SWATCHES: Record<string, string> = {
   Red: '#c0392b',
   Orange: '#e67e22',
@@ -67,20 +53,36 @@ const COLOR_ORDER = [
   'White',
 ];
 
+type SortItem = {
+  key: PaintingsSortKey;
+  label: string;
+  icon?: React.ReactNode;
+};
+
+const SORT_ITEMS: SortItem[] = [
+  { key: 'featured', label: 'Featured', icon: <IoStarOutline className='w-3.5 h-3.5' /> },
+  { key: 'newest', label: 'Newest', icon: <IoTimeOutline className='w-3.5 h-3.5' /> },
+  { key: 'oldest', label: 'Oldest', icon: <IoHourglassOutline className='w-3.5 h-3.5' /> },
+  { key: 'views', label: 'Most Viewed', icon: <BsEye className='w-3.5 h-3.5' /> },
+  { key: 'likes', label: 'Most Liked', icon: <IoHeartOutline className='w-3.5 h-3.5' /> },
+];
+
 function ColourRefinement() {
-  const { items, refine } = useRefinementList({ attribute: 'dominantColors', limit: 20 });
-  const deferredItems = useDeferredValue(items);
+  const { colorItems, toggleColor } = usePaintingsSearchContext();
 
-  if (deferredItems.length === 0) return null;
+  const sorted = useMemo(() => {
+    if (colorItems.length === 0) return [];
+    return [...colorItems].sort((a, b) => {
+      const ai = COLOR_ORDER.indexOf(a.label);
+      const bi = COLOR_ORDER.indexOf(b.label);
+      if (ai === -1 && bi === -1) return a.label.localeCompare(b.label);
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+  }, [colorItems]);
 
-  const sorted = [...deferredItems].sort((a, b) => {
-    const ai = COLOR_ORDER.indexOf(a.label);
-    const bi = COLOR_ORDER.indexOf(b.label);
-    if (ai === -1 && bi === -1) return a.label.localeCompare(b.label);
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
-  });
+  if (sorted.length === 0) return null;
 
   return (
     <div className='flex flex-wrap gap-2'>
@@ -90,10 +92,10 @@ function ColourRefinement() {
           <button
             key={item.label}
             type='button'
-            onClick={() => startTransition(() => refine(item.value))}
+            onClick={() => toggleColor(item.value)}
             title={`${item.label} (${item.count})`}
             className={cn(
-              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-150 border',
+              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border',
               item.isRefined
                 ? 'bg-foreground text-background border-foreground shadow-sm'
                 : 'bg-surface border-border text-foreground-subtle hover:border-foreground-muted hover:text-foreground',
@@ -104,7 +106,7 @@ function ColourRefinement() {
               style={{ backgroundColor: swatch }}
             />
             {item.label}
-            <span className='text-[10px] opacity-60'>{item.count}</span>
+            <span className='text-[10px] opacity-60 tabular-nums'>{item.count}</span>
           </button>
         );
       })}
@@ -112,22 +114,15 @@ function ColourRefinement() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// HitStats + custom Sort dropdown — compact results header
-// ---------------------------------------------------------------------------
-type SortItem = { label: string; value: string; icon?: React.ReactNode };
-
-function SortDropdown({ items }: { items: SortItem[] }) {
-  const { currentRefinement, refine } = useSortBy({ items });
+function SortDropdown() {
+  const { sort, setSort } = usePaintingsSearchContext();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const current = items.find(i => i.value === currentRefinement) ??
-    items[0] ?? { label: 'Sort', value: '' };
+  const current = SORT_ITEMS.find(item => item.key === sort) ?? SORT_ITEMS[0]!;
 
-  // Close on outside click
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    const handler = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -137,61 +132,55 @@ function SortDropdown({ items }: { items: SortItem[] }) {
     <div ref={ref} className='relative'>
       <button
         type='button'
-        onClick={() => setOpen(v => !v)}
+        onClick={() => setOpen(value => !value)}
         className={cn(
-          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150',
+          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium',
           'bg-surface border border-border text-foreground-subtle',
           'hover:border-accent-border hover:text-foreground',
           open && 'border-accent text-foreground',
         )}
       >
-        {current.icon && <span className='shrink-0'>{current.icon}</span>}
+        {current.icon}
         {current.label}
-        <IoChevronDown
-          className={cn('w-3.5 h-3.5 transition-transform duration-150', open && 'rotate-180')}
-        />
+        <IoChevronDown className={cn('w-3.5 h-3.5', open && 'rotate-180')} />
       </button>
 
-      {open && (
+      {open ? (
         <div className='absolute right-0 top-full mt-1.5 z-50 min-w-[140px] bg-surface border border-border rounded-xl shadow-lg overflow-hidden'>
-          {items.map(item => (
+          {SORT_ITEMS.map(item => (
             <button
-              key={item.value}
+              key={item.key}
               type='button'
               onClick={() => {
-                refine(item.value);
+                setSort(item.key);
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition-colors duration-100 text-left',
-                item.value === currentRefinement
+                'w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-left',
+                item.key === sort
                   ? 'text-foreground bg-surface-hover font-medium'
                   : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
               )}
             >
               <span className='flex items-center gap-2'>
-                {item.icon && <span className='shrink-0 opacity-60'>{item.icon}</span>}
+                {item.icon}
                 {item.label}
               </span>
-              {item.value === currentRefinement && (
-                <IoCheckmark className='w-3.5 h-3.5 text-accent shrink-0' />
-              )}
+              {item.key === sort ? <IoCheckmark className='w-3.5 h-3.5 text-accent' /> : null}
             </button>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
 
-type HitStatsProps = { sortItems: SortItem[] };
+function HitStatsWithSort() {
+  const { nbHits, page, status } = usePaintingsSearchContext();
+  const hitsPerPage = 18;
 
-function HitStatsWithSort({ sortItems }: HitStatsProps) {
-  const { nbHits, page, hitsPerPage } = useStats();
-  const { status } = useInstantSearch();
-  const isPending = status === 'loading' || status === 'stalled';
+  if (nbHits === 0) return null;
 
-  if (nbHits === 0 || hitsPerPage === undefined) return null;
   const from = page * hitsPerPage + 1;
   const to = Math.min((page + 1) * hitsPerPage, nbHits);
 
@@ -202,143 +191,57 @@ function HitStatsWithSort({ sortItems }: HitStatsProps) {
           {from}–{to}
         </span>{' '}
         of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
-        {isPending ? (
+        {status === 'loading' ? (
           <span className='ml-2 text-xs text-foreground-muted' aria-live='polite'>
             Updating…
           </span>
         ) : null}
       </p>
-      <SortDropdown items={sortItems} />
+      <SortDropdown />
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// ScrollToResults — scroll after user-driven search changes (not initial load)
-// ---------------------------------------------------------------------------
-const RESULTS_ID = 'paintings-results';
-const PAGE_HEADER_OFFSET = -128;
-
-type SearchSnapshot = {
-  page: number;
-  query: string;
-  refinements: string;
-};
-
-function scrollPageToTop() {
-  const lenis = getGlobalLenis();
-  if (lenis) {
-    lenis.scrollTo(0, { duration: 0.6 });
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-function scrollResultsIntoView() {
-  const el = document.getElementById(RESULTS_ID);
-  if (!el) return;
-
-  const lenis = getGlobalLenis();
-  if (lenis) {
-    lenis.scrollTo(el, { offset: PAGE_HEADER_OFFSET, duration: 0.6 });
-  } else {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-function ScrollToResults() {
-  const { results } = useInstantSearch();
-  const snapshotRef = useRef<SearchSnapshot | null>(null);
-
-  useEffect(() => {
-    if (!results) return;
-
-    const page = results.page ?? 0;
-    const query = results.query ?? '';
-    const refinements = JSON.stringify(results._state?.disjunctiveFacetsRefinements ?? {});
-
-    const previous = snapshotRef.current;
-    if (previous === null) {
-      snapshotRef.current = { page, query, refinements };
-      return;
-    }
-
-    const pageChanged = previous.page !== page;
-    const queryChanged = previous.query !== query;
-    const refinementsChanged = previous.refinements !== refinements;
-
-    snapshotRef.current = { page, query, refinements };
-
-    if (!pageChanged && !queryChanged && !refinementsChanged) {
-      return;
-    }
-
-    // Page/query changes scroll the user back to results; refinement toggles keep
-    // the sidebar in view on desktop so skip the expensive Lenis scroll there.
-    if (refinementsChanged && !pageChanged && !queryChanged) {
-      return;
-    }
-
-    // Let InstantSearch paint the new hits before scrolling.
-    window.setTimeout(() => {
-      if (pageChanged) {
-        scrollPageToTop();
-      } else {
-        scrollResultsIntoView();
-      }
-    }, 80);
-  }, [results]);
-
-  return null;
-}
-
-// ---------------------------------------------------------------------------
-// MobileFilterButton — shows active refinement count badge
-// ---------------------------------------------------------------------------
 function MobileFilterButton({ onClick }: { onClick: () => void }) {
-  const { items } = useCurrentRefinements();
-  const activeCount = items.reduce((sum, item) => sum + item.refinements.length, 0);
+  const { tagFilters, colorFilters, forSale } = usePaintingsSearchContext();
+  const activeCount = tagFilters.length + colorFilters.length + (forSale ? 1 : 0);
+
   return (
     <div className='md:hidden w-full'>
       <button
         type='button'
         onClick={onClick}
-        className='w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-surface border border-border text-sm font-medium text-foreground hover:border-accent-border hover:bg-surface-hover transition-all duration-200 shadow-sm'
+        className='w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-surface border border-border text-sm font-medium text-foreground hover:border-accent-border hover:bg-surface-hover shadow-sm'
       >
         <IoFilterOutline className='w-4 h-4' />
         Filters
-        {activeCount > 0 && (
+        {activeCount > 0 ? (
           <span className='inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-accent text-accent-contrast rounded-full'>
             {activeCount}
           </span>
-        )}
+        ) : null}
       </button>
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// FiltersSidebar — defined OUTSIDE the parent so React never creates a new
-// component identity on re-render (which would reset Algolia widget state).
-// ---------------------------------------------------------------------------
 const FiltersSidebar = memo(function FiltersSidebar() {
+  const { tagItems, toggleTag } = usePaintingsSearchContext();
+
   return (
     <>
-      {/* Search */}
       <div className='flex flex-col gap-1.5'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
           Search
         </p>
-        <CustomSearchBox />
+        <PaintingsSearchBox />
       </div>
 
-      {/* For sale — always visible, pinned above tag facets */}
       <div className='flex flex-col gap-1.5'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Shop</p>
-        <ForSaleFilter />
+        <PaintingsForSaleFilter />
       </div>
 
-      {/* Colour */}
       <div className='flex flex-col gap-2'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
           Colour
@@ -346,22 +249,20 @@ const FiltersSidebar = memo(function FiltersSidebar() {
         <ColourRefinement />
       </div>
 
-      {/* Tags — CustomRefinementList handles its own expand/collapse */}
       <div className='flex flex-col gap-2'>
         <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>Tags</p>
-        <CustomRefinementList attribute='tags' limit={50} transformItems={tagFacetTransformItems} />
+        <PaintingsFacetList items={tagItems} onToggle={toggleTag} />
       </div>
     </>
   );
 });
 
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
-
-export default function PaintingsSearch() {
+function PaintingsSearchLayout() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [isDesktopLayout, setIsDesktopLayout] = useState(false);
+  const [isDesktopLayout, setIsDesktopLayout] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(min-width: 768px)').matches;
+  });
 
   useEffect(() => {
     const media = window.matchMedia('(min-width: 768px)');
@@ -378,8 +279,59 @@ export default function PaintingsSearch() {
     };
   }, [isDesktopLayout, isMobileFiltersOpen]);
 
-  const mobileDrawerClosed = !isDesktopLayout && !isMobileFiltersOpen;
+  return (
+    <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
+      <MobileFilterButton onClick={() => setIsMobileFiltersOpen(true)} />
 
+      <div
+        aria-hidden='true'
+        onClick={() => setIsMobileFiltersOpen(false)}
+        className={cn(
+          'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden transition-opacity duration-300',
+          isMobileFiltersOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+        )}
+      />
+
+      <div
+        className={cn(
+          'flex flex-col gap-6 z-50',
+          'max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-h-[90dvh] max-md:overflow-y-auto',
+          'max-md:bg-background max-md:border-t max-md:border-border max-md:shadow-2xl max-md:p-6 max-md:rounded-t-3xl',
+          'max-md:transition-transform max-md:duration-300 max-md:ease-out',
+          isMobileFiltersOpen
+            ? 'max-md:translate-y-0'
+            : 'max-md:translate-y-full max-md:pointer-events-none',
+          'md:relative md:w-56 md:shrink-0 md:translate-y-0 md:pointer-events-auto md:p-0 md:border-0 md:shadow-none md:max-h-none md:overflow-visible',
+        )}
+        role={isDesktopLayout ? undefined : 'dialog'}
+        aria-modal={isDesktopLayout ? undefined : isMobileFiltersOpen}
+        aria-label={isDesktopLayout ? undefined : 'Filters & Search'}
+      >
+        <div className='flex items-center justify-between pb-2 border-b border-border/50 md:hidden'>
+          <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>
+          <button
+            type='button'
+            onClick={() => setIsMobileFiltersOpen(false)}
+            className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full'
+            aria-label='Close filters'
+          >
+            <IoClose className='w-6 h-6' />
+          </button>
+        </div>
+
+        <FiltersSidebar />
+      </div>
+
+      <div id='paintings-results' className='grow flex flex-col min-w-0'>
+        <HitStatsWithSort />
+        <CustomHits />
+        <PaintingsSearchPagination />
+      </div>
+    </div>
+  );
+}
+
+export default function PaintingsSearch() {
   if (!isAlgoliaConfigured || !searchClient) {
     return (
       <div className='mt-4 rounded-xl border border-border bg-surface px-6 py-10 text-center'>
@@ -393,109 +345,9 @@ export default function PaintingsSearch() {
     );
   }
 
-  const sortItems = [
-    {
-      label: 'Featured',
-      value: ALGOLIA_INDEX_NAME,
-      icon: <IoStarOutline className='w-3.5 h-3.5' />,
-    },
-    {
-      label: 'Newest',
-      value: replicaIndexName('newest'),
-      icon: <IoTimeOutline className='w-3.5 h-3.5' />,
-    },
-    {
-      label: 'Oldest',
-      value: replicaIndexName('oldest'),
-      icon: <IoHourglassOutline className='w-3.5 h-3.5' />,
-    },
-    {
-      label: 'Most Viewed',
-      value: replicaIndexName('views'),
-      icon: <BsEye className='w-3.5 h-3.5' />,
-    },
-    {
-      label: 'Most Liked',
-      value: replicaIndexName('likes'),
-      icon: <IoHeartOutline className='w-3.5 h-3.5' />,
-    },
-  ];
-
   return (
-    <InstantSearchNext
-      searchClient={searchClient}
-      indexName={ALGOLIA_INDEX_NAME}
-      routing
-      future={{ preserveSharedStateOnUnmount: true }}
-    >
-      <Configure
-        hitsPerPage={18}
-        filters={PAINTINGS_INDEX_FILTER}
-        attributesToRetrieve={[...PAINTING_HIT_ATTRIBUTES]}
-        facets={['tags', 'dominantColors', 'isForSale']}
-        maxValuesPerFacet={50}
-      />
-      <SearchAnalytics section='paintings' />
-      <ScrollToResults />
-
-      <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
-        <MobileFilterButton onClick={() => setIsMobileFiltersOpen(true)} />
-
-        {/* Mobile backdrop */}
-        <div
-          aria-hidden='true'
-          onClick={() => setIsMobileFiltersOpen(false)}
-          className={cn(
-            'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden',
-            'transition-opacity duration-300',
-            isMobileFiltersOpen
-              ? 'opacity-100 pointer-events-auto'
-              : 'opacity-0 pointer-events-none',
-          )}
-        />
-
-        {/*
-          Single filter panel — one set of Algolia widgets for mobile drawer + desktop sidebar.
-          Duplicating FiltersSidebar doubled facet work and caused visible lag on filter toggles.
-        */}
-        <div
-          className={cn(
-            'flex flex-col gap-6 z-50',
-            'max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-h-[90dvh] max-md:overflow-y-auto',
-            'max-md:bg-background max-md:border-t max-md:border-border max-md:shadow-2xl max-md:p-6 max-md:rounded-t-3xl',
-            'max-md:transition-transform max-md:duration-300 max-md:ease-out',
-            isMobileFiltersOpen
-              ? 'max-md:translate-y-0'
-              : 'max-md:translate-y-full max-md:pointer-events-none',
-            'md:relative md:w-56 md:shrink-0 md:translate-y-0 md:pointer-events-auto md:p-0 md:border-0 md:shadow-none md:max-h-none md:overflow-visible',
-          )}
-          inert={mobileDrawerClosed || undefined}
-          role={isDesktopLayout ? undefined : 'dialog'}
-          aria-modal={isDesktopLayout ? undefined : isMobileFiltersOpen}
-          aria-label={isDesktopLayout ? undefined : 'Filters & Search'}
-          aria-hidden={mobileDrawerClosed || undefined}
-        >
-          <div className='flex items-center justify-between pb-2 border-b border-border/50 md:hidden'>
-            <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>
-            <button
-              type='button'
-              onClick={() => setIsMobileFiltersOpen(false)}
-              className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors'
-              aria-label='Close filters'
-            >
-              <IoClose className='w-6 h-6' />
-            </button>
-          </div>
-
-          <FiltersSidebar />
-        </div>
-
-        <div id={RESULTS_ID} className='grow flex flex-col min-w-0'>
-          <HitStatsWithSort sortItems={sortItems} />
-          <CustomHits />
-          <PaintingsPagination />
-        </div>
-      </div>
-    </InstantSearchNext>
+    <PaintingsSearchProvider>
+      <PaintingsSearchLayout />
+    </PaintingsSearchProvider>
   );
 }
