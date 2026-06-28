@@ -18,7 +18,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "openai": "^6.38.0"
+    "openai": "^6.45.0"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",

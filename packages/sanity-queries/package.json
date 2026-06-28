@@ -19,8 +19,8 @@
     "dev": "tsup src/index.ts --format esm --dts --watch"
   },
   "dependencies": {
-    "@sanity/client": "^7.22.0",
-    "groq": "^5.26.0"
+    "@sanity/client": "^7.23.0",
+    "groq": "^6.2.0"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
