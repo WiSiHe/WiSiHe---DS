@@ -187,6 +187,9 @@ type HitStatsProps = { sortItems: SortItem[] };
 
 function HitStatsWithSort({ sortItems }: HitStatsProps) {
   const { nbHits, page, hitsPerPage } = useStats();
+  const { status } = useInstantSearch();
+  const isPending = status === 'loading' || status === 'stalled';
+
   if (nbHits === 0 || hitsPerPage === undefined) return null;
   const from = page * hitsPerPage + 1;
   const to = Math.min((page + 1) * hitsPerPage, nbHits);
@@ -198,6 +201,11 @@ function HitStatsWithSort({ sortItems }: HitStatsProps) {
           {from}–{to}
         </span>{' '}
         of <span className='font-medium text-foreground'>{nbHits.toLocaleString()}</span> paintings
+        {isPending ? (
+          <span className='ml-2 text-xs text-foreground-muted' aria-live='polite'>
+            Updating…
+          </span>
+        ) : null}
       </p>
       <SortDropdown items={sortItems} />
     </div>
