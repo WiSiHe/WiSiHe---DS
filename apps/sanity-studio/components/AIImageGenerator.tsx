@@ -69,6 +69,8 @@ export default function AIImageGenerator(props: ObjectInputProps) {
         prompt: finalPrompt,
         n: 1,
         size: '1024x1024',
+        quality: 'hd',
+        style: 'natural',
       });
 
       const imageUrl = response.data[0]?.url;
