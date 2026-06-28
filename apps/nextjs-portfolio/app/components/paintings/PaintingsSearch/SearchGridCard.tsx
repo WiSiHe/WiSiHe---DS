@@ -3,7 +3,7 @@
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import {
   getPaintingImageLqip,
   resolvePaintingCardLayout,
@@ -41,13 +41,17 @@ function SearchGridCardInner({ hit, index, nsfwRevealed = false }: SearchGridCar
   const showNsfwCover = isNsfw && !nsfwRevealed;
   const isForSale = hit.isForSale === true || hit.hasStoreLink === true;
 
-  const layout = resolvePaintingCardLayout({
-    format: hit.format,
-    aspectRatio: hit.image?.aspectRatio ?? null,
-  });
+  const layout = useMemo(
+    () =>
+      resolvePaintingCardLayout({
+        format: hit.format,
+        aspectRatio: hit.image?.aspectRatio ?? null,
+      }),
+    [hit.format, hit.image?.aspectRatio],
+  );
 
-  const imageSrc = urlForPaintingCard(hit.image, layout);
-  const lqip = getPaintingImageLqip(hit.image);
+  const imageSrc = useMemo(() => urlForPaintingCard(hit.image, layout), [hit.image, layout]);
+  const lqip = useMemo(() => getPaintingImageLqip(hit.image), [hit.image]);
 
   return (
     <Link
@@ -76,6 +80,7 @@ function SearchGridCardInner({ hit, index, nsfwRevealed = false }: SearchGridCar
           placeholder={lqip ? 'blur' : 'empty'}
           blurDataURL={lqip}
           quality={75}
+          loading={index < 6 ? 'eager' : 'lazy'}
           className='object-cover'
         />
       ) : (

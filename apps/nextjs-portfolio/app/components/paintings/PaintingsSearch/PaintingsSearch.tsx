@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { startTransition, useEffect, useRef, useState } from 'react';
+import { memo, startTransition, useDeferredValue, useEffect, useRef, useState } from 'react';
 import { BsEye } from 'react-icons/bs';
 import {
   IoCheckmark,
@@ -69,10 +69,11 @@ const COLOR_ORDER = [
 
 function ColourRefinement() {
   const { items, refine } = useRefinementList({ attribute: 'dominantColors', limit: 20 });
+  const deferredItems = useDeferredValue(items);
 
-  if (items.length === 0) return null;
+  if (deferredItems.length === 0) return null;
 
-  const sorted = [...items].sort((a, b) => {
+  const sorted = [...deferredItems].sort((a, b) => {
     const ai = COLOR_ORDER.indexOf(a.label);
     const bi = COLOR_ORDER.indexOf(b.label);
     if (ai === -1 && bi === -1) return a.label.localeCompare(b.label);
@@ -320,7 +321,7 @@ function MobileFilterButton({ onClick }: { onClick: () => void }) {
 // FiltersSidebar — defined OUTSIDE the parent so React never creates a new
 // component identity on re-render (which would reset Algolia widget state).
 // ---------------------------------------------------------------------------
-function FiltersSidebar() {
+const FiltersSidebar = memo(function FiltersSidebar() {
   return (
     <>
       {/* Search */}
@@ -352,7 +353,7 @@ function FiltersSidebar() {
       </div>
     </>
   );
-}
+});
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -360,13 +361,24 @@ function FiltersSidebar() {
 
 export default function PaintingsSearch() {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [isDesktopLayout, setIsDesktopLayout] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = isMobileFiltersOpen ? 'hidden' : '';
+    const media = window.matchMedia('(min-width: 768px)');
+    const update = () => setIsDesktopLayout(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileFiltersOpen && !isDesktopLayout ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isMobileFiltersOpen]);
+  }, [isDesktopLayout, isMobileFiltersOpen]);
+
+  const mobileDrawerClosed = !isDesktopLayout && !isMobileFiltersOpen;
 
   if (!isAlgoliaConfigured || !searchClient) {
     return (
@@ -420,85 +432,64 @@ export default function PaintingsSearch() {
         hitsPerPage={18}
         filters={PAINTINGS_INDEX_FILTER}
         attributesToRetrieve={[...PAINTING_HIT_ATTRIBUTES]}
+        facets={['tags', 'dominantColors', 'isForSale']}
+        maxValuesPerFacet={50}
       />
       <SearchAnalytics section='paintings' />
       <ScrollToResults />
 
       <div className='flex flex-col md:flex-row gap-8 w-full mt-4'>
-        {/* ---------------------------------------------------------------- */}
-        {/* Mobile — Filter toggle button                                    */}
-        {/* ---------------------------------------------------------------- */}
         <MobileFilterButton onClick={() => setIsMobileFiltersOpen(true)} />
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Mobile — Always-mounted slide-up drawer                         */}
-        {/*                                                                  */}
-        {/* IMPORTANT: We do NOT use HeadlessUI <Dialog> here because it    */}
-        {/* unmounts its children on close, which destroys the Algolia      */}
-        {/* widgets and clears all active refinements.                       */}
-        {/*                                                                  */}
-        {/* Instead we keep the panel always in the DOM and animate it with  */}
-        {/* a CSS transform, so widgets are never unmounted.                 */}
-        {/* ---------------------------------------------------------------- */}
-        <div className='md:hidden'>
-          {/* Backdrop — click to close */}
-          <div
-            aria-hidden='true'
-            onClick={() => setIsMobileFiltersOpen(false)}
-            className={cn(
-              'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm',
-              'transition-opacity duration-300',
-              isMobileFiltersOpen
-                ? 'opacity-100 pointer-events-auto'
-                : 'opacity-0 pointer-events-none',
-            )}
-          />
+        {/* Mobile backdrop */}
+        <div
+          aria-hidden='true'
+          onClick={() => setIsMobileFiltersOpen(false)}
+          className={cn(
+            'fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden',
+            'transition-opacity duration-300',
+            isMobileFiltersOpen
+              ? 'opacity-100 pointer-events-auto'
+              : 'opacity-0 pointer-events-none',
+          )}
+        />
 
-          {/* Drawer panel — always mounted, slides in/out */}
-          <div
-            role='dialog'
-            aria-modal='true'
-            aria-label='Filters & Search'
-            // When closed, keep widgets mounted but non-interactive (aria-hidden + focusables fails axe)
-            inert={!isMobileFiltersOpen}
-            className={cn(
-              'fixed inset-x-0 bottom-0 z-50',
-              'w-full bg-background max-h-[90dvh] flex flex-col overflow-y-auto',
-              'border-t border-border shadow-2xl p-6 gap-6 rounded-t-3xl',
-              'transition-transform duration-300 ease-out',
-              isMobileFiltersOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none',
-            )}
-          >
-            {/* Header */}
-            <div className='flex items-center justify-between pb-2 border-b border-border/50'>
-              <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>
-              <button
-                type='button'
-                onClick={() => setIsMobileFiltersOpen(false)}
-                className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors'
-                aria-label='Close filters'
-              >
-                <IoClose className='w-6 h-6' />
-              </button>
-            </div>
-
-            {/* Filters content */}
-            <div className='flex flex-col gap-6 pb-10'>
-              <FiltersSidebar />
-            </div>
+        {/*
+          Single filter panel — one set of Algolia widgets for mobile drawer + desktop sidebar.
+          Duplicating FiltersSidebar doubled facet work and caused visible lag on filter toggles.
+        */}
+        <div
+          className={cn(
+            'flex flex-col gap-6 z-50',
+            'max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-h-[90dvh] max-md:overflow-y-auto',
+            'max-md:bg-background max-md:border-t max-md:border-border max-md:shadow-2xl max-md:p-6 max-md:rounded-t-3xl',
+            'max-md:transition-transform max-md:duration-300 max-md:ease-out',
+            isMobileFiltersOpen
+              ? 'max-md:translate-y-0'
+              : 'max-md:translate-y-full max-md:pointer-events-none',
+            'md:relative md:w-56 md:shrink-0 md:translate-y-0 md:pointer-events-auto md:p-0 md:border-0 md:shadow-none md:max-h-none md:overflow-visible',
+          )}
+          inert={mobileDrawerClosed || undefined}
+          role={isDesktopLayout ? undefined : 'dialog'}
+          aria-modal={isDesktopLayout ? undefined : isMobileFiltersOpen}
+          aria-label={isDesktopLayout ? undefined : 'Filters & Search'}
+          aria-hidden={mobileDrawerClosed || undefined}
+        >
+          <div className='flex items-center justify-between pb-2 border-b border-border/50 md:hidden'>
+            <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>
+            <button
+              type='button'
+              onClick={() => setIsMobileFiltersOpen(false)}
+              className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors'
+              aria-label='Close filters'
+            >
+              <IoClose className='w-6 h-6' />
+            </button>
           </div>
-        </div>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Desktop — Sidebar (always visible, always mounted)              */}
-        {/* ---------------------------------------------------------------- */}
-        <div className='hidden md:flex w-56 shrink-0 flex-col gap-6'>
           <FiltersSidebar />
         </div>
 
-        {/* ---------------------------------------------------------------- */}
-        {/* Main content                                                     */}
-        {/* ---------------------------------------------------------------- */}
         <div id={RESULTS_ID} className='grow flex flex-col min-w-0'>
           <HitStatsWithSort sortItems={sortItems} />
           <CustomHits />
