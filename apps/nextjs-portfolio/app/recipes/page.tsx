@@ -52,10 +52,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RecipesPage() {
   const { data } = await sanityFetch({ query: getAllRecipes });
   const recipes = (data ?? []) as GetAllRecipesResult;
+  const validRecipes = recipes.filter(
+    (r): r is typeof r & { slug: string; title: string } => !!r.slug && !!r.title,
+  );
 
   return (
     <>
-      <JsonLd data={buildRecipesListStructuredData(recipes)} />
+      <JsonLd data={buildRecipesListStructuredData(validRecipes as any)} />
       <div className='min-h-screen bg-background'>
         <header className='relative overflow-hidden border-b border-border/40 pt-28 pb-16 sm:pt-32'>
           <div className='pointer-events-none absolute inset-0 bg-accent/5' aria-hidden />

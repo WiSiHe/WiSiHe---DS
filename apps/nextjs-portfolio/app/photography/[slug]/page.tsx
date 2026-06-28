@@ -19,7 +19,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     perspective: 'published',
     stega: false,
   });
-  return ((data as PhotographySlugsResult) ?? []).map(({ slug }) => ({ slug }));
+  return ((data as PhotographySlugsResult) ?? [])
+    .filter((item): item is typeof item & { slug: string } => !!item.slug)
+    .map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -66,7 +68,7 @@ export default async function PhotographyDetailPage(props: Props) {
 
   const place = photo.place;
   const image = photo.image;
-  const contentUrl = image ? resolveOpenGraphImage(image)?.url : undefined;
+  const contentUrl = image ? resolveOpenGraphImage(image as any)?.url : undefined;
 
   const structuredData = {
     '@context': 'https://schema.org',

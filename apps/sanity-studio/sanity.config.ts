@@ -2,6 +2,7 @@
 
 import { assist } from '@sanity/assist';
 import { codeInput } from '@sanity/code-input';
+import { documentInternationalization } from '@sanity/document-internationalization';
 import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
 import { presentationTool } from 'sanity/presentation';
@@ -33,6 +34,15 @@ const config = defineConfig({
     : ([
         // Core structure and content editing
         structureTool({ structure }),
+
+        // Document internationalization
+        documentInternationalization({
+          supportedLanguages: [
+            { id: 'en', title: 'English' },
+            { id: 'no', title: 'Norwegian' },
+          ],
+          schemaTypes: ['recipe'],
+        }),
 
         // Live preview and presentation
         presentationTool(presentationToolOptions),

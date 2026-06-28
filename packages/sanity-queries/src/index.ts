@@ -813,7 +813,7 @@ export const SITEMAP_QUERY = defineQuery(`
   `);
 
 export const getAllRecipes = defineQuery(`
-  *[_type == "recipe" && defined(slug.current)]
+  *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]
   | order(publishedAt desc, _updatedAt desc) {
     _id,
     "slug": slug.current,
@@ -837,7 +837,16 @@ export const getAllRecipes = defineQuery(`
 export const getRecipe = defineQuery(`
   *[_type == "recipe" && slug.current == $slug][0] {
     _id,
+    language,
     "slug": slug.current,
+    "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[] {
+      _key,
+      value-> {
+        "slug": slug.current,
+        language,
+        title
+      }
+    },
     title,
     description,
     "seo": {
@@ -858,18 +867,18 @@ export const getRecipe = defineQuery(`
     },
     ingredientCategories[]{
       categoryName,
-              ingredients[]{
-          ingredient,
-          photo {
-            ...,
-            "lqip": asset->metadata.lqip,
-            "aspectRatio": asset->metadata.dimensions.aspectRatio
-          },
-          amount,
-          unit,
-          isDiscrete,
-          notes
-        }
+      ingredients[]{
+        "ingredient": ingredient->name,
+        "photo": ingredient->photo {
+          ...,
+          "lqip": asset->metadata.lqip,
+          "aspectRatio": asset->metadata.dimensions.aspectRatio
+        },
+        amount,
+        unit,
+        isDiscrete,
+        notes
+      }
     },
     instructions[]{
       title,

@@ -1,5 +1,6 @@
 import blockContent from './blockContent';
 import blockContentMinimal from './blockContentMinimal';
+import ingredient from './ingredient';
 import { homePageSectionTypes } from './objects/homePageSections';
 import homeSectionIntro from './objects/homeSectionIntro';
 import painting from './painting';
@@ -47,6 +48,7 @@ export const schemaTypes = [
   redirectType,
   socialType,
   recipe,
+  ingredient,
   // Presentation schema and supporting types
   presentationCategory,
   sourceType,

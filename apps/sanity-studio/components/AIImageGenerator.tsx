@@ -50,8 +50,8 @@ export default function AIImageGenerator(props: ObjectInputProps) {
   const parentValue = useMemo(() => {
     if (!documentValue) return undefined;
     return getValueAtPath(documentValue, path.slice(0, -1));
-  }, [documentValue, path]) as { ingredient?: string } | undefined;
-  const ingredientName = parentValue?.ingredient || '';
+  }, [documentValue, path]) as { name?: string } | undefined;
+  const ingredientName = parentValue?.name || '';
 
   const defaultPrompt = useMemo(() => {
     return ingredientName
@@ -94,16 +94,27 @@ export default function AIImageGenerator(props: ObjectInputProps) {
       });
 
       const imageUrl = response.data[0]?.url;
-      if (!imageUrl) {
-        throw new Error('No image URL returned from OpenAI');
-      }
+      const b64Data = response.data[0]?.b64_json;
+      let blob: Blob;
 
-      // Fetch DALL-E image as blob
-      const imgResponse = await fetch(imageUrl);
-      if (!imgResponse.ok) {
-        throw new Error(`Failed to fetch generated image: ${imgResponse.statusText}`);
+      if (b64Data) {
+        // Convert base64 to blob in the browser
+        const byteCharacters = atob(b64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        blob = new Blob([byteArray], { type: 'image/png' });
+      } else if (imageUrl) {
+        const imgResponse = await fetch(imageUrl);
+        if (!imgResponse.ok) {
+          throw new Error(`Failed to fetch generated image: ${imgResponse.statusText}`);
+        }
+        blob = await imgResponse.blob();
+      } else {
+        throw new Error('No image data returned from OpenAI');
       }
-      const blob = await imgResponse.blob();
 
       // Upload to Sanity
       const filename = `${ingredientName.toLowerCase().replace(/[^a-z0-9]/g, '_') || 'ingredient'}.png`;
@@ -111,15 +122,48 @@ export default function AIImageGenerator(props: ObjectInputProps) {
         filename,
       });
 
-      // Set the value inside Sanity
+      // Generate Alt Text using gpt-4o-mini and the temporary image URL
+      let altText = '';
+      try {
+        const chatCompletion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'text',
+                  text: `Write a short, descriptive alt text (under 100 characters) for this ingredient image of ${ingredientName || 'a food ingredient'}. It is isolated on a clean solid white background. Focus on its appearance, color, and texture. Keep it concise for screen readers.`,
+                },
+                {
+                  type: 'image_url',
+                  image_url: {
+                    url: imageUrl,
+                  },
+                },
+              ],
+            },
+          ],
+          max_tokens: 50,
+        });
+        altText = chatCompletion.choices[0]?.message?.content?.trim() || '';
+        // Remove quotes if wrapped
+        altText = altText.replace(/^["']|["']$/g, '');
+      } catch (err) {
+        console.error('Failed to generate alt text automatically:', err);
+        altText = `Fresh ${ingredientName || 'food ingredient'} isolated on a white background`;
+      }
+
+      // Set both the asset reference and the automatically generated alt text inside Sanity
       onChange(
-        set(
-          {
+        set({
+          _type: 'image',
+          asset: {
             _type: 'reference',
             _ref: asset._id,
           },
-          ['asset'],
-        ),
+          alt: altText,
+        }),
       );
       setSuccess(true);
     } catch (err: unknown) {

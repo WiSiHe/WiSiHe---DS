@@ -93,7 +93,7 @@ export default function ShopTeaserSection({
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: index * 0.08 }}
             >
-              <PaintingCard paintingData={painting} shouldBeLazy alwaysShowTags />
+              <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
             </motion.li>
           ))}
         </ul>

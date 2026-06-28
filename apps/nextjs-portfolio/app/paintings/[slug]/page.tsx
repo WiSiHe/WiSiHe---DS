@@ -19,7 +19,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     perspective: 'published',
     stega: false,
   });
-  return ((data as PaintingsSlugsResult) ?? []).map(({ slug }) => ({ slug }));
+  return ((data as PaintingsSlugsResult) ?? [])
+    .filter((item): item is typeof item & { slug: string } => !!item.slug)
+    .map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

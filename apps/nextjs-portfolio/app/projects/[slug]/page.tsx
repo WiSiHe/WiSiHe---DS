@@ -50,7 +50,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
       perspective: 'published',
       stega: false,
     });
-    return ((data as ProjectsSlugsResult) ?? []).map(({ slug }) => ({ slug }));
+    return ((data as ProjectsSlugsResult) ?? [])
+      .filter((item): item is typeof item & { slug: string } => !!item.slug)
+      .map(({ slug }) => ({ slug }));
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];

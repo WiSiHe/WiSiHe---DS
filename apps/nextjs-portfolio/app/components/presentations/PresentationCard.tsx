@@ -102,7 +102,7 @@ export function PresentationCard({
         {presentation.tags?.length ? (
           <div className='flex flex-wrap gap-2'>
             {presentation.tags.slice(0, 4).map(tag => (
-              <Chip key={tag._id} label={tag.name} size='small' interactive={false} />
+              <Chip key={tag._id} label={tag.name || ''} size='small' interactive={false} />
             ))}
           </div>
         ) : null}

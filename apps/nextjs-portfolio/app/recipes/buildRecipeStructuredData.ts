@@ -18,8 +18,9 @@ export function buildRecipeIngredientList(recipe: NonNullable<GetRecipeResult>):
   return (
     recipe.ingredientCategories?.flatMap(category =>
       (category.ingredients ?? []).map(ingredient => {
+        const name = ingredient.ingredient || '';
         const amount = [ingredient.amount, ingredient.unit].filter(Boolean).join(' ');
-        return amount ? `${amount} ${ingredient.ingredient}` : ingredient.ingredient;
+        return amount ? `${amount} ${name}` : name;
       }),
     ) ?? []
   );
