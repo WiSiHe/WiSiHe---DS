@@ -2,10 +2,10 @@
  * Merge fun facts + place stats into journey items (does not overwrite titles or narrative).
  * Run: node scripts/patch-journey-fun-facts.mjs
  */
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import fs from 'node:fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const studioRoot = path.join(__dirname, '..');

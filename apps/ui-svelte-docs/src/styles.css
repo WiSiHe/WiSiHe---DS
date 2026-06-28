@@ -1,10 +1,10 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
-
 @import "@wisihe/tokens/tailwind-v4";
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 @import "@wisihe/tokens/tailwind-v4-dark";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Ensure Tailwind scans the component package classes. */
 @source "../../../packages/ui-svelte/src/**/*.svelte";

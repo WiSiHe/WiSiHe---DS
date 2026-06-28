@@ -3,8 +3,8 @@
  * Data source: apps/nextjs-portfolio/app/about/data/visited-city-facts.json
  * Run: node scripts/patch-visited-city-facts.mjs
  */
-import { createRequire } from 'node:module';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
