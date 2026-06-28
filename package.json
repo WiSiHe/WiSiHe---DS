@@ -37,9 +37,6 @@
   },
   "packageManager": "pnpm@10.23.0",
   "pnpm": {
-    "patchedDependencies": {
-      "sanity@6.0.0": "patches/sanity@6.0.0.patch"
-    },
     "overrides": {
       "@types/node": "25.3.5"
     },
