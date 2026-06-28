@@ -29,9 +29,9 @@ export default function ForSaleFilter() {
       <Checkbox
         inputSize='sm'
         checked={value.isRefined}
-        onChange={() => refine(value)}
+        className='pointer-events-none'
         label='For sale'
-        labelClassName='grow text-left text-sm font-medium cursor-pointer'
+        labelClassName='grow text-left text-sm font-medium cursor-pointer pointer-events-none'
       />
       <FaShoppingCart
         className={cn(
