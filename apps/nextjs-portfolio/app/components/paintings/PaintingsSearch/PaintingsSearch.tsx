@@ -134,7 +134,7 @@ function SortDropdown() {
         type='button'
         onClick={() => setOpen(value => !value)}
         className={cn(
-          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium',
+          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap',
           'bg-surface border border-border text-foreground-subtle',
           'hover:border-accent-border hover:text-foreground',
           open && 'border-accent text-foreground',
@@ -146,7 +146,7 @@ function SortDropdown() {
       </button>
 
       {open ? (
-        <div className='absolute right-0 top-full mt-1.5 z-50 min-w-[140px] bg-surface border border-border rounded-xl shadow-lg overflow-hidden'>
+        <div className='absolute right-0 top-full mt-1.5 z-50 w-max min-w-full bg-surface border border-border rounded-xl shadow-lg overflow-hidden'>
           {SORT_ITEMS.map(item => (
             <button
               key={item.key}
@@ -156,17 +156,19 @@ function SortDropdown() {
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-left',
+                'w-full flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-left whitespace-nowrap',
                 item.key === sort
                   ? 'text-foreground bg-surface-hover font-medium'
                   : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
               )}
             >
-              <span className='flex items-center gap-2'>
+              <span className='flex items-center gap-2 shrink-0'>
                 {item.icon}
                 {item.label}
               </span>
-              {item.key === sort ? <IoCheckmark className='w-3.5 h-3.5 text-accent' /> : null}
+              {item.key === sort ? (
+                <IoCheckmark className='w-3.5 h-3.5 shrink-0 text-accent' />
+              ) : null}
             </button>
           ))}
         </div>
