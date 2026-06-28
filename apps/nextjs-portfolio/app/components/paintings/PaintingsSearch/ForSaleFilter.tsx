@@ -2,6 +2,7 @@
 
 import { Checkbox } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
+import { startTransition } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useToggleRefinement } from 'react-instantsearch';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
@@ -12,7 +13,7 @@ export default function ForSaleFilter() {
   const handleToggle = () => {
     // value.isRefined reflects the state before this toggle.
     trackEvent(AnalyticsEvent.FOR_SALE_FILTER_TOGGLED, { enabled: !value.isRefined });
-    refine(value);
+    startTransition(() => refine(value));
   };
 
   return (

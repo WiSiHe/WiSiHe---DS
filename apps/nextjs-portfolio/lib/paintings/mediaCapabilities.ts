@@ -12,16 +12,40 @@ export function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+type BrushRevealListener = (canReveal: boolean) => void;
+
+let brushRevealSubscribed = false;
+let brushRevealValue = false;
+const brushRevealListeners = new Set<BrushRevealListener>();
+
+function subscribeBrushRevealMedia() {
+  if (brushRevealSubscribed || typeof window === 'undefined') return;
+  brushRevealSubscribed = true;
+
+  brushRevealValue = prefersFinePointerHover();
+  const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const update = () => {
+    brushRevealValue = media.matches;
+    for (const listener of brushRevealListeners) {
+      listener(brushRevealValue);
+    }
+  };
+  media.addEventListener('change', update);
+}
+
 /** Desktop fine-pointer hover — brush reveal runs only when true. */
 export function useCanBrushReveal(): boolean {
-  const [canReveal, setCanReveal] = useState(false);
+  const [canReveal, setCanReveal] = useState(() =>
+    typeof window === 'undefined' ? false : prefersFinePointerHover(),
+  );
 
   useLayoutEffect(() => {
-    setCanReveal(prefersFinePointerHover());
-    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const update = () => setCanReveal(media.matches);
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+    subscribeBrushRevealMedia();
+    setCanReveal(brushRevealValue);
+    brushRevealListeners.add(setCanReveal);
+    return () => {
+      brushRevealListeners.delete(setCanReveal);
+    };
   }, []);
 
   return canReveal;

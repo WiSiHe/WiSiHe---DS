@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { useEffect, useRef, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { BsEye } from 'react-icons/bs';
 import {
   IoCheckmark,
@@ -89,7 +89,7 @@ function ColourRefinement() {
           <button
             key={item.label}
             type='button'
-            onClick={() => refine(item.value)}
+            onClick={() => startTransition(() => refine(item.value))}
             title={`${item.label} (${item.count})`}
             className={cn(
               'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-150 border',
