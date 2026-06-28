@@ -49,7 +49,24 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
   ): PortableTextBlock[] => {
     return [...content].map(block => {
       if (block._type === 'block' && block.children) {
-        const processedChildren = block.children.flatMap(child => {
+        // Merge adjacent plain-text spans (spans without marks) to avoid curly braces being split across spans.
+        const mergedChildren: any[] = [];
+        for (const child of block.children) {
+          const lastChild = mergedChildren[mergedChildren.length - 1];
+          if (
+            lastChild &&
+            lastChild._type === 'span' &&
+            (!lastChild.marks || lastChild.marks.length === 0) &&
+            child._type === 'span' &&
+            (!child.marks || child.marks.length === 0)
+          ) {
+            lastChild.text = (lastChild.text || '') + (child.text || '');
+          } else {
+            mergedChildren.push({ ...child });
+          }
+        }
+
+        const processedChildren = mergedChildren.flatMap(child => {
           if (child._type === 'span' && child.text && typeof child.text === 'string') {
             // Process the text to replace ingredient references
             const processedText = processInstructionText(child.text, ingredients || []);
