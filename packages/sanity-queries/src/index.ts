@@ -851,6 +851,11 @@ export const getRecipe = defineQuery(`
       "lqip": asset->metadata.lqip,
       "aspectRatio": asset->metadata.dimensions.aspectRatio
     },
+    additionalImages[] {
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    },
     ingredientCategories[]{
       categoryName,
               ingredients[]{
