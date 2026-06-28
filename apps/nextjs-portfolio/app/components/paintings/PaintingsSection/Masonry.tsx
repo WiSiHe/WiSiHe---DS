@@ -67,9 +67,9 @@ const useMedia = (queries: readonly string[], values: readonly number[], default
     return idx >= 0 ? values[idx]! : defaultValue;
   };
 
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(get);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setValue(get());
     const handler = () => setValue(get());
     queries.forEach(q => window.matchMedia(q).addEventListener('change', handler));
@@ -87,16 +87,11 @@ const useMeasure = () => {
     const el = ref.current;
     if (!el) return;
     const read = () => {
-      const r = el.getBoundingClientRect();
-      setSize({ width: r.width, height: r.height });
+      const { width, height } = el.getBoundingClientRect();
+      setSize(prev => (prev.width === width && prev.height === height ? prev : { width, height }));
     };
     read();
-    const ro = new ResizeObserver(entries => {
-      const entry = entries[0];
-      if (!entry) return;
-      const { width, height } = entry.contentRect;
-      setSize({ width, height });
-    });
+    const ro = new ResizeObserver(read);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -188,25 +183,31 @@ const Masonry = ({
       const selector = `[data-masonry-key="${CSS.escape(item.id)}"]`;
       const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
 
+      gsap.killTweensOf(selector);
+
       if (!hasMounted.current) {
         const start = getInitialPosition(item);
+        if (reduced) {
+          gsap.set(selector, { opacity: 1, ...animProps, filter: 'none' });
+          return;
+        }
         gsap.fromTo(
           selector,
           {
-            opacity: reduced ? 1 : 0,
-            x: reduced ? item.x : start.x,
-            y: reduced ? item.y : start.y,
+            opacity: 0,
+            x: start.x,
+            y: start.y,
             width: item.w,
             height: item.h,
-            ...(!reduced && blurToFocus ? { filter: 'blur(10px)' } : {}),
+            ...(blurToFocus ? { filter: 'blur(10px)' } : {}),
           },
           {
             opacity: 1,
             ...animProps,
-            ...(!reduced && blurToFocus ? { filter: 'blur(0px)' } : {}),
-            duration: reduced ? 0 : 0.8,
+            ...(blurToFocus ? { filter: 'blur(0px)' } : {}),
+            duration: 0.8,
             ease: 'power3.out',
-            delay: reduced ? 0 : index * stagger,
+            delay: index * stagger,
           },
         );
       } else {
@@ -292,14 +293,13 @@ const Masonry = ({
         <div
           key={item.id}
           data-masonry-key={item.id}
-          className='absolute box-content overflow-hidden rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] ring-1 ring-border/20'
+          className='absolute overflow-hidden rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] ring-1 ring-border/20'
           style={{
             position: 'absolute',
             left: 0,
             top: 0,
             width: item.w,
             height: item.h,
-            transform: `translate3d(${item.x}px, ${item.y}px, 0px)`,
             willChange: 'transform, width, height, opacity',
           }}
           onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
