@@ -1,5 +1,9 @@
 import { IconClock, IconFlame, IconGauge, IconUsers } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
+import {
+  type RecipeNutritionValues,
+  resolveCalories,
+} from '../RecipeNutrition/recipeNutritionUtils';
 
 type RecipeMetaBadgesProps = {
   prepTime?: number | null;
@@ -7,6 +11,7 @@ type RecipeMetaBadgesProps = {
   totalTime?: number | null;
   servings?: number | null;
   difficulty?: 'easy' | 'medium' | 'hard' | null;
+  nutrition?: RecipeNutritionValues | null;
   variant?: 'hero' | 'card';
   className?: string;
 };
@@ -23,6 +28,7 @@ export function RecipeMetaBadges({
   totalTime,
   servings,
   difficulty,
+  nutrition,
   variant = 'card',
   className,
 }: RecipeMetaBadgesProps) {
@@ -31,7 +37,12 @@ export function RecipeMetaBadges({
     ? 'border-white/35 bg-black/70 text-white backdrop-blur-lg'
     : 'border-border/25 bg-surface/50 text-foreground-subtle backdrop-blur-xs';
 
+  const caloriesPerServing = nutrition ? resolveCalories(nutrition) : null;
+
   const items = [
+    caloriesPerServing != null
+      ? { icon: IconFlame, label: `${caloriesPerServing} kcal / serving` }
+      : null,
     prepTime ? { icon: IconClock, label: `Prep ${prepTime} min` } : null,
     cookingTime ? { icon: IconFlame, label: `Cook ${cookingTime} min` } : null,
     totalTime ? { icon: IconClock, label: `Total ${totalTime} min` } : null,
