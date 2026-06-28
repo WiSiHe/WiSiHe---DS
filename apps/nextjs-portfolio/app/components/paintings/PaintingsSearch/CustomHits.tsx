@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { memo, useDeferredValue, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import { isNsfwFacetActive } from '@/lib/algolia/facets';
 import { SearchGridCard, type SearchGridHit } from './SearchGridCard';
@@ -33,7 +33,7 @@ const PaintingHit = memo(
     const adapted = useMemo(() => adaptSearchHit(hit), [hit]);
 
     return (
-      <div className='mb-2 [content-visibility:auto] [contain-intrinsic-size:auto_280px]'>
+      <div className='[content-visibility:auto] [contain-intrinsic-size:auto_280px]'>
         <SearchGridCard hit={adapted} index={index} nsfwRevealed={nsfwRevealed} />
       </div>
     );
@@ -58,7 +58,7 @@ function PaintingCardSkeleton({ index }: { index: number }) {
   return (
     <div
       className={cn(
-        'w-full rounded-xl bg-surface border border-border overflow-hidden animate-pulse mb-2 relative',
+        'w-full rounded-xl bg-surface border border-border overflow-hidden animate-pulse relative',
         aspect,
       )}
       style={{ animationDelay: `${index * 40}ms` }}
@@ -85,12 +85,22 @@ export default function CustomHits() {
   const { items: refinements } = useCurrentRefinements();
   const refreshAttempted = useRef(false);
 
-  const displayItems = useDeferredValue(items);
-  const isUpdatingResults = displayItems !== items;
+  const settledItemsRef = useRef(items);
+  const settledNsfwRevealedRef = useRef(isNsfwFacetActive(refinements));
+
+  const isSearchPending = status === 'loading' || status === 'stalled';
+  const isNsfwFilterActive = isNsfwFacetActive(refinements);
+
+  if (!isSearchPending) {
+    settledItemsRef.current = items;
+    settledNsfwRevealedRef.current = isNsfwFilterActive;
+  }
+
+  const displayItems = isSearchPending ? settledItemsRef.current : items;
+  const displayNsfwRevealed = settledNsfwRevealedRef.current;
 
   const nbHits = results?.nbHits ?? 0;
   const queryId = results?.queryID;
-  const isSearchPending = status === 'loading' || status === 'stalled';
   const awaitingFirstResponse = items.length === 0 && queryId == null && status !== 'error';
   const showInitialSkeleton = items.length === 0 && (isSearchPending || awaitingFirstResponse);
 
@@ -99,8 +109,6 @@ export default function CustomHits() {
     refreshAttempted.current = true;
     refresh();
   }, [awaitingFirstResponse, refresh, status]);
-
-  const isNsfwFilterActive = isNsfwFacetActive(refinements);
 
   if (showInitialSkeleton) {
     return <SkeletonGrid />;
@@ -116,16 +124,13 @@ export default function CustomHits() {
   }
 
   return (
-    <div
-      className='grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4'
-      aria-busy={isSearchPending || isUpdatingResults}
-    >
+    <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4' aria-busy={isSearchPending}>
       {displayItems.map((hit, index) => (
         <PaintingHit
           key={hit.objectID}
           hit={hit}
           index={index}
-          nsfwRevealed={hit['isNSFW'] === true ? isNsfwFilterActive : undefined}
+          nsfwRevealed={hit['isNSFW'] === true ? displayNsfwRevealed : undefined}
         />
       ))}
     </div>
