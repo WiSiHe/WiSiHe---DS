@@ -7,7 +7,7 @@ import * as React from 'react';
 const inputVariants = cva(
   [
     'flex w-full rounded-md border bg-background px-3 py-2 text-sm text-foreground',
-    'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground',
+    'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-foreground-muted',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0',
     'disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
   ],
@@ -16,7 +16,7 @@ const inputVariants = cva(
       variant: {
         default: '',
         filled:
-          'bg-muted border-transparent hover:bg-muted/80 focus-visible:bg-background focus-visible:border-ring',
+          'bg-surface-subtle border-transparent hover:bg-surface-subtle/80 focus-visible:bg-background focus-visible:border-ring',
       },
       inputSize: {
         default: 'h-10',
@@ -88,14 +88,14 @@ export function Input({
       </label>
 
       {description && (
-        <p id={descriptionId} className='text-xs text-muted-foreground'>
+        <p id={descriptionId} className='text-xs text-foreground-muted'>
           {description}
         </p>
       )}
 
       <div className='relative w-full'>
         {leftIcon && (
-          <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none'>
+          <div className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none'>
             {leftIcon}
           </div>
         )}
@@ -118,7 +118,7 @@ export function Input({
           {...props}
         />
         {rightIcon && (
-          <div className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none'>
+          <div className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none'>
             {rightIcon}
           </div>
         )}

@@ -1,6 +1,19 @@
 # Color System Documentation
 
-This project uses a **hybrid color system** combining **semantic tokens** (theme-aware) and **numeric scales** (fixed colors), following best practices from Tailwind CSS, shadcn/ui, and Designsystemet.
+This project uses **@wisihe/tokens** semantic colors for UI, plus **numeric primitive scales** for fixed designs (illustrations, data viz, marketing one-offs). Canonical token docs: [`packages/tokens/README.md`](../../packages/tokens/README.md).
+
+## Naming canon (WiSiHe-native)
+
+Use token-backed utilities only. **Do not use shadcn-style names** — they are not defined in `@wisihe/tokens`.
+
+| Use | Do not use |
+|-----|------------|
+| `text-foreground-muted` | `text-muted-foreground` |
+| `bg-surface` | `bg-card` |
+| `bg-surface-subtle` | `bg-muted` |
+| `hover:bg-surface-hover` | `hover:bg-muted` |
+| `bg-accent`, `text-accent-contrast` | `bg-primary`, `text-primary-foreground` |
+| `bg-danger`, `text-danger-contrast` | `bg-destructive`, `text-destructive-foreground` |
 
 ## Overview
 
@@ -199,6 +212,9 @@ Each scale has 11 shades from 50 (lightest) to 950 (darkest):
 | `bg-color-primary`      | `bg-accent`            | `bg-accent-500`      |
 | `text-color-on-primary` | `text-accent-contrast` | `text-neutral-50`    |
 | `border-color-border`   | `border-border`        | `border-neutral-300` |
+| `text-muted-foreground` | `text-foreground-muted` | — |
+| `bg-card`               | `bg-surface`           | — |
+| `bg-muted`              | `bg-surface-subtle`    | — |
 
 ---
 
@@ -242,6 +258,8 @@ Each scale has 11 shades from 50 (lightest) to 950 (darkest):
 
 // Don't mix old and new naming
 <div className="bg-color-background">  {/* Use bg-background instead */}
+<div className="text-muted-foreground">  {/* Use text-foreground-muted */}
+<div className="bg-card">  {/* Use bg-surface */}
 ```
 
 ---

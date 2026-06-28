@@ -23,7 +23,7 @@ export default function ForSaleFilter() {
         'flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm transition-colors',
         value.isRefined
           ? 'border-accent/40 bg-accent/10 text-foreground'
-          : 'border-border bg-surface text-muted-foreground hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
+          : 'border-border bg-surface text-foreground-muted hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
       )}
     >
       <span
@@ -52,7 +52,7 @@ export default function ForSaleFilter() {
       <FaShoppingCart
         className={cn(
           'h-3.5 w-3.5 shrink-0',
-          value.isRefined ? 'text-accent' : 'text-muted-foreground/60',
+          value.isRefined ? 'text-accent' : 'text-foreground-muted/60',
         )}
         aria-hidden
       />

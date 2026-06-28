@@ -22,7 +22,7 @@ export default function PaintingsForSaleFilter() {
         'flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm',
         forSale
           ? 'border-accent/40 bg-accent/10 text-foreground'
-          : 'border-border bg-surface text-muted-foreground hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
+          : 'border-border bg-surface text-foreground-muted hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
       )}
     >
       <span
@@ -47,7 +47,7 @@ export default function PaintingsForSaleFilter() {
       </span>
       <span className='grow text-left text-sm font-medium'>For sale</span>
       <FaShoppingCart
-        className={cn('h-3.5 w-3.5 shrink-0', forSale ? 'text-accent' : 'text-muted-foreground/60')}
+        className={cn('h-3.5 w-3.5 shrink-0', forSale ? 'text-accent' : 'text-foreground-muted/60')}
         aria-hidden
       />
     </button>

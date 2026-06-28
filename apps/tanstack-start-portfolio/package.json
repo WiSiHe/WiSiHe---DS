@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "predev": "pnpm --filter @wisihe/tokens build",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview"

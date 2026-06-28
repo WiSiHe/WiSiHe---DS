@@ -100,7 +100,7 @@ const PortableTextImage = ({ value }: { value: SanityImage }) => {
         />
       </div>
       {caption && (
-        <figcaption className='mt-2 text-sm text-center text-muted-foreground'>
+        <figcaption className='mt-2 text-sm text-center text-foreground-muted'>
           {caption}
         </figcaption>
       )}
@@ -203,7 +203,7 @@ const PortableTextVideo = ({
         />
       </div>
       {value.caption && (
-        <figcaption className='mt-2 text-sm text-center text-muted-foreground'>
+        <figcaption className='mt-2 text-sm text-center text-foreground-muted'>
           {value.caption}
         </figcaption>
       )}
@@ -255,7 +255,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-foreground'
               aria-label='Link to heading'
             >
               <svg
@@ -289,7 +289,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-foreground'
               aria-label='Link to heading'
             >
               <svg
@@ -323,7 +323,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-foreground'
               aria-label='Link to heading'
             >
               <svg
@@ -357,7 +357,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
           {value?._key && (
             <a
               href={`#heading-${value._key}`}
-              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground'
+              className='absolute top-0 bottom-0 left-0 flex items-center -ml-6 transition-opacity opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-foreground'
               aria-label='Link to heading'
             >
               <svg
@@ -382,7 +382,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
         </h4>
       ),
       blockquote: ({ children }) => (
-        <blockquote className='border-l-4 border-accent pl-4 italic text-muted-foreground'>
+        <blockquote className='border-l-4 border-accent pl-4 italic text-foreground-muted'>
           {children}
         </blockquote>
       ),
@@ -406,7 +406,7 @@ export default function CustomPortableText({ className, value }: CustomPortableT
       strong: ({ children }) => <strong className='font-semibold'>{children}</strong>,
       em: ({ children }) => <em className='italic'>{children}</em>,
       code: ({ children }) => (
-        <code className='bg-muted px-1 py-0.5 rounded text-sm font-mono'>{children}</code>
+        <code className='bg-surface-subtle px-1 py-0.5 rounded text-sm font-mono'>{children}</code>
       ),
       underline: ({ children }) => <u className='underline'>{children}</u>,
       'strike-through': ({ children }) => <del className='line-through'>{children}</del>,

@@ -1,19 +1,18 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
 @import "locomotive-scroll/dist/locomotive-scroll.css";
 /* Import design tokens from package exports */
 @import "@wisihe/tokens/tailwind-v4";
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
+@import "@wisihe/tokens/tailwind-v4-dark";
 
 @source "../../../packages/ui-react/src";
 
 @theme {
   --aspect-portrait: 3 / 4;
 }
-
-/**
- * Triggering recompile to fix opacity modifiers issue.
- */
 
 /* ============================================================================
    BASE STYLES
@@ -122,11 +121,6 @@
   /* Remove focus ring for pointer interactions */
   :focus:not(:focus-visible) {
     outline: none;
-  }
-
-  /* Dark mode overrides for broken token mappings */
-  :root.dark {
-    --color-surface-elevated: var(--semantic-dark-color-surface-tinted);
   }
 }
 

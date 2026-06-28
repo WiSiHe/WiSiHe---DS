@@ -83,7 +83,7 @@ export function Combobox<T extends string | number = string>({
       </label>
 
       {description && (
-        <p id={descriptionId} className='text-xs text-muted-foreground'>
+        <p id={descriptionId} className='text-xs text-foreground-muted'>
           {description}
         </p>
       )}
@@ -91,7 +91,7 @@ export function Combobox<T extends string | number = string>({
       <HeadlessCombobox value={value} onChange={onChange} disabled={disabled}>
         <div className='relative'>
           {/* Search icon */}
-          <div className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
+          <div className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted'>
             <IconSearch className='size-4' />
           </div>
 
@@ -110,7 +110,7 @@ export function Combobox<T extends string | number = string>({
             placeholder={placeholder}
             className={cn(
               'flex w-full rounded-md border bg-background pl-9 pr-10 py-2 text-sm text-foreground',
-              'placeholder:text-muted-foreground transition-colors',
+              'placeholder:text-foreground-muted transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0',
               'disabled:cursor-not-allowed disabled:opacity-50',
               hasError
@@ -122,7 +122,7 @@ export function Combobox<T extends string | number = string>({
           <ComboboxButton
             type='button'
             aria-label='Show options'
-            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+            className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
           >
             <IconChevronDown className='size-4' aria-hidden />
           </ComboboxButton>
@@ -139,7 +139,7 @@ export function Combobox<T extends string | number = string>({
           )}
         >
           {filteredOptions.length === 0 ? (
-            <div className='px-3 py-2 text-sm text-muted-foreground'>No results found.</div>
+            <div className='px-3 py-2 text-sm text-foreground-muted'>No results found.</div>
           ) : (
             filteredOptions.map(opt => (
               <ComboboxOption
@@ -148,8 +148,8 @@ export function Combobox<T extends string | number = string>({
                 disabled={opt.disabled}
                 className={cn(
                   'flex items-center justify-between gap-2 rounded-lg px-3 py-2 cursor-pointer',
-                  'text-foreground hover:bg-muted transition-colors',
-                  'data-focus:bg-muted data-selected:font-medium',
+                  'text-foreground hover:bg-surface-hover transition-colors',
+                  'data-focus:bg-surface-hover data-selected:font-medium',
                   'data-disabled:opacity-50 data-disabled:cursor-not-allowed',
                 )}
               >

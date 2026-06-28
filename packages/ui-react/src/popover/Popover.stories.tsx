@@ -60,7 +60,7 @@ export const WithRichContent: Story = {
       <PopoverContent className='max-w-xs'>
         <div className='p-3'>
           <p className='font-medium text-foreground mb-1'>Need help?</p>
-          <p className='text-xs text-muted-foreground'>
+          <p className='text-xs text-foreground-muted'>
             Visit the docs or reach out to support for assistance.
           </p>
         </div>

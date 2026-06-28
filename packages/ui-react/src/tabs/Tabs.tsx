@@ -11,7 +11,7 @@ const tabListVariants = cva('flex', {
   variants: {
     variant: {
       underline: 'border-b border-border gap-0',
-      pill: 'bg-muted p-1 rounded-lg gap-1',
+      pill: 'bg-surface-subtle p-1 rounded-lg gap-1',
     },
   },
   defaultVariants: { variant: 'underline' },
@@ -27,12 +27,12 @@ const tabVariants = cva(
     variants: {
       variant: {
         underline: [
-          'px-4 py-2.5 -mb-px border-b-2 border-transparent text-muted-foreground',
+          'px-4 py-2.5 -mb-px border-b-2 border-transparent text-foreground-muted',
           'hover:text-foreground hover:border-border',
           'data-selected:text-foreground data-selected:border-accent',
         ],
         pill: [
-          'px-3 py-1.5 rounded-md text-muted-foreground',
+          'px-3 py-1.5 rounded-md text-foreground-muted',
           'hover:text-foreground hover:bg-background/60',
           'data-selected:bg-background data-selected:text-foreground data-selected:shadow-sm',
         ],

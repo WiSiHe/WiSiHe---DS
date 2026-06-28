@@ -18,15 +18,5 @@ export default {
         },
       ],
     },
-    'tailwind-v3': {
-      transformGroup: 'js',
-      buildPath: 'dist/tailwind/',
-      files: [
-        {
-          destination: 'config.js',
-          format: 'javascript/module',
-        },
-      ],
-    },
   },
 };

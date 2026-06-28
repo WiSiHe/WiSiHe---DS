@@ -8,7 +8,7 @@ const card = cva('rounded-lg border', {
       default: ['bg-surface', 'border-border', 'text-foreground'],
       elevated: ['bg-surface-subtle', 'border-border', 'text-foreground', 'shadow-md'],
       outlined: ['bg-transparent', 'border-border', 'text-foreground'],
-      filled: ['bg-neutral-50', 'border-transparent', 'text-foreground'],
+      filled: ['bg-surface-subtle', 'border-transparent', 'text-foreground'],
     },
     padding: {
       none: 'p-0',

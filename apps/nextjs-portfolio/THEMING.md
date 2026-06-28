@@ -1,249 +1,59 @@
-# Theming System Documentation
+# Theming System
 
-This project uses a modern, best-practice theming approach combining **Tailwind CSS v4**, **next-themes**, and **shadcn/ui** conventions.
+This app uses **`@wisihe/tokens`** with **Tailwind CSS v4** and **next-themes** (`attribute="class"` on `<html>`).
 
-## Overview
+Canonical docs: [`packages/tokens/README.md`](../../packages/tokens/README.md)
 
-Our theming system provides:
-
-- ✅ **Automatic dark mode** without `dark:` prefix spam
-- ✅ **SSR-safe** theme switching with next-themes
-- ✅ **System preference** detection
-- ✅ **Semantic color naming** following shadcn/ui conventions
-- ✅ **OKLCH color space** for perceptual uniformity
-- ✅ **Type-safe** theme management
-
-## Architecture
-
-### 1. Color Definition (`globals.css`)
-
-Colors are defined in three layers:
-
-#### Layer 1: Base Variables (`:root` and `.dark`)
+## CSS setup (`globals.css`)
 
 ```css
-:root {
-  --background: oklch(98% 0.002 250);
-  --foreground: oklch(12% 0.01 250);
-  --primary: oklch(25% 0.02 250);
-  --primary-foreground: oklch(98% 0.002 250);
-  /* ... */
-}
-
-.dark {
-  --background: oklch(8% 0.005 250);
-  --foreground: oklch(98% 0.002 250);
-  /* ... */
-}
-```
-
-#### Layer 2: Tailwind Mapping (`@theme inline`)
-
-```css
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  /* ... */
-}
-```
-
-#### Layer 3: Custom Dark Mode Variant
-
-```css
+@import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
+@import "@wisihe/tokens/tailwind-v4-dark";
 ```
 
-This eliminates the need for `dark:` prefixes in your components!
+### Why each import
 
-### 2. Theme Provider (`providers.tsx`)
+| Import | Role |
+|--------|------|
+| `tailwind-v4` | Tailwind `@theme` utilities (`bg-accent`, `text-foreground`, …) |
+| `css` | Primitive CSS variables from Style Dictionary |
+| `css/semantic` | Runtime `-val` variables on `:root` / `:root.dark` |
+| `tailwind-v4-dark` | `.dark` overrides + `@theme inline` fallbacks for opacity modifiers |
 
-Uses `next-themes` for robust theme management:
+### Class-based dark mode
+
+`@custom-variant dark` wires Tailwind `dark:*` utilities to the `.dark` class from next-themes (not `prefers-color-scheme` alone).
+
+Prefer semantic utilities that adapt automatically:
 
 ```tsx
-<NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-  {children}
-</NextThemesProvider>
+<div className="bg-surface text-foreground border-border" />
 ```
 
-## Usage
+Use `dark:*` only when you need an explicit light/dark split outside the token system (e.g. `dark:prose-invert`).
 
-### Using Theme Colors
+## Theme provider
 
-#### ✅ Recommended: Semantic Colors
+`app/providers.tsx` uses next-themes with `attribute="class"` and `enableSystem`. No extra setup required.
 
-```tsx
-// Background and foreground
-<div className="bg-background text-foreground">
+## Editing tokens
 
-// Primary actions
-<button className="bg-accent text-accent-contrast">
-
-// Cards and surfaces
-<div className="bg-card text-card-foreground">
-
-// Muted/disabled states
-<div className="bg-muted text-muted-foreground">
-
-// Accents
-<div className="bg-accent text-accent-contrast">
-```
-
-#### ✅ With Custom Dark Mode Variant
-
-Thanks to `@custom-variant dark`, you can write:
-
-```tsx
-// This automatically adapts to dark mode!
-<div className="bg-accent">
-```
-
-Instead of:
-
-```tsx
-// ❌ Old way - no longer needed!
-<div className="bg-accent">
-```
-
-### Accessing Theme State
-
-```tsx
-import { useTheme } from '@/app/providers';
-
-function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-
-  return (
-    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-      Current: {resolvedTheme}
-    </button>
-  );
-}
-```
-
-## Available Colors
-
-### Core Semantic Colors
-
-| Color                                | Purpose                             | Example Usage                            |
-| ------------------------------------ | ----------------------------------- | ---------------------------------------- |
-| `background` / `foreground`          | Page background and primary text    | `bg-background text-foreground`          |
-| `accent` / `accent-contrast`         | Primary actions and CTAs            | `bg-accent text-accent-contrast`         |
-| `secondary` / `secondary-foreground` | Secondary actions                   | `bg-secondary text-secondary-foreground` |
-| `accent` / `accent-contrast`         | Highlights and interactive elements | `bg-accent text-accent-contrast`         |
-| `muted` / `muted-foreground`         | Subtle backgrounds, disabled states | `bg-muted text-muted-foreground`         |
-
-### Surface Colors
-
-| Color                            | Purpose                   |
-| -------------------------------- | ------------------------- |
-| `card` / `card-foreground`       | Card components           |
-| `popover` / `popover-foreground` | Popover/dropdown surfaces |
-
-### UI Elements
-
-| Color    | Purpose              |
-| -------- | -------------------- |
-| `border` | Borders and dividers |
-| `input`  | Input field borders  |
-| `ring`   | Focus rings          |
-
-### Semantic States
-
-| Color                                    | Purpose                   |
-| ---------------------------------------- | ------------------------- |
-| `success` / `success-foreground`         | Success states            |
-| `warning` / `warning-foreground`         | Warning states            |
-| `destructive` / `destructive-foreground` | Error/destructive actions |
-
-### Additional Accents
-
-| Color         | Purpose                |
-| ------------- | ---------------------- |
-| `accent-warm` | Warm orange highlights |
-| `accent-cool` | Cool purple accents    |
-
-## Adding New Colors
-
-To add a new color to the theme:
-
-1. **Define in `:root` and `.dark`**:
-
-```css
-:root {
-  --info: oklch(70% 0.15 240);
-  --info-foreground: oklch(12% 0.01 250);
-}
-
-.dark {
-  --info: oklch(80% 0.18 240);
-  --info-foreground: oklch(8% 0.005 250);
-}
-```
-
-2. **Map to Tailwind in `@theme inline`**:
-
-```css
-@theme inline {
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-}
-```
-
-3. **Use in components**:
-
-```tsx
-<div className="bg-info text-info-foreground">Info message</div>
-```
-
-## Best Practices
-
-### ✅ DO
-
-- Use semantic color names (`bg-accent`, `bg-surface`, `text-foreground`)
-- Follow the `background`/`foreground` naming pattern
-- Use OKLCH color space for new colors
-- Test colors in both light and dark modes
-- Ensure sufficient contrast for accessibility
-
-### ❌ DON'T
-
-- Use `dark:` prefixes (the custom variant handles this)
-- Define colors directly in components
-- Use hex colors for theme-aware elements
-- Skip the `-foreground` variant for colored backgrounds
-
-## Migration from Old System
-
-If you have existing code using the old color system:
-
-| Old                                         | New               |
-| ------------------------------------------- | ----------------- |
-| `bg-color-background`                       | `bg-background`   |
-| `text-color-foreground`                     | `text-foreground` |
-| `bg-color-primary`                          | `bg-accent`       |
-| `bg-color-accent dark:bg-color-accent-dark` | `bg-accent`       |
-| `border-color-border`                       | `border-border`   |
-
-## Resources
-
-- [Tailwind CSS v4 Documentation](https://tailwindcss.com/docs)
-- [next-themes](https://github.com/pacocoursey/next-themes)
-- [shadcn/ui Theming](https://ui.shadcn.com/docs/theming)
-- [OKLCH Color Space](https://oklch.com/)
+1. Change JSON under `packages/tokens/tokens/`
+2. Run `pnpm --filter @wisihe/tokens build`
+3. Never edit `packages/tokens/dist/` directly
 
 ## Troubleshooting
 
-### Theme flashing on page load
+| Issue | Check |
+|-------|-------|
+| Colors don't switch with theme toggle | `css/semantic` imported? `.dark` on `<html>`? |
+| `dark:*` ignores toggle | `@custom-variant dark` in CSS entry? |
+| Opacity modifiers broken on semantic colors | `tailwind-v4-dark` imported? Rebuild tokens. |
+| Stale values after edit | Run token build; restart dev server |
 
-This is handled by `next-themes` automatically. Ensure `disableTransitionOnChange` is set in the provider.
-
-### Colors not updating in dark mode
-
-1. Check that the color is defined in both `:root` and `.dark`
-2. Verify the `@theme inline` mapping exists
-3. Ensure you're using the Tailwind class name (e.g., `bg-accent`, not `bg-color-primary`)
-
-### CSS warnings about `@custom-variant` or `@theme`
-
-These are expected - they're Tailwind v4 specific directives that CSS linters don't recognize yet. They work correctly at runtime.
+See also: [`COLOR-SYSTEM.md`](./COLOR-SYSTEM.md)
