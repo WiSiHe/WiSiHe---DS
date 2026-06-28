@@ -284,10 +284,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     return () => clearInterval(interval);
   }, [isTouchDevice, stage, visibleItems.length]);
 
-  if (!items || items.length === 0) {
-    return <div className='text-center py-20'>No items available.</div>;
-  }
-
   const basePositions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
   const [positions, setPositions] = useState(basePositions);
 
@@ -296,6 +292,10 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     const shuffled = [...basePositions].sort(() => Math.random() - 0.5);
     setPositions(shuffled);
   }, [basePositions]);
+
+  if (!items || items.length === 0) {
+    return <div className='text-center py-20'>No items available.</div>;
+  }
 
   // Variants for central text stagger entrance
   const textContainerVariants = {

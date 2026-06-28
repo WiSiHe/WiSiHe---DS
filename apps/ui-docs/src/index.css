@@ -1,10 +1,10 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
-
 @import "@wisihe/tokens/tailwind-v4";
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 @import "@wisihe/tokens/tailwind-v4-dark";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @source "../../../packages/ui-react/src";
 /* Scan local app + stories (subfolders are not included by `@source "."` in some setups). */

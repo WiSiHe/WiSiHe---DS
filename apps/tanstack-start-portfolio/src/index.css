@@ -1,13 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap");
-
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* Import workspace tokens and tailwind */
 @import "@wisihe/tokens/tailwind-v4";
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 @import "@wisihe/tokens/tailwind-v4-dark";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   /* Reset border colors */

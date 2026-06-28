@@ -149,15 +149,16 @@ const PROJECT_STACK_TAG_NAMES = new Set([
   'Hackathon',
   'Workshop',
 ]);
-return text
+
+function normalizeTagDescription(text) {
+  return text
     .replace(/^["']|["']$/g, '')
     .replace(/\n/g, ' ')
     .trim()
     .slice(0, 150);
 }
 
-async
-function generateTagDescription(tagName) {
+async function generateTagDescription(tagName) {
   const text = await openaiText([
     {
       role: 'user',
