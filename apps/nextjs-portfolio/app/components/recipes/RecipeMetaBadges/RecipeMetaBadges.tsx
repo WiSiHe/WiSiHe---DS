@@ -29,7 +29,7 @@ export function RecipeMetaBadges({
   const isHero = variant === 'hero';
   const badgeClass = isHero
     ? 'border-white/35 bg-black/70 text-white backdrop-blur-lg'
-    : 'border-border/40 bg-surface text-foreground-subtle';
+    : 'border-border/25 bg-surface/50 text-foreground-subtle backdrop-blur-xs';
 
   const items = [
     prepTime ? { icon: IconClock, label: `Prep ${prepTime} min` } : null,

@@ -880,6 +880,8 @@ export const getRecipe = defineQuery(`
     totalTime,
     servings,
     difficulty,
+    recipeCategory,
+    recipeCuisine,
     publishedAt,
     tags[]->{name}
   }

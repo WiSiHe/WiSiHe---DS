@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
 import { useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
@@ -92,30 +93,39 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
     });
   };
 
+  // Find the first uncompleted step (active step)
+  const activeStepIndex = instructions.findIndex((_, idx) => !completedSteps.has(idx));
+
   return (
-    <div className='rounded-2xl bg-surface border border-border/30 shadow-lg p-6 md:p-8'>
+    <div className='rounded-[2rem] border border-border/20 bg-surface/70 backdrop-blur-md p-6 md:p-8 shadow-xl shadow-foreground/[0.02]'>
       <div className='mb-8'>
-        <h2 className='text-3xl font-bold font-serif text-foreground mb-2'>Instructions</h2>
+        <h2 className='text-3xl font-extrabold tracking-tight text-foreground mb-2 font-sans'>
+          Instructions
+        </h2>
         <p className='text-sm text-foreground-muted'>
           Follow these steps to create your recipe. Click each step to mark it as complete.
         </p>
       </div>
 
-      <div className='space-y-8'>
+      <div className='space-y-4'>
         {instructions.map((instruction, index) => {
           const isCompleted = completedSteps.has(index);
+          const isActive = index === activeStepIndex;
 
           return (
             <div
               // biome-ignore lint/suspicious/noArrayIndexKey: static instruction steps
               key={index}
-              className={`group relative flex gap-6 transition-all duration-300 ${
-                isCompleted ? 'opacity-60' : ''
-              }`}
+              className={cn(
+                'group relative flex gap-6 transition-all duration-300 -mx-4 px-4 py-4 rounded-2xl border border-transparent',
+                isActive &&
+                  'bg-accent/5 border-accent/15 shadow-sm scale-[1.01] ring-1 ring-accent/5',
+                isCompleted && 'opacity-45',
+              )}
             >
               {/* Connecting line */}
               {index < instructions.length - 1 && (
-                <div className='absolute left-4 top-12 w-0.5 h-full bg-border/30 -z-10' />
+                <div className='absolute left-9 top-14 w-0.5 h-full bg-border/20 -z-10' />
               )}
 
               <div className='shrink-0'>
@@ -123,11 +133,14 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
                 <button
                   type='button'
                   onClick={() => toggleStep(index)}
-                  className={`relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background cursor-pointer shadow-md ${
+                  className={cn(
+                    'relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer shadow-sm border-2',
                     isCompleted
-                      ? 'bg-success text-success-contrast scale-95'
-                      : 'bg-accent text-accent-contrast hover:bg-accent-hover'
-                  }`}
+                      ? 'bg-success border-success text-success-contrast scale-95'
+                      : isActive
+                        ? 'border-accent bg-accent text-accent-contrast shadow-accent/20 shadow-md ring-2 ring-accent/25'
+                        : 'border-border bg-background text-foreground-subtle hover:border-accent hover:text-accent',
+                  )}
                   aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
                 >
                   {isCompleted ? <FiCheck className='w-5 h-5' /> : <span>{index + 1}</span>}
@@ -137,19 +150,21 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
               <div className='flex-1 min-w-0'>
                 {instruction.title && (
                   <h3
-                    className={`text-xl font-semibold mb-3 transition-all duration-300 ${
+                    className={cn(
+                      'text-xl font-bold mb-2 transition-all duration-300 font-sans tracking-tight',
                       isCompleted
                         ? 'line-through text-foreground-muted'
-                        : 'text-foreground group-hover:text-accent'
-                    }`}
+                        : 'text-foreground group-hover:text-accent',
+                    )}
                   >
                     {instruction.title}
                   </h3>
                 )}
                 <div
-                  className={`prose prose-gray max-w-none transition-all duration-300 ${
-                    isCompleted ? 'line-through' : ''
-                  }`}
+                  className={cn(
+                    'prose prose-gray max-w-none transition-all duration-300',
+                    isCompleted ? 'line-through' : '',
+                  )}
                 >
                   <div className={isCompleted ? 'text-foreground-muted' : 'text-foreground-subtle'}>
                     <PortableText value={processContent(instruction.content)} />
@@ -163,7 +178,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
 
       {/* Progress indicator */}
       {completedSteps.size > 0 && (
-        <div className='mt-10 pt-8 border-t border-border/30'>
+        <div className='mt-10 pt-8 border-t border-border/10'>
           <div className='flex items-center justify-between mb-4'>
             <div>
               <p className='text-sm font-medium text-foreground'>
@@ -181,7 +196,7 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
               Reset
             </button>
           </div>
-          <div className='w-full h-2.5 bg-surface-hover/50 rounded-full overflow-hidden'>
+          <div className='w-full h-2 bg-surface-hover/50 rounded-full overflow-hidden'>
             <div
               className='h-full rounded-full transition-all duration-500 bg-gradient-to-r from-success to-success/80 shadow-sm'
               style={{

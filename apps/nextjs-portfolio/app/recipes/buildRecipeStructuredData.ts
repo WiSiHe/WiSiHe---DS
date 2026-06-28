@@ -72,6 +72,8 @@ export function buildRecipeStructuredData(recipe: NonNullable<GetRecipeResult>) 
         ...(recipe.difficulty && {
           recipeDifficulty: recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1),
         }),
+        ...(recipe.recipeCategory ? { recipeCategory: recipe.recipeCategory } : {}),
+        ...(recipe.recipeCuisine ? { recipeCuisine: recipe.recipeCuisine } : {}),
         ...(recipe.tips?.length && {
           recipeTip: recipe.tips.map(tip => tip.content).filter(Boolean),
         }),
