@@ -36,7 +36,7 @@ export const Default: Story = {
 };
 
 export const ForSale: Story = {
-  name: 'For sale (highlighted)',
+  name: 'For sale',
   args: {
     title: 'Available Painting',
     href: '/paintings/available-painting',

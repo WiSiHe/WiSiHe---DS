@@ -177,13 +177,10 @@ export function PaintingCard({
       className={cn(
         'relative aspect-3/4 group overflow-hidden rounded-xl',
         'focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background',
-        'bg-surface border border-border',
+        'bg-surface border border-border/40',
         'transition-all duration-300',
         !brushReveal &&
-          'hover:border-accent-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
-        isForSale &&
-          !showBlur &&
-          'ring-2 ring-accent/50 border-accent/40 shadow-md shadow-accent/15 hover:ring-accent/70',
+          'hover:border-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
         className,
       )}
       whileHover={brushReveal ? undefined : 'hover'}
@@ -270,12 +267,13 @@ export function PaintingCard({
         <span className='sr-only'>
           View painting: {title}
           {isNsfw ? ' (mature content)' : ''}
+          {isForSale ? ' (available as print)' : ''}
         </span>
         {showHoverFooter ? (
           <div
             aria-hidden
             className={cn(
-              'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
+              'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border/30 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
               alwaysShowTags && 'opacity-100 translate-y-0',
             )}
           >

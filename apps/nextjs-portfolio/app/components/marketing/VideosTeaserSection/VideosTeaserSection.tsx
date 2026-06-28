@@ -1,6 +1,7 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
+import { cn } from '@wisihe/utils';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ import type { VideoItem } from './videoTeaserShared';
 const DEFAULT_COPY = {
   eyebrow: '// Motion',
   title: 'Process & playback',
-  description: 'Timelapses, trailers, and process reels from painting and game work.',
+  description: 'Timelapses, animation tests, and game dev clips — a look behind the still frames.',
   linkLabel: 'All videos',
 };
 
@@ -33,6 +34,53 @@ type VideosTeaserSectionProps = {
   videos: VideoItem[];
 };
 
+function VideosDesktopShowcase({
+  videos,
+  reducedMotion,
+}: {
+  videos: VideoItem[];
+  reducedMotion: boolean;
+}) {
+  const [heroVideo, ...secondaryVideos] = videos;
+  if (!heroVideo) return null;
+
+  return (
+    <div className='hidden lg:block'>
+      <motion.div
+        custom={0}
+        variants={reducedMotion ? undefined : cardVariants}
+        initial={reducedMotion ? false : 'hidden'}
+        whileInView={reducedMotion ? undefined : 'visible'}
+        viewport={{ once: true, margin: '-40px' }}
+      >
+        <VideoTeaserCard video={heroVideo} index={0} layout='cinema' />
+      </motion.div>
+
+      {secondaryVideos.length > 0 ? (
+        <ul
+          className={cn(
+            'mt-4 grid gap-4',
+            secondaryVideos.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
+          )}
+        >
+          {secondaryVideos.map((video, i) => (
+            <motion.li
+              key={video._id}
+              custom={i + 1}
+              variants={reducedMotion ? undefined : cardVariants}
+              initial={reducedMotion ? false : 'hidden'}
+              whileInView={reducedMotion ? undefined : 'visible'}
+              viewport={{ once: true, margin: '-40px' }}
+            >
+              <VideoTeaserCard video={video} index={i + 1} layout='row' className='h-full' />
+            </motion.li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
 export default function VideosTeaserSection({ intro, videos }: VideosTeaserSectionProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -42,8 +90,6 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
   if (videos.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
-  const [heroVideo, ...secondaryVideos] = videos;
-  if (!heroVideo) return null;
 
   return (
     <section
@@ -51,7 +97,7 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
       aria-labelledby='videos-teaser-heading'
     >
       <div className='mx-auto max-w-7xl'>
-        <div className='mb-12 flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between'>
+        <div className='mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between'>
           <HomeSectionHeader
             eyebrow={copy.eyebrow}
             title={copy.title}
@@ -61,7 +107,7 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
           />
           <Link
             href='/videos'
-            className='group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-border/60 bg-surface px-5 py-2.5 text-sm font-semibold uppercase tracking-wider text-foreground transition-[border-color,background-color,color,transform] duration-300 hover:border-accent/45 hover:bg-accent hover:text-accent-contrast'
+            className='group inline-flex shrink-0 items-center gap-2.5 self-start rounded-full border border-border/60 bg-surface px-5 py-2.5 text-sm font-semibold uppercase tracking-wider text-foreground transition-[border-color,background-color,color,transform] duration-300 hover:border-accent/45 hover:bg-accent hover:text-accent-contrast md:self-auto'
           >
             {copy.linkLabel}
             <IconArrowRight
@@ -72,46 +118,7 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
         </div>
 
         <VideosMobileCarousel videos={videos} />
-
-        {videos.length === 1 ? (
-          <div className='hidden lg:block'>
-            <motion.div
-              custom={0}
-              variants={reducedMotion ? undefined : cardVariants}
-              initial={reducedMotion ? false : 'hidden'}
-              whileInView={reducedMotion ? undefined : 'visible'}
-              viewport={{ once: true, margin: '-40px' }}
-            >
-              <VideoTeaserCard video={heroVideo} index={0} featuredLayout />
-            </motion.div>
-          </div>
-        ) : (
-          <ul className='hidden gap-6 lg:grid lg:grid-cols-12'>
-            <motion.li
-              className='lg:col-span-8'
-              custom={0}
-              variants={reducedMotion ? undefined : cardVariants}
-              initial={reducedMotion ? false : 'hidden'}
-              whileInView={reducedMotion ? undefined : 'visible'}
-              viewport={{ once: true, margin: '-40px' }}
-            >
-              <VideoTeaserCard video={heroVideo} index={0} featuredLayout />
-            </motion.li>
-            {secondaryVideos.map((video, i) => (
-              <motion.li
-                key={video._id}
-                className='lg:col-span-4'
-                custom={i + 1}
-                variants={reducedMotion ? undefined : cardVariants}
-                initial={reducedMotion ? false : 'hidden'}
-                whileInView={reducedMotion ? undefined : 'visible'}
-                viewport={{ once: true, margin: '-40px' }}
-              >
-                <VideoTeaserCard video={video} index={i + 1} />
-              </motion.li>
-            ))}
-          </ul>
-        )}
+        <VideosDesktopShowcase videos={videos} reducedMotion={reducedMotion} />
       </div>
     </section>
   );
