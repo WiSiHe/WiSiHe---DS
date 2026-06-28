@@ -2,7 +2,7 @@
 
 import { Checkbox } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 import { useRefinementList } from 'react-instantsearch';
 import { getFacetIcon } from '@/lib/facetIcons';
 
@@ -26,7 +26,7 @@ export default function CustomRefinementList(props: Parameters<typeof useRefinem
             <li key={item.value} className='w-full'>
               <button
                 type='button'
-                onClick={() => refine(item.value)}
+                onClick={() => startTransition(() => refine(item.value))}
                 className={cn(
                   'flex items-center gap-2.5 cursor-pointer group w-full text-sm transition-colors py-1.5 px-2 rounded-lg',
                   item.isRefined

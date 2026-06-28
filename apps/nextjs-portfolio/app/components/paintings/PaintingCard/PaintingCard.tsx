@@ -1,7 +1,7 @@
 'use client';
 
 import { PaintingCard, type PaintingCardBadge } from '@wisihe/ui-react';
-import { cleanTagName } from '@wisihe/utils';
+import { cleanTagName, cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsYoutube } from 'react-icons/bs';
@@ -23,28 +23,28 @@ type PaintingData = Record<string, unknown> & {
   title?: string;
 };
 
-type PaintingCardAdapterProps = {
+type PaintingCardInnerProps = {
   paintingData: PaintingData;
   shouldBeLazy?: boolean;
   isNsfwFilterActive?: boolean;
   svgHoverIndex?: number;
   alwaysShowTags?: boolean;
-  /** Carousel / touch layouts — skip SVG brush reveal even on fine-pointer devices */
-  disableBrushReveal?: boolean;
+  canBrushReveal: boolean;
+  /** Search grid — cheaper NSFW cover without backdrop-blur */
+  lightNsfwBlur?: boolean;
   className?: string;
 };
 
-const PaintingCardAdapter = ({
+function PaintingCardInner({
   paintingData,
   shouldBeLazy = false,
   isNsfwFilterActive = false,
   svgHoverIndex,
   alwaysShowTags = false,
-  disableBrushReveal = false,
+  canBrushReveal,
+  lightNsfwBlur = false,
   className,
-}: PaintingCardAdapterProps) => {
-  const canBrushReveal = !disableBrushReveal && useCanBrushReveal();
-
+}: PaintingCardInnerProps) {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
   const {
@@ -116,7 +116,10 @@ const PaintingCardAdapter = ({
       placeholder={lqip ? 'blur' : 'empty'}
       blurDataURL={lqip}
       quality={80}
-      className='object-cover w-full h-full'
+      className={cn(
+        'object-cover w-full h-full',
+        showNsfwBlur && lightNsfwBlur && 'scale-105 blur-xl',
+      )}
     />
   ) : undefined;
 
@@ -150,11 +153,19 @@ const PaintingCardAdapter = ({
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
       {imageEl}
       {showNsfwBlur ? (
-        <div
-          data-nsfw-blur
-          className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-          aria-hidden
-        />
+        lightNsfwBlur ? (
+          <div
+            data-nsfw-blur
+            className='pointer-events-none absolute inset-0 z-[8] bg-background/55'
+            aria-hidden
+          />
+        ) : (
+          <div
+            data-nsfw-blur
+            className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+            aria-hidden
+          />
+        )
       ) : null}
       {canBrushReveal ? (
         <BrushRevealLayer
@@ -195,6 +206,34 @@ const PaintingCardAdapter = ({
   }
 
   return <BrushRevealWrap>{card}</BrushRevealWrap>;
+}
+
+type PaintingCardAdapterProps = {
+  paintingData: PaintingData;
+  shouldBeLazy?: boolean;
+  isNsfwFilterActive?: boolean;
+  svgHoverIndex?: number;
+  alwaysShowTags?: boolean;
+  /** Carousel / touch layouts — skip SVG brush reveal even on fine-pointer devices */
+  disableBrushReveal?: boolean;
+  /** Search grid — cheaper NSFW cover without backdrop-blur */
+  lightNsfwBlur?: boolean;
+  className?: string;
+};
+
+function PaintingCardWithDeviceBrush(props: Omit<PaintingCardAdapterProps, 'disableBrushReveal'>) {
+  const canBrushReveal = useCanBrushReveal();
+  return <PaintingCardInner {...props} canBrushReveal={canBrushReveal} />;
+}
+
+const PaintingCardAdapter = ({
+  disableBrushReveal = false,
+  ...props
+}: PaintingCardAdapterProps) => {
+  if (disableBrushReveal) {
+    return <PaintingCardInner {...props} canBrushReveal={false} />;
+  }
+  return <PaintingCardWithDeviceBrush {...props} />;
 };
 
 export default PaintingCardAdapter;

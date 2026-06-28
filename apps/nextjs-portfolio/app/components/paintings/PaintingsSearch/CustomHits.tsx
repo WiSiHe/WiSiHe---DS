@@ -1,10 +1,56 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { useEffect, useRef } from 'react';
+import { memo, useDeferredValue, useEffect, useRef } from 'react';
 import { useCurrentRefinements, useHits, useInstantSearch } from 'react-instantsearch';
 import { isNsfwFacetActive } from '@/lib/algolia/facets';
 import PaintingCard from '../PaintingCard/PaintingCard';
+
+type AlgoliaHit = ReturnType<typeof useHits>['items'][number];
+
+function adaptAlgoliaHit(hit: AlgoliaHit) {
+  const rawSlug = hit['slug'] as string | { current?: string } | undefined;
+  return {
+    ...hit,
+    _id: hit.objectID,
+    slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
+    isNSFW: hit['isNSFW'] === true,
+    isForSale: hit['isForSale'] === true,
+    hasStoreLink: hit['hasStoreLink'] === true,
+    isFanArt: hit['isFanArt'] === true,
+    video: hit['video'] ?? '',
+    imagesCount: hit['imagesCount'] ?? 0,
+    tagsV2: hit['tags'] ? (hit['tags'] as string[]).map((t: string) => ({ name: t })) : [],
+  };
+}
+
+type PaintingHitProps = {
+  hit: AlgoliaHit;
+  index: number;
+  isNsfwFilterActive: boolean;
+};
+
+const PaintingHit = memo(
+  function PaintingHit({ hit, index, isNsfwFilterActive }: PaintingHitProps) {
+    const paintingData = adaptAlgoliaHit(hit);
+
+    return (
+      <div className='break-inside-avoid mb-2 [content-visibility:auto] [contain-intrinsic-size:auto_280px]'>
+        <PaintingCard
+          paintingData={paintingData}
+          shouldBeLazy={index < 2}
+          isNsfwFilterActive={isNsfwFilterActive}
+          disableBrushReveal
+          lightNsfwBlur
+        />
+      </div>
+    );
+  },
+  (prev, next) =>
+    prev.hit === next.hit &&
+    prev.index === next.index &&
+    prev.isNsfwFilterActive === next.isNsfwFilterActive,
+);
 
 function PaintingCardSkeleton({ index }: { index: number }) {
   const aspects = [
@@ -55,11 +101,15 @@ export default function CustomHits() {
   const { items: refinements } = useCurrentRefinements();
   const refreshAttempted = useRef(false);
 
+  const displayItems = useDeferredValue(items);
+  const isUpdatingResults = displayItems !== items;
+
   const nbHits = results?.nbHits ?? 0;
   const queryId = results?.queryID;
   const isSearchPending = status === 'loading' || status === 'stalled';
   const awaitingFirstResponse = items.length === 0 && queryId == null && status !== 'error';
   const showInitialSkeleton = items.length === 0 && (isSearchPending || awaitingFirstResponse);
+  const showPendingState = isSearchPending || isUpdatingResults;
 
   // If the first search never returns, retry once while keeping the skeleton visible.
   useEffect(() => {
@@ -74,7 +124,7 @@ export default function CustomHits() {
     return <SkeletonGrid />;
   }
 
-  if (items.length === 0 && nbHits === 0) {
+  if (displayItems.length === 0 && nbHits === 0) {
     return (
       <div className='w-full py-20 flex flex-col justify-center items-center text-foreground-subtle'>
         <p className='text-lg'>No paintings found matching your search.</p>
@@ -87,36 +137,18 @@ export default function CustomHits() {
     <div
       className={cn(
         'columns-2 sm:columns-3 gap-2 mt-4 transition-opacity duration-150',
-        isSearchPending && 'pointer-events-none opacity-60',
+        showPendingState && 'pointer-events-none opacity-60',
       )}
-      aria-busy={isSearchPending}
+      aria-busy={showPendingState}
     >
-      {items.map((hit, index) => {
-        const rawSlug = hit['slug'] as string | { current?: string } | undefined;
-        const adaptedPaintingData = {
-          ...hit,
-          _id: hit.objectID,
-          slug: typeof rawSlug === 'string' ? rawSlug : (rawSlug?.current ?? ''),
-          isNSFW: hit['isNSFW'] === true,
-          isForSale: hit['isForSale'] === true,
-          hasStoreLink: hit['hasStoreLink'] === true,
-          isFanArt: hit['isFanArt'] === true,
-          video: hit['video'] ?? '',
-          imagesCount: hit['imagesCount'] ?? 0,
-          tagsV2: hit['tags'] ? (hit['tags'] as string[]).map((t: string) => ({ name: t })) : [],
-        };
-
-        return (
-          <div key={hit.objectID} className='break-inside-avoid mb-2'>
-            <PaintingCard
-              // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
-              paintingData={adaptedPaintingData as any}
-              shouldBeLazy={index < 6}
-              isNsfwFilterActive={isNsfwFilterActive}
-            />
-          </div>
-        );
-      })}
+      {displayItems.map((hit, index) => (
+        <PaintingHit
+          key={hit.objectID}
+          hit={hit}
+          index={index}
+          isNsfwFilterActive={isNsfwFilterActive}
+        />
+      ))}
     </div>
   );
 }
