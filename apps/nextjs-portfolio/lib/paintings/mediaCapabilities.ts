@@ -35,9 +35,8 @@ function subscribeBrushRevealMedia() {
 
 /** Desktop fine-pointer hover — brush reveal runs only when true. */
 export function useCanBrushReveal(): boolean {
-  const [canReveal, setCanReveal] = useState(() =>
-    typeof window === 'undefined' ? false : prefersFinePointerHover(),
-  );
+  // Always false on first render so SSR and hydration markup match; updated after mount.
+  const [canReveal, setCanReveal] = useState(false);
 
   useLayoutEffect(() => {
     subscribeBrushRevealMedia();

@@ -1,9 +1,9 @@
+import { IconChevronRight } from '@tabler/icons-react';
 import Link from 'next/link';
-import { IoChevronForward } from 'react-icons/io5';
 
 export interface Crumb {
   label: string;
-  href?: string; // omit for the current (last) crumb
+  href?: string;
 }
 
 interface BreadcrumbsProps {
@@ -21,7 +21,11 @@ export default function Breadcrumbs({ crumbs }: BreadcrumbsProps) {
         return (
           <span key={crumb.label} className='flex items-center gap-1'>
             {index > 0 && (
-              <IoChevronForward className='w-3 h-3 text-foreground-muted/50 shrink-0' />
+              <IconChevronRight
+                className='size-3 text-foreground-muted/50 shrink-0'
+                stroke={2}
+                aria-hidden
+              />
             )}
             {crumb.href && !isLast ? (
               <Link

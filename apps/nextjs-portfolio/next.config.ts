@@ -56,7 +56,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       'motion',
       '@tabler/icons-react',
-      'react-icons',
       'algoliasearch',
       'react-instantsearch',
       'react-instantsearch-nextjs',

@@ -1,7 +1,7 @@
 'use client';
 
+import { IconShoppingCart } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { FaShoppingCart } from 'react-icons/fa';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
@@ -46,8 +46,9 @@ export default function PaintingsForSaleFilter() {
         ) : null}
       </span>
       <span className='grow text-left text-sm font-medium'>For sale</span>
-      <FaShoppingCart
-        className={cn('h-3.5 w-3.5 shrink-0', forSale ? 'text-accent' : 'text-foreground-muted/60')}
+      <IconShoppingCart
+        className={cn('size-3.5 shrink-0', forSale ? 'text-accent' : 'text-foreground-muted/60')}
+        stroke={2}
         aria-hidden
       />
     </button>

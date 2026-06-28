@@ -11,6 +11,7 @@ import {
 const { semanticDark, semanticLight } = loadLayeredTokens();
 const darkColors = semanticDark.semantic?.dark ?? {};
 const lightSemanticColors = semanticLight.semantic?.color ?? {};
+const lightSizeRadius = semanticLight.semantic?.size?.radius ?? {};
 const darkSemanticColors = darkColors.color ?? {};
 const darkSizeTokens = darkColors.size ?? {};
 const tokenRoot = buildTokenResolutionRoot();
@@ -51,11 +52,9 @@ function collectThemeInlineLines() {
     }
 
     const utilityName = tokenPath.join('-');
-    const darkTokenPath = tokenPath;
-    const darkTokenNode = getNestedToken(darkSemanticColors, darkTokenPath);
-    const fallback = darkTokenNode
-      ? resolveTokenValue(darkTokenNode.$value, tokenRoot)
-      : resolveTokenValue(token.$value, tokenRoot);
+    // Light fallbacks: @theme inline uses `var(--token, fallback)` for Tailwind opacity
+    // analysis. In light mode that fallback is what renders; `.dark` overrides at runtime.
+    const fallback = resolveTokenValue(token.$value, tokenRoot);
 
     if (typeof fallback === 'string' && fallback.startsWith('{')) {
       lines.push(`  --color-${utilityName}: var(--color-${utilityName});`);
@@ -65,34 +64,26 @@ function collectThemeInlineLines() {
     lines.push(`  --color-${utilityName}: var(--color-${utilityName}, ${fallback});`);
   }
 
-  for (const { path: tokenPath, token } of flattenTokenTree(darkSizeTokens)) {
+  for (const { path: tokenPath, token } of flattenTokenTree({ radius: lightSizeRadius })) {
     if (token.$type !== 'borderRadius') {
       continue;
     }
 
-    const fullKey = ['size', ...tokenPath].join('-');
-    const fallback = resolveTokenValue(token.$value, tokenRoot);
     const radiusName = tokenPath[tokenPath.length - 1];
-    lines.push(`  --radius-${radiusName}: var(--${fullKey}, ${fallback});`);
+    const varName = `size-radius-${radiusName}-val`;
+    // Light fallbacks in @theme inline — same pattern as semantic colors.
+    // .dark overrides --size-radius-*-val at runtime via semantic-colors.css.
+    const fallback = resolveTokenValue(token.$value, tokenRoot);
+
+    if (typeof fallback === 'string' && fallback.startsWith('{')) {
+      lines.push(`  --radius-${radiusName}: var(--${varName});`);
+      continue;
+    }
+
+    lines.push(`  --radius-${radiusName}: var(--${varName}, ${fallback});`);
   }
 
   return [...new Set(lines)].sort((a, b) => a.localeCompare(b));
-}
-
-function getNestedToken(node, pathParts) {
-  let current = node;
-  for (const part of pathParts) {
-    if (!current || typeof current !== 'object' || !(part in current)) {
-      return null;
-    }
-    current = current[part];
-  }
-
-  if (current && typeof current === 'object' && Object.hasOwn(current, '$value')) {
-    return current;
-  }
-
-  return null;
 }
 
 function generateDarkModeTheme() {
@@ -112,7 +103,7 @@ function generateDarkModeTheme() {
 
   output += `
 /* Map semantic tokens to Tailwind utilities */
-/* Static fallbacks are resolved from dark semantic tokens for Tailwind v4 opacity analysis */
+/* Static fallbacks use light semantic tokens; .dark overrides at runtime */
 @theme inline {
 ${themeInlineLines.join('\n')}
 }

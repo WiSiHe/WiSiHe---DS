@@ -1,7 +1,14 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import { IconArrowRight } from '@tabler/icons-react';
+import {
+  IconArrowRight,
+  IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandX,
+  IconChevronDown,
+} from '@tabler/icons-react';
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import gsap from 'gsap';
@@ -9,8 +16,6 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { BsTwitterX } from 'react-icons/bs';
-import { FaChevronDown, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 import { LifeJourneyScrolly } from './components/LifeJourneyScrolly';
@@ -27,12 +32,12 @@ if (typeof window !== 'undefined') {
 }
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
-  GitHub: <FaGithub />,
-  LinkedIn: <FaLinkedin />,
-  Linkedin: <FaLinkedin />,
-  Instagram: <FaInstagram />,
-  Twitter: <BsTwitterX />,
-  X: <BsTwitterX />,
+  GitHub: <IconBrandGithub className='size-5' stroke={2} aria-hidden />,
+  LinkedIn: <IconBrandLinkedin className='size-5' stroke={2} aria-hidden />,
+  Linkedin: <IconBrandLinkedin className='size-5' stroke={2} aria-hidden />,
+  Instagram: <IconBrandInstagram className='size-5' stroke={2} aria-hidden />,
+  Twitter: <IconBrandX className='size-5' stroke={2} aria-hidden />,
+  X: <IconBrandX className='size-5' stroke={2} aria-hidden />,
 };
 
 export default function AboutPageClient({
@@ -179,7 +184,7 @@ export default function AboutPageClient({
           className='absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-2xl text-accent/50'
           aria-hidden
         >
-          <FaChevronDown />
+          <IconChevronDown className='size-5 animate-bounce stroke-[2]' aria-hidden />
         </div>
       </section>
 

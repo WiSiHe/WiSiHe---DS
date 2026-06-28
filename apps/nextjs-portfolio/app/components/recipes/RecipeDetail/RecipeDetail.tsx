@@ -1,12 +1,12 @@
 'use client';
 
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { GetRecipeResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { urlForImage } from '@/sanity/lib/utils';
 import PortableText from '../../cms/PortableText/PortableText';
@@ -239,7 +239,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                     className='absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
                     aria-label='Previous image'
                   >
-                    <FiChevronLeft className='w-5 h-5' />
+                    <IconChevronLeft className='size-5' stroke={2} aria-hidden />
                   </button>
                   <button
                     type='button'
@@ -247,7 +247,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                     className='absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
                     aria-label='Next image'
                   >
-                    <FiChevronRight className='w-5 h-5' />
+                    <IconChevronRight className='size-5' stroke={2} aria-hidden />
                   </button>
 
                   {/* Dot Indicators */}
