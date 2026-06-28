@@ -361,6 +361,20 @@ export default defineType({
       of: [{ type: 'reference', to: { type: 'tag' } }],
     }),
     defineField({
+      name: 'recipeCategory',
+      title: 'Recipe Category',
+      type: 'string',
+      description: 'e.g. Dessert, Dinner, Main course, Salad',
+      group: 'metadata',
+    }),
+    defineField({
+      name: 'recipeCuisine',
+      title: 'Recipe Cuisine',
+      type: 'string',
+      description: 'e.g. Italian, Mexican, French, Nordic',
+      group: 'metadata',
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
