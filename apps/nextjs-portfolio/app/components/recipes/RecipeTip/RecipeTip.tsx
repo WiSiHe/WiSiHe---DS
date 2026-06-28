@@ -23,7 +23,7 @@ export default function RecipeTipComponent({ tip, className = '' }: RecipeTipPro
   return (
     <div
       className={cn(
-        'p-6 rounded-2xl border border-border/20 bg-surface/60 backdrop-blur-sm hover:shadow-md transition-all duration-200 flex items-start gap-4',
+        'p-5 border-l-4 border-accent bg-accent/5 rounded-r-2xl transition-all duration-200 flex items-start gap-4',
         className,
       )}
     >

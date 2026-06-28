@@ -83,8 +83,8 @@ export default function RecipeIngredients({
   if (!categories.length) return null;
 
   return (
-    <div className='w-full rounded-[2rem] border border-border/20 bg-surface/70 backdrop-blur-md p-6 sm:p-8 shadow-xl shadow-foreground/[0.02]'>
-      <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+    <div className='w-full space-y-6'>
+      <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/10 pb-4'>
         <h2 className='font-sans text-2xl font-extrabold tracking-tight text-foreground'>
           Ingredients
         </h2>

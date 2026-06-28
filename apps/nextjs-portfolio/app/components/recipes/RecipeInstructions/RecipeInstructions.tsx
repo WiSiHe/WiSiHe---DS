@@ -97,8 +97,8 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
   const activeStepIndex = instructions.findIndex((_, idx) => !completedSteps.has(idx));
 
   return (
-    <div className='rounded-[2rem] border border-border/20 bg-surface/70 backdrop-blur-md p-6 md:p-8 shadow-xl shadow-foreground/[0.02]'>
-      <div className='mb-8'>
+    <div className='w-full space-y-8'>
+      <div className='mb-6 border-b border-border/10 pb-4'>
         <h2 className='text-3xl font-extrabold tracking-tight text-foreground mb-2 font-sans'>
           Instructions
         </h2>
@@ -117,15 +117,14 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
               // biome-ignore lint/suspicious/noArrayIndexKey: static instruction steps
               key={index}
               className={cn(
-                'group relative flex gap-6 transition-all duration-300 -mx-4 px-4 py-4 rounded-2xl border border-transparent',
-                isActive &&
-                  'bg-accent/5 border-accent/15 shadow-sm scale-[1.01] ring-1 ring-accent/5',
-                isCompleted && 'opacity-45',
+                'group relative flex gap-6 transition-all duration-300 px-4 py-6 rounded-3xl border border-transparent',
+                isActive && 'bg-accent/5 shadow-xs scale-[1.01]',
+                isCompleted && 'opacity-40',
               )}
             >
               {/* Connecting line */}
               {index < instructions.length - 1 && (
-                <div className='absolute left-9 top-14 w-0.5 h-full bg-border/20 -z-10' />
+                <div className='absolute left-9 top-16 w-0.5 h-full bg-border/10 -z-10' />
               )}
 
               <div className='shrink-0'>

@@ -3,8 +3,10 @@
 import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { GetRecipeResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
+import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { urlForImage } from '@/sanity/lib/utils';
 import RecipeIngredients, { scaleAmount } from '../RecipeIngredients/RecipeIngredients';
@@ -21,6 +23,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
     title,
     description,
     mainImage,
+    additionalImages,
     ingredientCategories,
     instructions,
     tips,
@@ -37,6 +40,42 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
 
   const allIngredients =
     ingredientCategories?.flatMap(category => category.ingredients ?? []) ?? [];
+
+  const allImages = useMemo(() => {
+    const list = [];
+    if (mainImage) list.push(mainImage);
+    if (additionalImages && additionalImages.length > 0) {
+      list.push(...additionalImages);
+    }
+    return list;
+  }, [mainImage, additionalImages]);
+
+  const firstImage = allImages[0];
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   const breadcrumbs = (
     <nav aria-label='Breadcrumb'>
@@ -98,20 +137,85 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
               />
             </div>
 
-            {/* Right Column: Image */}
-            {mainImage ? (
-              <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle'>
-                <Image
-                  src={urlForImage(mainImage)?.width(1000).quality(85).url() || ''}
-                  alt={mainImage.alt}
-                  fill
-                  className='object-cover transition-transform duration-500 hover:scale-102'
-                  priority
-                  sizes='(max-width: 768px) 100vw, 40vw'
-                  placeholder={mainImage.lqip ? 'blur' : 'empty'}
-                  blurDataURL={mainImage.lqip ?? undefined}
-                />
-              </div>
+            {/* Right Column: Image or Carousel */}
+            {allImages.length > 0 && firstImage ? (
+              allImages.length > 1 ? (
+                <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle group/carousel'>
+                  <div className='overflow-hidden w-full h-full' ref={emblaRef}>
+                    <div className='flex w-full h-full'>
+                      {allImages.map((img, index) => {
+                        const imageUrl = urlForImage(img)?.width(1000).quality(85).url() || '';
+                        return (
+                          <div
+                            key={index}
+                            className='relative flex-[0_0_100%] w-full h-full min-w-0'
+                          >
+                            <Image
+                              src={imageUrl}
+                              alt={img.alt || `${title} - Image ${index + 1}`}
+                              fill
+                              className='object-cover h-full w-full'
+                              priority={index === 0}
+                              sizes='(max-width: 768px) 100vw, 40vw'
+                              placeholder={img.lqip ? 'blur' : 'empty'}
+                              blurDataURL={img.lqip ?? undefined}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Navigation Chevrons */}
+                  <button
+                    type='button'
+                    onClick={scrollPrev}
+                    className='absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
+                    aria-label='Previous image'
+                  >
+                    <FiChevronLeft className='w-5 h-5' />
+                  </button>
+                  <button
+                    type='button'
+                    onClick={scrollNext}
+                    className='absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
+                    aria-label='Next image'
+                  >
+                    <FiChevronRight className='w-5 h-5' />
+                  </button>
+
+                  {/* Dot Indicators */}
+                  <div className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5'>
+                    {allImages.map((_, index) => (
+                      <button
+                        key={index}
+                        type='button'
+                        onClick={() => emblaApi?.scrollTo(index)}
+                        className={cn(
+                          'w-2 h-2 rounded-full transition-all duration-200 cursor-pointer',
+                          index === selectedIndex
+                            ? 'bg-accent scale-110 shadow-sm'
+                            : 'bg-foreground/30 hover:bg-foreground/50',
+                        )}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle'>
+                  <Image
+                    src={urlForImage(firstImage)?.width(1000).quality(85).url() || ''}
+                    alt={firstImage.alt || title}
+                    fill
+                    className='object-cover transition-transform duration-500 hover:scale-102'
+                    priority
+                    sizes='(max-width: 768px) 100vw, 40vw'
+                    placeholder={firstImage.lqip ? 'blur' : 'empty'}
+                    blurDataURL={firstImage.lqip ?? undefined}
+                  />
+                </div>
+              )
             ) : null}
           </div>
         </div>
