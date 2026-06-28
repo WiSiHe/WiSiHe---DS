@@ -1,16 +1,16 @@
 'use client';
 
+import {
+  IconClock,
+  IconEye,
+  IconFilter,
+  IconHourglass,
+  IconStar,
+  IconX,
+} from '@tabler/icons-react';
 import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { useEffect, useState } from 'react';
-import {
-  IoClose,
-  IoEyeOutline,
-  IoFilterOutline,
-  IoHourglassOutline,
-  IoStarOutline,
-  IoTimeOutline,
-} from 'react-icons/io5';
 import { Configure, useStats } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import InstantSearchPagination from '@/app/components/search/InstantSearchPagination';
@@ -122,22 +122,22 @@ export default function ProjectsSearch() {
     {
       label: 'Featured',
       value: ALGOLIA_INDEX_NAME,
-      icon: <IoStarOutline className='w-4 h-4' />,
+      icon: <IconStar className='size-4' stroke={2} aria-hidden />,
     },
     {
       label: 'Newest',
       value: replicaIndexName('newest'),
-      icon: <IoTimeOutline className='w-4 h-4' />,
+      icon: <IconClock className='size-4' stroke={2} aria-hidden />,
     },
     {
       label: 'Oldest',
       value: replicaIndexName('oldest'),
-      icon: <IoHourglassOutline className='w-4 h-4' />,
+      icon: <IconHourglass className='size-4' stroke={2} aria-hidden />,
     },
     {
       label: 'Most viewed',
       value: replicaIndexName('views'),
-      icon: <IoEyeOutline className='w-4 h-4' />,
+      icon: <IconEye className='size-4' stroke={2} aria-hidden />,
     },
   ];
 
@@ -152,7 +152,7 @@ export default function ProjectsSearch() {
             onClick={() => setIsMobileFiltersOpen(true)}
             variant='secondary'
             className='w-full justify-center'
-            Icon={IoFilterOutline}
+            Icon={IconFilter}
           >
             Filters &amp; Search
           </Button>
@@ -192,7 +192,7 @@ export default function ProjectsSearch() {
                 className='p-2 -mr-2 text-foreground-muted hover:text-foreground hover:bg-surface-hover rounded-full transition-colors'
                 aria-label='Close filters'
               >
-                <IoClose className='w-6 h-6' />
+                <IconX className='size-6' stroke={2} aria-hidden />
               </button>
             </div>
 

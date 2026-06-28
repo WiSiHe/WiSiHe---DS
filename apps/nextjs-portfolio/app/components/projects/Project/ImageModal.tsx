@@ -1,7 +1,7 @@
 'use client';
+import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type ImageModalProps = {
@@ -87,7 +87,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
         className='absolute top-4 right-4 z-10 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
         aria-label='Close modal'
       >
-        <FaTimes className='h-6 w-6' />
+        <IconX className='size-6' stroke={2} aria-hidden />
       </button>
 
       {/* Navigation buttons */}
@@ -99,7 +99,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
             className='absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
             aria-label='Previous image'
           >
-            <FaChevronLeft className='h-6 w-6' />
+            <IconChevronLeft className='size-6' stroke={2} aria-hidden />
           </button>
 
           <button
@@ -108,7 +108,7 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
             className='absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 backdrop-blur-lg p-3 text-white transition-all hover:bg-black/75'
             aria-label='Next image'
           >
-            <FaChevronRight className='h-6 w-6' />
+            <IconChevronRight className='size-6' stroke={2} aria-hidden />
           </button>
         </>
       )}

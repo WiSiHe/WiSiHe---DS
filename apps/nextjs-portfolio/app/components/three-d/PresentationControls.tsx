@@ -1,7 +1,7 @@
 'use client';
 
+import { IconArrowUp, IconChevronDown, IconChevronUp, IconRocket } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { HiArrowSmallUp, HiChevronDown, HiChevronUp, HiRocketLaunch } from 'react-icons/hi2';
 
 type PresentationControlsProps = Readonly<{
   currentSlide: number;
@@ -58,7 +58,7 @@ export function PresentationControls({
               }`}
               aria-label='Previous slide'
             >
-              <HiChevronUp className='w-6 h-6' />
+              <IconChevronUp className='size-6' stroke={2} aria-hidden />
             </motion.button>
 
             <div className='py-1.5 flex flex-col items-center gap-0.5 select-none border-y border-border/10 w-full bg-foreground/5'>
@@ -85,7 +85,7 @@ export function PresentationControls({
               }`}
               aria-label='Next slide'
             >
-              <HiChevronDown className='w-6 h-6' />
+              <IconChevronDown className='size-6' stroke={2} aria-hidden />
             </motion.button>
           </div>
 
@@ -102,7 +102,7 @@ export function PresentationControls({
                   Skip to Cool Part
                 </span>
                 <div className='w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:text-accent-contrast transition-all duration-300 shadow-inner'>
-                  <HiRocketLaunch className='w-4 h-4' />
+                  <IconRocket className='size-4' stroke={2} aria-hidden />
                 </div>
               </motion.button>
             ) : null}
@@ -119,7 +119,7 @@ export function PresentationControls({
                 TOP
               </span>
               <div className='w-8 h-8 rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-300'>
-                <HiArrowSmallUp className='w-5 h-5' />
+                <IconArrowUp className='size-5' stroke={2} aria-hidden />
               </div>
             </motion.button>
           </div>

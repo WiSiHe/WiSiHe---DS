@@ -1,7 +1,7 @@
 'use client';
 
+import { IconLayoutGrid, IconRefresh } from '@tabler/icons-react';
 import { motion } from 'motion/react';
-import { HiArrowPath, HiSquares2X2 } from 'react-icons/hi2';
 
 type TextureOption = {
   readonly name: string;
@@ -33,7 +33,7 @@ export function ShowcaseControls({
       {/* Auto-Rotate Control */}
       <div className='space-y-3'>
         <h3 className='text-xl font-bold text-foreground flex items-center gap-2'>
-          <HiArrowPath className='text-accent w-5 h-5' />
+          <IconRefresh className='text-accent size-5' stroke={2} aria-hidden />
           Auto-Rotate
         </h3>
         <motion.button
@@ -49,14 +49,14 @@ export function ShowcaseControls({
           style={{ touchAction: 'manipulation' }}
         >
           <span>{autoRotate ? 'Rotating' : 'Paused'}</span>
-          {autoRotate && <HiArrowPath className='animate-spin w-4 h-4' />}
+          {autoRotate && <IconRefresh className='animate-spin size-4' stroke={2} aria-hidden />}
         </motion.button>
       </div>
 
       {/* Swap Texture Control */}
       <div className='space-y-3'>
         <h3 className='text-xl font-bold text-foreground flex items-center gap-2'>
-          <HiSquares2X2 className='text-accent w-5 h-5' />
+          <IconLayoutGrid className='text-accent size-5' stroke={2} aria-hidden />
           Swap Texture
         </h3>
         <div className='flex flex-wrap gap-2 md:gap-2'>

@@ -1,11 +1,11 @@
 'use client';
 
+import { IconPlayerPlay } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { FaPlay } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type VideoItem = {
@@ -171,7 +171,11 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                     <div className='absolute inset-0 z-10 bg-black/20 group-hover:bg-black/40 transition-colors duration-300' />
                     <div className='absolute inset-0 z-20 flex items-center justify-center'>
                       <div className='w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300 border border-white/30'>
-                        <FaPlay className='w-4 h-4 text-white ml-0.5' />
+                        <IconPlayerPlay
+                          className='size-4 text-white ml-0.5'
+                          stroke={2}
+                          aria-hidden
+                        />
                       </div>
                     </div>
 

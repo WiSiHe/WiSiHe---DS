@@ -1,3 +1,5 @@
+import { ThemeProvider } from '@teispace/next-themes';
+import { getTheme } from '@teispace/next-themes/server';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { AboutQueryResult, SettingsQueryResult } from '@wisihe/sanity-queries';
@@ -175,6 +177,7 @@ export default async function RootLayout({
   }
 
   const { socialLinks } = settings;
+  const initialTheme = await getTheme();
 
   return (
     <html lang='en' suppressHydrationWarning>
@@ -182,43 +185,49 @@ export default async function RootLayout({
         <link rel='preconnect' href='https://cdn.sanity.io' crossOrigin='anonymous' />
         <link rel='manifest' href='/manifest.json' />
         <link rel='mask-icon' href='/wisihe.svg' color='oklch(65% 0.15 180)' />
-
-        <JsonLd data={jsonLdGraph} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-background antialiased`}
       >
+        <JsonLd data={jsonLdGraph} />
         <div className='relative z-10'>
           <ReactScanDev />
           <ProgressBarProvider>
             <ProgressBar className='fixed h-1 shadow-lg shadow-accent bg-accent top-0 z-50' />
-            <PostHogProvider>
-              <PresentationMode />
-              <SmoothScroll />
-              {isDraftMode && (
-                <>
-                  <DraftModeToast />
-                  <VisualEditing />
-                </>
-              )}
-              <SanityLive onError={handleError} />
-              <HeaderNavigation />
-              <main id='main-content' className='bg-transparent'>
-                {children}
-              </main>
-              <Footer
-                socialLinks={socialLinks}
-                bio={about?.bio}
-                jobTitle={about?.jobTitle}
-                heroSubtitle={about?.heroSubtitle}
-                ctaLabel={about?.ctaButtonText}
-                ctaHref={about?.ctaButtonUrl}
-              />
-              <Analytics />
-              <SpeedInsights />
-              <CustomCursor />
-              <AppToaster />
-            </PostHogProvider>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+              initialTheme={initialTheme ?? undefined}
+            >
+              <PostHogProvider>
+                <PresentationMode />
+                <SmoothScroll />
+                {isDraftMode && (
+                  <>
+                    <DraftModeToast />
+                    <VisualEditing />
+                  </>
+                )}
+                <SanityLive onError={handleError} />
+                <HeaderNavigation />
+                <main id='main-content' className='bg-transparent'>
+                  {children}
+                </main>
+                <Footer
+                  socialLinks={socialLinks}
+                  bio={about?.bio}
+                  jobTitle={about?.jobTitle}
+                  heroSubtitle={about?.heroSubtitle}
+                  ctaLabel={about?.ctaButtonText}
+                  ctaHref={about?.ctaButtonUrl}
+                />
+                <Analytics />
+                <SpeedInsights />
+                <CustomCursor />
+                <AppToaster />
+              </PostHogProvider>
+            </ThemeProvider>
           </ProgressBarProvider>
         </div>
       </body>

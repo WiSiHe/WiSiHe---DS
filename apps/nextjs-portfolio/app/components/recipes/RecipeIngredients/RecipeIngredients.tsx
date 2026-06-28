@@ -1,10 +1,9 @@
 'use client';
 
+import { IconBasket, IconCheck, IconMinus, IconPlus } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { FiCheck, FiMinus, FiPlus } from 'react-icons/fi';
-import { TbBasket } from 'react-icons/tb';
 import { urlForImage } from '@/sanity/lib/utils';
 import { clampServings, scaleAmount } from './scaleAmount';
 
@@ -86,7 +85,7 @@ export default function RecipeIngredients({
                 className='flex size-8 items-center justify-center rounded-l-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
                 aria-label='Decrease servings'
               >
-                <FiMinus className='size-3.5' />
+                <IconMinus className='size-3.5' stroke={2} aria-hidden />
               </button>
               <input
                 type='number'
@@ -105,7 +104,7 @@ export default function RecipeIngredients({
                 className='flex size-8 items-center justify-center rounded-r-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
                 aria-label='Increase servings'
               >
-                <FiPlus className='size-3.5' />
+                <IconPlus className='size-3.5' stroke={2} aria-hidden />
               </button>
             </div>
           </div>
@@ -167,7 +166,7 @@ export default function RecipeIngredients({
                           )}
                           aria-hidden
                         >
-                          <FiCheck className='size-3 stroke-[3]' />
+                          <IconCheck className='size-3' stroke={2.5} aria-hidden />
                         </span>
                       </div>
                     ) : (
@@ -181,9 +180,9 @@ export default function RecipeIngredients({
                         aria-hidden
                       >
                         {isChecked ? (
-                          <FiCheck className='size-5 stroke-[2.5]' />
+                          <IconCheck className='size-5' stroke={2} aria-hidden />
                         ) : (
-                          <TbBasket className='size-5' />
+                          <IconBasket className='size-5' stroke={2} aria-hidden />
                         )}
                       </span>
                     )}

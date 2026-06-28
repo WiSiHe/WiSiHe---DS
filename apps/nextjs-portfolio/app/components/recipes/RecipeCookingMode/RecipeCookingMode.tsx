@@ -1,7 +1,7 @@
 'use client';
 
+import { IconChefHat } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { TbChefHat } from 'react-icons/tb';
 import { useWakeLock } from '@/hooks/useWakeLock';
 
 type RecipeCookingModeProps = {
@@ -28,7 +28,11 @@ export default function RecipeCookingMode({ className }: RecipeCookingModeProps)
         className,
       )}
     >
-      <TbChefHat className={cn('size-4 shrink-0', isActive && 'text-accent')} aria-hidden />
+      <IconChefHat
+        className={cn('size-4 shrink-0', isActive && 'text-accent')}
+        stroke={2}
+        aria-hidden
+      />
       <span>Cooking mode</span>
       <span className='hidden text-xs font-normal text-foreground-muted sm:inline'>
         {isActive ? 'Screen stays on' : 'Keep screen on'}

@@ -1,7 +1,7 @@
 'use client';
 
+import { IconCode } from '@tabler/icons-react';
 import { motion } from 'motion/react';
-import { HiCodeBracket } from 'react-icons/hi2';
 import DecryptedText from './Common/DecryptedText';
 import RippleGrid from './Common/RippleGrid';
 
@@ -55,7 +55,7 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
         >
           <div className='relative flex flex-col items-center'>
             <div className='p-4 md:p-6 rounded-2xl bg-surface-elevated border border-border shadow-2xl flex items-center justify-center text-accent'>
-              <HiCodeBracket className='w-10 h-10 md:w-14 md:h-14' />
+              <IconCode className='size-10 md:size-14' stroke={2} aria-hidden />
             </div>
             <div className='mt-4 px-6 py-1 bg-accent text-accent-contrast text-[11px] font-black uppercase tracking-[0.4em] rounded-full shadow-sm'>
               <DecryptedText text='SYSTEM READY' animateOn='view' speed={40} sequential={true} />
