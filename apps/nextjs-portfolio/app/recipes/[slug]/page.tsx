@@ -16,6 +16,8 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const slugs = await client.fetch(getRecipeSlugs);
   return (slugs as Array<{ slug: string }>).map(({ slug }) => ({ slug }));

@@ -15,6 +15,8 @@ export const AnalyticsEvent = {
   PHOTOGRAPHY_VIEWED: 'photography_viewed',
   PHOTOGRAPHY_LIKED: 'photography_liked',
   PHOTOGRAPHY_UNLIKED: 'photography_unliked',
+  RECIPE_VIEWED: 'recipe_viewed',
+  RECIPE_RATED: 'recipe_rated',
   PROJECTS_LISTING_VIEWED: 'projects_listing_viewed',
   PROJECTS_FILTERED: 'projects_filtered',
   HOME_PAINTINGS_SECTION_VIEWED: 'home_paintings_section_viewed',
@@ -51,6 +53,8 @@ export function getPageType(pathname: string): string {
   if (pathname.startsWith('/videos/')) return 'video_detail';
   if (pathname === '/photography') return 'photography_listing';
   if (pathname.startsWith('/photography/')) return 'photography_detail';
+  if (pathname === '/recipes') return 'recipes_listing';
+  if (pathname.startsWith('/recipes/')) return 'recipe_detail';
   if (pathname.startsWith('/three-d')) return 'three_d';
   return 'other';
 }

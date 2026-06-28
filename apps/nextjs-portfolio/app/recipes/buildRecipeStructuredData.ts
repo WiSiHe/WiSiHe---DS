@@ -6,8 +6,22 @@ const AUTHOR = {
   '@type': 'Person' as const,
   name: 'Henrik Wilhelm Sissener',
   alternateName: 'WiSiHe',
-  url: SITE_URL,
+  url: `${SITE_URL}/about`,
 };
+
+function buildRecipeImageUrls(recipe: NonNullable<GetRecipeResult>): string[] {
+  const urls = new Set<string>();
+
+  const addImage = (image: Parameters<typeof urlForImage>[0] | null | undefined) => {
+    const url = image ? urlForImage(image)?.width(1200).height(630).url() : undefined;
+    if (url) urls.add(url);
+  };
+
+  addImage(recipe.mainImage);
+  recipe.additionalImages?.forEach(addImage);
+
+  return [...urls];
+}
 
 export function formatRecipeDuration(minutes: number | null | undefined): string | undefined {
   if (!minutes || minutes <= 0) return undefined;
@@ -26,15 +40,79 @@ export function buildRecipeIngredientList(recipe: NonNullable<GetRecipeResult>):
   );
 }
 
+import {
+  hasNutritionData,
+  type RecipeNutritionValues,
+  resolveCalories,
+} from '@/app/components/recipes/RecipeNutrition/recipeNutritionUtils';
+
+function buildNutritionJsonLd(nutrition: RecipeNutritionValues | null | undefined) {
+  if (!hasNutritionData(nutrition) || !nutrition) return undefined;
+
+  const calories = resolveCalories(nutrition);
+  const entry: {
+    '@type': 'NutritionInformation';
+    calories?: string;
+    proteinContent?: string;
+    carbohydrateContent?: string;
+    fatContent?: string;
+    fiberContent?: string;
+    sugarContent?: string;
+    sodiumContent?: string;
+  } = {
+    '@type': 'NutritionInformation',
+  };
+
+  if (calories != null) entry.calories = `${calories} calories`;
+  if (nutrition.protein != null && nutrition.protein > 0) {
+    entry.proteinContent = `${nutrition.protein} g`;
+  }
+  if (nutrition.carbohydrates != null && nutrition.carbohydrates > 0) {
+    entry.carbohydrateContent = `${nutrition.carbohydrates} g`;
+  }
+  if (nutrition.fat != null && nutrition.fat > 0) {
+    entry.fatContent = `${nutrition.fat} g`;
+  }
+  if (nutrition.fiber != null && nutrition.fiber > 0) {
+    entry.fiberContent = `${nutrition.fiber} g`;
+  }
+  if (nutrition.sugar != null && nutrition.sugar > 0) {
+    entry.sugarContent = `${nutrition.sugar} g`;
+  }
+  if (nutrition.sodium != null && nutrition.sodium > 0) {
+    entry.sodiumContent = `${nutrition.sodium} mg`;
+  }
+
+  const hasValues = Boolean(
+    entry.calories ||
+      entry.proteinContent ||
+      entry.carbohydrateContent ||
+      entry.fatContent ||
+      entry.fiberContent ||
+      entry.sugarContent ||
+      entry.sodiumContent,
+  );
+
+  return hasValues ? entry : undefined;
+}
+
 export function buildRecipeStructuredData(recipe: NonNullable<GetRecipeResult>) {
   const url = `${SITE_URL}/recipes/${recipe.slug}`;
-  const imageUrl = recipe.mainImage
-    ? urlForImage(recipe.mainImage)?.width(1200).height(630).url()
-    : undefined;
+  const images = buildRecipeImageUrls(recipe);
   const keywords = recipe.tags
     ?.map(tag => tag.name)
     .filter(Boolean)
     .join(', ');
+  const storyText = recipe.story?.length
+    ? portableTextToPlainText(recipe.story as readonly Record<string, unknown>[])
+    : '';
+  const description =
+    recipe.description?.trim() ||
+    storyText.slice(0, 200) ||
+    `Home-cooked ${recipe.title} by Henrik Sissener.`;
+  const ratingCount = recipe.ratingCount ?? 0;
+  const averageRating = recipe.averageRating ?? null;
+  const nutritionJsonLd = buildNutritionJsonLd(recipe.nutrition);
 
   return {
     '@context': 'https://schema.org',
@@ -50,11 +128,13 @@ export function buildRecipeStructuredData(recipe: NonNullable<GetRecipeResult>) 
       {
         '@type': 'Recipe',
         '@id': url,
+        inLanguage: 'en',
         name: recipe.title,
-        description: recipe.description,
-        image: imageUrl ? [imageUrl] : undefined,
+        description,
+        image: images.length > 0 ? images : undefined,
         author: AUTHOR,
-        datePublished: recipe.publishedAt,
+        datePublished: recipe.publishedAt ?? undefined,
+        dateModified: recipe._updatedAt ?? recipe.publishedAt ?? undefined,
         prepTime: formatRecipeDuration(recipe.prepTime),
         cookTime: formatRecipeDuration(recipe.cookingTime),
         totalTime: formatRecipeDuration(recipe.totalTime),
@@ -78,6 +158,17 @@ export function buildRecipeStructuredData(recipe: NonNullable<GetRecipeResult>) 
         ...(recipe.tips?.length && {
           recipeTip: recipe.tips.map(tip => tip.content).filter(Boolean),
         }),
+        ...(nutritionJsonLd ? { nutrition: nutritionJsonLd } : {}),
+        ...(ratingCount > 0 &&
+          averageRating != null && {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: averageRating,
+              ratingCount,
+              bestRating: 5,
+              worstRating: 1,
+            },
+          }),
       },
     ],
   };

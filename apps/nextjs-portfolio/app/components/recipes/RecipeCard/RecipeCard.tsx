@@ -85,6 +85,12 @@ export function RecipeCard({ recipe, featured = false, className }: RecipeCardPr
           ) : null}
         </div>
 
+        {recipe.nutrition?.calories != null && recipe.nutrition.calories > 0 ? (
+          <p className='text-sm text-foreground-muted'>
+            {Math.round(recipe.nutrition.calories)} kcal per serving
+          </p>
+        ) : null}
+
         <RecipeMetaBadges
           prepTime={recipe.prepTime}
           cookingTime={recipe.cookingTime}
@@ -92,6 +98,13 @@ export function RecipeCard({ recipe, featured = false, className }: RecipeCardPr
           servings={recipe.servings}
           difficulty={recipe.difficulty}
         />
+
+        {recipe.ratingCount != null && recipe.ratingCount > 0 && recipe.averageRating != null ? (
+          <p className='text-sm text-foreground-muted'>
+            ★ {recipe.averageRating.toFixed(1)} · {recipe.ratingCount} rating
+            {recipe.ratingCount === 1 ? '' : 's'}
+          </p>
+        ) : null}
 
         {recipe.tags?.length ? (
           <div className='flex flex-wrap gap-2 pt-1'>

@@ -9,9 +9,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { urlForImage } from '@/sanity/lib/utils';
+import PortableText from '../../cms/PortableText/PortableText';
+import RecipeCookingMode from '../RecipeCookingMode/RecipeCookingMode';
+import RecipeEngagement from '../RecipeEngagement/RecipeEngagement';
 import RecipeIngredients, { scaleAmount } from '../RecipeIngredients/RecipeIngredients';
 import RecipeInstructions from '../RecipeInstructions/RecipeInstructions';
 import { RecipeMetaBadges } from '../RecipeMetaBadges/RecipeMetaBadges';
+import RecipeNutrition from '../RecipeNutrition/RecipeNutrition';
 import RecipeTipComponent from '../RecipeTip/RecipeTip';
 
 type RecipeDetailProps = {
@@ -20,8 +24,10 @@ type RecipeDetailProps = {
 
 export default function RecipeDetail({ recipe }: RecipeDetailProps) {
   const {
+    _id,
     title,
     description,
+    story,
     mainImage,
     additionalImages,
     ingredientCategories,
@@ -34,8 +40,11 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
     difficulty,
     tags,
     slug,
-    language,
-    translations,
+    publishedAt,
+    viewsCount,
+    averageRating,
+    ratingCount,
+    nutrition,
   } = recipe;
 
   const [servings, setServings] = useState(baseServings ?? 4);
@@ -78,17 +87,11 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
 
   const firstImage = allImages[0];
 
-  const LANGUAGE_LABEL: Record<string, string> = {
-    en: 'English',
-    no: 'Norsk',
-  };
-
-  const otherTranslations = useMemo(() => {
-    if (!translations || !Array.isArray(translations)) return [];
-    return (translations as any[]).filter(
-      (t: any) => t.value?.language && t.value.language !== (language || 'en'),
-    );
-  }, [translations, language]);
+  const publishedLabel = publishedAt
+    ? new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' }).format(
+        new Date(publishedAt),
+      )
+    : null;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -156,35 +159,38 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
             <div
               className={cn('lg:col-span-7 space-y-6', !mainImage && 'lg:col-span-12 max-w-4xl')}
             >
-              <div className='flex flex-wrap items-center justify-between gap-4 mb-2 w-full'>
-                {breadcrumbs}
-                {otherTranslations.length > 0 && (
-                  <div className='flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider'>
-                    <span className='text-foreground-muted'>Translate:</span>
-                    {otherTranslations.map((t: any) => {
-                      const lang = t.value?.language;
-                      const slugVal = t.value?.slug;
-                      if (!lang || !slugVal) return null;
-                      return (
-                        <Link
-                          key={lang}
-                          href={`/recipes/${slugVal}`}
-                          className='px-2.5 py-1 rounded bg-accent/10 hover:bg-accent/20 text-accent transition-colors font-semibold'
-                        >
-                          {LANGUAGE_LABEL[lang] ?? lang.toUpperCase()}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+              <div className='mb-2 w-full'>{breadcrumbs}</div>
               <h1 className='text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl font-sans'>
                 {title}
               </h1>
+              {publishedLabel ? (
+                <p className='text-sm text-foreground-muted'>
+                  By{' '}
+                  {ABOUT_PAGE_LINKS_ENABLED ? (
+                    <Link href='/about' className='font-medium text-accent hover:underline'>
+                      Henrik Wilhelm Sissener
+                    </Link>
+                  ) : (
+                    <span className='font-medium text-foreground'>Henrik Wilhelm Sissener</span>
+                  )}
+                  {' · '}
+                  Published {publishedLabel}
+                </p>
+              ) : null}
               {description ? (
                 <p className='text-lg leading-relaxed text-foreground-subtle sm:text-xl max-w-2xl'>
                   {description}
                 </p>
+              ) : null}
+              {slug && _id ? (
+                <RecipeEngagement
+                  recipeId={_id}
+                  recipeSlug={slug}
+                  title={title ?? 'Recipe'}
+                  viewsCount={viewsCount ?? 0}
+                  averageRating={averageRating ?? null}
+                  ratingCount={ratingCount ?? 0}
+                />
               ) : null}
               <RecipeMetaBadges
                 prepTime={prepTime}
@@ -282,6 +288,20 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
 
       {/* Main Content section */}
       <article className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
+        {story && story.length > 0 ? (
+          <section className='mx-auto mb-12 max-w-3xl' aria-labelledby='recipe-story-heading'>
+            <h2
+              id='recipe-story-heading'
+              className='mb-4 text-2xl font-extrabold tracking-tight text-foreground font-sans'
+            >
+              About this dish
+            </h2>
+            <div className='prose prose-neutral dark:prose-invert max-w-none text-foreground-subtle leading-relaxed'>
+              <PortableText value={story as Parameters<typeof PortableText>[0]['value']} />
+            </div>
+          </section>
+        ) : null}
+
         <div className='grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12'>
           {/* Ingredients Column */}
           <aside className='lg:col-span-4 lg:sticky lg:top-24 h-fit'>
@@ -292,12 +312,18 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 servings={servings}
                 onServingsChange={setServings}
               />
+              <RecipeNutrition
+                nutrition={nutrition}
+                servings={servings}
+                baseServings={baseServings ?? servings}
+              />
             </div>
           </aside>
 
           {/* Instructions Column */}
           <div className='min-w-0 lg:col-span-8'>
             <RecipeInstructions
+              headerActions={<RecipeCookingMode />}
               instructions={
                 instructions as Parameters<typeof RecipeInstructions>[0]['instructions']
               }
