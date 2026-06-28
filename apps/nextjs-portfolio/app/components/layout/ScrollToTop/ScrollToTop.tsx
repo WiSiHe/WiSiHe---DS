@@ -1,7 +1,7 @@
 'use client';
+import { IconArrowUp } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion, type Variants } from 'motion/react';
-import { IoArrowUpSharp } from 'react-icons/io5';
 import useScrollPosition from '@/hooks/useScrollPosition';
 
 type ScrollToTopButtonProps = {
@@ -69,7 +69,7 @@ const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
             className={buttonClassNames}
             aria-label='Scroll to top'
           >
-            <IoArrowUpSharp />
+            <IconArrowUp className='size-5' stroke={2} aria-hidden />
           </motion.button>
         </motion.div>
       )}

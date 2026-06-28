@@ -1,7 +1,7 @@
 'use client';
 
+import { IconMail, IconMapPin } from '@tabler/icons-react';
 import { motion } from 'motion/react';
-import { FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import { SocialListItem } from '@/app/components/layout/Footer/SocialListItem';
 import { CONTACT_DISPLAY_EMAIL, CONTACT_LOCATION } from '@/lib/contact/config';
 import ContactForm from './ContactForm';
@@ -58,7 +58,7 @@ export default function ContactPageClient({
           >
             <div className='group flex items-center gap-5'>
               <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface text-accent shadow-sm transition-all duration-300 group-hover:bg-accent group-hover:text-accent-contrast'>
-                <FaEnvelope className='text-xl' aria-hidden />
+                <IconMail className='size-5' stroke={2} aria-hidden />
               </div>
               <div>
                 <p className='text-xs font-bold uppercase tracking-widest text-foreground-muted'>
@@ -75,7 +75,7 @@ export default function ContactPageClient({
 
             <div className='group flex items-center gap-5'>
               <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface text-accent shadow-sm transition-all duration-300 group-hover:bg-accent group-hover:text-accent-contrast'>
-                <FaMapMarkerAlt className='text-xl' aria-hidden />
+                <IconMapPin className='size-5' stroke={2} aria-hidden />
               </div>
               <div>
                 <p className='text-xs font-bold uppercase tracking-widest text-foreground-muted'>

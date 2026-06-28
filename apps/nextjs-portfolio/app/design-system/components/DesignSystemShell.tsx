@@ -25,7 +25,6 @@ export default function DesignSystemShell({ children }: { children: React.ReactN
                   isActive
                     ? 'text-accent-contrast shadow-lg'
                     : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover',
-                  item.disabled && 'opacity-40 cursor-not-allowed pointer-events-none grayscale',
                 )}
                 aria-label={item.name}
               >
@@ -37,14 +36,12 @@ export default function DesignSystemShell({ children }: { children: React.ReactN
         </div>
       </div>
 
-      <div className='flex w-full max-w-7xl mx-auto px-6 py-12 pb-24 lg:pb-12 gap-12'>
+      <div className='flex w-full max-w-6xl mx-auto px-4 py-8 pb-24 lg:pb-10 gap-8 lg:gap-10'>
         {/* Sidebar - Desktop Sticky */}
         <DesignSystemSidebar />
 
         {/* Primary content (document landmark is root layout <main>) */}
-        <div className='flex-1 min-w-0'>
-          <div className='animate-in fade-in slide-in-from-bottom-4 duration-500'>{children}</div>
-        </div>
+        <div className='flex-1 min-w-0'>{children}</div>
       </div>
     </div>
   );

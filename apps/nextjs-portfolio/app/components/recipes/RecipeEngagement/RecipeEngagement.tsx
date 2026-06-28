@@ -1,8 +1,8 @@
 'use client';
 
+import { IconEye, IconShare, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BsEye, BsShare, BsStar, BsStarFill } from 'react-icons/bs';
 import { incrementRecipeView, rateRecipe } from '@/app/actions';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
@@ -205,9 +205,9 @@ export default function RecipeEngagement({
                   onClick={() => void handleRate(star)}
                 >
                   {filled ? (
-                    <BsStarFill className='size-5' aria-hidden />
+                    <IconStarFilled className='size-5' stroke={2} aria-hidden />
                   ) : (
-                    <BsStar className='size-5' aria-hidden />
+                    <IconStar className='size-5' stroke={2} aria-hidden />
                   )}
                 </button>
               );
@@ -229,7 +229,7 @@ export default function RecipeEngagement({
           </p>
         </div>
         <p className='flex items-center gap-1.5 text-xs text-foreground-muted'>
-          <BsEye className='size-3.5' aria-hidden />
+          <IconEye className='size-3.5' stroke={2} aria-hidden />
           {localViews} view{localViews === 1 ? '' : 's'}
         </p>
       </div>
@@ -239,7 +239,7 @@ export default function RecipeEngagement({
         onClick={() => void handleShare()}
         className='inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-foreground-muted hover:text-foreground sm:self-center'
       >
-        <BsShare className='size-4' aria-hidden />
+        <IconShare className='size-4' stroke={2} aria-hidden />
         {shareText}
       </button>
 

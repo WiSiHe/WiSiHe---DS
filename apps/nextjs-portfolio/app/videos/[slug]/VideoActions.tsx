@@ -1,8 +1,8 @@
 'use client';
 
+import { IconEye, IconHeart, IconHeartFilled, IconShare } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import { incrementVideoLike, incrementVideoView, removeVideoLike } from '@/app/actions';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
@@ -24,7 +24,6 @@ export default function VideoActions({
   const [shareText, setShareText] = useState('Share');
   const hasTrackedView = useRef(false);
 
-  // Restore liked state from localStorage
   useEffect(() => {
     try {
       const liked = JSON.parse(localStorage.getItem('likedVideos') || '{}');
@@ -34,7 +33,6 @@ export default function VideoActions({
     }
   }, [videoId]);
 
-  // Track view once per device
   useEffect(() => {
     if (hasTrackedView.current) return;
     const storageKey = `viewed_video_${videoId}`;
@@ -113,19 +111,21 @@ export default function VideoActions({
 
   return (
     <div className='flex items-center flex-wrap gap-4'>
-      {/* Stats */}
       <div className='flex items-center gap-4 text-sm text-foreground-muted'>
         <span className='flex items-center gap-1.5'>
-          <BsEye className='w-3.5 h-3.5' />
+          <IconEye className='size-3.5' stroke={2} aria-hidden />
           {viewsCount} views
         </span>
         <span className={cn('flex items-center gap-1.5', hasLiked && 'text-red-500')}>
-          {hasLiked ? <BsHeartFill className='w-3.5 h-3.5' /> : <BsHeart className='w-3.5 h-3.5' />}
+          {hasLiked ? (
+            <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
+          ) : (
+            <IconHeart className='size-3.5' stroke={2} aria-hidden />
+          )}
           {localLikes} likes
         </span>
       </div>
 
-      {/* Actions */}
       <div className='flex items-center gap-2 ml-auto'>
         <button
           type='button'
@@ -137,7 +137,11 @@ export default function VideoActions({
               : 'border-border bg-surface text-foreground-subtle hover:text-foreground hover:border-foreground-muted',
           )}
         >
-          {hasLiked ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
+          {hasLiked ? (
+            <IconHeartFilled className='size-4' stroke={2} aria-hidden />
+          ) : (
+            <IconHeart className='size-4' stroke={2} aria-hidden />
+          )}
           {hasLiked ? 'Liked' : 'Like'}
         </button>
         <button
@@ -145,7 +149,7 @@ export default function VideoActions({
           onClick={handleShare}
           className='flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-border bg-surface text-foreground-subtle hover:text-foreground hover:border-foreground-muted transition-colors duration-150'
         >
-          <BsShare className='w-4 h-4' />
+          <IconShare className='size-4' stroke={2} aria-hidden />
           {shareText}
         </button>
       </div>

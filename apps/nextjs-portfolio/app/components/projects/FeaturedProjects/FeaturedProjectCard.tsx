@@ -113,7 +113,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   return (
     <div
       ref={cardRef}
-      className='relative flex h-screen w-full items-center justify-center overflow-hidden border-t border-border/20 bg-card dark:border-white/5'
+      className='relative flex h-screen w-full items-center justify-center overflow-hidden border-t border-border/20 bg-surface dark:border-white/5'
     >
       <div className='absolute inset-0 z-0 h-full w-full overflow-hidden'>
         <div className='pointer-events-none absolute inset-0 z-10 bg-black/50 transition-colors duration-300 dark:bg-black/60' />
@@ -130,7 +130,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
             />
           </div>
         ) : (
-          <div className='h-full w-full bg-muted' />
+          <div className='h-full w-full bg-surface-subtle' />
         )}
       </div>
 

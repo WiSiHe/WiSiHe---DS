@@ -1,20 +1,23 @@
 'use client';
+import {
+  IconCalendar,
+  IconCircleCheck,
+  IconCircleX,
+  IconEye,
+  IconEyeOff,
+  IconHeart,
+  IconHeartFilled,
+  IconHelp,
+  IconLoader2,
+  IconPlayerPause,
+  IconShare,
+} from '@tabler/icons-react';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import type { PortableTextBlock } from 'next-sanity';
 import { useCallback, useEffect, useState } from 'react';
-import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
-import {
-  FaCalendarAlt as IconCalendar,
-  FaTimesCircle as IconCancel,
-  FaCheckCircle as IconCheck,
-  FaEyeSlash as IconEyePause,
-  FaSpinner as IconLoader,
-  FaPauseCircle as IconPause,
-  FaQuestionCircle as IconQuestion,
-} from 'react-icons/fa';
 import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@/app/actions';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import CustomPortableText from '../../cms/PortableText/PortableText';
@@ -25,14 +28,14 @@ type ProjectInformationProps = {
 
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
-  abandoned: { icon: IconEyePause, label: 'Abandoned' },
-  cancelled: { icon: IconCancel, label: 'Cancelled' },
-  completed: { icon: IconCheck, label: 'Completed' },
-  inProgress: { icon: IconLoader, label: 'In Progress' },
-  notStarted: { icon: IconPause, label: 'Not Started' },
-  onHold: { icon: IconPause, label: 'On Hold' },
+  abandoned: { icon: IconEyeOff, label: 'Abandoned' },
+  cancelled: { icon: IconCircleX, label: 'Cancelled' },
+  completed: { icon: IconCircleCheck, label: 'Completed' },
+  inProgress: { icon: IconLoader2, label: 'In Progress' },
+  notStarted: { icon: IconPlayerPause, label: 'Not Started' },
+  onHold: { icon: IconPlayerPause, label: 'On Hold' },
   planned: { icon: IconCalendar, label: 'Planned' },
-  unknown: { icon: IconQuestion, label: 'Unknown' },
+  unknown: { icon: IconHelp, label: 'Unknown' },
 } as const;
 
 const ProjectInformation = ({ project }: ProjectInformationProps) => {
@@ -232,7 +235,11 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
                 : '',
             )}
           >
-            {hasLikedLocal ? <BsHeartFill className='w-4 h-4' /> : <BsHeart className='w-4 h-4' />}
+            {hasLikedLocal ? (
+              <IconHeartFilled className='size-4' stroke={2} aria-hidden />
+            ) : (
+              <IconHeart className='size-4' stroke={2} aria-hidden />
+            )}
             {hasLikedLocal ? 'Liked' : 'Like'}
           </Button>
           <Button
@@ -240,7 +247,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
             variant='secondary'
             className='gap-2 w-fit rounded-full px-4 shadow-sm'
           >
-            <BsShare className='w-4 h-4' />
+            <IconShare className='size-4' stroke={2} aria-hidden />
             {shareText}
           </Button>
         </div>
@@ -254,7 +261,11 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
             Status
           </span>
           <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
-            <StatusIcon className='w-3.5 h-3.5' />
+            <StatusIcon
+              className={cn('size-3.5', status === 'inProgress' && 'animate-spin')}
+              stroke={2}
+              aria-hidden
+            />
             {statusConfig.label}
           </span>
         </div>
@@ -313,7 +324,7 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
             Views
           </span>
           <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
-            <BsEye className='w-3.5 h-3.5' />
+            <IconEye className='size-3.5' stroke={2} aria-hidden />
             {viewsCount?.toString() ?? '0'}
           </span>
         </div>
@@ -330,9 +341,9 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
             )}
           >
             {hasLikedLocal ? (
-              <BsHeartFill className='w-3.5 h-3.5' />
+              <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
             ) : (
-              <BsHeart className='w-3.5 h-3.5' />
+              <IconHeart className='size-3.5' stroke={2} aria-hidden />
             )}
             {localLikesCount}
           </span>

@@ -1,21 +1,21 @@
 'use client';
 
+import { IconBrush, IconDeviceTv, IconFolder, IconUser } from '@tabler/icons-react';
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import type { JSX } from 'react';
-import { FaBrush, FaFolder, FaTv, FaUser } from 'react-icons/fa';
 import { Dock } from '@/app/components/ui/Dock';
 import IconLogo from '../icons/IconLogo';
 import { Link } from '../ProgressLink';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 const NAV_ICONS: Record<string, JSX.Element> = {
-  Paintings: <FaBrush />,
-  Projects: <FaFolder />,
-  Videos: <FaTv />,
-  About: <FaUser />,
+  Paintings: <IconBrush className='size-5' stroke={2} aria-hidden />,
+  Projects: <IconFolder className='size-5' stroke={2} aria-hidden />,
+  Videos: <IconDeviceTv className='size-5' stroke={2} aria-hidden />,
+  About: <IconUser className='size-5' stroke={2} aria-hidden />,
 };
 
 interface iNavigationProps {
@@ -24,7 +24,6 @@ interface iNavigationProps {
 
 const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.Element => {
   const pathName = usePathname();
-  /** Immersive routes use their own chrome — hide dock to avoid overlap. */
   const hideBottomNav =
     pathName?.startsWith('/design-system') ||
     pathName === '/three-d' ||

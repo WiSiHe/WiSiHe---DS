@@ -1,7 +1,7 @@
 'use client';
 
+import { IconBasket } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { TbBasket } from 'react-icons/tb';
 
 export interface RecipeTip {
   title?: string;
@@ -33,7 +33,7 @@ export default function RecipeTipComponent({ tip, className = '' }: RecipeTipPro
             {tip.icon}
           </span>
         ) : (
-          <TbBasket className='w-5 h-5' />
+          <IconBasket className='size-5' stroke={2} aria-hidden />
         )}
       </div>
       <div className='flex-1 min-w-0'>

@@ -7,10 +7,10 @@
  * Appears with a subtle entrance animation and stays out of the way of content.
  */
 
+import { IconArrowLeft } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { IoArrowBack } from 'react-icons/io5';
 
 interface BackButtonProps {
   /** Fallback URL when the user landed directly (no browser history). */
@@ -51,7 +51,7 @@ export default function BackButton({ fallbackHref }: BackButtonProps) {
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
       aria-label='Go back'
     >
-      <IoArrowBack className='w-4 h-4' />
+      <IconArrowLeft className='size-4' stroke={2} aria-hidden />
       Back
     </motion.button>
   );

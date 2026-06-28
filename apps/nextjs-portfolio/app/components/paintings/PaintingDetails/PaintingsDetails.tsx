@@ -1,5 +1,16 @@
 /** biome-ignore-all lint/performance/noImgElement: Necessary for motion.img which doesn't support Next.js Image component easily for this specific transition */
 'use client';
+import {
+  IconArrowRight,
+  IconChevronLeft,
+  IconChevronRight,
+  IconEye,
+  IconHeart,
+  IconHeartFilled,
+  IconMask,
+  IconShare,
+  IconShoppingBag,
+} from '@tabler/icons-react';
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -8,10 +19,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { BiLogoRedbubble, BiRightArrow } from 'react-icons/bi';
-import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { TbMasksTheater } from 'react-icons/tb';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import Breadcrumbs, { type Crumb } from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
@@ -50,7 +57,13 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
   // Build the list of available stores — easy to extend with more platforms
   const storeLinks: { label: string; url: string; icon: React.ReactNode }[] = [
     ...(redbubbleUrl
-      ? [{ label: 'Redbubble', url: redbubbleUrl, icon: <BiLogoRedbubble className='w-4 h-4' /> }]
+      ? [
+          {
+            label: 'Redbubble',
+            url: redbubbleUrl,
+            icon: <IconShoppingBag className='size-4' stroke={2} aria-hidden />,
+          },
+        ]
       : []),
     ...(gelatoUrl
       ? [
@@ -332,7 +345,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                     className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Previous image'
                   >
-                    <IoChevronBack className='w-6 h-6' />
+                    <IconChevronLeft className='size-6' stroke={2} aria-hidden />
                   </button>
                   <button
                     type='button'
@@ -340,7 +353,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                     className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
                     aria-label='Next image'
                   >
-                    <IoChevronForward className='w-6 h-6' />
+                    <IconChevronRight className='size-6' stroke={2} aria-hidden />
                   </button>
                 </>
               )}
@@ -385,7 +398,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                 <div className='flex flex-wrap items-center gap-2'>
                   {isFanArt && (
                     <span className='inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20'>
-                      <TbMasksTheater className='w-3.5 h-3.5' /> Fan Art
+                      <IconMask className='size-3.5' stroke={2} aria-hidden /> Fan Art
                     </span>
                   )}
                 </div>
@@ -397,15 +410,16 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                 <div className='flex items-center flex-wrap gap-3 pt-1'>
                   <div className='flex items-center gap-4 text-sm text-foreground-muted'>
                     <span className='flex items-center gap-1.5'>
-                      <BsEye className='w-3.5 h-3.5' /> {viewsCount?.toString() ?? '0'} views
+                      <IconEye className='size-3.5' stroke={2} aria-hidden />{' '}
+                      {viewsCount?.toString() ?? '0'} views
                     </span>
                     <span
                       className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-red-500')}
                     >
                       {hasLikedLocal ? (
-                        <BsHeartFill className='w-3.5 h-3.5' />
+                        <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
                       ) : (
-                        <BsHeart className='w-3.5 h-3.5' />
+                        <IconHeart className='size-3.5' stroke={2} aria-hidden />
                       )}
                       {localLikesCount} likes
                     </span>
@@ -423,9 +437,9 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                       )}
                     >
                       {hasLikedLocal ? (
-                        <BsHeartFill className='w-4 h-4' />
+                        <IconHeartFilled className='size-4' stroke={2} aria-hidden />
                       ) : (
-                        <BsHeart className='w-4 h-4' />
+                        <IconHeart className='size-4' stroke={2} aria-hidden />
                       )}
                       {hasLikedLocal ? 'Liked' : 'Like'}
                     </Button>
@@ -434,7 +448,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                       variant='secondary'
                       className='gap-2 w-fit rounded-full px-4 shadow-sm'
                     >
-                      <BsShare className='w-4 h-4' />
+                      <IconShare className='size-4' stroke={2} aria-hidden />
                       {shareText}
                     </Button>
                   </div>
@@ -584,7 +598,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                           {store.icon}
                           Shop on {store.label}
                         </span>
-                        <BiRightArrow className='w-3.5 h-3.5 opacity-70' />
+                        <IconArrowRight className='size-3.5 opacity-70' stroke={2} aria-hidden />
                       </a>
                     ))}
                   </div>

@@ -44,7 +44,7 @@ export const Underline: Story = {
         <TabContent>
           {TABS.map(t => (
             <TabPanel key={t}>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-sm text-foreground-muted'>
                 Content for <strong>{t}</strong>
               </p>
             </TabPanel>
@@ -78,7 +78,7 @@ export const Pill: Story = {
         <TabContent>
           {TABS.map(t => (
             <TabPanel key={t}>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-sm text-foreground-muted'>
                 Content for <strong>{t}</strong>
               </p>
             </TabPanel>

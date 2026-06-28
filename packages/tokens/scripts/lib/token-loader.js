@@ -126,3 +126,56 @@ export function flattenTokenTree(node, pathParts = []) {
 
   return flattened;
 }
+
+function getTokenNode(root, pathParts) {
+  let current = root;
+  for (const part of pathParts) {
+    if (!isPlainObject(current) || !(part in current)) {
+      return null;
+    }
+    current = current[part];
+  }
+
+  if (isPlainObject(current) && Object.hasOwn(current, '$value')) {
+    return current;
+  }
+
+  return null;
+}
+
+export function buildTokenResolutionRoot() {
+  const { primitives, semanticLight, semanticDark, component } = loadLayeredTokens();
+
+  return mergeDeep(
+    mergeDeep(mergeDeep({}, primitives), semanticLight),
+    mergeDeep(semanticDark, component),
+  );
+}
+
+export function resolveTokenValue(value, root = buildTokenResolutionRoot(), visited = new Set()) {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  const referenceMatch = value.match(/^\{([^}]+)\}$/);
+  if (!referenceMatch) {
+    return value;
+  }
+
+  const tokenPath = referenceMatch[1].trim();
+  if (visited.has(tokenPath)) {
+    return value;
+  }
+
+  visited.add(tokenPath);
+  const tokenNode = getTokenNode(root, tokenPath.split('.'));
+  if (!tokenNode) {
+    return value;
+  }
+
+  return resolveTokenValue(tokenNode.$value, root, visited);
+}
+
+export function loadFlatTokensForExport() {
+  return buildTokenResolutionRoot();
+}

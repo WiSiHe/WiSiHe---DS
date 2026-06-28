@@ -1,30 +1,32 @@
 'use client';
 
-import { BiLogoRedbubble } from 'react-icons/bi';
-import { BsTwitterX } from 'react-icons/bs';
 import {
-  FaArtstation,
-  FaFacebook,
-  FaGithub,
-  FaInstagram,
-  FaLinkedin,
-  FaYoutube,
-} from 'react-icons/fa';
+  IconBrandFacebook,
+  IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandX,
+  IconBrandYoutube,
+  IconPalette,
+  IconShoppingBag,
+} from '@tabler/icons-react';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
+const iconClass = 'size-5 stroke-[2]';
+
 const iconPlatform = {
-  Instagram: <FaInstagram />,
-  X: <BsTwitterX />,
-  Twitter: <BsTwitterX />,
-  Facebook: <FaFacebook />,
-  Linkedin: <FaLinkedin />,
-  LinkedIn: <FaLinkedin />,
-  GitHub: <FaGithub />,
-  Github: <FaGithub />,
-  YouTube: <FaYoutube />,
-  Youtube: <FaYoutube />,
-  Redbubble: <BiLogoRedbubble />,
-  Artstation: <FaArtstation />,
+  Instagram: <IconBrandInstagram className={iconClass} aria-hidden />,
+  X: <IconBrandX className={iconClass} aria-hidden />,
+  Twitter: <IconBrandX className={iconClass} aria-hidden />,
+  Facebook: <IconBrandFacebook className={iconClass} aria-hidden />,
+  Linkedin: <IconBrandLinkedin className={iconClass} aria-hidden />,
+  LinkedIn: <IconBrandLinkedin className={iconClass} aria-hidden />,
+  GitHub: <IconBrandGithub className={iconClass} aria-hidden />,
+  Github: <IconBrandGithub className={iconClass} aria-hidden />,
+  YouTube: <IconBrandYoutube className={iconClass} aria-hidden />,
+  Youtube: <IconBrandYoutube className={iconClass} aria-hidden />,
+  Redbubble: <IconShoppingBag className={iconClass} aria-hidden />,
+  Artstation: <IconPalette className={iconClass} aria-hidden />,
 };
 
 interface SocialLink {
@@ -40,7 +42,12 @@ type SocialListItemProps = {
 
 export const SocialListItem = ({ item, variant = 'card' }: SocialListItemProps) => {
   const { platform, url } = item;
-  const Icon = platform ? iconPlatform[platform as keyof typeof iconPlatform] : null;
+  const Icon =
+    platform && platform in iconPlatform ? (
+      iconPlatform[platform as keyof typeof iconPlatform]
+    ) : platform ? (
+      <IconPalette className={iconClass} aria-hidden />
+    ) : null;
 
   if (!url) return null;
 

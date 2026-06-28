@@ -22,7 +22,7 @@ const FacetRow = memo(
             'flex w-full items-center gap-2.5 cursor-pointer group text-sm py-1.5 px-2 rounded-lg',
             item.isRefined
               ? 'bg-accent/10 text-foreground'
-              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+              : 'text-foreground-muted hover:bg-surface-hover hover:text-foreground',
           )}
         >
           <span
@@ -51,7 +51,7 @@ const FacetRow = memo(
           <span
             className={cn(
               'text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0 min-w-6 text-center tabular-nums',
-              item.isRefined ? 'bg-accent/20 text-accent' : 'text-muted-foreground',
+              item.isRefined ? 'bg-accent/20 text-accent' : 'text-foreground-muted',
             )}
           >
             {item.count}

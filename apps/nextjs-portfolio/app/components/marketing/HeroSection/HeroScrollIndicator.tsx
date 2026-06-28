@@ -2,6 +2,7 @@
 
 import { IconChevronDown } from '@tabler/icons-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { HERO_SQUASH_RATIOS } from './heroSquashStretch';
 
 type HeroScrollIndicatorProps = {
   show: boolean;
@@ -9,6 +10,7 @@ type HeroScrollIndicatorProps = {
 
 /**
  * Icon-only scroll hint above the fixed bottom nav (see HeaderNavigation).
+ * Chevrons squash at the low point of each bounce — subtle squash & stretch.
  */
 export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) {
   const reduceMotion = useReducedMotion();
@@ -27,11 +29,14 @@ export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) 
         >
           <motion.div
             className='flex flex-col items-center -space-y-4'
+            style={{ transformOrigin: 'center top' }}
             animate={
               reduceMotion
                 ? undefined
                 : {
                     y: [0, 5, 0],
+                    scaleX: [1, HERO_SQUASH_RATIOS.squashX, 1],
+                    scaleY: [1, HERO_SQUASH_RATIOS.squashY, 1],
                   }
             }
             transition={{

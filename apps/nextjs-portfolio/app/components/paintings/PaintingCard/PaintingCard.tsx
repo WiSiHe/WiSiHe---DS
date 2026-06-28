@@ -1,11 +1,10 @@
 'use client';
 
+import { IconBrandYoutube, IconMask, IconStack2 } from '@tabler/icons-react';
 import { PaintingCard, type PaintingCardBadge } from '@wisihe/ui-react';
 import { cleanTagName, cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BsYoutube } from 'react-icons/bs';
-import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
 import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
@@ -132,19 +131,23 @@ function PaintingCardInner({
   if (isFanArt === true) {
     badges.push({
       key: 'fanart',
-      icon: <TbMasksTheater className='w-4 h-4' />,
+      icon: <IconMask className='size-4' stroke={2} aria-hidden />,
       label: 'Fan art',
     });
   }
   if (Number(imagesCount) > 0) {
     badges.push({
       key: 'multi',
-      icon: <TbBoxMultiple className='w-4 h-4' />,
+      icon: <IconStack2 className='size-4' stroke={2} aria-hidden />,
       label: 'Multiple images',
     });
   }
   if (video) {
-    badges.push({ key: 'video', icon: <BsYoutube className='w-4 h-4' />, label: 'Has video' });
+    badges.push({
+      key: 'video',
+      icon: <IconBrandYoutube className='size-4' stroke={2} aria-hidden />,
+      label: 'Has video',
+    });
   }
 
   const showTagsWithoutBrush = alwaysShowTags || !canBrushReveal;

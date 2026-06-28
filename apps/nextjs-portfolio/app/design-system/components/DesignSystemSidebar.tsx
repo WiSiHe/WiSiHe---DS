@@ -16,7 +16,7 @@ export default function DesignSystemSidebar() {
           Design<span className='text-accent'>System</span>
         </h2>
         <p className='text-[10px] font-mono text-foreground-muted mt-1 opacity-60'>
-          v1.2.4 &bull; Neon Edition
+          @wisihe/tokens v1.1.0
         </p>
       </div>
 
@@ -32,7 +32,6 @@ export default function DesignSystemSidebar() {
                 isActive
                   ? 'text-accent-contrast font-bold shadow-md'
                   : 'text-foreground-subtle hover:text-foreground hover:bg-surface-hover/50',
-                item.disabled && 'opacity-40 cursor-not-allowed pointer-events-none',
               )}
             >
               {isActive && (
@@ -55,12 +54,6 @@ export default function DesignSystemSidebar() {
               </span>
 
               <span className='relative z-10 text-sm'>{item.name}</span>
-
-              {item.disabled && (
-                <span className='relative z-10 ml-auto text-[8px] uppercase font-black tracking-wider bg-surface/50 text-foreground-muted px-1.5 py-0.5 rounded border border-border/20'>
-                  WIP
-                </span>
-              )}
             </Link>
           );
         })}

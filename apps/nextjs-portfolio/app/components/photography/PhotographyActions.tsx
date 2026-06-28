@@ -1,8 +1,8 @@
 'use client';
 
+import { IconEye, IconHeart, IconHeartFilled, IconShare } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BsEye, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs';
 import {
   incrementPhotographyLike,
   incrementPhotographyView,
@@ -119,14 +119,14 @@ export function PhotographyActions({
     <div className='flex flex-wrap items-center gap-4'>
       <div className='flex items-center gap-4 text-sm text-foreground-muted'>
         <span className='flex items-center gap-1.5'>
-          <BsEye className='size-3.5' aria-hidden />
+          <IconEye className='size-3.5' stroke={2} aria-hidden />
           {localViews} views
         </span>
         <span className={cn('flex items-center gap-1.5', hasLiked && 'text-red-500')}>
           {hasLiked ? (
-            <BsHeartFill className='size-3.5' aria-hidden />
+            <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
           ) : (
-            <BsHeart className='size-3.5' aria-hidden />
+            <IconHeart className='size-3.5' stroke={2} aria-hidden />
           )}
           {localLikes} likes
         </span>
@@ -144,9 +144,9 @@ export function PhotographyActions({
           )}
         >
           {hasLiked ? (
-            <BsHeartFill className='size-4' aria-hidden />
+            <IconHeartFilled className='size-4' stroke={2} aria-hidden />
           ) : (
-            <BsHeart className='size-4' aria-hidden />
+            <IconHeart className='size-4' stroke={2} aria-hidden />
           )}
           {hasLiked ? 'Liked' : 'Like'}
         </button>
@@ -155,7 +155,7 @@ export function PhotographyActions({
           onClick={handleShare}
           className='flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors duration-150 hover:border-foreground-muted hover:text-foreground'
         >
-          <BsShare className='size-4' aria-hidden />
+          <IconShare className='size-4' stroke={2} aria-hidden />
           {shareText}
         </button>
       </div>
