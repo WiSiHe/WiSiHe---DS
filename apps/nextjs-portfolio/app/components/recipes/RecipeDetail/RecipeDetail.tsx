@@ -198,6 +198,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 totalTime={totalTime}
                 servings={servings}
                 difficulty={difficulty}
+                nutrition={nutrition}
                 className='pt-2'
               />
             </div>

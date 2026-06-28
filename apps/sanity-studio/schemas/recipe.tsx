@@ -173,6 +173,19 @@ export default defineType({
       of: [
         {
           type: 'object',
+          preview: {
+            select: {
+              title: 'categoryName',
+              ingredients: 'ingredients',
+            },
+            prepare({ title, ingredients }: { title?: string; ingredients?: unknown[] }) {
+              const count = ingredients?.length ?? 0;
+              return {
+                title: title || 'Untitled category',
+                subtitle: `${count} ingredient${count === 1 ? '' : 's'}`,
+              };
+            },
+          },
           fields: [
             defineField({
               name: 'categoryName',
@@ -188,6 +201,32 @@ export default defineType({
               of: [
                 {
                   type: 'object',
+                  preview: {
+                    select: {
+                      title: 'ingredient.name',
+                      amount: 'amount',
+                      unit: 'unit',
+                      media: 'ingredient.photo',
+                    },
+                    prepare({
+                      title,
+                      amount,
+                      unit,
+                      media,
+                    }: {
+                      title?: string;
+                      amount?: string;
+                      unit?: string;
+                      media?: unknown;
+                    }) {
+                      const quantity = [amount, unit].filter(Boolean).join(' ');
+                      return {
+                        title: title || 'Select ingredient',
+                        subtitle: quantity || 'No amount set',
+                        media,
+                      };
+                    },
+                  },
                   fields: [
                     defineField({
                       name: 'ingredient',
@@ -231,6 +270,14 @@ export default defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: 'nutrition',
+      title: 'Nutrition (per serving)',
+      type: 'recipeNutrition',
+      group: 'ingredients',
+      description:
+        'Calories and macros per serving. Open this block and use “Estimate with AI”, or enter values manually.',
     }),
     defineField({
       name: 'instructions',
@@ -328,13 +375,6 @@ export default defineType({
       title: 'Servings',
       type: 'number',
       group: 'metadata',
-    }),
-    defineField({
-      name: 'nutrition',
-      title: 'Nutrition',
-      type: 'recipeNutrition',
-      group: 'metadata',
-      description: 'Per-serving values. Use “Estimate with AI” or enter manually.',
     }),
     defineField({
       name: 'difficulty',
