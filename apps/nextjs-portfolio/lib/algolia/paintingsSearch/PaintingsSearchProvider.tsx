@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   createContext,
   type ReactNode,
@@ -77,50 +78,148 @@ function parseSearchResult(result: unknown): PaintingsSearchResults | null {
 }
 
 export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
-  const [query, setQueryState] = useState('');
-  const [tagFilters, setTagFilters] = useState<string[]>([]);
-  const [colorFilters, setColorFilters] = useState<string[]>([]);
-  const [forSale, setForSale] = useState(false);
-  const [sort, setSortState] = useState<PaintingsSortKey>('featured');
-  const [page, setPageState] = useState(0);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Read initial values from URL
+  const initialQuery = searchParams.get('q') || '';
+  const initialTags = useMemo(
+    () => searchParams.get('tag')?.split(',').filter(Boolean) || [],
+    [searchParams],
+  );
+  const initialColors = useMemo(
+    () => searchParams.get('color')?.split(',').filter(Boolean) || [],
+    [searchParams],
+  );
+  const initialForSale = searchParams.get('sale') === 'true';
+  const initialSort = (searchParams.get('sort') as PaintingsSortKey) || 'featured';
+  const initialPage = Math.max(0, parseInt(searchParams.get('p') || '1', 10) - 1);
+
+  const [query, setQueryState] = useState(initialQuery);
+  const [tagFilters, setTagFilters] = useState<string[]>(initialTags);
+  const [colorFilters, setColorFilters] = useState<string[]>(initialColors);
+  const [forSale, setForSale] = useState(initialForSale);
+  const [sort, setSortState] = useState<PaintingsSortKey>(initialSort);
+  const [page, setPageState] = useState(initialPage);
   const [status, setStatus] = useState<'idle' | 'loading'>('loading');
   const [results, setResults] = useState<PaintingsSearchResults | null>(null);
 
   const settledResultsRef = useRef<PaintingsSearchResults | null>(null);
   const requestIdRef = useRef(0);
 
-  const setQuery = useCallback((next: string) => {
-    setPageState(0);
-    setQueryState(next);
-  }, []);
+  const updateUrl = useCallback(
+    (newFilters: {
+      q?: string;
+      tag?: string[];
+      color?: string[];
+      sale?: boolean;
+      sort?: PaintingsSortKey;
+      p?: number;
+    }) => {
+      const currentParams = new URLSearchParams();
 
-  const setSort = useCallback((next: PaintingsSortKey) => {
-    setPageState(0);
-    setSortState(next);
-  }, []);
+      const q = newFilters.q !== undefined ? newFilters.q : query;
+      const tag = newFilters.tag !== undefined ? newFilters.tag : tagFilters;
+      const color = newFilters.color !== undefined ? newFilters.color : colorFilters;
+      const sale = newFilters.sale !== undefined ? newFilters.sale : forSale;
+      const s = newFilters.sort !== undefined ? newFilters.sort : sort;
+      const p = newFilters.p !== undefined ? newFilters.p : page;
 
-  const setPage = useCallback((next: number) => {
-    setPageState(next);
-  }, []);
+      if (q) currentParams.set('q', q);
+      if (tag.length) currentParams.set('tag', tag.join(','));
+      if (color.length) currentParams.set('color', color.join(','));
+      if (sale) currentParams.set('sale', 'true');
+      if (s !== 'featured') currentParams.set('sort', s);
+      if (p > 0) currentParams.set('p', String(p + 1));
 
-  const toggleTag = useCallback((value: string) => {
-    setPageState(0);
-    setTagFilters(prev =>
-      prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value],
-    );
-  }, []);
+      const search = currentParams.toString();
+      const queryStr = search ? `?${search}` : '';
 
-  const toggleColor = useCallback((value: string) => {
-    setPageState(0);
-    setColorFilters(prev =>
-      prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value],
-    );
-  }, []);
+      router.replace(`${pathname}${queryStr}`, { scroll: false });
+    },
+    [query, tagFilters, colorFilters, forSale, sort, page, router, pathname],
+  );
+
+  // Sync URL changes to React state (e.g. browser back/forward buttons)
+  useEffect(() => {
+    const q = searchParams.get('q') || '';
+    const tag = searchParams.get('tag')?.split(',').filter(Boolean) || [];
+    const color = searchParams.get('color')?.split(',').filter(Boolean) || [];
+    const sale = searchParams.get('sale') === 'true';
+    const s = (searchParams.get('sort') as PaintingsSortKey) || 'featured';
+    const p = Math.max(0, parseInt(searchParams.get('p') || '1', 10) - 1);
+
+    if (q !== query) setQueryState(q);
+
+    const tagChanged = tag.length !== tagFilters.length || tag.some((t, i) => t !== tagFilters[i]);
+    if (tagChanged) setTagFilters(tag);
+
+    const colorChanged =
+      color.length !== colorFilters.length || color.some((c, i) => c !== colorFilters[i]);
+    if (colorChanged) setColorFilters(color);
+
+    if (sale !== forSale) setForSale(sale);
+    if (s !== sort) setSortState(s);
+    if (p !== page) setPageState(p);
+  }, [searchParams, query, tagFilters, colorFilters, forSale, sort, page]);
+
+  const setQuery = useCallback(
+    (next: string) => {
+      setPageState(0);
+      setQueryState(next);
+      updateUrl({ q: next, p: 0 });
+    },
+    [updateUrl],
+  );
+
+  const setSort = useCallback(
+    (next: PaintingsSortKey) => {
+      setPageState(0);
+      setSortState(next);
+      updateUrl({ sort: next, p: 0 });
+    },
+    [updateUrl],
+  );
+
+  const setPage = useCallback(
+    (next: number) => {
+      setPageState(next);
+      updateUrl({ p: next });
+    },
+    [updateUrl],
+  );
+
+  const toggleTag = useCallback(
+    (value: string) => {
+      setPageState(0);
+      const nextTags = tagFilters.includes(value)
+        ? tagFilters.filter(item => item !== value)
+        : [...tagFilters, value];
+      setTagFilters(nextTags);
+      updateUrl({ tag: nextTags, p: 0 });
+    },
+    [tagFilters, updateUrl],
+  );
+
+  const toggleColor = useCallback(
+    (value: string) => {
+      setPageState(0);
+      const nextColors = colorFilters.includes(value)
+        ? colorFilters.filter(item => item !== value)
+        : [...colorFilters, value];
+      setColorFilters(nextColors);
+      updateUrl({ color: nextColors, p: 0 });
+    },
+    [colorFilters, updateUrl],
+  );
 
   const toggleForSale = useCallback(() => {
     setPageState(0);
-    setForSale(prev => !prev);
-  }, []);
+    const nextSale = !forSale;
+    setForSale(nextSale);
+    updateUrl({ sale: nextSale, p: 0 });
+  }, [forSale, updateUrl]);
 
   useEffect(() => {
     if (!searchClient) return;
