@@ -104,24 +104,6 @@ const useMeasure = () => {
   return [ref, size] as const;
 };
 
-const preloadImages = async (urls: string[]) => {
-  await Promise.all(
-    urls.map(
-      src =>
-        new Promise<void>(resolve => {
-          if (!src) {
-            resolve();
-            return;
-          }
-          const img = new window.Image();
-          img.src = src;
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-        }),
-    ),
-  );
-};
-
 const Masonry = ({
   items,
   ease = 'power3.out',
@@ -136,11 +118,6 @@ const Masonry = ({
   const columns = useMedia(MASONRY_MEDIA_QUERIES, MASONRY_MEDIA_COLUMNS, 1);
 
   const [containerRef, { width }] = useMeasure();
-  const [imagesReady, setImagesReady] = useState(false);
-
-  useEffect(() => {
-    preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
-  }, [items]);
 
   const grid = useMemo(() => {
     if (!width || !items.length) return [];
@@ -203,7 +180,7 @@ const Masonry = ({
   }, [itemIdsKey]);
 
   useLayoutEffect(() => {
-    if (!imagesReady || !grid.length) return;
+    if (!grid.length) return;
 
     const reduced = prefersReducedMotion();
 
@@ -243,17 +220,17 @@ const Masonry = ({
     });
 
     hasMounted.current = true;
-  }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
+  }, [grid, stagger, animateFrom, blurToFocus, duration, ease]);
 
   useLayoutEffect(() => {
-    if (!imagesReady || !grid.length) return;
+    if (!grid.length) return;
     grid.forEach(item => {
       const tile = containerRef.current?.querySelector<HTMLElement>(
         `[data-masonry-key="${CSS.escape(item.id)}"]`,
       );
       if (tile) initBrushRevealPaths(tile);
     });
-  }, [grid, imagesReady]);
+  }, [grid]);
 
   const runBrushEnter = (id: string, el: HTMLElement) => {
     svgHoverTlByIdRef.current.get(id)?.kill();
@@ -316,7 +293,15 @@ const Masonry = ({
           key={item.id}
           data-masonry-key={item.id}
           className='absolute box-content overflow-hidden rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] ring-1 ring-border/20'
-          style={{ willChange: 'transform, width, height, opacity' }}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: item.w,
+            height: item.h,
+            transform: `translate3d(${item.x}px, ${item.y}px, 0px)`,
+            willChange: 'transform, width, height, opacity',
+          }}
           onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
           onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
         >
