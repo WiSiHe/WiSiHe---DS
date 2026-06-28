@@ -1,5 +1,6 @@
 import { FaWeibo } from 'react-icons/fa';
 import { defineField, defineType } from 'sanity';
+import AIImageGenerator from '../components/AIImageGenerator';
 import GenericAIGenerator from '../components/GenericAIGenerator';
 import { seoType } from './seoType';
 
@@ -185,6 +186,9 @@ export default defineType({
                       type: 'image',
                       options: {
                         hotspot: true,
+                      },
+                      components: {
+                        input: AIImageGenerator,
                       },
                       fields: [
                         defineField({
