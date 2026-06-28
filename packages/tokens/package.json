@@ -11,7 +11,6 @@
       "style": "./dist/css/semantic-colors.css",
       "default": "./dist/css/semantic-colors.css"
     },
-    "./tailwind": "./dist/tailwind/config.js",
     "./tailwind-v4": {
       "style": "./dist/tailwind/theme.css",
       "default": "./dist/tailwind/theme.css"
@@ -28,8 +27,8 @@
     "tokens.json"
   ],
   "scripts": {
-    "build": "style-dictionary build --config style-dictionary.config.js && node scripts/generate-tailwind-v4.js && node scripts/generate-dark-theme.js && node scripts/generate-semantic-colors.js",
-    "clean": "rm -rf dist"
+    "build": "style-dictionary build --config style-dictionary.config.js --silent && node scripts/build-tailwind-themes.js",
+    "clean": "node scripts/clean.js"
   },
   "devDependencies": {
     "style-dictionary": "5.5.0"

@@ -314,7 +314,7 @@ function PaintingsSearchLayout() {
           <button
             type='button'
             onClick={() => setIsMobileFiltersOpen(false)}
-            className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full'
+            className='p-2 -mr-2 text-foreground-muted hover:text-foreground hover:bg-surface-hover rounded-full'
             aria-label='Close filters'
           >
             <IoClose className='w-6 h-6' />

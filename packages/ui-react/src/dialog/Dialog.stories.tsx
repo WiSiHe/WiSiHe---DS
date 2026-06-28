@@ -39,7 +39,7 @@ function DialogDemo({ size }: { size?: 'sm' | 'md' | 'lg' | 'xl' | 'full' }) {
           <DialogTitle className='text-lg font-semibold text-foreground'>
             Confirm action
           </DialogTitle>
-          <DialogDescription className='text-sm text-muted-foreground'>
+          <DialogDescription className='text-sm text-foreground-muted'>
             Are you sure you want to proceed? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>

@@ -50,7 +50,7 @@ export function PopoverItem({
       type='button'
       className={cn(
         'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-foreground',
-        'hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'hover:bg-surface-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className,
       )}
       {...props}
