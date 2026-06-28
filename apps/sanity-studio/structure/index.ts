@@ -41,6 +41,7 @@ const categories: CategoryItem[] = [
     items: [
       { title: 'Blog Posts', icon: '✍️', schemaType: 'post' },
       { title: 'Recipes', icon: '🍳', schemaType: 'recipe' },
+      { title: 'Ingredients', icon: '🧺', schemaType: 'ingredient' },
       { title: 'Videos', icon: '🎥', schemaType: 'video' },
     ],
   },

@@ -24,7 +24,9 @@ export function RecipesListing({ recipes }: RecipesListingProps) {
     const counts = new Map<string, number>();
     for (const recipe of recipes) {
       for (const tag of recipe.tags ?? []) {
-        counts.set(tag.name, (counts.get(tag.name) ?? 0) + 1);
+        if (tag.name) {
+          counts.set(tag.name, (counts.get(tag.name) ?? 0) + 1);
+        }
       }
     }
     return [...counts.entries()]
@@ -35,7 +37,7 @@ export function RecipesListing({ recipes }: RecipesListingProps) {
   const filteredRecipes = useMemo(() => {
     if (!activeTag) return recipes;
     return recipes.filter(recipe =>
-      recipe.tags?.some(tag => tag.name.toLowerCase() === activeTag.toLowerCase()),
+      recipe.tags?.some(tag => tag.name && tag.name.toLowerCase() === activeTag.toLowerCase()),
     );
   }, [activeTag, recipes]);
 

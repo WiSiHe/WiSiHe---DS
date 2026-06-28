@@ -1,5 +1,5 @@
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
-import type { HomeAboutTeaserSection, HomeContactCtaSection } from '@/lib/homePageBuilder';
+import type { HomeAboutTeaserSection } from '@/lib/homePageBuilder';
 
 export type HomeSectionIntroCopy = {
   eyebrow?: string | null;
@@ -45,7 +45,7 @@ export function buildAboutTeaserCopy(
   return `${name} — ${jobTitle}. ${bio}`;
 }
 
-export type ContactCtaSectionData = HomeContactCtaSection;
+export type ContactCtaSectionData = any;
 
 export function buildContactCtaCopy(
   section: ContactCtaSectionData | null,

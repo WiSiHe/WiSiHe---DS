@@ -28,17 +28,17 @@ export function RecipeCard({ recipe, featured = false, className }: RecipeCardPr
       )}
     >
       <Link
-        href={`/recipes/${recipe.slug}`}
+        href={`/recipes/${recipe.slug || ''}`}
         className={cn(
           'relative block overflow-hidden',
           featured ? 'aspect-[16/10] md:aspect-auto md:min-h-full' : 'aspect-[4/3]',
         )}
-        aria-label={recipe.title}
+        aria-label={recipe.title || undefined}
       >
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={recipe.mainImage?.alt ?? recipe.title}
+            alt={recipe.mainImage?.alt ?? recipe.title ?? ''}
             fill
             className='object-cover transition-transform duration-500 group-hover:scale-105'
             sizes={featured ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'}
@@ -63,7 +63,7 @@ export function RecipeCard({ recipe, featured = false, className }: RecipeCardPr
         className={cn('flex flex-col gap-3 p-5', featured && 'md:justify-center md:p-8 lg:p-10')}
       >
         <div className='space-y-2'>
-          <Link href={`/recipes/${recipe.slug}`}>
+          <Link href={`/recipes/${recipe.slug || ''}`}>
             <h2
               className={cn(
                 'font-serif font-bold text-foreground transition-colors group-hover:text-accent',
@@ -96,7 +96,7 @@ export function RecipeCard({ recipe, featured = false, className }: RecipeCardPr
         {recipe.tags?.length ? (
           <div className='flex flex-wrap gap-2 pt-1'>
             {recipe.tags.slice(0, 3).map(tag => (
-              <Chip key={tag.name} label={tag.name} size='small' interactive={false} />
+              <Chip key={tag.name || ''} label={tag.name || ''} size='small' interactive={false} />
             ))}
           </div>
         ) : null}

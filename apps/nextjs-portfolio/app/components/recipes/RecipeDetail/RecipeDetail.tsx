@@ -34,12 +34,38 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
     difficulty,
     tags,
     slug,
+    language,
+    translations,
   } = recipe;
 
   const [servings, setServings] = useState(baseServings ?? 4);
 
-  const allIngredients =
-    ingredientCategories?.flatMap(category => category.ingredients ?? []) ?? [];
+  const cleanIngredientCategories = useMemo(() => {
+    if (!ingredientCategories) return [];
+    return ingredientCategories.map(cat => ({
+      categoryName: cat.categoryName || '',
+      ingredients: (cat.ingredients || []).map(ing => ({
+        ingredient: ing.ingredient || '',
+        amount: ing.amount || '',
+        unit: ing.unit || '',
+        isDiscrete: ing.isDiscrete || false,
+        notes: ing.notes || '',
+        photo: ing.photo
+          ? {
+              _type: 'image' as const,
+              asset: ing.photo.asset,
+              alt: ing.photo.alt || '',
+              lqip: ing.photo.lqip || undefined,
+              aspectRatio: ing.photo.aspectRatio || undefined,
+            }
+          : null,
+      })),
+    }));
+  }, [ingredientCategories]);
+
+  const allIngredients = useMemo(() => {
+    return cleanIngredientCategories.flatMap(category => category.ingredients ?? []);
+  }, [cleanIngredientCategories]);
 
   const allImages = useMemo(() => {
     const list = [];
@@ -51,6 +77,18 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
   }, [mainImage, additionalImages]);
 
   const firstImage = allImages[0];
+
+  const LANGUAGE_LABEL: Record<string, string> = {
+    en: 'English',
+    no: 'Norsk',
+  };
+
+  const otherTranslations = useMemo(() => {
+    if (!translations || !Array.isArray(translations)) return [];
+    return (translations as any[]).filter(
+      (t: any) => t.value?.language && t.value.language !== (language || 'en'),
+    );
+  }, [translations, language]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -118,7 +156,28 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
             <div
               className={cn('lg:col-span-7 space-y-6', !mainImage && 'lg:col-span-12 max-w-4xl')}
             >
-              <div className='mb-2'>{breadcrumbs}</div>
+              <div className='flex flex-wrap items-center justify-between gap-4 mb-2 w-full'>
+                {breadcrumbs}
+                {otherTranslations.length > 0 && (
+                  <div className='flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider'>
+                    <span className='text-foreground-muted'>Translate:</span>
+                    {otherTranslations.map((t: any) => {
+                      const lang = t.value?.language;
+                      const slugVal = t.value?.slug;
+                      if (!lang || !slugVal) return null;
+                      return (
+                        <Link
+                          key={lang}
+                          href={`/recipes/${slugVal}`}
+                          className='px-2.5 py-1 rounded bg-accent/10 hover:bg-accent/20 text-accent transition-colors font-semibold'
+                        >
+                          {LANGUAGE_LABEL[lang] ?? lang.toUpperCase()}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
               <h1 className='text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl font-sans'>
                 {title}
               </h1>
@@ -206,7 +265,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle'>
                   <Image
                     src={urlForImage(firstImage)?.width(1000).quality(85).url() || ''}
-                    alt={firstImage.alt || title}
+                    alt={firstImage.alt || title || ''}
                     fill
                     className='object-cover transition-transform duration-500 hover:scale-102'
                     priority
@@ -228,7 +287,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
           <aside className='lg:col-span-4 lg:sticky lg:top-24 h-fit'>
             <div className='space-y-6'>
               <RecipeIngredients
-                ingredientCategories={ingredientCategories}
+                ingredientCategories={cleanIngredientCategories}
                 baseServings={baseServings}
                 servings={servings}
                 onServingsChange={setServings}
@@ -282,7 +341,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                     key={tip.title ?? `tip-${index}`}
                     tip={{
                       title: tip.title ?? undefined,
-                      content: tip.content,
+                      content: tip.content || '',
                       icon: tip.icon ?? undefined,
                     }}
                   />
@@ -300,15 +359,18 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                 Tags
               </h3>
               <div className='flex flex-wrap justify-center gap-3'>
-                {tags.map(tag => (
-                  <Link
-                    key={tag.name}
-                    href={`/recipes?tag=${encodeURIComponent(tag.name)}`}
-                    className='rounded-full border border-border/20 bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-accent/40 hover:text-accent'
-                  >
-                    {tag.name}
-                  </Link>
-                ))}
+                {tags.map(tag => {
+                  if (!tag.name) return null;
+                  return (
+                    <Link
+                      key={tag.name}
+                      href={`/recipes?tag=${encodeURIComponent(tag.name)}`}
+                      className='rounded-full border border-border/20 bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-accent/40 hover:text-accent'
+                    >
+                      {tag.name}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>

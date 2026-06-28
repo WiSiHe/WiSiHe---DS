@@ -112,7 +112,7 @@ function renderSection(
         </Suspense>
       );
 
-    case 'homeContactCtaSection':
+    case 'homeContactCtaSection' as any:
       return null;
 
     default:

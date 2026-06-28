@@ -113,13 +113,7 @@ export type TitleSlide = {
 export type PresentationMedia = {
   _type: "presentationMedia";
   mediaType?:
-    | "none"
-    | "image"
-    | "video"
-    | "iframe"
-    | "numbers"
-    | "graph"
-    | "custom";
+    "none" | "image" | "video" | "iframe" | "numbers" | "graph" | "custom";
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -138,10 +132,7 @@ export type PresentationMedia = {
     } & PresentationMetric
   >;
   chartType?:
-    | "performance"
-    | "business-impact"
-    | "engagement"
-    | "history-timeline";
+    "performance" | "business-impact" | "engagement" | "history-timeline";
   componentName?: string;
   componentProps?: string;
 };
@@ -212,12 +203,7 @@ export type BlockContent = Array<
       listItem?: "bullet" | "number";
       markDefs?: Array<{
         linkType?:
-          | "href"
-          | "slug"
-          | "painting"
-          | "project"
-          | "recipe"
-          | "video";
+          "href" | "slug" | "painting" | "project" | "recipe" | "video";
         href?: string;
         slug?: string;
         painting?: PaintingReference;
@@ -275,14 +261,7 @@ export type BlockContent = Array<
           _key: string;
         }>;
         style?:
-          | "normal"
-          | "h1"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "blockquote";
+          "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
         listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
@@ -503,6 +482,12 @@ export type Photography = {
   capturedAt?: string;
   camera?: string;
   isFeatured?: boolean;
+  viewsCount?: number;
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
   tagsV2?: Array<
     {
       _key: string;
@@ -619,12 +604,7 @@ export type About = {
     content?: string;
     placeName?: string;
     locationType?:
-      | "birthplace"
-      | "lived"
-      | "studied"
-      | "worked"
-      | "trip"
-      | "other";
+      "birthplace" | "lived" | "studied" | "worked" | "trip" | "other";
     coordinates?: Geopoint;
     mapZoom?: number;
     image?: {
@@ -803,241 +783,12 @@ export type Home = {
     | ({
         _key: string;
       } & HomeSkillsSection)
-    | ({
-        _key: string;
-      } & HomeContactCtaSection)
   >;
   projectsTitle?: string;
   projectsListingDescription: BlockContentMinimal;
   paintingsTitle?: string;
   paintingsDescription: BlockContentMinimal;
   title: string;
-};
-
-export type Project = {
-  _id: string;
-  _type: "project";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  status?:
-    | "inProgress"
-    | "completed"
-    | "onHold"
-    | "cancelled"
-    | "abandoned"
-    | "unknown"
-    | "notStarted"
-    | "planned";
-  projectType: "design" | "development" | "gameDevelopment" | "other";
-  slug: Slug;
-  projectStart?: string;
-  projectEnd?: string;
-  content?: BlockContent;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  extraImages?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  connectedPaintings?: Array<
-    {
-      _key: string;
-    } & PaintingReference
-  >;
-  connectedVideo?: VideoReference;
-  connectedPage?: string;
-  tags: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
-  seo?: Seo1;
-  redirect?: {
-    source?: string;
-    destination?: string;
-    permanent?: boolean;
-    isEnabled?: boolean;
-  };
-  social?: {
-    linkedIn?: string;
-    x?: string;
-  };
-};
-
-export type Recipe = {
-  _id: string;
-  _type: "recipe";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  description?: string;
-  mainImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  additionalImages?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
-  ingredientCategories?: Array<{
-    categoryName: string;
-    ingredients?: Array<{
-      ingredient: string;
-      photo?: {
-        asset?: SanityImageAssetReference;
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt: string;
-        _type: "image";
-      };
-      amount: string;
-      unit: string;
-      isDiscrete?: boolean;
-      notes?: string;
-      _key: string;
-    }>;
-    _key: string;
-  }>;
-  instructions?: Array<{
-    title?: string;
-    content: BlockContent;
-    _key: string;
-  }>;
-  tips?: Array<{
-    title?: string;
-    content: string;
-    icon?: string;
-    _key: string;
-  }>;
-  cookingTime?: number;
-  prepTime?: number;
-  totalTime?: number;
-  servings?: number;
-  difficulty?: "easy" | "medium" | "hard";
-  tags?: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
-  publishedAt?: string;
-  seo?: Seo1;
-};
-
-export type Video = {
-  _id: string;
-  _type: "video";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  description: string;
-  videoUrl: string;
-  featured?: boolean;
-  thumbnail: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  linkedPainting?: PaintingReference;
-  tags: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
-  seo?: Seo;
-  viewsCount?: number;
-  likes?: Array<{
-    likerId?: string;
-    timestamp?: string;
-    _key: string;
-  }>;
-};
-
-export type Painting = {
-  _id: string;
-  _type: "painting";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  image: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    _type: "image";
-  };
-  description: string;
-  seo?: Seo;
-  seoDescription?: string;
-  images?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    title: string;
-    alt: string;
-    _type: "image";
-    _key: string;
-  }>;
-  video?: string;
-  format: "square" | "landscape" | "portrait";
-  viewsCount?: number;
-  isNSFW?: boolean;
-  isForSale?: boolean;
-  isFeatured?: boolean;
-  isFanArt?: boolean;
-  medium?:
-    | "Digital (Procreate)"
-    | "Digital (Photoshop)"
-    | "Digital (Other)"
-    | "Oil on canvas"
-    | "Watercolour"
-    | "Pencil / Ink";
-  likes?: Array<{
-    likerId?: string;
-    timestamp?: string;
-    _key: string;
-  }>;
-  redbubbleUrl?: string;
-  gelatoUrl?: string;
-  paintedAt: string;
-  tagsV2: Array<
-    {
-      _key: string;
-    } & TagReference
-  >;
 };
 
 export type MediaTag = {
@@ -1194,6 +945,273 @@ export type Code = {
   highlightedLines?: Array<number>;
 };
 
+export type TranslationMetadata = {
+  _id: string;
+  _type: "translation.metadata";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  translations?: InternationalizedArrayReference;
+  schemaTypes?: Array<string>;
+};
+
+export type InternationalizedArrayReference = Array<
+  {
+    _key: string;
+  } & InternationalizedArrayReferenceValue
+>;
+
+export type InternationalizedArrayReferenceValue = {
+  _type: "internationalizedArrayReferenceValue";
+  value?: RecipeReference;
+  language: string;
+};
+
+export type IngredientReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "ingredient";
+};
+
+export type Recipe = {
+  _id: string;
+  _type: "recipe";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  language?: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  additionalImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  ingredientCategories?: Array<{
+    categoryName: string;
+    ingredients?: Array<{
+      ingredient: IngredientReference;
+      amount: string;
+      unit: string;
+      isDiscrete?: boolean;
+      notes?: string;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  instructions?: Array<{
+    title?: string;
+    content: BlockContent;
+    _key: string;
+  }>;
+  tips?: Array<{
+    title?: string;
+    content: string;
+    icon?: string;
+    _key: string;
+  }>;
+  cookingTime?: number;
+  prepTime?: number;
+  totalTime?: number;
+  servings?: number;
+  difficulty?: "easy" | "medium" | "hard";
+  tags?: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  recipeCategory?: string;
+  recipeCuisine?: string;
+  publishedAt?: string;
+  seo?: Seo1;
+};
+
+export type Project = {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  status?:
+    | "inProgress"
+    | "completed"
+    | "onHold"
+    | "cancelled"
+    | "abandoned"
+    | "unknown"
+    | "notStarted"
+    | "planned";
+  projectType: "design" | "development" | "gameDevelopment" | "other";
+  slug: Slug;
+  projectStart?: string;
+  projectEnd?: string;
+  content?: BlockContent;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  extraImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  connectedPaintings?: Array<
+    {
+      _key: string;
+    } & PaintingReference
+  >;
+  connectedVideo?: VideoReference;
+  connectedPage?: string;
+  tags: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  seo?: Seo1;
+  redirect?: {
+    source?: string;
+    destination?: string;
+    permanent?: boolean;
+    isEnabled?: boolean;
+  };
+  social?: {
+    linkedIn?: string;
+    x?: string;
+  };
+};
+
+export type Video = {
+  _id: string;
+  _type: "video";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description: string;
+  videoUrl: string;
+  featured?: boolean;
+  thumbnail: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  linkedPainting?: PaintingReference;
+  tags: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+  seo?: Seo;
+  viewsCount?: number;
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
+};
+
+export type Painting = {
+  _id: string;
+  _type: "painting";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+  description: string;
+  seo?: Seo;
+  seoDescription?: string;
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    title: string;
+    alt: string;
+    _type: "image";
+    _key: string;
+  }>;
+  video?: string;
+  format: "square" | "landscape" | "portrait";
+  viewsCount?: number;
+  isNSFW?: boolean;
+  isForSale?: boolean;
+  isFeatured?: boolean;
+  isFanArt?: boolean;
+  medium?:
+    | "Digital (Procreate)"
+    | "Digital (Photoshop)"
+    | "Digital (Other)"
+    | "Oil on canvas"
+    | "Watercolour"
+    | "Pencil / Ink";
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
+  redbubbleUrl?: string;
+  gelatoUrl?: string;
+  paintedAt: string;
+  tagsV2: Array<
+    {
+      _key: string;
+    } & TagReference
+  >;
+};
+
+export type Ingredient = {
+  _id: string;
+  _type: "ingredient";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  photo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    _type: "image";
+  };
+};
+
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
   background?: string;
@@ -1330,10 +1348,6 @@ export type AllSanitySchemaTypes =
   | TravelPlace
   | Settings
   | Home
-  | Project
-  | Recipe
-  | Video
-  | Painting
   | MediaTag
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
@@ -1349,6 +1363,15 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
   | Code
+  | TranslationMetadata
+  | InternationalizedArrayReference
+  | InternationalizedArrayReferenceValue
+  | IngredientReference
+  | Recipe
+  | Project
+  | Video
+  | Painting
+  | Ingredient
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1427,13 +1450,7 @@ export type AboutQueryResult = {
     content: string | null;
     placeName: string | null;
     locationType:
-      | "birthplace"
-      | "lived"
-      | "other"
-      | "studied"
-      | "trip"
-      | "worked"
-      | null;
+      "birthplace" | "lived" | "other" | "studied" | "trip" | "worked" | null;
     coordinates: Geopoint | null;
     mapZoom: number | null;
     funFact: string | null;
@@ -1625,8 +1642,8 @@ export type PhotographyQueryResult = {
   capturedAt: string | null;
   camera: string | null;
   isFeatured: boolean | null;
-  likesCount: null;
-  viewsCount: null;
+  likesCount: number | null;
+  viewsCount: number | null;
   place: {
     _id: string;
     name: string;
@@ -1960,17 +1977,6 @@ export type HomePageQueryResult = {
         secondaryLabel: string | null;
         journeyEyebrow: string | null;
         journeyLinkLabel: string | null;
-      }
-    | {
-        _key: string;
-        _type: "homeContactCtaSection";
-        eyebrow: string | null;
-        title: string | null;
-        description: string | null;
-        primaryLabel: string | null;
-        primaryUrl: string | null;
-        secondaryLabel: string | null;
-        secondaryUrl: string | null;
       }
     | {
         _key: string;
@@ -2604,7 +2610,7 @@ export type SITEMAP_QUERY_RESULT = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllRecipes
-// Query: *[_type == "recipe" && defined(slug.current)]  | order(publishedAt desc, _updatedAt desc) {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
+// Query: *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]  | order(publishedAt desc, _updatedAt desc) {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    tags[]->{name}  }
 export type GetAllRecipesResult = Array<{
   _id: string;
   slug: string;
@@ -2633,10 +2639,19 @@ export type GetAllRecipesResult = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getRecipe
-// Query: *[_type == "recipe" && slug.current == $slug][0] {    _id,    "slug": slug.current,    title,    description,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    additionalImages[] {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    ingredientCategories[]{      categoryName,              ingredients[]{          ingredient,          photo {            ...,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          amount,          unit,          isDiscrete,          notes        }    },    instructions[]{      title,      content    },    tips[]{      title,      content,      icon    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    recipeCategory,    recipeCuisine,    publishedAt,    tags[]->{name}  }
+// Query: *[_type == "recipe" && slug.current == $slug][0] {    _id,    language,    "slug": slug.current,    "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[] {      _key,      value-> {        "slug": slug.current,        language,        title      }    },    title,    description,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    additionalImages[] {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    ingredientCategories[]{      categoryName,      ingredients[]{        "ingredient": ingredient->name,        "photo": ingredient->photo {          ...,          "lqip": asset->metadata.lqip,          "aspectRatio": asset->metadata.dimensions.aspectRatio        },        amount,        unit,        isDiscrete,        notes      }    },    instructions[]{      title,      content    },    tips[]{      title,      content,      icon    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    recipeCategory,    recipeCuisine,    publishedAt,    tags[]->{name}  }
 export type GetRecipeResult = {
   _id: string;
+  language: string | null;
   slug: string;
+  translations: Array<{
+    _key: string;
+    value: {
+      slug: string;
+      language: string | null;
+      title: string;
+    } | null;
+  }> | null;
   title: string;
   description: string | null;
   seo: {
@@ -2701,8 +2716,8 @@ export type GetRecipeResult = {
   totalTime: number | null;
   servings: number | null;
   difficulty: "easy" | "hard" | "medium" | null;
-  recipeCategory: null;
-  recipeCuisine: null;
+  recipeCategory: string | null;
+  recipeCuisine: string | null;
   publishedAt: string | null;
   tags: Array<{
     name: string;
@@ -2766,12 +2781,7 @@ export type PresentationQueryResult = {
         subtitle: string | null;
         content: BlockContent | null;
         slideDesign:
-          | "centered"
-          | "default"
-          | "full-width"
-          | "minimal"
-          | "split"
-          | null;
+          "centered" | "default" | "full-width" | "minimal" | "split" | null;
         media:
           | {
               mediaType:
@@ -2785,12 +2795,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -2822,12 +2827,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -2930,20 +2930,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -2963,12 +2953,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3002,12 +2987,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -3027,12 +3007,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -3062,12 +3037,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3110,12 +3080,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               chartType:
                 | "business-impact"
@@ -3146,12 +3111,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -3277,20 +3237,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -3306,12 +3256,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3341,12 +3286,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -3362,12 +3302,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -3393,12 +3328,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3437,12 +3367,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               componentName: string | null;
               componentProps: string | null;
@@ -3469,12 +3394,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -3580,20 +3500,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3630,21 +3540,11 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -3668,20 +3568,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -3696,12 +3586,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3728,12 +3613,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3761,12 +3641,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -3780,12 +3655,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -3809,12 +3679,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               metrics: Array<{
                 label: string;
@@ -3852,12 +3717,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -3894,12 +3754,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
             }
           | {
@@ -3924,12 +3779,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -4088,12 +3938,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4125,12 +3970,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4233,20 +4073,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4266,12 +4096,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -4305,12 +4130,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4330,12 +4150,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4365,12 +4180,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -4413,12 +4223,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               chartType:
                 | "business-impact"
@@ -4449,12 +4254,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               chartType:
                 | "business-impact"
                 | "engagement"
@@ -4580,20 +4380,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -4609,12 +4399,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -4644,12 +4429,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -4665,12 +4445,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -4696,12 +4471,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -4740,12 +4510,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               componentName: string | null;
               componentProps: string | null;
@@ -4772,12 +4537,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               componentName: string | null;
               componentProps: string | null;
             }
@@ -4883,20 +4643,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -4933,21 +4683,11 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -4971,20 +4711,10 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -4999,12 +4729,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -5031,12 +4756,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -5064,12 +4784,7 @@ export type PresentationQueryResult = {
               videoUrl: string | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -5083,12 +4798,7 @@ export type PresentationQueryResult = {
                 | null;
               iframeUrl: string | null;
               iframeAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -5112,12 +4822,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               metrics: Array<{
                 label: string;
@@ -5155,12 +4860,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
                 label: string;
                 value: string;
@@ -5197,12 +4897,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
             }
           | {
@@ -5227,12 +4922,7 @@ export type PresentationQueryResult = {
                 aspectRatio: number | null;
               } | null;
               imageAspectRatio:
-                | "auto"
-                | "landscape"
-                | "portrait"
-                | "square"
-                | "video"
-                | null;
+                "auto" | "landscape" | "portrait" | "square" | "video" | null;
             }
           | {
               mediaType:
@@ -5425,8 +5115,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "redirect" && isEnabled == true] {\n      source,\n      destination,\n      permanent\n  }\n': REDIRECTS_QUERY_RESULT;
     '\n  *[_id == $id][0]{\n    title,\n    image {\n      ...,\n      "palette": asset->metadata.palette,\n    },\n  }\n': OG_IMAGE_QUERY_RESULT;
     '\n  *[_type in ["page", "post"] && defined(slug.current)] {\n      "href": select(\n        _type == "page" => "/" + slug.current,\n        _type == "post" => "/posts/" + slug.current,\n        slug.current\n      ),\n      _updatedAt\n  }\n  ': SITEMAP_QUERY_RESULT;
-    '\n  *[_type == "recipe" && defined(slug.current)]\n  | order(publishedAt desc, _updatedAt desc) {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetAllRecipesResult;
-    '\n  *[_type == "recipe" && slug.current == $slug][0] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    additionalImages[] {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    ingredientCategories[]{\n      categoryName,\n              ingredients[]{\n          ingredient,\n          photo {\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          amount,\n          unit,\n          isDiscrete,\n          notes\n        }\n    },\n    instructions[]{\n      title,\n      content\n    },\n    tips[]{\n      title,\n      content,\n      icon\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    recipeCategory,\n    recipeCuisine,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetRecipeResult;
+    '\n  *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]\n  | order(publishedAt desc, _updatedAt desc) {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetAllRecipesResult;
+    '\n  *[_type == "recipe" && slug.current == $slug][0] {\n    _id,\n    language,\n    "slug": slug.current,\n    "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[] {\n      _key,\n      value-> {\n        "slug": slug.current,\n        language,\n        title\n      }\n    },\n    title,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    mainImage {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    additionalImages[] {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    ingredientCategories[]{\n      categoryName,\n      ingredients[]{\n        "ingredient": ingredient->name,\n        "photo": ingredient->photo {\n          ...,\n          "lqip": asset->metadata.lqip,\n          "aspectRatio": asset->metadata.dimensions.aspectRatio\n        },\n        amount,\n        unit,\n        isDiscrete,\n        notes\n      }\n    },\n    instructions[]{\n      title,\n      content\n    },\n    tips[]{\n      title,\n      content,\n      icon\n    },\n    cookingTime,\n    prepTime,\n    totalTime,\n    servings,\n    difficulty,\n    recipeCategory,\n    recipeCuisine,\n    publishedAt,\n    tags[]->{name}\n  }\n': GetRecipeResult;
     '\n  *[_type == "recipe" && defined(slug.current)]\n  {"slug": slug.current}\n': GetRecipeSlugsResult;
     '\n  *[\n    _type == "painting" &&\n    defined(slug.current) &&\n    defined(image) &&\n    isNSFW != true\n  ] | order(_createdAt desc) [0...50] {\n    _id,\n    title,\n    "slug": slug.current,\n    isFeatured,\n    tagsV2[]->{name},\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "palette": asset->metadata.palette\n    }\n  }\n': RandomPaintingsQueryResult;
     '\n  *[_type == "presentation" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    tags[]->{\n      _id,\n      name\n    },\n    slides[] {\n      _type,\n      status,\n      _type == "contentSlide" => {\n        title,\n        subtitle,\n        content,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        },\n        category->{\n          _id,\n          name,\n          description,\n          color\n        },\n        sources[] {\n          text,\n          url\n        },\n        tools[] {\n          name,\n          description,\n          url,\n          category,\n          workshopUrl,\n          nerdLevel\n        },\n        examples[] {\n          name,\n          description,\n          image {\n            ...,\n            "url": asset->url,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          iframe,\n          url\n        }\n      },\n      _type == "titleSlide" => {\n        title,\n        subtitle,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        }\n      },\n      _type == "separatorSlide" => {\n        title,\n        slideDesign,\n        category->{\n          _id,\n          name,\n          description,\n          color\n        }\n      }\n    }\n  }\n': PresentationQueryResult;

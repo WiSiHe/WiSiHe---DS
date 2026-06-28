@@ -34,6 +34,12 @@ export default defineType({
   ],
   fields: [
     defineField({
+      name: 'language',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
@@ -177,39 +183,9 @@ export default defineType({
                     defineField({
                       name: 'ingredient',
                       title: 'Ingredient',
-                      type: 'string',
+                      type: 'reference',
+                      to: [{ type: 'ingredient' }],
                       validation: Rule => Rule.required(),
-                    }),
-                    defineField({
-                      name: 'photo',
-                      title: 'Ingredient Photo',
-                      type: 'image',
-                      options: {
-                        hotspot: true,
-                      },
-                      components: {
-                        input: AIImageGenerator,
-                      },
-                      fields: [
-                        defineField({
-                          name: 'alt',
-                          type: 'string',
-                          title: 'Alternative text',
-                          validation: Rule => Rule.required(),
-                          components: {
-                            input: props => (
-                              <GenericAIGenerator
-                                {...props}
-                                prompt='Write alt text for this ingredient image. Include the ingredient name, appearance, color, texture, and distinctive features. Keep it concise and accessible for screen readers.'
-                                imageField='photo'
-                                characterLimit={100}
-                                rows={2}
-                                placeholder='Enter or generate alt text for ingredient...'
-                              />
-                            ),
-                          },
-                        }),
-                      ],
                     }),
                     defineField({
                       name: 'amount',

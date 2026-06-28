@@ -24,7 +24,7 @@ export type HomeContactCtaSection = Extract<HomePageSection, { _type: 'homeConta
 
 export function getHomeSections(home: HomePageQueryResult | null): HomePageSection[] {
   return (home?.sections ?? []).filter(
-    section => section._type !== 'homeContactCtaSection',
+    section => (section._type as string) !== 'homeContactCtaSection',
   ) as HomePageSection[];
 }
 
