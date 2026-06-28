@@ -1,10 +1,10 @@
 'use client';
 
+import { IconCheck } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
-import { FiCheck } from 'react-icons/fi';
 import { processInstructionText } from '../../../utils/instructionProcessor';
 import PortableText from '../../cms/PortableText/PortableText';
 
@@ -168,7 +168,11 @@ export default function RecipeInstructions({
                   )}
                   aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
                 >
-                  {isCompleted ? <FiCheck className='w-5 h-5' /> : <span>{index + 1}</span>}
+                  {isCompleted ? (
+                    <IconCheck className='size-5' stroke={2} aria-hidden />
+                  ) : (
+                    <span>{index + 1}</span>
+                  )}
                 </button>
               </div>
 

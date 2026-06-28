@@ -1,7 +1,7 @@
 'use client';
 
+import { IconShoppingCart } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { FaShoppingCart } from 'react-icons/fa';
 import { useToggleRefinement } from 'react-instantsearch';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 
@@ -23,7 +23,7 @@ export default function ForSaleFilter() {
         'flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm transition-colors',
         value.isRefined
           ? 'border-accent/40 bg-accent/10 text-foreground'
-          : 'border-border bg-surface text-muted-foreground hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
+          : 'border-border bg-surface text-foreground-muted hover:border-accent/30 hover:bg-surface-hover hover:text-foreground',
       )}
     >
       <span
@@ -49,11 +49,12 @@ export default function ForSaleFilter() {
         ) : null}
       </span>
       <span className='grow text-left text-sm font-medium'>For sale</span>
-      <FaShoppingCart
+      <IconShoppingCart
         className={cn(
-          'h-3.5 w-3.5 shrink-0',
-          value.isRefined ? 'text-accent' : 'text-muted-foreground/60',
+          'size-3.5 shrink-0',
+          value.isRefined ? 'text-accent' : 'text-foreground-muted/60',
         )}
+        stroke={2}
         aria-hidden
       />
     </button>

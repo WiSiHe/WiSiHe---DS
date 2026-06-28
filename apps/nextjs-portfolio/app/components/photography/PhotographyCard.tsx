@@ -78,8 +78,6 @@ export function PhotographyCard({
           <Image
             src={imageUrl}
             alt={alt}
-            width={imageWidth}
-            height={imageHeight}
             fill
             priority={priority}
             className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]'

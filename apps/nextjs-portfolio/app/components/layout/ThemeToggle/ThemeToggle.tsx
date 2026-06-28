@@ -1,16 +1,17 @@
 'use client';
 
+import { IconDeviceDesktop, IconMoon, IconSun } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
-import { FaDesktop, FaMoon, FaSun } from 'react-icons/fa';
 import { useTheme } from '../../../providers';
+
+const themeIconClass = 'size-5 stroke-[2]';
 
 const ThemeToggle = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch by only rendering icon once mounted
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -24,10 +25,14 @@ const ThemeToggle = () => {
   const getIcon = () => {
     if (!mounted) return <div className='w-4 h-4' />;
 
-    // When in system mode, show the icon for what it *is* or what it *will be*?
-    // Usually it's best to show current mode or system icon.
-    if (theme === 'system') return <FaDesktop />;
-    return theme === 'dark' ? <FaMoon /> : <FaSun />;
+    if (theme === 'system') {
+      return <IconDeviceDesktop className={themeIconClass} aria-hidden />;
+    }
+    return theme === 'dark' ? (
+      <IconMoon className={themeIconClass} aria-hidden />
+    ) : (
+      <IconSun className={themeIconClass} aria-hidden />
+    );
   };
 
   const getLabel = () => {

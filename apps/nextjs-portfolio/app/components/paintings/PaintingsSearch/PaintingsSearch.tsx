@@ -1,18 +1,18 @@
 'use client';
 
+import {
+  IconCheck,
+  IconChevronDown,
+  IconClock,
+  IconEye,
+  IconFilter,
+  IconHeart,
+  IconHourglass,
+  IconStar,
+  IconX,
+} from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { BsEye } from 'react-icons/bs';
-import {
-  IoCheckmark,
-  IoChevronDown,
-  IoClose,
-  IoFilterOutline,
-  IoHeartOutline,
-  IoHourglassOutline,
-  IoStarOutline,
-  IoTimeOutline,
-} from 'react-icons/io5';
 import {
   PaintingsSearchProvider,
   usePaintingsSearchContext,
@@ -60,11 +60,31 @@ type SortItem = {
 };
 
 const SORT_ITEMS: SortItem[] = [
-  { key: 'featured', label: 'Featured', icon: <IoStarOutline className='w-3.5 h-3.5' /> },
-  { key: 'newest', label: 'Newest', icon: <IoTimeOutline className='w-3.5 h-3.5' /> },
-  { key: 'oldest', label: 'Oldest', icon: <IoHourglassOutline className='w-3.5 h-3.5' /> },
-  { key: 'views', label: 'Most Viewed', icon: <BsEye className='w-3.5 h-3.5' /> },
-  { key: 'likes', label: 'Most Liked', icon: <IoHeartOutline className='w-3.5 h-3.5' /> },
+  {
+    key: 'featured',
+    label: 'Featured',
+    icon: <IconStar className='size-3.5' stroke={2} aria-hidden />,
+  },
+  {
+    key: 'newest',
+    label: 'Newest',
+    icon: <IconClock className='size-3.5' stroke={2} aria-hidden />,
+  },
+  {
+    key: 'oldest',
+    label: 'Oldest',
+    icon: <IconHourglass className='size-3.5' stroke={2} aria-hidden />,
+  },
+  {
+    key: 'views',
+    label: 'Most Viewed',
+    icon: <IconEye className='size-3.5' stroke={2} aria-hidden />,
+  },
+  {
+    key: 'likes',
+    label: 'Most Liked',
+    icon: <IconHeart className='size-3.5' stroke={2} aria-hidden />,
+  },
 ];
 
 function ColourRefinement() {
@@ -142,7 +162,7 @@ function SortDropdown() {
       >
         {current.icon}
         {current.label}
-        <IoChevronDown className={cn('w-3.5 h-3.5', open && 'rotate-180')} />
+        <IconChevronDown className={cn('size-3.5', open && 'rotate-180')} stroke={2} aria-hidden />
       </button>
 
       {open ? (
@@ -167,7 +187,7 @@ function SortDropdown() {
                 {item.label}
               </span>
               {item.key === sort ? (
-                <IoCheckmark className='w-3.5 h-3.5 shrink-0 text-accent' />
+                <IconCheck className='size-3.5 shrink-0 text-accent' stroke={2} aria-hidden />
               ) : null}
             </button>
           ))}
@@ -215,7 +235,7 @@ function MobileFilterButton({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         className='w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-surface border border-border text-sm font-medium text-foreground hover:border-accent-border hover:bg-surface-hover shadow-sm'
       >
-        <IoFilterOutline className='w-4 h-4' />
+        <IconFilter className='size-4' stroke={2} aria-hidden />
         Filters
         {activeCount > 0 ? (
           <span className='inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-accent text-accent-contrast rounded-full'>
@@ -314,10 +334,10 @@ function PaintingsSearchLayout() {
           <button
             type='button'
             onClick={() => setIsMobileFiltersOpen(false)}
-            className='p-2 -mr-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full'
+            className='p-2 -mr-2 text-foreground-muted hover:text-foreground hover:bg-surface-hover rounded-full'
             aria-label='Close filters'
           >
-            <IoClose className='w-6 h-6' />
+            <IconX className='size-6' stroke={2} aria-hidden />
           </button>
         </div>
 

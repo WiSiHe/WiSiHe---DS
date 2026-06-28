@@ -17,6 +17,13 @@ import { urlForImage } from '@/sanity/lib/utils';
 import { HeroDotGrid } from './HeroDotGrid';
 import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
+import {
+  EXPLODE_SQUASH_KEYFRAMES,
+  EXPLODE_SQUASH_TRANSITION,
+  HERO_SQUASH_RATIOS,
+  HERO_SQUASH_SPRING,
+  heroFloatSquashStretch,
+} from './heroSquashStretch';
 
 export type ShowcasePainting = {
   _type: 'painting';
@@ -147,13 +154,19 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   /** Per-card float loop — must be stable across renders so Motion does not restart. */
   const floatKeyframes = useMemo(
     () =>
-      Array.from({ length: 15 }).map((_, i) => ({
-        y: [0, Math.random() * 20 + 10, 0] as [number, number, number],
-        x: [0, Math.random() * 10 - 5, 0] as [number, number, number],
-        rotate: [0, Math.random() * 6 - 3, 0] as [number, number, number],
-        duration: Math.random() * 3 + 4,
-        delay: i * 0.1,
-      })),
+      Array.from({ length: 15 }).map((_, i) => {
+        const y = [0, Math.random() * 20 + 10, 0] as [number, number, number];
+        const squashStretch = heroFloatSquashStretch(y[1]);
+        return {
+          y,
+          x: [0, Math.random() * 10 - 5, 0] as [number, number, number],
+          rotate: [0, Math.random() * 6 - 3, 0] as [number, number, number],
+          scaleX: squashStretch.scaleX,
+          scaleY: squashStretch.scaleY,
+          duration: Math.random() * 3 + 4,
+          delay: i * 0.1,
+        };
+      }),
     [],
   );
 
@@ -271,10 +284,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     return () => clearInterval(interval);
   }, [isTouchDevice, stage, visibleItems.length]);
 
-  if (!items || items.length === 0) {
-    return <div className='text-center py-20'>No items available.</div>;
-  }
-
   const basePositions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
   const [positions, setPositions] = useState(basePositions);
 
@@ -283,6 +292,10 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     const shuffled = [...basePositions].sort(() => Math.random() - 0.5);
     setPositions(shuffled);
   }, [basePositions]);
+
+  if (!items || items.length === 0) {
+    return <div className='text-center py-20'>No items available.</div>;
+  }
 
   // Variants for central text stagger entrance
   const textContainerVariants = {
@@ -516,6 +529,8 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
             y: [0, 12, 0] as [number, number, number],
             x: [0, 0, 0] as [number, number, number],
             rotate: [0, 0, 0] as [number, number, number],
+            scaleX: [1, 1, 1] as [number, number, number],
+            scaleY: [1, 1, 1] as [number, number, number],
             duration: 5,
             delay: 0,
           };
@@ -593,11 +608,15 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                   y: floatMotion.y,
                   x: floatMotion.x,
                   rotate: floatMotion.rotate,
+                  scaleX: floatMotion.scaleX,
+                  scaleY: floatMotion.scaleY,
                 }
               : {
                   y: 0,
                   x: 0,
                   rotate: 0,
+                  scaleX: 1,
+                  scaleY: 1,
                 };
 
           const floatTransition = {
@@ -665,109 +684,125 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                   className='h-full w-full'
                   style={{ transformStyle: 'preserve-3d' }}
                 >
-                  {/* Infinite float wrap */}
+                  {/* Squash on explosion landing */}
                   <motion.div
-                    animate={floatAnimate}
-                    transition={floatTransition}
+                    animate={
+                      stage === 'exploding' ? EXPLODE_SQUASH_KEYFRAMES : { scaleX: 1, scaleY: 1 }
+                    }
+                    transition={{
+                      ...EXPLODE_SQUASH_TRANSITION,
+                      delay: index * 0.03,
+                    }}
                     className='h-full w-full'
-                    style={{ transformStyle: 'preserve-3d' }}
+                    style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
                   >
-                    {/* Scale & Hover wrap: moved whileHover here to allow correct variant propagation down to child components */}
+                    {/* Infinite float wrap */}
                     <motion.div
-                      initial='initial'
-                      animate={isCurrentlyHovered ? 'hover' : 'initial'}
-                      variants={{
-                        initial: { scale: 1 },
-                        hover: { scale: 1.1 },
-                      }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      className='h-full w-full cursor-pointer'
-                      style={{ transformStyle: 'preserve-3d' }}
+                      animate={floatAnimate}
+                      transition={floatTransition}
+                      className='h-full w-full'
+                      style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
                     >
-                      <Link
-                        href={href}
-                        className='block h-full w-full rounded-lg overflow-hidden relative isolate transition-all duration-300'
-                        style={{
-                          boxShadow: isCurrentlyHovered
-                            ? `0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px ${cardAccentColor}33`
-                            : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+                      {/* Hover stretch — elongated spring instead of uniform scale */}
+                      <motion.div
+                        initial='initial'
+                        animate={isCurrentlyHovered ? 'hover' : 'initial'}
+                        variants={{
+                          initial: { scaleX: 1, scaleY: 1 },
+                          hover: {
+                            scaleX: HERO_SQUASH_RATIOS.stretchX,
+                            scaleY: HERO_SQUASH_RATIOS.stretchY,
+                          },
                         }}
+                        transition={HERO_SQUASH_SPRING}
+                        className='h-full w-full cursor-pointer'
+                        style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
                       >
-                        <span className='sr-only'>
-                          {isPainting ? 'View painting' : 'View project'}:{' '}
-                          {title ||
-                            (item._type === 'project' ? item.name : null) ||
-                            'Portfolio item'}
-                        </span>
-                        {!isPainting && (
-                          <motion.div
-                            className='absolute inset-0'
-                            animate={
-                              isCurrentlyHovered
-                                ? {
-                                    scale: 1.05,
-                                    filter: 'brightness(1.1) saturate(1.15) contrast(1.02)',
-                                  }
-                                : { scale: 1, filter: 'brightness(1) saturate(1) contrast(1)' }
-                            }
-                            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                          >
-                            <Image
-                              src={imageUrl}
-                              alt=''
-                              aria-hidden
-                              fill
-                              priority={isPriority}
-                              fetchPriority={isPriority ? 'high' : undefined}
-                              className='object-cover'
-                              sizes='(max-width: 768px) 40vw, 30vw'
-                            />
-                          </motion.div>
-                        )}
-
-                        {isPainting ? (
-                          <BrushRevealWrap
-                            className='relative isolate h-full w-full overflow-hidden'
-                            enabled={canBrushReveal}
-                            hovered={canBrushReveal && stage === 'floating' && isCurrentlyHovered}
-                          >
-                            <Image
-                              src={imageUrl}
-                              alt=''
-                              aria-hidden
-                              fill
-                              priority={isPriority}
-                              fetchPriority={isPriority ? 'high' : undefined}
-                              className='object-cover'
-                              sizes='(max-width: 768px) 40vw, 30vw'
-                            />
-                            {showNsfwBlur ? (
-                              <div
-                                data-nsfw-blur
-                                className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+                        <Link
+                          href={href}
+                          className='block h-full w-full rounded-lg overflow-hidden relative isolate transition-all duration-300'
+                          style={{
+                            boxShadow: isCurrentlyHovered
+                              ? `0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px ${cardAccentColor}33`
+                              : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+                          }}
+                        >
+                          <span className='sr-only'>
+                            {isPainting ? 'View painting' : 'View project'}:{' '}
+                            {title ||
+                              (item._type === 'project' ? item.name : null) ||
+                              'Portfolio item'}
+                          </span>
+                          {!isPainting && (
+                            <motion.div
+                              className='absolute inset-0'
+                              animate={
+                                isCurrentlyHovered
+                                  ? {
+                                      scale: 1.05,
+                                      filter: 'brightness(1.1) saturate(1.15) contrast(1.02)',
+                                    }
+                                  : { scale: 1, filter: 'brightness(1) saturate(1) contrast(1)' }
+                              }
+                              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                              <Image
+                                src={imageUrl}
+                                alt=''
                                 aria-hidden
+                                fill
+                                priority={isPriority}
+                                fetchPriority={isPriority ? 'high' : undefined}
+                                className='object-cover'
+                                sizes='(max-width: 768px) 40vw, 30vw'
                               />
-                            ) : null}
-                            {canBrushReveal && paintingStrokeColors ? (
-                              <BrushRevealLayer
-                                {...paintingStrokeColors}
-                                strokeVariantIndex={brushIndex}
-                                title={title}
-                                isNsfwBlurred={showNsfwBlur}
+                            </motion.div>
+                          )}
+
+                          {isPainting ? (
+                            <BrushRevealWrap
+                              className='relative isolate h-full w-full overflow-hidden'
+                              enabled={canBrushReveal}
+                              hovered={canBrushReveal && stage === 'floating' && isCurrentlyHovered}
+                            >
+                              <Image
+                                src={imageUrl}
+                                alt=''
+                                aria-hidden
+                                fill
+                                priority={isPriority}
+                                fetchPriority={isPriority ? 'high' : undefined}
+                                className='object-cover'
+                                sizes='(max-width: 768px) 40vw, 30vw'
                               />
-                            ) : null}
-                          </BrushRevealWrap>
-                        ) : (
-                          <div aria-hidden>
-                            <HeroProjectUiHover
-                              isHovered={isCurrentlyHovered}
-                              accentColor={accentColor}
-                              title={title || item.name}
-                              tags={projectTags}
-                            />
-                          </div>
-                        )}
-                      </Link>
+                              {showNsfwBlur ? (
+                                <div
+                                  data-nsfw-blur
+                                  className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
+                                  aria-hidden
+                                />
+                              ) : null}
+                              {canBrushReveal && paintingStrokeColors ? (
+                                <BrushRevealLayer
+                                  {...paintingStrokeColors}
+                                  strokeVariantIndex={brushIndex}
+                                  title={title}
+                                  isNsfwBlurred={showNsfwBlur}
+                                />
+                              ) : null}
+                            </BrushRevealWrap>
+                          ) : (
+                            <div aria-hidden>
+                              <HeroProjectUiHover
+                                isHovered={isCurrentlyHovered}
+                                accentColor={accentColor}
+                                title={title || item.name}
+                                tags={projectTags}
+                              />
+                            </div>
+                          )}
+                        </Link>
+                      </motion.div>
                     </motion.div>
                   </motion.div>
                 </motion.div>

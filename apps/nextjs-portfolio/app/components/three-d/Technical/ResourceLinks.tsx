@@ -1,7 +1,7 @@
 'use client';
 
+import { IconExternalLink } from '@tabler/icons-react';
 import { motion } from 'motion/react';
-import { HiArrowTopRightOnSquare } from 'react-icons/hi2';
 
 interface Link {
   text: string;
@@ -34,7 +34,7 @@ export function ResourceLinks({
             className='px-4 py-2 bg-surface-elevated text-accent-text border border-accent/30 rounded-lg font-medium hover:bg-accent-subtle hover:border-accent-border transition-all flex items-center gap-2'
           >
             <span>{link.text}</span>
-            <HiArrowTopRightOnSquare className='w-4 h-4' />
+            <IconExternalLink className='size-4' stroke={2} aria-hidden />
           </motion.a>
         ))}
       </div>

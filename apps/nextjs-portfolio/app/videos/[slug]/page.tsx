@@ -1,10 +1,9 @@
+import { IconBrandYoutube, IconEye, IconHeart } from '@tabler/icons-react';
 import type { VideoBySlugQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { BiLogoYoutube } from 'react-icons/bi';
-import { BsEye, BsHeart } from 'react-icons/bs';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
@@ -130,7 +129,7 @@ export default async function VideoPage(props: Props) {
             />
           ) : (
             <div className='w-full h-full flex items-center justify-center text-foreground-muted'>
-              <BiLogoYoutube className='w-16 h-16 opacity-30' />
+              <IconBrandYoutube className='size-16 opacity-30' stroke={2} aria-hidden />
             </div>
           )}
         </div>
@@ -142,14 +141,14 @@ export default async function VideoPage(props: Props) {
             {youtubeStats && (
               <div className='flex items-center gap-5 text-sm text-foreground-muted'>
                 <span className='flex items-center gap-1.5'>
-                  <BsEye className='w-3.5 h-3.5' />
+                  <IconEye className='size-3.5' stroke={2} aria-hidden />
                   <span className='font-semibold text-foreground'>
                     {formatCount(youtubeStats.viewCount)}
                   </span>{' '}
                   views on YouTube
                 </span>
                 <span className='flex items-center gap-1.5'>
-                  <BsHeart className='w-3.5 h-3.5' />
+                  <IconHeart className='size-3.5' stroke={2} aria-hidden />
                   <span className='font-semibold text-foreground'>
                     {formatCount(youtubeStats.likeCount)}
                   </span>{' '}
@@ -189,7 +188,7 @@ export default async function VideoPage(props: Props) {
                 rel='noopener noreferrer'
                 className='inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors'
               >
-                <BiLogoYoutube className='w-4 h-4' />
+                <IconBrandYoutube className='size-4' stroke={2} aria-hidden />
                 Watch on YouTube
               </a>
             )}

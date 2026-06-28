@@ -20,7 +20,7 @@ const selectVariants = cva(
       variant: {
         default: 'hover:border-border',
         filled:
-          'bg-muted border-transparent hover:bg-muted/80 focus-visible:bg-background focus-visible:border-ring',
+          'bg-surface-subtle border-transparent hover:bg-surface-subtle/80 focus-visible:bg-background focus-visible:border-ring',
       },
       selectSize: {
         default: 'h-10 text-sm',
@@ -80,19 +80,19 @@ export function Select({
           <ListboxButton id={buttonId} className={selectVariants({ variant, selectSize })}>
             <span className='flex items-center gap-2 truncate'>
               {leadingIcon ? (
-                <span className='text-muted-foreground group-hover:text-foreground transition-colors'>
+                <span className='text-foreground-muted group-hover:text-foreground transition-colors'>
                   {leadingIcon}
                 </span>
               ) : null}
               {selectedOption ? (
                 selectedOption.label
               ) : (
-                <span className='text-muted-foreground'>{placeholder}</span>
+                <span className='text-foreground-muted'>{placeholder}</span>
               )}
             </span>
             <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
               <IconChevronDown
-                className='h-4 w-4 text-muted-foreground transition-transform group-data-open:rotate-180'
+                className='h-4 w-4 text-foreground-muted transition-transform group-data-open:rotate-180'
                 aria-hidden
               />
             </span>
@@ -109,7 +109,7 @@ export function Select({
               >
                 <div className='flex items-center gap-2'>
                   {option.icon && (
-                    <span className='text-muted-foreground group-data-focus:text-foreground transition-colors'>
+                    <span className='text-foreground-muted group-data-focus:text-foreground transition-colors'>
                       {option.icon}
                     </span>
                   )}

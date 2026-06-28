@@ -22,6 +22,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "predev": "pnpm --filter @wisihe/tokens build",
     "dev": "tsup --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },

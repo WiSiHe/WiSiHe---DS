@@ -41,6 +41,18 @@ Is this a UI component (button, card, text, border)?
 </div>
 ```
 
+### Rule 1b: No shadcn utility names
+
+This repo uses **WiSiHe-native** names from `@wisihe/tokens`. These shadcn aliases are **not** in the theme — do not generate them:
+
+| Forbidden | Use instead |
+|-----------|-------------|
+| `text-muted-foreground` | `text-foreground-muted` |
+| `bg-muted`, `hover:bg-muted` | `bg-surface-subtle`, `hover:bg-surface-hover` |
+| `bg-card` | `bg-surface` |
+| `bg-primary` | `bg-accent` |
+| `text-destructive` | `text-danger` |
+
 ### Rule 2: Component-Specific Color Patterns
 
 #### Buttons

@@ -68,13 +68,12 @@ function generateSemanticColors() {
   return output;
 }
 
-const semanticColorsContent = generateSemanticColors();
-const outputDir = path.join(import.meta.dirname, '..', 'dist', 'css');
-if (!fs.existsSync(outputDir)) {
+export function writeSemanticColors() {
+  const semanticColorsContent = generateSemanticColors();
+  const outputDir = path.join(import.meta.dirname, '..', 'dist', 'css');
   fs.mkdirSync(outputDir, { recursive: true });
+
+  const outputPath = path.join(outputDir, 'semantic-colors.css');
+  fs.writeFileSync(outputPath, semanticColorsContent);
+  return outputPath;
 }
-
-const outputPath = path.join(outputDir, 'semantic-colors.css');
-fs.writeFileSync(outputPath, semanticColorsContent);
-
-console.log('✅ Semantic colors generated:', outputPath);

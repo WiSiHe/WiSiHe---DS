@@ -1,10 +1,10 @@
 'use client';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type ProjectImageProps = {
@@ -68,7 +68,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
             disabled={!prevBtnEnabled}
             aria-label='Previous image'
           >
-            <FaChevronLeft className='h-5 w-5' />
+            <IconChevronLeft className='size-5' stroke={2} aria-hidden />
           </button>
 
           <button
@@ -78,7 +78,7 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
             disabled={!nextBtnEnabled}
             aria-label='Next image'
           >
-            <FaChevronRight className='h-5 w-5' />
+            <IconChevronRight className='size-5' stroke={2} aria-hidden />
           </button>
         </>
       )}

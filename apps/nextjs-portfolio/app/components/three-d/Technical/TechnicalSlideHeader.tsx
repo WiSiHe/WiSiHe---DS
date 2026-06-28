@@ -1,6 +1,6 @@
 'use client';
 
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { TechnicalSlideIndicators } from './TechnicalSlideIndicators';
 
 interface TechnicalSlideHeaderProps {
@@ -29,7 +29,7 @@ export function TechnicalSlideHeader({
             className='p-2 -ml-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'
             aria-label='Previous Slide'
           >
-            <HiChevronLeft className='h-6 w-6' />
+            <IconChevronLeft className='size-6' stroke={2} aria-hidden />
           </button>
 
           <div className='flex flex-col'>
@@ -54,7 +54,7 @@ export function TechnicalSlideHeader({
           className='p-2 -mr-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'
           aria-label='Next Slide'
         >
-          <HiChevronRight className='h-6 w-6' />
+          <IconChevronRight className='size-6' stroke={2} aria-hidden />
         </button>
       </div>
 

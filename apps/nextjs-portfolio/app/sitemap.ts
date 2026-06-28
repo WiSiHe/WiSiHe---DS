@@ -73,6 +73,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
+      url: `${SITE_URL}/design-system/motion`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/design-system/components`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
+    {
       url: `${SITE_URL}/design-system/tone-of-voice`,
       changeFrequency: 'monthly' as const,
       priority: 0.6,

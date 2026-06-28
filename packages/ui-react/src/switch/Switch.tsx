@@ -9,7 +9,7 @@ const trackVariants = cva(
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:cursor-not-allowed disabled:opacity-50',
     // Unchecked: use border + surface so the track outline is visible in both light/dark
-    'bg-muted data-checked:bg-accent',
+    'bg-surface-subtle data-checked:bg-accent',
   ],
   {
     variants: {
@@ -99,7 +99,7 @@ export function SwitchField({
           {label}
         </Label>
         {description && (
-          <Description className='text-xs text-muted-foreground'>{description}</Description>
+          <Description className='text-xs text-foreground-muted'>{description}</Description>
         )}
       </div>
     </Field>

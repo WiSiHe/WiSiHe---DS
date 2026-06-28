@@ -64,7 +64,7 @@ export function Dialog({ size, showClose, children, className, ...props }: Dialo
             <button
               type='button'
               onClick={() => props.onClose(false)}
-              className='absolute top-4 right-4 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
+              className='absolute top-4 right-4 p-1 rounded-md text-foreground-muted hover:text-foreground hover:bg-surface-hover transition-colors'
               aria-label='Close dialog'
             >
               <IconX className='size-4' />
@@ -93,7 +93,7 @@ export function DialogFooter({ className, children }: React.HTMLAttributes<HTMLD
   return (
     <div
       className={cn(
-        'flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-muted/30 rounded-b-xl',
+        'flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface-subtle/30 rounded-b-xl',
         className,
       )}
     >

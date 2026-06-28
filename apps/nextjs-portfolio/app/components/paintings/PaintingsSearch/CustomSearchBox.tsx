@@ -1,8 +1,8 @@
 'use client';
 
+import { IconCircleX, IconSearch } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import * as React from 'react';
-import { IoCloseCircle, IoSearchOutline } from 'react-icons/io5';
 import { useSearchBox } from 'react-instantsearch';
 
 const SEARCH_DEBOUNCE_MS = 300;
@@ -67,7 +67,11 @@ export default function CustomSearchBox({
 
   return (
     <form onSubmit={handleSubmit} className='relative w-full'>
-      <IoSearchOutline className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted pointer-events-none' />
+      <IconSearch
+        className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-foreground-muted pointer-events-none'
+        stroke={2}
+        aria-hidden
+      />
       <input
         ref={inputRef}
         type='search'
@@ -92,7 +96,7 @@ export default function CustomSearchBox({
           aria-label='Clear search'
           className='absolute right-2.5 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
         >
-          <IoCloseCircle className='w-4 h-4' />
+          <IconCircleX className='size-4' stroke={2} aria-hidden />
         </button>
       )}
     </form>

@@ -109,13 +109,12 @@ ${dedupedLines.join('\n')}
 `;
 }
 
-const themeContent = generateTailwindV4Theme();
-const outputDir = path.join(import.meta.dirname, '..', 'dist', 'tailwind');
-if (!fs.existsSync(outputDir)) {
+export function writeTailwindV4Theme() {
+  const themeContent = generateTailwindV4Theme();
+  const outputDir = path.join(import.meta.dirname, '..', 'dist', 'tailwind');
   fs.mkdirSync(outputDir, { recursive: true });
+
+  const outputPath = path.join(outputDir, 'theme.css');
+  fs.writeFileSync(outputPath, themeContent);
+  return outputPath;
 }
-
-const outputPath = path.join(outputDir, 'theme.css');
-fs.writeFileSync(outputPath, themeContent);
-
-console.log('✅ Tailwind v4 theme generated:', outputPath);

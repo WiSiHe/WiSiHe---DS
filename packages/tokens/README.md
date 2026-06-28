@@ -41,55 +41,77 @@ For developer experience in Tailwind, these are exposed through clean aliases su
 - `border-border`, `border-border-strong`
 - `bg-accent`, `text-accent-contrast`
 
+### Naming canon (Tailwind utilities)
+
+Use WiSiHe-native names only. Do **not** use shadcn aliases — they are not exported.
+
+| Use | Do not use |
+|-----|------------|
+| `text-foreground-muted` | `text-muted-foreground` |
+| `bg-surface` | `bg-card` |
+| `bg-surface-subtle` | `bg-muted` |
+| `hover:bg-surface-hover` | `hover:bg-muted` |
+| `bg-accent` | `bg-primary` |
+| `text-danger` | `text-destructive` |
+
 ## Build outputs
 
 `pnpm build` generates:
 
 - `dist/css/variables.css` - core token variables from Style Dictionary
-- `dist/css/semantic-colors.css` - light/dark semantic variables + Tailwind semantic mappings
-- `dist/tailwind/config.js` - Tailwind v3 config output
+- `dist/css/semantic-colors.css` - light/dark semantic variables for runtime theme switching
 - `dist/tailwind/theme.css` - Tailwind v4 `@theme` variables
-- `dist/tailwind/theme-dark.css` - dark semantic override file
+- `dist/tailwind/theme-dark.css` - `.dark` overrides + `@theme inline` fallbacks
+- `tokens.json` - flat merged export (generated from layered sources)
 
 ## Usage
 
-### CSS variables
+### Tailwind v4 apps (canonical)
+
+Use this full block in your CSS entry (`globals.css`, `index.css`, etc.):
 
 ```css
-@import '@wisihe/tokens/css';
-@import '@wisihe/tokens/css/semantic';
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@import "@wisihe/tokens/tailwind-v4";
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
+@import "@wisihe/tokens/tailwind-v4-dark";
+```
+
+- `@custom-variant dark` — class-based dark mode (next-themes, Storybook, etc.)
+- Prefer semantic utilities (`bg-surface`, `text-foreground`) over `dark:` prefixes
+
+### CSS variables only (no Tailwind)
+
+```css
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
+```
+
+### Primitive CSS variables
+
+```css
+@import "@wisihe/tokens/css";
+@import "@wisihe/tokens/css/semantic";
 
 .button {
-  background: var(--color-accent-500);
+  background: var(--color-accent);
   color: var(--color-foreground);
   border-radius: var(--radius-lg);
 }
 ```
 
-### Tailwind v4
-
-```css
-@import 'tailwindcss';
-@import '@wisihe/tokens/tailwind-v4';
-@import '@wisihe/tokens/css/semantic';
-```
-
-### Dark mode
-
-```css
-@import '@wisihe/tokens/tailwind-v4-dark';
-```
-
-Dark mode is applied via `.dark` semantic variable overrides.
-
 ## Development
 
 ```bash
-pnpm build
+pnpm build   # from packages/tokens, or: pnpm --filter @wisihe/tokens build
 pnpm clean
-pnpm lint
 ```
 
-## Legacy raw export
+Token-consuming apps run `predev` / `prestorybook` hooks to rebuild tokens before dev.
 
-`@wisihe/tokens/raw` still points to `tokens.json` for backwards compatibility.
+## Raw export
+
+`@wisihe/tokens/raw` points to generated `tokens.json` (merged primitives + semantic + component). Do not edit by hand.

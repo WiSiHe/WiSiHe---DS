@@ -1,10 +1,9 @@
 'use client';
 
+import { IconBrandYoutube, IconMask, IconStack2 } from '@tabler/icons-react';
 import { cleanTagName } from '@wisihe/utils';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { BsYoutube } from 'react-icons/bs';
-import { TbBoxMultiple, TbMasksTheater } from 'react-icons/tb';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import {
   paintingBrushSeed,
@@ -70,21 +69,21 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
       if (p.isFanArt === true) {
         badges.push({
           key: 'fanart',
-          icon: <TbMasksTheater className='h-4 w-4' />,
+          icon: <IconMask className='size-4' stroke={2} aria-hidden />,
           label: 'Fan art',
         });
       }
       if (Number(p.images?.length ?? p.imagesCount ?? 0) > 0) {
         badges.push({
           key: 'multi',
-          icon: <TbBoxMultiple className='h-4 w-4' />,
+          icon: <IconStack2 className='size-4' stroke={2} aria-hidden />,
           label: 'Multiple images',
         });
       }
       if (p.video) {
         badges.push({
           key: 'video',
-          icon: <BsYoutube className='h-4 w-4' />,
+          icon: <IconBrandYoutube className='size-4' stroke={2} aria-hidden />,
           label: 'Has video',
         });
       }
