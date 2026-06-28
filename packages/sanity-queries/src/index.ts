@@ -830,25 +830,31 @@ export const getAllRecipes = defineQuery(`
     servings,
     difficulty,
     publishedAt,
+    averageRating,
+    ratingCount,
+    nutrition {
+      calories,
+      protein,
+      carbohydrates,
+      fat,
+      fiber,
+      sugar,
+      sodium,
+      notes
+    },
     tags[]->{name}
   }
 `);
 
 export const getRecipe = defineQuery(`
-  *[_type == "recipe" && slug.current == $slug][0] {
+  *[_type == "recipe" && slug.current == $slug && (language == "en" || !defined(language))][0] {
     _id,
     language,
     "slug": slug.current,
-    "translations": *[_type == "translation.metadata" && references(^._id)][0].translations[] {
-      _key,
-      value-> {
-        "slug": slug.current,
-        language,
-        title
-      }
-    },
     title,
     description,
+    story,
+    _updatedAt,
     "seo": {
       "title": coalesce(seo.title, title, ""),
       "description": coalesce(seo.description, description, ""),
@@ -897,12 +903,25 @@ export const getRecipe = defineQuery(`
     recipeCategory,
     recipeCuisine,
     publishedAt,
+    viewsCount,
+    averageRating,
+    ratingCount,
+    nutrition {
+      calories,
+      protein,
+      carbohydrates,
+      fat,
+      fiber,
+      sugar,
+      sodium,
+      notes
+    },
     tags[]->{name}
   }
 `);
 
 export const getRecipeSlugs = defineQuery(`
-  *[_type == "recipe" && defined(slug.current)]
+  *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]
   {"slug": slug.current}
 `);
 

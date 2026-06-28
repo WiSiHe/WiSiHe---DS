@@ -63,6 +63,7 @@ export default defineType({
       type: 'text',
       group: 'main',
       rows: 3,
+      description: 'Short summary for search snippets and cards (under 200 characters).',
       components: {
         input: props => (
           <GenericAIGenerator
@@ -74,6 +75,14 @@ export default defineType({
           />
         ),
       },
+    }),
+    defineField({
+      name: 'story',
+      title: 'About this dish',
+      type: 'blockContentMinimal',
+      group: 'main',
+      description:
+        'Optional longer intro — origin, personal notes, or serving context. Shown on the recipe page and helps search/AI understand the dish.',
     }),
     defineField({
       name: 'mainImage',
@@ -321,6 +330,13 @@ export default defineType({
       group: 'metadata',
     }),
     defineField({
+      name: 'nutrition',
+      title: 'Nutrition',
+      type: 'recipeNutrition',
+      group: 'metadata',
+      description: 'Per-serving values. Use “Estimate with AI” or enter manually.',
+    }),
+    defineField({
       name: 'difficulty',
       title: 'Difficulty',
       type: 'string',
@@ -359,6 +375,54 @@ export default defineType({
       title: 'Published at',
       type: 'datetime',
       group: 'metadata',
+    }),
+    defineField({
+      name: 'viewsCount',
+      title: 'Views',
+      type: 'number',
+      group: 'metadata',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Tracked automatically — do not edit manually',
+    }),
+    defineField({
+      name: 'averageRating',
+      title: 'Average rating',
+      type: 'number',
+      group: 'metadata',
+      readOnly: true,
+      description: 'Computed from visitor star ratings',
+    }),
+    defineField({
+      name: 'ratingCount',
+      title: 'Rating count',
+      type: 'number',
+      group: 'metadata',
+      readOnly: true,
+      description: 'Number of visitor star ratings',
+    }),
+    defineField({
+      name: 'ratings',
+      title: 'Ratings',
+      type: 'array',
+      group: 'metadata',
+      readOnly: true,
+      description: 'Visitor star ratings — do not edit manually',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'raterId', type: 'string', title: 'Rater ID' },
+            {
+              name: 'value',
+              type: 'number',
+              title: 'Stars',
+              validation: Rule => Rule.min(1).max(5).integer(),
+            },
+            { name: 'timestamp', type: 'datetime', title: 'Timestamp' },
+          ],
+        },
+      ],
     }),
     defineField(seoType),
   ],

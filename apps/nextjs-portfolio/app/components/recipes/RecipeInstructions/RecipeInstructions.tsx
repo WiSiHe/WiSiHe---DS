@@ -2,6 +2,7 @@
 
 import { cn } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { processInstructionText } from '../../../utils/instructionProcessor';
@@ -23,9 +24,14 @@ interface Instruction {
 interface RecipeInstructionsProps {
   instructions?: Instruction[] | null;
   ingredients?: Ingredient[];
+  headerActions?: ReactNode;
 }
 
-export default function RecipeInstructions({ instructions, ingredients }: RecipeInstructionsProps) {
+export default function RecipeInstructions({
+  instructions,
+  ingredients,
+  headerActions,
+}: RecipeInstructionsProps) {
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   if (!instructions || instructions.length === 0) {
@@ -115,13 +121,16 @@ export default function RecipeInstructions({ instructions, ingredients }: Recipe
 
   return (
     <div className='w-full space-y-8'>
-      <div className='mb-6 border-b border-border/10 pb-4'>
-        <h2 className='text-3xl font-extrabold tracking-tight text-foreground mb-2 font-sans'>
-          Instructions
-        </h2>
-        <p className='text-sm text-foreground-muted'>
-          Follow these steps to create your recipe. Click each step to mark it as complete.
-        </p>
+      <div className='mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-border/10 pb-4'>
+        <div>
+          <h2 className='text-3xl font-extrabold tracking-tight text-foreground mb-2 font-sans'>
+            Instructions
+          </h2>
+          <p className='text-sm text-foreground-muted'>
+            Follow these steps to create your recipe. Click each step to mark it as complete.
+          </p>
+        </div>
+        {headerActions ? <div className='shrink-0'>{headerActions}</div> : null}
       </div>
 
       <div className='space-y-4'>

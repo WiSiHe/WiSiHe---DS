@@ -3,9 +3,12 @@
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiMinus, FiPlus } from 'react-icons/fi';
 import { TbBasket } from 'react-icons/tb';
 import { urlForImage } from '@/sanity/lib/utils';
+import { clampServings, scaleAmount } from './scaleAmount';
+
+export { scaleAmount } from './scaleAmount';
 
 interface Ingredient {
   ingredient: string;
@@ -36,22 +39,6 @@ interface RecipeIngredientsProps {
   onServingsChange?: (servings: number) => void;
 }
 
-export function scaleAmount(
-  amount: string,
-  multiplier: number,
-  isDiscrete?: boolean | null,
-): string {
-  if (multiplier === 1 || isDiscrete) return amount;
-  const numeric = Number.parseFloat(amount.replace(',', '.'));
-  if (Number.isNaN(numeric)) return amount;
-
-  const scaled = numeric * multiplier;
-  const formatted = Number.isInteger(scaled)
-    ? String(scaled)
-    : scaled.toFixed(1).replace(/\.0$/, '');
-  return formatted;
-}
-
 export default function RecipeIngredients({
   ingredientCategories,
   baseServings,
@@ -70,13 +57,13 @@ export default function RecipeIngredients({
 
   const toggleIngredient = (id: string) => {
     setCheckedIngredients(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
       } else {
-        newSet.add(id);
+        next.add(id);
       }
-      return newSet;
+      return next;
     });
   };
 
@@ -84,109 +71,154 @@ export default function RecipeIngredients({
 
   return (
     <div className='w-full space-y-6'>
-      <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/10 pb-4'>
+      <div className='flex flex-col gap-4 border-b border-border/10 pb-4 sm:flex-row sm:items-center sm:justify-between'>
         <h2 className='font-sans text-2xl font-extrabold tracking-tight text-foreground'>
           Ingredients
         </h2>
         {baseServings ? (
-          <label className='flex items-center gap-2 text-sm text-foreground-subtle'>
+          <div className='flex items-center gap-2 text-sm text-foreground-subtle'>
             <span className='font-medium'>Servings</span>
-            <input
-              type='number'
-              min={1}
-              max={24}
-              value={servings}
-              onChange={e => setServings(Math.max(1, Number(e.target.value) || 1))}
-              className='w-16 rounded-lg border border-border bg-background px-2 py-1 text-center text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
-            />
-          </label>
+            <div className='inline-flex items-center rounded-lg border border-border bg-background'>
+              <button
+                type='button'
+                onClick={() => setServings(clampServings(servings - 1))}
+                disabled={servings <= 1}
+                className='flex size-8 items-center justify-center rounded-l-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
+                aria-label='Decrease servings'
+              >
+                <FiMinus className='size-3.5' />
+              </button>
+              <input
+                type='number'
+                min={1}
+                max={999}
+                inputMode='numeric'
+                value={servings}
+                onChange={e => setServings(clampServings(Number(e.target.value) || 1))}
+                className='w-14 border-x border-border bg-transparent py-1.5 text-center text-sm font-medium tabular-nums text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
+                aria-label='Number of servings'
+              />
+              <button
+                type='button'
+                onClick={() => setServings(clampServings(servings + 1))}
+                disabled={servings >= 999}
+                className='flex size-8 items-center justify-center rounded-r-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
+                aria-label='Increase servings'
+              >
+                <FiPlus className='size-3.5' />
+              </button>
+            </div>
+          </div>
         ) : null}
       </div>
 
       {categories.map((category, categoryIndex) => (
         <div key={category.categoryName ?? categoryIndex} className='mb-8 last:mb-0'>
-          <h3 className='mb-4 border-b border-border/10 pb-2 text-xs font-bold uppercase tracking-wider text-accent font-sans'>
+          <h3 className='mb-3 border-b border-border/10 pb-2 font-sans text-xs font-bold uppercase tracking-wider text-accent'>
             {category.categoryName}
           </h3>
-          <ul className='space-y-4'>
+          <ul className='space-y-2'>
             {(category.ingredients ?? []).map((ingredient, ingredientIndex) => {
               const ingredientId = `${categoryIndex}-${ingredientIndex}-${ingredient.ingredient}`;
               const isChecked = checkedIngredients.has(ingredientId);
+              const scaledAmount = scaleAmount(
+                ingredient.amount,
+                multiplier,
+                ingredient.isDiscrete,
+              );
 
               return (
-                <li
-                  key={`${ingredient.ingredient}-${ingredientIndex}`}
-                  className={cn(
-                    'flex items-start gap-3 transition-opacity duration-200',
-                    isChecked && 'opacity-60',
-                  )}
-                >
+                <li key={`${ingredient.ingredient}-${ingredientIndex}`}>
                   <button
                     type='button'
                     onClick={() => toggleIngredient(ingredientId)}
                     className={cn(
-                      'mt-1 flex size-5 shrink-0 items-center justify-center rounded-md border text-white transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/30',
-                      isChecked
-                        ? 'border-success bg-success'
-                        : 'border-border bg-background hover:border-accent',
+                      'group flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors',
+                      isChecked ? 'bg-surface-subtle/80' : 'hover:bg-surface-subtle/60',
                     )}
-                    aria-label={`Mark ${ingredient.ingredient} as ${isChecked ? 'incomplete' : 'complete'}`}
+                    aria-pressed={isChecked}
+                    aria-label={`Mark ${ingredient.ingredient} as ${isChecked ? 'needed' : 'got'}`}
                   >
-                    {isChecked && <FiCheck className='size-3.5 stroke-[3]' />}
+                    {ingredient.photo ? (
+                      <div
+                        className={cn(
+                          'relative size-14 shrink-0 overflow-hidden rounded-lg border transition-opacity',
+                          isChecked ? 'border-border/30 opacity-55' : 'border-border/40',
+                        )}
+                      >
+                        <Image
+                          src={
+                            urlForImage(ingredient.photo as Parameters<typeof urlForImage>[0])
+                              ?.width(112)
+                              .height(112)
+                              .url() || ''
+                          }
+                          alt={ingredient.photo.alt ?? ingredient.ingredient}
+                          width={56}
+                          height={56}
+                          className='size-full object-cover'
+                        />
+                        <span
+                          className={cn(
+                            'absolute bottom-1 right-1 flex size-5 items-center justify-center rounded-full border shadow-sm transition-colors',
+                            isChecked
+                              ? 'border-accent bg-accent text-accent-contrast'
+                              : 'border-border/70 bg-background/90 text-transparent group-hover:border-accent/50',
+                          )}
+                          aria-hidden
+                        >
+                          <FiCheck className='size-3 stroke-[3]' />
+                        </span>
+                      </div>
+                    ) : (
+                      <span
+                        className={cn(
+                          'flex size-14 shrink-0 items-center justify-center rounded-lg border transition-colors',
+                          isChecked
+                            ? 'border-accent/40 bg-accent/10 text-accent'
+                            : 'border-border bg-surface-subtle text-foreground-muted group-hover:border-accent/30',
+                        )}
+                        aria-hidden
+                      >
+                        {isChecked ? (
+                          <FiCheck className='size-5 stroke-[2.5]' />
+                        ) : (
+                          <TbBasket className='size-5' />
+                        )}
+                      </span>
+                    )}
+
+                    <div className='min-w-0 flex-1'>
+                      <div className='flex items-start justify-between gap-3'>
+                        <span
+                          className={cn(
+                            'font-medium leading-snug text-foreground',
+                            isChecked && 'text-foreground-muted',
+                          )}
+                        >
+                          {ingredient.ingredient}
+                        </span>
+                        <span
+                          className={cn(
+                            'shrink-0 text-right text-sm tabular-nums text-foreground-subtle',
+                            isChecked && 'text-foreground-muted',
+                          )}
+                        >
+                          {scaledAmount} {ingredient.unit}
+                        </span>
+                      </div>
+                      {ingredient.notes ? (
+                        <p
+                          className={cn(
+                            'mt-1 text-sm text-foreground-muted',
+                            isChecked && 'text-foreground-muted/70',
+                          )}
+                        >
+                          {ingredient.notes}
+                        </p>
+                      ) : null}
+                    </div>
                   </button>
-
-                  {ingredient.photo ? (
-                    <div className='size-16 shrink-0 overflow-hidden rounded-lg border border-border/40'>
-                      <Image
-                        src={
-                          urlForImage(ingredient.photo as Parameters<typeof urlForImage>[0])
-                            ?.width(64)
-                            .height(64)
-                            .url() || ''
-                        }
-                        alt={ingredient.photo.alt ?? ingredient.ingredient}
-                        width={64}
-                        height={64}
-                        className='size-full object-cover'
-                      />
-                    </div>
-                  ) : (
-                    <div className='flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-subtle text-foreground-muted'>
-                      <TbBasket className='size-5' />
-                    </div>
-                  )}
-
-                  <div className='min-w-0 flex-1'>
-                    <div className='flex flex-wrap items-baseline gap-x-2 gap-y-1'>
-                      <span
-                        className={cn(
-                          'font-medium text-foreground',
-                          isChecked && 'line-through text-foreground-muted',
-                        )}
-                      >
-                        {ingredient.ingredient}
-                      </span>
-                      <span
-                        className={cn(
-                          'text-sm text-foreground-subtle',
-                          isChecked && 'line-through text-foreground-muted',
-                        )}
-                      >
-                        {scaleAmount(ingredient.amount, multiplier, ingredient.isDiscrete)}{' '}
-                        {ingredient.unit}
-                      </span>
-                    </div>
-                    {ingredient.notes ? (
-                      <p
-                        className={cn(
-                          'mt-1 text-sm text-foreground-muted',
-                          isChecked && 'text-foreground-muted/65 line-through',
-                        )}
-                      >
-                        {ingredient.notes}
-                      </p>
-                    ) : null}
-                  </div>
                 </li>
               );
             })}
