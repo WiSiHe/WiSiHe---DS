@@ -1,6 +1,8 @@
 'use client';
 
+import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
+import dynamic from 'next/dynamic';
 import React, { useMemo } from 'react';
 import { presentationSlides as fallbackSlides } from '../../three-d/presentationSlides';
 import type { PresentationSlide } from '../../three-d/types';
@@ -10,17 +12,53 @@ import { ScrollIndicator } from './ScrollIndicator';
 import { ContentSlide } from './Slides/ContentSlide';
 import { SeparatorSlide } from './Slides/SeparatorSlide';
 import { TitleSlide } from './Slides/TitleSlide';
+import { SourcesSection } from './SourcesSection';
+import { TechnicalDeckSkeleton } from './Technical/TechnicalDeckSkeleton';
+import { TechnicalSeparator } from './TechnicalSeparator';
+import { ThreeDHero } from './ThreeDHero';
+
+const TechnicalDeck = dynamic(
+  () => import('./Technical/TechnicalDeck').then(mod => mod.TechnicalDeck),
+  {
+    ssr: false,
+    loading: () => <TechnicalDeckSkeleton />,
+  },
+);
+
+function CustomComponentRenderer({
+  name,
+  props,
+  currentSlide,
+  slideIndex,
+}: {
+  name: string;
+  props?: any;
+  currentSlide: number;
+  slideIndex: number;
+}) {
+  if (name === 'ThreeDHero') {
+    return <ThreeDHero {...props} />;
+  }
+  if (name === 'TechnicalSeparator') {
+    return <TechnicalSeparator {...props} />;
+  }
+  if (name === 'TechnicalDeck') {
+    // Only load/render TechnicalDeck when it is close to the viewport (e.g. currentSlide is within 1 of slideIndex)
+    const isClose = Math.abs(currentSlide - slideIndex) <= 1;
+    return isClose ? <TechnicalDeck {...props} /> : <TechnicalDeckSkeleton />;
+  }
+  if (name === 'SourcesSection') {
+    return <SourcesSection {...props} />;
+  }
+  return null;
+}
 
 export const IntroPresentation = React.memo(function IntroPresentation({
-  mainRef,
-  technicalDeckRef,
-  technicalSeparatorRef,
+  scrollRoot,
   slides,
   onPresentationStateChange,
 }: {
-  mainRef?: React.RefObject<HTMLElement | null>;
-  technicalDeckRef?: React.RefObject<HTMLDivElement | null>;
-  technicalSeparatorRef?: React.RefObject<HTMLElement | null>;
+  scrollRoot: HTMLElement | null;
   slides?: PresentationSlide[] | null;
   onPresentationStateChange?: (state: {
     currentSlide: number;
@@ -48,9 +86,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
     handleSkipToCoolPart,
   } = usePresentationLogic({
     slides: presentationSlides,
-    mainRef,
-    technicalDeckRef,
-    technicalSeparatorRef,
+    scrollRoot,
   });
 
   // Memoize history slide indices calculation to avoid recalculation on every render
@@ -123,8 +159,6 @@ export const IntroPresentation = React.memo(function IntroPresentation({
     handlePrevSlide,
     handleScrollToTop,
     handleSkipToCoolPart,
-    // Note: handlers are stable from usePresentationLogic, but we don't need them in deps
-    // since we only update when the actual state values change
   ]);
 
   return (
@@ -174,6 +208,7 @@ export const IntroPresentation = React.memo(function IntroPresentation({
 
           // Create stable key using type, title, and index for better React reconciliation
           const slideKey = `${slideData.type}-${slideData.title || ''}-${index}`;
+          const isCustomComponent = !!slideData.customComponent;
 
           return (
             <div
@@ -181,7 +216,12 @@ export const IntroPresentation = React.memo(function IntroPresentation({
               ref={el => {
                 slideRefs.current[index] = el;
               }}
-              className='h-screen snap-start flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16 relative z-10 shrink-0 overflow-hidden max-w-full'
+              className={cn(
+                'snap-start relative z-10 shrink-0 overflow-hidden max-w-full',
+                isCustomComponent
+                  ? 'h-[100dvh] w-full'
+                  : 'h-[100dvh] w-full flex items-center justify-center pt-28 pb-6 px-6 md:pt-32 md:pb-12 md:px-12 lg:pt-36 lg:pb-16 lg:px-16',
+              )}
               style={{
                 // Performance optimizations: content-visibility for off-screen slides
                 contentVisibility: isNearViewport ? 'visible' : 'auto',
@@ -191,19 +231,28 @@ export const IntroPresentation = React.memo(function IntroPresentation({
                 willChange: isNearViewport ? 'scroll-position' : 'auto',
               }}
             >
-              <div className='w-full max-w-full flex items-center justify-center overflow-hidden'>
-                {slideData.type === 'separator' && (
-                  <SeparatorSlide slideData={slideData} index={index} />
-                )}
-                {slideData.type === 'title' && <TitleSlide slideData={slideData} index={index} />}
-                {slideData.type === 'content' && (
-                  <ContentSlide
-                    slideData={slideData}
-                    index={index}
-                    currentHistorySlideIndex={currentHistorySlideIndex}
-                  />
-                )}
-              </div>
+              {isCustomComponent && slideData.customComponent ? (
+                <CustomComponentRenderer
+                  name={slideData.customComponent}
+                  props={slideData.customProps}
+                  currentSlide={currentSlide}
+                  slideIndex={index}
+                />
+              ) : (
+                <div className='w-full max-w-full flex items-center justify-center overflow-hidden'>
+                  {slideData.type === 'separator' && (
+                    <SeparatorSlide slideData={slideData} index={index} />
+                  )}
+                  {slideData.type === 'title' && <TitleSlide slideData={slideData} index={index} />}
+                  {slideData.type === 'content' && (
+                    <ContentSlide
+                      slideData={slideData}
+                      index={index}
+                      currentHistorySlideIndex={currentHistorySlideIndex}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           );
         })}

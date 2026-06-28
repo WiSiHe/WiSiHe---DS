@@ -34,6 +34,7 @@ export const footerLinks = [
 export const footerSecondaryLinks = [
   { name: 'Presentations', href: '/presentations' },
   { name: '3D Workshop', href: '/three-d' },
+  { name: 'Design System', href: '/design-system' },
 ];
 
 export const socialMediaLinks = [

@@ -11,7 +11,7 @@ export function TechnicalSeparator({ ref }: Readonly<{ ref?: React.Ref<HTMLEleme
       id='technical'
       ref={ref}
       aria-label='Transition to technical content'
-      className='snap-start h-screen w-full flex flex-col items-center justify-center relative overflow-hidden bg-background shrink-0'
+      className='snap-start h-[100dvh] w-full flex flex-col items-center justify-center relative overflow-hidden bg-background shrink-0'
     >
       {/* Dynamic Ripple Grid Background */}
       <div className='absolute inset-0 opacity-40'>

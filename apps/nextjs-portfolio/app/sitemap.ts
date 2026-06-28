@@ -54,6 +54,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
       lastModified: new Date(),
     },
+    {
+      url: `${SITE_URL}/design-system`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/design-system/colors`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/design-system/typography`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
+    {
+      url: `${SITE_URL}/design-system/tone-of-voice`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      lastModified: new Date(),
+    },
     ...(ABOUT_PAGE_LINKS_ENABLED
       ? [
           {

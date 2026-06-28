@@ -1,5 +1,6 @@
 import { PresentationIcon } from '@sanity/icons';
 import { defineField, defineType, type ValidationContext } from 'sanity';
+import GenericAIGenerator from '../components/GenericAIGenerator';
 import { seoType } from './seoType';
 import { tag } from './tag';
 
@@ -800,6 +801,50 @@ export default defineType({
       options: {
         layout: 'tags',
       },
+    }),
+    defineField({
+      name: 'noIndex',
+      title: 'Exclude from Search Engines (noIndex)',
+      type: 'boolean',
+      description: 'If checked, search engines will be instructed not to index this presentation.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'tldr',
+      title: 'TL;DR Summary',
+      type: 'text',
+      description: 'A brief, high-level summary of the presentation. Can be generated using AI.',
+      rows: 4,
+      components: {
+        input: props => (
+          <GenericAIGenerator
+            {...props}
+            prompt="Write a concise, scannable TL;DR bullet-point summary for the presentation '{presentationTitle}' based on its description: '{presentationDescription}'."
+            fieldDependencies={{
+              presentationTitle: 'title',
+              presentationDescription: 'description',
+            }}
+            characterLimit={500}
+            rows={4}
+            placeholder='AI-generated TL;DR summary will appear here...'
+            transformResponse={response => response.replace(/^["']|["']$/g, '').trim()}
+          />
+        ),
+      },
+    }),
+    defineField({
+      name: 'tldrPosition',
+      title: 'TL;DR Position',
+      type: 'string',
+      description: 'Where to display the TL;DR slide in the presentation deck.',
+      options: {
+        list: [
+          { title: 'Top (After Title/Hero Slide)', value: 'top' },
+          { title: 'Bottom (Before Sources Slide)', value: 'bottom' },
+        ],
+      },
+      initialValue: 'top',
+      hidden: ({ document }) => !document?.tldr,
     }),
     defineField({
       name: 'slides',
