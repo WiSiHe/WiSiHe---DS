@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { LayoutGroup, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { BsEye } from 'react-icons/bs';
 import {
@@ -83,36 +82,32 @@ function ColourRefinement() {
   });
 
   return (
-    <LayoutGroup id='colour-chips'>
-      <motion.div layout className='flex flex-wrap gap-2'>
-        {sorted.map(item => {
-          const swatch = COLOR_SWATCHES[item.label] ?? '#aaa';
-          return (
-            <motion.button
-              key={item.label}
-              layout
-              type='button'
-              onClick={() => refine(item.value)}
-              title={`${item.label} (${item.count})`}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              className={cn(
-                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-150 border',
-                item.isRefined
-                  ? 'bg-foreground text-background border-foreground shadow-sm'
-                  : 'bg-surface border-border text-foreground-subtle hover:border-foreground-muted hover:text-foreground',
-              )}
-            >
-              <span
-                className='w-3.5 h-3.5 rounded-full border border-black/10 shrink-0'
-                style={{ backgroundColor: swatch }}
-              />
-              {item.label}
-              <span className='text-[10px] opacity-60'>{item.count}</span>
-            </motion.button>
-          );
-        })}
-      </motion.div>
-    </LayoutGroup>
+    <div className='flex flex-wrap gap-2'>
+      {sorted.map(item => {
+        const swatch = COLOR_SWATCHES[item.label] ?? '#aaa';
+        return (
+          <button
+            key={item.label}
+            type='button'
+            onClick={() => refine(item.value)}
+            title={`${item.label} (${item.count})`}
+            className={cn(
+              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-150 border',
+              item.isRefined
+                ? 'bg-foreground text-background border-foreground shadow-sm'
+                : 'bg-surface border-border text-foreground-subtle hover:border-foreground-muted hover:text-foreground',
+            )}
+          >
+            <span
+              className='w-3.5 h-3.5 rounded-full border border-black/10 shrink-0'
+              style={{ backgroundColor: swatch }}
+            />
+            {item.label}
+            <span className='text-[10px] opacity-60'>{item.count}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -266,6 +261,12 @@ function ScrollToResults() {
     snapshotRef.current = { page, query, refinements };
 
     if (!pageChanged && !queryChanged && !refinementsChanged) {
+      return;
+    }
+
+    // Page/query changes scroll the user back to results; refinement toggles keep
+    // the sidebar in view on desktop so skip the expensive Lenis scroll there.
+    if (refinementsChanged && !pageChanged && !queryChanged) {
       return;
     }
 
