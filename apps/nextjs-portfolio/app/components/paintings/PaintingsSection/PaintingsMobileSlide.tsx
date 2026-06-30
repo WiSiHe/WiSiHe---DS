@@ -1,10 +1,14 @@
 'use client';
 
-import { cleanTagName } from '@wisihe/utils';
+import { cleanTagName, cn } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
+import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
+import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
+  paintingBrushSeed,
   resolvePaintingCardLayout,
   urlForPaintingCard,
 } from '@/lib/paintings/paintingCardImage';
@@ -64,6 +68,9 @@ export default function PaintingsMobileSlide({ painting, index }: PaintingsMobil
   }
 
   const visibleTags = tagNames.slice(0, 3);
+  const showNsfwCover = isNSFW === true;
+  const brushSeed = paintingBrushSeed(String(painting['_id'] ?? normalizedSlug ?? displayTitle));
+  const strokeColors = getBrushStrokeColors(brushSeed, painting['palette'] ?? image?.palette);
 
   return (
     <div className='w-[min(88vw,340px)] shrink-0'>
@@ -80,7 +87,10 @@ export default function PaintingsMobileSlide({ painting, index }: PaintingsMobil
               priority={index < 2}
               fetchPriority={index < 2 ? 'high' : undefined}
               sizes='88vw'
-              className='object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+              className={cn(
+                'object-cover transition-transform duration-500 group-hover:scale-[1.03]',
+                showNsfwCover && NSFW_IMAGE_BLUR_CLASS,
+              )}
               placeholder={lqip ? 'blur' : 'empty'}
               blurDataURL={lqip}
               quality={80}
@@ -89,11 +99,8 @@ export default function PaintingsMobileSlide({ painting, index }: PaintingsMobil
             <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-elevated' />
           )}
 
-          {isNSFW === true ? (
-            <div
-              className='pointer-events-none absolute inset-0 bg-background/45 backdrop-blur-xl'
-              aria-hidden
-            />
+          {showNsfwCover ? (
+            <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushSeed} />
           ) : null}
 
           {availableForSale ? (

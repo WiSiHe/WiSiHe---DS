@@ -7,8 +7,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
 import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
+import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import { useCanBrushReveal } from '@/lib/paintings/mediaCapabilities';
+import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   paintingBrushSeed,
@@ -29,8 +31,6 @@ type PaintingCardInnerProps = {
   svgHoverIndex?: number;
   alwaysShowTags?: boolean;
   canBrushReveal: boolean;
-  /** Search grid — cheaper NSFW cover without backdrop-blur */
-  lightNsfwBlur?: boolean;
   className?: string;
 };
 
@@ -41,7 +41,6 @@ function PaintingCardInner({
   svgHoverIndex,
   alwaysShowTags = false,
   canBrushReveal,
-  lightNsfwBlur = false,
   className,
 }: PaintingCardInnerProps) {
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
@@ -115,10 +114,7 @@ function PaintingCardInner({
       placeholder={lqip ? 'blur' : 'empty'}
       blurDataURL={lqip}
       quality={80}
-      className={cn(
-        'object-cover w-full h-full',
-        showNsfwBlur && lightNsfwBlur && 'scale-105 blur-xl',
-      )}
+      className={cn('object-cover w-full h-full', showNsfwBlur && NSFW_IMAGE_BLUR_CLASS)}
     />
   ) : undefined;
 
@@ -155,21 +151,7 @@ function PaintingCardInner({
   const imageNode = imageEl ? (
     <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
       {imageEl}
-      {showNsfwBlur ? (
-        lightNsfwBlur ? (
-          <div
-            data-nsfw-blur
-            className='pointer-events-none absolute inset-0 z-[8] bg-background/55'
-            aria-hidden
-          />
-        ) : (
-          <div
-            data-nsfw-blur
-            className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-            aria-hidden
-          />
-        )
-      ) : null}
+      {showNsfwBlur ? <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushIndex} /> : null}
       {canBrushReveal ? (
         <BrushRevealLayer
           {...strokeColors}
@@ -219,8 +201,6 @@ type PaintingCardAdapterProps = {
   alwaysShowTags?: boolean;
   /** Carousel / touch layouts — skip SVG brush reveal even on fine-pointer devices */
   disableBrushReveal?: boolean;
-  /** Search grid — cheaper NSFW cover without backdrop-blur */
-  lightNsfwBlur?: boolean;
   className?: string;
 };
 

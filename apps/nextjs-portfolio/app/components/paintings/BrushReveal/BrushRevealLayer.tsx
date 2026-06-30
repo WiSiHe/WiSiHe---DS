@@ -15,6 +15,7 @@ import {
   getBrushStrokeVariant,
   paintingBrushSeed,
 } from '@/app/components/marketing/HeroSection/brushStrokeVariants';
+import { NSFW_FILTER_HINT, NSFW_MATURE_LABEL } from '@/lib/paintings/nsfwCover';
 
 export { getBrushStrokeVariant, paintingBrushSeed };
 
@@ -121,49 +122,52 @@ export function BrushRevealLayer({
 
   return (
     <>
-      <div
-        data-brush-wash
-        className='pointer-events-none absolute inset-0 z-[6] opacity-0'
-        style={{ backgroundColor: washColor }}
-        aria-hidden
-      />
+      {!isNsfwBlurred ? (
+        <div
+          data-brush-wash
+          className='pointer-events-none absolute inset-0 z-[6] opacity-0'
+          style={{ backgroundColor: washColor }}
+          aria-hidden
+        />
+      ) : null}
 
-      <div
-        data-brush-svg
-        data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
-        className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
-        aria-hidden
-        style={{ transform: `scale(${scale})` }}
-      >
-        <svg className='absolute h-0 w-0' aria-hidden='true'>
-          <title>Brush stroke filters</title>
-          <defs>
-            <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
-              <feGaussianBlur
-                in='SourceGraphic'
-                stdDeviation={brushProfile.strokeBlur}
-                result='blur'
-              />
-              <feMerge>
-                <feMergeNode in='blur' />
-                <feMergeNode in='SourceGraphic' />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
+      {!isNsfwBlurred ? (
+        <div
+          data-brush-svg
+          className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
+          aria-hidden
+          style={{ transform: `scale(${scale})` }}
+        >
+          <svg className='absolute h-0 w-0' aria-hidden='true'>
+            <title>Brush stroke filters</title>
+            <defs>
+              <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
+                <feGaussianBlur
+                  in='SourceGraphic'
+                  stdDeviation={brushProfile.strokeBlur}
+                  result='blur'
+                />
+                <feMerge>
+                  <feMergeNode in='blur' />
+                  <feMergeNode in='SourceGraphic' />
+                </feMerge>
+              </filter>
+            </defs>
+          </svg>
 
-        {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
-          <BrushStrokeSvg
-            key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
-            layer={layer}
-            color={layerColors[index % layerColors.length] ?? accentColor}
-            filterId={filterId}
-            className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
-            strokeWidthRest={brushProfile.rest}
-            layerSizePercent={brushProfile.layerSizePercent}
-          />
-        ))}
-      </div>
+          {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
+            <BrushStrokeSvg
+              key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+              layer={layer}
+              color={layerColors[index % layerColors.length] ?? accentColor}
+              filterId={filterId}
+              className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
+              strokeWidthRest={brushProfile.rest}
+              layerSizePercent={brushProfile.layerSizePercent}
+            />
+          ))}
+        </div>
+      ) : null}
 
       <div
         data-brush-overlay
@@ -172,7 +176,9 @@ export function BrushRevealLayer({
         <div className='flex items-start justify-between gap-2'>
           <div className='flex min-w-0 flex-1 flex-wrap items-start gap-1 pr-1'>
             {isNsfwBlurred ? (
-              <span className={`${chipClass} border-white/25 bg-black/65`}>Mature content</span>
+              <span className={`${chipClass} border-white/25 bg-black/65`} title={NSFW_FILTER_HINT}>
+                {NSFW_MATURE_LABEL}
+              </span>
             ) : null}
             {visibleTags.length > 0 ? (
               <div className='flex flex-wrap gap-1' data-brush-tags>
