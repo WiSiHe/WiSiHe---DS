@@ -5,6 +5,7 @@
  * @see https://reactbits.dev/components/masonry
  */
 
+import { cn } from '@wisihe/utils';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,7 +21,9 @@ import {
   type BrushRevealBadge,
   BrushRevealLayer,
 } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
+import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
 import { prefersReducedMotion } from '@/lib/paintings/mediaCapabilities';
+import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
 
 export type MasonryItem = {
   id: string;
@@ -315,16 +318,17 @@ const Masonry = ({
                 alt=''
                 aria-hidden
                 fill
-                className='object-cover'
+                className={cn('object-cover', item.isNsfwBlurred && NSFW_IMAGE_BLUR_CLASS)}
                 sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
                 placeholder={item.lqip ? 'blur' : 'empty'}
                 blurDataURL={item.lqip}
               />
               {item.isNsfwBlurred ? (
-                <div
-                  data-nsfw-blur
-                  className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-                  aria-hidden
+                <NsfwBrushCover
+                  accentColor={item.accentColor}
+                  secondaryColor={item.secondaryColor}
+                  washColor={item.washColor}
+                  strokeVariantIndex={item.strokeIndex}
                 />
               ) : null}
               <BrushRevealLayer

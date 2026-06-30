@@ -2,7 +2,12 @@
 export const HERO_BRUSH_STROKE_WIDTH_REST = 200;
 export const HERO_BRUSH_STROKE_WIDTH_HOVER = 700;
 
-export type BrushStrokeProfile = 'masonry' | 'heroCard' | 'heroSpotlight' | 'heroBlend';
+export type BrushStrokeProfile =
+  | 'masonry'
+  | 'heroCard'
+  | 'heroSpotlight'
+  | 'heroBlend'
+  | 'nsfwCover';
 
 export type BrushProfileConfig = {
   rest: number;
@@ -59,10 +64,22 @@ const HERO_BLEND_BRUSH_PROFILE: BrushProfileConfig = {
   layerCount: 2,
 };
 
+/** NSFW thumbnail — soft blur with visible palette strokes painted on top at rest. */
+const NSFW_COVER_BRUSH_PROFILE: BrushProfileConfig = {
+  rest: 36,
+  hover: 36,
+  layerSizePercent: 188,
+  coverScale: variantScale => Math.min(variantScale * 0.92, 2.15),
+  strokeBlur: 2.35,
+  strokeOpacity: 0.88,
+  layerCount: 2,
+};
+
 export function getBrushProfileConfig(profile: BrushStrokeProfile): BrushProfileConfig {
   if (profile === 'heroCard') return HERO_CARD_BRUSH_PROFILE;
   if (profile === 'heroSpotlight') return HERO_SPOTLIGHT_BRUSH_PROFILE;
   if (profile === 'heroBlend') return HERO_BLEND_BRUSH_PROFILE;
+  if (profile === 'nsfwCover') return NSFW_COVER_BRUSH_PROFILE;
   return MASONRY_BRUSH_PROFILE;
 }
 

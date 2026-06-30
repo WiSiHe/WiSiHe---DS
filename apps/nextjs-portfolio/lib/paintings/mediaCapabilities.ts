@@ -33,6 +33,50 @@ function subscribeBrushRevealMedia() {
   media.addEventListener('change', update);
 }
 
+const DESKTOP_PAINTING_GRID_QUERY = '(min-width: 1024px)';
+
+export function prefersDesktopPaintingGrid(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia(DESKTOP_PAINTING_GRID_QUERY).matches;
+}
+
+type DesktopGridListener = (isDesktop: boolean) => void;
+
+let desktopGridSubscribed = false;
+let desktopGridValue = false;
+const desktopGridListeners = new Set<DesktopGridListener>();
+
+function subscribeDesktopGridMedia() {
+  if (desktopGridSubscribed || typeof window === 'undefined') return;
+  desktopGridSubscribed = true;
+
+  desktopGridValue = prefersDesktopPaintingGrid();
+  const media = window.matchMedia(DESKTOP_PAINTING_GRID_QUERY);
+  const update = () => {
+    desktopGridValue = media.matches;
+    for (const listener of desktopGridListeners) {
+      listener(desktopGridValue);
+    }
+  };
+  media.addEventListener('change', update);
+}
+
+/** Desktop gallery grid (lg+) — compact caption-below cards on smaller viewports. */
+export function useIsDesktopPaintingGrid(): boolean {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useLayoutEffect(() => {
+    subscribeDesktopGridMedia();
+    setIsDesktop(desktopGridValue);
+    desktopGridListeners.add(setIsDesktop);
+    return () => {
+      desktopGridListeners.delete(setIsDesktop);
+    };
+  }, []);
+
+  return isDesktop;
+}
+
 /** Desktop fine-pointer hover — brush reveal runs only when true. */
 export function useCanBrushReveal(): boolean {
   // Always false on first render so SSR and hydration markup match; updated after mount.

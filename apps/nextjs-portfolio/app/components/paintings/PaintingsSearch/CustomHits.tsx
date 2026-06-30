@@ -5,7 +5,9 @@ import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/r
 import { memo, useMemo } from 'react';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 import type { PaintingAlgoliaHit } from '@/lib/algolia/paintingsSearch/types';
+import { useIsDesktopPaintingGrid } from '@/lib/paintings/mediaCapabilities';
 import PaintingCard from '../PaintingCard/PaintingCard';
+import { PaintingSearchCompactCard } from './PaintingSearchCompactCard';
 
 function slugFromHit(rawSlug: unknown): string {
   if (typeof rawSlug === 'string') return rawSlug;
@@ -42,6 +44,7 @@ type PaintingHitProps = {
 const PaintingHit = memo(
   function PaintingHit({ hit, index, isNsfwFilterActive, reducedMotion }: PaintingHitProps) {
     const paintingData = useMemo(() => adaptPaintingData(hit), [hit]);
+    const isDesktopGrid = useIsDesktopPaintingGrid();
 
     return (
       <motion.div
@@ -56,13 +59,29 @@ const PaintingHit = memo(
         }
         className='break-inside-avoid mb-2'
       >
-        <PaintingCard
-          // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
-          paintingData={paintingData as any}
-          shouldBeLazy={index < 6}
-          isNsfwFilterActive={isNsfwFilterActive}
-          lightNsfwBlur
-        />
+        {isDesktopGrid ? (
+          <PaintingCard
+            // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
+            paintingData={paintingData as any}
+            shouldBeLazy={index < 6}
+            isNsfwFilterActive={isNsfwFilterActive}
+          />
+        ) : (
+          <PaintingSearchCompactCard
+            title={typeof hit['title'] === 'string' ? hit['title'] : ''}
+            slug={typeof paintingData.slug === 'string' ? paintingData.slug : ''}
+            // biome-ignore lint/suspicious/noExplicitAny: Algolia image shape
+            image={(paintingData as any).image}
+            index={index}
+            isNsfw={paintingData.isNSFW}
+            isNsfwFilterActive={isNsfwFilterActive}
+            isForSale={paintingData.isForSale}
+            hasStoreLink={paintingData.hasStoreLink}
+            paintingId={paintingData._id}
+            // biome-ignore lint/suspicious/noExplicitAny: Algolia palette shape
+            palette={(paintingData as any).palette}
+          />
+        )}
       </motion.div>
     );
   },
@@ -74,27 +93,15 @@ const PaintingHit = memo(
 );
 
 function PaintingCardSkeleton({ index }: { index: number }) {
-  const aspects = [
-    'aspect-[3/4]',
-    'aspect-square',
-    'aspect-[4/3]',
-    'aspect-[3/5]',
-    'aspect-[3/4]',
-    'aspect-square',
-  ];
-  const aspect = aspects[index % aspects.length];
-
   return (
     <div
-      className={cn(
-        'relative mb-2 w-full overflow-hidden rounded-xl border border-border bg-surface animate-pulse',
-        aspect,
-      )}
+      className='mb-2 w-full overflow-hidden rounded-xl border border-border bg-surface animate-pulse'
       style={{ animationDelay: `${index * 40}ms` }}
+      aria-hidden
     >
-      <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
-      <div className='absolute right-0 bottom-0 left-0 h-10 border-t border-border bg-surface/80 px-3 py-2.5'>
-        <div className='h-2.5 w-2/5 rounded-full bg-surface-subtle' />
+      <div className='aspect-[4/3] bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
+      <div className='border-t border-border px-3 py-2.5'>
+        <div className='h-3.5 w-2/5 rounded-full bg-surface-subtle' />
       </div>
     </div>
   );
@@ -141,7 +148,7 @@ export default function CustomHits() {
       <motion.div
         layout={!reducedMotion}
         className={cn(
-          'mt-4 columns-2 gap-2 sm:columns-3 transition-opacity duration-150',
+          'mt-4 columns-2 gap-2 sm:columns-3 lg:columns-3 transition-opacity duration-150',
           status === 'loading' && 'pointer-events-none opacity-60',
         )}
         aria-busy={status === 'loading'}
