@@ -1,17 +1,23 @@
 import type { ProjectQueryResult, ProjectsSlugsResult } from '@wisihe/sanity-queries';
-import { isNotEmptyObject } from '@wisihe/utils';
+import { cn, isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import {
-  ConnectedPage,
-  ConnectedPaintingsCarousel,
-  EmbeddedVideo,
+  hasProjectRelatedContent,
+  ProjectCaseStudy,
   ProjectImage,
   ProjectInformation,
+  ProjectRelatedContent,
 } from '@/app/components/projects/Project';
+import {
+  getProjectDisplayTitle,
+  getProjectSeoFallbackTitle,
+} from '@/app/components/projects/projectCardHelpers';
+import { resolveProjectContent } from '@/lib/projects/resolveProjectContent';
 import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
 import { buildContentMetadata, resolveSeoCopy } from '@/lib/seo/metadata';
 import { sanityFetch } from '@/sanity/lib/live';
@@ -25,15 +31,14 @@ const PROJECT_TYPE_SCHEMA: Record<string, string> = {
   other: 'CreativeWork',
 };
 
-// Loading component for Suspense boundaries
 function ProjectSectionSkeleton() {
   return (
     <div className='animate-pulse space-y-4'>
-      <div className='h-96 bg-surface-subtle rounded-xl border border-border/20' />
+      <div className='h-96 rounded-3xl border border-border/20 bg-surface-subtle' />
       <div className='space-y-3'>
-        <div className='h-4 bg-surface-subtle rounded w-3/4' />
-        <div className='h-4 bg-surface-subtle rounded w-1/2' />
-        <div className='h-4 bg-surface-subtle rounded w-5/6' />
+        <div className='h-4 w-3/4 rounded bg-surface-subtle' />
+        <div className='h-4 w-1/2 rounded bg-surface-subtle' />
+        <div className='h-4 w-5/6 rounded bg-surface-subtle' />
       </div>
     </div>
   );
@@ -76,16 +81,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       };
     }
 
-    const { seo, _id, name } = project;
+    const { seo, _id, name, client } = project;
     const defaultOgImage = `https://www.wisihe.no/api/og?id=${_id}`;
     const seoImage =
       seo?.image && isNotEmptyObject(seo.image)
         ? urlForImage(seo.image)?.width(1200).height(630).url()
         : undefined;
 
+    const displayTitle = getProjectDisplayTitle({ name, client });
     const { title, description, noIndex } = resolveSeoCopy(seo, {
-      title: name ?? 'Project',
-      description: seo?.description?.trim() || `Project case study: ${name}`,
+      title: getProjectSeoFallbackTitle({ name, client }),
+      description: seo?.description?.trim() || `Project case study: ${displayTitle}`,
     });
 
     return buildContentMetadata({
@@ -113,7 +119,7 @@ export default async function ProjectPage(props: Props) {
   const params = await props.params;
 
   try {
-    const [{ data: _proj }] = await Promise.all([sanityFetch({ query: projectQuery, params })]);
+    const { data: _proj } = await sanityFetch({ query: projectQuery, params });
     const project = _proj as ProjectQueryResult;
 
     if (!project?._id) {
@@ -121,6 +127,14 @@ export default async function ProjectPage(props: Props) {
     }
 
     const { connectedVideo, connectedPaintings = [] } = project;
+    const connectedVideoUrl = connectedVideo?.videoUrl ?? null;
+    const { sidebarSummary, caseStudyBody } = resolveProjectContent(
+      project.summary as PortableTextBlock[] | null | undefined,
+      project.content as PortableTextBlock[] | null | undefined,
+    );
+
+    const displayTitle = getProjectDisplayTitle({ name: project.name, client: project.client });
+    const showRelated = hasProjectRelatedContent(project, connectedPaintings, connectedVideoUrl);
 
     const projectUrl = `https://www.wisihe.no/projects/${project.slug}`;
     const imageUrl = project.image
@@ -133,7 +147,7 @@ export default async function ProjectPage(props: Props) {
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': schemaType,
-      name: project.name,
+      name: displayTitle,
       description: project.seo?.description || '',
       url: projectUrl,
       ...(imageUrl ? { image: imageUrl } : {}),
@@ -149,64 +163,64 @@ export default async function ProjectPage(props: Props) {
     const breadcrumbData = buildBreadcrumbJsonLd([
       { name: 'Home', path: '/' },
       { name: 'Projects', path: '/projects' },
-      { name: project.name ?? 'Project', path: `/projects/${project.slug}` },
+      { name: displayTitle, path: `/projects/${project.slug}` },
     ]);
 
     return (
-      <div className='min-h-screen pt-32'>
+      <div className='min-h-screen pt-28 md:pt-32'>
         <JsonLd data={structuredData} />
         <JsonLd data={breadcrumbData} />
-        <div className='max-w-7xl mx-auto px-4 pt-4'>
-          <Breadcrumbs
-            crumbs={[
-              { label: 'Home', href: '/' },
-              { label: 'Projects', href: '/projects' },
-              { label: project.name ?? 'Project' },
-            ]}
-          />
-        </div>
-        {/* Hero Section with Project Image */}
-        <section className='relative py-8 lg:py-12'>
-          <div className='max-w-7xl mx-auto px-4'>
+
+        <div className='mx-auto max-w-7xl px-4'>
+          <div className='pt-4 pb-2'>
+            <Breadcrumbs
+              crumbs={[
+                { label: 'Home', href: '/' },
+                { label: 'Projects', href: '/projects' },
+                { label: displayTitle },
+              ]}
+            />
+          </div>
+
+          <section className='py-4 md:py-6'>
             <Suspense fallback={<ProjectSectionSkeleton />}>
               <ProjectImage project={project} />
             </Suspense>
+          </section>
+        </div>
+
+        <section className='border-t border-border/60 bg-surface-subtle/25'>
+          <div className='mx-auto max-w-7xl px-4 py-10 lg:py-14'>
+            <div
+              className={cn(
+                'grid gap-8 lg:gap-12',
+                showRelated ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]' : 'grid-cols-1',
+              )}
+            >
+              <Suspense fallback={<ProjectSectionSkeleton />}>
+                <ProjectInformation project={project} summary={sidebarSummary} />
+              </Suspense>
+
+              {showRelated ? (
+                <div className='lg:sticky lg:top-28 lg:self-start'>
+                  <Suspense fallback={<ProjectSectionSkeleton />}>
+                    <ProjectRelatedContent
+                      project={project}
+                      connectedPaintings={connectedPaintings}
+                      connectedVideoUrl={connectedVideoUrl}
+                    />
+                  </Suspense>
+                </div>
+              ) : null}
+            </div>
           </div>
         </section>
 
-        {/* Main Content Grid */}
-        <div className='max-w-7xl mx-auto px-4 py-8 lg:py-12'>
-          <div className='grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12'>
-            {/* Project Information */}
-            <section className='lg:col-span-6'>
-              <Suspense fallback={<ProjectSectionSkeleton />}>
-                <ProjectInformation project={project} />
-              </Suspense>
-            </section>
-
-            {/* Connected Content */}
-            <section className='lg:col-span-6 space-y-8'>
-              <Suspense fallback={<ProjectSectionSkeleton />}>
-                <ConnectedPaintingsCarousel paintings={connectedPaintings} />
-              </Suspense>
-              {connectedVideo?.videoUrl && (
-                <Suspense fallback={<ProjectSectionSkeleton />}>
-                  <div className='space-y-3'>
-                    <h2 className='text-xl font-semibold font-serif text-foreground'>
-                      Project Video
-                    </h2>
-                    <EmbeddedVideo videoUrl={connectedVideo.videoUrl} />
-                  </div>
-                </Suspense>
-              )}
-            </section>
-          </div>
-        </div>
-
-        {/* Connected Page Section - Full Width */}
-        <Suspense fallback={<ProjectSectionSkeleton />}>
-          <ConnectedPage project={project} />
-        </Suspense>
+        {caseStudyBody && caseStudyBody.length > 0 ? (
+          <Suspense fallback={<ProjectSectionSkeleton />}>
+            <ProjectCaseStudy content={caseStudyBody} />
+          </Suspense>
+        ) : null}
       </div>
     );
   } catch (error) {

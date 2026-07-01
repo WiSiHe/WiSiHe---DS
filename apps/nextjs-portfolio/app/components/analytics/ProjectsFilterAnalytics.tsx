@@ -6,7 +6,6 @@ import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 type ProjectsFilterAnalyticsProps = {
   activeType: string;
   activeTags: string[];
-  searchQuery: string;
   resultCount: number;
   totalCount: number;
 };
@@ -14,11 +13,12 @@ type ProjectsFilterAnalyticsProps = {
 export default function ProjectsFilterAnalytics({
   activeType,
   activeTags,
-  searchQuery,
   resultCount,
   totalCount,
 }: ProjectsFilterAnalyticsProps) {
   const isFirstRender = useRef(true);
+  const countsRef = useRef({ resultCount, totalCount });
+  countsRef.current = { resultCount, totalCount };
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -26,20 +26,18 @@ export default function ProjectsFilterAnalytics({
       return;
     }
 
-    const hasFilters =
-      activeType !== 'all' || activeTags.length > 0 || searchQuery.trim().length > 0;
+    const hasFilters = activeType !== 'all' || activeTags.length > 0;
+    const { resultCount: currentResultCount, totalCount: currentTotalCount } = countsRef.current;
 
     trackEvent(AnalyticsEvent.PROJECTS_FILTERED, {
       project_type: activeType,
       tag_count: activeTags.length,
       tags: activeTags.join(','),
-      has_search: searchQuery.trim().length > 0,
-      search_length: searchQuery.trim().length,
-      result_count: resultCount,
-      total_count: totalCount,
+      result_count: currentResultCount,
+      total_count: currentTotalCount,
       has_active_filters: hasFilters,
     });
-  }, [activeType, activeTags, searchQuery, resultCount, totalCount]);
+  }, [activeType, activeTags]);
 
   return null;
 }

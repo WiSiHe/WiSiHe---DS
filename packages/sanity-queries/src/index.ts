@@ -354,7 +354,7 @@ export const projectQuery = defineQuery(`
       "lqip": asset->metadata.lqip
     },
     "seo": {
-      "title": coalesce(seo.title, title, ""),
+      "title": coalesce(seo.title, name, ""),
       "description": coalesce(seo.description,  ""),
       "image": seo.image,
       "noIndex": seo.noIndex == true
@@ -414,7 +414,6 @@ export const homePageQuery = defineQuery(`
         showcaseProjects[]->{
           _type,
           _id,
-          title,
           description,
           seoDescription,
           projectStart,
@@ -422,12 +421,13 @@ export const homePageQuery = defineQuery(`
           status,
           content,
           "seo": {
-            "title": coalesce(seo.title, title, ""),
+            "title": coalesce(seo.title, name, ""),
             "description": coalesce(seo.description, ""),
             "image": seo.image,
             "noIndex": seo.noIndex == true
           },
           name,
+          client,
           "tags": tags[]->{name},
           "slug": slug.current,
           image{
@@ -647,13 +647,14 @@ export const getAllProjects = defineQuery(`
         | order(projectStart desc) {
           _id,
           "slug": slug.current,
-          title,
           "seoDescription": coalesce(seo.description, ""),
           projectType,
           projectStart,
           projectEnd,
           status,
           name,
+          client,
+          summary,
           "tags": tags[]->{name},
           image {
             ...,
@@ -664,13 +665,14 @@ export const getAllProjects = defineQuery(`
         | order(projectEnd desc) {
           _id,
           "slug": slug.current,
-          title,
           "seoDescription": coalesce(seo.description, ""),
           projectType,
           projectStart,
           projectEnd,
           status,
           name,
+          client,
+          summary,
           "tags": tags[]->{name},
           image {
             ...,
@@ -1132,7 +1134,6 @@ export const getPaginatedProjects = defineQuery(`
   | order(projectStart desc, _updatedAt desc) [$start...$end] {
     _id,
     "slug": slug.current,
-    title,
     description,
     seoDescription,
     projectType,
@@ -1141,6 +1142,7 @@ export const getPaginatedProjects = defineQuery(`
     status,
     content,
     name,
+    client,
     "tags": tags[]->{name},
     image {
       ...,

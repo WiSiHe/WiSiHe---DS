@@ -1,6 +1,6 @@
 'use client';
 
-import { IconBrush, IconDeviceTv, IconFolder, IconUser } from '@tabler/icons-react';
+import { IconBrush, IconCamera, IconDeviceTv, IconFolder, IconUser } from '@tabler/icons-react';
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
@@ -15,14 +15,15 @@ const NAV_ICONS: Record<string, JSX.Element> = {
   Paintings: <IconBrush className='size-5' stroke={2} aria-hidden />,
   Projects: <IconFolder className='size-5' stroke={2} aria-hidden />,
   Videos: <IconDeviceTv className='size-5' stroke={2} aria-hidden />,
+  Photography: <IconCamera className='size-5' stroke={2} aria-hidden />,
   About: <IconUser className='size-5' stroke={2} aria-hidden />,
 };
 
-interface iNavigationProps {
+interface NavigationProps {
   isAbsolute?: boolean;
 }
 
-const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.Element => {
+const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.Element => {
   const pathName = usePathname();
   const hideBottomNav =
     pathName?.startsWith('/design-system') ||
@@ -45,7 +46,7 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.E
 
   return (
     <header className='pointer-events-none'>
-      <div className='fixed top-4 left-4 z-[60]'>
+      <div className='fixed top-4 left-4 z-60'>
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}

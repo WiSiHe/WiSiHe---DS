@@ -5,6 +5,7 @@ import { motion, useInView, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
 import { GlassSurface } from '@/app/components/ui/GlassSurface';
 import { registerScrollElements } from '@/app/lib/lenis-registry';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
@@ -89,9 +90,13 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   const panelFromX = isEven ? -52 : 52;
   const panelAnimate = reducedMotion ? false : isCardInView ? 'visible' : 'hidden';
   const titleId = `featured-project-title-${project._id}`;
-  const titleTrimmed = (project.title as unknown as string | undefined)?.trim();
+  const clientLabel = (project.client as string | null | undefined)?.trim() || null;
   const nameTrimmed = (project.name as string | undefined)?.trim();
-  const headingText = titleTrimmed || nameTrimmed || 'Project';
+  const headingText = nameTrimmed || 'Project';
+  const displayTitle = getProjectDisplayTitle({
+    name: project.name as string | null | undefined,
+    client: project.client as string | null | undefined,
+  });
   const seoDescription = (project.seoDescription as string | null | undefined)?.trim() ?? '';
   const legacyDescription = (project.description as string | null | undefined)?.trim() ?? '';
   const summaryText =
@@ -108,7 +113,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
     ? urlForImage(project.image)?.width(1400).height(1050).quality(85).url()
     : null;
   const previewSources = collectPreviewSources(project);
-  const backdropAlt = project.seo?.title || project.title || project.name || 'Project backdrop';
+  const backdropAlt = project.seo?.title || displayTitle || 'Project backdrop';
 
   return (
     <div
@@ -176,6 +181,11 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
               variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
               className='mb-4 font-sans text-2xl font-bold leading-tight text-white md:text-3xl'
             >
+              {clientLabel ? (
+                <span className='mb-2 block text-xs font-bold uppercase tracking-wider text-accent'>
+                  {clientLabel}
+                </span>
+              ) : null}
               {headingText}
             </motion.h3>
 

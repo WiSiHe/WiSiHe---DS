@@ -5,7 +5,9 @@ import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useState } from 'react';
+import DebouncedSearchAnalytics from '@/app/components/analytics/DebouncedSearchAnalytics';
 import ProjectsFilterAnalytics from '@/app/components/analytics/ProjectsFilterAnalytics';
+import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
 import OngoingProjectCard from './OngoingProjectCard';
 import PastProjectCard from './PastProjectCard';
 import ProjectFilter from './ProjectFilter';
@@ -32,9 +34,12 @@ type ProjectItem =
 function matchesSearch(project: ProjectItem, query: string): boolean {
   if (!query) return true;
   const q = query.toLowerCase();
-  const name = (project.name ?? '').toLowerCase();
+  const displayTitle = getProjectDisplayTitle({
+    name: project.name,
+    client: project.client,
+  }).toLowerCase();
   const desc = (project.seoDescription ?? '').toLowerCase();
-  return name.includes(q) || desc.includes(q);
+  return displayTitle.includes(q) || desc.includes(q);
 }
 
 function matchesType(project: ProjectItem, type: string): boolean {
@@ -101,9 +106,13 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
       <ProjectsFilterAnalytics
         activeType={activeType}
         activeTags={activeFilters}
-        searchQuery={searchQuery}
         resultCount={totalFiltered}
         totalCount={totalCount}
+      />
+      <DebouncedSearchAnalytics
+        query={searchQuery}
+        resultCount={totalFiltered}
+        section='projects'
       />
       {/* ── Type tabs ─────────────────────────────────────────────── */}
       <div className='flex flex-wrap gap-2'>
@@ -238,7 +247,7 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             {filteredOngoing.length > 0 && (
               <h2 className='text-xl font-semibold font-serif text-foreground'>Past Projects</h2>
             )}
-            <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
               {filteredPast.map((project, index) => (
                 <PastProjectCard
                   key={project._id}

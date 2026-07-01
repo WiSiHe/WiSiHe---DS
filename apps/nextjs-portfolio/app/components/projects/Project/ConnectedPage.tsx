@@ -4,6 +4,7 @@ import { IconArrowUpRight } from '@tabler/icons-react';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import Image from 'next/image';
+import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { urlForImage } from '@/sanity/lib/utils';
 
@@ -20,8 +21,8 @@ function displayHost(url: string): string {
 }
 
 const ConnectedPage = ({ project }: ConnectedPageProps) => {
-  const { _id, name, connectedPage, image } = project;
-  const projectTitle = name || 'Untitled Project';
+  const { _id, name, client, connectedPage, image } = project;
+  const projectTitle = getProjectDisplayTitle({ name, client });
 
   if (!connectedPage) {
     return null;

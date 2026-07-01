@@ -83,10 +83,10 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
 
   return (
     <div className='space-y-4'>
-      <h2 className='text-xl font-semibold font-serif text-foreground'>Connected Paintings</h2>
+      <h2 className='font-serif text-lg font-semibold text-foreground'>Related paintings</h2>
 
-      <div className='relative'>
-        <div className='overflow-hidden rounded-xl border border-border/20' ref={emblaRef}>
+      <div className='relative rounded-2xl border border-border/80 bg-surface p-3 shadow-sm'>
+        <div className='overflow-hidden rounded-xl' ref={emblaRef}>
           <div className='flex gap-4'>
             {paintings.map(painting => {
               const { image, slug, title } = painting;
@@ -125,48 +125,51 @@ export default function ConnectedPaintingsCarousel({ paintings }: ConnectedPaint
           </div>
         </div>
 
-        {/* Navigation buttons */}
-        <div className='flex justify-between items-center mt-4'>
-          <button
-            type='button'
-            className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
-            onClick={scrollPrev}
-            disabled={!canScrollPrev}
-            aria-label='Scroll to previous painting'
-          >
-            <IconArrowNarrowLeft className='w-6 h-6' />
-          </button>
+        {/* Navigation */}
+        {paintings.length > 1 ? (
+          <div className='mt-3 flex items-center justify-between gap-3'>
+            <button
+              type='button'
+              className='flex size-9 items-center justify-center rounded-full border border-border/60 bg-surface-subtle text-foreground transition-colors hover:bg-accent hover:text-accent-contrast disabled:cursor-not-allowed disabled:opacity-40'
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              aria-label='Scroll to previous painting'
+            >
+              <IconArrowNarrowLeft className='size-4' />
+            </button>
 
-          {/* Dots navigation */}
-          {scrollSnaps.length > 1 && (
-            <div className='flex gap-2'>
-              {scrollSnaps.map((_, index) => (
-                <button
-                  type='button'
-                  // biome-ignore lint/suspicious/noArrayIndexKey: scroll snaps have no other stable identifier
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === selectedIndex
-                      ? 'bg-accent'
-                      : 'bg-surface-hover hover:bg-surface-subtle'
-                  }`}
-                  onClick={() => scrollTo(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
+            {scrollSnaps.length > 1 ? (
+              <div className='flex gap-1.5'>
+                {scrollSnaps.map((_, index) => (
+                  <button
+                    type='button'
+                    // biome-ignore lint/suspicious/noArrayIndexKey: scroll snaps have no other stable identifier
+                    key={index}
+                    className={`size-2 rounded-full transition-colors ${
+                      index === selectedIndex
+                        ? 'bg-accent'
+                        : 'bg-border hover:bg-foreground-muted/40'
+                    }`}
+                    onClick={() => scrollTo(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <span aria-hidden />
+            )}
 
-          <button
-            type='button'
-            className='flex items-center justify-center w-10 h-10 transition-colors duration-300 rounded-full cursor-pointer bg-accent text-accent-contrast disabled:opacity-50 hover:bg-accent-hover shadow-lg'
-            onClick={scrollNext}
-            disabled={!canScrollNext}
-            aria-label='Scroll to next painting'
-          >
-            <IconArrowNarrowRight className='w-6 h-6' />
-          </button>
-        </div>
+            <button
+              type='button'
+              className='flex size-9 items-center justify-center rounded-full border border-border/60 bg-surface-subtle text-foreground transition-colors hover:bg-accent hover:text-accent-contrast disabled:cursor-not-allowed disabled:opacity-40'
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              aria-label='Scroll to next painting'
+            >
+              <IconArrowNarrowRight className='size-4' />
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );
