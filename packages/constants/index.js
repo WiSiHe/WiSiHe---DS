@@ -18,6 +18,7 @@ export const navigationItems = [
     description: 'Projects',
   },
   { label: 'Videos', href: '/videos', description: 'Videos' },
+  { label: 'Photography', href: '/photography', description: 'Photography' },
   ...(ABOUT_PAGE_LINKS_ENABLED ? [aboutNavItem] : []),
 ];
 
