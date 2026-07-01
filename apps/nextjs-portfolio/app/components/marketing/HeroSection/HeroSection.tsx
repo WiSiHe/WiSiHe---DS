@@ -55,10 +55,12 @@ export type ShowcaseProject = {
   _type: 'project';
   _id: string;
   slug: string | null;
-  title: string | null;
+  title?: string | null;
   name?: string | null;
+  client?: string | null;
   description?: string | null;
   seoDescription?: string | null;
+  seo?: { title?: string | null } | null;
   image?: {
     asset?: { _ref: string };
     lqip?: string | null;

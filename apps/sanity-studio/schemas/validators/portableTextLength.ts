@@ -35,3 +35,6 @@ export const HERO_INTRO_MAX_CHARS = 155;
 
 /** Section intros on the home page (featured projects, paintings gallery). */
 export const SECTION_INTRO_MAX_CHARS = 280;
+
+/** Project sidebar summary — 2–3 short paragraphs. */
+export const PROJECT_SUMMARY_MAX_CHARS = 500;

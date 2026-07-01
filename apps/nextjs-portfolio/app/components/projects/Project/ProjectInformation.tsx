@@ -21,9 +21,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { incrementProjectLike, incrementProjectView, removeProjectLike } from '@/app/actions';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import CustomPortableText from '../../cms/PortableText/PortableText';
+import { getProjectDisplayTitle, getProjectTypeLabel } from '../projectCardHelpers';
 
 type ProjectInformationProps = {
   project: NonNullable<ProjectQueryResult>;
+  summary?: PortableTextBlock[] | null;
 };
 
 // Status configuration object for better maintainability
@@ -38,7 +40,7 @@ const STATUS_CONFIG = {
   unknown: { icon: IconHelp, label: 'Unknown' },
 } as const;
 
-const ProjectInformation = ({ project }: ProjectInformationProps) => {
+const ProjectInformation = ({ project, summary }: ProjectInformationProps) => {
   const _id = project?._id ?? '';
   const likesCount = project?.likesCount;
 
@@ -105,17 +107,19 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
 
   const {
     name,
+    client,
     status = 'unknown',
     projectStart,
     projectEnd,
+    projectType,
     tags: rawTags = [],
     viewsCount = 0,
   } = project;
   const tags = rawTags ?? [];
 
-  const projectContent = project.content as PortableTextBlock[];
-
-  const projectTitle = name || 'Untitled Project';
+  const projectTitle = getProjectDisplayTitle({ name, client });
+  const clientLabel = client?.trim() || null;
+  const typeLabel = getProjectTypeLabel(projectType);
   const statusConfig = STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.unknown;
   const StatusIcon = statusConfig.icon;
 
@@ -214,177 +218,191 @@ const ProjectInformation = ({ project }: ProjectInformationProps) => {
   const otherTags = tags.filter(t => !techTags.includes(t));
 
   return (
-    <motion.div layout className='space-y-8'>
-      {/* Title + actions */}
-      <div className='space-y-4'>
-        <motion.h1
-          className='text-3xl md:text-4xl lg:text-5xl font-bold font-serif text-foreground leading-tight'
-          layoutId={`title-${projectTitle}`}
-        >
-          {projectTitle}
-        </motion.h1>
-
-        <div className='flex items-center flex-wrap gap-3'>
-          <Button
-            onClick={handleLike}
-            variant='secondary'
-            className={cn(
-              'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
-              hasLikedLocal
-                ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
-                : '',
-            )}
+    <motion.div
+      layout
+      className='rounded-3xl border border-border/80 bg-surface p-6 shadow-sm md:p-8 lg:p-10'
+    >
+      <div className='space-y-8'>
+        {/* Title + actions */}
+        <div className='space-y-4'>
+          <div className='flex flex-wrap items-center gap-2'>
+            {typeLabel ? (
+              <span className='rounded-full border border-border/60 bg-surface-subtle px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-foreground-muted'>
+                {typeLabel}
+              </span>
+            ) : null}
+            {clientLabel ? (
+              <span className='text-[11px] font-semibold uppercase tracking-[0.14em] text-accent'>
+                {clientLabel}
+              </span>
+            ) : null}
+          </div>
+          <motion.h1
+            className='text-3xl font-bold font-serif text-foreground leading-tight md:text-4xl lg:text-[2.75rem]'
+            layoutId={`title-${projectTitle}`}
           >
-            {hasLikedLocal ? (
-              <IconHeartFilled className='size-4' stroke={2} aria-hidden />
-            ) : (
-              <IconHeart className='size-4' stroke={2} aria-hidden />
-            )}
-            {hasLikedLocal ? 'Liked' : 'Like'}
-          </Button>
-          <Button
-            onClick={handleShare}
-            variant='secondary'
-            className='gap-2 w-fit rounded-full px-4 shadow-sm'
-          >
-            <IconShare className='size-4' stroke={2} aria-hidden />
-            {shareText}
-          </Button>
-        </div>
-      </div>
+            {name || 'Untitled Project'}
+          </motion.h1>
 
-      {/* Stats panel */}
-      <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
-        {/* Status */}
-        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-            Status
-          </span>
-          <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
-            <StatusIcon
-              className={cn('size-3.5', status === 'inProgress' && 'animate-spin')}
-              stroke={2}
-              aria-hidden
-            />
-            {statusConfig.label}
-          </span>
-        </div>
-
-        {/* Year / Duration — only show when we have meaningful date info */}
-        {(() => {
-          const start = projectStart ? new Date(projectStart).getFullYear() : null;
-          const end = projectEnd ? new Date(projectEnd).getFullYear() : null;
-          const startDate = projectStart ? new Date(projectStart) : null;
-          const endDate = projectEnd ? new Date(projectEnd) : null;
-          const sameDay =
-            startDate && endDate && startDate.toDateString() === endDate.toDateString();
-
-          // Multi-year span
-          if (start && end && start !== end) {
-            return (
-              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-                  Duration
-                </span>
-                <span className='text-sm font-semibold text-foreground'>
-                  {start} – {end}
-                </span>
-              </div>
-            );
-          }
-          // Ongoing (no end)
-          if (start && !end) {
-            return (
-              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-                  Started
-                </span>
-                <span className='text-sm font-semibold text-foreground'>{start}</span>
-              </div>
-            );
-          }
-          // Same day — just show the year, no misleading "Duration" label
-          if (sameDay || (start && end && start === end)) {
-            return (
-              <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-                <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-                  Year
-                </span>
-                <span className='text-sm font-semibold text-foreground'>{start}</span>
-              </div>
-            );
-          }
-          // No dates — hide the box entirely
-          return null;
-        })()}
-
-        {/* Views */}
-        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-            Views
-          </span>
-          <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
-            <IconEye className='size-3.5' stroke={2} aria-hidden />
-            {viewsCount?.toString() ?? '0'}
-          </span>
-        </div>
-
-        {/* Likes */}
-        <div className='flex flex-col gap-1 p-3 rounded-xl bg-surface border border-border'>
-          <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-            Likes
-          </span>
-          <span
-            className={cn(
-              'flex items-center gap-1.5 text-sm font-semibold',
-              hasLikedLocal ? 'text-red-500' : 'text-foreground',
-            )}
-          >
-            {hasLikedLocal ? (
-              <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
-            ) : (
-              <IconHeart className='size-3.5' stroke={2} aria-hidden />
-            )}
-            {localLikesCount}
-          </span>
-        </div>
-      </div>
-
-      {/* Tech stack */}
-      {techTags.length > 0 && (
-        <div className='space-y-2'>
-          <h3 className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
-            Tech Stack
-          </h3>
-          <div className='flex flex-wrap gap-2'>
-            {techTags.map((tag: { name?: string | null }) => (
-              <Chip key={tag.name ?? ''} variation='secondary' label={tag.name ?? ''} />
-            ))}
+          <div className='flex items-center flex-wrap gap-3'>
+            <Button
+              onClick={handleLike}
+              variant='secondary'
+              className={cn(
+                'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
+                hasLikedLocal
+                  ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
+                  : '',
+              )}
+            >
+              {hasLikedLocal ? (
+                <IconHeartFilled className='size-4' stroke={2} aria-hidden />
+              ) : (
+                <IconHeart className='size-4' stroke={2} aria-hidden />
+              )}
+              {hasLikedLocal ? 'Liked' : 'Like'}
+            </Button>
+            <Button
+              onClick={handleShare}
+              variant='secondary'
+              className='gap-2 w-fit rounded-full px-4 shadow-sm'
+            >
+              <IconShare className='size-4' stroke={2} aria-hidden />
+              {shareText}
+            </Button>
           </div>
         </div>
-      )}
 
-      {/* Other tags */}
-      {otherTags.length > 0 && (
-        <div className='flex flex-wrap gap-2'>
-          {otherTags.map((tag: { name?: string | null }) => (
-            <Chip key={tag.name ?? ''} variation='primary' label={tag.name ?? ''} />
-          ))}
+        {/* Stats panel */}
+        <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
+          {/* Status */}
+          <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+            <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+              Status
+            </span>
+            <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
+              <StatusIcon
+                className={cn('size-3.5', status === 'inProgress' && 'animate-spin')}
+                stroke={2}
+                aria-hidden
+              />
+              {statusConfig.label}
+            </span>
+          </div>
+
+          {/* Year / Duration — only show when we have meaningful date info */}
+          {(() => {
+            const start = projectStart ? new Date(projectStart).getFullYear() : null;
+            const end = projectEnd ? new Date(projectEnd).getFullYear() : null;
+            const startDate = projectStart ? new Date(projectStart) : null;
+            const endDate = projectEnd ? new Date(projectEnd) : null;
+            const sameDay =
+              startDate && endDate && startDate.toDateString() === endDate.toDateString();
+
+            // Multi-year span
+            if (start && end && start !== end) {
+              return (
+                <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+                  <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                    Duration
+                  </span>
+                  <span className='text-sm font-semibold text-foreground'>
+                    {start} – {end}
+                  </span>
+                </div>
+              );
+            }
+            // Ongoing (no end)
+            if (start && !end) {
+              return (
+                <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+                  <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                    Started
+                  </span>
+                  <span className='text-sm font-semibold text-foreground'>{start}</span>
+                </div>
+              );
+            }
+            // Same day — just show the year, no misleading "Duration" label
+            if (sameDay || (start && end && start === end)) {
+              return (
+                <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+                  <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+                    Year
+                  </span>
+                  <span className='text-sm font-semibold text-foreground'>{start}</span>
+                </div>
+              );
+            }
+            // No dates — hide the box entirely
+            return null;
+          })()}
+
+          {/* Views */}
+          <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+            <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+              Views
+            </span>
+            <span className='flex items-center gap-1.5 text-sm font-semibold text-foreground'>
+              <IconEye className='size-3.5' stroke={2} aria-hidden />
+              {viewsCount?.toString() ?? '0'}
+            </span>
+          </div>
+
+          {/* Likes */}
+          <div className='flex flex-col gap-1 rounded-2xl border border-border/60 bg-surface-subtle/50 p-3'>
+            <span className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+              Likes
+            </span>
+            <span
+              className={cn(
+                'flex items-center gap-1.5 text-sm font-semibold',
+                hasLikedLocal ? 'text-red-500' : 'text-foreground',
+              )}
+            >
+              {hasLikedLocal ? (
+                <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
+              ) : (
+                <IconHeart className='size-3.5' stroke={2} aria-hidden />
+              )}
+              {localLikesCount}
+            </span>
+          </div>
         </div>
-      )}
 
-      {/* Divider */}
-      {projectContent && <hr className='border-border/40' />}
+        {/* Tech stack */}
+        {techTags.length > 0 && (
+          <div className='space-y-2'>
+            <h3 className='text-xs text-foreground-muted font-medium uppercase tracking-wider'>
+              Tech Stack
+            </h3>
+            <div className='flex flex-wrap gap-2'>
+              {techTags.map((tag: { name?: string | null }) => (
+                <Chip key={tag.name ?? ''} variation='secondary' label={tag.name ?? ''} />
+              ))}
+            </div>
+          </div>
+        )}
 
-      {/* Content */}
-      {projectContent && (
-        <div className='prose prose-lg max-w-none'>
-          <CustomPortableText
-            value={projectContent}
-            className='text-foreground-subtle leading-relaxed'
-          />
-        </div>
-      )}
+        {/* Other tags */}
+        {otherTags.length > 0 && (
+          <div className='flex flex-wrap gap-2'>
+            {otherTags.map((tag: { name?: string | null }) => (
+              <Chip key={tag.name ?? ''} variation='primary' label={tag.name ?? ''} />
+            ))}
+          </div>
+        )}
+
+        {/* Summary */}
+        {summary && summary.length > 0 ? (
+          <div className='space-y-4 border-t border-border/60 pt-8'>
+            <h2 className='text-xs font-semibold uppercase tracking-wider text-foreground-muted'>
+              Overview
+            </h2>
+            <CustomPortableText variant='minimal' value={summary} />
+          </div>
+        ) : null}
+      </div>
     </motion.div>
   );
 };

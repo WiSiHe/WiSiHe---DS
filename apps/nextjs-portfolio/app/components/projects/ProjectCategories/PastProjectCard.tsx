@@ -1,7 +1,16 @@
 import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
-import Image from 'next/image';
 import Link from 'next/link';
+import {
+  ProjectCardImageFrame,
+  ProjectCardImageOverlay,
+  ProjectCardTags,
+  ProjectCardTitleBlock,
+} from '@/app/components/projects/ProjectCardParts';
+import {
+  getProjectCardExcerpt,
+  getProjectDisplayTitle,
+} from '@/app/components/projects/projectCardHelpers';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type PastProjectCardProps = {
@@ -9,98 +18,77 @@ type PastProjectCardProps = {
   isLcpCandidate?: boolean;
 };
 
-const TYPE_LABEL: Record<string, string> = {
-  development: 'Development',
-  gameDevelopment: 'Game Dev',
-  design: 'Design',
-  other: 'Other',
-};
-
 const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardProps) => {
-  const { name, image, slug, tags, status, projectEnd, projectType, seoDescription } = project;
+  const {
+    name,
+    client,
+    image,
+    slug,
+    tags,
+    status,
+    projectEnd,
+    projectType,
+    seoDescription,
+    summary,
+  } = project;
 
-  const projectTitle = name;
+  const projectTitle = getProjectDisplayTitle({ name, client });
   const year = projectEnd ? new Date(projectEnd).getFullYear() : null;
-  const displayTags = (tags ?? []).slice(0, 3);
-  const remainingTagsCount = Math.max(0, (tags?.length ?? 0) - 3);
-  const typeLabel = projectType ? (TYPE_LABEL[projectType] ?? null) : null;
   const isDeprecated = status === 'cancelled' || status === 'abandoned';
-  const excerpt = seoDescription ?? '';
+  const excerpt = getProjectCardExcerpt(
+    summary as readonly Record<string, unknown>[] | null | undefined,
+    seoDescription,
+    160,
+  );
 
-  const imageSrc = image ? urlForImage(image)?.width(600).height(400).quality(75).url() : null;
+  const imageSrc = image ? urlForImage(image)?.width(900).height(675).quality(82).url() : null;
 
   return (
     <li
       className={cn(
         'relative group',
-        isDeprecated && 'opacity-60 hover:opacity-100 transition-opacity duration-300',
+        isDeprecated && 'opacity-65 hover:opacity-100 transition-opacity duration-300',
       )}
     >
-      <Link href={`projects/${slug}`}>
-        <article className='flex flex-col overflow-hidden rounded-2xl bg-surface border border-border transition-all duration-300 hover:border-accent-border hover:shadow-lg hover:-translate-y-0.5'>
-          {/* Thumbnail */}
-          <div className='relative aspect-video w-full overflow-hidden bg-surface-subtle'>
-            {imageSrc ? (
-              <Image
-                src={imageSrc}
-                alt={projectTitle ?? ''}
-                fill
-                priority={isLcpCandidate}
-                fetchPriority={isLcpCandidate ? 'high' : undefined}
-                sizes='(max-width: 768px) 100vw, 50vw'
-                placeholder={image?.lqip ? 'blur' : 'empty'}
-                blurDataURL={image?.lqip ?? undefined}
-                className='object-cover transition-transform duration-500 group-hover:scale-105'
-              />
-            ) : (
-              <div className='absolute inset-0 bg-gradient-to-br from-surface-subtle to-surface' />
-            )}
-
-            {year ? (
-              <div className='absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
-                {year}
-              </div>
-            ) : null}
-
-            {typeLabel ? (
-              <div className='absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-full bg-background/70 backdrop-blur-sm text-foreground-subtle border border-border/40'>
-                {typeLabel}
-              </div>
-            ) : null}
+      <Link href={`projects/${slug}`} className='block h-full'>
+        <article
+          className={cn(
+            'flex h-full flex-col overflow-hidden rounded-3xl border border-border/80 bg-surface shadow-sm',
+            'transition-[border-color,box-shadow,transform] duration-300 ease-out',
+            'hover:border-accent/25 hover:shadow-[0_20px_40px_-18px_rgba(0,0,0,0.16)] hover:-translate-y-0.5',
+            isDeprecated && 'border-border/60',
+          )}
+        >
+          <div className='relative'>
+            <ProjectCardImageFrame
+              imageSrc={imageSrc ?? null}
+              alt={image?.alt || projectTitle}
+              lqip={image?.lqip ?? null}
+              placeholderTitle={name ?? client}
+              priority={isLcpCandidate}
+              fetchPriority={isLcpCandidate ? 'high' : undefined}
+              sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+            />
+            <ProjectCardImageOverlay projectType={projectType} year={year} />
           </div>
 
-          {/* Content */}
-          <div className='flex flex-col flex-1 p-4 gap-2'>
-            <h3
-              className={cn(
-                'font-semibold text-foreground group-hover:text-accent transition-colors duration-200 leading-snug',
+          <div className='flex flex-1 flex-col gap-3 p-5 md:p-6'>
+            <ProjectCardTitleBlock
+              name={name}
+              client={client}
+              titleClassName={cn(
+                'text-xl md:text-[1.35rem]',
                 isDeprecated && 'text-foreground-subtle',
               )}
-            >
-              {projectTitle}
-            </h3>
+            />
 
             {excerpt ? (
-              <p className='text-xs text-foreground-muted line-clamp-1 leading-relaxed'>
+              <p className='line-clamp-2 text-sm leading-relaxed text-foreground-subtle'>
                 {excerpt}
               </p>
             ) : null}
 
-            {displayTags.length > 0 ? (
-              <div className='flex flex-wrap items-center gap-1 mt-auto pt-1'>
-                {displayTags.map((tag: { name?: string | null }) => (
-                  <span
-                    key={tag.name}
-                    className='text-xs text-foreground-muted px-1.5 py-0.5 rounded bg-surface-subtle'
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-                {remainingTagsCount > 0 ? (
-                  <span className='text-xs text-foreground-muted'>+{remainingTagsCount}</span>
-                ) : null}
-              </div>
-            ) : null}
+            <ProjectCardTags tags={tags} limit={3} className='mt-auto pt-1' />
           </div>
         </article>
       </Link>

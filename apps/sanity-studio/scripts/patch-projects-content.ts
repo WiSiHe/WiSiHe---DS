@@ -40,7 +40,8 @@ const PROJECT_PATCHES: Record<
     slug: 'bad-ui-battle-hackathon',
     seoTitle: 'BAD UI BATTLE | Hackathon',
     seoDescription:
-      'BAD UI BATTLE: a one-day hackathon building hilariously terrible UIs with mystery-meat navigation, hostile patterns, and blinding colors.',
+      'NoA Ignite BAD UI BATTLE (2024): TL;DR, hackathon format, anti-pattern playbook, and link to the Bad UI Gallery — deliberately terrible UIs judged by crowd vote.',
+    connectedPage: 'https://bad-ui-battle-signup.vercel.app/gallery',
   },
   '212bb547-d945-45d5-a06c-8527c7b8c8c4': {
     slug: 'slik-bygger-vi-apper-for-alle-panel-debate',
@@ -66,7 +67,8 @@ const PROJECT_PATCHES: Record<
   'f7b13fe2-566b-483e-855b-766521bbb64e': {
     seoTitle: 'BAD UI BATTLE 2.0 | Hackathon',
     seoDescription:
-      'BAD UI BATTLE 2.0 hackathon: awful interfaces, misaligned buttons, clashing colors, and hostile design patterns—on purpose.',
+      "BAD UI BATTLE 2.0 (Nov 2025): second round of NoA Ignite's awful-UI hackathon — format, design lessons, anti-patterns, and link to the live submission gallery.",
+    connectedPage: 'https://bad-ui-battle-signup.vercel.app/gallery',
   },
   '0fe76d1c-539b-48b9-bd5a-f831ad6beb97': {
     seoTitle: 'WiSiHe Portfolio Website',
@@ -89,7 +91,8 @@ const PROJECT_PATCHES: Record<
   },
   '03f8855c-bbfc-4933-a862-c49c0f8a47e4': {
     seoDescription:
-      'Project Babel: an Unreal Engine 4 game about restoring life to a frozen wasteland using ancient plans.',
+      'Project Babel (2016–2019): UE4 frozen-world adventure with Fabien Guillaume — shifting puzzle rooms, Tower of Babel finale, vertical slice, and lessons in scope, 3D pipeline, and Blueprint gameplay.',
+    connectedPage: 'https://youtu.be/_vomTdWqdP8',
   },
   '030150dd-650c-48ae-9d85-a7d1e9401f9d': {
     seoTitle: 'Anton Sport Online Retail',
@@ -110,6 +113,19 @@ const PROJECT_PATCHES: Record<
   'ab9134d7-c675-4445-b4ce-8af4d5e76c58': {
     seoTitle: 'TINE Kjøkken | Recipes',
     connectedPage: 'https://www.tine.no/kjokken/',
+  },
+  '037cce21-55e4-44be-beb1-17991a33f877': {
+    seoTitle: '3D Black Hole',
+    seoDescription:
+      "Interactive 3D black hole from Bruno Simon's Awwwards 2022 shader workshop — Three.js, GLSL, gravitational lensing, step-by-step build notes, and links to Three.js Journey.",
+    connectedPage: 'https://workshop-shaders.vercel.app/',
+  },
+  'ed9b5322-8d87-4441-986b-8861ff3ade7b': {
+    seoTitle: 'Spline Workshop',
+    seoDescription:
+      'NoA Ignite Spline workshop: TL;DR, step-by-step rocket build, and link to the full Notion guide — model, animate, and embed interactive 3D in under 40 minutes without Three.js.',
+    connectedPage:
+      'https://thenorthalliance.notion.site/Spline-Workshop-1b2cf2f6604a8079876bd7b025269ed5',
   },
 };
 

@@ -50,8 +50,8 @@ export type Presentation = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
+  title: string;
+  slug: Slug;
   description?: string;
   seo?: Seo;
   tags?: Array<
@@ -59,7 +59,10 @@ export type Presentation = {
       _key: string;
     } & TagReference
   >;
-  slides?: Array<
+  noIndex?: boolean;
+  tldr?: string;
+  tldrPosition?: "top" | "bottom";
+  slides: Array<
     | ({
         _key: string;
       } & ContentSlide)
@@ -82,7 +85,7 @@ export type Seo = {
 
 export type Slug = {
   _type: "slug";
-  current?: string;
+  current: string;
   source?: string;
 };
 
@@ -96,7 +99,7 @@ export type PresentationCategoryReference = {
 export type SeparatorSlide = {
   _type: "separatorSlide";
   status?: "published" | "draft" | "hidden";
-  title?: string;
+  title: string;
   category?: PresentationCategoryReference;
   slideDesign?: "default" | "minimal" | "bold";
 };
@@ -104,7 +107,7 @@ export type SeparatorSlide = {
 export type TitleSlide = {
   _type: "titleSlide";
   status?: "published" | "draft" | "hidden";
-  title?: string;
+  title: string;
   subtitle?: string;
   media?: PresentationMedia;
   slideDesign?: "default" | "centered" | "hero" | "minimal";
@@ -140,7 +143,7 @@ export type PresentationMedia = {
 export type ContentSlide = {
   _type: "contentSlide";
   status?: "published" | "draft" | "hidden";
-  title?: string;
+  title: string;
   subtitle?: string;
   content?: BlockContent;
   media?: PresentationMedia;
@@ -228,7 +231,7 @@ export type BlockContent = Array<
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       caption?: string;
       _type: "image";
       _key: string;
@@ -237,7 +240,7 @@ export type BlockContent = Array<
       _key: string;
     } & Code)
   | {
-      code?: string;
+      code: string;
       language?:
         | "javascript"
         | "typescript"
@@ -278,13 +281,13 @@ export type BlockContent = Array<
   | {
       icon?: string;
       title?: string;
-      content?: string;
+      content: string;
       type?: "pro" | "time" | "flavor" | "technique" | "substitution";
       _type: "recipeTip";
       _key: string;
     }
   | {
-      url?: string;
+      url: string;
       title?: string;
       caption?: string;
       _type: "videoEmbed";
@@ -294,32 +297,32 @@ export type BlockContent = Array<
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type PresentationMetric = {
   _type: "presentationMetric";
-  label?: string;
-  value?: string;
+  label: string;
+  value: string;
   description?: string;
   color?: "#22c55e" | "#ef4444" | "#3b82f6" | "#a855f7" | "#f97316" | "#14b8a6";
 };
 
 export type PresentationExample = {
   _type: "presentationExample";
-  name?: string;
-  description?: string;
+  name: string;
+  description: string;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -333,9 +336,9 @@ export type PresentationExample = {
 
 export type PresentationTool = {
   _type: "presentationTool";
-  name?: string;
-  description?: string;
-  url?: string;
+  name: string;
+  description: string;
+  url: string;
   category?: string;
   workshopUrl?: string;
   nerdLevel?: number;
@@ -343,7 +346,7 @@ export type PresentationTool = {
 
 export type PresentationSource = {
   _type: "presentationSource";
-  text?: string;
+  text: string;
   url?: string;
 };
 
@@ -353,7 +356,7 @@ export type PresentationCategory = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   description?: string;
   color?:
     | "#ef4444"
@@ -428,7 +431,7 @@ export type Tag = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   description?: string;
   isFeatured?: boolean;
   sortOrder?: number;
@@ -452,7 +455,7 @@ export type Post = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  slug?: Slug;
+  slug: Slug;
   excerpt?: string;
   mainImage?: {
     asset?: SanityImageAssetReference;
@@ -478,18 +481,18 @@ export type Photography = {
   _updatedAt: string;
   _rev: string;
   workflowIntro?: string;
-  image?: {
+  image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
   fileMetadataPanel?: string;
   place?: TravelPlaceReference;
-  title?: string;
-  slug?: Slug;
+  title: string;
+  slug: Slug;
   caption?: string;
   capturedAt?: string;
   camera?: string;
@@ -559,7 +562,7 @@ export type HomeAboutTeaserSection = {
 
 export type HomePaintingsSection = {
   _type: "homePaintingsSection";
-  description?: BlockContentMinimal;
+  description: BlockContentMinimal;
   showcasePaintings?: Array<
     {
       _key: string;
@@ -569,7 +572,7 @@ export type HomePaintingsSection = {
 
 export type HomeProjectsSection = {
   _type: "homeProjectsSection";
-  description?: BlockContentMinimal;
+  description: BlockContentMinimal;
   showcaseProjects?: Array<
     {
       _key: string;
@@ -579,13 +582,13 @@ export type HomeProjectsSection = {
 
 export type HomeHeroSection = {
   _type: "homeHeroSection";
-  overview?: BlockContentMinimal;
+  overview: BlockContentMinimal;
 };
 
 export type HomeSectionIntro = {
   _type: "homeSectionIntro";
   eyebrow?: string;
-  title?: string;
+  title: string;
   description?: string;
   linkLabel?: string;
 };
@@ -597,7 +600,7 @@ export type About = {
   _updatedAt: string;
   _rev: string;
   heroTitle?: string;
-  heroSubtitle?: string;
+  heroSubtitle: string;
   bio?: string;
   jobTitle?: string;
   portrait?: {
@@ -628,14 +631,14 @@ export type About = {
     };
     funFact?: string;
     stats?: Array<{
-      label?: string;
-      value?: string;
+      label: string;
+      value: string;
       _key: string;
     }>;
     _key: string;
   }>;
   visitedCountries?: Array<{
-    country?: string;
+    country: string;
     countryCode?: string;
     placeName?: string;
     coordinates?: Geopoint;
@@ -655,8 +658,8 @@ export type About = {
         _type: "image";
       };
       stats?: Array<{
-        label?: string;
-        value?: string;
+        label: string;
+        value: string;
         _key: string;
       }>;
       _key: string;
@@ -678,8 +681,8 @@ export type About = {
       _type: "image";
     };
     stats?: Array<{
-      label?: string;
-      value?: string;
+      label: string;
+      value: string;
       _key: string;
     }>;
     _key: string;
@@ -702,7 +705,7 @@ export type TravelPlace = {
   _updatedAt: string;
   _rev: string;
   workflowIntro?: string;
-  kind?: "city" | "adventure";
+  kind: "city" | "adventure";
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -711,17 +714,17 @@ export type TravelPlace = {
     _type: "image";
   };
   locationAssistPanel?: string;
-  name?: string;
-  countryName?: string;
+  name: string;
+  countryName: string;
   countryCode?: string;
-  coordinates?: Geopoint;
-  slug?: Slug;
+  coordinates: Geopoint;
+  slug: Slug;
   isHighlight?: boolean;
   funFact?: string;
   notes?: string;
   stats?: Array<{
-    label?: string;
-    value?: string;
+    label: string;
+    value: string;
     _key: string;
   }>;
 };
@@ -732,8 +735,8 @@ export type Settings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   ogImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -756,12 +759,12 @@ export type Settings = {
   keywords?: Array<string>;
   metadataBase?: string;
   structuredData?: {
-    type?: string;
+    type: string;
     data?: string;
   };
   socialLinks?: Array<{
-    platform?: string;
-    url?: string;
+    platform: string;
+    url: string;
     _type: "socialLink";
     _key: string;
   }>;
@@ -797,10 +800,10 @@ export type Home = {
       } & HomeSkillsSection)
   >;
   projectsTitle?: string;
-  projectsListingDescription?: BlockContentMinimal;
+  projectsListingDescription: BlockContentMinimal;
   paintingsTitle?: string;
-  paintingsDescription?: BlockContentMinimal;
-  title?: string;
+  paintingsDescription: BlockContentMinimal;
+  title: string;
 };
 
 export type MediaTag = {
@@ -859,7 +862,7 @@ export type AssistInstructionContextReference = {
 
 export type SanityAssistInstructionContext = {
   _type: "sanity.assist.instruction.context";
-  reference?: AssistInstructionContextReference;
+  reference: AssistInstructionContextReference;
 };
 
 export type AssistInstructionContext = {
@@ -887,7 +890,7 @@ export type AssistInstructionContext = {
 
 export type SanityAssistInstructionUserInput = {
   _type: "sanity.assist.instruction.userInput";
-  message?: string;
+  message: string;
   description?: string;
 };
 
@@ -976,7 +979,7 @@ export type InternationalizedArrayReference = Array<
 export type InternationalizedArrayReferenceValue = {
   _type: "internationalizedArrayReferenceValue";
   value?: RecipeReference;
-  language?: string;
+  language: string;
 };
 
 export type IngredientReference = {
@@ -993,8 +996,8 @@ export type Recipe = {
   _updatedAt: string;
   _rev: string;
   language?: string;
-  title?: string;
-  slug?: Slug;
+  title: string;
+  slug: Slug;
   description?: string;
   story?: BlockContentMinimal;
   mainImage?: {
@@ -1002,7 +1005,7 @@ export type Recipe = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
   additionalImages?: Array<{
@@ -1010,31 +1013,32 @@ export type Recipe = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     caption?: string;
     _type: "image";
     _key: string;
   }>;
   ingredientCategories?: Array<{
-    categoryName?: string;
+    categoryName: string;
     ingredients?: Array<{
-      ingredient?: IngredientReference;
-      amount?: string;
-      unit?: string;
+      ingredient: IngredientReference;
+      amount: string;
+      unit: string;
       isDiscrete?: boolean;
       notes?: string;
       _key: string;
     }>;
     _key: string;
   }>;
+  nutrition?: RecipeNutrition;
   instructions?: Array<{
     title?: string;
-    content?: BlockContent;
+    content: BlockContent;
     _key: string;
   }>;
   tips?: Array<{
     title?: string;
-    content?: string;
+    content: string;
     icon?: string;
     _key: string;
   }>;
@@ -1042,7 +1046,6 @@ export type Recipe = {
   prepTime?: number;
   totalTime?: number;
   servings?: number;
-  nutrition?: RecipeNutrition;
   difficulty?: "easy" | "medium" | "hard";
   tags?: Array<
     {
@@ -1070,13 +1073,13 @@ export type Ingredient = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   photo?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
 };
@@ -1087,7 +1090,8 @@ export type Project = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
+  client?: string;
   status?:
     | "inProgress"
     | "completed"
@@ -1097,17 +1101,18 @@ export type Project = {
     | "unknown"
     | "notStarted"
     | "planned";
-  projectType?: "design" | "development" | "gameDevelopment" | "other";
-  slug?: Slug;
+  projectType: "design" | "development" | "gameDevelopment" | "other";
+  slug: Slug;
   projectStart?: string;
   projectEnd?: string;
+  summary?: BlockContentMinimal;
   content?: BlockContent;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
   extraImages?: Array<{
@@ -1125,7 +1130,7 @@ export type Project = {
   >;
   connectedVideo?: VideoReference;
   connectedPage?: string;
-  tags?: Array<
+  tags: Array<
     {
       _key: string;
     } & TagReference
@@ -1149,21 +1154,21 @@ export type Video = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
-  description?: string;
-  videoUrl?: string;
+  title: string;
+  slug: Slug;
+  description: string;
+  videoUrl: string;
   featured?: boolean;
-  thumbnail?: {
+  thumbnail: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
   linkedPainting?: PaintingReference;
-  tags?: Array<
+  tags: Array<
     {
       _key: string;
     } & TagReference
@@ -1183,17 +1188,17 @@ export type Painting = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
-  image?: {
+  title: string;
+  slug: Slug;
+  image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
   };
-  description?: string;
+  description: string;
   seo?: Seo;
   seoDescription?: string;
   images?: Array<{
@@ -1201,13 +1206,13 @@ export type Painting = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    title?: string;
-    alt?: string;
+    title: string;
+    alt: string;
     _type: "image";
     _key: string;
   }>;
   video?: string;
-  format?: "square" | "landscape" | "portrait";
+  format: "square" | "landscape" | "portrait";
   viewsCount?: number;
   isNSFW?: boolean;
   isForSale?: boolean;
@@ -1227,8 +1232,8 @@ export type Painting = {
   }>;
   redbubbleUrl?: string;
   gelatoUrl?: string;
-  paintedAt?: string;
-  tagsV2?: Array<
+  paintedAt: string;
+  tagsV2: Array<
     {
       _key: string;
     } & TagReference
@@ -1256,9 +1261,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
 export type SanityImageMetadata = {
@@ -1284,14 +1289,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
 };
 
@@ -1313,14 +1318,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -1413,8 +1418,8 @@ export type SettingsQueryResult = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   ogImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1437,12 +1442,12 @@ export type SettingsQueryResult = {
   keywords?: Array<string>;
   metadataBase?: string;
   structuredData?: {
-    type?: string;
+    type: string;
     data?: string;
   };
   socialLinks?: Array<{
-    platform?: string;
-    url?: string;
+    platform: string;
+    url: string;
     _type: "socialLink";
     _key: string;
   }>;
@@ -1453,7 +1458,7 @@ export type SettingsQueryResult = {
 // Query: *[_type == "about" && _id == "about"][0] {    heroTitle,    heroSubtitle,    bio,    jobTitle,    portrait { ..., "lqip": asset->metadata.lqip },    seoTitle,    seoDescription,    knowsAbout,    journeyItems[] {      _key,      year,      title,      content,      placeName,      locationType,      coordinates,      mapZoom,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip }    },    visitedCountries[] {      _key,      country,      countryCode,      placeName,      coordinates,      notes,      cities[] {        _key,        name,        coordinates,        isHighlight,        notes,        funFact,        stats[] { label, value },        image { ..., "lqip": asset->metadata.lqip },        place-> {          _id,          name,          kind,          countryName,          countryCode,          coordinates,          isHighlight,          funFact,          notes,          stats[] { label, value },          image { ..., "lqip": asset->metadata.lqip }        }      }    },    adventurePlaces[] {      _key,      name,      placeName,      coordinates,      notes,      funFact,      stats[] { label, value },      image { ..., "lqip": asset->metadata.lqip },      place-> {        _id,        name,        kind,        countryName,        countryCode,        coordinates,        isHighlight,        funFact,        notes,        stats[] { label, value },        image { ..., "lqip": asset->metadata.lqip }      }    },    ctaTitle,    ctaDescription,    ctaButtonText,    ctaButtonUrl,    socialLinks[] { _key, platform, url }  }
 export type AboutQueryResult = {
   heroTitle: string | null;
-  heroSubtitle: string | null;
+  heroSubtitle: string;
   bio: string | null;
   jobTitle: string | null;
   portrait: {
@@ -1479,8 +1484,8 @@ export type AboutQueryResult = {
     mapZoom: number | null;
     funFact: string | null;
     stats: Array<{
-      label: string | null;
-      value: string | null;
+      label: string;
+      value: string;
     }> | null;
     image: {
       asset?: SanityImageAssetReference;
@@ -1493,7 +1498,7 @@ export type AboutQueryResult = {
   }> | null;
   visitedCountries: Array<{
     _key: string;
-    country: string | null;
+    country: string;
     countryCode: string | null;
     placeName: string | null;
     coordinates: Geopoint | null;
@@ -1506,8 +1511,8 @@ export type AboutQueryResult = {
       notes: string | null;
       funFact: string | null;
       stats: Array<{
-        label: string | null;
-        value: string | null;
+        label: string;
+        value: string;
       }> | null;
       image: {
         asset?: SanityImageAssetReference;
@@ -1519,17 +1524,17 @@ export type AboutQueryResult = {
       } | null;
       place: {
         _id: string;
-        name: string | null;
-        kind: "adventure" | "city" | null;
-        countryName: string | null;
+        name: string;
+        kind: "adventure" | "city";
+        countryName: string;
         countryCode: string | null;
-        coordinates: Geopoint | null;
+        coordinates: Geopoint;
         isHighlight: boolean | null;
         funFact: string | null;
         notes: string | null;
         stats: Array<{
-          label: string | null;
-          value: string | null;
+          label: string;
+          value: string;
         }> | null;
         image: {
           asset?: SanityImageAssetReference;
@@ -1550,8 +1555,8 @@ export type AboutQueryResult = {
     notes: string | null;
     funFact: string | null;
     stats: Array<{
-      label: string | null;
-      value: string | null;
+      label: string;
+      value: string;
     }> | null;
     image: {
       asset?: SanityImageAssetReference;
@@ -1563,17 +1568,17 @@ export type AboutQueryResult = {
     } | null;
     place: {
       _id: string;
-      name: string | null;
-      kind: "adventure" | "city" | null;
-      countryName: string | null;
+      name: string;
+      kind: "adventure" | "city";
+      countryName: string;
       countryCode: string | null;
-      coordinates: Geopoint | null;
+      coordinates: Geopoint;
       isHighlight: boolean | null;
       funFact: string | null;
       notes: string | null;
       stats: Array<{
-        label: string | null;
-        value: string | null;
+        label: string;
+        value: string;
       }> | null;
       image: {
         asset?: SanityImageAssetReference;
@@ -1601,8 +1606,8 @@ export type AboutQueryResult = {
 // Query: *[_type == "photography" && (    defined(place) ||    defined(country) && country != "" ||    defined(countryCode) && countryCode != ""  )] | order(isFeatured desc, capturedAt desc) {    _id,    title,    "slug": slug.current,    country,    countryCode,    placeName,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      "lqip": asset->metadata.lqip    }  }
 export type AboutTravelPhotographyQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   country: string | null;
   countryCode: string | null;
   placeName: string | null;
@@ -1610,8 +1615,8 @@ export type AboutTravelPhotographyQueryResult = Array<{
   capturedAt: string | null;
   place: {
     _id: string;
-    name: string | null;
-    countryName: string | null;
+    name: string;
+    countryName: string;
     countryCode: string | null;
   } | null;
   image: {
@@ -1619,10 +1624,10 @@ export type AboutTravelPhotographyQueryResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
-  } | null;
+  };
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -1630,15 +1635,15 @@ export type AboutTravelPhotographyQueryResult = Array<{
 // Query: *[_type == "photography" && defined(slug.current) && defined(image)]  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {    _id,    title,    "slug": slug.current,    caption,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  }
 export type PhotographyListQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   caption: string | null;
   isFeatured: boolean | null;
   capturedAt: string | null;
   place: {
     _id: string;
-    name: string | null;
-    countryName: string | null;
+    name: string;
+    countryName: string;
     countryCode: string | null;
   } | null;
   image: {
@@ -1646,13 +1651,13 @@ export type PhotographyListQueryResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt: string | null;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
     width: number | null;
     height: number | null;
-  } | null;
+  };
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -1660,8 +1665,8 @@ export type PhotographyListQueryResult = Array<{
 // Query: *[_type == "photography" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    caption,    capturedAt,    camera,    isFeatured,    "likesCount": count(likes),    viewsCount,    place-> {      _id,      name,      countryName,      countryCode,      kind,      coordinates    },    tagsV2[]->{ _id, name },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "palette": asset->metadata.palette,      "location": asset->metadata.location,      "exif": asset->metadata.exif,      "mimeType": asset->mimeType,      "fileSize": asset->size,      "originalFilename": asset->originalFilename    }  }
 export type PhotographyQueryResult = {
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   caption: string | null;
   capturedAt: string | null;
   camera: string | null;
@@ -1670,22 +1675,22 @@ export type PhotographyQueryResult = {
   viewsCount: number | null;
   place: {
     _id: string;
-    name: string | null;
-    countryName: string | null;
+    name: string;
+    countryName: string;
     countryCode: string | null;
-    kind: "adventure" | "city" | null;
-    coordinates: Geopoint | null;
+    kind: "adventure" | "city";
+    coordinates: Geopoint;
   } | null;
   tagsV2: Array<{
     _id: string;
-    name: string | null;
+    name: string;
   }> | null;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt: string | null;
+    alt: string;
     _type: "image";
     lqip: string | null;
     blurhash: null;
@@ -1700,14 +1705,14 @@ export type PhotographyQueryResult = {
     mimeType: string | null;
     fileSize: number | null;
     originalFilename: string | null;
-  } | null;
+  };
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: photographySlugs
 // Query: *[_type == "photography" && defined(slug.current)]{ "slug": slug.current }
 export type PhotographySlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -1722,7 +1727,7 @@ export type AllPostsQueryResult = Array<{
   _id: string;
   status: "draft" | "published";
   title: string | "Untitled";
-  slug: string | null;
+  slug: string;
   excerpt: string | null;
   coverImage: null;
   date: string;
@@ -1734,16 +1739,16 @@ export type AllPostsQueryResult = Array<{
 // Query: *[_type == "painting" && defined(slug.current)] | order(date desc, _updatedAt desc) {        _id,        title,        slug,        image,        "date": coalesce(date, _updatedAt),    }
 export type AllPaintingsQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: Slug | null;
+  title: string;
+  slug: Slug;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
-  } | null;
+  };
   date: string;
 }>;
 
@@ -1754,7 +1759,7 @@ export type MorePostsQueryResult = Array<{
   _id: string;
   status: "draft" | "published";
   title: string | "Untitled";
-  slug: string | null;
+  slug: string;
   excerpt: string | null;
   coverImage: null;
   date: string;
@@ -1769,7 +1774,7 @@ export type PostQueryResult = {
   _id: string;
   status: "draft" | "published";
   title: string | "Untitled";
-  slug: string | null;
+  slug: string;
   excerpt: string | null;
   coverImage: null;
   date: string;
@@ -1781,12 +1786,12 @@ export type PostQueryResult = {
 // Query: *[_type == "painting" && slug.current == $slug][0] {    _id,    title,    'slug': slug.current,    description,    seoDescription,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, seoDescription, ""),      "image": coalesce(seo.image, image),      "noIndex": seo.noIndex == true    },    format,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    "likesCount": count(likes),    viewsCount,    paintedAt,    format,    redbubbleUrl,    gelatoUrl,    image{      ...,      "lqip": asset->metadata.lqip,      "blurhash": asset->metadata.blurhash,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "hasAlpha": asset->metadata.hasAlpha,      "isOpaque": asset->metadata.isOpaque,      "altText": altText,      "palette": asset->metadata.palette    },    "images": coalesce(      images[]{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio,        "altText": altText      },      []    ),    tagsV2[]->{name},    video  }
 export type PaintingQueryResult = {
   _id: string;
-  title: string | null;
-  slug: string | null;
-  description: string | null;
+  title: string;
+  slug: string;
+  description: string;
   seoDescription: string | null;
   seo: {
-    title: string | "";
+    title: string;
     description: string | "";
     image:
       | Image1
@@ -1795,13 +1800,12 @@ export type PaintingQueryResult = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
-          alt?: string;
+          alt: string;
           _type: "image";
-        }
-      | null;
+        };
     noIndex: boolean | false;
   };
-  format: "landscape" | "portrait" | "square" | null;
+  format: "landscape" | "portrait" | "square";
   medium:
     | "Digital (Other)"
     | "Digital (Photoshop)"
@@ -1816,7 +1820,7 @@ export type PaintingQueryResult = {
   isForSale: boolean | null;
   likesCount: number | null;
   viewsCount: number | null;
-  paintedAt: string | null;
+  paintedAt: string;
   redbubbleUrl: string | null;
   gelatoUrl: string | null;
   image: {
@@ -1824,7 +1828,7 @@ export type PaintingQueryResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     blurhash: null;
@@ -1835,15 +1839,15 @@ export type PaintingQueryResult = {
     isOpaque: boolean | null;
     altText: null;
     palette: SanityImagePalette | null;
-  } | null;
+  };
   images:
     | Array<{
         asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        title?: string;
-        alt?: string;
+        title: string;
+        alt: string;
         _type: "image";
         _key: string;
         lqip: string | null;
@@ -1852,21 +1856,22 @@ export type PaintingQueryResult = {
       }>
     | Array<never>;
   tagsV2: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   video: string | null;
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: projectQuery
-// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    viewsCount,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    viewsCount,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, name, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
 export type ProjectQueryResult = {
   _id: string;
   _type: "project";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
+  client?: string;
   status?:
     | "abandoned"
     | "cancelled"
@@ -1876,17 +1881,18 @@ export type ProjectQueryResult = {
     | "onHold"
     | "planned"
     | "unknown";
-  projectType?: "design" | "development" | "gameDevelopment" | "other";
-  slug: string | null;
+  projectType: "design" | "development" | "gameDevelopment" | "other";
+  slug: string;
   projectStart?: string;
   projectEnd?: string;
+  summary?: BlockContentMinimal;
   content?: BlockContent;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
   } | null;
@@ -1900,28 +1906,28 @@ export type ProjectQueryResult = {
   }>;
   connectedPaintings:
     | Array<{
-        title: string | "";
-        slug: string | "";
-        format: "" | "landscape" | "portrait" | "square";
+        title: string;
+        slug: string;
+        format: "landscape" | "portrait" | "square";
         image: {
           asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
-          alt?: string;
+          alt: string;
           _type: "image";
-        } | null;
+        };
       }>
     | Array<never>;
   connectedVideo: {
-    videoUrl: string | null;
+    videoUrl: string;
   } | null;
   connectedPage: string | "";
   tags: Array<{
-    name: string | "";
-  }> | null;
+    name: string;
+  }>;
   seo: {
-    title: string | "";
+    title: string;
     description: string | "";
     image: Image1 | null;
     noIndex: boolean | false;
@@ -1938,28 +1944,28 @@ export type ProjectQueryResult = {
   };
   likesCount: null;
   viewsCount: null;
-  type: "" | "design" | "development" | "gameDevelopment" | "other";
+  type: "design" | "development" | "gameDevelopment" | "other";
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
 export type PostPagesSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: paintingsSlugs
 // Query: *[_type == "painting" && defined(slug.current)]  {"slug": slug.current}
 export type PaintingsSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: projectsSlugs
 // Query: *[_type == "project" && defined(slug.current)]  {"slug": slug.current}
 export type ProjectsSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -1971,24 +1977,24 @@ export type PagesSlugsResult = Array<never>;
 // Variable: homeSectionCopyQuery
 // Query: *[_type == "home"][0]{    title,    "overview": sections[_type == "homeHeroSection"][0].overview,    paintingsTitle,    paintingsDescription,    projectsTitle,    projectsListingDescription,  }
 export type HomeSectionCopyQueryResult = {
-  title: string | null;
+  title: string;
   overview: BlockContentMinimal | null;
   paintingsTitle: string | null;
-  paintingsDescription: BlockContentMinimal | null;
+  paintingsDescription: BlockContentMinimal;
   projectsTitle: string | null;
-  projectsListingDescription: BlockContentMinimal | null;
+  projectsListingDescription: BlockContentMinimal;
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    title,    paintingsTitle,    projectsTitle,    paintingsDescription,    projectsListingDescription,    "paintingsCount": count(*[_type == "painting"]),    "overview": sections[_type == "homeHeroSection"][0].overview,    sections[]{      _key,      _type,      _type == "homeHeroSection" => {        overview      },      _type == "homeProjectsSection" => {        description,        showcaseProjects[]->{          _type,          _id,          title,          description,          seoDescription,          projectStart,          projectEnd,          status,          content,          "seo": {            "title": coalesce(seo.title, title, ""),            "description": coalesce(seo.description, ""),            "image": seo.image,            "noIndex": seo.noIndex == true          },          name,          "tags": tags[]->{name},          "slug": slug.current,          image{            ...,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          }        }      },      _type == "homePaintingsSection" => {        description,        "showcasePaintingsCurated": count(showcasePaintings) > 0,        "showcasePaintings": coalesce(          showcasePaintings[]->{            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }          },          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }          }        )      },      _type == "homeAboutTeaserSection" => {        eyebrow,        title,        description,        primaryLabel,        secondaryLabel,        journeyEyebrow,        journeyLinkLabel      },      _type == "homeVideosTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeShopTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeSkillsSection" => {        eyebrow,        title      },      _type == "homeContactCtaSection" => {        eyebrow,        title,        description,        primaryLabel,        primaryUrl,        secondaryLabel,        secondaryUrl      }    }  }
+// Query: *[_type == "home"][0]{    _id,    title,    paintingsTitle,    projectsTitle,    paintingsDescription,    projectsListingDescription,    "paintingsCount": count(*[_type == "painting"]),    "overview": sections[_type == "homeHeroSection"][0].overview,    sections[]{      _key,      _type,      _type == "homeHeroSection" => {        overview      },      _type == "homeProjectsSection" => {        description,        showcaseProjects[]->{          _type,          _id,          description,          seoDescription,          projectStart,          projectEnd,          status,          content,          "seo": {            "title": coalesce(seo.title, name, ""),            "description": coalesce(seo.description, ""),            "image": seo.image,            "noIndex": seo.noIndex == true          },          name,          client,          "tags": tags[]->{name},          "slug": slug.current,          image{            ...,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          }        }      },      _type == "homePaintingsSection" => {        description,        "showcasePaintingsCurated": count(showcasePaintings) > 0,        "showcasePaintings": coalesce(          showcasePaintings[]->{            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }          },          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {            _type, _id, altText,            "slug": slug.current,            title, format, isFeatured, isNSFW, medium, paintedAt,            tagsV2[]->{name},            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }          }        )      },      _type == "homeAboutTeaserSection" => {        eyebrow,        title,        description,        primaryLabel,        secondaryLabel,        journeyEyebrow,        journeyLinkLabel      },      _type == "homeVideosTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeShopTeaserSection" => {        intro {          eyebrow,          title,          description,          linkLabel        }      },      _type == "homeSkillsSection" => {        eyebrow,        title      },      _type == "homeContactCtaSection" => {        eyebrow,        title,        description,        primaryLabel,        primaryUrl,        secondaryLabel,        secondaryUrl      }    }  }
 export type HomePageQueryResult = {
   _id: string;
-  title: string | null;
+  title: string;
   paintingsTitle: string | null;
   projectsTitle: string | null;
-  paintingsDescription: BlockContentMinimal | null;
-  projectsListingDescription: BlockContentMinimal | null;
+  paintingsDescription: BlockContentMinimal;
+  projectsListingDescription: BlockContentMinimal;
   paintingsCount: number;
   overview: BlockContentMinimal | null;
   sections: Array<
@@ -2006,55 +2012,88 @@ export type HomePageQueryResult = {
     | {
         _key: string;
         _type: "homeHeroSection";
-        overview: BlockContentMinimal | null;
+        overview: BlockContentMinimal;
       }
     | {
         _key: string;
         _type: "homePaintingsSection";
-        description: BlockContentMinimal | null;
+        description: BlockContentMinimal;
         showcasePaintingsCurated: boolean | null;
-        showcasePaintings: Array<{
-          _type: "painting";
-          _id: string;
-          altText: null;
-          slug: string | null;
-          title: string | null;
-          format: "landscape" | "portrait" | "square" | null;
-          isFeatured: boolean | null;
-          isNSFW: boolean | null;
-          medium:
-            | "Digital (Other)"
-            | "Digital (Photoshop)"
-            | "Digital (Procreate)"
-            | "Oil on canvas"
-            | "Pencil / Ink"
-            | "Watercolour"
-            | null;
-          paintedAt: string | null;
-          tagsV2: Array<{
-            name: string | null;
-          }> | null;
-          image: {
-            asset?: SanityImageAssetReference;
-            media?: unknown;
-            hotspot?: SanityImageHotspot;
-            crop?: SanityImageCrop;
-            alt?: string;
-            _type: "image";
-            lqip: string | null;
-            aspectRatio: number | null;
-            palette: SanityImagePalette | null;
-          } | null;
-        }>;
+        showcasePaintings:
+          | Array<{
+              _type: "painting";
+              _id: string;
+              altText: null;
+              slug: string;
+              title: string;
+              format: "landscape" | "portrait" | "square";
+              isFeatured: true;
+              isNSFW: boolean | null;
+              medium:
+                | "Digital (Other)"
+                | "Digital (Photoshop)"
+                | "Digital (Procreate)"
+                | "Oil on canvas"
+                | "Pencil / Ink"
+                | "Watercolour"
+                | null;
+              paintedAt: string;
+              tagsV2: Array<{
+                name: string;
+              }>;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string;
+                _type: "image";
+                lqip: string | null;
+                aspectRatio: number | null;
+                palette: SanityImagePalette | null;
+              };
+            }>
+          | Array<{
+              _type: "painting";
+              _id: string;
+              altText: null;
+              slug: string;
+              title: string;
+              format: "landscape" | "portrait" | "square";
+              isFeatured: boolean | null;
+              isNSFW: boolean | null;
+              medium:
+                | "Digital (Other)"
+                | "Digital (Photoshop)"
+                | "Digital (Procreate)"
+                | "Oil on canvas"
+                | "Pencil / Ink"
+                | "Watercolour"
+                | null;
+              paintedAt: string;
+              tagsV2: Array<{
+                name: string;
+              }>;
+              image: {
+                asset?: SanityImageAssetReference;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                alt: string;
+                _type: "image";
+                lqip: string | null;
+                aspectRatio: number | null;
+                palette: SanityImagePalette | null;
+              };
+            }>;
       }
     | {
         _key: string;
         _type: "homeProjectsSection";
-        description: BlockContentMinimal | null;
+        description: BlockContentMinimal;
         showcaseProjects: Array<{
           _type: "project";
           _id: string;
-          title: null;
           description: null;
           seoDescription: null;
           projectStart: string | null;
@@ -2071,22 +2110,23 @@ export type HomePageQueryResult = {
             | null;
           content: BlockContent | null;
           seo: {
-            title: string | "";
+            title: string;
             description: string | "";
             image: Image1 | null;
             noIndex: boolean | false;
           };
-          name: string | null;
+          name: string;
+          client: string | null;
           tags: Array<{
-            name: string | null;
-          }> | null;
-          slug: string | null;
+            name: string;
+          }>;
+          slug: string;
           image: {
             asset?: SanityImageAssetReference;
             media?: unknown;
             hotspot?: SanityImageHotspot;
             crop?: SanityImageCrop;
-            alt?: string;
+            alt: string;
             _type: "image";
             lqip: string | null;
             aspectRatio: number | null;
@@ -2098,7 +2138,7 @@ export type HomePageQueryResult = {
         _type: "homeShopTeaserSection";
         intro: {
           eyebrow: string | null;
-          title: string | null;
+          title: string;
           description: string | null;
           linkLabel: string | null;
         } | null;
@@ -2114,7 +2154,7 @@ export type HomePageQueryResult = {
         _type: "homeVideosTeaserSection";
         intro: {
           eyebrow: string | null;
-          title: string | null;
+          title: string;
           description: string | null;
           linkLabel: string | null;
         } | null;
@@ -2128,44 +2168,44 @@ export type HomePageQueryResult = {
 export type HomeExtrasQueryResult = {
   videos: Array<{
     _id: string;
-    slug: string | null;
-    title: string | null;
+    slug: string;
+    title: string;
     featured: boolean | false;
-    description: string | null;
+    description: string;
     tags: Array<{
-      name: string | null;
-    }> | null;
+      name: string;
+    }>;
     thumbnail: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
-    } | null;
+    };
   }>;
   forSalePaintings: Array<{
     _id: string;
-    slug: string | null;
-    title: string | null;
+    slug: string;
+    title: string;
     isForSale: boolean | null;
     redbubbleUrl: string | null;
     gelatoUrl: string | null;
     tagsV2: Array<{
-      name: string | null;
-    }> | null;
-    paintedAt: string | null;
+      name: string;
+    }>;
+    paintedAt: string;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
       aspectRatio: number | null;
-    } | null;
+    };
   }>;
   forSalePaintingsCount: number;
 };
@@ -2176,8 +2216,8 @@ export type HomeExtrasQueryResult = {
 export type GetAllPaintingsandTagsResult = {
   paintings: Array<{
     _id: string;
-    slug: string | null;
-    title: string | null;
+    slug: string;
+    title: string;
     medium:
       | "Digital (Other)"
       | "Digital (Photoshop)"
@@ -2191,10 +2231,10 @@ export type GetAllPaintingsandTagsResult = {
     isNSFW: boolean | null;
     isForSale: boolean | null;
     tagsV2: Array<{
-      name: string | null;
-    }> | null;
+      name: string;
+    }>;
     viewsCount: number | null;
-    paintedAt: string | null;
+    paintedAt: string;
     video: string | null;
     imagesCount: number | 0;
     image: {
@@ -2202,16 +2242,16 @@ export type GetAllPaintingsandTagsResult = {
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
       aspectRatio: number | null;
       palette: SanityImagePalette | null;
-    } | null;
+    };
   }>;
   tags: Array<{
     _id: string;
-    name: string | null;
+    name: string;
     paintingsCount: number;
   }>;
 };
@@ -2221,8 +2261,8 @@ export type GetAllPaintingsandTagsResult = {
 // Query: *[_type == "painting" && defined(slug.current)]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    viewsCount,    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "palette": asset->metadata.palette    }  }
 export type GetPaginatedPaintingsResult = Array<{
   _id: string;
-  slug: string | null;
-  title: string | null;
+  slug: string;
+  title: string;
   medium:
     | "Digital (Other)"
     | "Digital (Photoshop)"
@@ -2236,10 +2276,10 @@ export type GetPaginatedPaintingsResult = Array<{
   isNSFW: boolean | null;
   isForSale: boolean | null;
   tagsV2: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   viewsCount: number | null;
-  paintedAt: string | null;
+  paintedAt: string;
   video: string | null;
   imagesCount: number | 0;
   image: {
@@ -2247,12 +2287,12 @@ export type GetPaginatedPaintingsResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
     palette: SanityImagePalette | null;
-  } | null;
+  };
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -2265,8 +2305,8 @@ export type GetPaintingsCountResult = number;
 // Query: *[_type == "painting" && defined(slug.current) && (    ($filter0 == "" || $filter0 in tagsV2[]->name)    && ($filter1 == "" || $filter1 in tagsV2[]->name)    && ($filter2 == "" || $filter2 in tagsV2[]->name)    && ($filter3 == "" || $filter3 in tagsV2[]->name)    && ($filter4 == "" || $filter4 in tagsV2[]->name)  )]  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    medium,    isFeatured,    isFanArt,    isNSFW,    isForSale,    tagsV2[]->{name},    viewsCount,    paintedAt,    video,    "imagesCount": coalesce(count(images), 0),    image {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "palette": asset->metadata.palette    }  }
 export type GetFilteredPaginatedPaintingsResult = Array<{
   _id: string;
-  slug: string | null;
-  title: string | null;
+  slug: string;
+  title: string;
   medium:
     | "Digital (Other)"
     | "Digital (Photoshop)"
@@ -2280,10 +2320,10 @@ export type GetFilteredPaginatedPaintingsResult = Array<{
   isNSFW: boolean | null;
   isForSale: boolean | null;
   tagsV2: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   viewsCount: number | null;
-  paintedAt: string | null;
+  paintedAt: string;
   video: string | null;
   imagesCount: number | 0;
   image: {
@@ -2291,12 +2331,12 @@ export type GetFilteredPaginatedPaintingsResult = Array<{
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
     palette: SanityImagePalette | null;
-  } | null;
+  };
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -2306,14 +2346,13 @@ export type GetFilteredPaintingsCountResult = number;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getAllProjects
-// Query: {      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]        | order(projectStart desc) {          _id,          "slug": slug.current,          title,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]        | order(projectEnd desc) {          _id,          "slug": slug.current,          title,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "tags": *[        _type == "tag" &&        count(*[_type == "project" && references(^._id)]) > 0      ]      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {        _id,        name,        isFeatured,        "count": count(*[_type == "project" && references(^._id)]),        "projectsCount": count(*[_type == "project" && references(^._id)])      }    }
+// Query: {      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]        | order(projectStart desc) {          _id,          "slug": slug.current,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          client,          summary,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]        | order(projectEnd desc) {          _id,          "slug": slug.current,          "seoDescription": coalesce(seo.description, ""),          projectType,          projectStart,          projectEnd,          status,          name,          client,          summary,          "tags": tags[]->{name},          image {            ...,            "lqip": asset->metadata.lqip          }        },      "tags": *[        _type == "tag" &&        count(*[_type == "project" && references(^._id)]) > 0      ]      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {        _id,        name,        isFeatured,        "count": count(*[_type == "project" && references(^._id)]),        "projectsCount": count(*[_type == "project" && references(^._id)])      }    }
 export type GetAllProjectsResult = {
   ongoingProjects: Array<{
     _id: string;
-    slug: string | null;
-    title: null;
+    slug: string;
     seoDescription: string | "";
-    projectType: "design" | "development" | "gameDevelopment" | "other" | null;
+    projectType: "design" | "development" | "gameDevelopment" | "other";
     projectStart: string | null;
     projectEnd: string | null;
     status:
@@ -2326,26 +2365,27 @@ export type GetAllProjectsResult = {
       | "planned"
       | "unknown"
       | null;
-    name: string | null;
+    name: string;
+    client: string | null;
+    summary: BlockContentMinimal | null;
     tags: Array<{
-      name: string | null;
-    }> | null;
+      name: string;
+    }>;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
     } | null;
   }>;
   pastProjects: Array<{
     _id: string;
-    slug: string | null;
-    title: null;
+    slug: string;
     seoDescription: string | "";
-    projectType: "design" | "development" | "gameDevelopment" | "other" | null;
+    projectType: "design" | "development" | "gameDevelopment" | "other";
     projectStart: string | null;
     projectEnd: string | null;
     status:
@@ -2358,23 +2398,25 @@ export type GetAllProjectsResult = {
       | "planned"
       | "unknown"
       | null;
-    name: string | null;
+    name: string;
+    client: string | null;
+    summary: BlockContentMinimal | null;
     tags: Array<{
-      name: string | null;
-    }> | null;
+      name: string;
+    }>;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
     } | null;
   }>;
   tags: Array<{
     _id: string;
-    name: string | null;
+    name: string;
     isFeatured: boolean | null;
     count: number;
     projectsCount: number;
@@ -2387,37 +2429,37 @@ export type GetAllProjectsResult = {
 export type GetAllVideosResult = {
   videos: Array<{
     _id: string;
-    slug: string | null;
-    title: string | null;
+    slug: string;
+    title: string;
     featured: boolean | false;
-    description: string | null;
-    videoUrl: string | null;
+    description: string;
+    videoUrl: string;
     linkedPainting: {
       _id: string;
-      slug: string | null;
-      title: string | null;
+      slug: string;
+      title: string;
       image: {
         asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: string;
+        alt: string;
         _type: "image";
         lqip: string | null;
-      } | null;
+      };
     } | null;
     tags: Array<{
-      name: string | null;
-    }> | null;
+      name: string;
+    }>;
     thumbnail: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
-    } | null;
+    };
   }>;
 };
 
@@ -2426,12 +2468,12 @@ export type GetAllVideosResult = {
 // Query: *[_type == "video" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    description,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": coalesce(seo.image, thumbnail),      "noIndex": seo.noIndex == true    },    videoUrl,    "featured": featured == true,    "viewsCount": coalesce(viewsCount, 0),    "likesCount": count(likes),    "linkedPainting": coalesce(linkedPainting->{      _id,      "slug": slug.current,      title,      description,      image{        ...,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      }    }, null),    tags[]->{name},    thumbnail {      ...,      "lqip": asset->metadata.lqip    }  }
 export type VideoBySlugQueryResult = {
   _id: string;
-  title: string | null;
-  slug: string | null;
-  description: string | null;
+  title: string;
+  slug: string;
+  description: string;
   seo: {
-    title: string | "";
-    description: string | "";
+    title: string;
+    description: string;
     image:
       | Image1
       | {
@@ -2439,58 +2481,57 @@ export type VideoBySlugQueryResult = {
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
-          alt?: string;
+          alt: string;
           _type: "image";
-        }
-      | null;
+        };
     noIndex: boolean | false;
   };
-  videoUrl: string | null;
+  videoUrl: string;
   featured: boolean | false;
   viewsCount: number | 0;
   likesCount: number | null;
   linkedPainting: {
     _id: string;
-    slug: string | null;
-    title: string | null;
-    description: string | null;
+    slug: string;
+    title: string;
+    description: string;
     image: {
       asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      alt?: string;
+      alt: string;
       _type: "image";
       lqip: string | null;
       aspectRatio: number | null;
-    } | null;
+    };
   } | null;
   tags: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   thumbnail: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
-  } | null;
+  };
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: videosSlugs
 // Query: *[_type == "video" && defined(slug.current)] { "slug": slug.current }
 export type VideosSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: generateStaticSlugs
 // Query: *[    _type == $type    && defined(slug.current)    && coalesce(seo.noIndex, false) != true    && !(_type == "painting" && isNSFW == true)  ]{    "slug": slug.current,    _updatedAt  }
 export type GenerateStaticSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
   _updatedAt: string;
 }>;
 
@@ -2500,32 +2541,32 @@ export type GenerateStaticSlugsResult = Array<{
 export type IndexableContentSlugsResult = Array<
   | {
       _type: "painting";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
   | {
       _type: "photography";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
   | {
       _type: "presentation";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
   | {
       _type: "project";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
   | {
       _type: "recipe";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
   | {
       _type: "video";
-      slug: string | null;
+      slug: string;
       _updatedAt: string;
     }
 >;
@@ -2548,8 +2589,24 @@ export type OG_IMAGE_QUERY_RESULT =
       image: null;
     }
   | {
+      title: string;
+      image: null;
+    }
+  | {
       title: string | null;
       image: null;
+    }
+  | {
+      title: string;
+      image: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt: string;
+        _type: "image";
+        palette: SanityImagePalette | null;
+      };
     }
   | {
       title: null;
@@ -2558,19 +2615,7 @@ export type OG_IMAGE_QUERY_RESULT =
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        palette: SanityImagePalette | null;
-      } | null;
-    }
-  | {
-      title: string | null;
-      image: {
-        asset?: SanityImageAssetReference;
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
+        alt: string;
         _type: "image";
         palette: SanityImagePalette | null;
       } | null;
@@ -2592,7 +2637,7 @@ export type OG_IMAGE_QUERY_RESULT =
 // Variable: SITEMAP_QUERY
 // Query: *[_type in ["page", "post"] && defined(slug.current)] {      "href": select(        _type == "page" => "/" + slug.current,        _type == "post" => "/posts/" + slug.current,        slug.current      ),      _updatedAt  }
 export type SITEMAP_QUERY_RESULT = Array<{
-  href: string | null;
+  href: string;
   _updatedAt: string;
 }>;
 
@@ -2601,15 +2646,15 @@ export type SITEMAP_QUERY_RESULT = Array<{
 // Query: *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]  | order(publishedAt desc, _updatedAt desc) {    _id,    "slug": slug.current,    title,    description,    mainImage {      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    cookingTime,    prepTime,    totalTime,    servings,    difficulty,    publishedAt,    averageRating,    ratingCount,    nutrition {      calories,      protein,      carbohydrates,      fat,      fiber,      sugar,      sodium,      notes    },    tags[]->{name}  }
 export type GetAllRecipesResult = Array<{
   _id: string;
-  slug: string | null;
-  title: string | null;
+  slug: string;
+  title: string;
   description: string | null;
   mainImage: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
@@ -2633,7 +2678,7 @@ export type GetAllRecipesResult = Array<{
     notes: string | null;
   } | null;
   tags: Array<{
-    name: string | null;
+    name: string;
   }> | null;
 }>;
 
@@ -2643,13 +2688,13 @@ export type GetAllRecipesResult = Array<{
 export type GetRecipeResult = {
   _id: string;
   language: string | null;
-  slug: string | null;
-  title: string | null;
+  slug: string;
+  title: string;
   description: string | null;
   story: BlockContentMinimal | null;
   _updatedAt: string;
   seo: {
-    title: string | "";
+    title: string;
     description: string | "";
     image: Image1 | null;
     noIndex: boolean | false;
@@ -2659,7 +2704,7 @@ export type GetRecipeResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
@@ -2669,7 +2714,7 @@ export type GetRecipeResult = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     caption?: string;
     _type: "image";
     _key: string;
@@ -2677,32 +2722,32 @@ export type GetRecipeResult = {
     aspectRatio: number | null;
   }> | null;
   ingredientCategories: Array<{
-    categoryName: string | null;
+    categoryName: string;
     ingredients: Array<{
-      ingredient: string | null;
+      ingredient: string;
       photo: {
         asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
-        alt?: string;
+        alt: string;
         _type: "image";
         lqip: string | null;
         aspectRatio: number | null;
       } | null;
-      amount: string | null;
-      unit: string | null;
+      amount: string;
+      unit: string;
       isDiscrete: boolean | null;
       notes: string | null;
     }> | null;
   }> | null;
   instructions: Array<{
     title: string | null;
-    content: BlockContent | null;
+    content: BlockContent;
   }> | null;
   tips: Array<{
     title: string | null;
-    content: string | null;
+    content: string;
     icon: string | null;
   }> | null;
   cookingTime: number | null;
@@ -2727,7 +2772,7 @@ export type GetRecipeResult = {
     notes: string | null;
   } | null;
   tags: Array<{
-    name: string | null;
+    name: string;
   }> | null;
 } | null;
 
@@ -2735,7 +2780,7 @@ export type GetRecipeResult = {
 // Variable: getRecipeSlugs
 // Query: *[_type == "recipe" && defined(slug.current) && (language == "en" || !defined(language))]  {"slug": slug.current}
 export type GetRecipeSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -2743,23 +2788,23 @@ export type GetRecipeSlugsResult = Array<{
 // Query: *[    _type == "painting" &&    defined(slug.current) &&    defined(image) &&    isNSFW != true  ] | order(_createdAt desc) [0...50] {    _id,    title,    "slug": slug.current,    isFeatured,    tagsV2[]->{name},    image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "palette": asset->metadata.palette    }  }
 export type RandomPaintingsQueryResult = Array<{
   _id: string;
-  title: string | null;
-  slug: string | null;
+  title: string;
+  slug: string;
   isFeatured: boolean | null;
   tagsV2: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
     aspectRatio: number | null;
     palette: SanityImagePalette | null;
-  } | null;
+  };
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -2767,27 +2812,27 @@ export type RandomPaintingsQueryResult = Array<{
 // Query: *[_type == "presentation" && slug.current == $slug][0] {    _id,    title,    description,    "slug": slug.current,    noIndex,    tldr,    tldrPosition,    "seo": {      "title": coalesce(seo.title, title, ""),      "description": coalesce(seo.description, description, ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },    tags[]->{      _id,      name    },    slides[] {      _type,      status,      _type == "contentSlide" => {        title,        subtitle,        content,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        },        category->{          _id,          name,          description,          color        },        sources[] {          text,          url        },        tools[] {          name,          description,          url,          category,          workshopUrl,          nerdLevel        },        examples[] {          name,          description,          image {            ...,            "url": asset->url,            "lqip": asset->metadata.lqip,            "aspectRatio": asset->metadata.dimensions.aspectRatio          },          iframe,          url        }      },      _type == "titleSlide" => {        title,        subtitle,        slideDesign,        media {          mediaType,          mediaType == "image" => {            image {              ...,              "url": asset->url,              "lqip": asset->metadata.lqip,              "aspectRatio": asset->metadata.dimensions.aspectRatio,              alt            },            imageAspectRatio          },          mediaType == "video" => {            videoUrl          },          mediaType == "iframe" => {            iframeUrl,            iframeAspectRatio          },          mediaType == "numbers" => {            metrics[] {              label,              value,              description,              color            }          },          mediaType == "graph" => {            chartType          },          mediaType == "custom" => {            componentName,            componentProps          }        }      },      _type == "separatorSlide" => {        title,        slideDesign,        category->{          _id,          name,          description,          color        }      }    }  }
 export type PresentationQueryResult = {
   _id: string;
-  title: string | null;
+  title: string;
   description: string | null;
-  slug: string | null;
-  noIndex: null;
-  tldr: null;
-  tldrPosition: null;
+  slug: string;
+  noIndex: boolean | null;
+  tldr: string | null;
+  tldrPosition: "bottom" | "top" | null;
   seo: {
-    title: string | "";
+    title: string;
     description: string | "";
     image: Image1 | null;
     noIndex: boolean | false;
   };
   tags: Array<{
     _id: string;
-    name: string | null;
+    name: string;
   }> | null;
   slides: Array<
     | {
         _type: "contentSlide";
         status: "draft" | "hidden" | "published" | null;
-        title: string | null;
+        title: string;
         subtitle: string | null;
         content: BlockContent | null;
         slideDesign:
@@ -2858,8 +2903,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -2965,8 +3010,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3049,8 +3094,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3141,8 +3186,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3171,8 +3216,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3268,8 +3313,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3340,8 +3385,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3420,8 +3465,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3446,8 +3491,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3515,8 +3560,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3598,8 +3643,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3625,8 +3670,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3692,8 +3737,8 @@ export type PresentationQueryResult = {
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3729,8 +3774,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3803,8 +3848,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3827,8 +3872,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -3866,7 +3911,7 @@ export type PresentationQueryResult = {
           | null;
         category: {
           _id: string;
-          name: string | null;
+          name: string;
           description: string | null;
           color:
             | "#14b8a6"
@@ -3880,20 +3925,20 @@ export type PresentationQueryResult = {
             | null;
         } | null;
         sources: Array<{
-          text: string | null;
+          text: string;
           url: string | null;
         }> | null;
         tools: Array<{
-          name: string | null;
-          description: string | null;
-          url: string | null;
+          name: string;
+          description: string;
+          url: string;
           category: string | null;
           workshopUrl: string | null;
           nerdLevel: number | null;
         }> | null;
         examples: Array<{
-          name: string | null;
-          description: string | null;
+          name: string;
+          description: string;
           image: {
             asset?: SanityImageAssetReference;
             media?: unknown;
@@ -3911,11 +3956,11 @@ export type PresentationQueryResult = {
     | {
         _type: "separatorSlide";
         status: "draft" | "hidden" | "published" | null;
-        title: string | null;
+        title: string;
         slideDesign: "bold" | "default" | "minimal" | null;
         category: {
           _id: string;
-          name: string | null;
+          name: string;
           description: string | null;
           color:
             | "#14b8a6"
@@ -3932,7 +3977,7 @@ export type PresentationQueryResult = {
     | {
         _type: "titleSlide";
         status: "draft" | "hidden" | "published" | null;
-        title: string | null;
+        title: string;
         subtitle: string | null;
         slideDesign: "centered" | "default" | "hero" | "minimal" | null;
         media:
@@ -4001,8 +4046,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4108,8 +4153,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4192,8 +4237,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4284,8 +4329,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4314,8 +4359,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4411,8 +4456,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4483,8 +4528,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4563,8 +4608,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4589,8 +4634,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4658,8 +4703,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4741,8 +4786,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4768,8 +4813,8 @@ export type PresentationQueryResult = {
               iframeAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4835,8 +4880,8 @@ export type PresentationQueryResult = {
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4872,8 +4917,8 @@ export type PresentationQueryResult = {
               imageAspectRatio:
                 "auto" | "landscape" | "portrait" | "square" | "video" | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4946,8 +4991,8 @@ export type PresentationQueryResult = {
                 | null;
               videoUrl: string | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -4970,8 +5015,8 @@ export type PresentationQueryResult = {
                 | "video"
                 | null;
               metrics: Array<{
-                label: string | null;
-                value: string | null;
+                label: string;
+                value: string;
                 description: string | null;
                 color:
                   | "#14b8a6"
@@ -5008,7 +5053,7 @@ export type PresentationQueryResult = {
             }
           | null;
       }
-  > | null;
+  >;
 } | null;
 
 // Source: ../../packages/sanity-queries/src/index.ts
@@ -5016,14 +5061,14 @@ export type PresentationQueryResult = {
 // Query: *[_type == "presentation" && defined(slug.current)] | order(_createdAt desc) {    _id,    title,    description,    "slug": slug.current,    "slidesCount": count(slides),    _createdAt,    tags[]->{      _id,      name    },    "coverImage": coalesce(      slides[_type == "titleSlide" && media.mediaType == "image"][0].media.image {        ...,        alt,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      },      slides[_type == "contentSlide" && media.mediaType == "image"][0].media.image {        ...,        alt,        "lqip": asset->metadata.lqip,        "aspectRatio": asset->metadata.dimensions.aspectRatio      },      null    )  }
 export type AllPresentationsQueryResult = Array<{
   _id: string;
-  title: string | null;
+  title: string;
   description: string | null;
-  slug: string | null;
-  slidesCount: number | null;
+  slug: string;
+  slidesCount: number;
   _createdAt: string;
   tags: Array<{
     _id: string;
-    name: string | null;
+    name: string;
   }> | null;
   coverImage: {
     asset?: SanityImageAssetReference;
@@ -5041,19 +5086,18 @@ export type AllPresentationsQueryResult = Array<{
 // Variable: presentationSlugsQuery
 // Query: *[_type == "presentation" && defined(slug.current)] { "slug": slug.current }
 export type PresentationSlugsQueryResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: getPaginatedProjects
-// Query: *[_type == "project" && defined(slug.current)]  | order(projectStart desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    title,    description,    seoDescription,    projectType,    projectStart,    projectEnd,    status,    content,    name,    "tags": tags[]->{name},    image {      ...,      "lqip": asset->metadata.lqip    }  }
+// Query: *[_type == "project" && defined(slug.current)]  | order(projectStart desc, _updatedAt desc) [$start...$end] {    _id,    "slug": slug.current,    description,    seoDescription,    projectType,    projectStart,    projectEnd,    status,    content,    name,    client,    "tags": tags[]->{name},    image {      ...,      "lqip": asset->metadata.lqip    }  }
 export type GetPaginatedProjectsResult = Array<{
   _id: string;
-  slug: string | null;
-  title: null;
+  slug: string;
   description: null;
   seoDescription: null;
-  projectType: "design" | "development" | "gameDevelopment" | "other" | null;
+  projectType: "design" | "development" | "gameDevelopment" | "other";
   projectStart: string | null;
   projectEnd: string | null;
   status:
@@ -5067,16 +5111,17 @@ export type GetPaginatedProjectsResult = Array<{
     | "unknown"
     | null;
   content: BlockContent | null;
-  name: string | null;
+  name: string;
+  client: string | null;
   tags: Array<{
-    name: string | null;
-  }> | null;
+    name: string;
+  }>;
   image: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt: string;
     _type: "image";
     lqip: string | null;
   } | null;
@@ -5103,20 +5148,20 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult;
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult;
     '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, seoDescription, ""),\n      "image": coalesce(seo.image, image),\n      "noIndex": seo.noIndex == true\n    },\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    viewsCount,\n    paintedAt,\n    format,\n    redbubbleUrl,\n    gelatoUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "altText": altText,\n      "palette": asset->metadata.palette\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, name, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  {"slug": slug.current}\n': PaintingsSlugsResult;
     '\n  *[_type == "project" && defined(slug.current)]\n  {"slug": slug.current}\n': ProjectsSlugsResult;
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult;
     '\n  *[_type == "home"][0]{\n    title,\n    "overview": sections[_type == "homeHeroSection"][0].overview,\n    paintingsTitle,\n    paintingsDescription,\n    projectsTitle,\n    projectsListingDescription,\n  }\n': HomeSectionCopyQueryResult;
-    '\n  *[_type == "home"][0]{\n    _id,\n    title,\n    paintingsTitle,\n    projectsTitle,\n    paintingsDescription,\n    projectsListingDescription,\n    "paintingsCount": count(*[_type == "painting"]),\n    "overview": sections[_type == "homeHeroSection"][0].overview,\n    sections[]{\n      _key,\n      _type,\n      _type == "homeHeroSection" => {\n        overview\n      },\n      _type == "homeProjectsSection" => {\n        description,\n        showcaseProjects[]->{\n          _type,\n          _id,\n          title,\n          description,\n          seoDescription,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          "seo": {\n            "title": coalesce(seo.title, title, ""),\n            "description": coalesce(seo.description, ""),\n            "image": seo.image,\n            "noIndex": seo.noIndex == true\n          },\n          name,\n          "tags": tags[]->{name},\n          "slug": slug.current,\n          image{\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          }\n        }\n      },\n      _type == "homePaintingsSection" => {\n        description,\n        "showcasePaintingsCurated": count(showcasePaintings) > 0,\n        "showcasePaintings": coalesce(\n          showcasePaintings[]->{\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }\n          },\n          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }\n          }\n        )\n      },\n      _type == "homeAboutTeaserSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        secondaryLabel,\n        journeyEyebrow,\n        journeyLinkLabel\n      },\n      _type == "homeVideosTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeShopTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeSkillsSection" => {\n        eyebrow,\n        title\n      },\n      _type == "homeContactCtaSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        primaryUrl,\n        secondaryLabel,\n        secondaryUrl\n      }\n    }\n  }\n': HomePageQueryResult;
+    '\n  *[_type == "home"][0]{\n    _id,\n    title,\n    paintingsTitle,\n    projectsTitle,\n    paintingsDescription,\n    projectsListingDescription,\n    "paintingsCount": count(*[_type == "painting"]),\n    "overview": sections[_type == "homeHeroSection"][0].overview,\n    sections[]{\n      _key,\n      _type,\n      _type == "homeHeroSection" => {\n        overview\n      },\n      _type == "homeProjectsSection" => {\n        description,\n        showcaseProjects[]->{\n          _type,\n          _id,\n          description,\n          seoDescription,\n          projectStart,\n          projectEnd,\n          status,\n          content,\n          "seo": {\n            "title": coalesce(seo.title, name, ""),\n            "description": coalesce(seo.description, ""),\n            "image": seo.image,\n            "noIndex": seo.noIndex == true\n          },\n          name,\n          client,\n          "tags": tags[]->{name},\n          "slug": slug.current,\n          image{\n            ...,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          }\n        }\n      },\n      _type == "homePaintingsSection" => {\n        description,\n        "showcasePaintingsCurated": count(showcasePaintings) > 0,\n        "showcasePaintings": coalesce(\n          showcasePaintings[]->{\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }\n          },\n          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {\n            _type, _id, altText,\n            "slug": slug.current,\n            title, format, isFeatured, isNSFW, medium, paintedAt,\n            tagsV2[]->{name},\n            image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }\n          }\n        )\n      },\n      _type == "homeAboutTeaserSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        secondaryLabel,\n        journeyEyebrow,\n        journeyLinkLabel\n      },\n      _type == "homeVideosTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeShopTeaserSection" => {\n        intro {\n          eyebrow,\n          title,\n          description,\n          linkLabel\n        }\n      },\n      _type == "homeSkillsSection" => {\n        eyebrow,\n        title\n      },\n      _type == "homeContactCtaSection" => {\n        eyebrow,\n        title,\n        description,\n        primaryLabel,\n        primaryUrl,\n        secondaryLabel,\n        secondaryUrl\n      }\n    }\n  }\n': HomePageQueryResult;
     '{\n  "videos": *[_type == "video" && defined(slug.current)]\n    | order(featured desc, coalesce(date, _updatedAt) desc) [0...3] {\n      _id,\n      "slug": slug.current,\n      title,\n      "featured": featured == true,\n      description,\n      tags[]->{name},\n      thumbnail {\n        ...,\n        "lqip": asset->metadata.lqip\n      }\n    },\n  "forSalePaintings": *[_type == "painting" && defined(slug.current) && isNSFW != true && (\n      isForSale == true || defined(redbubbleUrl) || defined(gelatoUrl)\n    )] | order(paintedAt desc) [0...3] {\n      _id,\n      "slug": slug.current,\n      title,\n      isForSale,\n      redbubbleUrl,\n      gelatoUrl,\n      tagsV2[]->{name},\n      paintedAt,\n      image {\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    },\n  "forSalePaintingsCount": count(*[_type == "painting" && defined(slug.current) && isNSFW != true && (\n      isForSale == true || defined(redbubbleUrl) || defined(gelatoUrl)\n    )])\n}': HomeExtrasQueryResult;
     '\n  {\n    "paintings": *[_type == "painting" && defined(slug.current)]\n      {\n        _id,\n        "slug": slug.current,\n        title,\n        medium,\n        isFeatured,\n        isFanArt,\n        isNSFW,\n        isForSale,\n        tagsV2[]->{name},\n        viewsCount,\n        paintedAt,\n        video,\n        "imagesCount": coalesce(count(images), 0),\n        image {\n          ...,\n          "lqip": asset->metadata.lqip,\n          "aspectRatio": asset->metadata.dimensions.aspectRatio,\n          "palette": asset->metadata.palette\n        }\n      },\n    "tags": *[\n      _type == "tag" &&\n      count(*[_type == "painting" && references(^._id)]) > 0\n    ]\n    | order(name asc) {\n      _id,\n      name,\n      "paintingsCount": count(*[_type == "painting" && references(^._id)].title)\n    }\n  }\n  ': GetAllPaintingsandTagsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    viewsCount,\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "palette": asset->metadata.palette\n    }\n  }\n': GetPaginatedPaintingsResult;
     '\n  count(*[_type == "painting" && defined(slug.current)])\n': GetPaintingsCountResult;
     '\n  *[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )]\n  | order(isFeatured desc, paintedAt desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    tagsV2[]->{name},\n    viewsCount,\n    paintedAt,\n    video,\n    "imagesCount": coalesce(count(images), 0),\n    image {\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "palette": asset->metadata.palette\n    }\n  }\n': GetFilteredPaginatedPaintingsResult;
     '\n  count(*[_type == "painting" && defined(slug.current) && (\n    ($filter0 == "" || $filter0 in tagsV2[]->name)\n    && ($filter1 == "" || $filter1 in tagsV2[]->name)\n    && ($filter2 == "" || $filter2 in tagsV2[]->name)\n    && ($filter3 == "" || $filter3 in tagsV2[]->name)\n    && ($filter4 == "" || $filter4 in tagsV2[]->name)\n  )])\n': GetFilteredPaintingsCountResult;
-    '\n    {\n      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]\n        | order(projectStart desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]\n        | order(projectEnd desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "tags": *[\n        _type == "tag" &&\n        count(*[_type == "project" && references(^._id)]) > 0\n      ]\n      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        isFeatured,\n        "count": count(*[_type == "project" && references(^._id)]),\n        "projectsCount": count(*[_type == "project" && references(^._id)])\n      }\n    }\n    ': GetAllProjectsResult;
+    '\n    {\n      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]\n        | order(projectStart desc) {\n          _id,\n          "slug": slug.current,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          client,\n          summary,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]\n        | order(projectEnd desc) {\n          _id,\n          "slug": slug.current,\n          "seoDescription": coalesce(seo.description, ""),\n          projectType,\n          projectStart,\n          projectEnd,\n          status,\n          name,\n          client,\n          summary,\n          "tags": tags[]->{name},\n          image {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        },\n      "tags": *[\n        _type == "tag" &&\n        count(*[_type == "project" && references(^._id)]) > 0\n      ]\n      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {\n        _id,\n        name,\n        isFeatured,\n        "count": count(*[_type == "project" && references(^._id)]),\n        "projectsCount": count(*[_type == "project" && references(^._id)])\n      }\n    }\n    ': GetAllProjectsResult;
     '\n      {\n        "videos": *[_type == "video" && defined(slug.current)]\n        | order(date desc, _updatedAt desc) {\n          _id,\n          "slug": slug.current,\n          title,\n          "featured": featured == true,\n          description,\n          videoUrl,\n          "linkedPainting": coalesce(linkedPainting->{\n            _id,\n            "slug": slug.current,\n            title,\n            image{\n              ...,\n              "lqip": asset->metadata.lqip\n            }\n          }, null),\n          tags[]->{name},\n          thumbnail {\n            ...,\n            "lqip": asset->metadata.lqip\n          }\n        }\n      }\n    ': GetAllVideosResult;
     '\n  *[_type == "video" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": coalesce(seo.image, thumbnail),\n      "noIndex": seo.noIndex == true\n    },\n    videoUrl,\n    "featured": featured == true,\n    "viewsCount": coalesce(viewsCount, 0),\n    "likesCount": count(likes),\n    "linkedPainting": coalesce(linkedPainting->{\n      _id,\n      "slug": slug.current,\n      title,\n      description,\n      image{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      }\n    }, null),\n    tags[]->{name},\n    thumbnail {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': VideoBySlugQueryResult;
     '\n  *[_type == "video" && defined(slug.current)] { "slug": slug.current }\n': VideosSlugsResult;
@@ -5132,7 +5177,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "presentation" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    noIndex,\n    tldr,\n    tldrPosition,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, description, ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n    tags[]->{\n      _id,\n      name\n    },\n    slides[] {\n      _type,\n      status,\n      _type == "contentSlide" => {\n        title,\n        subtitle,\n        content,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        },\n        category->{\n          _id,\n          name,\n          description,\n          color\n        },\n        sources[] {\n          text,\n          url\n        },\n        tools[] {\n          name,\n          description,\n          url,\n          category,\n          workshopUrl,\n          nerdLevel\n        },\n        examples[] {\n          name,\n          description,\n          image {\n            ...,\n            "url": asset->url,\n            "lqip": asset->metadata.lqip,\n            "aspectRatio": asset->metadata.dimensions.aspectRatio\n          },\n          iframe,\n          url\n        }\n      },\n      _type == "titleSlide" => {\n        title,\n        subtitle,\n        slideDesign,\n        media {\n          mediaType,\n          mediaType == "image" => {\n            image {\n              ...,\n              "url": asset->url,\n              "lqip": asset->metadata.lqip,\n              "aspectRatio": asset->metadata.dimensions.aspectRatio,\n              alt\n            },\n            imageAspectRatio\n          },\n          mediaType == "video" => {\n            videoUrl\n          },\n          mediaType == "iframe" => {\n            iframeUrl,\n            iframeAspectRatio\n          },\n          mediaType == "numbers" => {\n            metrics[] {\n              label,\n              value,\n              description,\n              color\n            }\n          },\n          mediaType == "graph" => {\n            chartType\n          },\n          mediaType == "custom" => {\n            componentName,\n            componentProps\n          }\n        }\n      },\n      _type == "separatorSlide" => {\n        title,\n        slideDesign,\n        category->{\n          _id,\n          name,\n          description,\n          color\n        }\n      }\n    }\n  }\n': PresentationQueryResult;
     '\n  *[_type == "presentation" && defined(slug.current)] | order(_createdAt desc) {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    "slidesCount": count(slides),\n    _createdAt,\n    tags[]->{\n      _id,\n      name\n    },\n    "coverImage": coalesce(\n      slides[_type == "titleSlide" && media.mediaType == "image"][0].media.image {\n        ...,\n        alt,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      },\n      slides[_type == "contentSlide" && media.mediaType == "image"][0].media.image {\n        ...,\n        alt,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio\n      },\n      null\n    )\n  }\n': AllPresentationsQueryResult;
     '\n  *[_type == "presentation" && defined(slug.current)] { "slug": slug.current }\n': PresentationSlugsQueryResult;
-    '\n  *[_type == "project" && defined(slug.current)]\n  | order(projectStart desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    title,\n    description,\n    seoDescription,\n    projectType,\n    projectStart,\n    projectEnd,\n    status,\n    content,\n    name,\n    "tags": tags[]->{name},\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': GetPaginatedProjectsResult;
+    '\n  *[_type == "project" && defined(slug.current)]\n  | order(projectStart desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    description,\n    seoDescription,\n    projectType,\n    projectStart,\n    projectEnd,\n    status,\n    content,\n    name,\n    client,\n    "tags": tags[]->{name},\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': GetPaginatedProjectsResult;
     '\n  count(*[_type == "project" && defined(slug.current)])\n': GetProjectsCountResult;
   }
 }

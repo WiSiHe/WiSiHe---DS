@@ -8,6 +8,7 @@ import { seoType } from './seoType';
 import { socialType } from './socialType';
 import { tag } from './tag';
 import { PROJECT_TAG_GUIDE, validateContentTags } from './tagGuidance';
+import { PROJECT_SUMMARY_MAX_CHARS, portableTextCharCount } from './validators/portableTextLength';
 
 export default defineType({
   name: 'project',
@@ -44,16 +45,21 @@ export default defineType({
 
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Title',
       type: 'string',
       group: 'main',
-      description: (
-        <details>
-          <summary>Why is this important?</summary>
-          <p>The Googlebot is an indexer of...</p>
-        </details>
-      ),
-      validation: rule => rule.required().error('Name is required'),
+      description:
+        'Primary project name shown on the site (e.g. "Transport Optimisation Dashboard"). Use Title Case — not ALL CAPS.',
+      validation: rule => rule.required().error('Title is required'),
+    }),
+
+    defineField({
+      name: 'client',
+      title: 'Client / context',
+      type: 'string',
+      group: 'main',
+      description:
+        'Optional label for the client, employer, or event (e.g. "Bama", "Hackathon"). Shown above the title on project pages.',
     }),
 
     defineField({
@@ -149,11 +155,35 @@ export default defineType({
     }),
 
     defineField({
+      name: 'summary',
+      title: 'Summary',
+      type: 'blockContentMinimal',
+      group: 'main',
+      description:
+        'Short intro shown in the project sidebar (2–3 paragraphs, ~400 characters). The full case study lives in Content.',
+      validation: rule =>
+        rule.custom(
+          (
+            blocks:
+              | Array<{ _type?: string; children?: Array<{ text?: string | null }> }>
+              | undefined,
+          ) => {
+            const count = portableTextCharCount(blocks);
+            if (count === 0) return true;
+            if (count > PROJECT_SUMMARY_MAX_CHARS) {
+              return `Keep the summary under ${PROJECT_SUMMARY_MAX_CHARS} characters (currently ${count}).`;
+            }
+            return true;
+          },
+        ),
+    }),
+
+    defineField({
       name: 'content',
-      title: 'Content',
+      title: 'Case study',
       type: 'blockContent',
       group: 'main',
-      description: 'Rich text describing the project',
+      description: 'Full case study — rendered below the project overview on the detail page.',
     }),
 
     defineField({
@@ -246,14 +276,19 @@ export default defineType({
   preview: {
     select: {
       title: 'name',
+      client: 'client',
       media: 'image',
       status: 'status',
       desc: 'seo.description',
       start: 'projectStart',
       end: 'projectEnd',
     },
-    prepare({ title, media, status, desc, start, end }) {
+    prepare({ title, client, media, status, desc, start, end }) {
       const shortDesc = typeof desc === 'string' ? desc.substring(0, 50) : '';
+      const displayTitle =
+        typeof client === 'string' && client.trim()
+          ? `${client.trim()} — ${typeof title === 'string' ? title : 'Untitled Project'}`
+          : (typeof title === 'string' ? title : '') || 'Untitled Project';
       // Build a date range display if needed
       let dateRange = start ? `From ${start}` : '';
       if (end) {
@@ -261,7 +296,7 @@ export default defineType({
       }
 
       return {
-        title: (typeof title === 'string' ? title : '') || 'Untitled Project',
+        title: displayTitle,
         media: media,
         subtitle:
           // If both status and dateRange exist
