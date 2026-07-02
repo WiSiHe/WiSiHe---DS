@@ -3,6 +3,15 @@
  * Importing other npm packages here could lead to needlessly increasing the client bundle size, or end up in a server-only function that don't need it.
  */
 
+import {
+  sanityApiVersion,
+  sanityDataset,
+  sanityProjectId,
+  sanityReadToken,
+  sanityStudioUrl,
+  sanityWriteToken,
+} from '@/lib/env';
+
 export function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
     throw new Error(errorMessage);
@@ -11,19 +20,16 @@ export function assertValue<T>(v: T | undefined, errorMessage: string): T {
 }
 
 export const dataset = assertValue(
-  process.env['NEXT_PUBLIC_SANITY_DATASET'],
+  sanityDataset(),
   'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET',
 );
 
 export const projectId = assertValue(
-  process.env['NEXT_PUBLIC_SANITY_PROJECT_ID'],
+  sanityProjectId(),
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID',
 );
 
-export const apiVersion = process.env['NEXT_PUBLIC_SANITY_API_VERSION'] || '2024-10-28';
-
-export const studioUrl = process.env['NEXT_PUBLIC_SANITY_STUDIO_URL'] || 'http://localhost:3333';
-
-export const readToken = process.env['NEXT_PUBLIC_SANITY_API_READ_TOKEN'];
-
-export const writeToken = process.env['NEXT_PUBLIC_SANITY_API_WRITE_TOKEN'];
+export const apiVersion = sanityApiVersion();
+export const studioUrl = sanityStudioUrl();
+export const readToken = sanityReadToken();
+export const writeToken = sanityWriteToken();

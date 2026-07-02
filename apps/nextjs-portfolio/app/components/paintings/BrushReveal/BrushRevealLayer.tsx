@@ -1,14 +1,15 @@
 'use client';
 
 /**
- * Card brush reveal — wash + four thick strokes + metadata (tags, badges, title).
- * Driven by GSAP via `BrushRevealWrap` / `useBrushReveal`.
+ * Card brush reveal — wash + layered SVG strokes + metadata (tags, badges, title).
+ * Driven by Motion via `BrushRevealWrap` context.
  */
 
+import { motion, type Variants } from 'motion/react';
 import { type CSSProperties, type ReactNode, useId } from 'react';
 import {
   type BrushStrokeProfile,
-  getBrushProfileConfig,
+  resolveBrushProfile,
 } from '@/app/components/marketing/HeroSection/brushStrokeConstants';
 import {
   type BrushStrokeLayer,
@@ -16,10 +17,77 @@ import {
   paintingBrushSeed,
 } from '@/app/components/marketing/HeroSection/brushStrokeVariants';
 import { NSFW_FILTER_HINT, NSFW_MATURE_LABEL } from '@/lib/paintings/nsfwCover';
+import { BrushPaletteWash } from './BrushFrostedWash';
+import { useBrushReveal } from './BrushRevealContext';
+import {
+  BRUSH_OVERLAY_GROUP_STAGGER,
+  BRUSH_OVERLAY_ITEM_STAGGER,
+  brushOverlayEnterDelay,
+  brushOverlayItemTransition,
+  brushStrokeTransition,
+  brushWashTransition,
+} from './brushRevealMotion';
 
 export { getBrushStrokeVariant, paintingBrushSeed };
 
-const LAYER_BASE_CLASS = `svg-stroke absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center`;
+const LAYER_BASE_CLASS =
+  'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center';
+
+const CHIP_CLASS =
+  'rounded-md bg-black/70 px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider text-white border border-white/20 shadow-sm sm:text-[10px]';
+
+const TITLE_CLASS =
+  'line-clamp-2 font-serif text-base font-medium italic leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:text-lg [@supports(color:contrast-color(red))]:text-[contrast-color(var(--brush-wash))]';
+
+const OVERLAY_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+function overlayRootVariants(reduced: boolean, enterDelay: number): Variants {
+  if (reduced) {
+    return {
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: { duration: 0.2, ease: OVERLAY_EASE },
+      },
+    };
+  }
+  return {
+    hidden: {
+      opacity: 0,
+      transition: { when: 'afterChildren', staggerDirection: -1, staggerChildren: 0.04 },
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: 'beforeChildren',
+        delayChildren: enterDelay,
+        staggerChildren: BRUSH_OVERLAY_GROUP_STAGGER,
+      },
+    },
+  };
+}
+
+const overlayGroupVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: BRUSH_OVERLAY_ITEM_STAGGER },
+  },
+};
+
+function overlayItemVariants(reduced: boolean): Variants {
+  return {
+    hidden: {
+      opacity: 0,
+      y: reduced ? 0 : 8,
+      transition: brushOverlayItemTransition(false, reduced),
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: brushOverlayItemTransition(true, reduced),
+    },
+  };
+}
 
 function layerSizeStyle(layerSizePercent: number): CSSProperties {
   const size = `${layerSizePercent}%`;
@@ -32,25 +100,53 @@ function layerTransform(layer: BrushStrokeLayer): string {
     : `rotate(${layer.rotateDeg}deg)`;
 }
 
-function BrushStrokeSvg({
+function BrushStrokePath({
   layer,
   color,
   className,
-  filterId,
   strokeWidthRest,
+  strokeWidthHover,
   layerSizePercent,
+  strokeOpacity,
+  index,
+  layerCount,
+  filterId,
+  paintOver,
+  strokeBlendMode,
+  opacityOnly,
+  useStrokeFilter,
 }: {
   layer: BrushStrokeLayer;
   color: string;
   className: string;
-  filterId: string;
   strokeWidthRest: number;
+  strokeWidthHover: number;
   layerSizePercent: number;
+  strokeOpacity: number;
+  index: number;
+  layerCount: number;
+  filterId: string;
+  paintOver: boolean;
+  strokeBlendMode?: CSSProperties['mixBlendMode'];
+  opacityOnly: boolean;
+  useStrokeFilter: boolean;
 }) {
+  const { isActive, reduceMotion, liteMode } = useBrushReveal();
+  const widthScale = layer.widthScale ?? 1;
+  const opacityScale = layer.opacityScale ?? 1;
+  const restWidth = strokeWidthRest * 0.85 * widthScale;
+  const hoverWidth = strokeWidthHover * widthScale;
+  const peakOpacity = strokeOpacity * opacityScale;
+  const strokeFilter = useStrokeFilter ? `url(#${filterId})` : undefined;
+
   return (
     <div
       className={className}
-      style={{ ...layerSizeStyle(layerSizePercent), transform: layerTransform(layer) }}
+      style={{
+        ...layerSizeStyle(layerSizePercent),
+        transform: layerTransform(layer),
+        ...(strokeBlendMode ? { mixBlendMode: strokeBlendMode } : {}),
+      }}
     >
       <svg
         className='block h-full w-full'
@@ -58,17 +154,50 @@ function BrushStrokeSvg({
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
         preserveAspectRatio='xMidYMid slice'
+        aria-hidden
       >
         <title>Decorative brush stroke</title>
-        <path
+        <motion.path
           d={layer.d}
           stroke={color}
-          strokeWidth={strokeWidthRest}
           strokeLinecap='round'
           strokeLinejoin='round'
           fill='none'
-          filter={`url(#${filterId})`}
-          style={{ opacity: 0 }}
+          filter={strokeFilter}
+          initial={
+            opacityOnly
+              ? {
+                  pathLength: 1,
+                  opacity: 0,
+                  strokeWidth: hoverWidth,
+                }
+              : {
+                  pathLength: 0,
+                  opacity: 0,
+                  strokeWidth: restWidth,
+                }
+          }
+          animate={
+            opacityOnly
+              ? {
+                  pathLength: 1,
+                  opacity: isActive ? peakOpacity : 0,
+                  strokeWidth: hoverWidth,
+                }
+              : {
+                  pathLength: isActive ? 1 : 0,
+                  opacity: isActive ? peakOpacity : 0,
+                  strokeWidth: isActive ? hoverWidth : restWidth,
+                }
+          }
+          transition={brushStrokeTransition(
+            index,
+            isActive,
+            reduceMotion,
+            layerCount,
+            paintOver,
+            liteMode,
+          )}
         />
       </svg>
     </div>
@@ -108,136 +237,185 @@ export function BrushRevealLayer({
   isNsfwBlurred = false,
   profile = 'masonry',
 }: BrushRevealLayerProps) {
-  const brushProfile = getBrushProfileConfig(profile);
+  const { isActive, reduceMotion, liteMode } = useBrushReveal();
+  const brushProfile = resolveBrushProfile(profile, liteMode);
+  const { solidFill } = brushProfile;
+  const paintOver = solidFill;
+  const opacityOnly = liteMode;
+  const useStrokeFilter = brushProfile.strokeBlur > 0;
+  const filterId = useId().replace(/:/g, '');
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const scale = brushProfile.coverScale(variant.scale);
   const displayTags = (tags ?? []).filter(Boolean);
   const visibleTags = displayTags.slice(0, 4);
-  const filterId = useId().replace(/:/g, '');
-
-  const chipClass =
-    'rounded-md bg-black/55 px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-sm sm:text-[10px]';
-
-  const layerColors = [accentColor, secondaryColor, accentColor, secondaryColor] as const;
+  const layerColors = solidFill
+    ? Array.from({ length: brushProfile.layerCount }, () => washColor)
+    : Array.from({ length: brushProfile.layerCount }, (_, i) =>
+        i % 2 === 0 ? accentColor : secondaryColor,
+      );
+  const overlayDelay = brushOverlayEnterDelay(paintOver, liteMode);
+  const chipVariants = overlayItemVariants(reduceMotion);
+  const showStrokes = !isNsfwBlurred && !reduceMotion && (!liteMode || isActive);
 
   return (
     <>
       {!isNsfwBlurred ? (
-        <div
-          data-brush-wash
-          className='pointer-events-none absolute inset-0 z-[6] opacity-0'
-          style={{ backgroundColor: washColor }}
-          aria-hidden
+        <BrushPaletteWash
+          washColor={washColor}
+          washOpacity={brushProfile.washOpacity}
+          isActive={isActive}
+          transition={brushWashTransition(isActive, reduceMotion, paintOver, liteMode)}
+          blendMode={brushProfile.washBlendMode}
         />
       ) : null}
 
-      {!isNsfwBlurred ? (
+      {showStrokes ? (
         <div
           data-brush-svg
           className='pointer-events-none absolute inset-0 z-10 overflow-hidden'
           aria-hidden
           style={{ transform: `scale(${scale})` }}
         >
-          <svg className='absolute h-0 w-0' aria-hidden='true'>
-            <title>Brush stroke filters</title>
-            <defs>
-              <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
-                <feGaussianBlur
-                  in='SourceGraphic'
-                  stdDeviation={brushProfile.strokeBlur}
-                  result='blur'
-                />
-                <feMerge>
-                  <feMergeNode in='blur' />
-                  <feMergeNode in='SourceGraphic' />
-                </feMerge>
-              </filter>
-            </defs>
-          </svg>
-
+          {useStrokeFilter ? (
+            <svg className='absolute h-0 w-0' aria-hidden>
+              <defs>
+                <filter id={filterId} x='-35%' y='-35%' width='170%' height='170%'>
+                  <feGaussianBlur
+                    in='SourceGraphic'
+                    stdDeviation={brushProfile.strokeBlur}
+                    result='blur'
+                  />
+                  {solidFill ? (
+                    <feMerge>
+                      <feMergeNode in='blur' />
+                    </feMerge>
+                  ) : (
+                    <feMerge>
+                      <feMergeNode in='blur' />
+                      <feMergeNode in='SourceGraphic' />
+                    </feMerge>
+                  )}
+                </filter>
+              </defs>
+            </svg>
+          ) : null}
           {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
-            <BrushStrokeSvg
+            <BrushStrokePath
               key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
               layer={layer}
-              color={layerColors[index % layerColors.length] ?? accentColor}
-              filterId={filterId}
+              color={layerColors[index % layerColors.length] ?? washColor}
               className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
               strokeWidthRest={brushProfile.rest}
+              strokeWidthHover={brushProfile.hover}
               layerSizePercent={brushProfile.layerSizePercent}
+              strokeOpacity={brushProfile.strokeOpacity}
+              index={index}
+              layerCount={brushProfile.layerCount}
+              filterId={filterId}
+              paintOver={paintOver}
+              strokeBlendMode={brushProfile.strokeBlendMode}
+              opacityOnly={opacityOnly}
+              useStrokeFilter={useStrokeFilter}
             />
           ))}
         </div>
       ) : null}
 
-      <div
+      <motion.div
         data-brush-overlay
-        className='pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2 sm:p-2.5 opacity-0'
+        className='pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2 sm:p-2.5'
+        style={{ '--brush-wash': washColor } as CSSProperties}
+        initial='hidden'
+        animate={isActive ? 'visible' : 'hidden'}
+        variants={overlayRootVariants(reduceMotion, overlayDelay)}
       >
-        <div className='flex items-start justify-between gap-2'>
-          <div className='flex min-w-0 flex-1 flex-wrap items-start gap-1 pr-1'>
+        <motion.div
+          className='flex items-start justify-between gap-2'
+          variants={overlayGroupVariants}
+        >
+          <motion.div
+            className='flex min-w-0 flex-1 flex-wrap items-start gap-1 pr-1'
+            variants={overlayGroupVariants}
+            data-brush-tags
+          >
             {isNsfwBlurred ? (
-              <span className={`${chipClass} border-white/25 bg-black/65`} title={NSFW_FILTER_HINT}>
+              <motion.span
+                variants={chipVariants}
+                className={`${CHIP_CLASS} border-white/25 bg-black/80`}
+                title={NSFW_FILTER_HINT}
+              >
                 {NSFW_MATURE_LABEL}
-              </span>
+              </motion.span>
             ) : null}
-            {visibleTags.length > 0 ? (
-              <div className='flex flex-wrap gap-1' data-brush-tags>
-                {visibleTags.map(tag => (
-                  <span
-                    key={tag}
-                    className={chipClass}
-                    style={{ boxShadow: `0 0 10px ${accentColor}44` }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            ) : null}
-          </div>
+            {visibleTags.map(tag => (
+              <motion.span
+                key={tag}
+                variants={chipVariants}
+                className={CHIP_CLASS}
+                style={{ boxShadow: `0 0 10px ${accentColor}44` }}
+              >
+                {tag}
+              </motion.span>
+            ))}
+          </motion.div>
 
           {badges.length > 0 ? (
-            <ul
+            <motion.ul
               className='flex shrink-0 flex-col gap-1'
               data-brush-badges
               aria-label='Painting attributes'
+              variants={overlayGroupVariants}
             >
               {badges.map(badge => (
-                <li key={badge.key}>
+                <motion.li key={badge.key} variants={chipVariants}>
                   <span
-                    className='inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/20 bg-black/55 text-white shadow-sm backdrop-blur-md'
+                    className='inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/20 bg-black/70 text-white shadow-sm'
                     title={badge.label}
                   >
                     <span className='sr-only'>{badge.label}</span>
                     {badge.icon}
                   </span>
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
           ) : null}
-        </div>
+        </motion.div>
 
         {title ? (
-          <div data-brush-title className='mt-auto flex flex-col items-start space-y-0.5 text-left'>
-            <p className='line-clamp-2 font-serif text-base font-medium italic leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:text-lg'>
+          <motion.div
+            data-brush-title
+            className='mt-auto flex flex-col items-start space-y-0.5 text-left'
+            variants={overlayGroupVariants}
+          >
+            <motion.p variants={chipVariants} className={TITLE_CLASS}>
               {title}
-            </p>
+            </motion.p>
             {(year || medium) && (
-              <div className='flex flex-wrap items-center gap-1.5'>
+              <motion.div
+                className='flex flex-wrap items-center gap-1.5'
+                variants={overlayGroupVariants}
+              >
                 {year ? (
-                  <span className='rounded border border-white/10 bg-black/50 px-1.5 py-0.5 font-sans text-[9px] font-bold text-white/90 backdrop-blur-sm'>
+                  <motion.span
+                    variants={chipVariants}
+                    className='rounded border border-white/10 bg-black/65 px-1.5 py-0.5 font-sans text-[9px] font-bold text-white/90'
+                  >
                     {year}
-                  </span>
+                  </motion.span>
                 ) : null}
                 {medium ? (
-                  <span className='max-w-[150px] truncate font-mono text-[8px] font-semibold uppercase tracking-wider text-white/80 drop-shadow-sm'>
+                  <motion.span
+                    variants={chipVariants}
+                    className='max-w-[150px] truncate font-mono text-[8px] font-semibold uppercase tracking-wider text-white/80 drop-shadow-sm'
+                  >
                     {medium}
-                  </span>
+                  </motion.span>
                 ) : null}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         ) : null}
-      </div>
+      </motion.div>
     </>
   );
 }

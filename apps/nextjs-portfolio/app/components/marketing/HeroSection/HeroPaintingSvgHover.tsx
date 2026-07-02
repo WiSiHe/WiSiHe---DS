@@ -6,11 +6,14 @@
 
 import { motion, type Variants } from 'motion/react';
 import { type CSSProperties, useId } from 'react';
-
+import { BrushPaletteWash } from '@/app/components/paintings/BrushReveal/BrushFrostedWash';
+import { brushWashTransition } from '@/app/components/paintings/BrushReveal/brushRevealMotion';
+import { useBrushRevealLite } from '@/lib/paintings/mediaCapabilities';
 import {
   type BrushStrokeProfile,
   getBrushProfileConfig,
   HERO_BRUSH_STROKE_WIDTH_REST,
+  resolveBrushProfile,
 } from './brushStrokeConstants';
 import {
   type BrushStrokeLayer,
@@ -152,7 +155,26 @@ function strokePathVariants(
   peakOpacity: number,
   delay = 0,
   drawDuration = 0.85,
+  opacityOnly = false,
 ): Variants {
+  if (opacityOnly) {
+    return {
+      initial: {
+        pathLength: 1,
+        strokeWidth: hoverStrokeWidth,
+        opacity: 0,
+      },
+      hover: {
+        pathLength: 1,
+        strokeWidth: hoverStrokeWidth,
+        opacity: peakOpacity,
+        transition: {
+          opacity: { duration: drawDuration * 0.45, ease: 'easeOut', delay },
+        },
+      },
+    };
+  }
+
   return {
     initial: {
       pathLength: 0,
@@ -187,6 +209,7 @@ function BrushStrokeSvg({
   layerSizePercent,
   motionState,
   strokeBlendMode,
+  useStrokeFilter,
 }: {
   layer: BrushStrokeLayer;
   color: string;
@@ -198,13 +221,14 @@ function BrushStrokeSvg({
   layerSizePercent: number;
   motionState?: 'initial' | 'hover';
   strokeBlendMode?: CSSProperties['mixBlendMode'];
+  useStrokeFilter: boolean;
 }) {
   const paintProps = {
     stroke: color,
     strokeLinecap: 'round' as const,
     strokeLinejoin: 'round' as const,
     fill: 'none' as const,
-    filter: `url(#${filterId})`,
+    ...(useStrokeFilter ? { filter: `url(#${filterId})` } : {}),
   };
 
   return (
@@ -312,7 +336,9 @@ export function HeroPaintingSvgHover({
   titleOnly = true,
   hoverMode = 'blend',
 }: HeroPaintingSvgHoverProps) {
-  const brushProfile = getBrushProfileConfig(profileForMode(hoverMode));
+  const liteMode = useBrushRevealLite();
+  const brushProfile = resolveBrushProfile(profileForMode(hoverMode), liteMode);
+  const useStrokeFilter = brushProfile.strokeBlur > 0;
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const filterId = useId().replace(/:/g, '');
   const scale = brushProfile.coverScale(variant.scale);
@@ -323,7 +349,8 @@ export function HeroPaintingSvgHover({
   const isOpaquePaintOver = hoverMode === 'paintOver';
   const layers = variant.layers.slice(0, brushProfile.layerCount);
   const strokeDrawDuration = isBlend ? 0.82 : isSpotlight ? 0.68 : 0.95;
-  const layerStagger = isBlend ? 0.14 : 0.14;
+  const layerStagger = liteMode ? 0.035 : isBlend ? 0.14 : 0.14;
+  const showSvg = !isNsfwBlurred && (!liteMode || isHovered);
 
   const overlayVariants: Variants = {
     initial: { opacity: 0, y: 10 },
@@ -338,13 +365,7 @@ export function HeroPaintingSvgHover({
     },
   };
 
-  const washVariants: Variants = {
-    initial: { opacity: 0 },
-    hover: {
-      opacity: 1,
-      transition: { duration: 0.38, ease: [0.33, 0, 0.2, 1] },
-    },
-  };
+  const paintOverActive = useMotion ? isHovered : false;
 
   const scrimVariants: Variants = {
     initial: { opacity: 0 },
@@ -381,65 +402,68 @@ export function HeroPaintingSvgHover({
       ) : null}
 
       {isOpaquePaintOver && !isNsfwBlurred && washColor ? (
-        <motion.div
-          data-brush-wash
-          variants={useMotion ? washVariants : undefined}
-          animate={motionState}
-          initial='initial'
-          className='pointer-events-none absolute inset-0 z-[6]'
-          style={{ backgroundColor: washColor }}
-          aria-hidden
+        <BrushPaletteWash
+          washColor={washColor}
+          washOpacity={brushProfile.washOpacity}
+          isActive={paintOverActive}
+          transition={brushWashTransition(paintOverActive, false, true, liteMode)}
         />
       ) : null}
 
-      <div
-        data-hero-svg
-        data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
-        className={`pointer-events-none absolute inset-0 z-10 ${isOpaquePaintOver ? 'overflow-visible' : 'overflow-hidden'}`}
-        aria-hidden
-        style={{ transform: `scale(${scale})` }}
-      >
-        <svg className='absolute h-0 w-0' aria-hidden>
-          <defs>
-            <filter id={filterId} x='-20%' y='-20%' width='140%' height='140%'>
-              <feGaussianBlur
-                in='SourceGraphic'
-                stdDeviation={brushProfile.strokeBlur}
-                result='blur'
-              />
-              <feMerge>
-                <feMergeNode in='blur' />
-                <feMergeNode in='SourceGraphic' />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
-        {layers.map((layer, index) => (
-          <BrushStrokeSvg
-            key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
-            layer={layer}
-            color={layerColors[index % layerColors.length] ?? accentColor}
-            filterId={filterId}
-            className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
-            useMotion={useMotion}
-            pathVariants={
-              useMotion
-                ? strokePathVariants(
-                    brushProfile.rest,
-                    brushProfile.hover,
-                    brushProfile.strokeOpacity,
-                    index * layerStagger,
-                    strokeDrawDuration,
-                  )
-                : undefined
-            }
-            strokeWidthRest={brushProfile.rest}
-            layerSizePercent={brushProfile.layerSizePercent}
-            motionState={motionState}
-            strokeBlendMode={isBlend ? 'hard-light' : undefined}
-          />
-        ))}
-      </div>
+      {showSvg ? (
+        <div
+          data-hero-svg
+          data-nsfw-blurred={isNsfwBlurred ? '' : undefined}
+          className={`pointer-events-none absolute inset-0 z-10 ${isOpaquePaintOver ? 'overflow-visible' : 'overflow-hidden'}`}
+          aria-hidden
+          style={{ transform: `scale(${scale})` }}
+        >
+          {useStrokeFilter ? (
+            <svg className='absolute h-0 w-0' aria-hidden>
+              <defs>
+                <filter id={filterId} x='-20%' y='-20%' width='140%' height='140%'>
+                  <feGaussianBlur
+                    in='SourceGraphic'
+                    stdDeviation={brushProfile.strokeBlur}
+                    result='blur'
+                  />
+                  <feMerge>
+                    <feMergeNode in='blur' />
+                    <feMergeNode in='SourceGraphic' />
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
+          ) : null}
+          {layers.map((layer, index) => (
+            <BrushStrokeSvg
+              key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+              layer={layer}
+              color={layerColors[index % layerColors.length] ?? accentColor}
+              filterId={filterId}
+              className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
+              useMotion={useMotion}
+              pathVariants={
+                useMotion
+                  ? strokePathVariants(
+                      brushProfile.rest,
+                      brushProfile.hover,
+                      brushProfile.strokeOpacity,
+                      index * layerStagger,
+                      strokeDrawDuration,
+                      liteMode,
+                    )
+                  : undefined
+              }
+              strokeWidthRest={brushProfile.rest}
+              layerSizePercent={brushProfile.layerSizePercent}
+              motionState={motionState}
+              strokeBlendMode={brushProfile.strokeBlendMode}
+              useStrokeFilter={useStrokeFilter}
+            />
+          ))}
+        </div>
+      ) : null}
 
       {isNsfwBlurred ? (
         <div

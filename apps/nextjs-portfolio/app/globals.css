@@ -149,6 +149,63 @@ html ::-moz-selection {
 }
 
 /* ============================================================================
+   GLASS SURFACES (Safari-safe backdrop-filter)
+   -webkit-backdrop-filter + compositor layer (translateZ)
+   Lighter blur on mobile; solid fallback for prefers-reduced-transparency
+   ========================================================================= */
+
+@layer components {
+  .glass-surface-backdrop {
+    background-color: rgb(0 0 0 / 0.28);
+    box-shadow:
+      0 24px 64px rgb(0 0 0 / 0.45),
+      inset 0 1px 0 rgb(255 255 255 / 0.14);
+    /* No transform here — transform + backdrop-filter on the same node breaks sampling */
+  }
+
+  @media (min-width: 768px) {
+    .glass-surface-backdrop {
+      background-color: rgb(0 0 0 / 0.2);
+    }
+  }
+
+  .glass-surface-default {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  .glass-surface-overlay {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .glass-surface-backdrop,
+    .glass-surface-default,
+    .glass-surface-overlay {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    .glass-surface-backdrop {
+      background-color: rgb(8 8 8 / 0.88);
+    }
+
+    .glass-surface-overlay {
+      background-color: rgb(10 10 10 / 0.94);
+    }
+  }
+}
+
+/* ============================================================================
    ANIMATIONS
    ========================================================================= */
 

@@ -17,7 +17,7 @@ You can use **one Doppler project** with multiple **configs** (e.g. `dev`, `stg`
 ## 1. Create the Doppler project
 
 1. Sign in at [dashboard.doppler.com](https://dashboard.doppler.com).
-2. **Create Project** → e.g. `wisihe-portfolio`.
+2. **Create Project** → e.g. `portfolio`.
 3. Create configs:
    - **`dev`** — local development
    - **`stg`** — Vercel preview deployments (optional; can mirror `dev`)
@@ -27,7 +27,7 @@ You can use **one Doppler project** with multiple **configs** (e.g. `dev`, `stg`
 
 ## 2. Add secrets (production checklist)
 
-Copy variable **names** from [`.env.example`](../apps/nextjs-portfolio/.env.example). Values live only in Doppler.
+Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/nextjs-portfolio/.env.example). Full cross-app reference: [env-variables.md](./env-variables.md). Values live only in Doppler.
 
 ### Required for the live site
 
@@ -59,7 +59,7 @@ Copy variable **names** from [`.env.example`](../apps/nextjs-portfolio/.env.exam
 | `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` | About page map |
 | `YOUTUBE_API_KEY` | YouTube metadata |
 | `OPENAI_API_KEY` | AI tag suggestions API |
-| `SANITY_AI_BULK_SECRET` | Shared secret Studio ↔ Next.js AI route |
+| `SANITY_AI_PROXY_SECRET` | Shared secret Studio ↔ Next.js AI route |
 | `STATSIG_*` / `EXPERIMENTATION_*` | Feature flags (optional) |
 
 ### Sanity Studio & Algolia (same Doppler project or a `studio` config)
@@ -70,6 +70,7 @@ Copy variable **names** from [`.env.example`](../apps/nextjs-portfolio/.env.exam
 | `SANITY_STUDIO_DATASET` | Same as `NEXT_PUBLIC_SANITY_DATASET` |
 | `SANITY_STUDIO_PREVIEW_URL` | `https://www.wisihe.no` |
 | `SANITY_API_READ_TOKEN` | For `pnpm sync-algolia` scripts |
+| `OPENAI_API_KEY` | Studio Assist / bulk AI |
 | `ALGOLIA_APP_ID` | Same app ID as public |
 | `ALGOLIA_WRITE_KEY` | **Admin** key — server/scripts only |
 | `ALGOLIA_INDEX_NAME` | `wisihe-search` |
@@ -105,23 +106,38 @@ doppler login
 From the monorepo root:
 
 ```bash
-doppler setup --project wisihe-portfolio --config dev
+doppler setup --project portfolio --config dev
 ```
 
 This writes `.doppler.yaml` (safe to commit — it only stores project/config names, not secrets).
 
 ### Run apps with injected env
 
+From the monorepo root (scripts wrap `doppler run` automatically):
+
 ```bash
-# Next.js portfolio (port 1992)
-doppler run -- pnpm --filter nextjs-portfolio dev
+# Next.js portfolio + Storybook + Studio + wisihe-ai
+pnpm dev
 
-# Sanity Studio
-doppler run -- pnpm --filter sanity-studio dev
+# Sanity Studio only
+pnpm dev:studio
 
-# One-off Algolia sync
-doppler run -- pnpm --filter sanity-studio sync-algolia
+# wisihe-ai only
+pnpm dev:wisihe-ai
+
+# Algolia sync against production index
+pnpm sync-algolia
+pnpm set-algolia-settings
 ```
+
+Run a single app directly:
+
+```bash
+pnpm --filter nextjs-portfolio dev
+pnpm --filter sanity-studio dev
+```
+
+Use `:local` variants (e.g. `pnpm dev:local`) when using `.env.local` instead of Doppler.
 
 ### Without Doppler CLI
 
@@ -155,14 +171,14 @@ Without this, unique visitor counts may be under-reported. No extra Doppler vari
 
 ## 7. Algolia index maintenance
 
-After content or schema changes, from your machine (with Doppler `prd` or secrets that match production):
+After content or schema changes, from your machine:
 
 ```bash
-doppler run --config prd -- pnpm --filter sanity-studio sync-algolia
-doppler run --config prd -- pnpm --filter sanity-studio set-algolia-settings
+pnpm sync-algolia
+pnpm set-algolia-settings
 ```
 
-Use **`dev`** config locally if your Algolia index name differs per environment.
+Use `pnpm sync-algolia:dev` for the **dev** Doppler config when your Algolia index name differs per environment.
 
 ---
 
@@ -183,7 +199,7 @@ Use **`dev`** config locally if your Algolia index name differs per environment.
 | Contact form “not configured” | `RESEND_API_KEY` in **prd** only (server secret) |
 | PostHog shows zero users | Cookieless hash mode enabled in PostHog UI |
 | Studio preview wrong site | `SANITY_STUDIO_PREVIEW_URL` matches deployed URL |
-| Local env not loading | Using `.env.local` in the **app folder**, not repo root |
+| Local env not loading | Using `.env.local` in the **app folder**, not repo root — see [env-variables.md](./env-variables.md) |
 
 ---
 

@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "predev": "pnpm --filter @wisihe/tokens build && pnpm --filter @wisihe/sanity-bulk-ai build && pnpm --filter sanity-studio typegen",
-    "dev": "next dev --turbo -p 1992",
-    "dev:quick": "next dev --turbo -p 1992",
+    "dev": "doppler run -- next dev --turbo -p 1992",
+    "dev:local": "next dev --turbo -p 1992",
+    "dev:quick": "doppler run -- next dev --turbo -p 1992",
+    "dev:quick:local": "next dev --turbo -p 1992",
     "prebuild": "pnpm --filter @wisihe/tokens build && pnpm --filter @wisihe/sanity-bulk-ai build && pnpm --filter sanity-studio typegen",
     "build": "next build",
-    "start": "next start",
+    "start": "doppler run -- next start",
+    "start:local": "next start",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

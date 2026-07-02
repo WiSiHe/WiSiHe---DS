@@ -26,7 +26,7 @@ export async function suggestTagsFromProxy(input: {
     import.meta.env.VITE_AI_PROXY_SECRET?.trim();
   if (!secret) {
     throw new Error(
-      'Missing SANITY_APP_AI_PROXY_SECRET (or legacy VITE_AI_PROXY_SECRET). Use the same value as SANITY_AI_BULK_SECRET on the Next.js server.',
+      'Missing SANITY_APP_AI_PROXY_SECRET (or legacy VITE_AI_PROXY_SECRET). Use the same value as SANITY_AI_PROXY_SECRET on the Next.js server.',
     );
   }
 

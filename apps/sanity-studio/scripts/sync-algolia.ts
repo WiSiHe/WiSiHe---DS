@@ -2,13 +2,21 @@ import path from 'node:path';
 import { createClient } from '@sanity/client';
 import { algoliasearch } from 'algoliasearch';
 import * as dotenv from 'dotenv';
+import {
+  algoliaAppId,
+  algoliaIndexName,
+  algoliaWriteKey,
+  sanityReadToken,
+  studioDataset,
+  studioProjectId,
+} from '../lib/env';
 
 // Load .env.local specifically
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 // 1. Initialize Sanity Client
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-const dataset = process.env.SANITY_STUDIO_DATASET;
+const projectId = studioProjectId();
+const dataset = studioDataset();
 
 if (!projectId || !dataset) {
   console.error(
@@ -17,7 +25,7 @@ if (!projectId || !dataset) {
   process.exit(1);
 }
 
-const sanityToken = process.env.SANITY_API_READ_TOKEN;
+const sanityToken = sanityReadToken();
 if (!sanityToken) {
   console.error('Missing SANITY_API_READ_TOKEN in environment variables.');
   process.exit(1);
@@ -32,8 +40,8 @@ const sanityClient = createClient({
 });
 
 // 2. Initialize Algolia Client
-const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
-const ALGOLIA_WRITE_KEY = process.env.ALGOLIA_WRITE_KEY;
+const ALGOLIA_APP_ID = algoliaAppId();
+const ALGOLIA_WRITE_KEY = algoliaWriteKey();
 
 if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_KEY) {
   console.error('Missing ALGOLIA_APP_ID or ALGOLIA_WRITE_KEY in environment variables.');
@@ -41,7 +49,7 @@ if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_KEY) {
 }
 
 const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_KEY);
-const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME?.trim() || 'wisihe-search';
+const ALGOLIA_INDEX_NAME = algoliaIndexName();
 
 // 3. Define the GROQ Query
 // Projects are server-rendered via GROQ — not synced to Algolia.

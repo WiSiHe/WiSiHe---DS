@@ -1,103 +1,75 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-
-import {
-  brushRevealInstant,
-  brushRevealInstantLeave,
-  initBrushRevealPaths,
-  paintingSvgBrushEnter,
-  paintingSvgBrushLeave,
-} from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
-import { prefersFinePointerHover, prefersReducedMotion } from '@/lib/paintings/mediaCapabilities';
+import { useReducedMotion } from 'motion/react';
+import { type ReactNode, useMemo, useState } from 'react';
+import type { BrushStrokeProfile } from '@/app/components/marketing/HeroSection/brushStrokeConstants';
+import { prefersFinePointerHover, useBrushRevealLite } from '@/lib/paintings/mediaCapabilities';
+import { BrushRevealProvider } from './BrushRevealContext';
 
 type BrushRevealWrapProps = {
   children: ReactNode;
   className?: string;
   enabled?: boolean;
+  profile?: BrushStrokeProfile;
   /** When set, pointer handlers are skipped and hover is driven externally (hero cards). */
   hovered?: boolean;
 };
 
 /**
- * Drives GSAP brush reveal on painting cards (desktop fine pointer only).
+ * Provides brush-reveal hover state for `BrushRevealLayer` (desktop fine pointer only).
  */
 export function BrushRevealWrap({
   children,
   className,
   enabled = true,
+  profile = 'masonry',
   hovered,
 }: BrushRevealWrapProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const tlRef = useRef<globalThis.gsap.core.Timeline | null>(null);
-
-  useLayoutEffect(() => {
-    if (!enabled) return;
-    initBrushRevealPaths(rootRef.current);
-  }, [enabled]);
-
-  const runEnter = useCallback(() => {
-    if (!enabled) return;
-    const root = rootRef.current;
-    if (!root) return;
-
-    tlRef.current?.kill();
-    if (prefersReducedMotion()) {
-      brushRevealInstant(root);
-      return;
-    }
-    tlRef.current = paintingSvgBrushEnter(root);
-  }, [enabled]);
-
-  const runLeave = useCallback(() => {
-    if (!enabled) return;
-    const root = rootRef.current;
-    if (!root) return;
-
-    tlRef.current?.kill();
-    tlRef.current = null;
-    if (prefersReducedMotion()) {
-      brushRevealInstantLeave(root);
-      return;
-    }
-    paintingSvgBrushLeave(root);
-  }, [enabled]);
-
-  const onPointerEnter = () => {
-    if (!prefersFinePointerHover()) return;
-    runEnter();
-  };
-
-  const onPointerLeave = () => {
-    if (!prefersFinePointerHover()) return;
-    runLeave();
-  };
+  const reduceMotion = useReducedMotion();
+  const liteMode = useBrushRevealLite();
+  const [pointerActive, setPointerActive] = useState(false);
 
   const isControlled = hovered !== undefined;
+  const isActive = enabled && (isControlled ? Boolean(hovered) : pointerActive);
 
-  useEffect(() => {
-    if (!enabled || !isControlled) return;
-    if (hovered) runEnter();
-    else runLeave();
-  }, [enabled, hovered, isControlled, runEnter, runLeave]);
+  const contextValue = useMemo(
+    () => ({
+      isActive,
+      reduceMotion: Boolean(reduceMotion),
+      liteMode,
+      profile,
+    }),
+    [enabled, isActive, liteMode, profile, reduceMotion],
+  );
+
+  const activate = () => {
+    if (!prefersFinePointerHover()) return;
+    setPointerActive(true);
+  };
+
+  const deactivate = () => {
+    if (!prefersFinePointerHover()) return;
+    setPointerActive(false);
+  };
 
   if (!enabled) {
     return <div className={cn('h-full w-full', className)}>{children}</div>;
   }
 
   return (
-    <div
-      ref={rootRef}
-      className={cn('h-full w-full', className)}
-      {...(isControlled
-        ? {}
-        : {
-            onPointerEnter,
-            onPointerLeave,
-          })}
-    >
-      {children}
-    </div>
+    <BrushRevealProvider value={contextValue}>
+      <div
+        className={cn('h-full w-full', className)}
+        {...(isControlled
+          ? {}
+          : {
+              onPointerEnter: activate,
+              onPointerLeave: deactivate,
+            })}
+      >
+        {children}
+      </div>
+    </BrushRevealProvider>
   );
 }

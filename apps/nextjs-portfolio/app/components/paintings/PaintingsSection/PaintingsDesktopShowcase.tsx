@@ -121,8 +121,6 @@ const PaintingsDesktopShowcase = ({ paintings }: PaintingsDesktopShowcaseProps) 
           duration={0.6}
           stagger={0.05}
           animateFrom='bottom'
-          scaleOnHover
-          hoverScale={0.97}
           blurToFocus
           colorShiftOnHover={false}
         />

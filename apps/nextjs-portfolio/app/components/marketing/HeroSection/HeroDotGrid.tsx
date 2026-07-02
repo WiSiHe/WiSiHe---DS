@@ -2,8 +2,7 @@
 
 import { motion, useReducedMotion } from 'motion/react';
 
-const DOT_MASK =
-  'radial-gradient(ellipse 72% 58% at 50% 44%, transparent 0%, transparent 52%, black 100%)';
+const DOT_MASK = 'radial-gradient(ellipse 60% 48% at 50% 46%, transparent 0%, black 78%)';
 
 const dotLayerStyle = {
   backgroundImage: 'radial-gradient(var(--color-foreground) 1.5px, transparent 1.5px)',

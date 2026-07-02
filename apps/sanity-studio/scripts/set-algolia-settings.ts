@@ -1,12 +1,13 @@
 import path from 'node:path';
 import { algoliasearch } from 'algoliasearch';
 import * as dotenv from 'dotenv';
+import { algoliaAppId, algoliaIndexName, algoliaWriteKey } from '../lib/env';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
-const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID || process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '';
-const ALGOLIA_WRITE_KEY = process.env.ALGOLIA_WRITE_KEY || '';
-const INDEX = process.env.ALGOLIA_INDEX_NAME?.trim() || 'wisihe-search';
+const ALGOLIA_APP_ID = algoliaAppId();
+const ALGOLIA_WRITE_KEY = algoliaWriteKey();
+const INDEX = algoliaIndexName();
 
 if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_KEY) {
   console.error('Missing ALGOLIA_APP_ID or ALGOLIA_WRITE_KEY in environment variables.');

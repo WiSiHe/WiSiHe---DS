@@ -7,9 +7,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "sanity build",
-    "deploy": "sanity deploy",
-    "dev": "sanity dev",
-    "start": "sanity start",
+    "deploy": "doppler run -- sanity deploy",
+    "deploy:local": "sanity deploy",
+    "dev": "doppler run -- sanity dev",
+    "dev:local": "sanity dev",
+    "start": "doppler run -- sanity start",
+    "start:local": "sanity start",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [

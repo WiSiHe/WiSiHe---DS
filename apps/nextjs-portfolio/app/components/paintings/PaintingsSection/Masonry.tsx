@@ -1,28 +1,21 @@
 'use client';
 
 /**
- * Masonry grid + GSAP entrance (React Bits–style).
+ * Masonry grid + Motion entrance (React Bits–style).
  * @see https://reactbits.dev/components/masonry
  */
 
 import { cn } from '@wisihe/utils';
-import gsap from 'gsap';
+import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
-  brushRevealInstant,
-  brushRevealInstantLeave,
-  initBrushRevealPaths,
-  paintingSvgBrushEnter,
-  paintingSvgBrushLeave,
-} from '@/app/components/marketing/HeroSection/paintingSvgBrushHover';
-import {
   type BrushRevealBadge,
   BrushRevealLayer,
 } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
+import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
 import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
-import { prefersReducedMotion } from '@/lib/paintings/mediaCapabilities';
 import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
 
 export type MasonryItem = {
@@ -62,6 +55,8 @@ const MASONRY_MEDIA_QUERIES = [
   '(min-width: 400px)',
 ] as const;
 const MASONRY_MEDIA_COLUMNS = [5, 4, 3, 2] as const;
+
+const ENTRANCE_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const useMedia = (queries: readonly string[], values: readonly number[], defaultValue: number) => {
   const get = () => {
@@ -104,16 +99,16 @@ const useMeasure = () => {
 
 const Masonry = ({
   items,
-  ease = 'power3.out',
   duration = 0.6,
   stagger = 0.05,
   animateFrom = 'bottom',
-  scaleOnHover = true,
+  scaleOnHover = false,
   hoverScale = 0.95,
   blurToFocus = true,
   colorShiftOnHover = false,
 }: MasonryProps) => {
   const columns = useMedia(MASONRY_MEDIA_QUERIES, MASONRY_MEDIA_COLUMNS, 1);
+  const reduceMotion = useReducedMotion();
 
   const [containerRef, { width }] = useMeasure();
 
@@ -139,6 +134,23 @@ const Masonry = ({
     if (!grid.length) return 0;
     return Math.max(...grid.map(item => item.y + item.h));
   }, [grid]);
+
+  const itemIdsKey = useMemo(() => items.map(i => i.id).join('|'), [items]);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    setHasEntered(false);
+  }, [itemIdsKey]);
+
+  useEffect(() => {
+    if (!grid.length || hasEntered || reduceMotion) {
+      if (grid.length) setHasEntered(true);
+      return;
+    }
+    const maxDelay = (grid.length - 1) * stagger + 0.8;
+    const id = window.setTimeout(() => setHasEntered(true), maxDelay * 1000);
+    return () => window.clearTimeout(id);
+  }, [grid.length, hasEntered, itemIdsKey, reduceMotion, stagger]);
 
   const getInitialPosition = (item: (typeof grid)[number]) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -169,121 +181,6 @@ const Masonry = ({
     }
   };
 
-  const hasMounted = useRef(false);
-  const svgHoverTlByIdRef = useRef<Map<string, gsap.core.Timeline>>(new Map());
-  const itemIdsKey = useMemo(() => items.map(i => i.id).join('|'), [items]);
-
-  useEffect(() => {
-    hasMounted.current = false;
-  }, [itemIdsKey]);
-
-  useLayoutEffect(() => {
-    if (!grid.length) return;
-
-    const reduced = prefersReducedMotion();
-
-    grid.forEach((item, index) => {
-      const selector = `[data-masonry-key="${CSS.escape(item.id)}"]`;
-      const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
-
-      gsap.killTweensOf(selector);
-
-      if (!hasMounted.current) {
-        const start = getInitialPosition(item);
-        if (reduced) {
-          gsap.set(selector, { opacity: 1, ...animProps, filter: 'none' });
-          return;
-        }
-        gsap.fromTo(
-          selector,
-          {
-            opacity: 0,
-            x: start.x,
-            y: start.y,
-            width: item.w,
-            height: item.h,
-            ...(blurToFocus ? { filter: 'blur(10px)' } : {}),
-          },
-          {
-            opacity: 1,
-            ...animProps,
-            ...(blurToFocus ? { filter: 'blur(0px)' } : {}),
-            duration: 0.8,
-            ease: 'power3.out',
-            delay: index * stagger,
-          },
-        );
-      } else {
-        gsap.to(selector, {
-          ...animProps,
-          duration: reduced ? 0 : duration,
-          ease,
-          overwrite: 'auto',
-        });
-      }
-    });
-
-    hasMounted.current = true;
-  }, [grid, stagger, animateFrom, blurToFocus, duration, ease]);
-
-  useLayoutEffect(() => {
-    if (!grid.length) return;
-    grid.forEach(item => {
-      const tile = containerRef.current?.querySelector<HTMLElement>(
-        `[data-masonry-key="${CSS.escape(item.id)}"]`,
-      );
-      if (tile) initBrushRevealPaths(tile);
-    });
-  }, [grid]);
-
-  const runBrushEnter = (id: string, el: HTMLElement) => {
-    svgHoverTlByIdRef.current.get(id)?.kill();
-    if (prefersReducedMotion()) {
-      brushRevealInstant(el);
-      return;
-    }
-    const tl = paintingSvgBrushEnter(el);
-    svgHoverTlByIdRef.current.set(id, tl);
-  };
-
-  const runBrushLeave = (id: string, el: HTMLElement) => {
-    svgHoverTlByIdRef.current.get(id)?.kill();
-    svgHoverTlByIdRef.current.delete(id);
-    if (prefersReducedMotion()) {
-      brushRevealInstantLeave(el);
-      return;
-    }
-    paintingSvgBrushLeave(el);
-  };
-
-  const handleMouseEnter = (id: string, el: HTMLElement) => {
-    runBrushEnter(id, el);
-    if (!scaleOnHover) return;
-    gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
-      scale: hoverScale,
-      duration: 0.3,
-      ease: 'power2.out',
-    });
-    if (colorShiftOnHover) {
-      const overlay = el.querySelector('.color-overlay');
-      if (overlay) gsap.to(overlay, { opacity: 0.3, duration: 0.3 });
-    }
-  };
-
-  const handleMouseLeave = (id: string, el: HTMLElement) => {
-    runBrushLeave(id, el);
-    if (!scaleOnHover) return;
-    gsap.to(`[data-masonry-key="${CSS.escape(id)}"]`, {
-      scale: 1,
-      duration: 0.3,
-      ease: 'power2.out',
-    });
-    if (colorShiftOnHover) {
-      const overlay = el.querySelector('.color-overlay');
-      if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.3 });
-    }
-  };
-
   if (!items.length) return null;
 
   return (
@@ -292,64 +189,92 @@ const Masonry = ({
       className='relative w-full'
       style={{ minHeight: gridHeight > 0 ? gridHeight : undefined }}
     >
-      {grid.map(item => (
-        <div
-          key={item.id}
-          data-masonry-key={item.id}
-          className='absolute overflow-hidden rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] ring-1 ring-border/20'
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: item.w,
-            height: item.h,
-            willChange: 'transform, width, height, opacity',
-          }}
-          onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
-          onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
-        >
-          <Link href={item.url} className='relative block h-full w-full'>
-            <span className='sr-only'>
-              {item.title ? `View painting: ${item.title}` : 'View painting'}
-            </span>
-            <div className='relative h-full w-full overflow-hidden rounded-[10px]'>
-              <Image
-                src={item.img}
-                alt=''
-                aria-hidden
-                fill
-                className={cn('object-cover', item.isNsfwBlurred && NSFW_IMAGE_BLUR_CLASS)}
-                sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
-                placeholder={item.lqip ? 'blur' : 'empty'}
-                blurDataURL={item.lqip}
-              />
-              {item.isNsfwBlurred ? (
-                <NsfwBrushCover
-                  accentColor={item.accentColor}
-                  secondaryColor={item.secondaryColor}
-                  washColor={item.washColor}
-                  strokeVariantIndex={item.strokeIndex}
-                />
-              ) : null}
-              <BrushRevealLayer
-                accentColor={item.accentColor}
-                secondaryColor={item.secondaryColor}
-                washColor={item.washColor}
-                strokeVariantIndex={item.strokeIndex}
-                title={item.title ?? null}
-                medium={item.medium ?? null}
-                year={item.year ?? null}
-                tags={item.tags}
-                badges={item.badges}
-                isNsfwBlurred={item.isNsfwBlurred}
-              />
-              {colorShiftOnHover ? (
-                <div className='color-overlay pointer-events-none absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0' />
-              ) : null}
-            </div>
-          </Link>
-        </div>
-      ))}
+      {grid.map((item, index) => {
+        const playEntrance = !hasEntered && !reduceMotion;
+        const start = getInitialPosition(item);
+
+        return (
+          <motion.div
+            key={item.id}
+            data-masonry-key={item.id}
+            className={cn(
+              'group absolute overflow-hidden rounded-xl shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] ring-1 ring-border/20',
+            )}
+            style={{ left: 0, top: 0, willChange: 'transform, width, height, opacity' }}
+            initial={
+              playEntrance
+                ? {
+                    opacity: 0,
+                    x: start.x,
+                    y: start.y,
+                    width: item.w,
+                    height: item.h,
+                    scale: 1,
+                    ...(blurToFocus ? { filter: 'blur(10px)' } : {}),
+                  }
+                : false
+            }
+            animate={{
+              x: item.x,
+              y: item.y,
+              width: item.w,
+              height: item.h,
+              opacity: 1,
+              scale: 1,
+              ...(blurToFocus ? { filter: 'blur(0px)' } : {}),
+            }}
+            transition={{
+              duration: playEntrance ? 0.8 : duration,
+              delay: playEntrance ? index * stagger : 0,
+              ease: ENTRANCE_EASE,
+            }}
+            whileHover={scaleOnHover ? { scale: hoverScale } : undefined}
+          >
+            <BrushRevealWrap className='h-full w-full'>
+              <Link href={item.url} className='relative block h-full w-full'>
+                <span className='sr-only'>
+                  {item.title ? `View painting: ${item.title}` : 'View painting'}
+                </span>
+                <div className='relative h-full w-full overflow-hidden rounded-xl'>
+                  <Image
+                    src={item.img}
+                    alt=''
+                    aria-hidden
+                    fill
+                    className={cn('object-cover', item.isNsfwBlurred && NSFW_IMAGE_BLUR_CLASS)}
+                    sizes='(min-width: 1500px) 18vw, (min-width: 1000px) 22vw, (min-width: 600px) 30vw, 45vw'
+                    placeholder={item.lqip ? 'blur' : 'empty'}
+                    blurDataURL={item.lqip}
+                  />
+                  {item.isNsfwBlurred ? (
+                    <NsfwBrushCover
+                      accentColor={item.accentColor}
+                      secondaryColor={item.secondaryColor}
+                      washColor={item.washColor}
+                      strokeVariantIndex={item.strokeIndex}
+                    />
+                  ) : null}
+                  <BrushRevealLayer
+                    accentColor={item.accentColor}
+                    secondaryColor={item.secondaryColor}
+                    washColor={item.washColor}
+                    strokeVariantIndex={item.strokeIndex}
+                    title={item.title ?? null}
+                    medium={item.medium ?? null}
+                    year={item.year ?? null}
+                    tags={item.tags}
+                    badges={item.badges}
+                    isNsfwBlurred={item.isNsfwBlurred}
+                  />
+                  {colorShiftOnHover ? (
+                    <div className='color-overlay pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 transition-opacity duration-300 group-hover:opacity-30' />
+                  ) : null}
+                </div>
+              </Link>
+            </BrushRevealWrap>
+          </motion.div>
+        );
+      })}
     </div>
   );
 };
