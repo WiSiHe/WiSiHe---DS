@@ -1,7 +1,6 @@
 'use client';
 
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
@@ -10,12 +9,17 @@ import { TextPressure } from '@/app/components/ui/TextPressure';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/sanity/lib/utils';
 import { HeroDotGrid } from './HeroDotGrid';
+import { HeroFloatingCard } from './HeroFloatingCard';
 import HeroScrollIndicator from './HeroScrollIndicator';
 import {
-  EXPLODE_SQUASH_KEYFRAMES,
-  EXPLODE_SQUASH_TRANSITION,
-  heroFloatSquashStretch,
-} from './heroSquashStretch';
+  buildArcPositions,
+  type HeroViewport,
+  heroCardScatter,
+  heroVisibleCount,
+  resolveHeroViewport,
+  seededSlotOrder,
+} from './heroArcLayout';
+import { heroFloatSquashStretch } from './heroSquashStretch';
 
 export type ShowcasePainting = {
   _type: 'painting';
@@ -64,63 +68,6 @@ export type ShowcaseProject = {
 
 export type ShowcaseItem = ShowcasePainting | ShowcaseProject;
 
-function heroDisplayName(heroSubtitle?: string | null): string {
-  const trimmed = heroSubtitle?.trim();
-  if (!trimmed) return 'Henrik';
-  return trimmed.split(/\s+/)[0] ?? trimmed;
-}
-
-type HeroImageSectionProps = {
-  items?: ShowcaseItem[] | null;
-  overview?: PortableTextBlock[] | null;
-  heroEyebrow?: string | null;
-  heroName?: string | null;
-};
-
-// Cards form left/right wing columns; center ~25–75% horizontal, ~32–68% vertical
-// stays clear for hero copy. `side` + `band` drive outward-biased jitter/parallax.
-type HeroCardSide = 'left' | 'right';
-type HeroCardBand = 'top' | 'bottom';
-type HeroCardPosition = {
-  top: string;
-  left: string;
-  rotation: number;
-  scale: number;
-  side: HeroCardSide;
-  band: HeroCardBand;
-};
-
-/** 8 collage slots — asymmetric wings; center ~30–70% vertical, ~26–74% horizontal clear. */
-const FIXED_POSITIONS_DESKTOP: HeroCardPosition[] = [
-  { top: '6%', left: '5%', rotation: -12, scale: 0.88, side: 'left', band: 'top' },
-  { top: '11%', left: '94%', rotation: 10, scale: 0.9, side: 'right', band: 'top' },
-  { top: '20%', left: '18%', rotation: -7, scale: 0.92, side: 'left', band: 'top' },
-  { top: '17%', left: '91%', rotation: 14, scale: 0.87, side: 'right', band: 'top' },
-  { top: '58%', left: '93%', rotation: 8, scale: 0.89, side: 'right', band: 'bottom' },
-  { top: '63%', left: '10%', rotation: -10, scale: 0.91, side: 'left', band: 'bottom' },
-  { top: '76%', left: '88%', rotation: 5, scale: 0.9, side: 'right', band: 'bottom' },
-  { top: '80%', left: '7%', rotation: -14, scale: 0.86, side: 'left', band: 'bottom' },
-];
-
-/** 6 slots — staggered heights per side, no horizontal pairs. */
-const FIXED_POSITIONS_TABLET: HeroCardPosition[] = [
-  { top: '7%', left: '6%', rotation: -11, scale: 0.89, side: 'left', band: 'top' },
-  { top: '13%', left: '92%', rotation: 9, scale: 0.9, side: 'right', band: 'top' },
-  { top: '22%', left: '17%', rotation: -4, scale: 0.91, side: 'left', band: 'top' },
-  { top: '19%', left: '89%', rotation: 12, scale: 0.88, side: 'right', band: 'top' },
-  { top: '64%', left: '9%', rotation: -8, scale: 0.89, side: 'left', band: 'bottom' },
-  { top: '69%', left: '91%', rotation: 7, scale: 0.9, side: 'right', band: 'bottom' },
-];
-
-/** 4 cards — diagonal stagger, not corner pairs. */
-const FIXED_POSITIONS_MOBILE: HeroCardPosition[] = [
-  { top: '8%', left: '8%', rotation: -10, scale: 0.84, side: 'left', band: 'top' },
-  { top: '12%', left: '90%', rotation: 11, scale: 0.83, side: 'right', band: 'top' },
-  { top: '74%', left: '11%', rotation: -7, scale: 0.82, side: 'left', band: 'bottom' },
-  { top: '68%', left: '88%', rotation: 8, scale: 0.81, side: 'right', band: 'bottom' },
-];
-
-/** Collage display ratios — portrait through ultra-wide, picked per card. */
 const HERO_CARD_ASPECT_PRESETS = [
   2 / 3,
   3 / 4,
@@ -137,37 +84,152 @@ const HERO_CARD_ASPECT_PRESETS = [
   2 / 1,
 ] as const;
 
+const MOBILE_CARD_ROTATIONS = [-8, 7, -5, 6] as const;
+const MOBILE_CARD_SIZES = [
+  'w-[38vw] max-w-[148px]',
+  'w-[40vw] max-w-[156px]',
+  'w-[38vw] max-w-[148px]',
+  'w-[40vw] max-w-[156px]',
+] as const;
+
+function heroDisplayName(heroSubtitle?: string | null): string {
+  const trimmed = heroSubtitle?.trim();
+  if (!trimmed) return 'Henrik';
+  return trimmed.split(/\s+/)[0] ?? trimmed;
+}
+
 function resolveHeroCardAspectRatio(item: ShowcaseItem, index: number): number {
   const seed = paintingBrushSeed(`${item._id}:${index}`);
   return HERO_CARD_ASPECT_PRESETS[seed % HERO_CARD_ASPECT_PRESETS.length] ?? 4 / 3;
 }
 
-function shuffleSlotOrder(count: number): number[] {
-  const order = Array.from({ length: count }, (_, i) => i);
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = order[i]!;
-    order[i] = order[j]!;
-    order[j] = tmp;
-  }
-  return order;
+function itemDisplayTitle(item: ShowcaseItem): string {
+  return item.title || (item._type === 'project' ? item.name : null) || 'Portfolio item';
 }
 
-/** Stable outward-biased scatter — unique per item, not identical across a wing pair. */
-function heroCardScatter(
-  seed: number,
-  side: HeroCardSide,
-  band: HeroCardBand,
-): { x: number; y: number; rotate: number } {
-  const r1 = (seed % 997) / 997;
-  const r2 = ((seed * 17) % 991) / 991;
-  const r3 = ((seed * 31) % 983) / 983;
+type HeroImageSectionProps = {
+  items?: ShowcaseItem[] | null;
+  overview?: PortableTextBlock[] | null;
+  heroEyebrow?: string | null;
+  heroName?: string | null;
+};
 
-  return {
-    x: (side === 'left' ? -1 : 1) * (6 + r1 * 16),
-    y: (band === 'top' ? -1 : 1) * (5 + r2 * 14),
-    rotate: (r3 - 0.5) * 12,
-  };
+const textContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+};
+
+const textItemVariants = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 1, ease: 'easeOut' as const },
+  },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 1, ease: 'easeOut' as const },
+  },
+};
+
+type HeroCopyProps = {
+  stage: 'loading' | 'exploding' | 'floating';
+  hasPlayedAlready: boolean;
+  heroEyebrow?: string | null;
+  displayName: string;
+  overview?: PortableTextBlock[] | null;
+  reducedMotion: boolean;
+  className?: string;
+};
+
+function HeroCopy({
+  stage,
+  hasPlayedAlready,
+  heroEyebrow,
+  displayName,
+  overview,
+  reducedMotion,
+  className = '',
+}: HeroCopyProps) {
+  return (
+    <motion.div
+      variants={textContainerVariants}
+      initial={hasPlayedAlready ? 'visible' : 'hidden'}
+      animate={stage !== 'loading' ? 'visible' : 'hidden'}
+      className={`relative z-[60] flex w-full max-w-xl flex-col items-center px-4 text-center pointer-events-none sm:px-6 ${className}`}
+    >
+      <motion.p
+        variants={textItemVariants}
+        className='mb-3 max-w-[16rem] text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:max-w-xs sm:text-xs sm:tracking-[0.2em] md:text-sm'
+      >
+        {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
+      </motion.p>
+
+      <motion.div variants={textItemVariants} className='mb-3 w-full pointer-events-auto md:mb-4'>
+        <h1 className='text-4xl font-black leading-none tracking-tighter text-foreground sm:text-5xl md:hidden'>
+          {displayName}
+        </h1>
+        {!reducedMotion ? (
+          <div className='hidden h-28 w-full md:block lg:h-32'>
+            <TextPressure
+              text={displayName}
+              minFontSize={44}
+              flex
+              weight
+              width
+              className='leading-none tracking-tighter'
+            />
+          </div>
+        ) : (
+          <h1 className='hidden text-5xl font-black leading-none tracking-tighter text-foreground md:block lg:text-8xl'>
+            {displayName}
+          </h1>
+        )}
+      </motion.div>
+
+      {overview?.length ? (
+        <motion.div
+          variants={textItemVariants}
+          className='max-w-[17rem] text-pretty text-sm font-medium leading-relaxed text-foreground-subtle sm:max-w-xs md:max-w-sm md:text-base lg:text-lg [&_p]:m-0'
+        >
+          <PortableText value={overview} />
+        </motion.div>
+      ) : (
+        <motion.p
+          variants={textItemVariants}
+          className='max-w-[17rem] text-pretty text-sm font-medium leading-relaxed text-foreground-subtle sm:max-w-xs md:max-w-sm md:text-base lg:text-lg'
+        >
+          I&apos;m a design engineer, painter and maker. Explore paintings, projects, and
+          experiments from my portfolio.
+        </motion.p>
+      )}
+
+      <motion.div
+        variants={buttonVariants}
+        className='mt-5 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-6'
+      >
+        <Link
+          href='/paintings'
+          className='inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover sm:px-6'
+        >
+          View Paintings
+        </Link>
+        <Link
+          href='/projects'
+          className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-5 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg sm:px-6'
+        >
+          Explore Projects
+        </Link>
+      </motion.div>
+    </motion.div>
+  );
 }
 
 const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageSectionProps) => {
@@ -178,15 +240,14 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const [stage, setStage] = useState<'loading' | 'exploding' | 'floating'>('loading');
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [hasPlayedAlready, setHasPlayedAlready] = useState(false);
-  const [viewport, setViewport] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const [viewport, setViewport] = useState<HeroViewport>('desktop');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [canHover, setCanHover] = useState(false);
 
-  /** Per-card float loop — must be stable across renders so Motion does not restart. */
   const floatKeyframes = useMemo(
     () =>
-      Array.from({ length: 15 }).map((_, i) => {
+      Array.from({ length: 12 }).map((_, i) => {
         const y = [0, Math.random() * 20 + 10, 0] as [number, number, number];
         const squashStretch = heroFloatSquashStretch(y[1]);
         return {
@@ -202,46 +263,33 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     [],
   );
 
-  // Track viewport matches reactively
   useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 768) {
-        setViewport('mobile');
-      } else if (width < 1024) {
-        setViewport('tablet');
-      } else {
-        setViewport('desktop');
-      }
-    };
+    const handleResize = () => setViewport(resolveHeroViewport(window.innerWidth));
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Detect touch device for mobile optimizations
   useEffect(() => {
-    const checkTouch = () => {
-      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    };
-    checkTouch();
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Track mouse coordinates normalized relative to window center (-1 to 1)
   useEffect(() => {
-    if (isTouchDevice) return;
-
+    if (!canHover) return;
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-      setMousePos({ x, y });
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: (e.clientY / window.innerHeight) * 2 - 1,
+      });
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isTouchDevice]);
+  }, [canHover]);
 
-  // Set up the loading & entry stages using Framer Motion
   useEffect(() => {
     const hasPlayed = sessionStorage.getItem('hero-splash-played');
     const isDev = process.env.NODE_ENV === 'development';
@@ -253,108 +301,239 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
       return;
     }
 
-    if (!isDev) {
-      sessionStorage.setItem('hero-splash-played', 'true');
-    }
+    if (!isDev) sessionStorage.setItem('hero-splash-played', 'true');
 
-    // Animate the progress counter (0% to 100% over 2.5s)
     const controls = animate(0, 100, {
       duration: 2.5,
       ease: 'easeInOut',
       onUpdate: latest => setProgress(Math.round(latest)),
       onComplete: () => {
         setStage('exploding');
-        // Let the spring explosion settle for 1.2s before entering float loop
-        setTimeout(() => {
-          setStage('floating');
-        }, 1200);
+        setTimeout(() => setStage('floating'), 1200);
       },
     });
 
     return () => controls.stop();
   }, []);
 
-  // Hide scroll indicator after scroll threshold
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset;
-      if (scrollY > 100) {
-        setShowScrollIndicator(false);
-      } else {
-        setShowScrollIndicator(true);
-      }
+      setShowScrollIndicator(scrollY <= 100);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Determine visibility slice for items (matches original layout logic)
   const isMobile = viewport === 'mobile';
-  const isTablet = viewport === 'tablet';
-
-  const visibleItems = items
-    ? isMobile
-      ? items.slice(0, 4)
-      : isTablet
-        ? items.slice(0, 6)
-        : items.slice(0, 8)
-    : [];
-
-  const positions = isMobile
-    ? FIXED_POSITIONS_MOBILE
-    : isTablet
-      ? FIXED_POSITIONS_TABLET
-      : FIXED_POSITIONS_DESKTOP;
-
-  /** Which collage slot each visible item occupies — shuffled so wings don't read as pairs. */
-  const slotOrder = useMemo(() => shuffleSlotOrder(positions.length), [positions.length]);
+  const visibleCount = heroVisibleCount(viewport);
+  const visibleItems = items ? items.slice(0, visibleCount) : [];
+  const arcPositions = useMemo(
+    () => buildArcPositions(visibleCount, viewport === 'mobile' ? 'tablet' : viewport),
+    [visibleCount, viewport],
+  );
+  const slotOrder = useMemo(() => seededSlotOrder(visibleCount), [visibleCount]);
+  const hoverEnabled = canHover && stage === 'floating';
 
   if (!items || items.length === 0) {
-    return <div className='text-center py-20'>No items available.</div>;
+    return <div className='py-20 text-center'>No items available.</div>;
   }
 
-  // Variants for central text stagger entrance
-  const textContainerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
+  const renderCardData = (item: ShowcaseItem, index: number) => {
+    if (!item.image) return null;
+    const cardAspectRatio = resolveHeroCardAspectRatio(item, index);
+    const imageUrl =
+      urlForImage(item.image)
+        ?.width(800)
+        .height(Math.round(800 / cardAspectRatio))
+        .fit('crop')
+        .auto('format')
+        .quality(85)
+        .url() ?? '';
+    const href = item._type === 'painting' ? `/paintings/${item.slug}` : `/projects/${item.slug}`;
+    const showNsfwBlur = item._type === 'painting' && item.isNSFW === true;
+
+    return {
+      cardAspectRatio,
+      imageUrl,
+      href,
+      displayTitle: itemDisplayTitle(item),
+      showNsfwBlur,
+    };
   };
 
-  const textItemVariants = {
-    hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: { duration: 1, ease: 'easeOut' as const },
-    },
+  const renderArcCard = (item: ShowcaseItem, index: number) => {
+    const data = renderCardData(item, index);
+    if (!data) return null;
+
+    const slotIndex = slotOrder[index] ?? index;
+    const pos = arcPositions[slotIndex] ?? arcPositions[index] ?? arcPositions[0];
+    if (!pos) return null;
+
+    const scatter = heroCardScatter(
+      paintingBrushSeed(`${item._id}:hero-scatter`),
+      pos.side,
+      pos.band,
+    );
+    const stackScale = 1 - index * 0.03;
+    const stackOffsetY = -(index * 15);
+    const stackRotation = (index % 3) * 3 - 3;
+    const stackY = `calc(-50% + ${stackOffsetY}px)`;
+    const outward = pos.side === 'left' ? -1 : 1;
+
+    const getParallaxValues = (slot: number) => {
+      if (!canHover) return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (slot % 3) + 1 };
+      const tier = slot % 3;
+      const magX = Math.abs(mousePos.x);
+      if (tier === 0) {
+        return {
+          x: outward * magX * 20,
+          y: mousePos.y * 24,
+          rotateX: mousePos.y * -6,
+          rotateY: mousePos.x * 6,
+          zIndex: 1,
+        };
+      }
+      if (tier === 1) {
+        return {
+          x: outward * magX * 14,
+          y: mousePos.y * -12,
+          rotateX: mousePos.y * -12,
+          rotateY: mousePos.x * 12,
+          zIndex: 2,
+        };
+      }
+      return {
+        x: outward * magX * 30,
+        y: mousePos.y * -42,
+        rotateX: mousePos.y * -22,
+        rotateY: mousePos.x * 22,
+        zIndex: 3,
+      };
+    };
+
+    const isCardHovered = hoveredIndex === index;
+    const parallaxRaw =
+      stage === 'floating'
+        ? getParallaxValues(slotIndex)
+        : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
+    const parallaxDamp = isCardHovered ? 0.15 : 1;
+    const parallax = {
+      x: parallaxRaw.x * parallaxDamp,
+      y: parallaxRaw.y * parallaxDamp,
+      rotateX: parallaxRaw.rotateX * parallaxDamp,
+      rotateY: parallaxRaw.rotateY * parallaxDamp,
+      zIndex: parallaxRaw.zIndex,
+    };
+    const floatMotion = floatKeyframes[slotIndex] ?? floatKeyframes[0]!;
+
+    const arcSizes = [
+      'w-56 lg:w-64 xl:max-w-[17vw]',
+      'w-60 lg:w-72 xl:max-w-[18vw]',
+      'w-52 lg:w-60 xl:max-w-[16vw]',
+      'w-56 lg:w-64 xl:max-w-[17vw]',
+    ];
+
+    const outerAnimate =
+      stage === 'loading'
+        ? {
+            left: '50%',
+            top: '50%',
+            x: '-50%',
+            y: stackY,
+            scale: stackScale,
+            rotate: stackRotation,
+            opacity: 1,
+            filter: 'blur(0px)',
+          }
+        : {
+            left: pos.left,
+            top: pos.top,
+            x: '-50%',
+            y: '-50%',
+            scale: pos.scale,
+            rotate: pos.rotation + scatter.rotate,
+            opacity: 1,
+            filter: 'blur(0px)',
+          };
+
+    const outerTransition =
+      stage === 'loading'
+        ? { delay: 0.1 + index * 0.12, duration: 1.4, ease: 'easeOut' as const }
+        : stage === 'exploding'
+          ? { type: 'spring' as const, stiffness: 110, damping: 11, mass: 0.8 }
+          : { duration: 0.6, ease: 'easeOut' as const };
+
+    const cardZIndex =
+      stage === 'loading'
+        ? index + 1
+        : stage === 'exploding'
+          ? 1
+          : isCardHovered
+            ? 40
+            : parallax.zIndex;
+
+    return (
+      <HeroFloatingCard
+        key={`${item._type}-${item._id}`}
+        item={item}
+        index={index}
+        layout='arc'
+        stage={stage}
+        hasPlayedAlready={hasPlayedAlready}
+        hoverEnabled={hoverEnabled}
+        isCardHovered={isCardHovered}
+        onHoverStart={() => setHoveredIndex(index)}
+        onHoverEnd={() => setHoveredIndex(null)}
+        isPriority={index === 0}
+        sizeClass={arcSizes[index % arcSizes.length] ?? arcSizes[0]!}
+        outerAnimate={outerAnimate}
+        outerTransition={outerTransition}
+        pos={pos}
+        scatter={scatter}
+        parallax={parallax}
+        floatMotion={floatMotion}
+        stackY={stackY}
+        stackScale={stackScale}
+        stackRotation={stackRotation}
+        cardZIndex={cardZIndex}
+        {...data}
+      />
+    );
   };
 
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: { duration: 1, ease: 'easeOut' as const },
-    },
+  const renderMobileCard = (item: ShowcaseItem, index: number) => {
+    const data = renderCardData(item, index);
+    if (!data) return null;
+
+    return (
+      <HeroFloatingCard
+        key={`${item._type}-${item._id}`}
+        item={item}
+        index={index}
+        layout='mobile'
+        stage={stage}
+        hasPlayedAlready={hasPlayedAlready}
+        hoverEnabled={false}
+        isCardHovered={false}
+        onHoverStart={() => {}}
+        onHoverEnd={() => {}}
+        isPriority={index === 0}
+        sizeClass={MOBILE_CARD_SIZES[index] ?? MOBILE_CARD_SIZES[0]!}
+        mobileRotation={MOBILE_CARD_ROTATIONS[index] ?? 0}
+        {...data}
+      />
+    );
   };
 
   return (
     <section
-      className='relative flex min-h-screen w-full items-center justify-center overflow-visible pt-16 pb-8 transition-colors duration-500 bg-background-subtle md:pt-20 md:pb-12'
+      className='relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden bg-background-subtle pt-16 pb-10 transition-colors duration-500 md:overflow-visible md:pt-20 md:pb-12'
       style={{ perspective: 1200 }}
     >
       <HeroDotGrid />
 
-      {/* Loader */}
       <AnimatePresence>
         {stage === 'loading' && (
           <motion.div
@@ -366,424 +545,53 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               filter: 'blur(10px)',
               transition: { duration: 0.5, ease: 'easeIn' },
             }}
-            className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center pointer-events-none'
+            className='pointer-events-none absolute top-1/2 left-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center'
           >
-            <div className='text-9xl font-black font-mono tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
+            <div className='font-mono text-9xl font-black tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
               {progress}%
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Central Text Content — always above floating cards */}
-      <motion.div
-        variants={textContainerVariants}
-        initial={hasPlayedAlready ? 'visible' : 'hidden'}
-        animate={stage !== 'loading' ? 'visible' : 'hidden'}
-        className='relative z-[60] flex max-w-xl flex-col items-center p-6 text-center pointer-events-none md:p-8'
-      >
-        <motion.p
-          variants={textItemVariants}
-          className='mb-3 text-xs font-bold uppercase tracking-[0.2em] text-foreground-subtle md:text-sm'
+      {/* Mobile — 2 cards above · copy · 2 cards below */}
+      <div className='relative z-10 flex w-full flex-col items-center gap-5 py-4 md:hidden'>
+        <div className='grid w-full max-w-md grid-cols-2 gap-3 px-3'>
+          {visibleItems.slice(0, 2).map((item, index) => renderMobileCard(item, index))}
+        </div>
+
+        <HeroCopy
+          stage={stage}
+          hasPlayedAlready={hasPlayedAlready}
+          heroEyebrow={heroEyebrow}
+          displayName={displayName}
+          overview={overview}
+          reducedMotion={reducedMotion}
+        />
+
+        <div className='grid w-full max-w-md grid-cols-2 gap-3 px-3'>
+          {visibleItems.slice(2, 4).map((item, index) => renderMobileCard(item, index + 2))}
+        </div>
+      </div>
+
+      {/* md+ — orbit collage + centered copy */}
+      <div className='relative hidden min-h-screen w-full md:block'>
+        <HeroCopy
+          stage={stage}
+          hasPlayedAlready={hasPlayedAlready}
+          heroEyebrow={heroEyebrow}
+          displayName={displayName}
+          overview={overview}
+          reducedMotion={reducedMotion}
+          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 py-8'
+        />
+
+        <div
+          className='pointer-events-none absolute inset-0 mx-auto max-w-[1776px] overflow-visible'
+          style={{ transformStyle: 'preserve-3d' }}
         >
-          {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
-        </motion.p>
-        <motion.div
-          variants={textItemVariants}
-          className='mb-4 w-full max-w-2xl pointer-events-auto'
-        >
-          {reducedMotion ? (
-            <h1 className='text-5xl font-black leading-none tracking-tighter text-foreground sm:text-6xl md:text-7xl lg:text-8xl'>
-              {displayName}
-            </h1>
-          ) : (
-            <div className='h-20 w-full md:h-28 lg:h-32'>
-              <TextPressure
-                text={displayName}
-                minFontSize={44}
-                flex
-                weight
-                width
-                className='leading-none tracking-tighter'
-              />
-            </div>
-          )}
-        </motion.div>
-        {overview?.length ? (
-          <motion.div
-            variants={textItemVariants}
-            className='max-w-sm text-base font-medium leading-relaxed text-foreground-subtle md:text-lg [&_p]:m-0'
-          >
-            <PortableText value={overview} />
-          </motion.div>
-        ) : (
-          <motion.p
-            variants={textItemVariants}
-            className='max-w-sm text-base font-medium leading-relaxed text-foreground-subtle md:text-lg'
-          >
-            I&apos;m a design engineer, painter and maker. Explore paintings, projects, and
-            experiments from my portfolio.
-          </motion.p>
-        )}
-
-        {/* Double Call to Actions (serving both paintings & projects) */}
-        <motion.div
-          variants={buttonVariants}
-          className='mt-6 flex flex-col sm:flex-row items-center gap-3 pointer-events-auto'
-        >
-          <Link
-            href='/paintings'
-            className='inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover'
-          >
-            View Paintings
-          </Link>
-          <Link
-            href='/projects'
-            className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-6 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg'
-          >
-            Explore Projects
-          </Link>
-        </motion.div>
-      </motion.div>
-
-      {/* Floating Images Container */}
-      <div
-        className='absolute inset-0 overflow-visible pointer-events-none max-w-[1776px] mx-auto'
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {visibleItems.map((item, index) => {
-          const { image, slug, title } = item;
-          if (!image) return null;
-
-          const isPainting = item._type === 'painting';
-          const cardAspectRatio = resolveHeroCardAspectRatio(item, index);
-          const imageUrl =
-            (item.image
-              ? urlForImage(item.image)
-                  ?.width(800)
-                  .height(Math.round(800 / cardAspectRatio))
-                  .fit('crop')
-                  .auto('format')
-                  .quality(85)
-                  .url()
-              : '') || '';
-
-          // Deterministic sizing based on index
-          const sizes = [
-            'w-44 md:w-72 lg:max-w-[18vw]',
-            'w-52 md:w-80 lg:max-w-[19vw]',
-            'w-40 md:w-64 lg:max-w-[17vw]',
-            'w-48 md:w-72 lg:max-w-[18vw]',
-          ];
-          const isPriority = index === 0;
-          const size = sizes[index % sizes.length];
-
-          // Target configuration — item index maps to a shuffled slot, not a mirrored pair.
-          const slotIndex = slotOrder[index] ?? index;
-          const pos: HeroCardPosition = positions[slotIndex] ?? {
-            top: '50%',
-            left: '50%',
-            rotation: 0,
-            scale: 1,
-            side: index % 2 === 0 ? 'left' : 'right',
-            band: 'top',
-          };
-          const scatter = heroCardScatter(
-            paintingBrushSeed(`${item._id}:hero-scatter`),
-            pos.side,
-            pos.band,
-          );
-          const showNsfwBlur = isPainting && item.isNSFW === true;
-
-          // Stacking coordinates at center
-          const stackScale = 1 - index * 0.03;
-          const stackOffsetY = -(index * 15);
-          const stackRotation = (index % 3) * 3 - 3;
-
-          // Parallax calculation creating a stereoscopic split (disabled on touch devices):
-          // tier 0 (Background): moves WITH the mouse, tilts slightly
-          // tier 1 (Middleground): moves slightly opposite, tilts normal
-          // tier 2 (Foreground): moves strongly opposite, tilts heavily
-          // Horizontal drift is biased outward (away from center) per card side so
-          // cards never travel into the protected center text column.
-          const outward = pos.side === 'left' ? -1 : 1;
-          const getParallaxValues = (slot: number) => {
-            if (isTouchDevice) {
-              return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (slot % 3) + 1 };
-            }
-
-            const tier = slot % 3;
-            // Map mouse X to a 0..1 magnitude so horizontal motion has no inward sign.
-            const magX = Math.abs(mousePos.x);
-            if (tier === 0) {
-              return {
-                x: outward * magX * 20,
-                y: mousePos.y * 24,
-                rotateX: mousePos.y * -6,
-                rotateY: mousePos.x * 6,
-                zIndex: 1,
-              };
-            } else if (tier === 1) {
-              return {
-                x: outward * magX * 14,
-                y: mousePos.y * -12,
-                rotateX: mousePos.y * -12,
-                rotateY: mousePos.x * 12,
-                zIndex: 2,
-              };
-            } else {
-              return {
-                x: outward * magX * 30,
-                y: mousePos.y * -42,
-                rotateX: mousePos.y * -22,
-                rotateY: mousePos.x * 22,
-                zIndex: 3,
-              };
-            }
-          };
-
-          const isCardHovered = hoveredIndex === index;
-
-          const parallaxRaw =
-            stage === 'floating'
-              ? getParallaxValues(slotIndex)
-              : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
-          const parallaxDamp = isCardHovered ? 0.15 : 1;
-          const parallax = {
-            x: parallaxRaw.x * parallaxDamp,
-            y: parallaxRaw.y * parallaxDamp,
-            rotateX: parallaxRaw.rotateX * parallaxDamp,
-            rotateY: parallaxRaw.rotateY * parallaxDamp,
-            zIndex: parallaxRaw.zIndex,
-          };
-
-          const offset = scatter;
-          const floatMotion = floatKeyframes[slotIndex] ?? {
-            y: [0, 12, 0] as [number, number, number],
-            x: [0, 0, 0] as [number, number, number],
-            rotate: [0, 0, 0] as [number, number, number],
-            scaleX: [1, 1, 1] as [number, number, number],
-            scaleY: [1, 1, 1] as [number, number, number],
-            duration: 5,
-            delay: 0,
-          };
-
-          const stackY = `calc(-50% + ${stackOffsetY}px)`;
-
-          const cardZIndex =
-            stage === 'loading'
-              ? index + 1
-              : stage === 'exploding'
-                ? 1
-                : hoveredIndex === index
-                  ? 40
-                  : parallax.zIndex;
-
-          // Animations
-          const outerAnimate =
-            stage === 'loading'
-              ? {
-                  left: '50%',
-                  top: '50%',
-                  x: '-50%',
-                  y: stackY,
-                  scale: stackScale,
-                  rotate: stackRotation,
-                  opacity: 1,
-                  filter: 'blur(0px)',
-                }
-              : stage === 'exploding'
-                ? {
-                    left: pos.left,
-                    top: pos.top,
-                    x: '-50%',
-                    y: '-50%',
-                    scale: pos.scale,
-                    rotate: pos.rotation + offset.rotate,
-                    opacity: 1,
-                    filter: 'blur(0px)',
-                  }
-                : {
-                    left: pos.left,
-                    top: pos.top,
-                    x: '-50%',
-                    y: '-50%',
-                    scale: pos.scale,
-                    rotate: pos.rotation + offset.rotate,
-                    opacity: 1,
-                    filter: 'blur(0px)',
-                  };
-
-          // Soft watercolor bleed for loading stage, snappy spring wobble for explosion stage
-          const outerTransition =
-            stage === 'loading'
-              ? {
-                  delay: 0.1 + index * 0.12,
-                  duration: 1.4,
-                  ease: 'easeOut' as const,
-                }
-              : stage === 'exploding'
-                ? {
-                    type: 'spring' as const,
-                    stiffness: 110,
-                    damping: 11,
-                    mass: 0.8,
-                  }
-                : {
-                    duration: 0.6,
-                    ease: 'easeOut' as const,
-                  };
-
-          // Float animation loop values (stable keyframes from useMemo)
-          const floatAnimate =
-            stage === 'floating' && !isCardHovered
-              ? {
-                  y: floatMotion.y,
-                  x: floatMotion.x,
-                  rotate: floatMotion.rotate,
-                  scaleX: floatMotion.scaleX,
-                  scaleY: floatMotion.scaleY,
-                }
-              : {
-                  y: 0,
-                  x: 0,
-                  rotate: 0,
-                  scaleX: 1,
-                  scaleY: 1,
-                };
-
-          const floatTransition = {
-            duration: floatMotion.duration,
-            repeat: stage === 'floating' ? Infinity : 0,
-            ease: 'easeInOut' as const,
-            delay: floatMotion.delay,
-          };
-
-          const href = item._type === 'painting' ? `/paintings/${slug}` : `/projects/${slug}`;
-
-          return (
-            <motion.div
-              key={`${item._type}-${item._id}`}
-              initial={
-                hasPlayedAlready
-                  ? false
-                  : {
-                      opacity: 0,
-                      scale: 0.3,
-                      filter: 'blur(30px)',
-                      left: '50%',
-                      top: '50%',
-                      x: '-50%',
-                      y: stackY,
-                      rotate: stackRotation,
-                    }
-              }
-              animate={outerAnimate}
-              transition={outerTransition}
-              onMouseEnter={() => {
-                if (stage === 'floating') setHoveredIndex(index);
-              }}
-              onMouseLeave={() => {
-                if (stage === 'floating') setHoveredIndex(null);
-              }}
-              className={`absolute pointer-events-auto ${size} will-change-transform`}
-              style={{
-                transformStyle: 'preserve-3d',
-                zIndex: cardZIndex,
-                aspectRatio: cardAspectRatio,
-              }}
-            >
-              {/* Organic client-side scattering offset wrapper */}
-              <motion.div
-                animate={stage === 'loading' ? { x: 0, y: 0 } : { x: offset.x, y: offset.y }}
-                transition={outerTransition}
-                className='h-full w-full'
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                {/* 3D Mouse Parallax Wrap */}
-                <motion.div
-                  animate={{
-                    x: parallax.x,
-                    y: parallax.y,
-                    rotateX: parallax.rotateX,
-                    rotateY: parallax.rotateY,
-                  }}
-                  transition={{ type: 'spring', stiffness: 90, damping: 22, mass: 0.4 }}
-                  className='h-full w-full'
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
-                  {/* Squash on explosion landing */}
-                  <motion.div
-                    animate={
-                      stage === 'exploding' ? EXPLODE_SQUASH_KEYFRAMES : { scaleX: 1, scaleY: 1 }
-                    }
-                    transition={{
-                      ...EXPLODE_SQUASH_TRANSITION,
-                      delay: index * 0.03,
-                    }}
-                    className='h-full w-full'
-                    style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
-                  >
-                    {/* Infinite float wrap */}
-                    <motion.div
-                      animate={floatAnimate}
-                      transition={floatTransition}
-                      className='h-full w-full'
-                      style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
-                      whileHover={
-                        stage === 'floating'
-                          ? {
-                              scale: 1.05,
-                              y: -8,
-                              rotate: 0,
-                              transition: { type: 'spring', stiffness: 380, damping: 22 },
-                            }
-                          : undefined
-                      }
-                    >
-                      <Link
-                        href={href}
-                        className={`relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle ${
-                          isCardHovered
-                            ? 'shadow-[0_32px_56px_-14px_rgba(0,0,0,0.42)] ring-accent/35'
-                            : 'shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 dark:ring-white/10'
-                        }`}
-                      >
-                        <span className='sr-only'>
-                          {isPainting ? 'View painting' : 'View project'}:{' '}
-                          {title ||
-                            (item._type === 'project' ? item.name : null) ||
-                            'Portfolio item'}
-                        </span>
-                        <Image
-                          src={imageUrl}
-                          alt=''
-                          aria-hidden
-                          fill
-                          priority={isPriority}
-                          fetchPriority={isPriority ? 'high' : undefined}
-                          className={`object-cover transition-[transform,filter] duration-500 ease-out ${
-                            isCardHovered
-                              ? 'scale-[1.06] brightness-[1.08] saturate-[1.06]'
-                              : 'scale-100 brightness-100 saturate-100'
-                          }`}
-                          sizes='(max-width: 768px) 40vw, 30vw'
-                        />
-                        {showNsfwBlur ? (
-                          <div
-                            data-nsfw-blur
-                            className='pointer-events-none absolute inset-0 z-[1] bg-background/45 backdrop-blur-xl'
-                            aria-hidden
-                          />
-                        ) : null}
-                      </Link>
-                    </motion.div>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          );
-        })}
+          {!isMobile ? visibleItems.map((item, index) => renderArcCard(item, index)) : null}
+        </div>
       </div>
 
       <HeroScrollIndicator show={showScrollIndicator} />
