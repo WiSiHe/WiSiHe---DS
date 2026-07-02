@@ -1,15 +1,21 @@
 import { runTagSuggest, type TagSuggestRequest } from '@wisihe/sanity-bulk-ai';
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import {
+  openaiApiKey,
+  openaiTagSuggestModel,
+  sanityAiProxyAllowedOrigins,
+  sanityAiProxySecret,
+} from '@/lib/env';
 
 export const runtime = 'nodejs';
 
-const SECRET = process.env['SANITY_AI_BULK_SECRET'];
-const OPENAI_KEY = process.env['OPENAI_API_KEY'];
-const TAG_MODEL = process.env['OPENAI_TAG_SUGGEST_MODEL'] ?? 'gpt-5.4-nano';
+const SECRET = sanityAiProxySecret();
+const OPENAI_KEY = openaiApiKey();
+const TAG_MODEL = openaiTagSuggestModel();
 
 function originAllowed(origin: string): boolean {
-  const explicit = process.env['SANITY_AI_BULK_ALLOWED_ORIGINS'];
+  const explicit = sanityAiProxyAllowedOrigins();
   if (explicit?.trim()) {
     return explicit
       .split(',')

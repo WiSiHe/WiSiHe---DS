@@ -74,9 +74,7 @@ export default function AIImageGenerator(props: ObjectInputProps) {
 
   async function handleImageGeneration() {
     if (!OPENAI_API_KEY) {
-      setError(
-        'OpenAI API Key is missing. Please set SANITY_STUDIO_OPENAI_API_KEY in your environment.',
-      );
+      setError('OpenAI API Key is missing. Please set OPENAI_API_KEY in your environment.');
       return;
     }
 

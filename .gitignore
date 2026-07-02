@@ -17,3 +17,5 @@ apps/sanity-studio/.env.production
 .svelte-kit
 .tanstack
 .vinxi
+.vercel
+.env*

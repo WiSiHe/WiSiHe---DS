@@ -6,10 +6,18 @@
     "build:packages": "turbo run build --filter=./packages/*",
     "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs --filter=!ui-svelte-docs --filter=!ui-web-components-docs",
     "ci": "pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build:packages",
-    "dev": "turbo run dev --filter=nextjs-portfolio... --filter=ui-docs... --filter=sanity-studio... --filter=wisihe-ai",
-    "dev:studio": "turbo run dev --filter=sanity-studio...",
-    "dev:wisihe-ai": "turbo run dev --filter=wisihe-ai",
-    "deploy:wisihe-ai": "pnpm --filter wisihe-ai exec sanity deploy",
+    "doppler:setup": "doppler setup --project portfolio --config dev",
+    "dev": "doppler run -- turbo run dev --filter=nextjs-portfolio... --filter=ui-docs... --filter=sanity-studio... --filter=wisihe-ai",
+    "dev:local": "turbo run dev --filter=nextjs-portfolio... --filter=ui-docs... --filter=sanity-studio... --filter=wisihe-ai",
+    "dev:studio": "doppler run -- turbo run dev --filter=sanity-studio...",
+    "dev:studio:local": "turbo run dev --filter=sanity-studio...",
+    "dev:wisihe-ai": "doppler run -- turbo run dev --filter=wisihe-ai",
+    "dev:wisihe-ai:local": "turbo run dev --filter=wisihe-ai",
+    "deploy:wisihe-ai": "doppler run -- pnpm --filter wisihe-ai exec sanity deploy",
+    "sync-algolia": "doppler run --config prd -- pnpm --filter sanity-studio sync-algolia",
+    "sync-algolia:dev": "doppler run --config dev -- pnpm --filter sanity-studio sync-algolia",
+    "set-algolia-settings": "doppler run --config prd -- pnpm --filter sanity-studio set-algolia-settings",
+    "env:pull": "vercel env pull apps/nextjs-portfolio/.env.local --environment=development",
     "dev:astro": "turbo run dev --filter=apps-astro-portfolio...",
     "dev:react": "turbo run dev --filter=@wisihe/ui-react... --filter=ui-docs...",
     "dev:svelte": "turbo run dev --filter=@wisihe/ui-svelte... --filter=ui-svelte-docs...",
@@ -35,38 +43,5 @@
     "lefthook": "2.1.8",
     "turbo": "^2.10.0"
   },
-  "packageManager": "pnpm@10.23.0",
-  "pnpm": {
-    "overrides": {
-      "@types/node": "25.3.5"
-    },
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@vercel/speed-insights",
-      "core-js",
-      "esbuild",
-      "lefthook",
-      "less",
-      "msw",
-      "protobufjs",
-      "sharp",
-      "unrs-resolver"
-    ],
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "19",
-        "react-dom": "19",
-        "sanity": "6"
-      },
-      "ignoreMissing": [
-        "react",
-        "react-dom"
-      ]
-    },
-    "allowedDeprecatedVersions": {
-      "glob": "8.1.0",
-      "inflight": "*",
-      "source-map": "0.8.0-beta.0"
-    }
-  }
+  "packageManager": "pnpm@10.23.0"
 }

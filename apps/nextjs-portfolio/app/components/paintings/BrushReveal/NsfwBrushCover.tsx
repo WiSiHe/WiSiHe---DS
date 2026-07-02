@@ -7,11 +7,12 @@
 
 import { cn } from '@wisihe/utils';
 import { type CSSProperties, useId } from 'react';
-import { getBrushProfileConfig } from '@/app/components/marketing/HeroSection/brushStrokeConstants';
+import { resolveBrushProfile } from '@/app/components/marketing/HeroSection/brushStrokeConstants';
 import {
   type BrushStrokeLayer,
   getBrushStrokeVariant,
 } from '@/app/components/marketing/HeroSection/brushStrokeVariants';
+import { useBrushRevealLite } from '@/lib/paintings/mediaCapabilities';
 import {
   NSFW_STROKE_OPACITY_HOVER,
   NSFW_WASH_OPACITY,
@@ -40,6 +41,8 @@ function NsfwBrushStroke({
   strokeWidth,
   layerSizePercent,
   strokeOpacity,
+  strokeBlendMode,
+  useStrokeFilter,
 }: {
   layer: BrushStrokeLayer;
   color: string;
@@ -48,11 +51,17 @@ function NsfwBrushStroke({
   strokeWidth: number;
   layerSizePercent: number;
   strokeOpacity: number;
+  strokeBlendMode?: CSSProperties['mixBlendMode'];
+  useStrokeFilter: boolean;
 }) {
   return (
     <div
       className={className}
-      style={{ ...layerSizeStyle(layerSizePercent), transform: layerTransform(layer) }}
+      style={{
+        ...layerSizeStyle(layerSizePercent),
+        transform: layerTransform(layer),
+        ...(strokeBlendMode ? { mixBlendMode: strokeBlendMode } : {}),
+      }}
     >
       <svg
         className='block h-full w-full'
@@ -69,7 +78,7 @@ function NsfwBrushStroke({
           strokeLinecap='round'
           strokeLinejoin='round'
           fill='none'
-          filter={`url(#${filterId})`}
+          {...(useStrokeFilter ? { filter: `url(#${filterId})` } : {})}
           className='transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-stroke-hover)] group-focus-within:opacity-[var(--nsfw-stroke-hover)]'
           style={
             {
@@ -104,11 +113,14 @@ export function NsfwBrushCover({
   className,
   liteOnMobile = true,
 }: NsfwBrushCoverProps) {
-  const brushProfile = getBrushProfileConfig('nsfwCover');
+  const liteMode = useBrushRevealLite();
+  const brushProfile = resolveBrushProfile('nsfwCover', liteMode);
+  const useStrokeFilter = brushProfile.strokeBlur > 0;
   const variant = getBrushStrokeVariant(strokeVariantIndex);
   const scale = brushProfile.coverScale(variant.scale);
   const filterId = useId().replace(/:/g, '');
   const layerColors = [accentColor, secondaryColor, accentColor, secondaryColor] as const;
+  const showStrokes = !liteMode;
 
   return (
     <div
@@ -124,46 +136,59 @@ export function NsfwBrushCover({
     >
       <div
         className='absolute inset-0 transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-wash-hover)] group-focus-within:opacity-[var(--nsfw-wash-hover)]'
-        style={{ backgroundColor: washColor, opacity: NSFW_WASH_OPACITY }}
+        style={{
+          backgroundColor: washColor,
+          opacity: NSFW_WASH_OPACITY,
+          ...(brushProfile.washBlendMode ? { mixBlendMode: brushProfile.washBlendMode } : {}),
+        }}
       />
 
-      <div
-        className={cn(
-          'absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.02] group-focus-within:scale-[1.02]',
-          liteOnMobile && 'max-md:hidden md:block',
-        )}
-      >
-        <div className='absolute inset-0 overflow-hidden' style={{ transform: `scale(${scale})` }}>
-          <svg className='absolute h-0 w-0' aria-hidden>
-            <defs>
-              <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
-                <feGaussianBlur
-                  in='SourceGraphic'
-                  stdDeviation={brushProfile.strokeBlur}
-                  result='blur'
-                />
-                <feMerge>
-                  <feMergeNode in='blur' />
-                  <feMergeNode in='SourceGraphic' />
-                </feMerge>
-              </filter>
-            </defs>
-          </svg>
+      {showStrokes ? (
+        <div
+          className={cn(
+            'absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.02] group-focus-within:scale-[1.02]',
+            liteOnMobile && 'max-md:hidden md:block',
+          )}
+        >
+          <div
+            className='absolute inset-0 overflow-hidden'
+            style={{ transform: `scale(${scale})` }}
+          >
+            {useStrokeFilter ? (
+              <svg className='absolute h-0 w-0' aria-hidden>
+                <defs>
+                  <filter id={filterId} x='-25%' y='-25%' width='150%' height='150%'>
+                    <feGaussianBlur
+                      in='SourceGraphic'
+                      stdDeviation={brushProfile.strokeBlur}
+                      result='blur'
+                    />
+                    <feMerge>
+                      <feMergeNode in='blur' />
+                      <feMergeNode in='SourceGraphic' />
+                    </feMerge>
+                  </filter>
+                </defs>
+              </svg>
+            ) : null}
 
-          {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
-            <NsfwBrushStroke
-              key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
-              layer={layer}
-              color={layerColors[index % layerColors.length] ?? accentColor}
-              filterId={filterId}
-              className={LAYER_BASE_CLASS}
-              strokeWidth={brushProfile.rest}
-              layerSizePercent={brushProfile.layerSizePercent}
-              strokeOpacity={brushProfile.strokeOpacity}
-            />
-          ))}
+            {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
+              <NsfwBrushStroke
+                key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+                layer={layer}
+                color={layerColors[index % layerColors.length] ?? accentColor}
+                filterId={filterId}
+                className={LAYER_BASE_CLASS}
+                strokeWidth={brushProfile.rest}
+                layerSizePercent={brushProfile.layerSizePercent}
+                strokeOpacity={brushProfile.strokeOpacity}
+                strokeBlendMode={brushProfile.strokeBlendMode}
+                useStrokeFilter={useStrokeFilter}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

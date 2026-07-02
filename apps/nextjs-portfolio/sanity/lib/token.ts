@@ -1,7 +1,7 @@
 import 'server-only';
-import { readToken } from './api';
+import { sanityReadToken } from '@/lib/env';
 
-export const token = readToken;
+export const token = sanityReadToken();
 
 if (!token) {
   throw new Error('Missing NEXT_PUBLIC_SANITY_API_READ_TOKEN');

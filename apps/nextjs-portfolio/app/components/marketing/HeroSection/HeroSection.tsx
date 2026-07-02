@@ -7,6 +7,7 @@ import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import { useEffect, useMemo, useState } from 'react';
 import { getHeroStrokeColors } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
+import { BrushRevealImageBlur } from '@/app/components/paintings/BrushReveal/BrushRevealImageBlur';
 import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
 import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
 import { TextPressure } from '@/app/components/ui/TextPressure';
@@ -85,26 +86,37 @@ type HeroImageSectionProps = {
   heroName?: string | null;
 };
 
-// Positions that avoid the center text area but are closer together
-const FIXED_POSITIONS_DESKTOP = [
-  { top: '15%', left: '20%', rotation: -12, scale: 0.95 },
-  { top: '20%', left: '80%', rotation: 15, scale: 0.92 },
-  { top: '28%', left: '15%', rotation: -5, scale: 1.0 },
-  { top: '24%', left: '85%', rotation: 10, scale: 0.98 },
-  { top: '68%', left: '20%', rotation: -15, scale: 0.92 },
-  { top: '72%', left: '80%', rotation: 5, scale: 1.0 },
-  { top: '12%', left: '50%', rotation: -8, scale: 0.95 },
-  { top: '76%', left: '50%', rotation: 12, scale: 0.95 },
+// Cards live in the outer columns only; center ~30–70% stays clear for hero copy.
+// `side` drives inner-edge alignment + outward-biased motion so cards never
+// drift into the text zone. Outer edges may bleed off-screen — that's intentional.
+type HeroCardSide = 'left' | 'right';
+type HeroCardPosition = {
+  top: string;
+  left: string;
+  rotation: number;
+  scale: number;
+  side: HeroCardSide;
+};
+
+const FIXED_POSITIONS_DESKTOP: HeroCardPosition[] = [
+  { top: '10%', left: '13%', rotation: -12, scale: 0.95, side: 'left' },
+  { top: '15%', left: '87%', rotation: 15, scale: 0.92, side: 'right' },
+  { top: '30%', left: '9%', rotation: -5, scale: 1.0, side: 'left' },
+  { top: '24%', left: '91%', rotation: 10, scale: 0.98, side: 'right' },
+  { top: '70%', left: '13%', rotation: -15, scale: 0.92, side: 'left' },
+  { top: '76%', left: '87%', rotation: 5, scale: 1.0, side: 'right' },
+  { top: '52%', left: '10%', rotation: -8, scale: 0.92, side: 'left' },
+  { top: '54%', left: '90%', rotation: 12, scale: 0.92, side: 'right' },
 ];
 
-// Mobile positions - use space both above and below text
-const FIXED_POSITIONS_MOBILE = [
-  { top: '10%', left: '15%', rotation: -12, scale: 0.9 },
-  { top: '14%', left: '80%', rotation: 15, scale: 0.88 },
-  { top: '10%', left: '50%', rotation: -8, scale: 0.9 },
-  { top: '66%', left: '20%', rotation: -15, scale: 0.9 },
-  { top: '70%', left: '80%', rotation: 5, scale: 0.88 },
-  { top: '74%', left: '50%', rotation: 12, scale: 0.9 },
+// Mobile positions — cards above/below the text block, not through it
+const FIXED_POSITIONS_MOBILE: HeroCardPosition[] = [
+  { top: '7%', left: '14%', rotation: -12, scale: 0.9, side: 'left' },
+  { top: '9%', left: '84%', rotation: 15, scale: 0.88, side: 'right' },
+  { top: '6%', left: '52%', rotation: -8, scale: 0.88, side: 'right' },
+  { top: '72%', left: '16%', rotation: -15, scale: 0.9, side: 'left' },
+  { top: '76%', left: '84%', rotation: 5, scale: 0.88, side: 'right' },
+  { top: '80%', left: '48%', rotation: 12, scale: 0.88, side: 'left' },
 ];
 
 /** Collage display ratios — portrait through ultra-wide, picked per card. */
@@ -146,9 +158,9 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const cardOffsets = useMemo(
     () =>
       Array.from({ length: 15 }).map(() => ({
-        x: (Math.random() - 0.5) * 50,
-        y: (Math.random() - 0.5) * 50,
-        rotate: (Math.random() - 0.5) * 20,
+        x: (Math.random() - 0.5) * 36,
+        y: (Math.random() - 0.5) * 36,
+        rotate: (Math.random() - 0.5) * 16,
       })),
     [],
   );
@@ -358,16 +370,16 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         )}
       </AnimatePresence>
 
-      {/* Central Text Content */}
+      {/* Central Text Content — always above floating cards */}
       <motion.div
         variants={textContainerVariants}
         initial={hasPlayedAlready ? 'visible' : 'hidden'}
         animate={stage !== 'loading' ? 'visible' : 'hidden'}
-        className='relative z-50 flex flex-col items-center text-center p-8 max-w-2xl pointer-events-none'
+        className='relative z-[60] flex max-w-2xl flex-col items-center p-8 text-center pointer-events-none'
       >
         <motion.p
           variants={textItemVariants}
-          className='text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-4 text-foreground-subtle'
+          className='mb-4 text-sm font-bold uppercase tracking-[0.2em] text-foreground-subtle md:text-base'
         >
           {heroEyebrow?.trim() || 'My name is'}
         </motion.p>
@@ -376,7 +388,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           className='mb-6 w-full max-w-3xl pointer-events-auto'
         >
           {reducedMotion ? (
-            <h1 className='text-7xl font-black tracking-tighter leading-none text-foreground md:text-9xl'>
+            <h1 className='text-7xl font-black leading-none tracking-tighter text-foreground md:text-9xl'>
               {displayName}
             </h1>
           ) : (
@@ -395,14 +407,14 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         {overview?.length ? (
           <motion.div
             variants={textItemVariants}
-            className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle [&_p]:m-0'
+            className='max-w-md text-lg font-medium leading-relaxed text-foreground-subtle md:text-xl [&_p]:m-0'
           >
             <PortableText value={overview} />
           </motion.div>
         ) : (
           <motion.p
             variants={textItemVariants}
-            className='text-lg md:text-xl font-medium max-w-md leading-relaxed text-foreground-subtle'
+            className='max-w-md text-lg font-medium leading-relaxed text-foreground-subtle md:text-xl'
           >
             I&apos;m a design engineer, painter and a maker.
             <br />
@@ -463,11 +475,12 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           const size = sizes[index % sizes.length];
 
           // Target configuration based on layout
-          const pos = positions[index % positions.length] || {
+          const pos: HeroCardPosition = positions[index % positions.length] || {
             top: '50%',
             left: '50%',
             rotation: 0,
             scale: 1,
+            side: index % 2 === 0 ? 'left' : 'right',
           };
           const { accentColor } = getHeroStrokeColors(index);
           const brushIndex = isPainting ? paintingBrushSeed(item._id) : index;
@@ -487,15 +500,20 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           // tier 0 (Background): moves WITH the mouse, tilts slightly
           // tier 1 (Middleground): moves slightly opposite, tilts normal
           // tier 2 (Foreground): moves strongly opposite, tilts heavily
+          // Horizontal drift is biased outward (away from center) per card side so
+          // cards never travel into the protected center text column.
+          const outward = pos.side === 'left' ? -1 : 1;
           const getParallaxValues = (idx: number) => {
             if (isTouchDevice) {
               return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (idx % 3) + 1 };
             }
 
             const tier = idx % 3;
+            // Map mouse X to a 0..1 magnitude so horizontal motion has no inward sign.
+            const magX = Math.abs(mousePos.x);
             if (tier === 0) {
               return {
-                x: mousePos.x * 24,
+                x: outward * magX * 20,
                 y: mousePos.y * 24,
                 rotateX: mousePos.y * -6,
                 rotateY: mousePos.x * 6,
@@ -503,7 +521,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               };
             } else if (tier === 1) {
               return {
-                x: mousePos.x * -12,
+                x: outward * magX * 14,
                 y: mousePos.y * -12,
                 rotateX: mousePos.y * -12,
                 rotateY: mousePos.x * 12,
@@ -511,7 +529,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               };
             } else {
               return {
-                x: mousePos.x * -42,
+                x: outward * magX * 30,
                 y: mousePos.y * -42,
                 rotateX: mousePos.y * -22,
                 rotateY: mousePos.x * 22,
@@ -526,7 +544,13 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
 
           const isCurrentlyHovered = hoveredIndex === index;
-          const offset = cardOffsets[index] ?? { x: 0, y: 0, rotate: 0 };
+          const rawOffset = cardOffsets[index] ?? { x: 0, y: 0, rotate: 0 };
+          // Scatter horizontally outward only, so jitter can't nudge a card inward.
+          const offset = {
+            x: (pos.side === 'left' ? -1 : 1) * Math.abs(rawOffset.x),
+            y: rawOffset.y,
+            rotate: rawOffset.rotate,
+          };
           const floatMotion = floatKeyframes[index] ?? {
             y: [0, 12, 0] as [number, number, number],
             x: [0, 0, 0] as [number, number, number],
@@ -545,7 +569,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               : stage === 'exploding'
                 ? 1
                 : isCurrentlyHovered
-                  ? 50
+                  ? 40
                   : parallax.zIndex;
 
           // Animations
@@ -765,18 +789,24 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                             <BrushRevealWrap
                               className='relative isolate h-full w-full overflow-hidden'
                               enabled={canBrushReveal}
+                              profile='heroCard'
                               hovered={canBrushReveal && stage === 'floating' && isCurrentlyHovered}
                             >
-                              <Image
-                                src={imageUrl}
-                                alt=''
-                                aria-hidden
-                                fill
-                                priority={isPriority}
-                                fetchPriority={isPriority ? 'high' : undefined}
-                                className='object-cover'
-                                sizes='(max-width: 768px) 40vw, 30vw'
-                              />
+                              <BrushRevealImageBlur
+                                className='absolute inset-0'
+                                disabled={showNsfwBlur}
+                              >
+                                <Image
+                                  src={imageUrl}
+                                  alt=''
+                                  aria-hidden
+                                  fill
+                                  priority={isPriority}
+                                  fetchPriority={isPriority ? 'high' : undefined}
+                                  className='object-cover'
+                                  sizes='(max-width: 768px) 40vw, 30vw'
+                                />
+                              </BrushRevealImageBlur>
                               {showNsfwBlur ? (
                                 <div
                                   data-nsfw-blur
@@ -790,6 +820,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                                   strokeVariantIndex={brushIndex}
                                   title={title}
                                   isNsfwBlurred={showNsfwBlur}
+                                  profile='heroCard'
                                 />
                               ) : null}
                             </BrushRevealWrap>

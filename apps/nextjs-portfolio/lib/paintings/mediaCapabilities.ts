@@ -12,6 +12,44 @@ export function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+/**
+ * WebKit Safari — SVG filters, mix-blend, and pathLength animation are very costly.
+ * Chrome/Firefox/Edge on macOS are excluded.
+ */
+export function isSafariBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+  const ua = navigator.userAgent;
+  return /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua);
+}
+
+type BrushRevealLiteListener = (lite: boolean) => void;
+
+let brushRevealLiteSubscribed = false;
+let brushRevealLiteValue = false;
+const brushRevealLiteListeners = new Set<BrushRevealLiteListener>();
+
+function subscribeBrushRevealLite() {
+  if (brushRevealLiteSubscribed || typeof window === 'undefined') return;
+  brushRevealLiteSubscribed = true;
+  brushRevealLiteValue = isSafariBrowser();
+}
+
+/** Safari / WebKit — lighter brush reveal (no filters, blend modes, or path draw). */
+export function useBrushRevealLite(): boolean {
+  const [lite, setLite] = useState(false);
+
+  useLayoutEffect(() => {
+    subscribeBrushRevealLite();
+    setLite(brushRevealLiteValue);
+    brushRevealLiteListeners.add(setLite);
+    return () => {
+      brushRevealLiteListeners.delete(setLite);
+    };
+  }, []);
+
+  return lite;
+}
+
 type BrushRevealListener = (canReveal: boolean) => void;
 
 let brushRevealSubscribed = false;

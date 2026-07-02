@@ -17,7 +17,7 @@ const panelEase = [0.22, 1, 0.36, 1] as const;
 const panelContainerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.11, delayChildren: 0.08 },
+    transition: { staggerChildren: 0.13, delayChildren: 0.06 },
   },
 };
 
@@ -26,15 +26,13 @@ function panelItemVariants(fromX: number) {
     hidden: {
       opacity: 0,
       x: fromX,
-      y: 28,
-      filter: 'blur(10px)',
+      y: 16,
     },
     visible: {
       opacity: 1,
       x: 0,
       y: 0,
-      filter: 'blur(0px)',
-      transition: { duration: 0.75, ease: panelEase },
+      transition: { duration: 0.85, ease: panelEase },
     },
   };
 }
@@ -87,7 +85,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   });
 
   const isEven = index % 2 === 0;
-  const panelFromX = isEven ? -52 : 52;
+  const panelFromX = isEven ? -24 : 24;
   const panelAnimate = reducedMotion ? false : isCardInView ? 'visible' : 'hidden';
   const titleId = `featured-project-title-${project._id}`;
   const clientLabel = (project.client as string | null | undefined)?.trim() || null;
