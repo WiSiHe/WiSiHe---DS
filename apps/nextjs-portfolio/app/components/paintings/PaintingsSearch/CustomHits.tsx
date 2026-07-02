@@ -45,7 +45,7 @@ const PaintingHit = memo(
     const isDesktopGrid = useIsDesktopPaintingGrid();
 
     return (
-      <div className='break-inside-avoid mb-2'>
+      <div className='mb-3 break-inside-avoid'>
         {isDesktopGrid ? (
           <PaintingCard
             // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
@@ -60,11 +60,13 @@ const PaintingHit = memo(
             // biome-ignore lint/suspicious/noExplicitAny: Algolia image shape
             image={(paintingData as any).image}
             index={index}
+            format={typeof hit['format'] === 'string' ? hit['format'] : undefined}
             isNsfw={paintingData.isNSFW}
             isNsfwFilterActive={isNsfwFilterActive}
             isForSale={paintingData.isForSale}
             hasStoreLink={paintingData.hasStoreLink}
             paintingId={paintingData._id}
+            tags={(paintingData.tagsV2 ?? []).map(tag => tag.name)}
             // biome-ignore lint/suspicious/noExplicitAny: Algolia palette shape
             palette={(paintingData as any).palette}
           />
@@ -79,16 +81,17 @@ const PaintingHit = memo(
 );
 
 function PaintingCardSkeleton({ index }: { index: number }) {
+  const aspectClass =
+    index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[4/3]';
+
   return (
     <div
-      className='mb-2 w-full overflow-hidden rounded-xl border border-border bg-surface animate-pulse'
+      className='mb-3 w-full animate-pulse'
       style={{ animationDelay: `${index * 40}ms` }}
       aria-hidden
     >
-      <div className='aspect-[4/3] bg-linear-to-br from-surface-subtle via-surface to-surface-subtle' />
-      <div className='border-t border-border px-3 py-2.5'>
-        <div className='h-3.5 w-2/5 rounded-full bg-surface-subtle' />
-      </div>
+      <div className={cn(aspectClass, 'rounded-xl bg-surface-subtle')} />
+      <div className='mt-2 h-3.5 w-3/5 rounded-full bg-surface-subtle' />
     </div>
   );
 }
@@ -96,11 +99,11 @@ function PaintingCardSkeleton({ index }: { index: number }) {
 function SkeletonGrid() {
   return (
     <div
-      className='mt-4 columns-2 gap-2 sm:columns-3'
+      className='mt-4 columns-2 gap-3 sm:columns-2 md:columns-3'
       aria-busy='true'
       aria-label='Loading paintings'
     >
-      {Array.from({ length: 18 }).map((_, i) => (
+      {Array.from({ length: 12 }).map((_, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
         <div key={i} className='break-inside-avoid'>
           <PaintingCardSkeleton index={i} />
@@ -131,7 +134,7 @@ export default function CustomHits() {
   return (
     <div
       className={cn(
-        'mt-4 columns-2 gap-2 sm:columns-3 lg:columns-3 transition-opacity duration-300',
+        'mt-4 columns-2 gap-3 sm:columns-2 md:columns-3 transition-opacity duration-300',
         status === 'loading' && 'pointer-events-none opacity-40',
       )}
       aria-busy={status === 'loading'}

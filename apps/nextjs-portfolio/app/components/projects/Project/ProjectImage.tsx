@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
+import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
 import ImageModal from './ImageModal';
 
@@ -211,7 +212,9 @@ const ProjectImage = ({ project }: ProjectImageProps) => {
   return (
     <div>
       <motion.div
-        layoutId={`image-${projectTitle}`}
+        layoutId={contentImageLayoutId(projectTitle)}
+        initial={false}
+        transition={sharedLayoutTransition}
         className='rounded-2xl bg-surface p-1 shadow-md ring-1 ring-border/40'
       >
         <section

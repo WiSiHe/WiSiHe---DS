@@ -13,6 +13,7 @@ import {
   getProjectDisplayTitle,
   getProjectTypeLabel,
 } from '@/app/components/projects/projectCardHelpers';
+import { contentImageLayoutId } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type OngoingProjectCardProps = {
@@ -74,6 +75,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
           <div className='grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]'>
             <div className='relative order-first lg:order-last'>
               <ProjectCardImageFrame
+                layoutId={contentImageLayoutId(projectTitle)}
                 imageSrc={imageSrc ?? null}
                 alt={image?.alt || projectTitle}
                 lqip={image?.lqip ?? null}

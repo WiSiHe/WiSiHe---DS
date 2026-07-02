@@ -1,12 +1,13 @@
 'use client';
 
 import { motion, useReducedMotion } from 'motion/react';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 type HomeSectionHeaderProps = {
   eyebrow: string;
   title: string;
-  description?: string | null;
+  description?: ReactNode;
   headingId?: string;
   descriptionId?: string;
   align?: 'center' | 'left';
@@ -45,12 +46,21 @@ export default function HomeSectionHeader({
         {title}
       </h2>
       {description ? (
-        <p
-          id={descriptionId}
-          className='mt-4 text-base leading-relaxed text-foreground-subtle md:text-lg text-pretty'
-        >
-          {description}
-        </p>
+        typeof description === 'string' ? (
+          <p
+            id={descriptionId}
+            className='mt-4 text-base leading-relaxed text-foreground-subtle md:text-lg text-pretty'
+          >
+            {description}
+          </p>
+        ) : (
+          <div
+            id={descriptionId}
+            className='mt-4 text-base leading-relaxed text-foreground-subtle md:text-lg text-pretty [&_p]:m-0'
+          >
+            {description}
+          </div>
+        )
       ) : null}
     </motion.div>
   );

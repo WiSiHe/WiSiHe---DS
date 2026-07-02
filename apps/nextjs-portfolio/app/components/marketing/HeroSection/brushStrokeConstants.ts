@@ -34,18 +34,16 @@ export type BrushProfileConfig = {
 };
 
 const MASONRY_BRUSH_PROFILE: BrushProfileConfig = {
-  rest: 32,
-  hover: 120,
-  layerSizePercent: 240,
-  coverScale: variantScale => Math.min(variantScale * 1, 2.5),
-  strokeBlur: 2.8,
-  strokeOpacity: 0.88,
-  layerCount: 7,
-  washOpacity: 0.52,
+  rest: 26,
+  hover: 168,
+  layerSizePercent: 255,
+  coverScale: variantScale => Math.min(variantScale * 1.05, 2.6),
+  strokeBlur: 2.6,
+  strokeOpacity: 1,
+  layerCount: 3,
+  washOpacity: 1,
   imageBlurPx: 0,
-  solidFill: false,
-  strokeBlendMode: 'hard-light',
-  washBlendMode: 'soft-light',
+  solidFill: true,
 };
 
 /** Full paint-over for grid cards when metadata replaces the artwork. */
@@ -91,20 +89,18 @@ const HERO_BLEND_BRUSH_PROFILE: BrushProfileConfig = {
   strokeBlendMode: 'hard-light',
 };
 
-/** NSFW thumbnail — soft blur with visible palette strokes painted on top at rest. */
+/** NSFW thumbnail — palette wash with dense brush strokes painted on top at rest. */
 const NSFW_COVER_BRUSH_PROFILE: BrushProfileConfig = {
-  rest: 36,
-  hover: 36,
-  layerSizePercent: 188,
-  coverScale: variantScale => Math.min(variantScale * 0.92, 2.15),
-  strokeBlur: 2.35,
-  strokeOpacity: 0.88,
-  layerCount: 2,
+  rest: 38,
+  hover: 52,
+  layerSizePercent: 230,
+  coverScale: variantScale => Math.min(variantScale * 1.12, 2.6),
+  strokeBlur: 2.2,
+  strokeOpacity: 1,
+  layerCount: 3,
   washOpacity: 1,
   imageBlurPx: 0,
-  solidFill: false,
-  strokeBlendMode: 'hard-light',
-  washBlendMode: 'soft-light',
+  solidFill: true,
 };
 
 export function getBrushProfileConfig(profile: BrushStrokeProfile): BrushProfileConfig {
@@ -123,7 +119,7 @@ export function resolveBrushProfile(
   const base = getBrushProfileConfig(profile);
   if (!lite) return base;
 
-  const layerCap = base.solidFill ? 3 : 3;
+  const layerCap = base.solidFill ? 3 : 2;
 
   return {
     ...base,

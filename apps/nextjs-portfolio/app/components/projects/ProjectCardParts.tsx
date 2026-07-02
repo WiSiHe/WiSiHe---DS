@@ -1,8 +1,11 @@
 import { cn } from '@wisihe/utils';
-import type { ImageProps } from 'next/image';
-import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { getProjectTypeLabel } from '@/app/components/projects/projectCardHelpers';
+
+export {
+  ProjectCardImageFrame,
+  type ProjectCardImageFrameProps,
+} from '@/app/components/projects/ProjectCardImageFrame';
 
 const TECH_TAG_NAMES = new Set([
   'React',
@@ -73,63 +76,6 @@ export function ProjectCardBadge({ children, className }: ProjectCardBadgeProps)
     >
       {children}
     </span>
-  );
-}
-
-type ProjectCardImageFrameProps = {
-  imageSrc: string | null;
-  alt: string;
-  lqip?: string | null;
-  priority?: boolean;
-  fetchPriority?: ImageProps['fetchPriority'];
-  sizes?: string;
-  aspectClassName?: string;
-  imageClassName?: string;
-};
-
-export function ProjectCardImageFrame({
-  imageSrc,
-  alt,
-  lqip,
-  priority,
-  fetchPriority,
-  sizes = '(max-width: 768px) 100vw, 50vw',
-  aspectClassName = 'aspect-4/3',
-  imageClassName = 'object-cover',
-}: ProjectCardImageFrameProps) {
-  return (
-    <div
-      className={cn(
-        'relative overflow-hidden bg-linear-to-br from-accent/8 via-surface-subtle to-surface-subtle',
-        aspectClassName,
-      )}
-    >
-      <div className='absolute inset-0 p-4 md:p-5'>
-        <div className='relative h-full w-full overflow-hidden rounded-2xl bg-surface-subtle/50 ring-1 ring-border/40'>
-          {imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt={alt}
-              fill
-              priority={priority}
-              fetchPriority={fetchPriority}
-              sizes={sizes}
-              placeholder={lqip ? 'blur' : 'empty'}
-              blurDataURL={lqip ?? undefined}
-              className={cn(
-                'transition-transform duration-700 ease-out group-hover:scale-[1.03]',
-                imageClassName,
-              )}
-            />
-          ) : (
-            <div
-              className='absolute inset-0 bg-linear-to-br from-accent/[0.06] via-surface-subtle to-foreground/[0.03] dark:from-accent/[0.09] dark:to-foreground/[0.02]'
-              aria-hidden
-            />
-          )}
-        </div>
-      </div>
-    </div>
   );
 }
 

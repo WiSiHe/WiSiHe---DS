@@ -316,8 +316,14 @@ export const paintingQuery = defineQuery(`
       images[]{
         ...,
         "lqip": asset->metadata.lqip,
+        "blurhash": asset->metadata.blurhash,
         "aspectRatio": asset->metadata.dimensions.aspectRatio,
-        "altText": altText
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
+        "hasAlpha": asset->metadata.hasAlpha,
+        "isOpaque": asset->metadata.isOpaque,
+        "altText": altText,
+        "palette": asset->metadata.palette
       },
       []
     ),

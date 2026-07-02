@@ -10,6 +10,7 @@ import { draftMode } from 'next/headers';
 import { VisualEditing } from 'next-sanity/visual-editing';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 import HeaderNavigation from '@/app/components/layout/HeaderNavigation';
+import { MotionLayoutGroup } from '@/app/components/layout/MotionLayoutGroup';
 import { SanityLive, sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
@@ -212,7 +213,7 @@ export default async function RootLayout({
                 <SanityLive onError={handleError} />
                 <HeaderNavigation />
                 <main id='main-content' className='bg-transparent'>
-                  {children}
+                  <MotionLayoutGroup>{children}</MotionLayoutGroup>
                 </main>
                 <Footer
                   socialLinks={socialLinks}

@@ -3,14 +3,16 @@
 import { IconBrandYoutube, IconMask, IconStack2 } from '@tabler/icons-react';
 import { PaintingCard, type PaintingCardBadge } from '@wisihe/ui-react';
 import { cleanTagName, cn } from '@wisihe/utils';
+import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
 import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
 import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
+import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import { useCanBrushReveal } from '@/lib/paintings/mediaCapabilities';
-import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
+import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   paintingBrushSeed,
@@ -43,6 +45,8 @@ function PaintingCardInner({
   canBrushReveal,
   className,
 }: PaintingCardInnerProps) {
+  const reduceMotion = useReducedMotion();
+
   if (!paintingData || Object.keys(paintingData).length === 0) return null;
 
   const {
@@ -114,7 +118,7 @@ function PaintingCardInner({
       placeholder={lqip ? 'blur' : 'empty'}
       blurDataURL={lqip}
       quality={80}
-      className={cn('object-cover w-full h-full', showNsfwBlur && NSFW_IMAGE_BLUR_CLASS)}
+      className={cn('object-cover w-full h-full', showNsfwBlur && getNsfwImageBlurClass('card'))}
     />
   ) : undefined;
 
@@ -147,11 +151,24 @@ function PaintingCardInner({
   }
 
   const showTagsWithoutBrush = alwaysShowTags || !canBrushReveal;
+  const imageLayoutId = title && !reduceMotion ? contentImageLayoutId(title) : undefined;
+  const ImageFrame = imageLayoutId ? motion.div : 'div';
 
   const imageNode = imageEl ? (
-    <div className='relative isolate h-full w-full overflow-hidden rounded-xl'>
+    <ImageFrame
+      {...(imageLayoutId
+        ? {
+            layoutId: imageLayoutId,
+            initial: false as const,
+            transition: sharedLayoutTransition,
+          }
+        : {})}
+      className='relative isolate h-full w-full overflow-hidden rounded-xl'
+    >
       {imageEl}
-      {showNsfwBlur ? <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushIndex} /> : null}
+      {showNsfwBlur ? (
+        <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushIndex} className='z-[1]' />
+      ) : null}
       {canBrushReveal ? (
         <BrushRevealLayer
           {...strokeColors}
@@ -164,7 +181,7 @@ function PaintingCardInner({
           isNsfwBlurred={showNsfwBlur}
         />
       ) : null}
-    </div>
+    </ImageFrame>
   ) : undefined;
 
   const card = (

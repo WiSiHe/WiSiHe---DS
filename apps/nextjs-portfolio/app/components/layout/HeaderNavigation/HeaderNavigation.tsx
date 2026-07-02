@@ -58,12 +58,12 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
           <Link
             href='/'
             aria-label='Navigate to the homepage'
-            className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
+            className='group relative flex items-center justify-center rounded-lg border border-border bg-surface p-1.5 shadow-lg transition-all duration-200 hover:scale-105 hover:border-accent-border hover:bg-surface-hover'
           >
             <IconLogo
               color='currentColor'
               className={cn(
-                'transition-all duration-300 text-foreground group-hover:text-accent w-12 h-12 md:w-20 md:h-20',
+                'h-9 w-9 text-foreground transition-all duration-300 group-hover:text-accent md:h-12 md:w-12',
               )}
               size='100%'
             />

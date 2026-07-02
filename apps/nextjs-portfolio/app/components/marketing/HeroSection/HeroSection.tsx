@@ -6,23 +6,14 @@ import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import { useEffect, useMemo, useState } from 'react';
-import { getHeroStrokeColors } from '@/app/components/marketing/HeroSection/HeroPaintingSvgHover';
-import { BrushRevealImageBlur } from '@/app/components/paintings/BrushReveal/BrushRevealImageBlur';
-import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
-import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
 import { TextPressure } from '@/app/components/ui/TextPressure';
-import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
-import { useCanBrushReveal } from '@/lib/paintings/mediaCapabilities';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/sanity/lib/utils';
 import { HeroDotGrid } from './HeroDotGrid';
-import { HeroProjectUiHover } from './HeroProjectUiHover';
 import HeroScrollIndicator from './HeroScrollIndicator';
 import {
   EXPLODE_SQUASH_KEYFRAMES,
   EXPLODE_SQUASH_TRANSITION,
-  HERO_SQUASH_RATIOS,
-  HERO_SQUASH_SPRING,
   heroFloatSquashStretch,
 } from './heroSquashStretch';
 
@@ -86,37 +77,47 @@ type HeroImageSectionProps = {
   heroName?: string | null;
 };
 
-// Cards live in the outer columns only; center ~30–70% stays clear for hero copy.
-// `side` drives inner-edge alignment + outward-biased motion so cards never
-// drift into the text zone. Outer edges may bleed off-screen — that's intentional.
+// Cards form left/right wing columns; center ~25–75% horizontal, ~32–68% vertical
+// stays clear for hero copy. `side` + `band` drive outward-biased jitter/parallax.
 type HeroCardSide = 'left' | 'right';
+type HeroCardBand = 'top' | 'bottom';
 type HeroCardPosition = {
   top: string;
   left: string;
   rotation: number;
   scale: number;
   side: HeroCardSide;
+  band: HeroCardBand;
 };
 
+/** 8 collage slots — asymmetric wings; no mirrored rows (center ~28–72% stays clear). */
 const FIXED_POSITIONS_DESKTOP: HeroCardPosition[] = [
-  { top: '10%', left: '13%', rotation: -12, scale: 0.95, side: 'left' },
-  { top: '15%', left: '87%', rotation: 15, scale: 0.92, side: 'right' },
-  { top: '30%', left: '9%', rotation: -5, scale: 1.0, side: 'left' },
-  { top: '24%', left: '91%', rotation: 10, scale: 0.98, side: 'right' },
-  { top: '70%', left: '13%', rotation: -15, scale: 0.92, side: 'left' },
-  { top: '76%', left: '87%', rotation: 5, scale: 1.0, side: 'right' },
-  { top: '52%', left: '10%', rotation: -8, scale: 0.92, side: 'left' },
-  { top: '54%', left: '90%', rotation: 12, scale: 0.92, side: 'right' },
+  { top: '7%', left: '7%', rotation: -14, scale: 0.9, side: 'left', band: 'top' },
+  { top: '13%', left: '91%', rotation: 11, scale: 0.94, side: 'right', band: 'top' },
+  { top: '22%', left: '16%', rotation: -6, scale: 0.96, side: 'left', band: 'top' },
+  { top: '19%', left: '88%', rotation: 15, scale: 0.89, side: 'right', band: 'top' },
+  { top: '59%', left: '93%', rotation: 9, scale: 0.91, side: 'right', band: 'bottom' },
+  { top: '64%', left: '12%', rotation: -11, scale: 0.93, side: 'left', band: 'bottom' },
+  { top: '74%', left: '86%', rotation: 6, scale: 0.95, side: 'right', band: 'bottom' },
+  { top: '78%', left: '9%', rotation: -16, scale: 0.88, side: 'left', band: 'bottom' },
 ];
 
-// Mobile positions — cards above/below the text block, not through it
+/** 6 slots — staggered heights per side, no horizontal pairs. */
+const FIXED_POSITIONS_TABLET: HeroCardPosition[] = [
+  { top: '8%', left: '8%', rotation: -12, scale: 0.91, side: 'left', band: 'top' },
+  { top: '15%', left: '90%', rotation: 10, scale: 0.92, side: 'right', band: 'top' },
+  { top: '24%', left: '15%', rotation: -5, scale: 0.93, side: 'left', band: 'top' },
+  { top: '21%', left: '87%', rotation: 13, scale: 0.9, side: 'right', band: 'top' },
+  { top: '66%', left: '11%', rotation: -9, scale: 0.91, side: 'left', band: 'bottom' },
+  { top: '71%', left: '89%', rotation: 8, scale: 0.92, side: 'right', band: 'bottom' },
+];
+
+/** 4 cards — diagonal stagger, not corner pairs. */
 const FIXED_POSITIONS_MOBILE: HeroCardPosition[] = [
-  { top: '7%', left: '14%', rotation: -12, scale: 0.9, side: 'left' },
-  { top: '9%', left: '84%', rotation: 15, scale: 0.88, side: 'right' },
-  { top: '6%', left: '52%', rotation: -8, scale: 0.88, side: 'right' },
-  { top: '72%', left: '16%', rotation: -15, scale: 0.9, side: 'left' },
-  { top: '76%', left: '84%', rotation: 5, scale: 0.88, side: 'right' },
-  { top: '80%', left: '48%', rotation: 12, scale: 0.88, side: 'left' },
+  { top: '9%', left: '10%', rotation: -11, scale: 0.86, side: 'left', band: 'top' },
+  { top: '14%', left: '88%', rotation: 12, scale: 0.85, side: 'right', band: 'top' },
+  { top: '72%', left: '14%', rotation: -8, scale: 0.84, side: 'left', band: 'bottom' },
+  { top: '67%', left: '86%', rotation: 9, scale: 0.83, side: 'right', band: 'bottom' },
 ];
 
 /** Collage display ratios — portrait through ultra-wide, picked per card. */
@@ -141,8 +142,35 @@ function resolveHeroCardAspectRatio(item: ShowcaseItem, index: number): number {
   return HERO_CARD_ASPECT_PRESETS[seed % HERO_CARD_ASPECT_PRESETS.length] ?? 4 / 3;
 }
 
+function shuffleSlotOrder(count: number): number[] {
+  const order = Array.from({ length: count }, (_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = order[i]!;
+    order[i] = order[j]!;
+    order[j] = tmp;
+  }
+  return order;
+}
+
+/** Stable outward-biased scatter — unique per item, not identical across a wing pair. */
+function heroCardScatter(
+  seed: number,
+  side: HeroCardSide,
+  band: HeroCardBand,
+): { x: number; y: number; rotate: number } {
+  const r1 = (seed % 997) / 997;
+  const r2 = ((seed * 17) % 991) / 991;
+  const r3 = ((seed * 31) % 983) / 983;
+
+  return {
+    x: (side === 'left' ? -1 : 1) * (10 + r1 * 24),
+    y: (band === 'top' ? -1 : 1) * (8 + r2 * 20),
+    rotate: (r3 - 0.5) * 18,
+  };
+}
+
 const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageSectionProps) => {
-  const canBrushReveal = useCanBrushReveal();
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
   const displayName = heroDisplayName(heroName);
@@ -154,16 +182,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  const cardOffsets = useMemo(
-    () =>
-      Array.from({ length: 15 }).map(() => ({
-        x: (Math.random() - 0.5) * 36,
-        y: (Math.random() - 0.5) * 36,
-        rotate: (Math.random() - 0.5) * 16,
-      })),
-    [],
-  );
 
   /** Per-card float loop — must be stable across renders so Motion does not restart. */
   const floatKeyframes = useMemo(
@@ -279,33 +297,20 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
   const visibleItems = items
     ? isMobile
-      ? items.slice(0, 6)
+      ? items.slice(0, 4)
       : isTablet
-        ? items.slice(0, 7)
+        ? items.slice(0, 6)
         : items.slice(0, 8)
     : [];
 
-  // Auto-cycling highlight timer on mobile/touch screens
-  useEffect(() => {
-    if (!isTouchDevice || stage !== 'floating' || visibleItems.length === 0) return;
+  const positions = isMobile
+    ? FIXED_POSITIONS_MOBILE
+    : isTablet
+      ? FIXED_POSITIONS_TABLET
+      : FIXED_POSITIONS_DESKTOP;
 
-    let currentIndex = 0;
-    const interval = setInterval(() => {
-      setHoveredIndex(currentIndex);
-      currentIndex = (currentIndex + 1) % visibleItems.length;
-    }, 3000); // Highlight a different card every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [isTouchDevice, stage, visibleItems.length]);
-
-  const basePositions = isMobile ? FIXED_POSITIONS_MOBILE : FIXED_POSITIONS_DESKTOP;
-  const [positions, setPositions] = useState(basePositions);
-
-  useEffect(() => {
-    // Shuffle positions on client mount/resize to randomize collage layout safely
-    const shuffled = [...basePositions].sort(() => Math.random() - 0.5);
-    setPositions(shuffled);
-  }, [basePositions]);
+  /** Which collage slot each visible item occupies — shuffled so wings don't read as pairs. */
+  const slotOrder = useMemo(() => shuffleSlotOrder(positions.length), [positions.length]);
 
   if (!items || items.length === 0) {
     return <div className='text-center py-20'>No items available.</div>;
@@ -375,27 +380,27 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         variants={textContainerVariants}
         initial={hasPlayedAlready ? 'visible' : 'hidden'}
         animate={stage !== 'loading' ? 'visible' : 'hidden'}
-        className='relative z-[60] flex max-w-2xl flex-col items-center p-8 text-center pointer-events-none'
+        className='relative z-[60] flex max-w-xl flex-col items-center p-6 text-center pointer-events-none md:p-8'
       >
         <motion.p
           variants={textItemVariants}
-          className='mb-4 text-sm font-bold uppercase tracking-[0.2em] text-foreground-subtle md:text-base'
+          className='mb-3 text-xs font-bold uppercase tracking-[0.2em] text-foreground-subtle md:text-sm'
         >
-          {heroEyebrow?.trim() || 'My name is'}
+          {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
         </motion.p>
         <motion.div
           variants={textItemVariants}
-          className='mb-6 w-full max-w-3xl pointer-events-auto'
+          className='mb-4 w-full max-w-2xl pointer-events-auto'
         >
           {reducedMotion ? (
-            <h1 className='text-7xl font-black leading-none tracking-tighter text-foreground md:text-9xl'>
+            <h1 className='text-5xl font-black leading-none tracking-tighter text-foreground sm:text-6xl md:text-7xl lg:text-8xl'>
               {displayName}
             </h1>
           ) : (
-            <div className='h-24 w-full md:h-36'>
+            <div className='h-20 w-full md:h-28 lg:h-32'>
               <TextPressure
                 text={displayName}
-                minFontSize={56}
+                minFontSize={44}
                 flex
                 weight
                 width
@@ -407,35 +412,34 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         {overview?.length ? (
           <motion.div
             variants={textItemVariants}
-            className='max-w-md text-lg font-medium leading-relaxed text-foreground-subtle md:text-xl [&_p]:m-0'
+            className='max-w-sm text-base font-medium leading-relaxed text-foreground-subtle md:text-lg [&_p]:m-0'
           >
             <PortableText value={overview} />
           </motion.div>
         ) : (
           <motion.p
             variants={textItemVariants}
-            className='max-w-md text-lg font-medium leading-relaxed text-foreground-subtle md:text-xl'
+            className='max-w-sm text-base font-medium leading-relaxed text-foreground-subtle md:text-lg'
           >
-            I&apos;m a design engineer, painter and a maker.
-            <br />
-            Explore my work.
+            I&apos;m a design engineer, painter and maker. Explore paintings, projects, and
+            experiments from my portfolio.
           </motion.p>
         )}
 
         {/* Double Call to Actions (serving both paintings & projects) */}
         <motion.div
           variants={buttonVariants}
-          className='mt-8 flex flex-col sm:flex-row items-center gap-4 pointer-events-auto'
+          className='mt-6 flex flex-col sm:flex-row items-center gap-3 pointer-events-auto'
         >
           <Link
             href='/paintings'
-            className='inline-flex items-center justify-center px-8 py-3 rounded-full bg-accent text-accent-contrast font-bold tracking-wide transition-all hover:scale-105 hover:bg-accent-hover shadow-lg'
+            className='inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover'
           >
             View Paintings
           </Link>
           <Link
             href='/projects'
-            className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-8 py-3 font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg'
+            className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-6 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg'
           >
             Explore Projects
           </Link>
@@ -466,29 +470,29 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
           // Deterministic sizing based on index
           const sizes = [
-            'w-52 md:w-84 lg:max-w-[22vw]',
-            'w-60 md:w-96 lg:max-w-[24vw]',
-            'w-48 md:w-80 lg:max-w-[21vw]',
-            'w-56 md:w-96 lg:max-w-[23vw]',
+            'w-44 md:w-72 lg:max-w-[18vw]',
+            'w-52 md:w-80 lg:max-w-[19vw]',
+            'w-40 md:w-64 lg:max-w-[17vw]',
+            'w-48 md:w-72 lg:max-w-[18vw]',
           ];
           const isPriority = index === 0;
           const size = sizes[index % sizes.length];
 
-          // Target configuration based on layout
-          const pos: HeroCardPosition = positions[index % positions.length] || {
+          // Target configuration — item index maps to a shuffled slot, not a mirrored pair.
+          const slotIndex = slotOrder[index] ?? index;
+          const pos: HeroCardPosition = positions[slotIndex] ?? {
             top: '50%',
             left: '50%',
             rotation: 0,
             scale: 1,
             side: index % 2 === 0 ? 'left' : 'right',
+            band: 'top',
           };
-          const { accentColor } = getHeroStrokeColors(index);
-          const brushIndex = isPainting ? paintingBrushSeed(item._id) : index;
-          const paintingStrokeColors = isPainting
-            ? getBrushStrokeColors(brushIndex, item.image?.palette ?? null)
-            : null;
-          const cardAccentColor = paintingStrokeColors?.accentColor ?? accentColor;
-
+          const scatter = heroCardScatter(
+            paintingBrushSeed(`${item._id}:hero-scatter`),
+            pos.side,
+            pos.band,
+          );
           const showNsfwBlur = isPainting && item.isNSFW === true;
 
           // Stacking coordinates at center
@@ -503,12 +507,12 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           // Horizontal drift is biased outward (away from center) per card side so
           // cards never travel into the protected center text column.
           const outward = pos.side === 'left' ? -1 : 1;
-          const getParallaxValues = (idx: number) => {
+          const getParallaxValues = (slot: number) => {
             if (isTouchDevice) {
-              return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (idx % 3) + 1 };
+              return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (slot % 3) + 1 };
             }
 
-            const tier = idx % 3;
+            const tier = slot % 3;
             // Map mouse X to a 0..1 magnitude so horizontal motion has no inward sign.
             const magX = Math.abs(mousePos.x);
             if (tier === 0) {
@@ -540,18 +544,11 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
           const parallax =
             stage === 'floating'
-              ? getParallaxValues(index)
+              ? getParallaxValues(slotIndex)
               : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
 
-          const isCurrentlyHovered = hoveredIndex === index;
-          const rawOffset = cardOffsets[index] ?? { x: 0, y: 0, rotate: 0 };
-          // Scatter horizontally outward only, so jitter can't nudge a card inward.
-          const offset = {
-            x: (pos.side === 'left' ? -1 : 1) * Math.abs(rawOffset.x),
-            y: rawOffset.y,
-            rotate: rawOffset.rotate,
-          };
-          const floatMotion = floatKeyframes[index] ?? {
+          const offset = scatter;
+          const floatMotion = floatKeyframes[slotIndex] ?? {
             y: [0, 12, 0] as [number, number, number],
             x: [0, 0, 0] as [number, number, number],
             rotate: [0, 0, 0] as [number, number, number],
@@ -568,9 +565,10 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
               ? index + 1
               : stage === 'exploding'
                 ? 1
-                : isCurrentlyHovered
+                : hoveredIndex === index
                   ? 40
                   : parallax.zIndex;
+          const isCardHovered = hoveredIndex === index;
 
           // Animations
           const outerAnimate =
@@ -652,12 +650,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
             delay: floatMotion.delay,
           };
 
-          const href = item._type === 'painting' ? `paintings/${slug}` : `projects/${slug}`;
-
-          const projectTags =
-            item._type === 'project' && item.tags
-              ? item.tags.map(t => t.name).filter((name): name is string => name !== null)
-              : null;
+          const href = item._type === 'painting' ? `/paintings/${slug}` : `/projects/${slug}`;
 
           return (
             <motion.div
@@ -728,114 +721,50 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                       transition={floatTransition}
                       className='h-full w-full'
                       style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
+                      whileHover={
+                        stage === 'floating'
+                          ? {
+                              scale: 1.04,
+                              y: -5,
+                              transition: { type: 'spring', stiffness: 420, damping: 24 },
+                            }
+                          : undefined
+                      }
                     >
-                      {/* Hover stretch — elongated spring instead of uniform scale */}
-                      <motion.div
-                        initial='initial'
-                        animate={isCurrentlyHovered ? 'hover' : 'initial'}
-                        variants={{
-                          initial: { scaleX: 1, scaleY: 1 },
-                          hover: {
-                            scaleX: HERO_SQUASH_RATIOS.stretchX,
-                            scaleY: HERO_SQUASH_RATIOS.stretchY,
-                          },
-                        }}
-                        transition={HERO_SQUASH_SPRING}
-                        className='h-full w-full cursor-pointer'
-                        style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
+                      <Link
+                        href={href}
+                        className={`relative isolate block h-full w-full overflow-hidden rounded-lg ring-1 transition-[box-shadow,ring-color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle ${
+                          isCardHovered
+                            ? 'shadow-[0_28px_50px_-12px_rgba(0,0,0,0.45)] ring-foreground/15'
+                            : 'shadow-[0_20px_25px_-5px_rgba(0,0,0,0.3),0_10px_10px_-5px_rgba(0,0,0,0.2)] ring-black/10'
+                        }`}
                       >
-                        <Link
-                          href={href}
-                          className='block h-full w-full rounded-lg overflow-hidden relative isolate transition-all duration-300'
-                          style={{
-                            boxShadow: isCurrentlyHovered
-                              ? `0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px ${cardAccentColor}33`
-                              : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
-                          }}
-                        >
-                          <span className='sr-only'>
-                            {isPainting ? 'View painting' : 'View project'}:{' '}
-                            {title ||
-                              (item._type === 'project' ? item.name : null) ||
-                              'Portfolio item'}
-                          </span>
-                          {!isPainting && (
-                            <motion.div
-                              className='absolute inset-0'
-                              animate={
-                                isCurrentlyHovered
-                                  ? {
-                                      scale: 1.05,
-                                      filter: 'brightness(1.1) saturate(1.15) contrast(1.02)',
-                                    }
-                                  : { scale: 1, filter: 'brightness(1) saturate(1) contrast(1)' }
-                              }
-                              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                            >
-                              <Image
-                                src={imageUrl}
-                                alt=''
-                                aria-hidden
-                                fill
-                                priority={isPriority}
-                                fetchPriority={isPriority ? 'high' : undefined}
-                                className='object-cover'
-                                sizes='(max-width: 768px) 40vw, 30vw'
-                              />
-                            </motion.div>
-                          )}
-
-                          {isPainting ? (
-                            <BrushRevealWrap
-                              className='relative isolate h-full w-full overflow-hidden'
-                              enabled={canBrushReveal}
-                              profile='heroCard'
-                              hovered={canBrushReveal && stage === 'floating' && isCurrentlyHovered}
-                            >
-                              <BrushRevealImageBlur
-                                className='absolute inset-0'
-                                disabled={showNsfwBlur}
-                              >
-                                <Image
-                                  src={imageUrl}
-                                  alt=''
-                                  aria-hidden
-                                  fill
-                                  priority={isPriority}
-                                  fetchPriority={isPriority ? 'high' : undefined}
-                                  className='object-cover'
-                                  sizes='(max-width: 768px) 40vw, 30vw'
-                                />
-                              </BrushRevealImageBlur>
-                              {showNsfwBlur ? (
-                                <div
-                                  data-nsfw-blur
-                                  className='pointer-events-none absolute inset-0 z-[8] bg-background/45 backdrop-blur-xl'
-                                  aria-hidden
-                                />
-                              ) : null}
-                              {canBrushReveal && paintingStrokeColors ? (
-                                <BrushRevealLayer
-                                  {...paintingStrokeColors}
-                                  strokeVariantIndex={brushIndex}
-                                  title={title}
-                                  isNsfwBlurred={showNsfwBlur}
-                                  profile='heroCard'
-                                />
-                              ) : null}
-                            </BrushRevealWrap>
-                          ) : (
-                            <div aria-hidden>
-                              <HeroProjectUiHover
-                                isHovered={isCurrentlyHovered}
-                                accentColor={accentColor}
-                                title={title || item.name}
-                                tags={projectTags}
-                              />
-                            </div>
-                          )}
-                        </Link>
-                      </motion.div>
+                        <span className='sr-only'>
+                          {isPainting ? 'View painting' : 'View project'}:{' '}
+                          {title ||
+                            (item._type === 'project' ? item.name : null) ||
+                            'Portfolio item'}
+                        </span>
+                        <Image
+                          src={imageUrl}
+                          alt=''
+                          aria-hidden
+                          fill
+                          priority={isPriority}
+                          fetchPriority={isPriority ? 'high' : undefined}
+                          className={`object-cover transition-[transform,filter] duration-500 ease-out ${
+                            isCardHovered ? 'scale-[1.05] brightness-105' : 'scale-100'
+                          }`}
+                          sizes='(max-width: 768px) 40vw, 30vw'
+                        />
+                        {showNsfwBlur ? (
+                          <div
+                            data-nsfw-blur
+                            className='pointer-events-none absolute inset-0 z-[1] bg-background/45 backdrop-blur-xl'
+                            aria-hidden
+                          />
+                        ) : null}
+                      </Link>
                     </motion.div>
                   </motion.div>
                 </motion.div>

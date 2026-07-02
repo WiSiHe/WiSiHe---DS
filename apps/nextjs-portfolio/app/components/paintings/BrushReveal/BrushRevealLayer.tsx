@@ -27,6 +27,11 @@ import {
   brushStrokeTransition,
   brushWashTransition,
 } from './brushRevealMotion';
+import {
+  brushStrokePathTransitions,
+  resolveBrushLayerColors,
+  resolveBrushLayerMetrics,
+} from './brushStrokeRender';
 
 export { getBrushStrokeVariant, paintingBrushSeed };
 
@@ -132,12 +137,72 @@ function BrushStrokePath({
   useStrokeFilter: boolean;
 }) {
   const { isActive, reduceMotion, liteMode } = useBrushReveal();
-  const widthScale = layer.widthScale ?? 1;
-  const opacityScale = layer.opacityScale ?? 1;
-  const restWidth = strokeWidthRest * 0.85 * widthScale;
-  const hoverWidth = strokeWidthHover * widthScale;
-  const peakOpacity = strokeOpacity * opacityScale;
+  const metrics = resolveBrushLayerMetrics(
+    layer,
+    strokeWidthRest,
+    strokeWidthHover,
+    strokeOpacity,
+    paintOver,
+  );
+  const { restWidth, hoverWidth, peakOpacity, underWidth, underOpacity } = metrics;
   const strokeFilter = useStrokeFilter ? `url(#${filterId})` : undefined;
+  const baseTransition = brushStrokeTransition(
+    index,
+    isActive,
+    reduceMotion,
+    layerCount,
+    paintOver,
+    liteMode,
+  );
+  const pathTransitions = brushStrokePathTransitions(
+    index,
+    isActive,
+    reduceMotion,
+    layerCount,
+    paintOver,
+    liteMode,
+    baseTransition,
+  );
+
+  const initialState = opacityOnly
+    ? {
+        pathLength: 1,
+        opacity: 0,
+        strokeWidth: hoverWidth,
+      }
+    : {
+        pathLength: 0,
+        opacity: 0,
+        strokeWidth: restWidth,
+      };
+
+  const activeState = opacityOnly
+    ? {
+        pathLength: 1,
+        opacity: isActive ? peakOpacity : 0,
+        strokeWidth: hoverWidth,
+      }
+    : {
+        pathLength: isActive ? 1 : 0,
+        opacity: isActive ? peakOpacity : 0,
+        strokeWidth: isActive ? hoverWidth : restWidth,
+      };
+
+  const underInitial = opacityOnly
+    ? { pathLength: 1, opacity: 0, strokeWidth: underWidth }
+    : { pathLength: 0, opacity: 0, strokeWidth: restWidth * 1.15 };
+
+  const underActive = opacityOnly
+    ? {
+        pathLength: 1,
+        opacity: isActive ? underOpacity : 0,
+        strokeWidth: underWidth,
+      }
+    : {
+        pathLength: isActive ? 1 : 0,
+        opacity: isActive ? underOpacity : 0,
+        strokeWidth: isActive ? underWidth : restWidth * 1.15,
+      };
 
   return (
     <div
@@ -157,6 +222,19 @@ function BrushStrokePath({
         aria-hidden
       >
         <title>Decorative brush stroke</title>
+        {!opacityOnly ? (
+          <motion.path
+            d={layer.d}
+            stroke={color}
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            fill='none'
+            filter={strokeFilter}
+            initial={underInitial}
+            animate={underActive}
+            transition={pathTransitions}
+          />
+        ) : null}
         <motion.path
           d={layer.d}
           stroke={color}
@@ -164,40 +242,9 @@ function BrushStrokePath({
           strokeLinejoin='round'
           fill='none'
           filter={strokeFilter}
-          initial={
-            opacityOnly
-              ? {
-                  pathLength: 1,
-                  opacity: 0,
-                  strokeWidth: hoverWidth,
-                }
-              : {
-                  pathLength: 0,
-                  opacity: 0,
-                  strokeWidth: restWidth,
-                }
-          }
-          animate={
-            opacityOnly
-              ? {
-                  pathLength: 1,
-                  opacity: isActive ? peakOpacity : 0,
-                  strokeWidth: hoverWidth,
-                }
-              : {
-                  pathLength: isActive ? 1 : 0,
-                  opacity: isActive ? peakOpacity : 0,
-                  strokeWidth: isActive ? hoverWidth : restWidth,
-                }
-          }
-          transition={brushStrokeTransition(
-            index,
-            isActive,
-            reduceMotion,
-            layerCount,
-            paintOver,
-            liteMode,
-          )}
+          initial={initialState}
+          animate={activeState}
+          transition={pathTransitions}
         />
       </svg>
     </div>
@@ -248,24 +295,38 @@ export function BrushRevealLayer({
   const scale = brushProfile.coverScale(variant.scale);
   const displayTags = (tags ?? []).filter(Boolean);
   const visibleTags = displayTags.slice(0, 4);
-  const layerColors = solidFill
-    ? Array.from({ length: brushProfile.layerCount }, () => washColor)
-    : Array.from({ length: brushProfile.layerCount }, (_, i) =>
-        i % 2 === 0 ? accentColor : secondaryColor,
-      );
+  const layerColors = resolveBrushLayerColors(
+    brushProfile.layerCount,
+    accentColor,
+    secondaryColor,
+    washColor,
+    solidFill,
+  );
   const overlayDelay = brushOverlayEnterDelay(paintOver, liteMode);
   const chipVariants = overlayItemVariants(reduceMotion);
   const showStrokes = !isNsfwBlurred && !reduceMotion && (!liteMode || isActive);
 
+  const washTransition = brushWashTransition(isActive, reduceMotion, paintOver, liteMode);
+
   return (
     <>
+      {!paintOver ? (
+        <motion.div
+          data-brush-dim
+          className='pointer-events-none absolute inset-0 z-[5] bg-black'
+          aria-hidden
+          initial={false}
+          animate={{ opacity: isActive ? 0.38 : 0 }}
+          transition={washTransition}
+        />
+      ) : null}
+
       {!isNsfwBlurred ? (
         <BrushPaletteWash
           washColor={washColor}
           washOpacity={brushProfile.washOpacity}
           isActive={isActive}
-          transition={brushWashTransition(isActive, reduceMotion, paintOver, liteMode)}
-          blendMode={brushProfile.washBlendMode}
+          transition={washTransition}
         />
       ) : null}
 
@@ -279,19 +340,43 @@ export function BrushRevealLayer({
           {useStrokeFilter ? (
             <svg className='absolute h-0 w-0' aria-hidden>
               <defs>
-                <filter id={filterId} x='-35%' y='-35%' width='170%' height='170%'>
-                  <feGaussianBlur
+                <filter
+                  id={filterId}
+                  x='-45%'
+                  y='-45%'
+                  width='190%'
+                  height='190%'
+                  colorInterpolationFilters='sRGB'
+                >
+                  <feTurbulence
+                    type='fractalNoise'
+                    baseFrequency='0.045 0.12'
+                    numOctaves='2'
+                    seed={strokeVariantIndex % 97}
+                    result='noise'
+                  />
+                  <feDisplacementMap
                     in='SourceGraphic'
-                    stdDeviation={brushProfile.strokeBlur}
-                    result='blur'
+                    in2='noise'
+                    scale={paintOver ? 2.8 : 2.2}
+                    xChannelSelector='R'
+                    yChannelSelector='G'
+                    result='displaced'
+                  />
+                  <feGaussianBlur
+                    in='displaced'
+                    stdDeviation={brushProfile.strokeBlur * 0.55}
+                    result='soft'
                   />
                   {solidFill ? (
                     <feMerge>
-                      <feMergeNode in='blur' />
+                      <feMergeNode in='soft' />
+                      <feMergeNode in='displaced' />
                     </feMerge>
                   ) : (
                     <feMerge>
-                      <feMergeNode in='blur' />
+                      <feMergeNode in='soft' />
+                      <feMergeNode in='displaced' />
                       <feMergeNode in='SourceGraphic' />
                     </feMerge>
                   )}
@@ -320,6 +405,15 @@ export function BrushRevealLayer({
           ))}
         </div>
       ) : null}
+
+      <motion.div
+        data-brush-scrim
+        className='pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[58%] bg-gradient-to-t from-black/40 via-black/20 to-transparent'
+        aria-hidden
+        initial={false}
+        animate={{ opacity: isActive ? 1 : 0 }}
+        transition={washTransition}
+      />
 
       <motion.div
         data-brush-overlay

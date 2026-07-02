@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
-import { NSFW_IMAGE_BLUR_CLASS } from '@/lib/paintings/nsfwCover';
+import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   paintingBrushSeed,
@@ -89,7 +89,7 @@ export default function PaintingsMobileSlide({ painting, index }: PaintingsMobil
               sizes='88vw'
               className={cn(
                 'object-cover transition-transform duration-500 group-hover:scale-[1.03]',
-                showNsfwCover && NSFW_IMAGE_BLUR_CLASS,
+                showNsfwCover && getNsfwImageBlurClass('thumbnail'),
               )}
               placeholder={lqip ? 'blur' : 'empty'}
               blurDataURL={lqip}
@@ -100,7 +100,7 @@ export default function PaintingsMobileSlide({ painting, index }: PaintingsMobil
           )}
 
           {showNsfwCover ? (
-            <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushSeed} />
+            <NsfwBrushCover {...strokeColors} strokeVariantIndex={brushSeed} variant='thumbnail' />
           ) : null}
 
           {availableForSale ? (
