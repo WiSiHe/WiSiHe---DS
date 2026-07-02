@@ -378,7 +378,7 @@ function PortableTextCallout({
 const VARIANT_WRAPPER_CLASS: Record<PortableTextVariant, string> = {
   default: 'prose prose-gray dark:prose-invert max-w-none',
   article:
-    'prose prose-neutral dark:prose-invert max-w-none text-foreground prose-headings:font-serif prose-headings:text-foreground prose-a:text-accent prose-a:underline-offset-2 hover:prose-a:text-accent-hover',
+    'prose prose-neutral dark:prose-invert mx-auto max-w-prose text-foreground prose-headings:font-serif prose-headings:text-foreground prose-a:text-accent prose-a:underline-offset-2 hover:prose-a:text-accent-hover',
   minimal: 'max-w-none',
 };
 

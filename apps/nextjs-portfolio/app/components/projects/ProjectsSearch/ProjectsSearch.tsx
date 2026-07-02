@@ -206,11 +206,15 @@ export default function ProjectsSearch() {
           <FiltersSidebar sortItems={sortItems} />
         </div>
 
-        <div className='grow flex flex-col min-w-0'>
+        <div id='projects-results' className='grow flex flex-col min-w-0'>
+          <div id='projects-results-top' className='scroll-mt-36' aria-hidden />
           <HitStats />
           <ProjectSearchHits />
 
-          <InstantSearchPagination />
+          <InstantSearchPagination
+            scrollTargetId='projects-results'
+            ariaLabel='Projects pagination'
+          />
         </div>
       </div>
     </InstantSearchNext>

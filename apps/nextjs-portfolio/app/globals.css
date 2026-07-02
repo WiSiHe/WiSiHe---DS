@@ -94,16 +94,6 @@
     hyphens: none;
   }
 
-  ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-accent-contrast);
-  }
-
-  ::-moz-selection {
-    background-color: var(--color-accent);
-    color: var(--color-accent-contrast);
-  }
-
   /* Accessibility - focus rings use semantic ring token */
   :where(button, a, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-ring);
@@ -121,6 +111,15 @@
   :focus:not(:focus-visible) {
     outline: none;
   }
+}
+
+/* Unlayered: beats Tailwind preflight ::selection (color-mix on --color-accent is invisible in light mode). */
+html ::selection,
+html ::-moz-selection {
+  background-color: var(--color-accent-val, #e02e00);
+  color: var(--color-accent-contrast-val, #ffffff);
+  -webkit-text-fill-color: var(--color-accent-contrast-val, #ffffff);
+  text-shadow: none;
 }
 
 @layer utilities {

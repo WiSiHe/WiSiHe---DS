@@ -64,7 +64,6 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
               imageSrc={imageSrc ?? null}
               alt={image?.alt || projectTitle}
               lqip={image?.lqip ?? null}
-              placeholderTitle={name ?? client}
               priority={isLcpCandidate}
               fetchPriority={isLcpCandidate ? 'high' : undefined}
               sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'

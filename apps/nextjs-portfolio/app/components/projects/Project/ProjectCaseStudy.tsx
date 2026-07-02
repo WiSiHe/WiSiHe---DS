@@ -14,7 +14,7 @@ export default function ProjectCaseStudy({ content }: ProjectCaseStudyProps) {
       aria-label='Project case study'
     >
       <div className='mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8'>
-        <CustomPortableText variant='article' value={content} className='mx-auto max-w-3xl' />
+        <CustomPortableText variant='article' value={content} />
       </div>
     </section>
   );

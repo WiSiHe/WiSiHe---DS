@@ -135,6 +135,9 @@ export default async function ProjectPage(props: Props) {
 
     const displayTitle = getProjectDisplayTitle({ name: project.name, client: project.client });
     const showRelated = hasProjectRelatedContent(project, connectedPaintings, connectedVideoUrl);
+    const hasHeroImages =
+      Boolean(project.image?.asset?._ref) ||
+      (project.extraImages?.some(img => img?.asset?._ref) ?? false);
 
     const projectUrl = `https://www.wisihe.no/projects/${project.slug}`;
     const imageUrl = project.image
@@ -182,11 +185,13 @@ export default async function ProjectPage(props: Props) {
             />
           </div>
 
-          <section className='py-4 md:py-6'>
-            <Suspense fallback={<ProjectSectionSkeleton />}>
-              <ProjectImage project={project} />
-            </Suspense>
-          </section>
+          {hasHeroImages ? (
+            <section className='py-4 md:py-6'>
+              <Suspense fallback={<ProjectSectionSkeleton />}>
+                <ProjectImage project={project} />
+              </Suspense>
+            </section>
+          ) : null}
         </div>
 
         <section className='border-t border-border/60 bg-surface-subtle/25'>
