@@ -93,19 +93,17 @@ export function ProjectCardImageOverlay({
   const typeLabel = getProjectTypeLabel(projectType);
 
   return (
-    <>
-      <div className='pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4 md:p-5'>
+    <div className='pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-3 md:p-4'>
+      <div className='flex items-start justify-between gap-2'>
         {typeLabel ? <ProjectCardBadge>{typeLabel}</ProjectCardBadge> : <span aria-hidden />}
         {year ? <ProjectCardBadge>{year}</ProjectCardBadge> : null}
       </div>
       {statusLabel ? (
-        <div className='pointer-events-none absolute inset-x-0 bottom-0 z-10 p-4 md:p-5'>
-          <ProjectCardBadge className='border-accent/25 bg-accent/10 text-accent'>
-            {statusLabel}
-          </ProjectCardBadge>
-        </div>
+        <ProjectCardBadge className='w-fit border-accent/25 bg-accent/10 text-accent'>
+          {statusLabel}
+        </ProjectCardBadge>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -121,7 +119,7 @@ export function ProjectCardTags({ tags, limit = 3, className }: ProjectCardTagsP
   if (visible.length === 0) return null;
 
   return (
-    <div className={cn('flex flex-wrap items-center gap-1.5', className)}>
+    <div className={cn('flex flex-wrap items-center gap-2', className)}>
       {visible.map(tag => (
         <span
           key={tag.name}
