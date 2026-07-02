@@ -77,7 +77,6 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
                 imageSrc={imageSrc ?? null}
                 alt={image?.alt || projectTitle}
                 lqip={image?.lqip ?? null}
-                placeholderTitle={name ?? client}
                 priority={index === 0}
                 fetchPriority={index === 0 ? 'high' : undefined}
                 sizes='(max-width: 1024px) 100vw, 45vw'

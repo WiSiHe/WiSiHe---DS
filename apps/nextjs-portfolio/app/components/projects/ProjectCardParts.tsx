@@ -2,7 +2,6 @@ import { cn } from '@wisihe/utils';
 import type { ImageProps } from 'next/image';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
-import { ProjectImagePlaceholder } from '@/app/components/projects/Project/ProjectImagePlaceholder';
 import { getProjectTypeLabel } from '@/app/components/projects/projectCardHelpers';
 
 const TECH_TAG_NAMES = new Set([
@@ -86,7 +85,6 @@ type ProjectCardImageFrameProps = {
   sizes?: string;
   aspectClassName?: string;
   imageClassName?: string;
-  placeholderTitle?: string | null | undefined;
 };
 
 export function ProjectCardImageFrame({
@@ -98,7 +96,6 @@ export function ProjectCardImageFrame({
   sizes = '(max-width: 768px) 100vw, 50vw',
   aspectClassName = 'aspect-4/3',
   imageClassName = 'object-cover',
-  placeholderTitle,
 }: ProjectCardImageFrameProps) {
   return (
     <div
@@ -125,7 +122,10 @@ export function ProjectCardImageFrame({
               )}
             />
           ) : (
-            <ProjectImagePlaceholder title={placeholderTitle ?? alt} compact />
+            <div
+              className='absolute inset-0 bg-linear-to-br from-accent/[0.06] via-surface-subtle to-foreground/[0.03] dark:from-accent/[0.09] dark:to-foreground/[0.02]'
+              aria-hidden
+            />
           )}
         </div>
       </div>

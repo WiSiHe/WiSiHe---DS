@@ -1,19 +1,37 @@
 'use client';
 
-import { Pagination, useInstantSearch, useStats } from 'react-instantsearch';
-import { instantSearchPaginationClassNames } from '@/lib/algolia/instantSearchPaginationClassNames';
+import { useInstantSearch, usePagination, useStats } from 'react-instantsearch';
+import SearchPagination from '@/app/components/search/SearchPagination';
+import { useScrollToResultsOnPageChange } from '@/lib/pagination/useScrollToResultsOnPageChange';
 
-export default function InstantSearchPagination() {
+type InstantSearchPaginationProps = Readonly<{
+  scrollTargetId?: string;
+  ariaLabel?: string;
+}>;
+
+export default function InstantSearchPagination({
+  scrollTargetId = 'projects-results',
+  ariaLabel = 'Search pagination',
+}: InstantSearchPaginationProps) {
   const { nbHits } = useStats();
   const { status } = useInstantSearch();
+  const { currentRefinement, nbPages, refine } = usePagination({ padding: 2 });
 
-  if (nbHits === 0 || status === 'loading' || status === 'stalled') {
-    return null;
-  }
+  useScrollToResultsOnPageChange({
+    page: currentRefinement,
+    isLoading: status === 'loading' || status === 'stalled',
+    targetId: scrollTargetId,
+  });
+
+  if (nbHits === 0 || nbPages <= 1) return null;
 
   return (
-    <div className='mt-12 flex justify-center w-full'>
-      <Pagination classNames={instantSearchPaginationClassNames} />
-    </div>
+    <SearchPagination
+      page={currentRefinement}
+      nbPages={nbPages}
+      onPageChange={refine}
+      disabled={status === 'loading' || status === 'stalled'}
+      ariaLabel={ariaLabel}
+    />
   );
 }

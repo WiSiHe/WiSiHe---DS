@@ -351,7 +351,13 @@ export const projectQuery = defineQuery(`
     ),
     "image": image{
       ...,
-      "lqip": asset->metadata.lqip
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
+    },
+    "extraImages": extraImages[]{
+      ...,
+      "lqip": asset->metadata.lqip,
+      "aspectRatio": asset->metadata.dimensions.aspectRatio
     },
     "seo": {
       "title": coalesce(seo.title, name, ""),

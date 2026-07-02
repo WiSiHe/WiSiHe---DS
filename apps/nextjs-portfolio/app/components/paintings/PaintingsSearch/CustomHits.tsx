@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react';
 import { memo, useMemo } from 'react';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 import type { PaintingAlgoliaHit } from '@/lib/algolia/paintingsSearch/types';
@@ -38,27 +37,15 @@ type PaintingHitProps = {
   hit: PaintingAlgoliaHit;
   index: number;
   isNsfwFilterActive: boolean;
-  reducedMotion: boolean;
 };
 
 const PaintingHit = memo(
-  function PaintingHit({ hit, index, isNsfwFilterActive, reducedMotion }: PaintingHitProps) {
+  function PaintingHit({ hit, index, isNsfwFilterActive }: PaintingHitProps) {
     const paintingData = useMemo(() => adaptPaintingData(hit), [hit]);
     const isDesktopGrid = useIsDesktopPaintingGrid();
 
     return (
-      <motion.div
-        layout={!reducedMotion}
-        initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
-        animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
-        exit={reducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
-        transition={
-          reducedMotion
-            ? { duration: 0 }
-            : { duration: 0.2, ease: 'easeOut', delay: Math.min(index * 0.015, 0.2) }
-        }
-        className='break-inside-avoid mb-2'
-      >
+      <div className='break-inside-avoid mb-2'>
         {isDesktopGrid ? (
           <PaintingCard
             // biome-ignore lint/suspicious/noExplicitAny: Algolia hit adapted to Sanity shape
@@ -82,14 +69,13 @@ const PaintingHit = memo(
             palette={(paintingData as any).palette}
           />
         )}
-      </motion.div>
+      </div>
     );
   },
   (prev, next) =>
     prev.hit === next.hit &&
     prev.index === next.index &&
-    prev.isNsfwFilterActive === next.isNsfwFilterActive &&
-    prev.reducedMotion === next.reducedMotion,
+    prev.isNsfwFilterActive === next.isNsfwFilterActive,
 );
 
 function PaintingCardSkeleton({ index }: { index: number }) {
@@ -126,7 +112,6 @@ function SkeletonGrid() {
 
 export default function CustomHits() {
   const { hits, nbHits, status, nsfwFilterActive } = usePaintingsSearchContext();
-  const reducedMotion = useReducedMotion() ?? false;
 
   const showInitialSkeleton = status === 'loading' && hits.length === 0;
 
@@ -144,27 +129,22 @@ export default function CustomHits() {
   }
 
   return (
-    <LayoutGroup id='paintings-search-masonry'>
-      <motion.div
-        layout={!reducedMotion}
-        className={cn(
-          'mt-4 columns-2 gap-2 sm:columns-3 lg:columns-3 transition-opacity duration-150',
-          status === 'loading' && 'pointer-events-none opacity-60',
-        )}
-        aria-busy={status === 'loading'}
-      >
-        <AnimatePresence mode='popLayout'>
-          {hits.map((hit, index) => (
-            <PaintingHit
-              key={hit.objectID}
-              hit={hit}
-              index={index}
-              isNsfwFilterActive={nsfwFilterActive}
-              reducedMotion={reducedMotion}
-            />
-          ))}
-        </AnimatePresence>
-      </motion.div>
-    </LayoutGroup>
+    <div
+      className={cn(
+        'mt-4 columns-2 gap-2 sm:columns-3 lg:columns-3 transition-opacity duration-300',
+        status === 'loading' && 'pointer-events-none opacity-40',
+      )}
+      aria-busy={status === 'loading'}
+      aria-live='polite'
+    >
+      {hits.map((hit, index) => (
+        <PaintingHit
+          key={hit.objectID}
+          hit={hit}
+          index={index}
+          isNsfwFilterActive={nsfwFilterActive}
+        />
+      ))}
+    </div>
   );
 }

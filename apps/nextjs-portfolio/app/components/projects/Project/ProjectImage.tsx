@@ -3,21 +3,24 @@
 import { IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
-import useEmblaCarousel from 'embla-carousel-react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
-import { urlForImage } from '@/sanity/lib/utils';
+import { getCroppedAspectRatio, urlForImage } from '@/sanity/lib/utils';
 import ImageModal from './ImageModal';
-import { ProjectImagePlaceholder } from './ProjectImagePlaceholder';
 
 type ProjectImageProps = {
   project: NonNullable<ProjectQueryResult>;
 };
 
 type SanityImage = NonNullable<ProjectQueryResult>['image'];
-type SanityImageWithKey = SanityImage & { _key?: string };
+type SanityImageWithKey = SanityImage & {
+  _key?: string;
+  aspectRatio?: number | null;
+};
+
+const THUMBNAIL_STRIP_MAX = 5;
 
 function dedupeProjectImages(images: SanityImage[]): SanityImage[] {
   const seen = new Set<string>();
@@ -37,210 +40,270 @@ function getImageKey(img: SanityImage, index: number): string {
   return `slide-${index}-${img?.asset?._ref ?? 'unknown'}`;
 }
 
+function getImageAspectRatio(img: SanityImage, measured: number | undefined): number {
+  if (measured && measured > 0) return measured;
+  return getCroppedAspectRatio(img as SanityImageWithKey);
+}
+
+type GalleryViewportProps = {
+  image: SanityImage;
+  alt: string;
+  aspectRatio: number;
+  priority?: boolean;
+  onOpen: () => void;
+};
+
+function GalleryViewport({ image, alt, aspectRatio, priority, onOpen }: GalleryViewportProps) {
+  const imageUrl = urlForImage(image)?.width(1800).fit('max')?.url() || '';
+  const backdropUrl = urlForImage(image)?.width(48).blur(40).fit('crop')?.url() || imageUrl;
+  const isPortrait = aspectRatio < 0.95;
+
+  return (
+    <motion.button
+      type='button'
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        'group/slide relative block cursor-zoom-in overflow-hidden rounded-2xl border-0 bg-foreground/4 p-0',
+        isPortrait
+          ? 'mx-auto h-[min(75vh,720px)] w-auto max-w-full'
+          : 'mx-auto w-full max-h-[min(75vh,720px)]',
+      )}
+      style={{ aspectRatio: String(aspectRatio) }}
+      onClick={onOpen}
+      aria-label={`View ${alt} full size`}
+    >
+      {backdropUrl ? (
+        <Image
+          src={backdropUrl}
+          alt=''
+          fill
+          className='scale-110 object-cover opacity-35 blur-2xl saturate-125 dark:opacity-25'
+          sizes='100vw'
+          aria-hidden
+          draggable={false}
+        />
+      ) : null}
+
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={alt}
+          fill
+          className='relative z-10 object-contain'
+          priority={priority}
+          sizes='(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1200px'
+          draggable={false}
+        />
+      ) : null}
+
+      <span className='pointer-events-none absolute right-3 top-3 z-20 rounded-full bg-background/70 p-2 text-foreground-subtle opacity-0 shadow-sm backdrop-blur-md transition-opacity duration-200 group-hover/slide:opacity-100 sm:right-4 sm:top-4'>
+        <IconMaximize className='size-4' aria-hidden />
+      </span>
+    </motion.button>
+  );
+}
+
 const ProjectImage = ({ project }: ProjectImageProps) => {
   const { name, client, image, extraImages = [] } = project;
   const projectTitle = getProjectDisplayTitle({ name, client });
 
   const allImages = useMemo(() => {
-    const combined = (image ? [image, ...extraImages] : extraImages).filter(
-      Boolean,
-    ) as SanityImage[];
+    const extras = extraImages ?? [];
+    const combined = (image ? [image, ...extras] : extras).filter(Boolean) as SanityImage[];
     return dedupeProjectImages(combined);
   }, [image, extraImages]);
 
   const hasImages = allImages.length > 0;
   const hasMultiple = allImages.length > 1;
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
-    loop: hasMultiple,
-    dragFree: false,
-    containScroll: 'trimSnaps',
-  });
+  const showThumbnailStrip = allImages.length <= THUMBNAIL_STRIP_MAX;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [measuredAspects, setMeasuredAspects] = useState<Record<string, number>>({});
+  const touchStartX = useRef<number | null>(null);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-  const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi]);
+  const goTo = useCallback(
+    (index: number) => {
+      if (!hasMultiple) return;
+      const total = allImages.length;
+      setSelectedIndex(((index % total) + total) % total);
+    },
+    [allImages.length, hasMultiple],
+  );
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
+  const goPrev = useCallback(() => goTo(selectedIndex - 1), [goTo, selectedIndex]);
+  const goNext = useCallback(() => goTo(selectedIndex + 1), [goTo, selectedIndex]);
 
   useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
-    return () => {
-      emblaApi.off('select', onSelect);
-      emblaApi.off('reInit', onSelect);
+    if (!hasMultiple) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') goPrev();
+      if (event.key === 'ArrowRight') goNext();
     };
-  }, [emblaApi, onSelect]);
+
+    globalThis.addEventListener('keydown', handleKeyDown);
+    return () => globalThis.removeEventListener('keydown', handleKeyDown);
+  }, [goNext, goPrev, hasMultiple]);
+
+  useEffect(() => {
+    for (const [index, img] of allImages.entries()) {
+      if (!img) continue;
+      const key = getImageKey(img, index);
+      if (measuredAspects[key]) continue;
+
+      const withMeta = img as SanityImageWithKey;
+      if (withMeta.aspectRatio) continue;
+
+      const src = urlForImage(img)?.width(32).fit('max')?.url();
+      if (!src) continue;
+
+      const probe = new globalThis.Image();
+      probe.onload = () => {
+        if (!probe.naturalWidth || !probe.naturalHeight) return;
+        setMeasuredAspects(current => {
+          if (current[key]) return current;
+          return {
+            ...current,
+            [key]: probe.naturalWidth / probe.naturalHeight,
+          };
+        });
+      };
+      probe.src = src;
+    }
+  }, [allImages, measuredAspects]);
 
   const openModal = (index: number) => {
     setSelectedIndex(index);
     setModalOpen(true);
   };
 
+  if (!hasImages) {
+    return null;
+  }
+
+  const safeIndex = Math.min(selectedIndex, allImages.length - 1);
+  const currentImage = allImages[safeIndex];
+  if (!currentImage) {
+    return null;
+  }
+
+  const currentKey = getImageKey(currentImage, safeIndex);
+  const currentAspect = getImageAspectRatio(currentImage, measuredAspects[currentKey]);
+  const currentAlt = currentImage.alt || `${projectTitle} — image ${safeIndex + 1}`;
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (touchStartX.current == null || !hasMultiple) return;
+    const delta = (event.changedTouches[0]?.clientX ?? touchStartX.current) - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 48) return;
+    if (delta < 0) goNext();
+    else goPrev();
+  };
+
   return (
-    <div className='space-y-4'>
+    <div>
       <motion.div
         layoutId={`image-${projectTitle}`}
-        className='overflow-hidden rounded-3xl border border-border/80 bg-surface shadow-sm'
+        className='rounded-2xl bg-surface p-1 shadow-md ring-1 ring-border/40'
       >
-        <div className='relative bg-linear-to-br from-accent/8 via-surface-subtle to-surface-subtle'>
-          <div className='p-4 md:p-6 lg:p-8'>
-            <section
-              className={cn(
-                'relative overflow-hidden rounded-2xl bg-surface-subtle/60 ring-1 ring-border/40',
-                hasImages ? 'aspect-16/10 lg:aspect-2/1' : 'aspect-16/10 max-h-[420px]',
-              )}
-              aria-label={hasImages ? `Project images for ${projectTitle}` : undefined}
-            >
-              {hasImages ? (
-                <>
-                  <div className='h-full overflow-hidden' ref={emblaRef}>
-                    <div className='flex h-full'>
-                      {allImages.map((img, index) => (
-                        <div
-                          key={getImageKey(img, index)}
-                          className='relative min-w-0 flex-[0_0_100%] h-full'
-                        >
-                          <button
-                            type='button'
-                            className='group/slide relative h-full w-full cursor-zoom-in border-0 bg-transparent p-0'
-                            onClick={() => openModal(index)}
-                            aria-label={`View image ${index + 1} of ${allImages.length} full size`}
-                          >
-                            <Image
-                              src={urlForImage(img)?.width(1600).fit('max')?.url() || ''}
-                              alt={img?.alt || `${projectTitle} — image ${index + 1}`}
-                              fill
-                              className='object-contain p-3 md:p-4 transition-transform duration-500 group-hover/slide:scale-[1.01]'
-                              priority={index === 0}
-                              sizes='(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1200px'
-                              draggable={false}
-                            />
-                            <span className='pointer-events-none absolute right-3 top-3 rounded-full border border-border/60 bg-background/85 p-2 text-foreground-subtle opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/slide:opacity-100'>
-                              <IconMaximize className='size-4' aria-hidden />
-                            </span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {hasMultiple ? (
-                    <div className='pointer-events-none absolute inset-x-0 top-1/2 z-10 hidden -translate-y-1/2 justify-between px-3 md:flex'>
-                      <button
-                        type='button'
-                        className='pointer-events-auto rounded-full border border-border/60 bg-background/90 p-2.5 text-foreground shadow-md backdrop-blur-sm transition-colors hover:bg-accent hover:text-accent-contrast disabled:cursor-not-allowed disabled:opacity-40'
-                        onClick={scrollPrev}
-                        disabled={!canScrollPrev}
-                        aria-label='Previous image'
-                      >
-                        <IconChevronLeft className='size-5' stroke={2} aria-hidden />
-                      </button>
-                      <button
-                        type='button'
-                        className='pointer-events-auto rounded-full border border-border/60 bg-background/90 p-2.5 text-foreground shadow-md backdrop-blur-sm transition-colors hover:bg-accent hover:text-accent-contrast disabled:cursor-not-allowed disabled:opacity-40'
-                        onClick={scrollNext}
-                        disabled={!canScrollNext}
-                        aria-label='Next image'
-                      >
-                        <IconChevronRight className='size-5' stroke={2} aria-hidden />
-                      </button>
-                    </div>
-                  ) : null}
-                </>
-              ) : (
-                <ProjectImagePlaceholder title={name ?? client} />
-              )}
-            </section>
-          </div>
-        </div>
+        <section
+          className='relative'
+          aria-label={`Project images for ${projectTitle}`}
+          aria-roledescription={hasMultiple ? 'carousel' : undefined}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <AnimatePresence mode='wait' initial={false}>
+            <GalleryViewport
+              key={currentKey}
+              image={currentImage}
+              alt={currentAlt}
+              aspectRatio={currentAspect}
+              priority={safeIndex === 0}
+              onOpen={() => openModal(safeIndex)}
+            />
+          </AnimatePresence>
+        </section>
 
         {hasMultiple ? (
-          <div className='flex flex-col gap-3 border-t border-border/60 bg-surface px-4 py-3 md:px-6 md:py-4'>
-            <div className='flex items-center justify-between gap-3'>
-              <p className='text-sm font-medium text-foreground-subtle'>
-                Image {selectedIndex + 1} of {allImages.length}
-              </p>
-              <div className='flex items-center gap-2 md:hidden'>
-                <button
-                  type='button'
-                  className='rounded-full border border-border/60 bg-surface-subtle p-2 text-foreground disabled:opacity-40'
-                  onClick={scrollPrev}
-                  disabled={!canScrollPrev}
-                  aria-label='Previous image'
-                >
-                  <IconChevronLeft className='size-4' aria-hidden />
-                </button>
-                <button
-                  type='button'
-                  className='rounded-full border border-border/60 bg-surface-subtle p-2 text-foreground disabled:opacity-40'
-                  onClick={scrollNext}
-                  disabled={!canScrollNext}
-                  aria-label='Next image'
-                >
-                  <IconChevronRight className='size-4' aria-hidden />
-                </button>
-              </div>
-            </div>
+          <div className='flex items-center justify-center border-t border-border/40 py-2.5'>
+            <div className='flex items-center gap-1'>
+              <button
+                type='button'
+                className='rounded-full p-1.5 text-foreground/80 transition-colors hover:bg-surface-subtle hover:text-foreground'
+                onClick={goPrev}
+                aria-label='Previous image'
+              >
+                <IconChevronLeft className='size-4' stroke={2} aria-hidden />
+              </button>
 
-            <div className='flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden'>
-              {allImages.map((img, index) => {
-                const thumbUrl = urlForImage(img)?.width(160).height(120).fit('crop').url();
-                const isActive = index === selectedIndex;
+              <span className='min-w-14 px-2 text-center text-xs font-medium tabular-nums text-foreground-muted'>
+                {selectedIndex + 1} / {allImages.length}
+              </span>
 
-                return (
-                  <button
-                    key={getImageKey(img, index)}
-                    type='button'
-                    onClick={() => scrollTo(index)}
-                    className={cn(
-                      'relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 transition-[border-color,opacity,transform] duration-200',
-                      isActive
-                        ? 'border-accent opacity-100 ring-2 ring-accent/20'
-                        : 'border-border/60 opacity-70 hover:border-accent/40 hover:opacity-100',
-                    )}
-                    aria-label={`Show image ${index + 1}`}
-                    aria-current={isActive ? 'true' : undefined}
-                  >
-                    {thumbUrl ? (
-                      <Image
-                        src={thumbUrl}
-                        alt=''
-                        fill
-                        className='object-cover'
-                        sizes='96px'
-                        draggable={false}
-                      />
-                    ) : null}
-                  </button>
-                );
-              })}
+              <button
+                type='button'
+                className='rounded-full p-1.5 text-foreground/80 transition-colors hover:bg-surface-subtle hover:text-foreground'
+                onClick={goNext}
+                aria-label='Next image'
+              >
+                <IconChevronRight className='size-4' stroke={2} aria-hidden />
+              </button>
             </div>
           </div>
         ) : null}
       </motion.div>
 
-      {hasImages ? (
-        <ImageModal
-          images={allImages}
-          initialIndex={selectedIndex}
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-        />
+      {hasMultiple && showThumbnailStrip ? (
+        <div className='mt-3 flex justify-center gap-2 px-1 py-1'>
+          {allImages.map((img, index) => {
+            const thumbUrl = urlForImage(img)?.width(160).height(100).fit('crop').url();
+            const isActive = index === selectedIndex;
+
+            return (
+              <button
+                key={getImageKey(img, index)}
+                type='button'
+                onClick={() => goTo(index)}
+                className={cn(
+                  'relative h-14 w-18 shrink-0 overflow-hidden rounded-lg border-2 transition-[border-color,opacity] duration-200',
+                  isActive
+                    ? 'border-accent opacity-100'
+                    : 'border-transparent opacity-55 hover:opacity-90',
+                )}
+                aria-label={`Show image ${index + 1}`}
+                aria-current={isActive ? 'true' : undefined}
+              >
+                {thumbUrl ? (
+                  <Image
+                    src={thumbUrl}
+                    alt=''
+                    fill
+                    className='object-cover'
+                    sizes='72px'
+                    draggable={false}
+                  />
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
       ) : null}
+
+      <ImageModal
+        images={allImages}
+        initialIndex={selectedIndex}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </div>
   );
 };

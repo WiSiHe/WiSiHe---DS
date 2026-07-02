@@ -1863,7 +1863,7 @@ export type PaintingQueryResult = {
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: projectQuery
-// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    viewsCount,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip    },    "seo": {      "title": coalesce(seo.title, name, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
+// Query: *[_type == "project" && slug.current == $slug][0] {    ...,    "slug": slug.current,    "likesCount": count(likes),    viewsCount,    tags[]->{      "name": coalesce(name, "")    },    "connectedPage": coalesce(connectedPage, ""),    "type": coalesce(projectType, ""),    connectedVideo->{      "videoUrl": videoUrl    },    "connectedPaintings": coalesce(      connectedPaintings[]->{        "title": coalesce(title, ""),        "slug": coalesce(slug.current, ""),        "format": coalesce(format, ""),        "image": coalesce(image, null)      },      []    ),    "image": image{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    "extraImages": extraImages[]{      ...,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio    },    "seo": {      "title": coalesce(seo.title, name, ""),      "description": coalesce(seo.description,  ""),      "image": seo.image,      "noIndex": seo.noIndex == true    },  }
 export type ProjectQueryResult = {
   _id: string;
   _type: "project";
@@ -1895,15 +1895,18 @@ export type ProjectQueryResult = {
     alt: string;
     _type: "image";
     lqip: string | null;
+    aspectRatio: number | null;
   } | null;
-  extraImages?: Array<{
+  extraImages: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
     _key: string;
-  }>;
+    lqip: string | null;
+    aspectRatio: number | null;
+  }> | null;
   connectedPaintings:
     | Array<{
         title: string;
@@ -5148,7 +5151,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult;
     '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  link {\n      ...,\n      _type == "link" => {\n        "page": page->slug.current,\n        "post": post->slug.current\n        }\n      }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult;
     '\n  *[_type == "painting" && slug.current == $slug][0] {\n    _id,\n    title,\n    \'slug\': slug.current,\n    description,\n    seoDescription,\n    "seo": {\n      "title": coalesce(seo.title, title, ""),\n      "description": coalesce(seo.description, seoDescription, ""),\n      "image": coalesce(seo.image, image),\n      "noIndex": seo.noIndex == true\n    },\n    format,\n    medium,\n    isFeatured,\n    isFanArt,\n    isNSFW,\n    isForSale,\n    "likesCount": count(likes),\n    viewsCount,\n    paintedAt,\n    format,\n    redbubbleUrl,\n    gelatoUrl,\n    image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "blurhash": asset->metadata.blurhash,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height,\n      "hasAlpha": asset->metadata.hasAlpha,\n      "isOpaque": asset->metadata.isOpaque,\n      "altText": altText,\n      "palette": asset->metadata.palette\n    },\n    "images": coalesce(\n      images[]{\n        ...,\n        "lqip": asset->metadata.lqip,\n        "aspectRatio": asset->metadata.dimensions.aspectRatio,\n        "altText": altText\n      },\n      []\n    ),\n    tagsV2[]->{name},\n    video\n  }\n': PaintingQueryResult;
-    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip\n    },\n    "seo": {\n      "title": coalesce(seo.title, name, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    ...,\n    "slug": slug.current,\n    "likesCount": count(likes),\n    viewsCount,\n    tags[]->{\n      "name": coalesce(name, "")\n    },\n    "connectedPage": coalesce(connectedPage, ""),\n    "type": coalesce(projectType, ""),\n    connectedVideo->{\n      "videoUrl": videoUrl\n    },\n    "connectedPaintings": coalesce(\n      connectedPaintings[]->{\n        "title": coalesce(title, ""),\n        "slug": coalesce(slug.current, ""),\n        "format": coalesce(format, ""),\n        "image": coalesce(image, null)\n      },\n      []\n    ),\n    "image": image{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    "extraImages": extraImages[]{\n      ...,\n      "lqip": asset->metadata.lqip,\n      "aspectRatio": asset->metadata.dimensions.aspectRatio\n    },\n    "seo": {\n      "title": coalesce(seo.title, name, ""),\n      "description": coalesce(seo.description,  ""),\n      "image": seo.image,\n      "noIndex": seo.noIndex == true\n    },\n  }\n': ProjectQueryResult;
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult;
     '\n  *[_type == "painting" && defined(slug.current)]\n  {"slug": slug.current}\n': PaintingsSlugsResult;
     '\n  *[_type == "project" && defined(slug.current)]\n  {"slug": slug.current}\n': ProjectsSlugsResult;

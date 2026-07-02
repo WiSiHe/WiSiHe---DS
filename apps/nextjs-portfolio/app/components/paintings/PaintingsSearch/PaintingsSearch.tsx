@@ -22,6 +22,7 @@ import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomHits from './CustomHits';
 import PaintingsFacetList from './PaintingsFacetList';
 import PaintingsForSaleFilter from './PaintingsForSaleFilter';
+import PaintingsResultsScrollSync from './PaintingsResultsScrollSync';
 import PaintingsSearchBox from './PaintingsSearchBox';
 import PaintingsSearchPagination from './PaintingsSearchPagination';
 
@@ -345,6 +346,8 @@ function PaintingsSearchLayout() {
       </div>
 
       <div id='paintings-results' className='grow flex flex-col min-w-0'>
+        <div id='paintings-results-top' className='scroll-mt-36' aria-hidden />
+        <PaintingsResultsScrollSync />
         <HitStatsWithSort />
         <CustomHits />
         <PaintingsSearchPagination />
