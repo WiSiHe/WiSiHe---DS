@@ -60,18 +60,16 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
             isDeprecated && 'border-border/60',
           )}
         >
-          <div className='relative'>
-            <ProjectCardImageFrame
-              layoutId={contentImageLayoutId(projectTitle)}
-              imageSrc={imageSrc ?? null}
-              alt={image?.alt || projectTitle}
-              lqip={image?.lqip ?? null}
-              priority={isLcpCandidate}
-              fetchPriority={isLcpCandidate ? 'high' : undefined}
-              sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
-            />
-            <ProjectCardImageOverlay projectType={projectType} year={year} />
-          </div>
+          <ProjectCardImageFrame
+            layoutId={contentImageLayoutId(projectTitle)}
+            imageSrc={imageSrc ?? null}
+            alt={image?.alt || projectTitle}
+            lqip={image?.lqip ?? null}
+            priority={isLcpCandidate}
+            fetchPriority={isLcpCandidate ? 'high' : undefined}
+            sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+            overlay={<ProjectCardImageOverlay projectType={projectType} year={year} />}
+          />
 
           <div className='flex flex-1 flex-col gap-3 p-5 md:p-6'>
             <ProjectCardTitleBlock
@@ -89,7 +87,7 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
               </p>
             ) : null}
 
-            <ProjectCardTags tags={tags} limit={3} className='mt-auto pt-1' />
+            <ProjectCardTags tags={tags} limit={3} className='mt-auto pt-2' />
           </div>
         </article>
       </Link>
