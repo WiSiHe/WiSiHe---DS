@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/performance/noImgElement: Necessary for motion.img which doesn't support Next.js Image component easily for this specific transition */
 'use client';
 import {
   IconArrowRight,
@@ -17,11 +16,19 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import Breadcrumbs, { type Crumb } from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
+import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
+import { useTheme } from '@/app/providers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import { getPaintingImageLqip } from '@/lib/paintings/paintingCardImage';
+import {
+  paintingAmbientFrameShadow,
+  paintingAmbientGlowColor,
+  paintingAmbientGlowSecondary,
+} from '@/lib/paintings/paintingPaletteGlow';
 import { urlForImage } from '@/sanity/lib/utils';
 
 // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
@@ -30,7 +37,17 @@ type PaintingDetailProps = {
   breadcrumbs?: Crumb[];
 };
 
+const paintingCarouselNavButtonClass = cn(
+  'inline-flex size-11 shrink-0 items-center justify-center rounded-full touch-manipulation',
+  'text-foreground-muted transition-colors',
+  'hover:bg-surface-hover hover:text-foreground',
+  'active:bg-surface-active active:text-foreground',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+);
+
 const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -50,7 +67,6 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
     redbubbleUrl,
     gelatoUrl,
     format,
-    medium,
     isFanArt,
   } = paintingData as any;
 
@@ -93,9 +109,60 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
     darkMuted: 'Dk. Muted',
   };
 
-  // Extract dominant palette swatches sorted by population
-  const paletteSwatches: { key: string; color: string; population: number }[] = image?.palette
-    ? Object.entries(image.palette)
+  const formattedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  // Curated definition list — only the fields worth surfacing to a viewer.
+  const formatAspectClass = (
+    {
+      landscape: 'aspect-video',
+      square: 'aspect-square',
+      portrait: 'aspect-portrait',
+    } as Record<string, string>
+  )[format as string];
+
+  const PAINTING_MAX_HEIGHT = 'min(78vh, 920px)';
+
+  // Primary image + extras, deduped by asset ref
+  const allImages = useMemo(() => {
+    const combined = [image, ...(images ?? [])].filter((img): img is NonNullable<typeof image> =>
+      Boolean(img?.asset?._ref),
+    );
+    const seen = new Set<string>();
+
+    return combined.filter(img => {
+      const ref = img.asset?._ref;
+      if (!ref || seen.has(ref)) return false;
+      seen.add(ref);
+      return true;
+    });
+  }, [image, images]);
+
+  const activeImage = allImages[selectedIndex] ?? image;
+  const activeWidth: number | null = activeImage?.width ?? imageWidth;
+  const activeHeight: number | null = activeImage?.height ?? imageHeight;
+  const activeHasAlpha: boolean = activeImage?.hasAlpha ?? hasAlpha;
+  const activePalette = activeImage?.palette ?? image?.palette;
+
+  const detailRows: { label: string; value: string }[] = [
+    { label: 'Date', value: formattedPaintedAt },
+    { label: 'Format', value: formatLabel },
+    ...(activeWidth && activeHeight
+      ? [
+          {
+            label: 'Resolution',
+            value: `${activeWidth.toLocaleString()} × ${activeHeight.toLocaleString()} px`,
+          },
+        ]
+      : []),
+    ...(activeHasAlpha ? [{ label: 'Background', value: 'Transparent' }] : []),
+  ];
+
+  const paletteSwatches: { key: string; color: string; population: number }[] = activePalette
+    ? Object.entries(activePalette)
         .filter(([key]) => !key.startsWith('_'))
         .map(([key, swatch]: [string, any]) => ({
           key,
@@ -107,16 +174,28 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
         .slice(0, 5)
     : [];
 
-  const aspectRatioStyle = (
-    {
-      landscape: 'aspect-video',
-      square: 'aspect-square',
-      portrait: 'aspect-portrait',
-    } as Record<string, string>
-  )[format as string];
+  const activeGlowPrimary = paintingAmbientGlowColor(activePalette);
+  const activeGlowSecondary = paintingAmbientGlowSecondary(activePalette);
 
-  // Combine the primary image + any additional images
-  const allImages = [image, ...images];
+  const paintingFrameStyle = useMemo((): CSSProperties => {
+    if (activeWidth && activeHeight) {
+      const ratio = activeWidth / activeHeight;
+      return {
+        aspectRatio: `${activeWidth} / ${activeHeight}`,
+        width: `min(100%, calc(${PAINTING_MAX_HEIGHT} * ${ratio}))`,
+        maxHeight: PAINTING_MAX_HEIGHT,
+        minHeight: '12rem',
+      };
+    }
+    return { maxHeight: PAINTING_MAX_HEIGHT, minHeight: '12rem', width: '100%' };
+  }, [activeWidth, activeHeight]);
+
+  const ambientFrameShadow = useMemo(
+    () => paintingAmbientFrameShadow(activePalette, { dark: isDark }),
+    [activePalette, isDark],
+  );
+
+  const glowTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -139,12 +218,6 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
       emblaApi.off('select', onSelect);
     };
   }, [emblaApi, onSelect]);
-
-  const formattedPaintedAt = new Date(paintedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   const generateOrRetrieveViewerId = useCallback((): string => {
     try {
@@ -270,263 +343,276 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
     }
   };
 
-  return (
-    <div className='pt-32 min-h-[calc(100vh-5rem)] pb-32 overflow-clip'>
-      <section className='grid items-start grid-cols-12 gap-6 mx-auto text-foreground lg:gap-16 max-w-screen-2xl'>
-        <section className='relative flex flex-col items-center justify-center w-full p-4 lg:py-20 col-span-full md:col-span-8'>
-          <div className='relative w-full'>
-            <motion.img
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 0.45 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ type: 'spring' }}
-              src={
-                allImages[selectedIndex]?.lqip ??
-                urlForImage(allImages[selectedIndex])
-                  ?.width(20)
-                  .height(20)
-                  .quality(10)
-                  .blur(100)
-                  .url() ??
-                ''
-              }
-              alt={title}
-              className={cn(
-                'absolute inset-0 object-cover pointer-events-none w-full h-full blur-3xl overflow-clip',
-                aspectRatioStyle,
-              )}
-              aria-hidden='true'
-            />
+  const getThumbUrl = (img: (typeof allImages)[number]) =>
+    urlForImage(img)?.width(128).height(128).fit('crop').format('webp').quality(70).url() ?? '';
 
-            <motion.div
-              layoutId={`image-${title}`}
-              className={cn('relative', aspectRatioStyle)}
-              transition={{ type: 'spring', stiffness: 200, damping: 28 }}
+  return (
+    <div className='overflow-visible pb-16 pt-32 md:pb-20 md:pt-36 lg:pt-40'>
+      {breadcrumbs ? (
+        <div className='mx-auto mb-8 max-w-screen-2xl px-4 lg:px-8'>
+          <Breadcrumbs crumbs={breadcrumbs} />
+        </div>
+      ) : null}
+      <section className='mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-10 overflow-visible px-4 text-foreground lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:gap-y-8 lg:px-8 xl:gap-x-12'>
+        <section className='relative flex w-full min-w-0 flex-col items-center overflow-visible'>
+          <div
+            className={cn(
+              'relative isolate mx-auto w-full max-w-full overflow-visible',
+              !(activeWidth && activeHeight) && cn('max-h-[min(78vh,920px)]', formatAspectClass),
+            )}
+            style={paintingFrameStyle}
+          >
+            {/* Palette halo — follows the active carousel slide */}
+            <div className='pointer-events-none absolute inset-0 -z-10' aria-hidden>
+              <motion.div
+                className='absolute left-1/2 top-1/2 h-[132%] w-[122%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[80px] sm:blur-[96px]'
+                animate={{
+                  backgroundColor: activeGlowPrimary,
+                  opacity: isDark ? 0.62 : 0.46,
+                }}
+                transition={glowTransition}
+              />
+              <motion.div
+                className='absolute left-1/2 top-1/2 h-[118%] w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[52px] sm:blur-[64px]'
+                animate={{
+                  backgroundColor: activeGlowSecondary,
+                  opacity: isDark ? 0.44 : 0.32,
+                }}
+                transition={glowTransition}
+              />
+            </div>
+
+            <SharedLayoutFrame
+              title={title}
+              className={cn(
+                'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
+                activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
+              )}
             >
-              <div className='overflow-hidden rounded-3xl w-full h-full shadow-2xl' ref={emblaRef}>
-                <div className='flex w-full h-full'>
+              <motion.div
+                className='pointer-events-none absolute inset-0 z-[5] rounded-2xl'
+                animate={{ boxShadow: ambientFrameShadow }}
+                transition={glowTransition}
+                aria-hidden
+              />
+              <div ref={emblaRef} className='relative z-10 h-full w-full overflow-hidden'>
+                <div className='flex h-full w-full touch-pan-y'>
                   {allImages.map((img, index) => {
-                    const { width, height } = getImageDimensions(format);
+                    const slideWidth = img?.width ?? imageWidth;
+                    const slideHeight = img?.height ?? imageHeight;
+                    const fallback = getImageDimensions(format);
+                    const width = slideWidth ?? fallback.width;
+                    const height = slideHeight ?? fallback.height;
+                    const lqip = getPaintingImageLqip(img);
                     const imageUrl =
                       urlForImage(img)
                         ?.width(width)
                         .height(height)
                         .fit('max')
                         .format('webp')
-                        .quality(90) // Increased quality for crispness
+                        .quality(90)
                         .url() ?? '';
 
                     return (
                       <div
-                        key={imageUrl || index}
-                        className='relative flex-[0_0_100%] w-full h-full min-w-0'
+                        key={img?.asset?._ref ?? index}
+                        className={cn(
+                          'relative h-full min-w-0 w-full flex-[0_0_100%]',
+                          activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
+                        )}
                       >
-                        <div className='w-full h-full relative'>
+                        {!imageUrl && !lqip ? (
+                          <div
+                            className='absolute inset-0 bg-surface-subtle motion-safe:animate-pulse'
+                            aria-hidden
+                          />
+                        ) : null}
+                        {imageUrl ? (
                           <Image
                             src={imageUrl}
                             alt={`${title} - Image ${index + 1}`}
                             priority={index === 0}
                             fill
-                            className='object-cover h-full w-full'
-                            sizes='(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 66vw'
+                            placeholder={lqip ? 'blur' : 'empty'}
+                            blurDataURL={lqip}
+                            className='object-contain'
+                            sizes='(max-width: 1024px) 100vw, 72vw'
                           />
-                        </div>
+                        ) : null}
                       </div>
                     );
                   })}
                 </div>
               </div>
-
-              {allImages.length > 1 && (
-                <>
-                  <button
-                    type='button'
-                    onClick={scrollPrev}
-                    className='absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
-                    aria-label='Previous image'
-                  >
-                    <IconChevronLeft className='size-6' stroke={2} aria-hidden />
-                  </button>
-                  <button
-                    type='button'
-                    onClick={scrollNext}
-                    className='absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-surface border border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-all duration-200 text-foreground shadow-xl hover:scale-110'
-                    aria-label='Next image'
-                  >
-                    <IconChevronRight className='size-6' stroke={2} aria-hidden />
-                  </button>
-                </>
-              )}
-            </motion.div>
+            </SharedLayoutFrame>
           </div>
 
-          {allImages.length > 1 && (
-            <div className='z-10 flex items-center justify-center w-full gap-2.5 pt-6'>
-              {allImages.map((img, index) => (
+          {allImages.length > 1 ? (
+            <div className='z-10 mt-6 flex flex-col items-center gap-2.5'>
+              <div className='flex items-center gap-3 sm:gap-2'>
                 <button
-                  key={`${img?.asset?._ref ?? index}`}
                   type='button'
-                  onClick={() => emblaApi?.scrollTo(index)}
-                  className={cn(
-                    'w-2.5 h-2.5 rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none',
-                    index === selectedIndex
-                      ? 'bg-accent scale-125 shadow-lg shadow-accent/50'
-                      : 'bg-surface-hover hover:bg-surface-active border border-border-subtle',
-                  )}
-                  aria-label={`Go to image ${index + 1}`}
-                />
-              ))}
+                  onClick={scrollPrev}
+                  className={paintingCarouselNavButtonClass}
+                  aria-label='Previous image'
+                >
+                  <IconChevronLeft className='size-5 sm:size-4' stroke={2} aria-hidden />
+                </button>
+
+                <div className='flex max-w-[min(calc(100vw-7rem),18rem)] items-center gap-2.5 overflow-x-auto px-0.5 py-1 [scrollbar-width:none] sm:max-w-[min(calc(100vw-5rem),18rem)] sm:gap-2 sm:py-0.5 [&::-webkit-scrollbar]:hidden'>
+                  {allImages.map((img, index) => {
+                    const thumbUrl = getThumbUrl(img);
+                    const isActive = index === selectedIndex;
+
+                    return (
+                      <button
+                        key={`${img?.asset?._ref ?? index}-thumb`}
+                        type='button'
+                        onClick={() => emblaApi?.scrollTo(index)}
+                        className={cn(
+                          'relative size-12 shrink-0 touch-manipulation overflow-hidden rounded-md border-2 transition-all duration-200 active:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:size-14',
+                          isActive
+                            ? 'border-accent opacity-100 shadow-sm'
+                            : 'border-transparent opacity-50 hover:opacity-85',
+                        )}
+                        aria-label={`View image ${index + 1}`}
+                        aria-current={isActive ? 'true' : undefined}
+                      >
+                        {thumbUrl ? (
+                          <Image src={thumbUrl} alt='' fill className='object-cover' sizes='56px' />
+                        ) : (
+                          <span className='flex size-full items-center justify-center bg-surface-hover text-xs font-medium text-foreground-muted'>
+                            {index + 1}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type='button'
+                  onClick={scrollNext}
+                  className={paintingCarouselNavButtonClass}
+                  aria-label='Next image'
+                >
+                  <IconChevronRight className='size-5 sm:size-4' stroke={2} aria-hidden />
+                </button>
+              </div>
+
+              <p className='text-xs tabular-nums text-foreground-muted'>
+                {selectedIndex + 1} / {allImages.length}
+              </p>
             </div>
-          )}
+          ) : null}
         </section>
         <motion.div
           layout
-          className='z-10 flex flex-col col-span-full lg:right-14 lg:bottom-4 lg:top-42 lg:sticky md:col-span-4'
+          className='relative z-10 flex w-full min-w-0 flex-col max-lg:pt-2 lg:sticky lg:top-32 lg:self-start xl:top-36'
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 10 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 24 }}
-            className='w-full lg:rounded-2xl pointer-events-auto h-fit lg:bg-surface lg:border lg:border-border p-4 lg:p-8 lg:max-w-[520px] lg:shadow-xl'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className={cn(
+              'painting-detail-sidebar-glass pointer-events-auto h-fit w-full min-w-0 max-w-none',
+              'lg:min-w-[17.5rem] lg:rounded-xl lg:p-6',
+              'lg:border lg:border-border/30 lg:ring-1 lg:ring-white/10 dark:lg:ring-white/5',
+              'lg:bg-background/35 lg:backdrop-blur-xl lg:backdrop-saturate-[1.4]',
+              'lg:shadow-[0_12px_40px_rgba(0,0,0,0.08)]',
+              'dark:lg:bg-background/25 dark:lg:shadow-[0_12px_40px_rgba(0,0,0,0.25)]',
+            )}
           >
-            <div className='flex flex-col gap-5'>
-              {/* Breadcrumbs */}
-              {breadcrumbs && <Breadcrumbs crumbs={breadcrumbs} />}
-
-              {/* Title + badges */}
-              <div className='space-y-2'>
-                <div className='flex flex-wrap items-center gap-2'>
+            <div className='flex flex-col gap-5 sm:gap-6'>
+              {/* Header — title, stats, actions */}
+              <header className='space-y-4'>
+                <div className='space-y-2.5'>
                   {isFanArt && (
-                    <span className='inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20'>
+                    <span className='inline-flex items-center gap-1 rounded-full border border-accent/20 bg-accent/10 px-2.5 py-1 text-[11px] font-semibold text-accent'>
                       <IconMask className='size-3.5' stroke={2} aria-hidden /> Fan Art
                     </span>
                   )}
-                </div>
-                <h1 className='text-2xl lg:text-3xl font-bold text-balance text-foreground leading-tight'>
-                  {title}
-                </h1>
-
-                {/* Stats + primary actions */}
-                <div className='flex items-center flex-wrap gap-3 pt-1'>
+                  <h1 className='text-balance text-[1.65rem] font-bold leading-[1.12] tracking-tight text-foreground sm:text-2xl lg:text-[1.75rem]'>
+                    {title}
+                  </h1>
                   <div className='flex items-center gap-4 text-sm text-foreground-muted'>
                     <span className='flex items-center gap-1.5'>
-                      <IconEye className='size-3.5' stroke={2} aria-hidden />{' '}
-                      {viewsCount?.toString() ?? '0'} views
+                      <IconEye className='size-4' stroke={2} aria-hidden />
+                      {viewsCount?.toString() ?? '0'}
                     </span>
                     <span
-                      className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-red-500')}
-                    >
-                      {hasLikedLocal ? (
-                        <IconHeartFilled className='size-3.5' stroke={2} aria-hidden />
-                      ) : (
-                        <IconHeart className='size-3.5' stroke={2} aria-hidden />
-                      )}
-                      {localLikesCount} likes
-                    </span>
-                  </div>
-
-                  <div className='flex items-center gap-2 sm:ml-auto'>
-                    <Button
-                      onClick={handleLike}
-                      variant='secondary'
-                      className={cn(
-                        'gap-2 w-fit rounded-full pl-3 pr-4 shadow-sm transition-colors',
-                        hasLikedLocal
-                          ? 'text-red-500 hover:text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
-                          : '',
-                      )}
+                      className={cn('flex items-center gap-1.5', hasLikedLocal && 'text-accent')}
                     >
                       {hasLikedLocal ? (
                         <IconHeartFilled className='size-4' stroke={2} aria-hidden />
                       ) : (
                         <IconHeart className='size-4' stroke={2} aria-hidden />
                       )}
-                      {hasLikedLocal ? 'Liked' : 'Like'}
-                    </Button>
-                    <Button
-                      onClick={handleShare}
-                      variant='secondary'
-                      className='gap-2 w-fit rounded-full px-4 shadow-sm'
-                    >
-                      <IconShare className='size-4' stroke={2} aria-hidden />
-                      {shareText}
-                    </Button>
+                      {localLikesCount}
+                    </span>
                   </div>
                 </div>
-              </div>
 
-              <hr className='border-border/40' />
+                {/* Primary actions */}
+                <div className='flex items-center gap-2'>
+                  <Button
+                    onClick={handleLike}
+                    variant='secondary'
+                    className={cn(
+                      'flex-1 gap-2 rounded-full transition-colors max-lg:shadow-none',
+                      hasLikedLocal
+                        ? 'border-accent/20 bg-accent/10 text-accent hover:bg-accent/20 hover:text-accent'
+                        : '',
+                    )}
+                  >
+                    {hasLikedLocal ? (
+                      <IconHeartFilled className='size-4' stroke={2} aria-hidden />
+                    ) : (
+                      <IconHeart className='size-4' stroke={2} aria-hidden />
+                    )}
+                    {hasLikedLocal ? 'Liked' : 'Like'}
+                  </Button>
+                  <Button
+                    onClick={handleShare}
+                    variant='secondary'
+                    className='flex-1 gap-2 rounded-full max-lg:shadow-none'
+                  >
+                    <IconShare className='size-4' stroke={2} aria-hidden />
+                    {shareText}
+                  </Button>
+                </div>
+              </header>
 
-              {/* Details grid — buyer info */}
-              <div className='grid grid-cols-2 gap-x-6 gap-y-3'>
-                <div className='space-y-0.5'>
-                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    Date
-                  </p>
-                  <p className='text-sm font-semibold text-foreground'>{formattedPaintedAt}</p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    Medium
-                  </p>
-                  <p className='text-sm font-semibold text-foreground'>{medium ?? 'Digital'}</p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    Format
-                  </p>
-                  <p className='text-sm font-semibold text-foreground'>{formatLabel}</p>
-                </div>
-                {imageWidth && imageHeight && (
-                  <div className='space-y-0.5'>
-                    <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                      Resolution
-                    </p>
-                    <p className='text-sm font-semibold text-foreground'>
-                      {imageWidth.toLocaleString()} × {imageHeight.toLocaleString()} px
-                    </p>
+              {/* Details — hairline definition list */}
+              <dl className='divide-y divide-border/40 border-y border-border/40'>
+                {detailRows.map(row => (
+                  <div key={row.label} className='flex items-baseline justify-between gap-4 py-2.5'>
+                    <dt className='text-xs font-medium uppercase tracking-wider text-foreground-muted'>
+                      {row.label}
+                    </dt>
+                    <dd className='text-right text-sm font-semibold text-foreground [overflow-wrap:anywhere] sm:overflow-visible sm:[overflow-wrap:normal]'>
+                      {row.value}
+                    </dd>
                   </div>
-                )}
-                <div className='space-y-0.5'>
-                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    Background
-                  </p>
-                  <p className='text-sm font-semibold text-foreground'>
-                    {hasAlpha ? '✦ Transparent' : 'Solid'}
-                  </p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    File type
-                  </p>
-                  <p className='text-sm font-semibold text-foreground'>
-                    {hasAlpha ? 'PNG' : 'JPEG / PNG'}
-                  </p>
-                </div>
-              </div>
+                ))}
+              </dl>
 
-              {/* Colour palette — labelled swatches */}
+              {/* Colour palette — connected swatch bar */}
               {paletteSwatches.length > 0 && (
-                <div className='space-y-2'>
+                <div className='space-y-2.5'>
                   <p className='text-xs font-medium text-foreground-muted uppercase tracking-wider'>
-                    Colour Palette
+                    Palette
                   </p>
-                  <div className='flex flex-wrap gap-2'>
+                  <div className='flex overflow-hidden rounded-xl border border-border/40 shadow-sm'>
                     {paletteSwatches.map(swatch => (
                       <div
-                        key={swatch.key}
-                        className='flex flex-col items-center gap-1 group cursor-default'
+                        key={`${selectedIndex}-${swatch.key}`}
+                        className='group relative flex-1 h-12 cursor-default transition-[flex,background-color] duration-700 ease-out hover:flex-[1.6]'
+                        style={{ backgroundColor: swatch.color }}
+                        title={`${SWATCH_LABELS[swatch.key] ?? swatch.key} · ${swatch.color.toUpperCase()}`}
+                        aria-label={`${SWATCH_LABELS[swatch.key] ?? swatch.key}: ${swatch.color}`}
                       >
-                        <div
-                          className='w-10 h-10 rounded-xl border border-border/40 shadow-sm transition-all duration-200 group-hover:scale-110 group-hover:shadow-md'
-                          style={{ backgroundColor: swatch.color }}
-                          title={`${SWATCH_LABELS[swatch.key] ?? swatch.key}: ${swatch.color.toUpperCase()}`}
-                          aria-label={swatch.color}
-                        />
-                        <span className='text-[10px] text-foreground-muted leading-tight text-center'>
-                          {SWATCH_LABELS[swatch.key] ?? swatch.key}
-                        </span>
-                        <span className='text-[9px] text-foreground-muted/60 font-mono opacity-0 group-hover:opacity-100 transition-opacity'>
+                        <span className='pointer-events-none absolute inset-x-0 bottom-1 text-center text-[9px] font-mono font-medium text-white opacity-0 [text-shadow:0_1px_2px_rgba(0,0,0,0.8)] transition-opacity duration-200 group-hover:opacity-100'>
                           {swatch.color.toUpperCase()}
                         </span>
                       </div>
@@ -537,28 +623,31 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
 
               {/* Tags */}
               {tagsV2.length > 0 && (
-                <div className='flex flex-wrap gap-1.5'>
+                <div className='flex flex-wrap gap-2'>
                   {tagsV2.map((tag: { name?: string | null }) => {
                     const { name } = tag;
                     if (!name) return null;
                     return (
-                      <Link key={name} href={`/paintings?filter=${name}`}>
-                        <Chip variation='primary' label={name} />
+                      <Link key={name} href={`/paintings?filter=${name}`} className='inline-flex'>
+                        <Chip
+                          variation='primary'
+                          label={name}
+                          size='small'
+                          className='max-lg:text-xs'
+                        />
                       </Link>
                     );
                   })}
                 </div>
               )}
 
-              <hr className='border-border/40' />
-
-              {/* Gallery label */}
+              {/* About the work */}
               {description && (
-                <figure className='space-y-2'>
+                <figure className='space-y-2.5 border-t border-border/40 pt-6'>
                   <figcaption className='text-[11px] font-medium uppercase tracking-widest text-foreground-muted'>
                     About the work
                   </figcaption>
-                  <blockquote className='border-l-2 border-accent/35 pl-4 font-serif text-sm italic leading-relaxed text-foreground-subtle text-pretty'>
+                  <blockquote className='font-serif text-base italic leading-relaxed text-foreground-subtle text-pretty'>
                     {description}
                   </blockquote>
                 </figure>
