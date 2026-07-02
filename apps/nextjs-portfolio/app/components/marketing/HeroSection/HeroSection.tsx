@@ -90,34 +90,34 @@ type HeroCardPosition = {
   band: HeroCardBand;
 };
 
-/** 8 collage slots — asymmetric wings; no mirrored rows (center ~28–72% stays clear). */
+/** 8 collage slots — asymmetric wings; center ~30–70% vertical, ~26–74% horizontal clear. */
 const FIXED_POSITIONS_DESKTOP: HeroCardPosition[] = [
-  { top: '7%', left: '7%', rotation: -14, scale: 0.9, side: 'left', band: 'top' },
-  { top: '13%', left: '91%', rotation: 11, scale: 0.94, side: 'right', band: 'top' },
-  { top: '22%', left: '16%', rotation: -6, scale: 0.96, side: 'left', band: 'top' },
-  { top: '19%', left: '88%', rotation: 15, scale: 0.89, side: 'right', band: 'top' },
-  { top: '59%', left: '93%', rotation: 9, scale: 0.91, side: 'right', band: 'bottom' },
-  { top: '64%', left: '12%', rotation: -11, scale: 0.93, side: 'left', band: 'bottom' },
-  { top: '74%', left: '86%', rotation: 6, scale: 0.95, side: 'right', band: 'bottom' },
-  { top: '78%', left: '9%', rotation: -16, scale: 0.88, side: 'left', band: 'bottom' },
+  { top: '6%', left: '5%', rotation: -12, scale: 0.88, side: 'left', band: 'top' },
+  { top: '11%', left: '94%', rotation: 10, scale: 0.9, side: 'right', band: 'top' },
+  { top: '20%', left: '18%', rotation: -7, scale: 0.92, side: 'left', band: 'top' },
+  { top: '17%', left: '91%', rotation: 14, scale: 0.87, side: 'right', band: 'top' },
+  { top: '58%', left: '93%', rotation: 8, scale: 0.89, side: 'right', band: 'bottom' },
+  { top: '63%', left: '10%', rotation: -10, scale: 0.91, side: 'left', band: 'bottom' },
+  { top: '76%', left: '88%', rotation: 5, scale: 0.9, side: 'right', band: 'bottom' },
+  { top: '80%', left: '7%', rotation: -14, scale: 0.86, side: 'left', band: 'bottom' },
 ];
 
 /** 6 slots — staggered heights per side, no horizontal pairs. */
 const FIXED_POSITIONS_TABLET: HeroCardPosition[] = [
-  { top: '8%', left: '8%', rotation: -12, scale: 0.91, side: 'left', band: 'top' },
-  { top: '15%', left: '90%', rotation: 10, scale: 0.92, side: 'right', band: 'top' },
-  { top: '24%', left: '15%', rotation: -5, scale: 0.93, side: 'left', band: 'top' },
-  { top: '21%', left: '87%', rotation: 13, scale: 0.9, side: 'right', band: 'top' },
-  { top: '66%', left: '11%', rotation: -9, scale: 0.91, side: 'left', band: 'bottom' },
-  { top: '71%', left: '89%', rotation: 8, scale: 0.92, side: 'right', band: 'bottom' },
+  { top: '7%', left: '6%', rotation: -11, scale: 0.89, side: 'left', band: 'top' },
+  { top: '13%', left: '92%', rotation: 9, scale: 0.9, side: 'right', band: 'top' },
+  { top: '22%', left: '17%', rotation: -4, scale: 0.91, side: 'left', band: 'top' },
+  { top: '19%', left: '89%', rotation: 12, scale: 0.88, side: 'right', band: 'top' },
+  { top: '64%', left: '9%', rotation: -8, scale: 0.89, side: 'left', band: 'bottom' },
+  { top: '69%', left: '91%', rotation: 7, scale: 0.9, side: 'right', band: 'bottom' },
 ];
 
 /** 4 cards — diagonal stagger, not corner pairs. */
 const FIXED_POSITIONS_MOBILE: HeroCardPosition[] = [
-  { top: '9%', left: '10%', rotation: -11, scale: 0.86, side: 'left', band: 'top' },
-  { top: '14%', left: '88%', rotation: 12, scale: 0.85, side: 'right', band: 'top' },
-  { top: '72%', left: '14%', rotation: -8, scale: 0.84, side: 'left', band: 'bottom' },
-  { top: '67%', left: '86%', rotation: 9, scale: 0.83, side: 'right', band: 'bottom' },
+  { top: '8%', left: '8%', rotation: -10, scale: 0.84, side: 'left', band: 'top' },
+  { top: '12%', left: '90%', rotation: 11, scale: 0.83, side: 'right', band: 'top' },
+  { top: '74%', left: '11%', rotation: -7, scale: 0.82, side: 'left', band: 'bottom' },
+  { top: '68%', left: '88%', rotation: 8, scale: 0.81, side: 'right', band: 'bottom' },
 ];
 
 /** Collage display ratios — portrait through ultra-wide, picked per card. */
@@ -164,9 +164,9 @@ function heroCardScatter(
   const r3 = ((seed * 31) % 983) / 983;
 
   return {
-    x: (side === 'left' ? -1 : 1) * (10 + r1 * 24),
-    y: (band === 'top' ? -1 : 1) * (8 + r2 * 20),
-    rotate: (r3 - 0.5) * 18,
+    x: (side === 'left' ? -1 : 1) * (6 + r1 * 16),
+    y: (band === 'top' ? -1 : 1) * (5 + r2 * 14),
+    rotate: (r3 - 0.5) * 12,
   };
 }
 
@@ -542,10 +542,20 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
             }
           };
 
-          const parallax =
+          const isCardHovered = hoveredIndex === index;
+
+          const parallaxRaw =
             stage === 'floating'
               ? getParallaxValues(slotIndex)
               : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
+          const parallaxDamp = isCardHovered ? 0.15 : 1;
+          const parallax = {
+            x: parallaxRaw.x * parallaxDamp,
+            y: parallaxRaw.y * parallaxDamp,
+            rotateX: parallaxRaw.rotateX * parallaxDamp,
+            rotateY: parallaxRaw.rotateY * parallaxDamp,
+            zIndex: parallaxRaw.zIndex,
+          };
 
           const offset = scatter;
           const floatMotion = floatKeyframes[slotIndex] ?? {
@@ -568,7 +578,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                 : hoveredIndex === index
                   ? 40
                   : parallax.zIndex;
-          const isCardHovered = hoveredIndex === index;
 
           // Animations
           const outerAnimate =
@@ -627,7 +636,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
 
           // Float animation loop values (stable keyframes from useMemo)
           const floatAnimate =
-            stage === 'floating'
+            stage === 'floating' && !isCardHovered
               ? {
                   y: floatMotion.y,
                   x: floatMotion.x,
@@ -724,19 +733,20 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                       whileHover={
                         stage === 'floating'
                           ? {
-                              scale: 1.04,
-                              y: -5,
-                              transition: { type: 'spring', stiffness: 420, damping: 24 },
+                              scale: 1.05,
+                              y: -8,
+                              rotate: 0,
+                              transition: { type: 'spring', stiffness: 380, damping: 22 },
                             }
                           : undefined
                       }
                     >
                       <Link
                         href={href}
-                        className={`relative isolate block h-full w-full overflow-hidden rounded-lg ring-1 transition-[box-shadow,ring-color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle ${
+                        className={`relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle ${
                           isCardHovered
-                            ? 'shadow-[0_28px_50px_-12px_rgba(0,0,0,0.45)] ring-foreground/15'
-                            : 'shadow-[0_20px_25px_-5px_rgba(0,0,0,0.3),0_10px_10px_-5px_rgba(0,0,0,0.2)] ring-black/10'
+                            ? 'shadow-[0_32px_56px_-14px_rgba(0,0,0,0.42)] ring-accent/35'
+                            : 'shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 dark:ring-white/10'
                         }`}
                       >
                         <span className='sr-only'>
@@ -753,7 +763,9 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
                           priority={isPriority}
                           fetchPriority={isPriority ? 'high' : undefined}
                           className={`object-cover transition-[transform,filter] duration-500 ease-out ${
-                            isCardHovered ? 'scale-[1.05] brightness-105' : 'scale-100'
+                            isCardHovered
+                              ? 'scale-[1.06] brightness-[1.08] saturate-[1.06]'
+                              : 'scale-100 brightness-100 saturate-100'
                           }`}
                           sizes='(max-width: 768px) 40vw, 30vw'
                         />
