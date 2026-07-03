@@ -7,6 +7,8 @@ export const BRUSH_DRAW_EASE: Transition['ease'] = [0.42, 0.03, 0.58, 0.97];
 /** Width swell after the tip passes — simulates pressure on the brush. */
 export const BRUSH_WIDTH_EASE: Transition['ease'] = [0.33, 0, 0.18, 1];
 
+const POWER2_OUT: Transition['ease'] = [0.33, 1, 0.68, 1];
+
 export type ResolvedBrushLayer = {
   widthScale: number;
   opacityScale: number;
@@ -25,11 +27,16 @@ export function resolveBrushLayerMetrics(
   strokeWidthHover: number,
   strokeOpacity: number,
   paintOver: boolean,
+  glazeMode = false,
 ): ResolvedBrushLayer {
   const rawWidth = layer.widthScale ?? 1;
   const rawOpacity = layer.opacityScale ?? 1;
 
-  const widthScale = paintOver ? Math.max(rawWidth, 0.68) : rawWidth;
+  const widthScale = paintOver
+    ? Math.max(rawWidth, 0.68)
+    : glazeMode
+      ? Math.max(rawWidth, 0.88)
+      : rawWidth;
   const opacityScale = paintOver ? Math.max(rawOpacity, 0.82) : rawOpacity;
 
   const restWidth = strokeWidthRest * 0.72 * widthScale;
@@ -42,8 +49,8 @@ export function resolveBrushLayerMetrics(
     restWidth,
     hoverWidth,
     peakOpacity,
-    underWidth: hoverWidth * 1.38,
-    underOpacity: peakOpacity * 0.42,
+    underWidth: hoverWidth * (glazeMode ? 1.52 : 1.38),
+    underOpacity: peakOpacity * (glazeMode ? 0.5 : 0.42),
   };
 }
 
@@ -56,6 +63,7 @@ export function brushStrokePathTransitions(
   paintOver: boolean,
   lite: boolean,
   baseTransition: Transition,
+  glazeMode = false,
 ): {
   pathLength: Transition;
   strokeWidth: Transition;
@@ -66,19 +74,30 @@ export function brushStrokePathTransitions(
     return { pathLength: t, strokeWidth: t, opacity: t };
   }
 
+  if (!active && glazeMode) {
+    const quickLeave = {
+      delay: 0,
+      duration: 0.26,
+      ease: POWER2_OUT,
+    } satisfies Transition;
+    return { pathLength: quickLeave, strokeWidth: quickLeave, opacity: quickLeave };
+  }
+
   const delay =
     typeof baseTransition.delay === 'number'
       ? baseTransition.delay
-      : index * (paintOver ? 0.11 : lite ? 0.035 : 0.09);
+      : index * (paintOver ? 0.11 : glazeMode ? 0.13 : lite ? 0.035 : 0.09);
 
   const drawDuration =
     typeof baseTransition.duration === 'number'
       ? baseTransition.duration
       : paintOver
         ? 0.92
-        : lite
-          ? 0.28
-          : 0.95;
+        : glazeMode
+          ? 0.82
+          : lite
+            ? 0.28
+            : 0.95;
 
   if (!active) {
     const reverseIndex = Math.max(0, layerCount - 1 - index);

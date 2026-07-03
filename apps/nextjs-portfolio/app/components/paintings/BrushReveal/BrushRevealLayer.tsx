@@ -105,6 +105,140 @@ function layerTransform(layer: BrushStrokeLayer): string {
     : `rotate(${layer.rotateDeg}deg)`;
 }
 
+function BrushStrokeGlazeMark({
+  layer,
+  color,
+  className,
+  strokeWidthRest,
+  strokeWidthHover,
+  layerSizePercent,
+  strokeOpacity,
+  index,
+  layerCount,
+  filterId,
+  strokeBlendMode,
+  useStrokeFilter,
+}: {
+  layer: BrushStrokeLayer;
+  color: string;
+  className: string;
+  strokeWidthRest: number;
+  strokeWidthHover: number;
+  layerSizePercent: number;
+  strokeOpacity: number;
+  index: number;
+  layerCount: number;
+  filterId: string;
+  strokeBlendMode?: CSSProperties['mixBlendMode'];
+  useStrokeFilter: boolean;
+}) {
+  const { isActive, reduceMotion, liteMode } = useBrushReveal();
+  const maskId = `${filterId}-glaze-${index}`;
+  const metrics = resolveBrushLayerMetrics(
+    layer,
+    strokeWidthRest,
+    strokeWidthHover,
+    strokeOpacity,
+    false,
+    true,
+  );
+  const { hoverWidth, peakOpacity, underOpacity } = metrics;
+  const maskStrokeWidth = hoverWidth * 1.28;
+  const strokeFilter = useStrokeFilter ? `url(#${filterId})` : undefined;
+
+  const baseTransition = brushStrokeTransition(
+    index,
+    isActive,
+    reduceMotion,
+    layerCount,
+    false,
+    liteMode,
+    true,
+  );
+  const pathTransitions = brushStrokePathTransitions(
+    index,
+    isActive,
+    reduceMotion,
+    layerCount,
+    false,
+    liteMode,
+    baseTransition,
+    true,
+  );
+
+  const maskAnimate = reduceMotion
+    ? { pathLength: 1 as const, opacity: isActive ? 1 : 0 }
+    : isActive
+      ? { pathLength: 1, opacity: 1 }
+      : { pathLength: 0, opacity: 0 };
+
+  const paintOpacity = isActive ? peakOpacity : 0;
+  const underPaintOpacity = isActive ? underOpacity : 0;
+
+  return (
+    <div
+      className={className}
+      style={{
+        ...layerSizeStyle(layerSizePercent),
+        transform: layerTransform(layer),
+        ...(strokeBlendMode ? { mixBlendMode: strokeBlendMode } : {}),
+      }}
+    >
+      <svg
+        className='block h-full w-full'
+        viewBox={layer.viewBox}
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        preserveAspectRatio='xMidYMid slice'
+        aria-hidden
+      >
+        <title>Decorative brush stroke</title>
+        <defs>
+          <mask id={maskId}>
+            <motion.path
+              d={layer.d}
+              stroke='white'
+              strokeWidth={maskStrokeWidth}
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              fill='none'
+              filter={strokeFilter}
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={maskAnimate}
+              transition={{
+                pathLength: pathTransitions.pathLength,
+                opacity: pathTransitions.opacity,
+              }}
+            />
+          </mask>
+        </defs>
+        <motion.rect
+          x='0'
+          y='0'
+          width='100%'
+          height='100%'
+          fill={color}
+          mask={`url(#${maskId})`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: underPaintOpacity }}
+          transition={pathTransitions.opacity}
+        />
+        <motion.rect
+          x='0'
+          y='0'
+          width='100%'
+          height='100%'
+          fill={color}
+          mask={`url(#${maskId})`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: paintOpacity }}
+          transition={pathTransitions.opacity}
+        />
+      </svg>
+    </div>
+  );
+}
+
 function BrushStrokePath({
   layer,
   color,
@@ -286,7 +420,7 @@ export function BrushRevealLayer({
 }: BrushRevealLayerProps) {
   const { isActive, reduceMotion, liteMode } = useBrushReveal();
   const brushProfile = resolveBrushProfile(profile, liteMode);
-  const { solidFill } = brushProfile;
+  const { solidFill, glazeMode = false } = brushProfile;
   const paintOver = solidFill;
   const opacityOnly = liteMode;
   const useStrokeFilter = brushProfile.strokeBlur > 0;
@@ -302,11 +436,17 @@ export function BrushRevealLayer({
     washColor,
     solidFill,
   );
-  const overlayDelay = brushOverlayEnterDelay(paintOver, liteMode);
+  const overlayDelay = brushOverlayEnterDelay(paintOver, liteMode, glazeMode);
   const chipVariants = overlayItemVariants(reduceMotion);
   const showStrokes = !isNsfwBlurred && !reduceMotion && (!liteMode || isActive);
 
-  const washTransition = brushWashTransition(isActive, reduceMotion, paintOver, liteMode);
+  const washTransition = brushWashTransition(
+    isActive,
+    reduceMotion,
+    paintOver,
+    liteMode,
+    glazeMode,
+  );
 
   return (
     <>
@@ -327,6 +467,7 @@ export function BrushRevealLayer({
           washOpacity={brushProfile.washOpacity}
           isActive={isActive}
           transition={washTransition}
+          blendMode={brushProfile.washBlendMode}
         />
       ) : null}
 
@@ -358,7 +499,7 @@ export function BrushRevealLayer({
                   <feDisplacementMap
                     in='SourceGraphic'
                     in2='noise'
-                    scale={paintOver ? 2.8 : 2.2}
+                    scale={paintOver ? 2.8 : glazeMode ? 3.4 : 2.2}
                     xChannelSelector='R'
                     yChannelSelector='G'
                     result='displaced'
@@ -384,31 +525,53 @@ export function BrushRevealLayer({
               </defs>
             </svg>
           ) : null}
-          {variant.layers.slice(0, brushProfile.layerCount).map((layer, index) => (
-            <BrushStrokePath
-              key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
-              layer={layer}
-              color={layerColors[index % layerColors.length] ?? washColor}
-              className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
-              strokeWidthRest={brushProfile.rest}
-              strokeWidthHover={brushProfile.hover}
-              layerSizePercent={brushProfile.layerSizePercent}
-              strokeOpacity={brushProfile.strokeOpacity}
-              index={index}
-              layerCount={brushProfile.layerCount}
-              filterId={filterId}
-              paintOver={paintOver}
-              strokeBlendMode={brushProfile.strokeBlendMode}
-              opacityOnly={opacityOnly}
-              useStrokeFilter={useStrokeFilter}
-            />
-          ))}
+          {variant.layers
+            .slice(0, brushProfile.layerCount)
+            .map((layer, index) =>
+              glazeMode ? (
+                <BrushStrokeGlazeMark
+                  key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+                  layer={layer}
+                  color={layerColors[index % layerColors.length] ?? washColor}
+                  className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
+                  strokeWidthRest={brushProfile.rest}
+                  strokeWidthHover={brushProfile.hover}
+                  layerSizePercent={brushProfile.layerSizePercent}
+                  strokeOpacity={brushProfile.strokeOpacity}
+                  index={index}
+                  layerCount={brushProfile.layerCount}
+                  filterId={filterId}
+                  strokeBlendMode={brushProfile.strokeBlendMode}
+                  useStrokeFilter={useStrokeFilter}
+                />
+              ) : (
+                <BrushStrokePath
+                  key={`${variant.id}-${layer.d.slice(0, 12)}-${layer.rotateDeg}`}
+                  layer={layer}
+                  color={layerColors[index % layerColors.length] ?? washColor}
+                  className={`${LAYER_BASE_CLASS} svg-stroke-${index + 1}`}
+                  strokeWidthRest={brushProfile.rest}
+                  strokeWidthHover={brushProfile.hover}
+                  layerSizePercent={brushProfile.layerSizePercent}
+                  strokeOpacity={brushProfile.strokeOpacity}
+                  index={index}
+                  layerCount={brushProfile.layerCount}
+                  filterId={filterId}
+                  paintOver={paintOver}
+                  strokeBlendMode={brushProfile.strokeBlendMode}
+                  opacityOnly={opacityOnly}
+                  useStrokeFilter={useStrokeFilter}
+                />
+              ),
+            )}
         </div>
       ) : null}
 
       <motion.div
         data-brush-scrim
-        className='pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[58%] bg-gradient-to-t from-black/40 via-black/20 to-transparent'
+        className={`pointer-events-none absolute inset-x-0 bottom-0 z-[15] bg-gradient-to-t to-transparent ${
+          glazeMode ? 'h-[52%] from-black/32 via-black/14' : 'h-[58%] from-black/40 via-black/20'
+        }`}
         aria-hidden
         initial={false}
         animate={{ opacity: isActive ? 1 : 0 }}

@@ -241,7 +241,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [hasPlayedAlready, setHasPlayedAlready] = useState(false);
   const [viewport, setViewport] = useState<HeroViewport>('desktop');
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
 
@@ -253,7 +252,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         return {
           y,
           x: [0, Math.random() * 10 - 5, 0] as [number, number, number],
-          rotate: [0, Math.random() * 6 - 3, 0] as [number, number, number],
+          rotate: [0, Math.random() * 2 - 1, 0] as [number, number, number],
           scaleX: squashStretch.scaleX,
           scaleY: squashStretch.scaleY,
           duration: Math.random() * 3 + 4,
@@ -277,18 +276,6 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
-
-  useEffect(() => {
-    if (!canHover) return;
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [canHover]);
 
   useEffect(() => {
     const hasPlayed = sessionStorage.getItem('hero-splash-played');
@@ -378,62 +365,35 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
     );
     const stackScale = 1 - index * 0.03;
     const stackOffsetY = -(index * 15);
-    const stackRotation = (index % 3) * 3 - 3;
+    const stackRotation = (index % 3) * 1.5 - 1.5;
     const stackY = `calc(-50% + ${stackOffsetY}px)`;
-    const outward = pos.side === 'left' ? -1 : 1;
-
-    const getParallaxValues = (slot: number) => {
-      if (!canHover) return { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: (slot % 3) + 1 };
-      const tier = slot % 3;
-      const magX = Math.abs(mousePos.x);
-      if (tier === 0) {
-        return {
-          x: outward * magX * 20,
-          y: mousePos.y * 24,
-          rotateX: mousePos.y * -6,
-          rotateY: mousePos.x * 6,
-          zIndex: 1,
-        };
-      }
-      if (tier === 1) {
-        return {
-          x: outward * magX * 14,
-          y: mousePos.y * -12,
-          rotateX: mousePos.y * -12,
-          rotateY: mousePos.x * 12,
-          zIndex: 2,
-        };
-      }
-      return {
-        x: outward * magX * 30,
-        y: mousePos.y * -42,
-        rotateX: mousePos.y * -22,
-        rotateY: mousePos.x * 22,
-        zIndex: 3,
-      };
-    };
 
     const isCardHovered = hoveredIndex === index;
-    const parallaxRaw =
-      stage === 'floating'
-        ? getParallaxValues(slotIndex)
-        : { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 };
-    const parallaxDamp = isCardHovered ? 0.15 : 1;
     const parallax = {
-      x: parallaxRaw.x * parallaxDamp,
-      y: parallaxRaw.y * parallaxDamp,
-      rotateX: parallaxRaw.rotateX * parallaxDamp,
-      rotateY: parallaxRaw.rotateY * parallaxDamp,
-      zIndex: parallaxRaw.zIndex,
+      x: 0,
+      y: 0,
+      rotateX: 0,
+      rotateY: 0,
+      zIndex: (slotIndex % 3) + 1,
     };
-    const floatMotion = floatKeyframes[slotIndex] ?? floatKeyframes[0]!;
+    const floatMotion = floatKeyframes[slotIndex] ??
+      floatKeyframes[0] ?? {
+        y: [0, 12, 0] as [number, number, number],
+        x: [0, 0, 0] as [number, number, number],
+        rotate: [0, 0, 0] as [number, number, number],
+        scaleX: [1, 1, 1] as [number, number, number],
+        scaleY: [1, 1, 1] as [number, number, number],
+        duration: 5,
+        delay: 0,
+      };
 
     const arcSizes = [
-      'w-56 lg:w-64 xl:max-w-[17vw]',
-      'w-60 lg:w-72 xl:max-w-[18vw]',
-      'w-52 lg:w-60 xl:max-w-[16vw]',
-      'w-56 lg:w-64 xl:max-w-[17vw]',
+      'w-44 lg:w-52 xl:max-w-[14vw]',
+      'w-48 lg:w-56 xl:max-w-[15vw]',
+      'w-40 lg:w-48 xl:max-w-[13vw]',
+      'w-44 lg:w-52 xl:max-w-[14vw]',
     ];
+    const sizeClass = arcSizes[index % arcSizes.length] ?? arcSizes[0] ?? 'w-44';
 
     const outerAnimate =
       stage === 'loading'
@@ -487,7 +447,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         onHoverStart={() => setHoveredIndex(index)}
         onHoverEnd={() => setHoveredIndex(null)}
         isPriority={index === 0}
-        sizeClass={arcSizes[index % arcSizes.length] ?? arcSizes[0]!}
+        sizeClass={sizeClass}
         outerAnimate={outerAnimate}
         outerTransition={outerTransition}
         pos={pos}
@@ -520,7 +480,7 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         onHoverStart={() => {}}
         onHoverEnd={() => {}}
         isPriority={index === 0}
-        sizeClass={MOBILE_CARD_SIZES[index] ?? MOBILE_CARD_SIZES[0]!}
+        sizeClass={MOBILE_CARD_SIZES[index] ?? MOBILE_CARD_SIZES[0] ?? 'w-[38vw] max-w-[148px]'}
         mobileRotation={MOBILE_CARD_ROTATIONS[index] ?? 0}
         {...data}
       />
@@ -574,8 +534,15 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         </div>
       </div>
 
-      {/* md+ — orbit collage + centered copy */}
-      <div className='relative hidden min-h-screen w-full md:block'>
+      {/* md+ — orbit collage + vertically centered copy */}
+      <div className='relative hidden w-full md:flex md:min-h-[calc(100svh-5rem)] md:items-center md:justify-center'>
+        <div
+          className='pointer-events-none absolute inset-0 overflow-visible'
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {!isMobile ? visibleItems.map((item, index) => renderArcCard(item, index)) : null}
+        </div>
+
         <HeroCopy
           stage={stage}
           hasPlayedAlready={hasPlayedAlready}
@@ -583,15 +550,8 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
           displayName={displayName}
           overview={overview}
           reducedMotion={reducedMotion}
-          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 py-8'
+          className='px-6 py-8 md:px-10'
         />
-
-        <div
-          className='pointer-events-none absolute inset-0 mx-auto max-w-[1776px] overflow-visible'
-          style={{ transformStyle: 'preserve-3d' }}
-        >
-          {!isMobile ? visibleItems.map((item, index) => renderArcCard(item, index)) : null}
-        </div>
       </div>
 
       <HeroScrollIndicator show={showScrollIndicator} />
