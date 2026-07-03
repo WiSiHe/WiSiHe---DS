@@ -1,5 +1,8 @@
 import { defineQuery } from 'groq';
 
+/** Omit pre-launch / NDA projects from public listings and detail pages. */
+const PUBLIC_PROJECT_FILTER = 'coalesce(seo.noIndex, false) != true';
+
 export * from './sanity.types';
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
@@ -333,7 +336,7 @@ export const paintingQuery = defineQuery(`
 `);
 
 export const projectQuery = defineQuery(`
-  *[_type == "project" && slug.current == $slug][0] {
+  *[_type == "project" && slug.current == $slug && ${PUBLIC_PROJECT_FILTER}][0] {
     ...,
     "slug": slug.current,
     "likesCount": count(likes),
@@ -385,7 +388,7 @@ export const paintingsSlugs = defineQuery(`
 `);
 
 export const projectsSlugs = defineQuery(`
-  *[_type == "project" && defined(slug.current)]
+  *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER}]
   {"slug": slug.current}
 `);
 
@@ -655,7 +658,7 @@ export const getFilteredPaintingsCount = defineQuery(`
 
 export const getAllProjects = defineQuery(`
     {
-      "ongoingProjects": *[_type == "project" && defined(slug.current) && status in ["inProgress", "onHold", "notStarted", "planned"]]
+      "ongoingProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && status in ["inProgress", "onHold", "notStarted", "planned"]]
         | order(projectStart desc) {
           _id,
           "slug": slug.current,
@@ -673,7 +676,7 @@ export const getAllProjects = defineQuery(`
             "lqip": asset->metadata.lqip
           }
         },
-      "pastProjects": *[_type == "project" && defined(slug.current) && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]
+      "pastProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]
         | order(projectEnd desc) {
           _id,
           "slug": slug.current,
@@ -693,14 +696,14 @@ export const getAllProjects = defineQuery(`
         },
       "tags": *[
         _type == "tag" &&
-        count(*[_type == "project" && references(^._id)]) > 0
+        count(*[_type == "project" && references(^._id) && ${PUBLIC_PROJECT_FILTER}]) > 0
       ]
-      | order(isFeatured desc, count(*[_type == "project" && references(^._id)]) desc, name asc) {
+      | order(isFeatured desc, count(*[_type == "project" && references(^._id) && ${PUBLIC_PROJECT_FILTER}]) desc, name asc) {
         _id,
         name,
         isFeatured,
-        "count": count(*[_type == "project" && references(^._id)]),
-        "projectsCount": count(*[_type == "project" && references(^._id)])
+        "count": count(*[_type == "project" && references(^._id) && ${PUBLIC_PROJECT_FILTER}]),
+        "projectsCount": count(*[_type == "project" && references(^._id) && ${PUBLIC_PROJECT_FILTER}])
       }
     }
     `);
@@ -1142,7 +1145,7 @@ export const presentationSlugsQuery = defineQuery(`
   *[_type == "presentation" && defined(slug.current)] { "slug": slug.current }
 `);
 export const getPaginatedProjects = defineQuery(`
-  *[_type == "project" && defined(slug.current)]
+  *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER}]
   | order(projectStart desc, _updatedAt desc) [$start...$end] {
     _id,
     "slug": slug.current,
@@ -1164,7 +1167,7 @@ export const getPaginatedProjects = defineQuery(`
 `);
 
 export const getProjectsCount = defineQuery(`
-  count(*[_type == "project" && defined(slug.current)])
+  count(*[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER}])
 `);
 
 export * from './sanity.types';
