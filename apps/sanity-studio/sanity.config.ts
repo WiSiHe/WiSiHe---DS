@@ -8,12 +8,19 @@ import { defineConfig } from 'sanity';
 import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
+import { studioDataset, studioProjectId } from './lib/env';
 import { presentationToolOptions } from './presentation/toolOptions';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-const dataset = process.env.SANITY_STUDIO_DATASET;
+const projectId = studioProjectId();
+const dataset = studioDataset();
+
+if (!projectId) {
+  throw new Error(
+    'Missing Sanity project ID. Set SANITY_STUDIO_PROJECT_ID or NEXT_PUBLIC_SANITY_PROJECT_ID.',
+  );
+}
 
 // Environment configuration
 const isDevelopment = process.env.NODE_ENV === 'development';

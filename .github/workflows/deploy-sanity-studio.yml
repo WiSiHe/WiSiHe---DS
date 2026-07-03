@@ -1,0 +1,50 @@
+# Deploys apps/sanity-studio to Sanity hosting (wisihe.sanity.studio).
+# appId is committed in sanity.cli.ts — no interactive first deploy needed.
+#
+# Required repository secret:
+#   SANITY_AUTH_TOKEN — robot token with deploy permissions (same as wisihe-ai workflow)
+#
+# Optional repository variables (fallback when Doppler is not used in CI):
+#   SANITY_STUDIO_PROJECT_ID or NEXT_PUBLIC_SANITY_PROJECT_ID
+#   SANITY_STUDIO_DATASET or NEXT_PUBLIC_SANITY_DATASET
+
+name: Deploy sanity-studio
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-sanity-studio-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: sanity deploy (sanity-studio)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.23.0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy Studio
+        working-directory: apps/sanity-studio
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: sh scripts/deploy-studio.sh

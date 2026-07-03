@@ -205,7 +205,7 @@ function PaintingCardInner({
     return card;
   }
 
-  return <BrushRevealWrap>{card}</BrushRevealWrap>;
+  return <BrushRevealWrap profile='gridCard'>{card}</BrushRevealWrap>;
 }
 
 type PaintingCardAdapterProps = {

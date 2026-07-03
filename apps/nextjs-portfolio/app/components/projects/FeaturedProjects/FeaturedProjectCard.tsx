@@ -1,11 +1,13 @@
 'use client';
 
 import { IconArrowRight } from '@tabler/icons-react';
+import { cn } from '@wisihe/utils';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
+import { getProjectCardTags } from '@/app/components/projects/ProjectCardParts';
 import { GlassSurface } from '@/app/components/ui/GlassSurface';
 import { registerScrollElements } from '@/app/lib/lenis-registry';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
@@ -17,7 +19,7 @@ const panelEase = [0.22, 1, 0.36, 1] as const;
 const panelContainerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.13, delayChildren: 0.06 },
+    transition: { staggerChildren: 0.11, delayChildren: 0.05 },
   },
 };
 
@@ -26,13 +28,13 @@ function panelItemVariants(fromX: number) {
     hidden: {
       opacity: 0,
       x: fromX,
-      y: 16,
+      y: 12,
     },
     visible: {
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration: 0.85, ease: panelEase },
+      transition: { duration: 0.72, ease: panelEase },
     },
   };
 }
@@ -53,17 +55,24 @@ function collectPreviewSources(project: FeaturedProject): ImageSourceWithRef[] {
       const ref = img?.asset?._ref;
       return ref ? arr.findIndex(other => other?.asset?._ref === ref) === idx : idx === 0;
     })
-    .slice(0, 4);
+    .slice(0, 3);
 }
 
 type FeaturedProjectCardProps = {
   project: FeaturedProject;
   index: number;
-  panelColor: string;
 };
 
 function parallaxAttrs(mounted: boolean, speed: string) {
   return mounted ? { 'data-scroll': true, 'data-scroll-speed': speed } : {};
+}
+
+function MetaPill({ children }: { children: ReactNode }) {
+  return (
+    <span className='inline-flex items-center rounded-full border border-white/15 bg-white/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-sm md:text-[11px]'>
+      {children}
+    </span>
+  );
 }
 
 const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
@@ -85,16 +94,12 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   });
 
   const isEven = index % 2 === 0;
-  const panelFromX = isEven ? -24 : 24;
+  const panelFromX = isEven ? -20 : 20;
   const panelAnimate = reducedMotion ? false : isCardInView ? 'visible' : 'hidden';
   const titleId = `featured-project-title-${project._id}`;
   const clientLabel = (project.client as string | null | undefined)?.trim() || null;
   const nameTrimmed = (project.name as string | undefined)?.trim();
   const headingText = nameTrimmed || 'Project';
-  const displayTitle = getProjectDisplayTitle({
-    name: project.name as string | null | undefined,
-    client: project.client as string | null | undefined,
-  });
   const seoDescription = (project.seoDescription as string | null | undefined)?.trim() ?? '';
   const legacyDescription = (project.description as string | null | undefined)?.trim() ?? '';
   const summaryText =
@@ -107,11 +112,16 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
     ) ||
     null;
   const dateRange = formatDateRange(project.projectStart, project.projectEnd);
+  const statusLabel = formatProjectStatusLabel(project.status || 'unknown');
+  const { visible: visibleTags, remaining: remainingTags } = getProjectCardTags(
+    project.tags as Array<{ name?: string | null }> | null | undefined,
+    4,
+  );
   const heroUrl = project.image
     ? urlForImage(project.image)?.width(1400).height(1050).quality(85).url()
     : null;
   const previewSources = collectPreviewSources(project);
-  const backdropAlt = project.seo?.title || displayTitle || 'Project backdrop';
+  const backdropAlt = project.seo?.title || headingText || 'Project backdrop';
 
   return (
     <div
@@ -137,20 +147,15 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
         )}
       </div>
 
-      <div className='absolute bottom-4 right-4 z-10 hidden select-none rounded-md border border-white/10 bg-black/25 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white/45 backdrop-blur-sm md:block'>
-        Fig. {String(index + 1).padStart(2, '0')}
-        {' // '}
-        {project.slug || 'Specimen'}
-      </div>
-
       <div
-        className={`relative z-20 mx-4 my-auto w-full max-w-[90%] md:absolute md:inset-y-0 md:flex md:items-center md:w-[480px] md:mx-0 ${
+        className={cn(
+          'relative z-20 mx-4 my-auto w-full max-w-[90%] md:absolute md:inset-y-0 md:flex md:items-center md:w-[min(100%,32rem)] md:mx-0',
           isEven
             ? 'md:left-[10%] lg:left-[15%] md:right-auto'
-            : 'md:right-[10%] lg:right-[15%] md:left-auto'
-        }`}
+            : 'md:right-[10%] lg:right-[15%] md:left-auto',
+        )}
       >
-        <GlassSurface variant='backdrop' className='w-full rounded-3xl p-8 md:p-10'>
+        <GlassSurface variant='overlay' className='w-full rounded-2xl p-6 shadow-2xl md:p-8'>
           <motion.div
             className='flex flex-col'
             variants={reducedMotion ? undefined : panelContainerVariants}
@@ -159,57 +164,73 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
           >
             <motion.div
               variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
-              className='mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] font-bold uppercase tracking-wider text-accent md:text-xs'
+              className='mb-4 flex flex-wrap items-center gap-2'
             >
-              <span>EP-{String(index + 1).padStart(2, '0')}</span>
-              <span className='select-none text-white/35'>•</span>
-              <span className='text-white/90'>
-                {formatProjectStatusLabel(project.status || 'unknown')}
-              </span>
-              {dateRange ? (
-                <>
-                  <span className='select-none text-white/35'>•</span>
-                  <span className='text-white/90'>{dateRange}</span>
-                </>
-              ) : null}
+              <MetaPill>{statusLabel}</MetaPill>
+              {dateRange ? <MetaPill>{dateRange}</MetaPill> : null}
             </motion.div>
 
-            <motion.h3
-              id={titleId}
+            <motion.div
               variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
-              className='mb-4 font-sans text-2xl font-bold leading-tight text-white md:text-3xl'
+              className='mb-4 space-y-2'
             >
               {clientLabel ? (
-                <span className='mb-2 block text-xs font-bold uppercase tracking-wider text-accent'>
+                <p className='text-[11px] font-semibold uppercase tracking-[0.14em] text-accent'>
                   {clientLabel}
-                </span>
+                </p>
               ) : null}
-              {headingText}
-            </motion.h3>
+              <h3
+                id={titleId}
+                className='font-serif text-2xl font-bold leading-[1.15] tracking-tight text-white md:text-[1.85rem]'
+              >
+                {headingText}
+              </h3>
+            </motion.div>
 
             {summaryText ? (
               <motion.p
                 variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
-                className='mb-8 line-clamp-3 text-sm leading-relaxed text-white/78 md:text-base'
+                className='mb-5 line-clamp-4 text-sm leading-relaxed text-white/72 md:text-[15px]'
               >
                 {summaryText}
               </motion.p>
             ) : null}
 
+            {visibleTags.length > 0 ? (
+              <motion.div
+                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                className='mb-6 flex flex-wrap gap-1.5'
+              >
+                {visibleTags.map(tag => (
+                  <span
+                    key={tag.name}
+                    className='rounded-full border border-white/12 bg-white/6 px-2.5 py-0.5 text-[10px] font-medium text-white/80 md:text-[11px]'
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+                {remainingTags > 0 ? (
+                  <span className='self-center text-[10px] font-medium text-white/45'>
+                    +{remainingTags}
+                  </span>
+                ) : null}
+              </motion.div>
+            ) : null}
+
             {previewSources.length > 1 ? (
               <motion.div
                 variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
-                className='mb-8 grid grid-cols-4 gap-3'
+                className='mb-6 flex gap-2'
               >
-                {previewSources.slice(0, 4).map(src => {
-                  const u = urlForImage(src)?.width(160).height(160).quality(70).url();
+                {previewSources.map(src => {
+                  const u = urlForImage(src)?.width(200).height(140).quality(72).url();
                   return (
                     <div
                       key={src.asset._ref}
-                      className='relative aspect-square overflow-hidden rounded-xl border border-white/15 bg-white/5 transition-transform duration-300 hover:scale-105'
+                      className='relative aspect-[5/3] min-w-0 flex-1 overflow-hidden rounded-lg border border-white/12 bg-white/5'
                     >
                       {u ? (
-                        <Image src={u} alt='' fill className='object-cover' sizes='60px' />
+                        <Image src={u} alt='' fill className='object-cover' sizes='120px' />
                       ) : null}
                     </div>
                   );
@@ -217,17 +238,17 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
               </motion.div>
             ) : null}
 
-            <motion.div
-              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
-              className='flex items-center justify-between pt-2'
-            >
+            <motion.div variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}>
               <Link
-                href={`projects/${project.slug}`}
-                className='z-20 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wider text-accent-contrast shadow-md transition-colors hover:bg-accent-hover'
+                href={`/projects/${project.slug}`}
+                className='group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast shadow-md transition-[background-color,transform] duration-200 hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98]'
               >
                 <span className='sr-only'>{headingText}. </span>
-                View Project
-                <IconArrowRight aria-hidden className='h-4 w-4' />
+                View project
+                <IconArrowRight
+                  aria-hidden
+                  className='size-4 transition-transform duration-200 group-hover:translate-x-0.5'
+                />
               </Link>
             </motion.div>
           </motion.div>

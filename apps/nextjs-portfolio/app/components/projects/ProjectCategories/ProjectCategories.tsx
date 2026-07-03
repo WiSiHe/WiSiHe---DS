@@ -221,10 +221,17 @@ const ProjectCategories = ({ ongoingProjects, pastProjects, tags }: ProjectCateg
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className='space-y-4'
+            className='space-y-5'
           >
-            <h2 className='text-xl font-semibold font-serif text-foreground'>Ongoing</h2>
-            <ul className='grid w-full grid-cols-1 gap-6'>
+            <div>
+              <p className='mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent'>
+                {'// Active'}
+              </p>
+              <h2 className='font-serif text-2xl font-bold tracking-tight text-foreground md:text-3xl'>
+                Ongoing
+              </h2>
+            </div>
+            <ul className='grid w-full grid-cols-1 gap-8'>
               {filteredOngoing.map((project, index) => (
                 <OngoingProjectCard key={project._id} project={project} index={index} />
               ))}

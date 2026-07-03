@@ -119,8 +119,6 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                 <Image
                   src={imageUrl}
                   alt={image?.alt ?? photo.title ?? 'Photograph'}
-                  width={imageWidth}
-                  height={imageHeight}
                   fill
                   className='object-contain'
                   sizes='(max-width: 1024px) 100vw, 70vw'

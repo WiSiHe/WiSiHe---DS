@@ -298,26 +298,28 @@ export function PaintingCard({
           <div
             aria-hidden
             className={cn(
-              'absolute bottom-0 left-0 right-0 z-20 px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border/30 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
+              'absolute bottom-0 left-0 right-0 z-20 flex min-h-[4.5rem] items-center justify-center px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border/30 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
               alwaysShowTags && 'opacity-100 translate-y-0',
             )}
           >
-            <motion.p
-              layoutId={`title-${title}`}
-              className={cn(
-                'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
-                alwaysShowTags && 'text-accent',
-              )}
-            >
-              {title}
-            </motion.p>
-            {paintedAt ? (
-              <div className='mt-1'>
-                <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
-                  {paintedAt}
-                </span>
-              </div>
-            ) : null}
+            <div className='flex w-full flex-col items-center justify-center text-center'>
+              <motion.p
+                layoutId={`title-${title}`}
+                className={cn(
+                  'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
+                  alwaysShowTags && 'text-accent',
+                )}
+              >
+                {title}
+              </motion.p>
+              {paintedAt ? (
+                <div className='mt-1'>
+                  <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
+                    {paintedAt}
+                  </span>
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : null}
       </LinkEl>

@@ -121,7 +121,7 @@ function PaintingSearchCompactCardInner({
       <Link
         href={`/paintings/${slug}`}
         className={cn(
-          'group block',
+          'group group/painting block',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           IMAGE_RADIUS_CLASS,
         )}
@@ -199,9 +199,11 @@ function PaintingSearchCompactCardInner({
           ) : null}
         </div>
 
-        <h3 className='mt-2 line-clamp-2 font-sans text-[13px] font-semibold leading-snug text-foreground transition-colors group-hover:text-accent'>
-          {displayTitle}
-        </h3>
+        <div className='flex min-h-[2.75rem] items-center justify-center px-1 py-2'>
+          <h3 className='line-clamp-2 w-full text-center font-sans text-[13px] font-semibold leading-snug text-foreground transition-colors duration-200 group-hover/painting:text-accent'>
+            {displayTitle}
+          </h3>
+        </div>
 
         {showNsfwCover ? (
           <span className='sr-only'>

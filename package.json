@@ -14,6 +14,7 @@
     "dev:wisihe-ai": "doppler run -- turbo run dev --filter=wisihe-ai",
     "dev:wisihe-ai:local": "turbo run dev --filter=wisihe-ai",
     "deploy:wisihe-ai": "doppler run -- pnpm --filter wisihe-ai exec sanity deploy",
+    "deploy:studio": "pnpm --filter sanity-studio run deploy",
     "sync-algolia": "doppler run --config prd -- pnpm --filter sanity-studio sync-algolia",
     "sync-algolia:dev": "doppler run --config dev -- pnpm --filter sanity-studio sync-algolia",
     "set-algolia-settings": "doppler run --config prd -- pnpm --filter sanity-studio set-algolia-settings",

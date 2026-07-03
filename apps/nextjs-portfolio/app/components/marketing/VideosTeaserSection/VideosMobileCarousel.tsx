@@ -51,7 +51,7 @@ export default function VideosMobileCarousel({ videos }: VideosMobileCarouselPro
   }, [emblaApi, onSelect]);
 
   return (
-    <section className='lg:hidden' aria-label='Videos carousel'>
+    <section className='md:hidden' aria-label='Videos carousel'>
       <div className='relative'>
         <div className='overflow-hidden' ref={emblaRef}>
           <div className='flex gap-4'>

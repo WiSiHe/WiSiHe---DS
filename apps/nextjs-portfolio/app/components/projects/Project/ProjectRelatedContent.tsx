@@ -1,4 +1,5 @@
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
+import { isDuplicateOfEmbeddedVideo } from '@/lib/projects/connectedPagePresentation';
 import ConnectedPaintingsCarousel from './ConnectedPaintingsCarousel';
 import EmbeddedVideo from './EmbeddedVideo';
 import { ProjectLiveSiteCard } from './ProjectLiveSiteCard';
@@ -16,7 +17,9 @@ export default function ProjectRelatedContent({
 }: ProjectRelatedContentProps) {
   const hasPaintings = (connectedPaintings?.length ?? 0) > 0;
   const hasVideo = Boolean(connectedVideoUrl);
-  const hasLiveSite = Boolean(project.connectedPage);
+  const hasLiveSite =
+    Boolean(project.connectedPage) &&
+    !isDuplicateOfEmbeddedVideo(project.connectedPage, connectedVideoUrl);
 
   if (!hasPaintings && !hasVideo && !hasLiveSite) {
     return null;
@@ -41,9 +44,9 @@ export function hasProjectRelatedContent(
   connectedPaintings: NonNullable<ProjectQueryResult>['connectedPaintings'],
   connectedVideoUrl?: string | null,
 ): boolean {
-  return (
-    (connectedPaintings?.length ?? 0) > 0 ||
-    Boolean(connectedVideoUrl) ||
-    Boolean(project.connectedPage)
-  );
+  const hasConnectedPage =
+    Boolean(project.connectedPage) &&
+    !isDuplicateOfEmbeddedVideo(project.connectedPage, connectedVideoUrl);
+
+  return (connectedPaintings?.length ?? 0) > 0 || Boolean(connectedVideoUrl) || hasConnectedPage;
 }

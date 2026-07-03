@@ -27,23 +27,6 @@ const INTRO_TITLE = 'Featured projects';
 const FALLBACK_DESCRIPTION =
   'Selected client work and side projects — design systems, shops, campaign sites, and games.';
 
-/** Vertical strip on each card — cycles through brand + accent primitives from the design system */
-const STACK_PANEL_COLORS = [
-  'var(--color-brand-1-600)',
-  'var(--color-brand-2-500)',
-  'var(--color-neon-orange-500)',
-  'var(--color-brand-3-600)',
-] as const;
-
-function stackPanelColor(index: number): string {
-  return STACK_PANEL_COLORS[index % STACK_PANEL_COLORS.length] ?? STACK_PANEL_COLORS[0];
-}
-
-function featuredRangeLabel(count: number): string {
-  if (count <= 1) return 'Fig. 01';
-  return `Fig. 01–${String(count).padStart(2, '0')}`;
-}
-
 const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedProjectsProps) => {
   if (!showcaseProjects || showcaseProjects.length === 0) {
     return null;
@@ -78,10 +61,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
             description={descriptionContent}
           />
 
-          <div className='flex shrink-0 flex-col items-start gap-3 md:items-end md:text-right'>
-            <p className='font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground-subtle md:text-xs'>
-              {featuredRangeLabel(displayedProjects.length)}
-            </p>
+          <div className='flex shrink-0 flex-col items-start md:items-end'>
             <Button
               as={Link}
               href='/projects'
@@ -102,12 +82,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
 
       <div className='relative z-10 flex w-full flex-col'>
         {displayedProjects.map((project, index) => (
-          <FeaturedProjectCard
-            key={project._id}
-            project={project}
-            index={index}
-            panelColor={stackPanelColor(index)}
-          />
+          <FeaturedProjectCard key={project._id} project={project} index={index} />
         ))}
       </div>
 

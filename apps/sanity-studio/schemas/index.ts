@@ -3,6 +3,7 @@ import blockContentMinimal from './blockContentMinimal';
 import ingredient from './ingredient';
 import { homePageSectionTypes } from './objects/homePageSections';
 import homeSectionIntro from './objects/homeSectionIntro';
+import mermaidDiagram from './objects/mermaidDiagram';
 import recipeNutrition from './objects/recipeNutrition';
 import painting from './painting';
 import photography from './photography';
@@ -45,6 +46,7 @@ export const schemaTypes = [
   tag,
   blockContent,
   blockContentMinimal,
+  mermaidDiagram,
   seoType,
   redirectType,
   socialType,

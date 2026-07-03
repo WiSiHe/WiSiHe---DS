@@ -117,7 +117,7 @@ export function RecipesListing({ recipes }: RecipesListingProps) {
       )}
 
       {activeTag ? (
-        <p className='text-center text-sm text-foreground-muted'>
+        <div className='text-center text-sm text-foreground-muted'>
           Showing {filteredRecipes.length} recipe{filteredRecipes.length === 1 ? '' : 's'} tagged{' '}
           <Chip
             label={activeTag}
@@ -125,7 +125,7 @@ export function RecipesListing({ recipes }: RecipesListingProps) {
             interactive={false}
             className='inline-flex align-middle'
           />
-        </p>
+        </div>
       ) : null}
     </div>
   );

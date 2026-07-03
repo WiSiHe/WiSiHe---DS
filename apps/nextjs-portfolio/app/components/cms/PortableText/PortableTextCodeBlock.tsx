@@ -23,9 +23,9 @@ export function PortableTextCodeBlock({ code, language, filename }: PortableText
   const style = isDark ? oneDark : oneLight;
 
   return (
-    <figure className='not-prose my-6 overflow-hidden rounded-lg border border-border bg-surface-elevated'>
+    <figure className='not-prose my-5 w-full overflow-x-auto rounded-xl border border-border/70 bg-surface-elevated'>
       {filename ? (
-        <figcaption className='border-b border-border px-4 py-2 text-xs font-mono text-foreground-muted'>
+        <figcaption className='border-b border-border/70 px-4 py-2 text-xs font-mono text-foreground-muted'>
           {filename}
         </figcaption>
       ) : null}
@@ -35,8 +35,8 @@ export function PortableTextCodeBlock({ code, language, filename }: PortableText
         customStyle={{
           margin: 0,
           padding: '1rem',
-          fontSize: '0.875rem',
-          lineHeight: '1.6',
+          fontSize: '0.8125rem',
+          lineHeight: '1.65',
           background: 'transparent',
         }}
         PreTag='div'

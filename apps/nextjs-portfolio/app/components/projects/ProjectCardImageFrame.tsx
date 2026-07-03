@@ -18,8 +18,10 @@ export type ProjectCardImageFrameProps = {
   imageClassName?: string;
   /** Enables shared layout morph into project detail hero. */
   layoutId?: string;
-  /** Badges/metadata layered on the image (positioned inside the inset frame). */
+  /** Badges/metadata layered on the image. */
   overlay?: ReactNode;
+  /** When true, only top corners are rounded (card header image). */
+  flushTop?: boolean;
 };
 
 export function ProjectCardImageFrame({
@@ -33,12 +35,15 @@ export function ProjectCardImageFrame({
   imageClassName = 'object-cover',
   layoutId,
   overlay,
+  flushTop = true,
 }: ProjectCardImageFrameProps) {
   const reduceMotion = useReducedMotion();
   const effectiveLayoutId = layoutId && !reduceMotion ? layoutId : undefined;
 
-  const frameClassName =
-    'relative h-full w-full overflow-hidden rounded-2xl bg-surface-subtle/50 ring-1 ring-border/40';
+  const frameClassName = cn(
+    'relative h-full w-full overflow-hidden bg-neutral-950/5',
+    flushTop ? 'rounded-t-2xl' : 'rounded-2xl',
+  );
 
   const imageContent = imageSrc ? (
     <Image
@@ -51,42 +56,42 @@ export function ProjectCardImageFrame({
       placeholder={lqip ? 'blur' : 'empty'}
       blurDataURL={lqip ?? undefined}
       className={cn(
-        'transition-transform duration-700 ease-out group-hover:scale-[1.03]',
+        'transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.02]',
         imageClassName,
       )}
     />
   ) : (
     <div
-      className='absolute inset-0 bg-linear-to-br from-accent/[0.06] via-surface-subtle to-foreground/[0.03] dark:from-accent/[0.09] dark:to-foreground/[0.02]'
+      className='absolute inset-0 bg-linear-to-br from-accent/[0.08] via-surface-subtle to-surface'
       aria-hidden
     />
   );
 
+  const frameBody = (
+    <>
+      {imageContent}
+      <div
+        className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-95'
+        aria-hidden
+      />
+      {overlay}
+    </>
+  );
+
   return (
-    <div
-      className={cn(
-        'relative overflow-hidden bg-linear-to-br from-accent/8 via-surface-subtle to-surface-subtle',
-        aspectClassName,
+    <div className={cn('relative overflow-hidden', aspectClassName)}>
+      {effectiveLayoutId ? (
+        <motion.div
+          layoutId={effectiveLayoutId}
+          initial={false}
+          transition={sharedLayoutTransition}
+          className={frameClassName}
+        >
+          {frameBody}
+        </motion.div>
+      ) : (
+        <div className={frameClassName}>{frameBody}</div>
       )}
-    >
-      <div className='absolute inset-0 p-4 md:p-5'>
-        {effectiveLayoutId ? (
-          <motion.div
-            layoutId={effectiveLayoutId}
-            initial={false}
-            transition={sharedLayoutTransition}
-            className={frameClassName}
-          >
-            {imageContent}
-            {overlay}
-          </motion.div>
-        ) : (
-          <div className={frameClassName}>
-            {imageContent}
-            {overlay}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

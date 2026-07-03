@@ -6,19 +6,15 @@ import { Button } from '@wisihe/ui-react';
 import Image from 'next/image';
 import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import {
+  displayHost,
+  getConnectedPagePresentation,
+} from '@/lib/projects/connectedPagePresentation';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type ConnectedPageProps = {
   project: NonNullable<ProjectQueryResult>;
 };
-
-function displayHost(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
 
 const ConnectedPage = ({ project }: ConnectedPageProps) => {
   const { _id, name, client, connectedPage, image } = project;
@@ -30,6 +26,7 @@ const ConnectedPage = ({ project }: ConnectedPageProps) => {
 
   const previewUrl = image ? urlForImage(image)?.width(1600).height(900).fit('crop').url() : null;
   const host = displayHost(connectedPage);
+  const presentation = getConnectedPagePresentation(connectedPage);
 
   const handleVisitClick = () => {
     trackEvent(AnalyticsEvent.PROJECT_EXTERNAL_LINK_CLICKED, {
@@ -37,17 +34,24 @@ const ConnectedPage = ({ project }: ConnectedPageProps) => {
       project_name: projectTitle,
       external_url: connectedPage,
       external_host: host,
+      link_kind: presentation.kind,
     });
   };
+
+  const sectionTitle =
+    presentation.kind === 'live-site'
+      ? 'Live project'
+      : presentation.kind === 'video'
+        ? 'Project video'
+        : presentation.eyebrow;
 
   return (
     <section className='max-w-7xl mx-auto px-4 py-8 lg:py-12'>
       <div className='space-y-6'>
         <div className='space-y-2'>
-          <h2 className='text-2xl font-semibold font-serif text-foreground'>Live project</h2>
+          <h2 className='text-2xl font-semibold font-serif text-foreground'>{sectionTitle}</h2>
           <p className='text-foreground-subtle text-sm md:text-base max-w-prose'>
-            Visit the live site on {host}. External sites are not embedded here for performance,
-            privacy, and compatibility.
+            {presentation.description}
           </p>
         </div>
 
@@ -68,8 +72,8 @@ const ConnectedPage = ({ project }: ConnectedPageProps) => {
 
           <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 md:p-6'>
             <div className='min-w-0'>
-              <p className='text-sm text-foreground-muted'>External link</p>
-              <p className='font-medium text-foreground truncate'>{host}</p>
+              <p className='text-sm text-foreground-muted'>{presentation.eyebrow}</p>
+              <p className='font-medium text-foreground truncate'>{presentation.title}</p>
             </div>
             <Button
               as='a'
@@ -83,7 +87,7 @@ const ConnectedPage = ({ project }: ConnectedPageProps) => {
               className='rounded-full shrink-0'
               onClick={handleVisitClick}
             >
-              Visit live site
+              {presentation.cta}
             </Button>
           </div>
         </div>

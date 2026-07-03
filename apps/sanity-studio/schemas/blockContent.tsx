@@ -147,6 +147,10 @@ export default defineType({
       },
     }),
     defineArrayMember({
+      type: 'mermaidDiagram',
+      title: 'Mermaid diagram',
+    }),
+    defineArrayMember({
       type: 'object',
       name: 'callout',
       title: 'Callout',
