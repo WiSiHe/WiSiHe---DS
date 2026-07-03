@@ -3,21 +3,20 @@ import { isEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import { VIDEOS_DESCRIPTION } from '@/lib/siteCopy';
 import { sanityFetch } from '@/sanity/lib/live';
 import { getAllVideos } from '@/sanity/lib/queries';
 import { VideosPage } from '../components/marketing/VideosPage';
 
 export const metadata: Metadata = {
   title: 'Creative Video Gallery | WiSiHe',
-  description:
-    'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
+  description: VIDEOS_DESCRIPTION,
   alternates: {
     canonical: 'https://www.wisihe.no/videos',
   },
   openGraph: {
     title: 'Creative Video Gallery | WiSiHe',
-    description:
-      'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
+    description: VIDEOS_DESCRIPTION,
     url: 'https://www.wisihe.no/videos',
     siteName: 'WiSiHe',
     locale: 'en_US',
@@ -27,15 +26,14 @@ export const metadata: Metadata = {
         url: 'https://www.wisihe.no/images/hell.jpg',
         width: 1200,
         height: 630,
-        alt: 'Creative video gallery showcasing digital animations and timelapse drawings',
+        alt: 'Video gallery — timelapses and animation by WiSiHe',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Creative Video Gallery | WiSiHe',
-    description:
-      'Explore my digital creations in motion - from timelapse drawings to game development and animations.',
+    description: VIDEOS_DESCRIPTION,
     images: ['https://www.wisihe.no/images/hell.jpg'],
   },
 };

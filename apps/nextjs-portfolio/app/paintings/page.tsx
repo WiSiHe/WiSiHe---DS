@@ -1,5 +1,6 @@
 import type { HomeSectionCopyQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
+import { PAINTINGS_DESCRIPTION_FALLBACK } from '@/lib/siteCopy';
 import { sanityFetch } from '@/sanity/lib/live';
 import { homeSectionCopyQuery } from '@/sanity/lib/queries';
 import { portableTextToPlainText } from '@/sanity/lib/utils';
@@ -8,13 +9,11 @@ import PaintingsSearchDynamic from '../components/paintings/PaintingsSearch/Pain
 
 const PAINTINGS_CANONICAL = 'https://www.wisihe.no/paintings';
 const PAINTINGS_TITLE_FALLBACK = 'Digital Art Gallery';
-const PAINTINGS_DESCRIPTION_FALLBACK =
-  'Explore my collection of digital paintings and artwork, featuring imaginative landscapes, character designs, and creative visual storytelling.';
 const PAINTINGS_OG_IMAGE = {
   url: 'https://www.wisihe.no/images/hell.jpg',
   width: 1200,
   height: 630,
-  alt: "Digital art gallery showcasing WiSiHe's creative paintings and illustrations",
+  alt: 'Digital paintings and illustrations by Henrik Sissener (WiSiHe)',
 };
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -8,6 +8,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { scrollDocumentToTop } from '@/app/lib/lenis-registry';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import { SITE_TAGLINE } from '@/lib/siteCopy';
 import { APP_VERSION } from '@/lib/version';
 import IconLogo from '../icons/IconLogo';
 import { Link } from '../ProgressLink';
@@ -15,17 +16,13 @@ import { SocialListItem } from './SocialListItem';
 
 type FooterProps = {
   socialLinks: { _key: string; platform?: string | null; url?: string | null }[] | null | undefined;
-  bio?: string | null;
   jobTitle?: string | null;
   heroSubtitle?: string | null;
   ctaLabel?: string | null;
   ctaHref?: string | null;
 };
 
-const DEFAULT_BIO =
-  'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
-
-const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }: FooterProps) => {
+const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: FooterProps) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const prefersReducedMotion = useReducedMotion();
@@ -34,7 +31,6 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
   const currentYear = new Date().getFullYear();
   const displayName = heroSubtitle?.trim() || 'Henrik Wilhelm Sissener';
   const displayRole = jobTitle?.trim() || 'Frontend developer & digital artist';
-  const displayBio = bio?.trim() || DEFAULT_BIO;
   const contactHref = ctaHref?.trim() || '/contact';
   const contactLabel = ctaLabel?.trim() || 'Get in touch';
 
@@ -86,7 +82,7 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
                 {displayName}
               </h2>
               <p className='max-w-md text-base leading-relaxed text-foreground-subtle text-pretty'>
-                {displayBio}
+                {SITE_TAGLINE}
               </p>
             </div>
 

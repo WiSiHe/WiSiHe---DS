@@ -25,7 +25,7 @@ const MAX_PROJECTS = 3;
 const INTRO_EYEBROW = '// Selected works';
 const INTRO_TITLE = 'Featured projects';
 const FALLBACK_DESCRIPTION =
-  'Selected client and personal work — product UX, design systems, and full-stack delivery.';
+  'Selected client work and side projects — design systems, shops, campaign sites, and games.';
 
 /** Vertical strip on each card — cycles through brand + accent primitives from the design system */
 const STACK_PANEL_COLORS = [
