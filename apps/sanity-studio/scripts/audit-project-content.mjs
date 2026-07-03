@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 
 const client = createClient({
   projectId: PROJECT_ID,
@@ -129,7 +130,8 @@ function issuesFor(p) {
   };
 }
 
-const projects = await client.fetch(`*[_type == "project" && defined(slug.current)] | order(name asc) {
+const projects =
+  await client.fetch(`*[_type == "project" && defined(slug.current)] | order(name asc) {
   _id,
   name,
   "slug": slug.current,
