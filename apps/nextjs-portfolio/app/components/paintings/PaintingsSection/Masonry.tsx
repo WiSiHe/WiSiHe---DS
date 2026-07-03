@@ -15,9 +15,10 @@ import {
   BrushRevealLayer,
 } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
 import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
+import { NsfwBlurredCardFooter } from '@/app/components/paintings/BrushReveal/NsfwBlurredCardFooter';
 import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
-import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
+import { getNsfwImageBlurClass, resolveNsfwRatingLabel } from '@/lib/paintings/nsfwCover';
 
 export type MasonryItem = {
   id: string;
@@ -278,6 +279,13 @@ const Masonry = ({
                       badges={item.badges}
                       isNsfwBlurred={item.isNsfwBlurred}
                     />
+                    {item.isNsfwBlurred && item.title ? (
+                      <NsfwBlurredCardFooter
+                        title={item.title}
+                        matureContentLabel={resolveNsfwRatingLabel(item.tags ?? [])}
+                        paintedAt={item.year}
+                      />
+                    ) : null}
                     {colorShiftOnHover ? (
                       <div className='color-overlay pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 transition-opacity duration-300 group-hover:opacity-30' />
                     ) : null}
@@ -317,6 +325,13 @@ const Masonry = ({
                       badges={item.badges}
                       isNsfwBlurred={item.isNsfwBlurred}
                     />
+                    {item.isNsfwBlurred && item.title ? (
+                      <NsfwBlurredCardFooter
+                        title={item.title}
+                        matureContentLabel={resolveNsfwRatingLabel(item.tags ?? [])}
+                        paintedAt={item.year}
+                      />
+                    ) : null}
                     {colorShiftOnHover ? (
                       <div className='color-overlay pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 transition-opacity duration-300 group-hover:opacity-30' />
                     ) : null}

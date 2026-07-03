@@ -2,6 +2,7 @@
 
 import { cn } from '@wisihe/utils';
 import { memo, useMemo } from 'react';
+import { PaintingGridSkeleton } from '@/app/components/paintings/PaintingGridSkeleton';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 import type { PaintingAlgoliaHit } from '@/lib/algolia/paintingsSearch/types';
 import { useIsDesktopPaintingGrid } from '@/lib/paintings/mediaCapabilities';
@@ -80,37 +81,8 @@ const PaintingHit = memo(
     prev.isNsfwFilterActive === next.isNsfwFilterActive,
 );
 
-function PaintingCardSkeleton({ index }: { index: number }) {
-  const aspectClass =
-    index % 3 === 0 ? 'aspect-[3/4]' : index % 3 === 1 ? 'aspect-square' : 'aspect-[4/3]';
-
-  return (
-    <div
-      className='mb-3 w-full animate-pulse'
-      style={{ animationDelay: `${index * 40}ms` }}
-      aria-hidden
-    >
-      <div className={cn(aspectClass, 'rounded-xl bg-surface-subtle')} />
-      <div className='mt-2 h-3.5 w-3/5 rounded-full bg-surface-subtle' />
-    </div>
-  );
-}
-
 function SkeletonGrid() {
-  return (
-    <div
-      className='mt-4 columns-2 gap-3 sm:columns-2 md:columns-3'
-      aria-busy='true'
-      aria-label='Loading paintings'
-    >
-      {Array.from({ length: 12 }).map((_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
-        <div key={i} className='break-inside-avoid'>
-          <PaintingCardSkeleton index={i} />
-        </div>
-      ))}
-    </div>
-  );
+  return <PaintingGridSkeleton count={12} />;
 }
 
 export default function CustomHits() {

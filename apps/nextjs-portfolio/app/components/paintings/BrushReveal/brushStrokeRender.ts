@@ -1,6 +1,12 @@
 import type { Transition } from 'motion/react';
 import type { BrushStrokeLayer } from '@/app/components/marketing/HeroSection/brushStrokeVariants';
 
+const BAND_STROKE_DRAW_DURATION = 0.6;
+const BAND_STROKE_LEAVE_DURATION = 0.25;
+
+/** GSAP power1.inOut — matches page-transition reference. */
+export const GRID_BAND_DRAW_EASE: Transition['ease'] = [0.42, 0, 0.58, 1];
+
 /** Slow draw — loaded bristles trailing behind the stroke tip. */
 export const BRUSH_DRAW_EASE: Transition['ease'] = [0.42, 0.03, 0.58, 0.97];
 
@@ -54,6 +60,62 @@ export function resolveBrushLayerMetrics(
   };
 }
 
+/** Grid band — horizontal side wipe (left or right). */
+export function gridBandSideClipTransition(
+  active: boolean,
+  reduced: boolean,
+  lite: boolean,
+): Transition {
+  const duration = reduced ? 0.2 : lite ? 0.5 : BAND_STROKE_DRAW_DURATION;
+  if (!active) {
+    return {
+      delay: 0,
+      duration: BAND_STROKE_LEAVE_DURATION,
+      ease: POWER2_OUT,
+    };
+  }
+  return { delay: 0, duration, ease: GRID_BAND_DRAW_EASE };
+}
+
+/** Grid band — simultaneous GSAP-style path draw + width swell. */
+export function gridBandDrawPathTransitions(
+  active: boolean,
+  reduced: boolean,
+  lite: boolean,
+): {
+  pathLength: Transition;
+  strokeWidth: Transition;
+  opacity: Transition;
+} {
+  const duration = reduced ? 0.2 : lite ? 0.5 : BAND_STROKE_DRAW_DURATION;
+  const drawEase = GRID_BAND_DRAW_EASE;
+
+  if (reduced) {
+    const t = { delay: 0, duration, ease: drawEase } satisfies Transition;
+    return { pathLength: t, strokeWidth: t, opacity: t };
+  }
+
+  if (!active) {
+    const fade = {
+      delay: 0,
+      duration: BAND_STROKE_LEAVE_DURATION,
+      ease: POWER2_OUT,
+    } satisfies Transition;
+    return {
+      opacity: fade,
+      strokeWidth: fade,
+      pathLength: { delay: BAND_STROKE_LEAVE_DURATION, duration: 0 },
+    };
+  }
+
+  const draw = { delay: 0, duration, ease: drawEase } satisfies Transition;
+  return {
+    pathLength: draw,
+    strokeWidth: draw,
+    opacity: { delay: 0.04, duration: duration * 0.35, ease: 'easeOut' },
+  };
+}
+
 /** Staggered path draw + delayed width swell + soft opacity bloom. */
 export function brushStrokePathTransitions(
   index: number,
@@ -64,6 +126,7 @@ export function brushStrokePathTransitions(
   lite: boolean,
   baseTransition: Transition,
   glazeMode = false,
+  wedgeMode = false,
 ): {
   pathLength: Transition;
   strokeWidth: Transition;
@@ -74,19 +137,22 @@ export function brushStrokePathTransitions(
     return { pathLength: t, strokeWidth: t, opacity: t };
   }
 
-  if (!active && glazeMode) {
+  if (!active && (glazeMode || wedgeMode)) {
     const quickLeave = {
       delay: 0,
-      duration: 0.26,
+      duration: wedgeMode ? BAND_STROKE_LEAVE_DURATION : 0.26,
       ease: POWER2_OUT,
     } satisfies Transition;
-    return { pathLength: quickLeave, strokeWidth: quickLeave, opacity: quickLeave };
+    const pathLengthLeave = wedgeMode
+      ? { delay: BAND_STROKE_LEAVE_DURATION, duration: 0 }
+      : quickLeave;
+    return { pathLength: pathLengthLeave, strokeWidth: quickLeave, opacity: quickLeave };
   }
 
   const delay =
     typeof baseTransition.delay === 'number'
       ? baseTransition.delay
-      : index * (paintOver ? 0.11 : glazeMode ? 0.13 : lite ? 0.035 : 0.09);
+      : index * (paintOver ? 0.11 : glazeMode ? 0.13 : wedgeMode ? 0.08 : lite ? 0.035 : 0.09);
 
   const drawDuration =
     typeof baseTransition.duration === 'number'
@@ -95,9 +161,11 @@ export function brushStrokePathTransitions(
         ? 0.92
         : glazeMode
           ? 0.82
-          : lite
-            ? 0.28
-            : 0.95;
+          : wedgeMode
+            ? BAND_STROKE_DRAW_DURATION
+            : lite
+              ? 0.28
+              : 0.95;
 
   if (!active) {
     const reverseIndex = Math.max(0, layerCount - 1 - index);

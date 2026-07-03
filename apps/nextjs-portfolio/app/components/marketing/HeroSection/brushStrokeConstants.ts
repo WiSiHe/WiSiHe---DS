@@ -6,6 +6,7 @@ export const HERO_BRUSH_STROKE_WIDTH_HOVER = 700;
 
 export type BrushStrokeProfile =
   | 'masonry'
+  | 'gridCard'
   | 'heroCard'
   | 'heroSpotlight'
   | 'heroBlend'
@@ -29,10 +30,27 @@ export type BrushProfileConfig = {
   solidFill: boolean;
   /** Semi-transparent paint-over — artwork stays visible; mask-based stroke reveal. */
   glazeMode?: boolean;
+  /** Grid search — lower-band stroke reveal (full width, no palette wash). */
+  wedgeMode?: boolean;
   /** CSS mix-blend-mode for SVG strokes (e.g. hard-light over artwork). */
   strokeBlendMode?: CSSProperties['mixBlendMode'];
   /** CSS mix-blend-mode for palette wash over artwork. */
   washBlendMode?: CSSProperties['mixBlendMode'];
+};
+
+const GRID_CARD_BRUSH_PROFILE: BrushProfileConfig = {
+  rest: 200,
+  hover: 700,
+  layerSizePercent: 100,
+  coverScale: variantScale => Math.min(variantScale * 0.78, 2.05),
+  strokeBlur: 0,
+  strokeOpacity: 1,
+  layerCount: 2,
+  washOpacity: 0,
+  imageBlurPx: 0,
+  solidFill: false,
+  wedgeMode: true,
+  strokeBlendMode: 'hard-light',
 };
 
 const MASONRY_BRUSH_PROFILE: BrushProfileConfig = {
@@ -109,6 +127,7 @@ const NSFW_COVER_BRUSH_PROFILE: BrushProfileConfig = {
 };
 
 export function getBrushProfileConfig(profile: BrushStrokeProfile): BrushProfileConfig {
+  if (profile === 'gridCard') return GRID_CARD_BRUSH_PROFILE;
   if (profile === 'heroCard') return HERO_CARD_BRUSH_PROFILE;
   if (profile === 'heroSpotlight') return HERO_SPOTLIGHT_BRUSH_PROFILE;
   if (profile === 'heroBlend') return HERO_BLEND_BRUSH_PROFILE;
@@ -124,24 +143,27 @@ export function resolveBrushProfile(
   const base = getBrushProfileConfig(profile);
   if (!lite) return base;
 
-  const layerCap = base.solidFill ? 3 : base.glazeMode ? 3 : 2;
+  const layerCap = base.solidFill ? 3 : base.wedgeMode || base.glazeMode ? 3 : 2;
 
   return {
     ...base,
     layerCount: Math.min(base.layerCount, layerCap),
     strokeBlur: 0,
-    strokeBlendMode: undefined,
-    washBlendMode: base.glazeMode ? 'soft-light' : undefined,
+    strokeBlendMode: base.wedgeMode ? 'normal' : undefined,
+    washBlendMode: base.wedgeMode ? undefined : base.glazeMode ? 'soft-light' : undefined,
     strokeOpacity: base.solidFill
       ? base.strokeOpacity
-      : base.glazeMode
-        ? Math.min(base.strokeOpacity, 0.72)
-        : Math.min(base.strokeOpacity, 0.84),
-    washOpacity: base.solidFill
-      ? base.washOpacity
-      : base.glazeMode
-        ? Math.min(base.washOpacity, 0.42)
-        : Math.min(base.washOpacity, 0.62),
+      : base.wedgeMode
+        ? Math.min(base.strokeOpacity, 0.82)
+        : base.glazeMode
+          ? Math.min(base.strokeOpacity, 0.72)
+          : Math.min(base.strokeOpacity, 0.84),
+    washOpacity:
+      base.solidFill || base.wedgeMode
+        ? base.washOpacity
+        : base.glazeMode
+          ? Math.min(base.washOpacity, 0.42)
+          : Math.min(base.washOpacity, 0.62),
   };
 }
 
