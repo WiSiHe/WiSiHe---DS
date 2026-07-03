@@ -27,21 +27,6 @@ const items: DosDontItem[] = [
     dont: <Toast tone='error' message='Oh no! Something went wrong. So sorry!' />,
   },
   {
-    label: 'Empty state',
-    do: (
-      <div className='w-full max-w-[260px] rounded-lg border border-border bg-surface p-4 text-center'>
-        <p className='text-sm font-medium text-foreground'>No results</p>
-        <p className='mt-1 text-xs text-foreground-subtle'>Clear filters or browse all.</p>
-      </div>
-    ),
-    dont: (
-      <div className='w-full max-w-[260px] rounded-lg border border-border bg-surface p-4 text-center'>
-        <p className='text-sm font-medium text-foreground'>Nothing here yet 😢</p>
-        <p className='mt-1 text-xs text-foreground-subtle'>The gremlins ate your data!</p>
-      </div>
-    ),
-  },
-  {
     label: 'CTA',
     do: (
       <button
@@ -63,10 +48,5 @@ const items: DosDontItem[] = [
 ];
 
 export function ToneLiveExamples() {
-  return (
-    <DosDontGallery
-      description='Direct, calm copy — no hype, no blame-the-user jokes.'
-      items={items}
-    />
-  );
+  return <DosDontGallery items={items} />;
 }

@@ -5,7 +5,6 @@ import { DosDontGallery, type DosDontItem } from '../DosDontGallery';
 const items: DosDontItem[] = [
   {
     label: 'Card',
-    hint: 'Toggle theme to compare',
     do: (
       <div className='w-full max-w-[220px] rounded-xl border border-border bg-surface p-3'>
         <p className='text-sm font-semibold text-foreground'>Painting title</p>
@@ -38,31 +37,8 @@ const items: DosDontItem[] = [
       </button>
     ),
   },
-  {
-    label: 'Meta text',
-    do: <p className='text-sm text-foreground-muted'>Updated March 2024</p>,
-    dont: <p className='text-sm text-neutral-400'>Updated March 2024</p>,
-  },
-  {
-    label: 'Page shell',
-    do: (
-      <div className='w-full rounded-lg border border-border bg-background p-3 text-sm text-foreground'>
-        bg-background
-      </div>
-    ),
-    dont: (
-      <div className='w-full rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-900'>
-        bg-neutral-50
-      </div>
-    ),
-  },
 ];
 
 export function ColorLiveExamples() {
-  return (
-    <DosDontGallery
-      description='Semantic tokens on the left adapt to light and dark. Hard-coded neutrals on the right do not.'
-      items={items}
-    />
-  );
+  return <DosDontGallery items={items} />;
 }

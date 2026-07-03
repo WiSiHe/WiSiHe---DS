@@ -32,5 +32,5 @@ export const goldenRules: DesignRule[] = [
   },
 ];
 
-/** @deprecated use goldenRules */
+/** @deprecated unused — goldenRules is canonical */
 export const goldenRulesSummary = goldenRules;

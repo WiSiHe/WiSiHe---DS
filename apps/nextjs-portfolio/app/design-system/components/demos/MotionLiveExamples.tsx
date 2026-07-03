@@ -26,24 +26,16 @@ function ReplayButton({ onClick }: { onClick: () => void }) {
 const items: DosDontItem[] = [
   {
     label: 'Section reveal',
-    hint: 'Once on enter — not a looping headline',
     do: <SectionRevealDo />,
     dont: <SectionRevealDont />,
   },
   {
     label: 'Card hover',
-    hint: 'Subtle scale; disabled when reduced motion',
     do: <CardHoverDo />,
     dont: <CardHoverDont />,
   },
   {
-    label: 'Tap feedback',
-    do: <TapFeedbackDo />,
-    dont: <TapFeedbackDont />,
-  },
-  {
     label: 'Loading',
-    hint: 'Skeleton, not a fake progress bar',
     do: <LoadingDo />,
     dont: <LoadingDont />,
   },
@@ -107,32 +99,6 @@ function CardHoverDont() {
   );
 }
 
-function TapFeedbackDo() {
-  const { reduced } = useMotionDemoReady();
-  return (
-    <motion.button
-      type='button'
-      className='rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-contrast'
-      whileTap={reduced ? undefined : { scale: 0.98 }}
-    >
-      Save
-    </motion.button>
-  );
-}
-
-function TapFeedbackDont() {
-  return (
-    <motion.button
-      type='button'
-      className='rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-contrast'
-      animate={{ scale: [1, 0.92, 1] }}
-      transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.2 }}
-    >
-      Save
-    </motion.button>
-  );
-}
-
 function LoadingDo() {
   return (
     <div className='w-full max-w-[200px] space-y-2' aria-busy='true'>
@@ -157,10 +123,5 @@ function LoadingDont() {
 }
 
 export function MotionLiveExamples() {
-  return (
-    <DosDontGallery
-      description='Interact with the left column. Motion should orient or confirm — never decorate.'
-      items={items}
-    />
-  );
+  return <DosDontGallery items={items} />;
 }

@@ -2,7 +2,6 @@
 
 import { IconExternalLink } from '@tabler/icons-react';
 import { DesignSystemPageHeader } from '../components/DesignSystemPageHeader';
-import { ComponentLiveExamples } from '../components/demos/ComponentLiveExamples';
 import { STORYBOOK_URL, uiReactComponents } from '../token-data';
 
 export default function ComponentsPage() {
@@ -10,7 +9,7 @@ export default function ComponentsPage() {
     <div className='px-4 py-10 md:px-0'>
       <DesignSystemPageHeader
         title='Components'
-        description='React primitives from @wisihe/ui-react. Variants and a11y live in Storybook.'
+        description='@wisihe/ui-react — variants and a11y in Storybook.'
       >
         <a
           href={STORYBOOK_URL}
@@ -23,8 +22,7 @@ export default function ComponentsPage() {
         </a>
       </DesignSystemPageHeader>
 
-      <section className='mb-12'>
-        <h2 className='mb-4 text-lg font-bold text-foreground'>Catalog</h2>
+      <section className='mb-0'>
         <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4'>
           {uiReactComponents.map(component => (
             <li key={component.name}>
@@ -43,8 +41,6 @@ export default function ComponentsPage() {
           ))}
         </ul>
       </section>
-
-      <ComponentLiveExamples />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
-import { IconArrowRight, IconHeart, IconSearch } from '@tabler/icons-react';
-import { Button } from '@wisihe/ui-react';
+import { IconArrowRight, IconSearch } from '@tabler/icons-react';
 import { DosDontGallery, type DosDontItem } from '../DosDontGallery';
 
 const items: DosDontItem[] = [
@@ -21,23 +20,7 @@ const items: DosDontItem[] = [
     ),
   },
   {
-    label: 'Color',
-    do: (
-      <p className='flex items-center gap-2 text-sm text-foreground-muted'>
-        <IconArrowRight className='size-4 text-accent' stroke={2} aria-hidden />
-        Read more
-      </p>
-    ),
-    dont: (
-      <p className='flex items-center gap-2 text-sm text-foreground-muted'>
-        <IconArrowRight className='size-4 text-[#ec4899]' stroke={2} aria-hidden />
-        Read more
-      </p>
-    ),
-  },
-  {
     label: 'Icon-only control',
-    hint: 'Inspect with a screen reader',
     do: (
       <button
         type='button'
@@ -57,29 +40,22 @@ const items: DosDontItem[] = [
     ),
   },
   {
-    label: 'Inconsistent control',
+    label: 'Color',
     do: (
-      <Button variant='primary' Icon={IconArrowRight} iconPosition='right'>
-        View project
-      </Button>
+      <p className='flex items-center gap-2 text-sm text-foreground-muted'>
+        <IconArrowRight className='size-4 text-accent' stroke={2} aria-hidden />
+        Read more
+      </p>
     ),
     dont: (
-      <button
-        type='button'
-        className='inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2 text-sm font-medium text-accent-contrast'
-      >
-        View project
-        <IconHeart className='size-4' stroke={2} aria-hidden />
-      </button>
+      <p className='flex items-center gap-2 text-sm text-foreground-muted'>
+        <IconArrowRight className='size-4 text-[#ec4899]' stroke={2} aria-hidden />
+        Read more
+      </p>
     ),
   },
 ];
 
 export function IconographyLiveExamples() {
-  return (
-    <DosDontGallery
-      description='Pick a size tier and match adjacent text. stroke={2} (1.75 at size-3). shrink-0 in flex rows. Use @wisihe/ui-react Button for actions.'
-      items={items}
-    />
-  );
+  return <DosDontGallery items={items} />;
 }

@@ -8,7 +8,7 @@ export default function ToneOfVoicePage() {
     <div className='px-4 py-10 md:px-0'>
       <DesignSystemPageHeader
         title='Tone of voice'
-        description='Write as we design: direct, warm, and efficient. No hype, no blame-the-user jokes.'
+        description='Direct and calm. Say what happened and what to do next.'
       />
 
       <ToneLiveExamples />

@@ -10,7 +10,7 @@ export default function MotionPage() {
     <div className='px-4 py-10 md:px-0'>
       <DesignSystemPageHeader
         title='Motion'
-        description='Calm and purposeful. Respect prefers-reduced-motion. When in doubt, do less.'
+        description='Calm and purposeful. Respect prefers-reduced-motion.'
       />
 
       <ReferenceDisclosure title='Timing, libraries & snippet'>
