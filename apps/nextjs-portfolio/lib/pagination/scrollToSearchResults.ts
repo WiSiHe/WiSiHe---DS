@@ -1,4 +1,4 @@
-import { getGlobalLenis } from '@/app/lib/lenis-registry';
+import { getGlobalLenis, scrollDocumentToTop } from '@/app/lib/lenis-registry';
 
 const HEADER_OFFSET_PX = 120;
 
@@ -31,5 +31,5 @@ export function scrollToSearchResults(targetId?: string) {
     return;
   }
 
-  globalThis.window.scrollTo({ top: 0, left: 0, behavior });
+  scrollDocumentToTop({ immediate: behavior === 'auto' });
 }
