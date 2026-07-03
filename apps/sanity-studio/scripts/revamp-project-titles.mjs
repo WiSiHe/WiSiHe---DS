@@ -22,7 +22,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 const APPLY = process.argv.includes('--apply');
 
@@ -46,9 +47,23 @@ const client = createClient({
 const TITLE_PATCHES = [
   { slug: '3d-black-hole', name: '3D Black Hole' },
   { slug: 'anton-sport-online-retail', name: 'Online Retail', client: 'Anton Sport' },
-  { slug: 'bad-ui-battle-2-0-hackathon', name: 'Bad UI Battle 2.0', client: 'Hackathon', seoTitle: 'Bad UI Battle 2.0' },
-  { slug: 'bad-ui-battle-hackathon', name: 'Bad UI Battle', client: 'Hackathon', seoTitle: 'Bad UI Battle' },
-  { slug: 'bama-transport-optimisation-dashboard', name: 'Transport Optimisation Dashboard', client: 'Bama' },
+  {
+    slug: 'bad-ui-battle-2-0-hackathon',
+    name: 'Bad UI Battle 2.0',
+    client: 'Hackathon',
+    seoTitle: 'Bad UI Battle 2.0',
+  },
+  {
+    slug: 'bad-ui-battle-hackathon',
+    name: 'Bad UI Battle',
+    client: 'Hackathon',
+    seoTitle: 'Bad UI Battle',
+  },
+  {
+    slug: 'bama-transport-optimisation-dashboard',
+    name: 'Transport Optimisation Dashboard',
+    client: 'Bama',
+  },
   { slug: 'bane-nor-design-system-lead', name: 'Design System Lead', client: 'Bane NOR' },
   { slug: 'blodtarnet', name: 'Blodtårnet' },
   { slug: 'boxboi-unity', name: 'Box Boi' },
@@ -63,7 +78,12 @@ const TITLE_PATCHES = [
   { slug: 'project-huldra', name: 'Project Huldra' },
   { slug: 'scentwise', name: 'Scentwise' },
   { slug: 'sealift-systems', name: 'Sealift Systems' },
-  { slug: 'slik-bygger-vi-apper-for-alle-panel-debate', name: 'Slik bygger vi apper for alle', client: 'Panel debate', seoTitle: 'Slik bygger vi apper for alle' },
+  {
+    slug: 'slik-bygger-vi-apper-for-alle-panel-debate',
+    name: 'Slik bygger vi apper for alle',
+    client: 'Panel debate',
+    seoTitle: 'Slik bygger vi apper for alle',
+  },
   { slug: 'spline-workshop', name: 'Spline Workshop' },
   { slug: 'stormhvalen', name: 'Stormhvalen' },
   { slug: 'tine-litago', name: 'Litago', client: 'TINE' },
@@ -71,7 +91,12 @@ const TITLE_PATCHES = [
   { slug: 'tine-kjokken-recipes', name: 'Recipes', client: 'TINE Kjøkken' },
   { slug: 'unge-drabanter', name: 'Unge Drabanter' },
   { slug: 'website-performance-dashboard', name: 'Website Performance Dashboard' },
-  { slug: 'wisihe-website', name: 'Portfolio Website', client: 'WiSiHe', seoTitle: 'WiSiHe Portfolio Website' },
+  {
+    slug: 'wisihe-website',
+    name: 'Portfolio Website',
+    client: 'WiSiHe',
+    seoTitle: 'WiSiHe Portfolio Website',
+  },
 ];
 
 function buildSeoTitle({ name, client, seoTitle }) {
@@ -116,8 +141,12 @@ for (const project of projects) {
   changed += 1;
   const display = nextClient ? `${nextClient} — ${patch.name}` : patch.name;
   console.log(`→ ${project.slug}`);
-  console.log(`    was: ${JSON.stringify({ name: project.name, client: project.client, seoTitle: project.seoTitle })}`);
-  console.log(`    now: ${JSON.stringify({ name: patch.name, client: nextClient, seoTitle: nextSeoTitle, display })}`);
+  console.log(
+    `    was: ${JSON.stringify({ name: project.name, client: project.client, seoTitle: project.seoTitle })}`,
+  );
+  console.log(
+    `    now: ${JSON.stringify({ name: patch.name, client: nextClient, seoTitle: nextSeoTitle, display })}`,
+  );
 
   if (APPLY) {
     await client

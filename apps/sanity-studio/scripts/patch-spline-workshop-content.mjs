@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
@@ -146,8 +147,14 @@ const content = [
     'tldr-1',
     'Goal: model a 3D rocket in Spline, animate lift-off on Spacebar, reset on R, and embed the scene in a plain HTML page.',
   ),
-  bullet('tldr-2', 'Tools: free Spline account, browser (or desktop app), and a text editor for the final HTML file.'),
-  bullet('tldr-3', 'Build: Lathe body + hollow cylinder nozzle + vector fins cloned radially — all grouped as "Rocket Final".'),
+  bullet(
+    'tldr-2',
+    'Tools: free Spline account, browser (or desktop app), and a text editor for the final HTML file.',
+  ),
+  bullet(
+    'tldr-3',
+    'Build: Lathe body + hollow cylinder nozzle + vector fins cloned radially — all grouped as "Rocket Final".',
+  ),
   bullet(
     'tldr-4',
     'Polish: matcap materials, particle exhaust at the nozzle, Bloom post-processing, and keyboard-driven state transitions.',
@@ -194,12 +201,20 @@ const content = [
     { text: 'web app at spline.design', link: SPLINE_URL },
     { text: ' (easiest in a workshop — no install) or the optional ' },
     { text: 'desktop app', link: SPLINE_DOWNLOAD_URL },
-    { text: ' for Mac, Windows, or Linux. Create a free account when prompted — you need it to save files and export scenes.' },
+    {
+      text: ' for Mac, Windows, or Linux. Create a free account when prompted — you need it to save files and export scenes.',
+    },
   ]),
 
   bullet('part-0-1', 'Web version: open spline.design, sign in, and you are ready for Part 1.'),
-  bullet('part-0-2', 'Desktop version: download, install, log in with the same account — files sync across both.'),
-  bullet('part-0-3', 'Workshop tip: stick to one platform per session so everyone sees the same UI layout.'),
+  bullet(
+    'part-0-2',
+    'Desktop version: download, install, log in with the same account — files sync across both.',
+  ),
+  bullet(
+    'part-0-3',
+    'Workshop tip: stick to one platform per session so everyone sees the same UI layout.',
+  ),
 
   heading('part-1-heading', 'Part 1: Setup & preparation', 'h3'),
 
@@ -210,13 +225,22 @@ const content = [
     ),
   ]),
 
-  bullet('part-1-1', 'Clean the scene: select the "Text" object in the Object List (left panel) and press Delete or Backspace.'),
+  bullet(
+    'part-1-1',
+    'Clean the scene: select the "Text" object in the Object List (left panel) and press Delete or Backspace.',
+  ),
   bullet(
     'part-1-2',
     'Optional: delete or hide the "Rectangle" background (eye icon in the Object List) so the rocket sits on the default grid.',
   ),
-  bullet('part-1-3', 'Rename the file: click the title top-left (e.g. "3D Text Example") and change it to "My Rocket".'),
-  bullet('part-1-4', 'Save early and often: Cmd+S (Mac) or Ctrl+S (Windows). You will thank yourself before Part 3.'),
+  bullet(
+    'part-1-3',
+    'Rename the file: click the title top-left (e.g. "3D Text Example") and change it to "My Rocket".',
+  ),
+  bullet(
+    'part-1-4',
+    'Save early and often: Cmd+S (Mac) or Ctrl+S (Windows). You will thank yourself before Part 3.',
+  ),
 
   heading('part-2-heading', 'Part 2: Building the rocket (Lathe & Vector method)', 'h3'),
 
@@ -343,7 +367,9 @@ const content = [
   linkedParagraph('outro', [
     { text: 'That is the full arc: sign up, model, animate, export, embed. The ' },
     { text: 'Notion workshop guide', link: WORKSHOP_GUIDE_URL },
-    { text: ' is the document I used in the room — follow it if you want the same pacing and inspector numbers as the live session. For deeper Spline features, see ' },
+    {
+      text: ' is the document I used in the room — follow it if you want the same pacing and inspector numbers as the live session. For deeper Spline features, see ',
+    },
     { text: 'Spline Tutorials', link: SPLINE_TUTORIALS_URL },
     {
       text: ' and the Discord community. The same workflow scales to product hero sections, configurators, and landing-page interactions — the rocket is just a friendly first ship.',
