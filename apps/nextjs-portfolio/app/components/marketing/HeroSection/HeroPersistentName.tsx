@@ -20,17 +20,24 @@ type HeroPersistentNameProps = {
   text: string;
   hasExploded: boolean;
   reducedMotion: boolean;
+  /** Skip the intro overlay + char reveal; show final hero title on first paint. */
+  showImmediately?: boolean;
 };
 
 /** One name from stack intro through hero copy — chars reveal once, then layout morphs. */
-export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPersistentNameProps) {
+export function HeroPersistentName({
+  text,
+  hasExploded,
+  reducedMotion,
+  showImmediately = false,
+}: HeroPersistentNameProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLParagraphElement>(null);
-  const isIntroStyle = !hasExploded && !reducedMotion;
+  const isIntroStyle = !hasExploded && !reducedMotion && !showImmediately;
 
   useGSAP(
     () => {
-      if (reducedMotion || !rootRef.current) return;
+      if (reducedMotion || showImmediately || !rootRef.current) return;
 
       const chars = gsap.utils.toArray<HTMLElement>(
         '[data-char-slot="hero-name-char"]',
@@ -78,10 +85,10 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
         gsap.to(counter, { y: '-120%', duration: 0.45, ease: NAME_EXIT_EASE });
       }
     },
-    { scope: rootRef, dependencies: [hasExploded, reducedMotion, text] },
+    { scope: rootRef, dependencies: [hasExploded, reducedMotion, showImmediately, text] },
   );
 
-  if (reducedMotion) {
+  if (reducedMotion || showImmediately) {
     return (
       <h1 className='mb-3 w-full text-center text-4xl font-black leading-none tracking-tighter text-foreground sm:text-5xl md:mb-4 md:text-6xl lg:text-8xl'>
         {text}

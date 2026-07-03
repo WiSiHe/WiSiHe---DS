@@ -54,6 +54,7 @@ type HeroFloatingCardProps = {
   displayTitle: string;
   showNsfwBlur: boolean;
   isPriority: boolean;
+  imageLqip?: string | null;
   arcSizeClass: string;
   reducedMotion: boolean;
   hasExploded: boolean;
@@ -78,6 +79,7 @@ export function HeroFloatingCard({
   displayTitle,
   showNsfwBlur,
   isPriority,
+  imageLqip,
   arcSizeClass,
   reducedMotion,
   hasExploded,
@@ -208,6 +210,8 @@ export function HeroFloatingCard({
             fill
             priority={isPriority}
             fetchPriority={isPriority ? 'high' : undefined}
+            placeholder={imageLqip ? 'blur' : 'empty'}
+            blurDataURL={imageLqip ?? undefined}
             className={`object-cover ${showNsfwBlur ? getNsfwImageBlurClass('card') : ''}`}
             sizes='(max-width: 768px) 52vw, 250px'
           />
@@ -241,6 +245,8 @@ export function HeroFloatingCard({
             fill
             priority={isPriority}
             fetchPriority={isPriority ? 'high' : undefined}
+            placeholder={imageLqip ? 'blur' : 'empty'}
+            blurDataURL={imageLqip ?? undefined}
             className='object-cover'
             sizes='(max-width: 768px) 52vw, 250px'
           />

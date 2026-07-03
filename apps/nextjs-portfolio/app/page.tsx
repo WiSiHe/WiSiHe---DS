@@ -5,7 +5,8 @@ import type {
 } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { getHeroOverview } from '@/lib/homePageBuilder';
+import { preload } from 'react-dom';
+import { getHeroLcpImageUrl, getHeroOverview } from '@/lib/homePageBuilder';
 import { HOME_DESCRIPTION_FALLBACK } from '@/lib/siteCopy';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, homeExtrasQuery, homePageQuery } from '@/sanity/lib/queries';
@@ -70,9 +71,23 @@ export default async function Home() {
     );
   }
 
+  const heroLcpUrl = getHeroLcpImageUrl(homepage);
+  if (heroLcpUrl) {
+    preload(heroLcpUrl, { as: 'image', fetchPriority: 'high' });
+  }
+
   return (
     <div className='overflow-visible bg-background'>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className='relative flex min-h-screen w-full flex-col items-center justify-center bg-background-subtle pt-16 pb-10 md:pt-20 md:pb-12'>
+            <div className='w-full max-w-md px-4'>
+              <div className='mx-auto h-12 w-48 animate-pulse rounded-lg bg-surface-elevated' />
+              <div className='mx-auto mt-6 h-4 w-64 animate-pulse rounded bg-surface-elevated' />
+            </div>
+          </div>
+        }
+      >
         <HomePageSections
           home={homepage}
           about={about}
