@@ -75,12 +75,18 @@ type PaintingsFacetListProps = {
 export default function PaintingsFacetList({ items, onToggle }: PaintingsFacetListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const visibleItems = useMemo(
-    () => (isExpanded ? items : items.slice(0, DEFAULT_VISIBLE)),
-    [isExpanded, items],
-  );
-  const hiddenCount = items.length - DEFAULT_VISIBLE;
-  const canToggle = items.length > DEFAULT_VISIBLE;
+  const visibleItems = useMemo(() => {
+    if (isExpanded) return items;
+
+    const refined = items.filter(item => item.isRefined);
+    const unrefined = items.filter(item => !item.isRefined);
+    const unrefinedSlots = Math.max(0, DEFAULT_VISIBLE - refined.length);
+
+    return [...refined, ...unrefined.slice(0, unrefinedSlots)];
+  }, [isExpanded, items]);
+
+  const hiddenCount = Math.max(0, items.length - visibleItems.length);
+  const canToggle = hiddenCount > 0;
 
   return (
     <div className='flex flex-col gap-1'>

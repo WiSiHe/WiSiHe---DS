@@ -12,7 +12,7 @@ import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrush
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import { useCanBrushReveal } from '@/lib/paintings/mediaCapabilities';
-import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
+import { getNsfwImageBlurClass, resolveNsfwRatingLabel } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   paintingBrushSeed,
@@ -62,7 +62,6 @@ function PaintingCardInner({
     redbubbleUrl,
     gelatoUrl,
     tagsV2,
-    medium,
     paintedAt,
     format,
     palette,
@@ -95,9 +94,7 @@ function PaintingCardInner({
 
   const isNsfw = isNSFW === true;
   const showNsfwBlur = isNsfw && !isNsfwFilterActive;
-  const brushTags = showNsfwBlur
-    ? cleanedTags.filter(tag => !/^nsfw$/i.test(tag.trim()))
-    : cleanedTags;
+  const nsfwRatingLabel = resolveNsfwRatingLabel(cleanedTags);
 
   const layout = resolvePaintingCardLayout({
     format,
@@ -172,11 +169,12 @@ function PaintingCardInner({
       {canBrushReveal ? (
         <BrushRevealLayer
           {...strokeColors}
+          profile='gridCard'
           strokeVariantIndex={brushIndex}
+          paintingFormat={layout.format}
           title={title || null}
-          medium={medium ?? null}
           year={yearString ?? null}
-          tags={brushTags}
+          tags={[]}
           badges={badges}
           isNsfwBlurred={showNsfwBlur}
         />
@@ -190,15 +188,15 @@ function PaintingCardInner({
       href={`/paintings/${normalized}`}
       LinkComponent={Link}
       image={imageNode}
-      tags={cleanedTags}
+      tags={[]}
       isNsfw={isNsfw}
       isNsfwVisible={isNsfwFilterActive}
       isForSale={availableForSale}
       badges={badges}
       alwaysShowTags={showTagsWithoutBrush}
       brushReveal={canBrushReveal}
+      matureContentLabel={showNsfwBlur ? nsfwRatingLabel : undefined}
       className={className ?? layout.aspectClass}
-      medium={medium}
       paintedAt={yearString}
     />
   );

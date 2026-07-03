@@ -18,12 +18,10 @@ import {
 } from '@/app/components/paintings/BrushReveal/brushStrokeRender';
 import { useBrushRevealLite } from '@/lib/paintings/mediaCapabilities';
 import {
+  getNsfwStrokeOpacity,
+  getNsfwWashOpacity,
   NSFW_CARD_LAYER_COUNT,
-  NSFW_STROKE_OPACITY_HOVER,
-  NSFW_STROKE_OPACITY_REST,
   NSFW_THUMBNAIL_LAYER_COUNT,
-  NSFW_WASH_OPACITY,
-  NSFW_WASH_OPACITY_HOVER,
   type NsfwCoverVariant,
 } from '@/lib/paintings/nsfwCover';
 
@@ -52,6 +50,7 @@ function NsfwBrushStroke({
   strokeOpacity,
   useStrokeFilter,
   paintOver,
+  staticCover,
 }: {
   layer: BrushStrokeLayer;
   color: string;
@@ -63,6 +62,7 @@ function NsfwBrushStroke({
   strokeOpacity: number;
   useStrokeFilter: boolean;
   paintOver: boolean;
+  staticCover: boolean;
 }) {
   const metrics = resolveBrushLayerMetrics(
     layer,
@@ -97,12 +97,18 @@ function NsfwBrushStroke({
           strokeLinejoin='round'
           fill='none'
           filter={filter}
-          className='transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-stroke-under-hover)] group-focus-within:opacity-[var(--nsfw-stroke-under-hover)]'
+          className={
+            staticCover
+              ? undefined
+              : 'transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-stroke-under-hover)] group-focus-within:opacity-[var(--nsfw-stroke-under-hover)]'
+          }
           style={
-            {
-              opacity: metrics.underOpacity,
-              '--nsfw-stroke-under-hover': metrics.underOpacity * 1.15,
-            } as CSSProperties
+            staticCover
+              ? { opacity: metrics.underOpacity }
+              : ({
+                  opacity: metrics.underOpacity,
+                  '--nsfw-stroke-under-hover': metrics.underOpacity * 1.15,
+                } as CSSProperties)
           }
         />
         <path
@@ -113,12 +119,15 @@ function NsfwBrushStroke({
           strokeLinejoin='round'
           fill='none'
           filter={filter}
-          className='transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-stroke-hover)] group-focus-within:opacity-[var(--nsfw-stroke-hover)]'
+          className={
+            staticCover
+              ? undefined
+              : 'transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-stroke-hover)] group-focus-within:opacity-[var(--nsfw-stroke-hover)]'
+          }
           style={
-            {
-              opacity: metrics.peakOpacity,
-              '--nsfw-stroke-hover': NSFW_STROKE_OPACITY_HOVER,
-            } as CSSProperties
+            staticCover
+              ? { opacity: metrics.peakOpacity }
+              : ({ opacity: metrics.peakOpacity } as CSSProperties)
           }
         />
       </svg>
@@ -145,6 +154,7 @@ export function NsfwBrushCover({
   variant: coverVariant = 'card',
 }: NsfwBrushCoverProps) {
   const isThumbnail = coverVariant === 'thumbnail';
+  const staticCover = isThumbnail;
   const liteMode = useBrushRevealLite();
   const brushProfile = resolveBrushProfile('nsfwCover', liteMode);
   const useStrokeFilter = !isThumbnail && brushProfile.strokeBlur > 0;
@@ -156,23 +166,26 @@ export function NsfwBrushCover({
   const layerCount = Math.min(
     targetLayerCount,
     strokeVariant.layers.length,
-    liteMode ? Math.min(targetLayerCount, 3) : targetLayerCount,
+    liteMode ? Math.min(targetLayerCount, isThumbnail ? 3 : 2) : targetLayerCount,
   );
   const layerColors = resolveBrushLayerColors(
     layerCount,
     accentColor,
     secondaryColor,
     washColor,
-    brushProfile.solidFill,
+    isThumbnail && brushProfile.solidFill,
   );
   const strokeWidthRest = isThumbnail ? brushProfile.rest * 1.08 : brushProfile.rest;
   const strokeWidthHover = isThumbnail ? brushProfile.rest * 1.12 : brushProfile.hover;
-  const strokeOpacity = liteMode
-    ? Math.min(NSFW_STROKE_OPACITY_REST, brushProfile.strokeOpacity)
-    : NSFW_STROKE_OPACITY_REST;
+  const strokeOpacityRest = liteMode
+    ? Math.min(getNsfwStrokeOpacity(coverVariant, false), brushProfile.strokeOpacity)
+    : getNsfwStrokeOpacity(coverVariant, false);
+  const strokeOpacityHover = getNsfwStrokeOpacity(coverVariant, true);
   const layerSizePercent = isThumbnail
     ? brushProfile.layerSizePercent * 1.06
     : brushProfile.layerSizePercent;
+  const washOpacityRest = getNsfwWashOpacity(coverVariant, false);
+  const washOpacityHover = getNsfwWashOpacity(coverVariant, true);
 
   return (
     <div
@@ -185,8 +198,9 @@ export function NsfwBrushCover({
       aria-hidden
       style={
         {
-          '--nsfw-wash-rest': NSFW_WASH_OPACITY,
-          '--nsfw-wash-hover': NSFW_WASH_OPACITY_HOVER,
+          '--nsfw-wash-rest': washOpacityRest,
+          '--nsfw-wash-hover': washOpacityHover,
+          '--nsfw-stroke-hover': strokeOpacityHover,
         } as CSSProperties
       }
     >
@@ -194,13 +208,19 @@ export function NsfwBrushCover({
         <div className='absolute inset-0 bg-black/15 dark:bg-black/25' aria-hidden />
       ) : null}
 
-      <div
-        className='absolute inset-0 transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-wash-hover)] group-focus-within:opacity-[var(--nsfw-wash-hover)]'
-        style={{
-          backgroundColor: washColor,
-          opacity: NSFW_WASH_OPACITY,
-        }}
-      />
+      {washOpacityRest > 0 ? (
+        <div
+          className={
+            staticCover
+              ? 'absolute inset-0'
+              : 'absolute inset-0 transition-opacity duration-300 ease-out group-hover:opacity-[var(--nsfw-wash-hover)] group-focus-within:opacity-[var(--nsfw-wash-hover)]'
+          }
+          style={{
+            backgroundColor: washColor,
+            opacity: washOpacityRest,
+          }}
+        />
+      ) : null}
 
       <div className='absolute inset-0 overflow-hidden'>
         <div className='absolute inset-0 overflow-hidden' style={{ transform: `scale(${scale})` }}>
@@ -254,9 +274,10 @@ export function NsfwBrushCover({
               strokeWidthRest={strokeWidthRest}
               strokeWidthHover={strokeWidthHover}
               layerSizePercent={layerSizePercent}
-              strokeOpacity={strokeOpacity}
+              strokeOpacity={strokeOpacityRest}
               useStrokeFilter={useStrokeFilter}
-              paintOver={brushProfile.solidFill}
+              paintOver={isThumbnail && brushProfile.solidFill}
+              staticCover={staticCover}
             />
           ))}
         </div>

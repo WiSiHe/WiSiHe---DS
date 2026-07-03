@@ -71,7 +71,7 @@ export function buildPaintingsSearchRequest(options: {
     filters: buildFilterString(options.forSale),
     ...(facetFilters ? { facetFilters } : {}),
     facets: ['tags', 'dominantColors'],
-    maxValuesPerFacet: 20,
+    maxValuesPerFacet: 50,
     attributesToRetrieve: [...PAINTING_HIT_ATTRIBUTES],
   });
 

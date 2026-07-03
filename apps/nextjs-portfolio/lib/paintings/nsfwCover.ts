@@ -11,15 +11,49 @@ export function getNsfwImageBlurClass(variant: NsfwCoverVariant = 'card'): strin
   return variant === 'thumbnail' ? NSFW_IMAGE_BLUR_THUMBNAIL_CLASS : NSFW_IMAGE_BLUR_CLASS;
 }
 
-/** Palette wash at rest (0–1) — opaque so the artwork is fully covered. */
-export const NSFW_WASH_OPACITY = 1;
+/** Thumbnail — full opaque wash + strokes (search compact, carousel, hero). */
+export const NSFW_WASH_OPACITY_THUMBNAIL = 1;
 
-export const NSFW_WASH_OPACITY_HOVER = 1;
+export const NSFW_WASH_OPACITY_THUMBNAIL_HOVER = 1;
 
-/** Opaque strokes painted over the solid wash. */
-export const NSFW_STROKE_OPACITY_REST = 1;
+export const NSFW_STROKE_OPACITY_REST_THUMBNAIL = 1;
 
-export const NSFW_STROKE_OPACITY_HOVER = 1;
+export const NSFW_STROKE_OPACITY_HOVER_THUMBNAIL = 1;
+
+/** Grid card — light concealment; blur carries the cover, strokes are accent only. */
+export const NSFW_WASH_OPACITY_CARD = 0;
+
+export const NSFW_WASH_OPACITY_CARD_HOVER = 0;
+
+export const NSFW_STROKE_OPACITY_REST_CARD = 0.32;
+
+export const NSFW_STROKE_OPACITY_HOVER_CARD = 0.85;
+
+/** @deprecated Use variant-specific constants. */
+export const NSFW_WASH_OPACITY = NSFW_WASH_OPACITY_CARD;
+
+/** @deprecated Use variant-specific constants. */
+export const NSFW_WASH_OPACITY_HOVER = NSFW_WASH_OPACITY_CARD_HOVER;
+
+/** @deprecated Use variant-specific constants. */
+export const NSFW_STROKE_OPACITY_REST = NSFW_STROKE_OPACITY_REST_CARD;
+
+/** @deprecated Use variant-specific constants. */
+export const NSFW_STROKE_OPACITY_HOVER = NSFW_STROKE_OPACITY_HOVER_CARD;
+
+export function getNsfwWashOpacity(variant: NsfwCoverVariant, hover = false): number {
+  if (variant === 'thumbnail') {
+    return hover ? NSFW_WASH_OPACITY_THUMBNAIL_HOVER : NSFW_WASH_OPACITY_THUMBNAIL;
+  }
+  return hover ? NSFW_WASH_OPACITY_CARD_HOVER : NSFW_WASH_OPACITY_CARD;
+}
+
+export function getNsfwStrokeOpacity(variant: NsfwCoverVariant, hover = false): number {
+  if (variant === 'thumbnail') {
+    return hover ? NSFW_STROKE_OPACITY_HOVER_THUMBNAIL : NSFW_STROKE_OPACITY_REST_THUMBNAIL;
+  }
+  return hover ? NSFW_STROKE_OPACITY_HOVER_CARD : NSFW_STROKE_OPACITY_REST_CARD;
+}
 
 export const NSFW_MATURE_LABEL = 'Mature content';
 
@@ -47,7 +81,8 @@ export function filterTagsForNsfwCover(tags: string[]): string[] {
   return tags.map(tag => tag.trim()).filter(tag => tag.length > 0 && !NSFW_TAG_RE.test(tag));
 }
 
-/** Broad strokes only — wash provides full coverage. */
+/** Thumbnail — broad strokes; wash provides full coverage. */
 export const NSFW_THUMBNAIL_LAYER_COUNT = 3;
 
-export const NSFW_CARD_LAYER_COUNT = 3;
+/** Grid card — 1–2 accent strokes at rest. */
+export const NSFW_CARD_LAYER_COUNT = 2;

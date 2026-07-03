@@ -137,6 +137,8 @@ export interface PaintingCardProps {
   medium?: string;
   /** Year or date the painting was completed */
   paintedAt?: string;
+  /** Human-readable mature content label (e.g. "Mature content", "Mild nudity") */
+  matureContentLabel?: string;
   /** Passed through to the wrapping `motion.article` */
   className?: string;
 }
@@ -160,12 +162,13 @@ export function PaintingCard({
   className,
   medium,
   paintedAt,
+  matureContentLabel,
 }: PaintingCardProps) {
   const showBlur = isNsfw && !isNsfwVisible;
-  const displayTags = showBlur ? tags.filter(tag => !/^nsfw$/i.test(tag.trim())) : tags;
-  const showDefaultTags = !brushReveal && displayTags.length > 0;
+  const showDefaultTags = false;
   const showDefaultBadges = !brushReveal && badges.length > 0;
   const showHoverFooter = !brushReveal;
+  const showNsfwBlurredFooter = showBlur && brushReveal && Boolean(matureContentLabel);
   const tagVariants = alwaysShowTags ? alwaysVisibleTagVariants : listVariants;
   const iconBadgeVariants = alwaysShowTags ? alwaysVisibleIconsVariants : iconsListVariants;
 
@@ -191,16 +194,16 @@ export function PaintingCard({
       {/* ------------------------------------------------------------------ */}
       {/* Tag chips                                                           */}
       {/* ------------------------------------------------------------------ */}
-      {showDefaultTags && (
+      {showDefaultTags ? (
         <motion.ul
           className='absolute z-20 flex flex-wrap items-start gap-1 pr-10 text-xs top-2 left-2 right-2'
           variants={tagVariants}
         >
-          {displayTags.map(tag => (
+          {(showBlur ? tags.filter(tag => !/^nsfw$/i.test(tag.trim())) : tags).map(tag => (
             <PaintingCardTag key={tag} label={tag} alwaysVisible={alwaysShowTags} />
           ))}
         </motion.ul>
-      )}
+      ) : null}
 
       {showDefaultBadges && (
         <motion.ul
@@ -269,7 +272,29 @@ export function PaintingCard({
           {isNsfw ? ' (mature content)' : ''}
           {isForSale ? ' (available as print)' : ''}
         </span>
-        {showHoverFooter ? (
+        {showNsfwBlurredFooter ? (
+          <div
+            aria-hidden
+            className='pointer-events-none absolute bottom-0 left-0 right-0 z-[25] border-t border-border/30 bg-surface/95 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3'
+          >
+            <motion.p
+              layoutId={`title-${title}`}
+              className='line-clamp-1 font-inter text-sm font-black capitalize text-foreground sm:text-base'
+            >
+              {title}
+            </motion.p>
+            {paintedAt ? (
+              <div className='mt-1'>
+                <span className='rounded border border-border bg-surface-hover/80 px-1.5 py-0.5 font-sans text-[10px] font-bold text-foreground-subtle'>
+                  {paintedAt}
+                </span>
+              </div>
+            ) : null}
+            <p className='mt-1.5 text-[10px] font-medium leading-snug text-foreground-subtle'>
+              {matureContentLabel}
+            </p>
+          </div>
+        ) : showHoverFooter ? (
           <div
             aria-hidden
             className={cn(
@@ -286,20 +311,13 @@ export function PaintingCard({
             >
               {title}
             </motion.p>
-            {(medium || paintedAt) && (
-              <div className='mt-1 flex flex-wrap items-center gap-1.5 text-xs text-foreground-subtle'>
-                {paintedAt && (
-                  <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
-                    {paintedAt}
-                  </span>
-                )}
-                {medium && (
-                  <span className='font-mono text-[9px] uppercase tracking-wider font-semibold truncate max-w-[180px]'>
-                    {medium}
-                  </span>
-                )}
+            {paintedAt ? (
+              <div className='mt-1'>
+                <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
+                  {paintedAt}
+                </span>
               </div>
-            )}
+            ) : null}
           </div>
         ) : null}
       </LinkEl>
