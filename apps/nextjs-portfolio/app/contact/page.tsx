@@ -6,18 +6,18 @@ import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import ContactPageClient from './ContactPageClient';
 
 const SITE_URL = 'https://www.wisihe.no';
+const CONTACT_DESCRIPTION =
+  'Questions about work, licensing, or collaboration — reach Henrik Sissener by email or the contact form.';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description:
-    'Get in touch with Henrik Sissener for collaboration, licensing, project inquiries, or just to say hello.',
+  description: CONTACT_DESCRIPTION,
   alternates: {
     canonical: `${SITE_URL}/contact`,
   },
   openGraph: {
     title: 'Contact | WiSiHe',
-    description:
-      'Get in touch with Henrik Sissener for collaboration, licensing, project inquiries, or just to say hello.',
+    description: CONTACT_DESCRIPTION,
     type: 'website',
     url: `${SITE_URL}/contact`,
     siteName: 'WiSiHe',
@@ -26,8 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Contact | WiSiHe',
-    description:
-      'Get in touch with Henrik Sissener for collaboration, licensing, project inquiries, or just to say hello.',
+    description: CONTACT_DESCRIPTION,
   },
 };
 

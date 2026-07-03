@@ -11,6 +11,11 @@ import { VisualEditing } from 'next-sanity/visual-editing';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 import HeaderNavigation from '@/app/components/layout/HeaderNavigation';
 import { MotionLayoutGroup } from '@/app/components/layout/MotionLayoutGroup';
+import {
+  HOME_DESCRIPTION_FALLBACK,
+  JSON_LD_KNOWS_ABOUT,
+  JSON_LD_PERSON_DESCRIPTION,
+} from '@/lib/siteCopy';
 import { SanityLive, sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
@@ -64,7 +69,7 @@ export async function generateMetadata(): Promise<Metadata> {
         template: '%s',
         default: 'WiSiHe',
       },
-      description: 'A gallery of some of my paintings and other projects',
+      description: HOME_DESCRIPTION_FALLBACK,
     };
   }
 
@@ -124,9 +129,8 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Henrik Sissener',
-  jobTitle: 'Frontend Developer',
-  description:
-    'Frontend developer specializing in React and Svelte, with a passion for drawing and game development.',
+  jobTitle: 'Senior Frontend Developer & Digital Artist',
+  description: JSON_LD_PERSON_DESCRIPTION,
   url: 'https://www.wisihe.no',
   sameAs: [
     'https://github.com/wisihe',
@@ -135,14 +139,14 @@ const jsonLd = {
     'https://www.instagram.com/wisihe/',
     'https://www.youtube.com/@wisihe',
   ],
-  knowsAbout: ['React', 'Svelte', 'Frontend Development', 'Game Development', 'Digital Art'],
+  knowsAbout: [...JSON_LD_KNOWS_ABOUT],
 };
 
 const jsonLdSite = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'WiSiHe | Portfolio',
-  description: 'Portfolio of Henrik Sissener, a frontend developer and creative.',
+  description: HOME_DESCRIPTION_FALLBACK,
   url: 'https://www.wisihe.no',
 };
 
@@ -219,7 +223,6 @@ export default async function RootLayout({
                 </main>
                 <Footer
                   socialLinks={socialLinks}
-                  bio={about?.bio}
                   jobTitle={about?.jobTitle}
                   heroSubtitle={about?.heroSubtitle}
                   ctaLabel={about?.ctaButtonText}

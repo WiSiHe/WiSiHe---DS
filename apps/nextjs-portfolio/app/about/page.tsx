@@ -3,6 +3,7 @@ import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import { ABOUT_DESCRIPTION_FALLBACK } from '@/lib/siteCopy';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, aboutTravelPhotographyQuery } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -11,15 +12,13 @@ import { buildAboutStructuredData } from './buildAboutStructuredData';
 import { normalizeTravelPhotos } from './components/lifeJourneyTypes';
 
 const SITE_URL = 'https://www.wisihe.no';
-const DEFAULT_DESCRIPTION =
-  'Meet Henrik Wilhelm Sissener (WiSiHe) — frontend developer, design engineer, and digital artist in Oslo. Explore his life map, creative work, and technical projects.';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data } = await sanityFetch({ query: aboutQuery, stega: false });
   const about = data as AboutQueryResult | null;
   const name = about?.heroSubtitle ?? 'Henrik Wilhelm Sissener';
   const title = about?.seoTitle ?? `About ${name} | WiSiHe`;
-  const description = about?.seoDescription ?? about?.bio ?? DEFAULT_DESCRIPTION;
+  const description = about?.seoDescription ?? about?.bio ?? ABOUT_DESCRIPTION_FALLBACK;
   const ogImage = about?.portrait
     ? urlForImage(about.portrait)?.width(1200).height(630).quality(85).url()
     : `${SITE_URL}/wisihe.png`;

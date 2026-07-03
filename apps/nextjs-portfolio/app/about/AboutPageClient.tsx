@@ -16,6 +16,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { SITE_BIO } from '@/lib/siteCopy';
 import { urlForImage } from '@/sanity/lib/utils';
 import SkillsSection from '../components/marketing/SkillsSection/SkillsSection';
 import { LifeJourneyScrolly } from './components/LifeJourneyScrolly';
@@ -53,9 +54,7 @@ export default function AboutPageClient({
   const name = about?.heroSubtitle ?? 'Henrik Wilhelm Sissener';
   const heroEyebrow = about?.heroTitle?.trim() || 'Biography';
   const jobTitle = about?.jobTitle ?? 'Frontend developer & digital artist';
-  const bio =
-    about?.bio ??
-    'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
+  const bio = about?.bio ?? SITE_BIO;
   const journeyItems = normalizeJourneyItems(about?.journeyItems);
   const visitedCountries = normalizeVisitedCountries(about?.visitedCountries);
   const adventurePlaces = normalizeAdventurePlaces(about?.adventurePlaces);

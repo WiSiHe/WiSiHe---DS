@@ -1,5 +1,6 @@
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import type { HomeAboutTeaserSection } from '@/lib/homePageBuilder';
+import { SITE_BIO } from '@/lib/siteCopy';
 
 export type HomeSectionIntroCopy = {
   eyebrow?: string | null;
@@ -38,9 +39,7 @@ export function buildAboutTeaserCopy(
 
   const name = about?.heroSubtitle?.trim() || 'Henrik Wilhelm Sissener';
   const jobTitle = (about?.jobTitle?.trim() || 'Frontend developer & digital artist').toLowerCase();
-  const bio =
-    about?.bio?.trim() ||
-    'Frontend developer and digital artist based in Oslo. I build fast, polished web experiences and create digital paintings — two disciplines that keep feeding each other.';
+  const bio = about?.bio?.trim() || SITE_BIO;
 
   return `${name} — ${jobTitle}. ${bio}`;
 }

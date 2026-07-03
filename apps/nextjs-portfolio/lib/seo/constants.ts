@@ -11,5 +11,5 @@ export const DEFAULT_OG_IMAGE = {
   url: `${SITE_URL}/og-image.jpg`,
   width: 1200,
   height: 630,
-  alt: 'WiSiHe — digital art, design, and development portfolio',
+  alt: 'WiSiHe — paintings, projects, and web development by Henrik Sissener',
 } as const;

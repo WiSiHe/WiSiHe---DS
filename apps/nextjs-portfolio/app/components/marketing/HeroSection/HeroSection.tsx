@@ -182,7 +182,7 @@ function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBod
           href='/projects'
           className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-5 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg sm:px-6'
         >
-          Explore Projects
+          View projects
         </Link>
       </motion.div>
     </motion.div>

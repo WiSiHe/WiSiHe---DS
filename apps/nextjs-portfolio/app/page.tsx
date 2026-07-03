@@ -6,14 +6,13 @@ import type {
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getHeroOverview } from '@/lib/homePageBuilder';
+import { HOME_DESCRIPTION_FALLBACK } from '@/lib/siteCopy';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, homeExtrasQuery, homePageQuery } from '@/sanity/lib/queries';
 import { portableTextToPlainText } from '@/sanity/lib/utils';
 import HomePageSections from './components/marketing/HomePageSections/HomePageSections';
 
 const HOME_CANONICAL = 'https://www.wisihe.no';
-const HOME_DESCRIPTION_FALLBACK =
-  "Explore Henrik's portfolio featuring paintings, creative projects, and video works.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data } = await sanityFetch({
