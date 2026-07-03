@@ -29,7 +29,8 @@ type ArcConfig = {
 };
 
 /** Left-wing orbit angles — each is mirrored to the right at `180 - angle`. */
-const ORBIT_WING_ANGLES: Record<Exclude<HeroViewport, 'mobile'>, number[]> = {
+const ORBIT_WING_ANGLES: Record<HeroViewport, number[]> = {
+  mobile: [218, 162],
   tablet: [210, 158],
   desktop: [200, 238, 162],
   wide: [198, 222, 246, 158],
@@ -37,14 +38,14 @@ const ORBIT_WING_ANGLES: Record<Exclude<HeroViewport, 'mobile'>, number[]> = {
 
 function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
   switch (viewport) {
+    case 'mobile':
+      return { rx: 44, ry: 46, centerX: 50, centerY: 50, baseScale: 0.74 };
     case 'tablet':
-      return { rx: 32, ry: 36, centerX: 50, centerY: 50, baseScale: 0.68 };
+      return { rx: 34, ry: 38, centerX: 50, centerY: 50, baseScale: 0.82 };
     case 'desktop':
-      return { rx: 36, ry: 40, centerX: 50, centerY: 50, baseScale: 0.72 };
+      return { rx: 40, ry: 44, centerX: 50, centerY: 50, baseScale: 0.9 };
     case 'wide':
-      return { rx: 38, ry: 42, centerX: 50, centerY: 50, baseScale: 0.76 };
-    default:
-      return { rx: 36, ry: 40, centerX: 50, centerY: 50, baseScale: 0.72 };
+      return { rx: 42, ry: 46, centerX: 50, centerY: 50, baseScale: 0.94 };
   }
 }
 
@@ -82,8 +83,7 @@ function orbitRotation(deg: number, config: ArcConfig, pairIndex: number): numbe
 }
 
 function buildBalancedOrbitAngles(viewport: HeroViewport, config: ArcConfig): number[] {
-  const resolved = viewport === 'mobile' ? 'tablet' : viewport;
-  const wingAngles = ORBIT_WING_ANGLES[resolved].filter(deg => {
+  const wingAngles = ORBIT_WING_ANGLES[viewport].filter(deg => {
     const { left, top } = pointFromAngle(deg, config);
     const mirrored = pointFromAngle(mirrorAngle(deg), config);
     return !isInClearZone(left, top) && !isInClearZone(mirrored.left, mirrored.top);
@@ -118,9 +118,8 @@ export function heroVisibleCount(viewport: HeroViewport): number {
 }
 
 export function buildArcPositions(count: number, viewport: HeroViewport): HeroCardPosition[] {
-  const resolved = viewport === 'mobile' ? 'tablet' : viewport;
-  const config = arcConfigForViewport(resolved);
-  const angles = buildBalancedOrbitAngles(resolved, config).slice(0, count);
+  const config = arcConfigForViewport(viewport);
+  const angles = buildBalancedOrbitAngles(viewport, config).slice(0, count);
 
   return angles.map((deg, index) => {
     const { left, top } = pointFromAngle(deg, config);

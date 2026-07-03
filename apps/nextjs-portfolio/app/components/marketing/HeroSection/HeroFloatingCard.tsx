@@ -1,14 +1,33 @@
 'use client';
 
-import { motion, type TargetAndTransition, type Transition } from 'motion/react';
+import { useGSAP } from '@gsap/react';
+import { cleanTagName } from '@wisihe/utils';
+import gsap from 'gsap';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo, useRef, useState } from 'react';
+import { HeroProjectUiHover } from '@/app/components/marketing/HeroSection/HeroProjectUiHover';
 import type { ShowcaseItem } from '@/app/components/marketing/HeroSection/HeroSection';
 import type { HeroCardPosition } from '@/app/components/marketing/HeroSection/heroArcLayout';
 import {
   EXPLODE_SQUASH_KEYFRAMES,
   EXPLODE_SQUASH_TRANSITION,
 } from '@/app/components/marketing/HeroSection/heroSquashStretch';
+import {
+  CARD_REVEAL_DURATION,
+  CARD_REVEAL_STAGGER,
+  EXPLODE_STAGGER,
+  STACK_CLIP_CLOSED,
+  STACK_CLIP_OPEN,
+  STACK_REVEAL_DELAY,
+} from '@/app/components/marketing/HeroSection/heroStackConfig';
+import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
+import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
+import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
+import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
+import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
+import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 
 type FloatMotion = {
   y: [number, number, number];
@@ -20,6 +39,13 @@ type FloatMotion = {
   delay: number;
 };
 
+type StackLayout = {
+  rotation: number;
+  offsetX: number;
+  stackOffsetY: number;
+  stackScale: number;
+};
+
 type HeroFloatingCardProps = {
   item: ShowcaseItem;
   index: number;
@@ -29,25 +55,19 @@ type HeroFloatingCardProps = {
   displayTitle: string;
   showNsfwBlur: boolean;
   isPriority: boolean;
-  sizeClass: string;
-  layout: 'arc' | 'mobile';
-  stage: 'loading' | 'exploding' | 'floating';
-  hasPlayedAlready: boolean;
+  arcSizeClass: string;
+  reducedMotion: boolean;
+  hasExploded: boolean;
+  floatActive: boolean;
   hoverEnabled: boolean;
   isCardHovered: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
-  pos?: HeroCardPosition;
-  scatter?: { x: number; y: number; rotate: number };
-  parallax?: { x: number; y: number; rotateX: number; rotateY: number; zIndex: number };
-  floatMotion?: FloatMotion;
-  stackY?: string;
-  stackScale?: number;
-  stackRotation?: number;
-  cardZIndex?: number;
-  outerAnimate?: TargetAndTransition;
-  outerTransition?: Transition;
-  mobileRotation?: number;
+  pos: HeroCardPosition;
+  scatter: { x: number; y: number; rotate: number };
+  floatMotion: FloatMotion;
+  stackLayout: StackLayout;
+  cardZIndex: number;
 };
 
 export function HeroFloatingCard({
@@ -59,193 +79,253 @@ export function HeroFloatingCard({
   displayTitle,
   showNsfwBlur,
   isPriority,
-  sizeClass,
-  layout,
-  stage,
-  hasPlayedAlready,
+  arcSizeClass,
+  reducedMotion,
+  hasExploded,
+  floatActive,
   hoverEnabled,
   isCardHovered,
   onHoverStart,
   onHoverEnd,
   pos,
-  scatter = { x: 0, y: 0, rotate: 0 },
-  parallax = { x: 0, y: 0, rotateX: 0, rotateY: 0, zIndex: 1 },
-  floatMotion = {
-    y: [0, 12, 0],
-    x: [0, 0, 0],
-    rotate: [0, 0, 0],
-    scaleX: [1, 1, 1],
-    scaleY: [1, 1, 1],
-    duration: 5,
-    delay: 0,
-  },
-  stackY = '-50%',
-  stackScale = 1,
-  stackRotation = 0,
-  cardZIndex = 1,
-  outerAnimate,
-  outerTransition,
-  mobileRotation = 0,
+  scatter,
+  floatMotion,
+  stackLayout,
+  cardZIndex,
 }: HeroFloatingCardProps) {
+  const revealRef = useRef<HTMLDivElement>(null);
+  const [hasLanded, setHasLanded] = useState(reducedMotion);
   const isPainting = item._type === 'painting';
+  const strokeVariantIndex = paintingBrushSeed(item._id);
+  const paintingBrush = isPainting
+    ? getBrushStrokeColors(strokeVariantIndex, item.image?.palette ?? null)
+    : null;
+  const projectAccent = getBrushStrokeColors(index, null).accentColor;
+  const paintingTags = useMemo(
+    () =>
+      isPainting
+        ? (item.tagsV2 ?? [])
+            .map(tag => cleanTagName(tag.name ?? ''))
+            .filter((tag): tag is string => Boolean(tag))
+        : [],
+    [isPainting, item],
+  );
+  const paintingYear =
+    isPainting && item.paintedAt ? new Date(item.paintedAt).getFullYear().toString() : null;
+  const projectTags =
+    item._type === 'project'
+      ? (item.tags ?? []).map(tag => tag.name).filter((tag): tag is string => Boolean(tag))
+      : [];
 
-  const floatAnimate =
-    layout === 'arc' && stage === 'floating' && hoverEnabled
-      ? {
-          y: floatMotion.y,
-          x: floatMotion.x,
-          rotate: floatMotion.rotate,
-          scaleX: floatMotion.scaleX,
-          scaleY: floatMotion.scaleY,
-        }
-      : { y: 0, x: 0, rotate: 0, scaleX: 1, scaleY: 1 };
+  const arcRotate = pos.rotation + scatter.rotate;
+  const inStack = !reducedMotion && !hasExploded;
+
+  useGSAP(
+    () => {
+      const el = revealRef.current;
+      if (!el || reducedMotion) return;
+
+      gsap.set(el, {
+        scale: 0,
+        clipPath: STACK_CLIP_CLOSED,
+        transformOrigin: 'center center',
+      });
+
+      gsap.to(el, {
+        scale: 1,
+        clipPath: STACK_CLIP_OPEN,
+        duration: CARD_REVEAL_DURATION,
+        ease: 'power3.inOut',
+        delay: STACK_REVEAL_DELAY + index * CARD_REVEAL_STAGGER,
+      });
+    },
+    { dependencies: [index, reducedMotion] },
+  );
+
+  const stackPose = {
+    left: '50%',
+    top: '50%',
+    x: `calc(-50% + ${stackLayout.offsetX}px)`,
+    y: `calc(-50% + ${stackLayout.stackOffsetY}px)`,
+    scale: stackLayout.stackScale,
+    rotate: stackLayout.rotation,
+    opacity: 1,
+  };
+
+  const arcPose = {
+    left: pos.left,
+    top: pos.top,
+    x: '-50%',
+    y: '-50%',
+    scale: pos.scale,
+    rotate: arcRotate,
+    opacity: 1,
+  };
+
+  const arcTransition = reducedMotion
+    ? { duration: 0 }
+    : {
+        type: 'spring' as const,
+        stiffness: 145,
+        damping: 12,
+        mass: 0.75,
+        delay: index * EXPLODE_STAGGER,
+      };
+
+  const floatAnimate = floatActive
+    ? {
+        y: floatMotion.y,
+        x: floatMotion.x,
+        rotate: floatMotion.rotate,
+        scaleX: floatMotion.scaleX,
+        scaleY: floatMotion.scaleY,
+      }
+    : { y: 0, x: 0, rotate: 0, scaleX: 1, scaleY: 1 };
 
   const floatTransition = {
     duration: floatMotion.duration,
-    repeat: layout === 'arc' && stage === 'floating' ? Infinity : 0,
+    repeat: floatActive ? Infinity : 0,
     ease: 'easeInOut' as const,
     delay: floatMotion.delay,
   };
 
+  const baseZIndex = inStack ? index + 1 : cardZIndex;
+  const resolvedZIndex = isCardHovered && hoverEnabled ? 50 : baseZIndex;
+
   const cardLink = (
     <Link
       href={href}
-      className='relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-shadow duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle dark:ring-white/10'
+      className='relative isolate block h-full w-full overflow-hidden rounded-lg ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-[box-shadow] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle hover:shadow-[0_28px_40px_-10px_rgba(0,0,0,0.35),0_12px_18px_-8px_rgba(0,0,0,0.22)] dark:ring-white/10'
     >
-      {hoverEnabled ? (
-        <motion.span
-          aria-hidden
-          className='pointer-events-none absolute inset-0 z-[2] rounded-xl border-2 border-accent'
-          initial={false}
-          animate={{
-            opacity: isCardHovered ? 1 : 0,
-            scale: isCardHovered ? 1 : 0.92,
-          }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          style={{ transformOrigin: 'center center' }}
-        />
-      ) : null}
       <span className='sr-only'>
         {isPainting ? 'View painting' : 'View project'}: {displayTitle}
       </span>
-      <Image
-        src={imageUrl}
-        alt=''
-        aria-hidden
-        fill
-        priority={isPriority}
-        fetchPriority={isPriority ? 'high' : undefined}
-        className='object-cover'
-        sizes={layout === 'mobile' ? '40vw' : '(max-width: 768px) 40vw, 30vw'}
-      />
-      {showNsfwBlur ? (
-        <div
-          data-nsfw-blur
-          className='pointer-events-none absolute inset-0 z-[1] bg-background/45 backdrop-blur-xl'
-          aria-hidden
-        />
-      ) : null}
+      {isPainting ? (
+        <BrushRevealWrap
+          profile='masonry'
+          hovered={hoverEnabled && isCardHovered}
+          className='absolute inset-0'
+        >
+          <Image
+            src={imageUrl}
+            alt=''
+            aria-hidden
+            fill
+            priority={isPriority}
+            fetchPriority={isPriority ? 'high' : undefined}
+            className={`object-cover ${showNsfwBlur ? getNsfwImageBlurClass('card') : ''}`}
+            sizes='(max-width: 768px) 52vw, 250px'
+          />
+          {showNsfwBlur ? (
+            <NsfwBrushCover
+              accentColor={paintingBrush!.accentColor}
+              secondaryColor={paintingBrush!.secondaryColor}
+              washColor={paintingBrush!.washColor}
+              strokeVariantIndex={strokeVariantIndex}
+            />
+          ) : null}
+          <BrushRevealLayer
+            accentColor={paintingBrush!.accentColor}
+            secondaryColor={paintingBrush!.secondaryColor}
+            washColor={paintingBrush!.washColor}
+            strokeVariantIndex={strokeVariantIndex}
+            title={displayTitle}
+            medium={item.medium ?? null}
+            year={paintingYear}
+            tags={paintingTags}
+            isNsfwBlurred={showNsfwBlur}
+            profile='masonry'
+            paintingFormat={item.format ?? 'square'}
+          />
+        </BrushRevealWrap>
+      ) : (
+        <>
+          <Image
+            src={imageUrl}
+            alt=''
+            aria-hidden
+            fill
+            priority={isPriority}
+            fetchPriority={isPriority ? 'high' : undefined}
+            className='object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+            sizes='(max-width: 768px) 52vw, 250px'
+          />
+          {hoverEnabled ? (
+            <HeroProjectUiHover
+              accentColor={projectAccent}
+              title={displayTitle}
+              tags={projectTags}
+              isHovered={isCardHovered}
+            />
+          ) : null}
+        </>
+      )}
     </Link>
   );
 
-  if (layout === 'mobile') {
-    return (
-      <motion.div
-        initial={hasPlayedAlready ? false : { opacity: 0, y: 16, scale: 0.92 }}
-        animate={{ opacity: 1, y: 0, scale: 1, rotate: mobileRotation }}
-        transition={{ duration: 0.55, delay: 0.08 + index * 0.08, ease: 'easeOut' }}
-        className={`${sizeClass} mx-auto will-change-transform`}
-        style={{ aspectRatio: cardAspectRatio }}
-      >
-        {cardLink}
-      </motion.div>
-    );
-  }
-
-  const defaultOuterAnimate =
-    outerAnimate ??
-    (stage === 'loading'
-      ? {
-          left: '50%',
-          top: '50%',
-          x: '-50%',
-          y: stackY,
-          scale: stackScale,
-          rotate: stackRotation,
-          opacity: 1,
-        }
-      : {
-          left: pos?.left ?? '50%',
-          top: pos?.top ?? '50%',
-          x: '-50%',
-          y: '-50%',
-          scale: pos?.scale ?? 1,
-          rotate: (pos?.rotation ?? 0) + scatter.rotate,
-          opacity: 1,
-        });
-
   return (
     <motion.div
-      key={`${item._type}-${item._id}`}
-      initial={
-        hasPlayedAlready
-          ? false
-          : {
-              opacity: 0,
-              scale: 0.3,
-              filter: 'blur(30px)',
-              left: '50%',
-              top: '50%',
-              x: '-50%',
-              y: stackY,
-              rotate: stackRotation,
-            }
-      }
-      animate={defaultOuterAnimate}
-      transition={outerTransition}
+      initial={reducedMotion ? false : stackPose}
+      animate={hasExploded || reducedMotion ? arcPose : stackPose}
+      transition={hasExploded && !reducedMotion ? arcTransition : { duration: 0 }}
+      onAnimationComplete={() => {
+        if (hasExploded && !reducedMotion) {
+          setHasLanded(true);
+        }
+      }}
       onMouseEnter={hoverEnabled ? onHoverStart : undefined}
       onMouseLeave={hoverEnabled ? onHoverEnd : undefined}
-      className={`absolute pointer-events-auto ${sizeClass} will-change-transform`}
+      className={`group absolute ${hoverEnabled ? 'pointer-events-auto' : 'pointer-events-none'} ${arcSizeClass} will-change-transform`}
       style={{
-        transformStyle: 'preserve-3d',
-        zIndex: cardZIndex,
+        zIndex: resolvedZIndex,
         aspectRatio: cardAspectRatio,
       }}
     >
-      <motion.div
-        animate={stage === 'loading' ? { x: 0, y: 0 } : { x: scatter.x, y: scatter.y }}
-        transition={outerTransition}
-        className='h-full w-full'
-        style={{ transformStyle: 'preserve-3d' }}
+      <div
+        ref={revealRef}
+        className='h-full w-full overflow-hidden rounded-lg will-change-[transform,clip-path]'
+        style={
+          reducedMotion
+            ? undefined
+            : {
+                clipPath: STACK_CLIP_CLOSED,
+                transform: 'scale(0)',
+                transformOrigin: 'center center',
+              }
+        }
       >
         <motion.div
           animate={{
-            x: parallax.x,
-            y: parallax.y,
-            rotateX: parallax.rotateX,
-            rotateY: parallax.rotateY,
+            scale: isCardHovered && hoverEnabled ? 1.04 : 1,
           }}
-          transition={{ type: 'spring', stiffness: 90, damping: 22, mass: 0.4 }}
+          transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.55 }}
           className='h-full w-full'
-          style={{ transformStyle: 'preserve-3d' }}
         >
           <motion.div
-            animate={stage === 'exploding' ? EXPLODE_SQUASH_KEYFRAMES : { scaleX: 1, scaleY: 1 }}
-            transition={{ ...EXPLODE_SQUASH_TRANSITION, delay: index * 0.03 }}
+            animate={{ x: hasExploded ? scatter.x : 0, y: hasExploded ? scatter.y : 0 }}
+            transition={arcTransition}
             className='h-full w-full'
-            style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
           >
             <motion.div
-              animate={floatAnimate}
-              transition={floatTransition}
+              animate={
+                hasLanded && !reducedMotion ? EXPLODE_SQUASH_KEYFRAMES : { scaleX: 1, scaleY: 1 }
+              }
+              transition={{ ...EXPLODE_SQUASH_TRANSITION, delay: index * 0.03 }}
               className='h-full w-full'
-              style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
+              style={{ transformOrigin: 'center center' }}
             >
-              {cardLink}
+              <motion.div
+                animate={floatAnimate}
+                transition={floatTransition}
+                className='h-full w-full'
+                style={{ transformOrigin: 'center center' }}
+              >
+                {cardLink}
+              </motion.div>
             </motion.div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

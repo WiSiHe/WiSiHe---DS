@@ -1,6 +1,5 @@
 import { ABOUT_PAGE_ENABLED, ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-queries';
-import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
 import AboutTeaserSection from '@/app/components/marketing/AboutTeaserSection/AboutTeaserSection';
 import HeroImageSection from '@/app/components/marketing/HeroSection/HeroSection';
@@ -10,7 +9,7 @@ import VideosTeaserSection from '@/app/components/marketing/VideosTeaserSection/
 import PaintingsSection from '@/app/components/paintings/PaintingsSection/PaintingsSection';
 import FeaturedProjects from '@/app/components/projects/FeaturedProjects/FeaturedProjects';
 import type { HomePageSection, HomePageSectionsContext } from '@/lib/homePageBuilder';
-import { buildHeroCollageItems, getHeroOverview, getHomeSections } from '@/lib/homePageBuilder';
+import { buildHeroCollageItems, getHomeSections } from '@/lib/homePageBuilder';
 
 const HeroSkeleton = () => (
   <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>
@@ -35,7 +34,6 @@ type HomePageSectionsProps = HomePageSectionsContext;
 function renderSection(
   section: HomePageSection,
   context: {
-    heroOverview: ReturnType<typeof getHeroOverview>;
     heroItems: ReturnType<typeof buildHeroCollageItems>;
     heroEyebrow?: string | null;
     heroName?: string | null;
@@ -43,7 +41,7 @@ function renderSection(
     extras: HomeExtrasQueryResult | null;
   },
 ) {
-  const { heroOverview, heroItems, heroEyebrow, heroName, about, extras } = context;
+  const { heroItems, heroEyebrow, heroName, about, extras } = context;
   const key = section._key;
 
   switch (section._type) {
@@ -51,12 +49,7 @@ function renderSection(
       return (
         <div key={key} className='relative overflow-visible'>
           <Suspense fallback={<HeroSkeleton />}>
-            <HeroImageSection
-              items={heroItems}
-              overview={heroOverview as PortableTextBlock[] | null}
-              heroEyebrow={heroEyebrow}
-              heroName={heroName}
-            />
+            <HeroImageSection items={heroItems} heroEyebrow={heroEyebrow} heroName={heroName} />
           </Suspense>
         </div>
       );
@@ -128,14 +121,12 @@ export default function HomePageSections({
   heroName,
 }: HomePageSectionsProps) {
   const sections = getHomeSections(home);
-  const heroOverview = getHeroOverview(home);
   const heroItems = buildHeroCollageItems(home);
 
   return (
     <>
       {sections.map(section =>
         renderSection(section, {
-          heroOverview,
           heroItems,
           heroEyebrow,
           heroName,
