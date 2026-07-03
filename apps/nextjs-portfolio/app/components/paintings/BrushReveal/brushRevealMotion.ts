@@ -65,10 +65,31 @@ const PAINT_OVER_TIMELINE = {
   },
 } as const;
 
-type TimelineMode = typeof TIMELINE | typeof PAINT_OVER_TIMELINE | typeof LITE_TIMELINE;
+/** Semi-transparent glaze — strokes lead, soft wash, metadata after; quick uniform exit. */
+const GLAZE_TIMELINE = {
+  enter: {
+    wash: { delay: 0.08, duration: 0.74 },
+    blur: { delay: 0, duration: 0.74 },
+    stroke: { delayPerIndex: 0.13, duration: 0.82 },
+    overlay: { delay: 0.74, duration: 0.36 },
+  },
+  leave: {
+    overlay: { delay: 0, duration: 0.24 },
+    stroke: { delay: 0, duration: 0.26 },
+    wash: { delay: 0, duration: 0.26 },
+    blur: { delay: 0, duration: 0.26 },
+  },
+} as const;
 
-function pickTimeline(paintOver: boolean, lite = false): TimelineMode {
+type TimelineMode =
+  | typeof TIMELINE
+  | typeof PAINT_OVER_TIMELINE
+  | typeof LITE_TIMELINE
+  | typeof GLAZE_TIMELINE;
+
+function pickTimeline(paintOver: boolean, lite = false, glazeMode = false): TimelineMode {
   if (lite) return LITE_TIMELINE;
+  if (glazeMode) return GLAZE_TIMELINE;
   return paintOver ? PAINT_OVER_TIMELINE : TIMELINE;
 }
 
@@ -84,9 +105,10 @@ export const brushWashTransition = (
   reduced: boolean,
   paintOver = false,
   lite = false,
+  glazeMode = false,
 ): Transition => {
   if (reduced) return brushReducedTransition();
-  const timeline = pickTimeline(paintOver, lite);
+  const timeline = pickTimeline(paintOver, lite, glazeMode);
   const t = active ? timeline.enter.wash : timeline.leave.wash;
   return {
     delay: t.delay,
@@ -96,8 +118,8 @@ export const brushWashTransition = (
 };
 
 /** Metadata overlay base delay (seconds) — content stagger starts after this. */
-export function brushOverlayEnterDelay(paintOver = false, lite = false): number {
-  return pickTimeline(paintOver, lite).enter.overlay.delay;
+export function brushOverlayEnterDelay(paintOver = false, lite = false, glazeMode = false): number {
+  return pickTimeline(paintOver, lite, glazeMode).enter.overlay.delay;
 }
 
 export const BRUSH_OVERLAY_GROUP_STAGGER = 0.1;
@@ -136,9 +158,10 @@ export const brushStrokeTransition = (
   layerCount = BRUSH_DEFAULT_LAYER_COUNT,
   paintOver = false,
   lite = false,
+  glazeMode = false,
 ): Transition => {
   if (reduced) return brushReducedTransition();
-  const timeline = pickTimeline(paintOver, lite);
+  const timeline = pickTimeline(paintOver, lite, glazeMode);
   if (active) {
     return {
       delay: index * timeline.enter.stroke.delayPerIndex,
@@ -146,10 +169,24 @@ export const brushStrokeTransition = (
       ease: POWER1_IN_OUT,
     };
   }
+  if (glazeMode) {
+    const strokeLeave = timeline.leave.stroke;
+    if ('delay' in strokeLeave) {
+      return {
+        delay: strokeLeave.delay,
+        duration: strokeLeave.duration,
+        ease: POWER2_OUT,
+      };
+    }
+  }
   const reverseIndex = Math.max(0, layerCount - 1 - index);
+  const strokeLeave = timeline.leave.stroke;
+  if (!('delayPerReverseIndex' in strokeLeave)) {
+    return { delay: 0, duration: 0.26, ease: POWER2_OUT };
+  }
   return {
-    delay: reverseIndex * timeline.leave.stroke.delayPerReverseIndex,
-    duration: timeline.leave.stroke.duration,
+    delay: reverseIndex * strokeLeave.delayPerReverseIndex,
+    duration: strokeLeave.duration,
     ease: POWER1_IN_OUT,
   };
 };

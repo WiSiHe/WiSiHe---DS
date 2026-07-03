@@ -27,6 +27,8 @@ export type BrushProfileConfig = {
   imageBlurPx: number;
   /** Hover ends in one opaque washColor — thick strokes + full wash, artwork hidden. */
   solidFill: boolean;
+  /** Semi-transparent paint-over — artwork stays visible; mask-based stroke reveal. */
+  glazeMode?: boolean;
   /** CSS mix-blend-mode for SVG strokes (e.g. hard-light over artwork). */
   strokeBlendMode?: CSSProperties['mixBlendMode'];
   /** CSS mix-blend-mode for palette wash over artwork. */
@@ -35,15 +37,18 @@ export type BrushProfileConfig = {
 
 const MASONRY_BRUSH_PROFILE: BrushProfileConfig = {
   rest: 26,
-  hover: 168,
+  hover: 148,
   layerSizePercent: 255,
   coverScale: variantScale => Math.min(variantScale * 1.05, 2.6),
-  strokeBlur: 2.6,
-  strokeOpacity: 1,
+  strokeBlur: 3.4,
+  strokeOpacity: 0.8,
   layerCount: 3,
-  washOpacity: 1,
+  washOpacity: 0.5,
   imageBlurPx: 0,
-  solidFill: true,
+  solidFill: false,
+  glazeMode: true,
+  strokeBlendMode: 'hard-light',
+  washBlendMode: 'soft-light',
 };
 
 /** Full paint-over for grid cards when metadata replaces the artwork. */
@@ -119,16 +124,24 @@ export function resolveBrushProfile(
   const base = getBrushProfileConfig(profile);
   if (!lite) return base;
 
-  const layerCap = base.solidFill ? 3 : 2;
+  const layerCap = base.solidFill ? 3 : base.glazeMode ? 3 : 2;
 
   return {
     ...base,
     layerCount: Math.min(base.layerCount, layerCap),
     strokeBlur: 0,
     strokeBlendMode: undefined,
-    washBlendMode: undefined,
-    strokeOpacity: base.solidFill ? base.strokeOpacity : Math.min(base.strokeOpacity, 0.84),
-    washOpacity: base.solidFill ? base.washOpacity : Math.min(base.washOpacity, 0.62),
+    washBlendMode: base.glazeMode ? 'soft-light' : undefined,
+    strokeOpacity: base.solidFill
+      ? base.strokeOpacity
+      : base.glazeMode
+        ? Math.min(base.strokeOpacity, 0.72)
+        : Math.min(base.strokeOpacity, 0.84),
+    washOpacity: base.solidFill
+      ? base.washOpacity
+      : base.glazeMode
+        ? Math.min(base.washOpacity, 0.42)
+        : Math.min(base.washOpacity, 0.62),
   };
 }
 

@@ -90,7 +90,7 @@ export function HeroFloatingCard({
   const isPainting = item._type === 'painting';
 
   const floatAnimate =
-    layout === 'arc' && stage === 'floating' && !isCardHovered && hoverEnabled
+    layout === 'arc' && stage === 'floating' && hoverEnabled
       ? {
           y: floatMotion.y,
           x: floatMotion.x,
@@ -110,12 +110,21 @@ export function HeroFloatingCard({
   const cardLink = (
     <Link
       href={href}
-      className={`relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle ${
-        isCardHovered && hoverEnabled
-          ? 'shadow-[0_32px_56px_-14px_rgba(0,0,0,0.42)] ring-accent/35'
-          : 'shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 dark:ring-white/10'
-      }`}
+      className='relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-shadow duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle dark:ring-white/10'
     >
+      {hoverEnabled ? (
+        <motion.span
+          aria-hidden
+          className='pointer-events-none absolute inset-0 z-[2] rounded-xl border-2 border-accent'
+          initial={false}
+          animate={{
+            opacity: isCardHovered ? 1 : 0,
+            scale: isCardHovered ? 1 : 0.92,
+          }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: 'center center' }}
+        />
+      ) : null}
       <span className='sr-only'>
         {isPainting ? 'View painting' : 'View project'}: {displayTitle}
       </span>
@@ -126,11 +135,7 @@ export function HeroFloatingCard({
         fill
         priority={isPriority}
         fetchPriority={isPriority ? 'high' : undefined}
-        className={`object-cover transition-[transform,filter] duration-500 ease-out ${
-          isCardHovered && hoverEnabled
-            ? 'scale-[1.06] brightness-[1.08] saturate-[1.06]'
-            : 'scale-100 brightness-100 saturate-100'
-        }`}
+        className='object-cover'
         sizes={layout === 'mobile' ? '40vw' : '(max-width: 768px) 40vw, 30vw'}
       />
       {showNsfwBlur ? (
@@ -235,16 +240,6 @@ export function HeroFloatingCard({
               transition={floatTransition}
               className='h-full w-full'
               style={{ transformOrigin: 'center center', transformStyle: 'preserve-3d' }}
-              whileHover={
-                hoverEnabled && stage === 'floating'
-                  ? {
-                      scale: 1.05,
-                      y: -8,
-                      rotate: 0,
-                      transition: { type: 'spring', stiffness: 380, damping: 22 },
-                    }
-                  : undefined
-              }
             >
               {cardLink}
             </motion.div>

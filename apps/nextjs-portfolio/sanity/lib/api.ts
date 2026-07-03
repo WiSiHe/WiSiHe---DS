@@ -10,7 +10,7 @@ import {
   sanityReadToken,
   sanityStudioUrl,
   sanityWriteToken,
-} from '@/lib/env';
+} from '../../lib/env';
 
 export function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {

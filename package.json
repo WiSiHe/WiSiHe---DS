@@ -43,5 +43,38 @@
     "lefthook": "2.1.8",
     "turbo": "^2.10.0"
   },
-  "packageManager": "pnpm@10.23.0"
+  "packageManager": "pnpm@10.23.0",
+  "pnpm": {
+    "overrides": {
+      "@types/node": "25.3.5"
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@vercel/speed-insights",
+      "core-js",
+      "esbuild",
+      "lefthook",
+      "less",
+      "msw",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver"
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "19",
+        "react-dom": "19",
+        "sanity": "6"
+      },
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    },
+    "allowedDeprecatedVersions": {
+      "glob": "8.1.0",
+      "inflight": "*",
+      "source-map": "0.8.0-beta.0"
+    }
+  }
 }
