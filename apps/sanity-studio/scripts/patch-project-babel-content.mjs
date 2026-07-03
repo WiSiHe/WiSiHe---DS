@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
@@ -135,8 +136,14 @@ const content = [
     'tldr-2',
     'Team: me and Fabien Guillaume — two developers working remotely, building all art, design, and Blueprint gameplay ourselves.',
   ),
-  bullet('tldr-3', 'Gameplay: run, explore, solve puzzles — including rooms that shift layout and maze-like spaces that disorient on purpose.'),
-  bullet('tldr-4', 'Stack: Unreal Engine 4, Blender, ZBrush, Substance Painter, SpeedTree, UE4 Blueprints.'),
+  bullet(
+    'tldr-3',
+    'Gameplay: run, explore, solve puzzles — including rooms that shift layout and maze-like spaces that disorient on purpose.',
+  ),
+  bullet(
+    'tldr-4',
+    'Stack: Unreal Engine 4, Blender, ZBrush, Substance Painter, SpeedTree, UE4 Blueprints.',
+  ),
   bullet(
     'tldr-5',
     'Outcome: vertical slice + teaser trailer, then abandoned mid-2019. First thing I would cut if restarting today: the open world.',
@@ -210,10 +217,16 @@ const content = [
 
   heading('pipeline-heading', 'Pipeline & tools', 'h3'),
 
-  bullet('pipe-1', 'Blockouts and level design — grey-box spaces before polish, especially for puzzle rooms and labyrinth flow.'),
+  bullet(
+    'pipe-1',
+    'Blockouts and level design — grey-box spaces before polish, especially for puzzle rooms and labyrinth flow.',
+  ),
   bullet('pipe-2', 'Modelling: high and low poly in Blender and ZBrush.'),
   bullet('pipe-3', 'Texturing and materials: Substance Painter, in-engine material work.'),
-  bullet('pipe-4', 'Vegetation: SpeedTree for trees and ground cover in the frozen exterior spaces.'),
+  bullet(
+    'pipe-4',
+    'Vegetation: SpeedTree for trees and ground cover in the frozen exterior spaces.',
+  ),
   bullet('pipe-5', 'Rigging and animation prep for characters and interactive props.'),
   bullet('pipe-6', 'Gameplay: Unreal Engine 4 Blueprints for prototyping and systems.'),
 
@@ -241,11 +254,26 @@ const content = [
     ),
   ]),
 
-  bullet('lesson-1', 'Scope: open world is a multiplier, not a feature. Cut it before it cuts you.'),
-  bullet('lesson-2', '3D pipeline: modelling, materials, textures, blockouts, and rigging — end to end, not theoretical.'),
-  bullet('lesson-3', 'Gameplay: Blueprint prototyping, puzzle scripting, third-person feel — built, tested, thrown away, rebuilt.'),
-  bullet('lesson-4', 'Craft: making concept art real — the bridge from 2D intent to something physical in-engine.'),
-  bullet('lesson-5', 'Collaboration: remote game dev needs a pipeline sized to the team, not the dream.'),
+  bullet(
+    'lesson-1',
+    'Scope: open world is a multiplier, not a feature. Cut it before it cuts you.',
+  ),
+  bullet(
+    'lesson-2',
+    '3D pipeline: modelling, materials, textures, blockouts, and rigging — end to end, not theoretical.',
+  ),
+  bullet(
+    'lesson-3',
+    'Gameplay: Blueprint prototyping, puzzle scripting, third-person feel — built, tested, thrown away, rebuilt.',
+  ),
+  bullet(
+    'lesson-4',
+    'Craft: making concept art real — the bridge from 2D intent to something physical in-engine.',
+  ),
+  bullet(
+    'lesson-5',
+    'Collaboration: remote game dev needs a pipeline sized to the team, not the dream.',
+  ),
 
   heading('appendix-heading', 'Appendix: teaser trailer', 'h3'),
 

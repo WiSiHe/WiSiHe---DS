@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
@@ -92,7 +93,10 @@ const scentwiseContent = [
     'Concept: a fragrance discovery platform — search, explore, and understand scents without the usual retail clutter.',
   ),
   bullet('sw-tldr-2', 'Status: in progress since August 2025. MVP-first — ship small, learn fast.'),
-  bullet('sw-tldr-3', 'Stack: Next.js, Supabase, TypeScript, deployed on a modern serverless pipeline.'),
+  bullet(
+    'sw-tldr-3',
+    'Stack: Next.js, Supabase, TypeScript, deployed on a modern serverless pipeline.',
+  ),
   bullet(
     'sw-tldr-4',
     'Audience: fragrance lovers who want better tools, and curious newcomers who need a gentler on-ramp.',
@@ -117,10 +121,16 @@ const scentwiseContent = [
       'The first version is deliberately narrow. I am not trying to be a full retailer or a social network on day one. The MVP is about discovery mechanics: structured fragrance data, search that respects how people actually talk about scent, and pages that explain a fragrance in plain language.',
     ),
   ]),
-  bullet('sw-build-1', 'Fragrance catalog with consistent metadata — notes, families, and context that survives a search.'),
+  bullet(
+    'sw-build-1',
+    'Fragrance catalog with consistent metadata — notes, families, and context that survives a search.',
+  ),
   bullet('sw-build-2', 'Discovery flows tuned for browsing, not just filtering by brand.'),
   bullet('sw-build-3', 'A fast, readable UI — mobile-first, minimal chrome, no dark patterns.'),
-  bullet('sw-build-4', 'Auth and user data via Supabase — lightweight accounts when they earn their keep.'),
+  bullet(
+    'sw-build-4',
+    'Auth and user data via Supabase — lightweight accounts when they earn their keep.',
+  ),
 
   heading('sw-stack-heading', 'Stack & approach', 'h3'),
   paragraph('sw-stack-body', [
@@ -139,9 +149,18 @@ const scentwiseContent = [
   ]),
 
   heading('sw-next-heading', 'What is next', 'h3'),
-  bullet('sw-next-1', 'Tighten the core search and detail experience before adding social or recommendation layers.'),
-  bullet('sw-next-2', 'Validate the data model against real catalog imports — edge cases always show up late.'),
-  bullet('sw-next-3', 'Ship a usable MVP, then decide what "version two" actually needs based on feedback, not assumptions.'),
+  bullet(
+    'sw-next-1',
+    'Tighten the core search and detail experience before adding social or recommendation layers.',
+  ),
+  bullet(
+    'sw-next-2',
+    'Validate the data model against real catalog imports — edge cases always show up late.',
+  ),
+  bullet(
+    'sw-next-3',
+    'Ship a usable MVP, then decide what "version two" actually needs based on feedback, not assumptions.',
+  ),
 ];
 
 const huldraSummary = [
@@ -167,7 +186,10 @@ const huldraContent = [
   ),
   bullet('h-tldr-2', 'Role: solo developer — design, environment art, systems, and prototyping.'),
   bullet('h-tldr-3', 'Stack: Unreal Engine 5 (Lumen, Nanite), Blender, ZBrush, Substance Painter.'),
-  bullet('h-tldr-4', 'Status: on hold since mid-2024. Active development ran from June 2022; the prototype is not abandoned, but paused deliberately.'),
+  bullet(
+    'h-tldr-4',
+    'Status: on hold since mid-2024. Active development ran from June 2022; the prototype is not abandoned, but paused deliberately.',
+  ),
   bullet(
     'h-tldr-5',
     'Design pillar: the Huldra is not a boss fight — she is a presence you read, evade, and outthink.',
@@ -210,10 +232,22 @@ const huldraContent = [
       'Unreal Engine 5 is the backbone — Lumen for dynamic lighting in dense forest scenes, Nanite for high-fidelity geometry without hand-authoring every LOD transition. Assets move through a familiar pipeline: sculpt and block in Blender and ZBrush, surface in Substance Painter, assemble and light in-engine.',
     ),
   ]),
-  bullet('h-tech-1', 'Forest biome: photoreal trees, ground cover, and fog volumes tuned for oppressive readability.'),
-  bullet('h-tech-2', 'Modular ruins and props — reusable kits for faster iteration on puzzle spaces.'),
-  bullet('h-tech-3', 'Huldra behaviour prototyping — steering, stalking, and lure logic that can surprise during playtests.'),
-  bullet('h-tech-4', 'Performance discipline — a solo project dies when every scene is a tech demo; budgets matter.'),
+  bullet(
+    'h-tech-1',
+    'Forest biome: photoreal trees, ground cover, and fog volumes tuned for oppressive readability.',
+  ),
+  bullet(
+    'h-tech-2',
+    'Modular ruins and props — reusable kits for faster iteration on puzzle spaces.',
+  ),
+  bullet(
+    'h-tech-3',
+    'Huldra behaviour prototyping — steering, stalking, and lure logic that can surprise during playtests.',
+  ),
+  bullet(
+    'h-tech-4',
+    'Performance discipline — a solo project dies when every scene is a tech demo; budgets matter.',
+  ),
 
   heading('h-antagonist-heading', 'The Huldra as antagonist', 'h3'),
   paragraph('h-antagonist-body', [
@@ -239,9 +273,18 @@ const huldraContent = [
 
   heading('h-lessons-heading', 'What Huldra taught me', 'h3'),
   bullet('h-lesson-1', 'Scope: one strong forest biome beats three half-finished ones.'),
-  bullet('h-lesson-2', 'Horror is systems — lighting, audio, and pathing carry as much weight as the monster.'),
-  bullet('h-lesson-3', 'Solo pipelines need reusable kits — modular ruins and vegetation saved more time than hero assets.'),
-  bullet('h-lesson-4', 'On hold is not failure — it is scheduling honesty for a project that still has a point.'),
+  bullet(
+    'h-lesson-2',
+    'Horror is systems — lighting, audio, and pathing carry as much weight as the monster.',
+  ),
+  bullet(
+    'h-lesson-3',
+    'Solo pipelines need reusable kits — modular ruins and vegetation saved more time than hero assets.',
+  ),
+  bullet(
+    'h-lesson-4',
+    'On hold is not failure — it is scheduling honesty for a project that still has a point.',
+  ),
   bullet(
     'h-lesson-5',
     'Craft compounds — every ZBrush pass and Substance layer from Babel shows up here with sharper intent.',

@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
@@ -126,16 +127,33 @@ function buildV1Content() {
         text: 'BAD UI BATTLE is a one-day design hackathon at NoA Ignite where the only winning move is to build something spectacularly, deliberately terrible. I took part in the first edition on 19 September 2024 — browse every submission in the ',
       },
       { text: 'Bad UI Gallery', link: GALLERY_URL },
-      { text: ' (linked below) or read on for how the event works and what I learned from breaking every UX rule on purpose.' },
+      {
+        text: ' (linked below) or read on for how the event works and what I learned from breaking every UX rule on purpose.',
+      },
     ]),
 
     heading('tldr-heading', 'TL;DR'),
 
-    bullet('tldr-1', 'Goal: create a UI that technically works but is hilariously frustrating — then demo it live and win crowd votes for being the worst.'),
-    bullet('tldr-2', 'Format: team up, build from 17:00–19:00, three-minute demos, QR-code voting at the NoA Ignite office in Oslo.'),
-    bullet('tldr-3', 'Tools: anything goes — Figma prototypes, code, or whatever your team is fastest with. No coding required.'),
-    bullet('tldr-4', 'Strategy: weaponise real anti-patterns — mystery navigation, moving buttons, hostile confirmations, contrast that hurts.'),
-    bullet('tldr-5', 'Payoff: breaking rules on purpose is one of the fastest ways to remember why accessibility, hierarchy, and affordance matter.'),
+    bullet(
+      'tldr-1',
+      'Goal: create a UI that technically works but is hilariously frustrating — then demo it live and win crowd votes for being the worst.',
+    ),
+    bullet(
+      'tldr-2',
+      'Format: team up, build from 17:00–19:00, three-minute demos, QR-code voting at the NoA Ignite office in Oslo.',
+    ),
+    bullet(
+      'tldr-3',
+      'Tools: anything goes — Figma prototypes, code, or whatever your team is fastest with. No coding required.',
+    ),
+    bullet(
+      'tldr-4',
+      'Strategy: weaponise real anti-patterns — mystery navigation, moving buttons, hostile confirmations, contrast that hurts.',
+    ),
+    bullet(
+      'tldr-5',
+      'Payoff: breaking rules on purpose is one of the fastest ways to remember why accessibility, hierarchy, and affordance matter.',
+    ),
     linkedBullet('tldr-6', [
       { text: 'See the entries: ' },
       { text: 'open the gallery', link: GALLERY_URL },
@@ -156,11 +174,26 @@ function buildV1Content() {
       { text: ' lays out the format. In the room, it plays out like this:' },
     ]),
 
-    bullet('how-1', 'Form teams and pick a concept — the worse the idea, the better the starting point.'),
-    bullet('how-2', 'Build window: roughly two hours (17:00–19:00) to prototype or code something demo-ready.'),
-    bullet('how-3', 'Present: each team gets about three minutes to show off their bad UI and explain the chaos.'),
-    bullet('how-4', 'Vote: audience scans a QR code and picks the best (worst) design. One vote per person.'),
-    bullet('how-5', 'Win: the team that gets the strongest reaction — groans, laughter, disbelief — takes the prize.'),
+    bullet(
+      'how-1',
+      'Form teams and pick a concept — the worse the idea, the better the starting point.',
+    ),
+    bullet(
+      'how-2',
+      'Build window: roughly two hours (17:00–19:00) to prototype or code something demo-ready.',
+    ),
+    bullet(
+      'how-3',
+      'Present: each team gets about three minutes to show off their bad UI and explain the chaos.',
+    ),
+    bullet(
+      'how-4',
+      'Vote: audience scans a QR code and picks the best (worst) design. One vote per person.',
+    ),
+    bullet(
+      'how-5',
+      'Win: the team that gets the strongest reaction — groans, laughter, disbelief — takes the prize.',
+    ),
 
     heading('anti-patterns-heading', 'Anti-patterns worth stealing', 'h3'),
 
@@ -171,11 +204,23 @@ function buildV1Content() {
       ),
     ]),
 
-    bullet('ap-1', 'Mystery meat navigation — icons and labels that reveal nothing until you click the wrong thing.'),
+    bullet(
+      'ap-1',
+      'Mystery meat navigation — icons and labels that reveal nothing until you click the wrong thing.',
+    ),
     bullet('ap-2', 'Buttons that move when you hover — punishment for trying to tap the target.'),
-    bullet('ap-3', 'Colour contrast that fails every accessibility check — neon on neon, low-contrast greys on white.'),
-    bullet('ap-4', 'Hostile confirmations — guilt-trip copy, fake urgency, or dialogs that block the actual task.'),
-    bullet('ap-5', 'Broken hierarchy — everything screams at the same volume so nothing is findable.'),
+    bullet(
+      'ap-3',
+      'Colour contrast that fails every accessibility check — neon on neon, low-contrast greys on white.',
+    ),
+    bullet(
+      'ap-4',
+      'Hostile confirmations — guilt-trip copy, fake urgency, or dialogs that block the actual task.',
+    ),
+    bullet(
+      'ap-5',
+      'Broken hierarchy — everything screams at the same volume so nothing is findable.',
+    ),
 
     heading('my-entry-heading', 'My entry', 'h3'),
 
@@ -204,7 +249,10 @@ function buildV1Content() {
 
     linkedParagraph('outro', [
       { text: 'BAD UI BATTLE returned in 2025 as ' },
-      { text: 'BAD UI BATTLE 2.0', link: 'https://www.wisihe.no/projects/bad-ui-battle-2-0-hackathon' },
+      {
+        text: 'BAD UI BATTLE 2.0',
+        link: 'https://www.wisihe.no/projects/bad-ui-battle-2-0-hackathon',
+      },
       {
         text: ' — same spirit, new round of awful interfaces. If you run a design team, I cannot recommend this format enough: it is chaotic, hilarious, and weirdly effective at sharpening instincts.',
       },
@@ -216,7 +264,7 @@ function buildV2Content() {
   return [
     linkedParagraph('intro-hook', [
       {
-        text: 'BAD UI BATTLE 2.0 was the second round of NoA Ignite\'s deliberately terrible UI hackathon — same inverted brief, new teams, new levels of hostility. I joined on 18 November 2025. Every submission from both editions is collected in the ',
+        text: "BAD UI BATTLE 2.0 was the second round of NoA Ignite's deliberately terrible UI hackathon — same inverted brief, new teams, new levels of hostility. I joined on 18 November 2025. Every submission from both editions is collected in the ",
       },
       { text: 'Bad UI Gallery', link: GALLERY_URL },
       { text: ' (also linked in the Live project section below).' },
@@ -224,17 +272,32 @@ function buildV2Content() {
 
     heading('tldr-heading', 'TL;DR'),
 
-    bullet('tldr-1', 'Same rules as v1: build the worst UI you can, demo it live, win votes for being gloriously bad.'),
-    bullet('tldr-2', 'Good taste is still forbidden — misalignment, illegible type, and interactions that fight the user are features, not bugs.'),
-    bullet('tldr-3', 'Two-hour build, three-minute demos, crowd voting — Figma, code, or any tool your team prefers.'),
-    bullet('tldr-4', 'The real lesson: you feel accessibility, hierarchy, and affordance the moment you remove them on purpose.'),
+    bullet(
+      'tldr-1',
+      'Same rules as v1: build the worst UI you can, demo it live, win votes for being gloriously bad.',
+    ),
+    bullet(
+      'tldr-2',
+      'Good taste is still forbidden — misalignment, illegible type, and interactions that fight the user are features, not bugs.',
+    ),
+    bullet(
+      'tldr-3',
+      'Two-hour build, three-minute demos, crowd voting — Figma, code, or any tool your team prefers.',
+    ),
+    bullet(
+      'tldr-4',
+      'The real lesson: you feel accessibility, hierarchy, and affordance the moment you remove them on purpose.',
+    ),
     linkedBullet('tldr-5', [
       { text: 'Browse all entries: ' },
       { text: 'Bad UI Gallery', link: GALLERY_URL },
     ]),
     linkedBullet('tldr-6', [
       { text: 'Missed the first round? Read about ' },
-      { text: 'BAD UI BATTLE (2024)', link: 'https://www.wisihe.no/projects/bad-ui-battle-hackathon' },
+      {
+        text: 'BAD UI BATTLE (2024)',
+        link: 'https://www.wisihe.no/projects/bad-ui-battle-hackathon',
+      },
     ]),
 
     paragraph('intro-2', [
@@ -262,7 +325,10 @@ function buildV2Content() {
     ]),
 
     bullet('how-1', 'Teams form and pick a concept designed to frustrate.'),
-    bullet('how-2', 'Build phase: prototype or code something demo-ready in a single afternoon session.'),
+    bullet(
+      'how-2',
+      'Build phase: prototype or code something demo-ready in a single afternoon session.',
+    ),
     bullet('how-3', 'Each team presents for ~3 minutes — the demo is half the entertainment.'),
     bullet('how-4', 'Audience votes via QR code for the best (worst) UI.'),
     bullet('how-5', 'Winning team takes the prize. Everyone else takes new respect for WCAG.'),
@@ -323,7 +389,7 @@ const patches = [
     seo: {
       title: 'BAD UI BATTLE 2.0 | Hackathon',
       description:
-        'BAD UI BATTLE 2.0 (Nov 2025): second round of NoA Ignite\'s awful-UI hackathon — format, design lessons, anti-patterns, and link to the live submission gallery.',
+        "BAD UI BATTLE 2.0 (Nov 2025): second round of NoA Ignite's awful-UI hackathon — format, design lessons, anti-patterns, and link to the live submission gallery.",
     },
     tags: [
       { _type: 'reference', _ref: TAG_DESIGN, _key: 'tag-design' },

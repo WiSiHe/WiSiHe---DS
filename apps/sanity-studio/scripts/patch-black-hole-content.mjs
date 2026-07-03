@@ -16,7 +16,8 @@ config({ path: path.join(studioRoot, '.env.local') });
 config({ path: path.join(studioRoot, '.env') });
 
 const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
-const DATASET = process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
+const DATASET =
+  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
 const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
@@ -117,13 +118,13 @@ const content = [
   paragraph('intro-2', [
     span(
       'intro-2-span',
-      "The workshop was a crash course in writing your own shaders — the point where Three.js stops feeling like magic and starts feeling like graphics programming. The challenge was convincing GLSL: bending light around the event horizon, animating the accretion disk with procedural noise, and keeping the whole scene at 60fps in a normal browser tab.",
+      'The workshop was a crash course in writing your own shaders — the point where Three.js stops feeling like magic and starts feeling like graphics programming. The challenge was convincing GLSL: bending light around the event horizon, animating the accretion disk with procedural noise, and keeping the whole scene at 60fps in a normal browser tab.',
     ),
   ]),
   paragraph('intro-3', [
     span(
       'intro-3-span',
-      "What stuck with me was how much atmosphere you can get from almost nothing. Drag to orbit the scene — the gravitational lensing looks different from every angle, which is half the fun. It is still one of the projects I am most proud of, and the reason I kept going deeper into WebGL.",
+      'What stuck with me was how much atmosphere you can get from almost nothing. Drag to orbit the scene — the gravitational lensing looks different from every angle, which is half the fun. It is still one of the projects I am most proud of, and the reason I kept going deeper into WebGL.',
     ),
   ]),
 
@@ -315,10 +316,7 @@ void main() {
     'tuning-1',
     'Keep geometry simple — a subdivided sphere and one or two planes are enough. Complexity lives in the shader, not the mesh count.',
   ),
-  bullet(
-    'tuning-2',
-    'Cap devicePixelRatio at 2 to avoid burning GPU on retina displays.',
-  ),
+  bullet('tuning-2', 'Cap devicePixelRatio at 2 to avoid burning GPU on retina displays.'),
   bullet(
     'tuning-3',
     'Iterate on uniform values (lensing strength, disk speed, colour ramps) while orbiting — small GLSL tweaks change the mood dramatically.',
