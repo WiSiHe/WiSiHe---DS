@@ -29,29 +29,6 @@ export const controlHeights = [
   { token: 'size-12', px: 48, use: 'Logo hit area, large icon buttons' },
 ] as const;
 
-export const layoutPatterns = [
-  {
-    name: 'Card',
-    classes: 'rounded-xl border border-border bg-surface/50 p-4',
-    note: 'Default content card',
-  },
-  {
-    name: 'Section stack',
-    classes: 'space-y-8 mb-12',
-    note: 'Vertical rhythm between blocks',
-  },
-  {
-    name: 'Page shell',
-    classes: 'px-4 py-10 md:px-0',
-    note: 'Design-system and content pages',
-  },
-  {
-    name: 'Inline row',
-    classes: 'flex items-center gap-3',
-    note: 'Icon + label, meta rows',
-  },
-] as const;
-
 export const breakpoints = [
   { name: 'sm', px: 640, use: 'Two-column grids' },
   { name: 'md', px: 768, use: 'Sidebar layouts' },
@@ -67,88 +44,53 @@ export const shadowScale = [
   { token: 'shadow-none', use: 'Flat surfaces on busy backgrounds' },
 ] as const;
 
-export const primitiveSpacing = [
-  { name: 'spacing.xs', px: 4 },
-  { name: 'spacing.sm', px: 8 },
-  { name: 'spacing.md', px: 16 },
-  { name: 'spacing.lg', px: 24 },
-  { name: 'spacing.xl', px: 32 },
-  { name: 'spacing.2xl', px: 48 },
-  { name: 'spacing.3xl', px: 64 },
-] as const;
-
-export const layoutSnippet = `/* Card shell — matches design-system pages */
-<div className="rounded-xl border border-border bg-surface/50 p-4">
-  ...
-</div>
-
-/* Token radius in plain CSS */
-.my-panel {
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-md);
-}`;
-
 export type ShapeScale = 'small' | 'medium' | 'big';
 
 export type ShapeLanguageTier = {
   scale: ShapeScale;
   label: string;
-  subtitle: string;
   radius: string;
   radiusClasses: string;
   padding: string;
   gap: string;
   shadow: string;
-  examples: string[];
   guidance: string;
-  avoid: string;
 };
 
 export const shapeLanguage: ShapeLanguageTier[] = [
   {
     scale: 'small',
-    label: 'Small shape',
-    subtitle: 'Micro surfaces — dense, tight, pill-like',
+    label: 'Small',
     radius: '4–12px',
     radiusClasses: 'rounded-md · rounded-lg · rounded-full',
     padding: 'p-2 · p-3',
     gap: 'gap-1.5 · gap-2',
     shadow: 'shadow-none · shadow-sm',
-    examples: ['Chip', 'Tag', 'Facet label', 'Icon button', 'Badge'],
     guidance:
-      'Corners stay subtle. Use full radius only for pills and circular controls — not for card-sized boxes.',
-    avoid: 'Avoid rounded-2xl, heavy padding, or section-scale shadows on micro UI.',
+      'Micro UI — subtle corners. Full radius only for pills and circles, not card-sized boxes.',
   },
   {
     scale: 'medium',
-    label: 'Medium shape',
-    subtitle: 'Components — the default card and control language',
+    label: 'Medium',
     radius: '12–16px',
     radiusClasses: 'rounded-lg · rounded-xl',
     padding: 'p-4 · p-5',
     gap: 'gap-3 · gap-4',
     shadow: 'shadow-sm · hover:shadow-md',
-    examples: ['Content card', 'Button', 'Search field', 'List row', 'Do/don\u2019t row'],
-    guidance:
-      'This is the workhorse scale. Most interactive blocks use rounded-xl, border-border, and p-4.',
-    avoid: 'Do not mix medium cards with small-radius inputs in the same component group.',
+    guidance: 'Default for interactive blocks — rounded-xl, border-border, p-4.',
   },
   {
     scale: 'big',
-    label: 'Big shape',
-    subtitle: 'Sections — page regions and marketing shells',
+    label: 'Big',
     radius: '24–32px',
     radiusClasses: 'rounded-2xl · rounded-3xl',
     padding: 'p-6 · p-8 · py-10',
     gap: 'gap-6 · gap-8 · space-y-8',
     shadow: 'shadow-lg · soft gradient fills',
-    examples: ['Hero panel', 'Design-system intro', 'Modal shell', 'Feature band', 'Sidebar card'],
     guidance:
-      'Big shapes frame content — they should appear once or twice per viewport, not on every list item.',
-    avoid:
-      'Avoid big radius on chips or nested medium cards — nest medium inside big, not the reverse.',
+      'Page regions — once or twice per viewport. Nest medium inside big; never bigger radius on a child.',
   },
 ];
 
 export const shapeNestingRule =
-  'Nest outward: small inside medium inside big. A hero panel (big) contains cards (medium) contains chips (small). Never use a bigger radius on a child than its parent.';
+  'Nest outward: small inside medium inside big. Child corners stay equal or tighter than the parent.';

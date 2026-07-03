@@ -58,64 +58,15 @@ export const iconSizeScale = [
   },
 ] as const;
 
-export const iconScalingRules = [
-  {
-    title: 'Pick a tier',
-    body: 'Use size-3 through size-8 only. No arbitrary values (size-7, w-[18px], scale-110 on icons).',
-  },
-  {
-    title: 'Match the label',
-    body: 'Icon tier follows adjacent text: text-xs → size-3, text-sm → size-4, controls → size-5.',
-  },
-  {
-    title: 'Fit the control',
-    body: 'Icon-only buttons: container size-10 or size-11, icon size-5 inside. Never fill the whole hit area.',
-  },
-  {
-    title: 'Keep stroke consistent',
-    body: 'stroke={2} for sm and up. stroke={1.75} only at size-3 or dense facet rows.',
-  },
-  {
-    title: 'Inherit color',
-    body: 'Use currentColor via parent text-* tokens. Accent highlights only — no hex fills on SVGs.',
-  },
-  {
-    title: 'Prevent squish',
-    body: 'Add shrink-0 on icons in flex rows so long labels do not compress the glyph.',
-  },
-] as const;
-
-/** @deprecated Use iconSizeScale — kept for disclosure backwards compat */
-export const iconSizes = iconSizeScale.map(({ token, px, use }) => ({ token, px, use }));
-
 export const tablerIconSamples = [
   'IconArrowRight',
   'IconChevronDown',
-  'IconChevronLeft',
-  'IconChevronRight',
   'IconCheck',
   'IconSearch',
   'IconX',
-  'IconShoppingCart',
-  'IconMapPin',
-  'IconVideo',
   'IconBrush',
   'IconFolder',
-  'IconDeviceTv',
   'IconUser',
-  'IconEye',
-  'IconHeart',
-  'IconShare',
-] as const;
-
-export const appShellIconSamples = [
-  {
-    group: 'Navigation',
-    names: ['IconBrush', 'IconFolder', 'IconDeviceTv', 'IconUser'],
-    tier: 'lg' as const,
-  },
-  { group: 'Search', names: ['IconSearch', 'IconCircleX', 'IconFilter'], tier: 'md' as const },
-  { group: 'Engagement', names: ['IconEye', 'IconHeart', 'IconShare'], tier: 'sm' as const },
 ] as const;
 
 export const iconSnippet = `import { IconArrowRight, IconSearch } from '@tabler/icons-react';
