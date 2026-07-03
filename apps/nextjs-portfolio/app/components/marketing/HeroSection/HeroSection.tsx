@@ -1,15 +1,14 @@
 'use client';
 
-import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
+import { cn } from '@wisihe/utils';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
-import type { PortableTextBlock } from 'next-sanity';
-import { PortableText } from 'next-sanity';
 import { useEffect, useMemo, useState } from 'react';
-import { TextPressure } from '@/app/components/ui/TextPressure';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/sanity/lib/utils';
 import { HeroDotGrid } from './HeroDotGrid';
 import { HeroFloatingCard } from './HeroFloatingCard';
+import { HeroPersistentName } from './HeroPersistentName';
 import HeroScrollIndicator from './HeroScrollIndicator';
 import {
   buildArcPositions,
@@ -20,6 +19,12 @@ import {
   seededSlotOrder,
 } from './heroArcLayout';
 import { heroFloatSquashStretch } from './heroSquashStretch';
+import {
+  BODY_DELAY_AFTER_EXPLODE,
+  heroEntranceCompleteMs,
+  heroExplodeAtMs,
+  heroStackLayout,
+} from './heroStackConfig';
 
 export type ShowcasePainting = {
   _type: 'painting';
@@ -84,12 +89,11 @@ const HERO_CARD_ASPECT_PRESETS = [
   2 / 1,
 ] as const;
 
-const MOBILE_CARD_ROTATIONS = [-8, 7, -5, 6] as const;
-const MOBILE_CARD_SIZES = [
-  'w-[38vw] max-w-[148px]',
-  'w-[40vw] max-w-[156px]',
-  'w-[38vw] max-w-[148px]',
-  'w-[40vw] max-w-[156px]',
+const ARC_CARD_SIZES = [
+  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:max-w-[20vw]',
+  'w-[36vw] max-w-[156px] sm:w-48 sm:max-w-none md:w-60 lg:w-80 xl:max-w-[22vw]',
+  'w-[32vw] max-w-[140px] sm:w-40 sm:max-w-none md:w-52 lg:w-64 xl:max-w-[19vw]',
+  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:max-w-[20vw]',
 ] as const;
 
 function heroDisplayName(heroSubtitle?: string | null): string {
@@ -109,111 +113,64 @@ function itemDisplayTitle(item: ShowcaseItem): string {
 
 type HeroImageSectionProps = {
   items?: ShowcaseItem[] | null;
-  overview?: PortableTextBlock[] | null;
   heroEyebrow?: string | null;
   heroName?: string | null;
 };
 
-const textContainerVariants = {
+const bodyItemVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-};
-
-const textItemVariants = {
-  hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
   visible: {
     opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 1, ease: 'easeOut' as const },
+    transition: { duration: 0.55, ease: 'easeOut' as const },
   },
 };
 
 const buttonVariants = {
-  hidden: { opacity: 0, y: 30, filter: 'blur(5px)' },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 1, ease: 'easeOut' as const },
+    transition: { duration: 0.55, ease: 'easeOut' as const },
   },
 };
 
-type HeroCopyProps = {
-  stage: 'loading' | 'exploding' | 'floating';
-  hasPlayedAlready: boolean;
+type HeroBodyCopyProps = {
   heroEyebrow?: string | null;
-  displayName: string;
-  overview?: PortableTextBlock[] | null;
-  reducedMotion: boolean;
-  className?: string;
+  show: boolean;
+  reserveSpace: boolean;
+  skipEntrance: boolean;
 };
 
-function HeroCopy({
-  stage,
-  hasPlayedAlready,
-  heroEyebrow,
-  displayName,
-  overview,
-  reducedMotion,
-  className = '',
-}: HeroCopyProps) {
+const eyebrowClassName =
+  'mb-2 w-full text-center text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:text-xs sm:tracking-[0.2em] md:mb-3 md:text-sm';
+
+function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBodyCopyProps) {
+  if (!show && !skipEntrance && !reserveSpace) return null;
+
+  const isVisible = show || skipEntrance;
+
   return (
     <motion.div
-      variants={textContainerVariants}
-      initial={hasPlayedAlready ? 'visible' : 'hidden'}
-      animate={stage !== 'loading' ? 'visible' : 'hidden'}
-      className={`relative z-[60] flex w-full max-w-xl flex-col items-center px-4 text-center pointer-events-none sm:px-6 ${className}`}
-    >
-      <motion.p
-        variants={textItemVariants}
-        className='mb-3 max-w-[16rem] text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:max-w-xs sm:text-xs sm:tracking-[0.2em] md:text-sm'
-      >
-        {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
-      </motion.p>
-
-      <motion.div variants={textItemVariants} className='mb-3 w-full pointer-events-auto md:mb-4'>
-        <h1 className='text-4xl font-black leading-none tracking-tighter text-foreground sm:text-5xl md:hidden'>
-          {displayName}
-        </h1>
-        {!reducedMotion ? (
-          <div className='hidden h-28 w-full md:block lg:h-32'>
-            <TextPressure
-              text={displayName}
-              minFontSize={44}
-              flex
-              weight
-              width
-              className='leading-none tracking-tighter'
-            />
-          </div>
-        ) : (
-          <h1 className='hidden text-5xl font-black leading-none tracking-tighter text-foreground md:block lg:text-8xl'>
-            {displayName}
-          </h1>
-        )}
-      </motion.div>
-
-      {overview?.length ? (
-        <motion.div
-          variants={textItemVariants}
-          className='max-w-[17rem] text-pretty text-sm font-medium leading-relaxed text-foreground-subtle sm:max-w-xs md:max-w-sm md:text-base lg:text-lg [&_p]:m-0'
-        >
-          <PortableText value={overview} />
-        </motion.div>
-      ) : (
-        <motion.p
-          variants={textItemVariants}
-          className='max-w-[17rem] text-pretty text-sm font-medium leading-relaxed text-foreground-subtle sm:max-w-xs md:max-w-sm md:text-base lg:text-lg'
-        >
-          I&apos;m a design engineer, painter and maker. Explore paintings, projects, and
-          experiments from my portfolio.
-        </motion.p>
+      initial={skipEntrance ? 'visible' : 'hidden'}
+      animate={isVisible ? 'visible' : 'hidden'}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
+      }}
+      aria-hidden={!isVisible}
+      className={cn(
+        'flex w-full flex-col items-center',
+        !isVisible && reserveSpace && 'invisible pointer-events-none',
       )}
+    >
+      <motion.div variants={bodyItemVariants} className='w-full'>
+        <p className={eyebrowClassName}>
+          {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
+        </p>
+      </motion.div>
 
       <motion.div
         variants={buttonVariants}
-        className='mt-5 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-6'
+        className='mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'
       >
         <Link
           href='/paintings'
@@ -232,14 +189,14 @@ function HeroCopy({
   );
 }
 
-const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageSectionProps) => {
+const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProps) => {
   const prefersReducedMotion = useReducedMotion();
   const reducedMotion = Boolean(prefersReducedMotion);
   const displayName = heroDisplayName(heroName);
-  const [progress, setProgress] = useState(0);
-  const [stage, setStage] = useState<'loading' | 'exploding' | 'floating'>('loading');
-  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const [hasPlayedAlready, setHasPlayedAlready] = useState(false);
+  const [hasExploded, setHasExploded] = useState(reducedMotion);
+  const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
+  const [entranceComplete, setEntranceComplete] = useState(reducedMotion);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
   const [viewport, setViewport] = useState<HeroViewport>('desktop');
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
@@ -247,20 +204,60 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   const floatKeyframes = useMemo(
     () =>
       Array.from({ length: 12 }).map((_, i) => {
-        const y = [0, Math.random() * 20 + 10, 0] as [number, number, number];
-        const squashStretch = heroFloatSquashStretch(y[1]);
+        const yPeak = Math.random() * 10 + 5;
+        const squashStretch = heroFloatSquashStretch(yPeak);
         return {
-          y,
-          x: [0, Math.random() * 10 - 5, 0] as [number, number, number],
-          rotate: [0, Math.random() * 2 - 1, 0] as [number, number, number],
+          y: [0, yPeak, 0] as [number, number, number],
+          x: [0, Math.random() * 6 - 3, 0] as [number, number, number],
+          rotate: [0, Math.random() * 1.2 - 0.6, 0] as [number, number, number],
           scaleX: squashStretch.scaleX,
           scaleY: squashStretch.scaleY,
-          duration: Math.random() * 3 + 4,
+          duration: Math.random() * 1.5 + 5.5,
           delay: i * 0.1,
         };
       }),
     [],
   );
+
+  const visibleCount = heroVisibleCount(viewport);
+  const visibleItems = items ? items.slice(0, visibleCount) : [];
+  const explodeAtMs = heroExplodeAtMs(visibleItems.length);
+  const entranceCompleteMs = heroEntranceCompleteMs(visibleItems.length);
+
+  useEffect(() => {
+    if (!reducedMotion) return;
+
+    setHasExploded(true);
+    setShowHeroBody(true);
+    setEntranceComplete(true);
+    setShowScrollIndicator(true);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const explodeTimer = window.setTimeout(() => {
+      setHasExploded(true);
+    }, explodeAtMs);
+
+    const bodyTimer = window.setTimeout(
+      () => {
+        setShowHeroBody(true);
+      },
+      explodeAtMs + BODY_DELAY_AFTER_EXPLODE * 1000,
+    );
+
+    const doneTimer = window.setTimeout(() => {
+      setEntranceComplete(true);
+      setShowScrollIndicator(true);
+    }, entranceCompleteMs);
+
+    return () => {
+      window.clearTimeout(explodeTimer);
+      window.clearTimeout(bodyTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [reducedMotion, explodeAtMs, entranceCompleteMs]);
 
   useEffect(() => {
     const handleResize = () => setViewport(resolveHeroViewport(window.innerWidth));
@@ -278,50 +275,22 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
   }, []);
 
   useEffect(() => {
-    const hasPlayed = sessionStorage.getItem('hero-splash-played');
-    const isDev = process.env.NODE_ENV === 'development';
-
-    if (hasPlayed && !isDev) {
-      setStage('floating');
-      setProgress(100);
-      setHasPlayedAlready(true);
-      return;
-    }
-
-    if (!isDev) sessionStorage.setItem('hero-splash-played', 'true');
-
-    const controls = animate(0, 100, {
-      duration: 2.5,
-      ease: 'easeInOut',
-      onUpdate: latest => setProgress(Math.round(latest)),
-      onComplete: () => {
-        setStage('exploding');
-        setTimeout(() => setStage('floating'), 1200);
-      },
-    });
-
-    return () => controls.stop();
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY || window.pageYOffset;
-      setShowScrollIndicator(scrollY <= 100);
+      if ((window.scrollY || window.pageYOffset) > 100) {
+        setShowScrollIndicator(false);
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isMobile = viewport === 'mobile';
-  const visibleCount = heroVisibleCount(viewport);
-  const visibleItems = items ? items.slice(0, visibleCount) : [];
   const arcPositions = useMemo(
-    () => buildArcPositions(visibleCount, viewport === 'mobile' ? 'tablet' : viewport),
+    () => buildArcPositions(visibleCount, viewport),
     [visibleCount, viewport],
   );
   const slotOrder = useMemo(() => seededSlotOrder(visibleCount), [visibleCount]);
-  const hoverEnabled = canHover && stage === 'floating';
+  const hoverEnabled = canHover && entranceComplete;
+  const floatActive = entranceComplete && !reducedMotion;
 
   if (!items || items.length === 0) {
     return <div className='py-20 text-center'>No items available.</div>;
@@ -363,19 +332,10 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
       pos.side,
       pos.band,
     );
-    const stackScale = 1 - index * 0.03;
-    const stackOffsetY = -(index * 15);
-    const stackRotation = (index % 3) * 1.5 - 1.5;
-    const stackY = `calc(-50% + ${stackOffsetY}px)`;
 
     const isCardHovered = hoveredIndex === index;
-    const parallax = {
-      x: 0,
-      y: 0,
-      rotateX: 0,
-      rotateY: 0,
-      zIndex: (slotIndex % 3) + 1,
-    };
+    const cardZIndex = (slotIndex % 3) + 1;
+
     const floatMotion = floatKeyframes[slotIndex] ??
       floatKeyframes[0] ?? {
         y: [0, 12, 0] as [number, number, number],
@@ -387,171 +347,57 @@ const HeroImageSection = ({ items, overview, heroEyebrow, heroName }: HeroImageS
         delay: 0,
       };
 
-    const arcSizes = [
-      'w-44 lg:w-52 xl:max-w-[14vw]',
-      'w-48 lg:w-56 xl:max-w-[15vw]',
-      'w-40 lg:w-48 xl:max-w-[13vw]',
-      'w-44 lg:w-52 xl:max-w-[14vw]',
-    ];
-    const sizeClass = arcSizes[index % arcSizes.length] ?? arcSizes[0] ?? 'w-44';
-
-    const outerAnimate =
-      stage === 'loading'
-        ? {
-            left: '50%',
-            top: '50%',
-            x: '-50%',
-            y: stackY,
-            scale: stackScale,
-            rotate: stackRotation,
-            opacity: 1,
-            filter: 'blur(0px)',
-          }
-        : {
-            left: pos.left,
-            top: pos.top,
-            x: '-50%',
-            y: '-50%',
-            scale: pos.scale,
-            rotate: pos.rotation + scatter.rotate,
-            opacity: 1,
-            filter: 'blur(0px)',
-          };
-
-    const outerTransition =
-      stage === 'loading'
-        ? { delay: 0.1 + index * 0.12, duration: 1.4, ease: 'easeOut' as const }
-        : stage === 'exploding'
-          ? { type: 'spring' as const, stiffness: 110, damping: 11, mass: 0.8 }
-          : { duration: 0.6, ease: 'easeOut' as const };
-
-    const cardZIndex =
-      stage === 'loading'
-        ? index + 1
-        : stage === 'exploding'
-          ? 1
-          : isCardHovered
-            ? 40
-            : parallax.zIndex;
+    const arcSizeClass =
+      ARC_CARD_SIZES[index % ARC_CARD_SIZES.length] ?? ARC_CARD_SIZES[0] ?? 'w-44';
 
     return (
       <HeroFloatingCard
         key={`${item._type}-${item._id}`}
         item={item}
         index={index}
-        layout='arc'
-        stage={stage}
-        hasPlayedAlready={hasPlayedAlready}
+        reducedMotion={reducedMotion}
+        hasExploded={hasExploded}
+        floatActive={floatActive}
         hoverEnabled={hoverEnabled}
         isCardHovered={isCardHovered}
         onHoverStart={() => setHoveredIndex(index)}
         onHoverEnd={() => setHoveredIndex(null)}
         isPriority={index === 0}
-        sizeClass={sizeClass}
-        outerAnimate={outerAnimate}
-        outerTransition={outerTransition}
+        arcSizeClass={arcSizeClass}
         pos={pos}
         scatter={scatter}
-        parallax={parallax}
         floatMotion={floatMotion}
-        stackY={stackY}
-        stackScale={stackScale}
-        stackRotation={stackRotation}
+        stackLayout={heroStackLayout(index)}
         cardZIndex={cardZIndex}
         {...data}
       />
     );
   };
 
-  const renderMobileCard = (item: ShowcaseItem, index: number) => {
-    const data = renderCardData(item, index);
-    if (!data) return null;
-
-    return (
-      <HeroFloatingCard
-        key={`${item._type}-${item._id}`}
-        item={item}
-        index={index}
-        layout='mobile'
-        stage={stage}
-        hasPlayedAlready={hasPlayedAlready}
-        hoverEnabled={false}
-        isCardHovered={false}
-        onHoverStart={() => {}}
-        onHoverEnd={() => {}}
-        isPriority={index === 0}
-        sizeClass={MOBILE_CARD_SIZES[index] ?? MOBILE_CARD_SIZES[0] ?? 'w-[38vw] max-w-[148px]'}
-        mobileRotation={MOBILE_CARD_ROTATIONS[index] ?? 0}
-        {...data}
-      />
-    );
-  };
-
   return (
-    <section
-      className='relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden bg-background-subtle pt-16 pb-10 transition-colors duration-500 md:overflow-visible md:pt-20 md:pb-12'
-      style={{ perspective: 1200 }}
-    >
+    <section className='relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden bg-background-subtle pt-16 pb-10 md:overflow-visible md:pt-20 md:pb-12'>
       <HeroDotGrid />
 
-      <AnimatePresence>
-        {stage === 'loading' && (
-          <motion.div
-            key='loader'
-            initial={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{
-              opacity: 0,
-              y: -50,
-              filter: 'blur(10px)',
-              transition: { duration: 0.5, ease: 'easeIn' },
-            }}
-            className='pointer-events-none absolute top-1/2 left-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center'
-          >
-            <div className='font-mono text-9xl font-black tracking-tighter text-white mix-blend-difference drop-shadow-2xl'>
-              {progress}%
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile — 2 cards above · copy · 2 cards below */}
-      <div className='relative z-10 flex w-full flex-col items-center gap-5 py-4 md:hidden'>
-        <div className='grid w-full max-w-md grid-cols-2 gap-3 px-3'>
-          {visibleItems.slice(0, 2).map((item, index) => renderMobileCard(item, index))}
+      <div className='relative flex w-full min-h-[calc(100svh-4.5rem)] items-center justify-center md:min-h-[calc(100svh-5rem)]'>
+        <div className='pointer-events-none absolute inset-0 z-[45] overflow-visible'>
+          {visibleItems.map((item, index) => renderArcCard(item, index))}
         </div>
 
-        <HeroCopy
-          stage={stage}
-          hasPlayedAlready={hasPlayedAlready}
-          heroEyebrow={heroEyebrow}
-          displayName={displayName}
-          overview={overview}
-          reducedMotion={reducedMotion}
-        />
-
-        <div className='grid w-full max-w-md grid-cols-2 gap-3 px-3'>
-          {visibleItems.slice(2, 4).map((item, index) => renderMobileCard(item, index + 2))}
+        <div className='pointer-events-none absolute inset-0 z-[60] flex items-center justify-center px-4 py-8 sm:px-6 md:px-10'>
+          <div className='relative flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl'>
+            <HeroPersistentName
+              text={displayName}
+              hasExploded={hasExploded}
+              reducedMotion={reducedMotion}
+            />
+            <HeroBodyCopy
+              heroEyebrow={heroEyebrow}
+              show={showHeroBody}
+              reserveSpace={hasExploded}
+              skipEntrance={reducedMotion}
+            />
+          </div>
         </div>
-      </div>
-
-      {/* md+ — orbit collage + vertically centered copy */}
-      <div className='relative hidden w-full md:flex md:min-h-[calc(100svh-5rem)] md:items-center md:justify-center'>
-        <div
-          className='pointer-events-none absolute inset-0 overflow-visible'
-          style={{ transformStyle: 'preserve-3d' }}
-        >
-          {!isMobile ? visibleItems.map((item, index) => renderArcCard(item, index)) : null}
-        </div>
-
-        <HeroCopy
-          stage={stage}
-          hasPlayedAlready={hasPlayedAlready}
-          heroEyebrow={heroEyebrow}
-          displayName={displayName}
-          overview={overview}
-          reducedMotion={reducedMotion}
-          className='px-6 py-8 md:px-10'
-        />
       </div>
 
       <HeroScrollIndicator show={showScrollIndicator} />
