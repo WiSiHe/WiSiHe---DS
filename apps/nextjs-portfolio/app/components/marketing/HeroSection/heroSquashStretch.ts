@@ -17,7 +17,7 @@ export const HERO_SQUASH_RATIOS = {
   stretchY: 1.04,
 };
 
-/** Squash on impact, brief stretch, settle — for explosion landing. */
+/** Squash on impact, brief stretch, settle — for explode landing. */
 export const EXPLODE_SQUASH_KEYFRAMES = {
   scaleX: [1, HERO_SQUASH_RATIOS.squashX, HERO_SQUASH_RATIOS.stretchX, 1] as [
     number,
