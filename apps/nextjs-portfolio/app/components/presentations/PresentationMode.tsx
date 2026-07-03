@@ -2,13 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-
-function isImmersivePath(pathname: string | null): boolean {
-  if (!pathname) return false;
-  if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
-  if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
-  return false;
-}
+import { shouldSkipDocumentScrollRestoration } from '@/app/lib/lenis-registry';
 
 /**
  * Locks the page to a single native scroll container for slide decks.
@@ -16,7 +10,7 @@ function isImmersivePath(pathname: string | null): boolean {
  */
 export function PresentationMode() {
   const pathname = usePathname();
-  const immersive = isImmersivePath(pathname);
+  const immersive = shouldSkipDocumentScrollRestoration(pathname);
 
   useEffect(() => {
     if (!immersive) return;

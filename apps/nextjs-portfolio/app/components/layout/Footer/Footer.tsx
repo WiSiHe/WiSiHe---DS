@@ -6,6 +6,7 @@ import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { scrollDocumentToTop } from '@/app/lib/lenis-registry';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { APP_VERSION } from '@/lib/version';
 import IconLogo from '../icons/IconLogo';
@@ -42,7 +43,7 @@ const Footer = ({ socialLinks, bio, jobTitle, heroSubtitle, ctaLabel, ctaHref }:
     : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 } };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    scrollDocumentToTop({ immediate: Boolean(reducedMotion) });
   };
 
   return (

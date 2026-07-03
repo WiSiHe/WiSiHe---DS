@@ -2,6 +2,7 @@
 import { IconArrowUp } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion, type Variants } from 'motion/react';
+import { scrollDocumentToTop } from '@/app/lib/lenis-registry';
 import useScrollPosition from '@/hooks/useScrollPosition';
 
 type ScrollToTopButtonProps = {
@@ -46,11 +47,7 @@ const ScrollToTopButton = ({ isFixed = true }: ScrollToTopButtonProps) => {
   const isVisible = scrollPosition > SCROLL_THRESHOLD;
 
   const handleClick = () => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+    scrollDocumentToTop({ immediate: false });
   };
 
   return (
