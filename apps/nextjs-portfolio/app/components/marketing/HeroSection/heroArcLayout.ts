@@ -10,12 +10,25 @@ export type HeroCardPosition = {
   band: HeroCardBand;
 };
 
-export type HeroViewport = 'mobile' | 'tablet' | 'desktop' | 'wide';
+export type HeroViewport = 'mobile' | 'tablet' | 'desktop' | 'wide' | 'ultraWide';
+
+export type HeroViewportSize = {
+  width: number;
+  height: number;
+};
 
 /** Copy dead zone — cards stay outside this box (viewport %). */
 const CLEAR_ZONE = {
   leftMin: 28,
   leftMax: 72,
+  topMin: 24,
+  topMax: 68,
+};
+
+/** Slightly tighter copy lane on very wide screens so cards can use the wings. */
+const CLEAR_ZONE_ULTRA_WIDE = {
+  leftMin: 32,
+  leftMax: 68,
   topMin: 24,
   topMax: 68,
 };
@@ -26,6 +39,7 @@ type ArcConfig = {
   centerX: number;
   centerY: number;
   baseScale: number;
+  clearZone: typeof CLEAR_ZONE;
 };
 
 /** Left-wing orbit angles — each is mirrored to the right at `180 - angle`. */
@@ -34,19 +48,80 @@ const ORBIT_WING_ANGLES: Record<HeroViewport, number[]> = {
   tablet: [210, 158],
   desktop: [200, 238, 162],
   wide: [198, 222, 246, 158],
+  ultraWide: [192, 210, 228, 246, 264, 156],
 };
 
 function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
   switch (viewport) {
     case 'mobile':
-      return { rx: 44, ry: 46, centerX: 50, centerY: 50, baseScale: 0.74 };
+      return {
+        rx: 44,
+        ry: 46,
+        centerX: 50,
+        centerY: 50,
+        baseScale: 0.74,
+        clearZone: CLEAR_ZONE,
+      };
     case 'tablet':
-      return { rx: 34, ry: 38, centerX: 50, centerY: 50, baseScale: 0.82 };
+      return {
+        rx: 34,
+        ry: 38,
+        centerX: 50,
+        centerY: 50,
+        baseScale: 0.82,
+        clearZone: CLEAR_ZONE,
+      };
     case 'desktop':
-      return { rx: 40, ry: 44, centerX: 50, centerY: 50, baseScale: 0.9 };
+      return {
+        rx: 40,
+        ry: 44,
+        centerX: 50,
+        centerY: 50,
+        baseScale: 0.9,
+        clearZone: CLEAR_ZONE,
+      };
     case 'wide':
-      return { rx: 42, ry: 46, centerX: 50, centerY: 50, baseScale: 0.94 };
+      return {
+        rx: 42,
+        ry: 46,
+        centerX: 50,
+        centerY: 50,
+        baseScale: 0.94,
+        clearZone: CLEAR_ZONE,
+      };
+    case 'ultraWide':
+      return {
+        rx: 47,
+        ry: 44,
+        centerX: 50,
+        centerY: 50,
+        baseScale: 0.96,
+        clearZone: CLEAR_ZONE_ULTRA_WIDE,
+      };
   }
+}
+
+/** Push cards toward the side wings on 16:9+ and ultrawide displays. */
+function adjustConfigForViewportSize(config: ArcConfig, size?: HeroViewportSize): ArcConfig {
+  if (!size?.width || !size?.height) return config;
+
+  const aspect = size.width / size.height;
+  if (aspect < 1.9) return config;
+
+  const aspectBoost = Math.min((aspect - 1.78) * 5.5, 7);
+  return {
+    ...config,
+    rx: Math.min(50, config.rx + aspectBoost),
+    ry: Math.max(36, config.ry - aspectBoost * 0.35),
+  };
+}
+
+/** Keep card anchors inside the viewport, accounting for card width at the wings. */
+function clampOrbitPoint(left: number, top: number): { left: number; top: number } {
+  return {
+    left: Math.max(4, Math.min(96, left)),
+    top: Math.max(8, Math.min(92, top)),
+  };
 }
 
 function mirrorAngle(deg: number): number {
@@ -64,12 +139,12 @@ function pointFromAngle(deg: number, config: ArcConfig): { left: number; top: nu
   };
 }
 
-function isInClearZone(left: number, top: number): boolean {
+function isInClearZone(left: number, top: number, clearZone: ArcConfig['clearZone']): boolean {
   return (
-    left > CLEAR_ZONE.leftMin &&
-    left < CLEAR_ZONE.leftMax &&
-    top > CLEAR_ZONE.topMin &&
-    top < CLEAR_ZONE.topMax
+    left > clearZone.leftMin &&
+    left < clearZone.leftMax &&
+    top > clearZone.topMin &&
+    top < clearZone.topMax
   );
 }
 
@@ -86,7 +161,10 @@ function buildBalancedOrbitAngles(viewport: HeroViewport, config: ArcConfig): nu
   const wingAngles = ORBIT_WING_ANGLES[viewport].filter(deg => {
     const { left, top } = pointFromAngle(deg, config);
     const mirrored = pointFromAngle(mirrorAngle(deg), config);
-    return !isInClearZone(left, top) && !isInClearZone(mirrored.left, mirrored.top);
+    return (
+      !isInClearZone(left, top, config.clearZone) &&
+      !isInClearZone(mirrored.left, mirrored.top, config.clearZone)
+    );
   });
 
   const angles: number[] = [];
@@ -101,7 +179,8 @@ export function resolveHeroViewport(width: number): HeroViewport {
   if (width < 768) return 'mobile';
   if (width < 1024) return 'tablet';
   if (width < 1280) return 'desktop';
-  return 'wide';
+  if (width < 1920) return 'wide';
+  return 'ultraWide';
 }
 
 export function heroVisibleCount(viewport: HeroViewport): number {
@@ -114,15 +193,22 @@ export function heroVisibleCount(viewport: HeroViewport): number {
       return 6;
     case 'wide':
       return 8;
+    case 'ultraWide':
+      return 10;
   }
 }
 
-export function buildArcPositions(count: number, viewport: HeroViewport): HeroCardPosition[] {
-  const config = arcConfigForViewport(viewport);
+export function buildArcPositions(
+  count: number,
+  viewport: HeroViewport,
+  viewportSize?: HeroViewportSize,
+): HeroCardPosition[] {
+  const config = adjustConfigForViewportSize(arcConfigForViewport(viewport), viewportSize);
   const angles = buildBalancedOrbitAngles(viewport, config).slice(0, count);
 
   return angles.map((deg, index) => {
-    const { left, top } = pointFromAngle(deg, config);
+    const raw = pointFromAngle(deg, config);
+    const { left, top } = clampOrbitPoint(raw.left, raw.top);
     const side: HeroCardSide = left < config.centerX ? 'left' : 'right';
     const band: HeroCardBand = top < config.centerY ? 'top' : 'bottom';
     const pairIndex = Math.floor(index / 2);

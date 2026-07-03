@@ -6,6 +6,7 @@ import type {
 import type { PortableTextBlock } from 'next-sanity';
 import type { ReactNode } from 'react';
 import type { ShowcaseItem } from '@/app/components/marketing/HeroSection/HeroSection';
+import { urlForImage } from '@/sanity/lib/utils';
 
 export type HomePageSection = NonNullable<NonNullable<HomePageQueryResult>['sections']>[number];
 
@@ -65,6 +66,26 @@ export function buildHeroCollageItems(home: HomePageQueryResult | null): Showcas
   }
 
   return combined.slice(0, HERO_COLLAGE_MAX_ITEMS);
+}
+
+const HERO_LCP_FALLBACK_ASPECT = 4 / 3;
+
+/** URL for the homepage hero LCP image (first collage item). */
+export function getHeroLcpImageUrl(home: HomePageQueryResult | null): string | null {
+  const items = buildHeroCollageItems(home);
+  const first = items.find(item => item.image?.asset?._ref);
+  if (!first?.image) return null;
+
+  const aspectRatio = first.image.aspectRatio ?? HERO_LCP_FALLBACK_ASPECT;
+  return (
+    urlForImage(first.image)
+      ?.width(800)
+      .height(Math.round(800 / aspectRatio))
+      .fit('crop')
+      .auto('format')
+      .quality(85)
+      .url() ?? null
+  );
 }
 
 export function getHeroOverview(home: HomePageQueryResult | null): PortableTextBlock[] | null {

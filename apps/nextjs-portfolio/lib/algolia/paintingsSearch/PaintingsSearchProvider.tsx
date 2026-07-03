@@ -13,7 +13,9 @@ import {
 } from 'react';
 import { searchClient } from '@/lib/algolia/searchClient';
 import { buildPaintingsSearchRequest } from './buildPaintingsSearchRequest';
+import { PAINTINGS_HITS_PER_PAGE } from './constants';
 import { buildTagFacetItems, facetMapToItems, isNsfwTagFilterActive } from './facetItems';
+import { parsePaintingsSearchResult } from './parsePaintingsSearchResult';
 import type {
   PaintingAlgoliaHit,
   PaintingsFacetItem,
@@ -21,7 +23,6 @@ import type {
   PaintingsSortKey,
 } from './types';
 
-const HITS_PER_PAGE = 18;
 const SEARCH_DEBOUNCE_MS = 120;
 
 type PaintingsSearchContextValue = {
@@ -56,28 +57,13 @@ export function usePaintingsSearchContext(): PaintingsSearchContextValue {
   return ctx;
 }
 
-function parseSearchResult(result: unknown): PaintingsSearchResults | null {
-  if (!result || typeof result !== 'object') return null;
-  const r = result as Record<string, unknown>;
-  if (!Array.isArray(r['hits'])) return null;
-
-  const facetsRaw = r['facets'];
-  const facets =
-    facetsRaw && typeof facetsRaw === 'object'
-      ? (facetsRaw as PaintingsSearchResults['facets'])
-      : {};
-
-  return {
-    hits: r['hits'] as PaintingAlgoliaHit[],
-    nbHits: typeof r['nbHits'] === 'number' ? r['nbHits'] : 0,
-    page: typeof r['page'] === 'number' ? r['page'] : 0,
-    nbPages: typeof r['nbPages'] === 'number' ? r['nbPages'] : 0,
-    hitsPerPage: typeof r['hitsPerPage'] === 'number' ? r['hitsPerPage'] : HITS_PER_PAGE,
-    facets,
-  };
-}
-
-export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
+export function PaintingsSearchProvider({
+  children,
+  initialResults = null,
+}: {
+  children: ReactNode;
+  initialResults?: PaintingsSearchResults | null;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -102,11 +88,12 @@ export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
   const [forSale, setForSale] = useState(initialForSale);
   const [sort, setSortState] = useState<PaintingsSortKey>(initialSort);
   const [page, setPageState] = useState(initialPage);
-  const [status, setStatus] = useState<'idle' | 'loading'>('loading');
-  const [results, setResults] = useState<PaintingsSearchResults | null>(null);
+  const [status, setStatus] = useState<'idle' | 'loading'>(initialResults ? 'idle' : 'loading');
+  const [results, setResults] = useState<PaintingsSearchResults | null>(initialResults);
 
-  const settledResultsRef = useRef<PaintingsSearchResults | null>(null);
+  const settledResultsRef = useRef<PaintingsSearchResults | null>(initialResults);
   const requestIdRef = useRef(0);
+  const skipInitialFetchRef = useRef(initialResults != null);
 
   const updateUrl = useCallback(
     (newFilters: {
@@ -224,6 +211,11 @@ export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!searchClient) return;
 
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false;
+      return;
+    }
+
     const requestId = ++requestIdRef.current;
     setStatus('loading');
 
@@ -237,7 +229,7 @@ export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
             buildPaintingsSearchRequest({
               query,
               page,
-              hitsPerPage: HITS_PER_PAGE,
+              hitsPerPage: PAINTINGS_HITS_PER_PAGE,
               tagFilters,
               colorFilters,
               forSale,
@@ -248,7 +240,7 @@ export function PaintingsSearchProvider({ children }: { children: ReactNode }) {
         .then(response => {
           if (requestId !== requestIdRef.current) return;
 
-          const parsed = parseSearchResult(response.results[0]);
+          const parsed = parsePaintingsSearchResult(response.results[0]);
           if (parsed) {
             settledResultsRef.current = parsed;
             setResults(parsed);

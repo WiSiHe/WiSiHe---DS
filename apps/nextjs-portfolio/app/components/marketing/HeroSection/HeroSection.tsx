@@ -1,7 +1,6 @@
 'use client';
 
-import { cn } from '@wisihe/utils';
-import { motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
@@ -13,18 +12,14 @@ import HeroScrollIndicator from './HeroScrollIndicator';
 import {
   buildArcPositions,
   type HeroViewport,
+  type HeroViewportSize,
   heroCardScatter,
   heroVisibleCount,
   resolveHeroViewport,
   seededSlotOrder,
 } from './heroArcLayout';
 import { heroFloatSquashStretch } from './heroSquashStretch';
-import {
-  BODY_DELAY_AFTER_EXPLODE,
-  heroEntranceCompleteMs,
-  heroExplodeAtMs,
-  heroStackLayout,
-} from './heroStackConfig';
+import { heroEntranceCompleteMs, heroExplodeAtMs, heroStackLayout } from './heroStackConfig';
 
 export type ShowcasePainting = {
   _type: 'painting';
@@ -90,11 +85,18 @@ const HERO_CARD_ASPECT_PRESETS = [
 ] as const;
 
 const ARC_CARD_SIZES = [
-  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:max-w-[20vw]',
-  'w-[36vw] max-w-[156px] sm:w-48 sm:max-w-none md:w-60 lg:w-80 xl:max-w-[22vw]',
-  'w-[32vw] max-w-[140px] sm:w-40 sm:max-w-none md:w-52 lg:w-64 xl:max-w-[19vw]',
-  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:max-w-[20vw]',
+  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
+  'w-[36vw] max-w-[156px] sm:w-48 sm:max-w-none md:w-60 lg:w-80 xl:w-80 xl:max-w-80 2xl:max-w-[21rem] min-[2560px]:max-w-[22rem]',
+  'w-[32vw] max-w-[140px] sm:w-40 sm:max-w-none md:w-52 lg:w-64 xl:w-64 xl:max-w-64 2xl:max-w-72 min-[2560px]:max-w-[19rem]',
+  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
 ] as const;
+
+function readViewportSize(): HeroViewportSize {
+  if (typeof window === 'undefined') {
+    return { width: 0, height: 0 };
+  }
+  return { width: window.innerWidth, height: window.innerHeight };
+}
 
 function heroDisplayName(heroSubtitle?: string | null): string {
   const trimmed = heroSubtitle?.trim();
@@ -117,61 +119,21 @@ type HeroImageSectionProps = {
   heroName?: string | null;
 };
 
-const bodyItemVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.55, ease: 'easeOut' as const },
-  },
-};
-
-const buttonVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.55, ease: 'easeOut' as const },
-  },
-};
-
 type HeroBodyCopyProps = {
   heroEyebrow?: string | null;
-  show: boolean;
-  reserveSpace: boolean;
-  skipEntrance: boolean;
 };
 
 const eyebrowClassName =
   'mb-2 w-full text-center text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:text-xs sm:tracking-[0.2em] md:mb-3 md:text-sm';
 
-function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBodyCopyProps) {
-  if (!show && !skipEntrance && !reserveSpace) return null;
-
-  const isVisible = show || skipEntrance;
-
+function HeroBodyCopy({ heroEyebrow }: HeroBodyCopyProps) {
   return (
-    <motion.div
-      initial={skipEntrance ? 'visible' : 'hidden'}
-      animate={isVisible ? 'visible' : 'hidden'}
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
-      }}
-      aria-hidden={!isVisible}
-      className={cn(
-        'flex w-full flex-col items-center',
-        !isVisible && reserveSpace && 'invisible pointer-events-none',
-      )}
-    >
-      <motion.div variants={bodyItemVariants} className='w-full'>
-        <p className={eyebrowClassName}>
-          {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
-        </p>
-      </motion.div>
+    <div className='flex w-full flex-col items-center'>
+      <p className={eyebrowClassName}>
+        {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
+      </p>
 
-      <motion.div
-        variants={buttonVariants}
-        className='mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'
-      >
+      <div className='pointer-events-auto mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'>
         <Link
           href='/paintings'
           className='inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover sm:px-6'
@@ -184,8 +146,8 @@ function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBod
         >
           View projects
         </Link>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -194,10 +156,12 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const reducedMotion = Boolean(prefersReducedMotion);
   const displayName = heroDisplayName(heroName);
   const [hasExploded, setHasExploded] = useState(reducedMotion);
-  const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
   const [entranceComplete, setEntranceComplete] = useState(reducedMotion);
   const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
-  const [viewport, setViewport] = useState<HeroViewport>('desktop');
+  const [viewport, setViewport] = useState<HeroViewport>(() =>
+    typeof window === 'undefined' ? 'desktop' : resolveHeroViewport(window.innerWidth),
+  );
+  const [viewportSize, setViewportSize] = useState<HeroViewportSize>(readViewportSize);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
 
@@ -228,7 +192,6 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     if (!reducedMotion) return;
 
     setHasExploded(true);
-    setShowHeroBody(true);
     setEntranceComplete(true);
     setShowScrollIndicator(true);
   }, [reducedMotion]);
@@ -240,13 +203,6 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
       setHasExploded(true);
     }, explodeAtMs);
 
-    const bodyTimer = window.setTimeout(
-      () => {
-        setShowHeroBody(true);
-      },
-      explodeAtMs + BODY_DELAY_AFTER_EXPLODE * 1000,
-    );
-
     const doneTimer = window.setTimeout(() => {
       setEntranceComplete(true);
       setShowScrollIndicator(true);
@@ -254,13 +210,15 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
 
     return () => {
       window.clearTimeout(explodeTimer);
-      window.clearTimeout(bodyTimer);
       window.clearTimeout(doneTimer);
     };
   }, [reducedMotion, explodeAtMs, entranceCompleteMs]);
 
   useEffect(() => {
-    const handleResize = () => setViewport(resolveHeroViewport(window.innerWidth));
+    const handleResize = () => {
+      setViewport(resolveHeroViewport(window.innerWidth));
+      setViewportSize(readViewportSize());
+    };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -285,8 +243,8 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   }, []);
 
   const arcPositions = useMemo(
-    () => buildArcPositions(visibleCount, viewport),
-    [visibleCount, viewport],
+    () => buildArcPositions(visibleCount, viewport, viewportSize),
+    [visibleCount, viewport, viewportSize],
   );
   const slotOrder = useMemo(() => seededSlotOrder(visibleCount), [visibleCount]);
   const hoverEnabled = canHover && entranceComplete;
@@ -313,6 +271,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     return {
       cardAspectRatio,
       imageUrl,
+      imageLqip: item.image.lqip ?? null,
       href,
       displayTitle: itemDisplayTitle(item),
       showNsfwBlur,
@@ -389,13 +348,9 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
               text={displayName}
               hasExploded={hasExploded}
               reducedMotion={reducedMotion}
+              showImmediately={!reducedMotion}
             />
-            <HeroBodyCopy
-              heroEyebrow={heroEyebrow}
-              show={showHeroBody}
-              reserveSpace={hasExploded}
-              skipEntrance={reducedMotion}
-            />
+            <HeroBodyCopy heroEyebrow={heroEyebrow} />
           </div>
         </div>
       </div>

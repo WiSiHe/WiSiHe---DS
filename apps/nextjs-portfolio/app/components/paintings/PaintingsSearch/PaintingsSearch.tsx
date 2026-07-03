@@ -13,11 +13,12 @@ import {
 } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { PAINTINGS_HITS_PER_PAGE } from '@/lib/algolia/paintingsSearch/constants';
 import {
   PaintingsSearchProvider,
   usePaintingsSearchContext,
 } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
-import type { PaintingsSortKey } from '@/lib/algolia/paintingsSearch/types';
+import type { PaintingsSearchResults, PaintingsSortKey } from '@/lib/algolia/paintingsSearch/types';
 import { isAlgoliaConfigured, searchClient } from '@/lib/algolia/searchClient';
 import CustomHits from './CustomHits';
 import PaintingsFacetList from './PaintingsFacetList';
@@ -200,7 +201,7 @@ function SortDropdown() {
 
 function HitStatsWithSort() {
   const { nbHits, page, status } = usePaintingsSearchContext();
-  const hitsPerPage = 18;
+  const hitsPerPage = PAINTINGS_HITS_PER_PAGE;
 
   if (nbHits === 0) return null;
 
@@ -356,7 +357,11 @@ function PaintingsSearchLayout() {
   );
 }
 
-export default function PaintingsSearch() {
+export default function PaintingsSearch({
+  initialResults = null,
+}: {
+  initialResults?: PaintingsSearchResults | null;
+}) {
   if (!isAlgoliaConfigured || !searchClient) {
     return (
       <div className='mt-4 rounded-xl border border-border bg-surface px-6 py-10 text-center'>
@@ -371,7 +376,7 @@ export default function PaintingsSearch() {
   }
 
   return (
-    <PaintingsSearchProvider>
+    <PaintingsSearchProvider initialResults={initialResults}>
       <PaintingsSearchLayout />
     </PaintingsSearchProvider>
   );

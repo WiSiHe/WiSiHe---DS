@@ -103,7 +103,7 @@ const Masonry = ({
   items,
   duration = 0.6,
   stagger = 0.05,
-  animateFrom = 'bottom',
+  animateFrom: _animateFrom = 'bottom',
   scaleOnHover = false,
   hoverScale = 0.95,
   blurToFocus = true,
@@ -154,46 +154,18 @@ const Masonry = ({
     return () => window.clearTimeout(id);
   }, [grid.length, hasEntered, itemIdsKey, reduceMotion, stagger]);
 
-  const getInitialPosition = (item: (typeof grid)[number]) => {
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) return { x: item.x, y: item.y };
-
-    let direction = animateFrom;
-    if (animateFrom === 'random') {
-      const dirs = ['top', 'bottom', 'left', 'right'] as const;
-      direction = dirs[Math.floor(Math.random() * dirs.length)]!;
-    }
-
-    switch (direction) {
-      case 'top':
-        return { x: item.x, y: -200 };
-      case 'bottom':
-        return { x: item.x, y: window.innerHeight + 200 };
-      case 'left':
-        return { x: -200, y: item.y };
-      case 'right':
-        return { x: window.innerWidth + 200, y: item.y };
-      case 'center':
-        return {
-          x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2 - item.h / 2,
-        };
-      default:
-        return { x: item.x, y: item.y + 100 };
-    }
-  };
-
   if (!items.length) return null;
+
+  const estimatedMinHeight = items.length * 180;
 
   return (
     <div
       ref={containerRef}
       className='relative w-full'
-      style={{ minHeight: gridHeight > 0 ? gridHeight : undefined }}
+      style={{ minHeight: gridHeight > 0 ? gridHeight : estimatedMinHeight }}
     >
       {grid.map((item, index) => {
         const playEntrance = !hasEntered && !reduceMotion;
-        const start = getInitialPosition(item);
 
         return (
           <motion.div
@@ -207,8 +179,8 @@ const Masonry = ({
               playEntrance
                 ? {
                     opacity: 0,
-                    x: start.x,
-                    y: start.y,
+                    x: item.x,
+                    y: item.y,
                     width: item.w,
                     height: item.h,
                     scale: 1,

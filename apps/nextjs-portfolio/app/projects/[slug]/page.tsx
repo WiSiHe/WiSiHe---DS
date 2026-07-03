@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
 import { Suspense } from 'react';
+import { preload } from 'react-dom';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import {
@@ -47,6 +48,8 @@ function ProjectSectionSkeleton() {
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export const revalidate = 3600;
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
@@ -134,6 +137,14 @@ export default async function ProjectPage(props: Props) {
     );
 
     const displayTitle = getProjectDisplayTitle({ name: project.name, client: project.client });
+
+    if (project.image?.asset?._ref) {
+      const lcpUrl = urlForImage(project.image)?.width(1200).fit('max')?.url();
+      if (lcpUrl) {
+        preload(lcpUrl, { as: 'image', fetchPriority: 'high' });
+      }
+    }
+
     const showRelated = hasProjectRelatedContent(project, connectedPaintings, connectedVideoUrl);
     const hasHeroImages =
       Boolean(project.image?.asset?._ref) ||
@@ -187,9 +198,7 @@ export default async function ProjectPage(props: Props) {
 
           {hasHeroImages ? (
             <section className='py-4 md:py-6'>
-              <Suspense fallback={<ProjectSectionSkeleton />}>
-                <ProjectImage project={project} />
-              </Suspense>
+              <ProjectImage project={project} />
             </section>
           ) : null}
         </div>
