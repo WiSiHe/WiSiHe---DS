@@ -73,27 +73,29 @@ const PATCHES: Record<string, ProjectPatch> = {
       'Gravitational lensing, procedural accretion disk, 60fps in a browser tab. Still one of the projects I am most proud of — the reason I kept going deeper into WebGL.',
     ],
     seoDescription:
-      "Three.js black hole from Bruno Simon's Awwwards 2022 workshop — GLSL shaders, gravitational lensing, and step-by-step build notes.",
+      "Interactive 3D black hole from Bruno Simon's Awwwards 2022 shader workshop — Three.js, GLSL, gravitational lensing, step-by-step build notes, and links to Three.js Journey.",
   },
 
   // ── Top client projects ──────────────────────────────────────────────────
   '7c2e6663-3d89-4463-b807-45402c101fb7': {
     summary: [
-      "Led design system architecture for Bane NOR — Norway's national rail operator. React component library, token-based CSS, and documentation built for dozens of internal product teams.",
-      'Hard calls on naming, contribution models, and docs engineers actually read. The system shipped and is in active use across Bane NOR product teams.',
+      'Succeeded Design System Lead at Bane NOR through NoA Ignite — live React library, tokens, and Storybook already serving 20+ internal rail product teams.',
+      'Owned roadmap, releases, stakeholder reporting, and support. Components, deprecations, feedback loops, and design–dev sync on an NX monorepo shipping via Azure Artifacts.',
     ],
     seoTitle: 'Bane NOR — Design System Lead',
     seoDescription:
-      "Led Bane NOR's React design system — token-based CSS, component library, and docs adopted across Norway's national rail product teams.",
+      'Succeeded design system lead at Bane NOR — maintaining and growing a live React library across 20+ rail product teams. Roadmap, releases, stakeholder reporting, and support at national-operator scale.',
   },
   '7ea4c1a3-1780-4a29-b3d5-bc1229725aef': {
     summary: [
-      'Built KREM for TINE over ten months — React + TypeScript component library with Figma token pipeline, TailwindCSS theming, Storybook docs, and Turborepo monorepo.',
-      'Published as a private NPM package consumed by multiple product teams. Cut redundant UI work and gave TINE a consistent, scalable digital foundation.',
+      'TINE had an estimated 20–30 different button implementations across brands and repos. KREM was TINE’s initiative to regain control — I was frontend lead (Nov 2023 – Sep 2024), working målstyrt: tokens first, Button in production by end of Q1 2024, then rollout into target projects.',
+      'Turborepo monorepo with Figma token sync, three brand themes (TINE Handel, Fjordland, Diplom-Is Handel), Changesets releases, Chromatic + public Storybook. Not every product ran React; the token layer still gave value.',
     ],
     seoTitle: 'TINE — KREM Design System',
     seoDescription:
-      "KREM: TINE's React design system — Figma tokens, TailwindCSS, Storybook, Turborepo, and private NPM package for Norway's largest dairy brand.",
+      'Multi-brand React design system for TINE — Figma token pipeline, three brand themes, Turborepo monorepo, Changesets releases, Chromatic + Storybook, Button in production by end of Q1 2024.',
+    connectedPage:
+      'https://main--65aef5010dff543cab28da32.chromatic.com/?path=/docs/welcome-tine-design-system--docs',
   },
   '030150dd-650c-48ae-9d85-a7d1e9401f9d': {
     summary: [
@@ -107,22 +109,22 @@ const PATCHES: Record<string, ProjectPatch> = {
   },
   'ab9134d7-c675-4445-b4ce-8af4d5e76c58': {
     summary: [
-      "Rebuilt TINE Kjøkken's recipe platform frontend (Sep–Dec 2024) in Next.js with Enonic XP as headless CMS — one of Norway's most visited food destinations.",
-      'Dynamic routing, ISR, and structured recipe data so editors manage thousands of recipes while the frontend stays fast. Live at tine.no/kjokken.',
+      'Rebuilt TINE Kjøkken frontend (Sep–Dec 2024) — Next.js on Enonic XP with dynamic routing, ISR, and structured recipe data. One of Norway’s busiest food sites.',
+      'Editors publish in Enonic; the Next layer handles speed and templates. Live at tine.no/kjokken.',
     ],
     seoTitle: 'TINE Kjøkken — Recipes',
     seoDescription:
-      'Next.js rebuild for TINE Kjøkken — Enonic XP headless CMS, ISR, and recipe structured data for millions of monthly visitors.',
+      'Next.js rebuild for TINE Kjøkken — Enonic XP headless CMS, ISR, dynamic routing, and recipe structured data. Live at tine.no/kjokken.',
     connectedPage: 'https://www.tine.no/kjokken/',
   },
   '2d707aac-070a-4fb7-bf72-b8cbf37a0e13': {
     summary: [
-      "Internal transport optimisation dashboard for Bama's logistics team (Aug–Oct 2023). GraphQL API integration with Next.js + TailwindCSS.",
-      'Data-heavy UI designed for ops staff making time-sensitive routing decisions — efficient queries, clear hierarchy, shipped on schedule.',
+      'Internal transport dashboard for Bama (Aug–Oct 2023) — Next.js, GraphQL, and Tailwind for logistics routing and planning. Maps and tables built for operators, not demos.',
+      'The hard part was information density: show enough to decide fast, hide the rest. If the route view is wrong, trucks are wrong.',
     ],
     seoTitle: 'Bama — Transport Optimisation Dashboard',
     seoDescription:
-      'Bama logistics dashboard: GraphQL transport data and Next.js + Tailwind UI — built for ops teams making routing decisions at scale.',
+      'Bama internal logistics dashboard — GraphQL transport data and Next.js + Tailwind UI for ops teams making routing decisions at scale.',
   },
 
   // ── Remaining completed projects ─────────────────────────────────────────
@@ -137,12 +139,12 @@ const PATCHES: Record<string, ProjectPatch> = {
   },
   '5e65b3fc-fbf3-481f-a777-22573220d887': {
     summary: [
-      'Horror tower-defense built in three days during a game jam — trapped in a blood-stained tower, holding off waves with whatever defenses you can build. Unity, ship under pressure.',
-      'Free to play in the browser. One of those jam projects where every decision counts when the clock is running.',
+      'Weekend game jam I organised and led — Norse-themed Blodtårnet, ten-plus people, one Unity game by Sunday 18:00. 2D platformer with isometric maps, minigames, boss fight, save-or-consume-the-children ethics.',
+      'Ran schedule, rules, and Unity onboarding; scoped gameplay, levels, and art while integrating everyone’s work. Shipped on Unity Play — played live at launch.',
     ],
-    seoTitle: 'Blodtårnet',
+    seoTitle: 'Blodtårnet — Game Jam',
     seoDescription:
-      'Blodtårnet: Unity horror tower-defense game jam — survive the blood-stained tower. Free browser game built in three days.',
+      'Blodtårnet — weekend Unity game jam: 2D platformer with minigames, boss fight, and Norse horror ethics. Organised and led for 10+ people; playable on Unity Play.',
     connectedPage: 'https://play.unity.com/en/games/29bffa25-928f-4283-b5ef-97cc5c1f5a0a/game-web',
   },
   'e46f4d50-38a1-4d6e-96ab-cb9de2b22bb3': {
@@ -152,7 +154,7 @@ const PATCHES: Record<string, ProjectPatch> = {
     ],
     seoTitle: 'Box Boi',
     seoDescription:
-      'BoxBoi: solo Unity endless runner game jam — custom art, C# gameplay, and a Nicolas Cage hazard. Built in 48 hours.',
+      'Box Boi — solo Unity endless runner game jam. Custom art, C# gameplay, and a Nicolas Cage hazard. Built in 48 hours, November 2019.',
   },
   'dba5d7b2-da21-4d52-a976-6ed4c0ff1c83': {
     summary: [
@@ -165,21 +167,22 @@ const PATCHES: Record<string, ProjectPatch> = {
   },
   'cb42f323-4d88-402e-91da-f729403ec045': {
     summary: [
-      'Media tracking dashboard for First House (Hastings) — React, Vite, TypeScript, TailwindCSS. Turned AI-processed brand coverage into something client teams could actually use.',
-      'Redux Toolkit + RTK Query for live data, custom widgets, and interactive charts. Three months, tight scope, real client depending on it.',
+      'Hastings — media-tracking dashboard for First House (Aug–Oct 2022). React, Vite, TypeScript, Tailwind, RTK Query. Turned AI-processed brand coverage into client-ready widgets and charts.',
+      'Three-month build for property-sector comms clients. The hard part: live data without making the UI feel like a Bloomberg terminal.',
     ],
-    seoTitle: 'Hastings — First House',
+    seoTitle: 'First House — Hastings',
     seoDescription:
-      'First House brand-tracking dashboard — React, RTK Query, and live AI-processed media data for property sector clients.',
+      'Hastings media-tracking dashboard for First House — React, RTK Query, and live AI-processed brand coverage for property clients.',
   },
   'c6c7060d-0313-4ef0-bf60-bea88a1eff66': {
     summary: [
-      'Holiday campaign site for Ruter (Oslo public transport) encouraging community giving at Christmas. Built with Next.js + Tailwind in under two months, Nov–Dec 2023.',
-      "Public-facing work for one of Norway's most recognisable transport brands — fast, polished, and deadline-driven.",
+      'Gi Av Deg Selv — Ruter Christmas 2023 campaign site at NoA Ignite. Next.js + Tailwind, built in under two months (Nov–Dec). Digital gift flow: wrap a meeting as a present at ruter.no/gave.',
+      'High-visibility holiday work for Oslo public transport — TV, cinema, outdoor, and a live activation at Oslo S. Deadline-driven from day one.',
     ],
     seoTitle: 'Ruter — Gi Av Deg Selv',
     seoDescription:
-      'Gi Av Deg Selv: Ruter holiday campaign site — Next.js + Tailwind, built in two months for Oslo public transport.',
+      'Gi Av Deg Selv: Ruter Christmas 2023 campaign site — Next.js + Tailwind gift flow at ruter.no/gave, built in two months at NoA Ignite.',
+    connectedPage: 'https://ruter.no/gave',
   },
   '38987d1d-75a9-486c-af3b-bccc85b6a091': {
     summary: [
@@ -201,12 +204,13 @@ const PATCHES: Record<string, ProjectPatch> = {
   },
   '0fe76d1c-539b-48b9-bd5a-f831ad6beb97': {
     summary: [
-      "WiSiHe is my own portfolio — illustration and development in one space. Next.js, TypeScript, Sanity CMS, Tailwind, Framer Motion, and Three.js where flat isn't enough.",
-      "Three years of evolving, rebuilding, and using the site as a live testbed for the tools I care about. No finish line — and that's the point.",
+      'WiSiHe — my portfolio and playground in one. Illustration, client work, and experiments on a Next.js monorepo with Sanity CMS, design tokens, Algolia search, and Motion.',
+      'Started March 2021, still in progress. I rebuild sections whenever I learn something worth shipping — no finish line, and that is the point.',
     ],
     seoTitle: 'WiSiHe — Portfolio Website',
     seoDescription:
-      'WiSiHe portfolio — Next.js monorepo with Sanity CMS, design tokens, paintings, projects, and performance-focused UX.',
+      'WiSiHe portfolio — Next.js monorepo with Sanity CMS, design tokens, Algolia search, shared React components, and performance-focused UX. Ongoing since 2021.',
+    status: 'inProgress',
     connectedPage: 'https://www.wisihe.no',
   },
   'a0953f6d-9c90-4e09-b9b5-647ff7164cc7': {

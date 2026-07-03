@@ -8,6 +8,7 @@ import { urlForImage } from '@/sanity/lib/utils';
 import RecipeTipComponent from '../../recipes/RecipeTip/RecipeTip';
 import ResolvedLink from '../ResolvedLink/ResolvedLink';
 import { PortableTextCodeBlock } from './PortableTextCodeBlock';
+import { PortableTextMermaid } from './PortableTextMermaid';
 
 export type PortableTextVariant = 'default' | 'article' | 'minimal';
 
@@ -48,6 +49,11 @@ type PortableTextCodeValue = {
   code: string;
   language?: string;
   filename?: string;
+};
+
+type PortableTextMermaidValue = {
+  code: string;
+  caption?: string | null;
 };
 
 interface CustomPortableTextProps {
@@ -171,16 +177,14 @@ function createPortableTextVideo(wide: boolean) {
   };
 }
 
-function createPortableTextCodeBlock(wide: boolean) {
+function createPortableTextCodeBlock() {
   return function CodeBlockType({ value }: { value: PortableTextCodeValue }) {
     return (
-      <div className={cn(wide && BREAKOUT_MEDIA_CLASS)}>
-        <PortableTextCodeBlock
-          code={value.code}
-          language={value.language}
-          filename={value.filename}
-        />
-      </div>
+      <PortableTextCodeBlock
+        code={value.code}
+        language={value.language}
+        filename={value.filename}
+      />
     );
   };
 }
@@ -246,12 +250,17 @@ function createPortableTextComponents(variant: PortableTextVariant): PortableTex
           }
         />
       ),
-      code: createPortableTextCodeBlock(wide),
+      code: createPortableTextCodeBlock(),
+      mermaidDiagram: ({ value }) => (
+        <PortableTextMermaid
+          code={(value as PortableTextMermaidValue).code}
+          caption={(value as PortableTextMermaidValue).caption}
+        />
+      ),
       image: createPortableTextImage(wide),
       codeBlock: ({ value }) => {
         const codeValue = value as PortableTextCodeValue;
-        const block = <PortableTextCodeBlock code={codeValue.code} language={codeValue.language} />;
-        return wide ? <div className={BREAKOUT_MEDIA_CLASS}>{block}</div> : block;
+        return <PortableTextCodeBlock code={codeValue.code} language={codeValue.language} />;
       },
       callout: ({ value }) => (
         <PortableTextCallout
@@ -364,7 +373,7 @@ function PortableTextCallout({
       className={cn(
         'border-l-4 p-4 my-6',
         getCalloutStyles(value.type),
-        wide && BREAKOUT_MEDIA_CLASS,
+        wide && 'not-prose w-full',
       )}
     >
       {value.title ? <h4 className='font-semibold mb-2'>{value.title}</h4> : null}

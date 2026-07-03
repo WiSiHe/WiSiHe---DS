@@ -12,25 +12,19 @@ const require = createRequire(path.join(studioRoot, 'package.json'));
 const { createClient } = require('@sanity/client');
 const { config } = require('dotenv');
 
-config({ path: path.join(studioRoot, '.env.local') });
-config({ path: path.join(studioRoot, '.env') });
+config({ path: path.join(studioRoot, '.env.local'), quiet: true });
+config({ path: path.join(studioRoot, '.env'), quiet: true });
+config({ path: path.join(studioRoot, '../nextjs-portfolio/.env.local'), quiet: true });
 
-const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
+const PROJECT_ID =
+  process.env.SANITY_STUDIO_API_PROJECT_ID ||
+  process.env.SANITY_STUDIO_PROJECT_ID ||
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const DATASET =
-  process.env.SANITY_STUDIO_API_DATASET || process.env.SANITY_STUDIO_DATASET || 'production';
-const WRITE_TOKEN = process.env.SANITY_API_WRITE_TOKEN;
-
-if (!PROJECT_ID || !WRITE_TOKEN) {
-  throw new Error('Missing SANITY_STUDIO_PROJECT_ID or SANITY_API_WRITE_TOKEN');
-}
-
-const client = createClient({
-  projectId: PROJECT_ID,
-  dataset: DATASET,
-  apiVersion: '2024-10-28',
-  token: WRITE_TOKEN,
-  useCdn: false,
-});
+  process.env.SANITY_STUDIO_API_DATASET ||
+  process.env.SANITY_STUDIO_DATASET ||
+  process.env.NEXT_PUBLIC_SANITY_DATASET ||
+  'production';
 
 const DOCUMENT_ID = '037cce21-55e4-44be-beb1-17991a33f877';
 
@@ -127,6 +121,32 @@ const content = [
       'What stuck with me was how much atmosphere you can get from almost nothing. Drag to orbit the scene — the gravitational lensing looks different from every angle, which is half the fun. It is still one of the projects I am most proud of, and the reason I kept going deeper into WebGL.',
     ),
   ]),
+
+  heading('my-changes-heading', 'What I changed from the workshop'),
+
+  paragraph('my-changes-intro', [
+    span(
+      'my-changes-intro-span',
+      'The workshop gives you a working baseline. I kept the same geometry and shader architecture, but pushed the look toward a warmer Interstellar palette and cranked lensing until the starfield felt like it was bending around the horizon.',
+    ),
+  ]),
+
+  bullet(
+    'my-changes-1',
+    'Accretion disk: warmer orange-red colour ramp and faster UV scroll so the disk feels hotter and more turbulent.',
+  ),
+  bullet(
+    'my-changes-2',
+    'Gravitational lensing: stronger distortion near the event horizon — the bend reads differently as you orbit.',
+  ),
+  bullet(
+    'my-changes-3',
+    'Starfield: denser background stars with slightly higher contrast so the lensing pop is visible from more angles.',
+  ),
+  bullet(
+    'my-changes-4',
+    'Performance pass: pixel ratio capped at 2 and shader uniforms tuned so it stays smooth on a laptop GPU.',
+  ),
 
   heading('how-built-heading', 'How the demo was built'),
 
@@ -339,21 +359,56 @@ void main() {
   ]),
 ];
 
-await client
-  .patch(DOCUMENT_ID)
-  .set({
-    content,
-    connectedPage: 'https://workshop-shaders.vercel.app/',
-    seo: {
-      title: '3D Black Hole',
-      description:
-        "Interactive 3D black hole from Bruno Simon's Awwwards 2022 shader workshop — Three.js, GLSL, gravitational lensing, step-by-step build notes, and links to Three.js Journey.",
-    },
-    tags: [
-      { _type: 'reference', _ref: 'f183c67b-f706-4442-8f6b-20a330c00b64', _key: 'tag-threejs' },
-      { _type: 'reference', _ref: '65851e27-7ec4-4b54-b4c2-1d0602bc3fbb', _key: 'tag-javascript' },
-    ],
-  })
-  .commit();
+const patchPayload = {
+  content,
+  connectedPage: 'https://workshop-shaders.vercel.app/',
+  summary: [
+    paragraph('bh-s0', [
+      span(
+        'bh-s0-s',
+        "Built at Bruno Simon's Awwwards 2022 shader workshop — an interactive black hole tribute to Interstellar's Gargantua, rendered in Three.js and custom GLSL with no imported models.",
+      ),
+    ]),
+    paragraph('bh-s1', [
+      span(
+        'bh-s1-s',
+        'Gravitational lensing, procedural accretion disk, 60fps in a browser tab. Still one of the projects I am most proud of — the reason I kept going deeper into WebGL.',
+      ),
+    ]),
+  ],
+  seo: {
+    title: '3D Black Hole',
+    description:
+      "Interactive 3D black hole from Bruno Simon's Awwwards 2022 shader workshop — Three.js, GLSL, gravitational lensing, step-by-step build notes, and links to Three.js Journey.",
+  },
+  tags: [
+    { _type: 'reference', _ref: 'f183c67b-f706-4442-8f6b-20a330c00b64', _key: 'tag-threejs' },
+    { _type: 'reference', _ref: '65851e27-7ec4-4b54-b4c2-1d0602bc3fbb', _key: 'tag-javascript' },
+  ],
+};
+
+if (process.argv.includes('--print-json')) {
+  process.stdout.write(JSON.stringify(patchPayload));
+  process.exit(0);
+}
+
+const WRITE_TOKEN =
+  process.env.SANITY_API_WRITE_TOKEN ||
+  process.env.SANITY_STUDIO_WRITE_TOKEN ||
+  process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN;
+
+if (!PROJECT_ID || !WRITE_TOKEN) {
+  throw new Error('Missing SANITY_STUDIO_PROJECT_ID or SANITY_API_WRITE_TOKEN');
+}
+
+const client = createClient({
+  projectId: PROJECT_ID,
+  dataset: DATASET,
+  apiVersion: '2024-10-28',
+  token: WRITE_TOKEN,
+  useCdn: false,
+});
+
+await client.patch(DOCUMENT_ID).set(patchPayload).commit();
 
 console.log('Updated 3D Black Hole project content');

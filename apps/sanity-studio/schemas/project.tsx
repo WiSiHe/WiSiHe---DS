@@ -112,6 +112,20 @@ export default defineType({
     }),
 
     defineField({
+      name: 'excludeFromOngoingSpotlight',
+      title: 'Hide from ongoing spotlight',
+      type: 'boolean',
+      group: 'main',
+      initialValue: false,
+      description:
+        'List this project in the past projects grid instead of the large ongoing hero on /projects. Use for long-running personal work that is still in progress. Detail page status is unchanged.',
+      hidden: ({ parent }) => {
+        const status = parent?.status as string | undefined;
+        return !['inProgress', 'onHold', 'notStarted', 'planned'].includes(status ?? '');
+      },
+    }),
+
+    defineField({
       name: 'projectStart',
       title: 'Project Start',
       type: 'date',

@@ -3,7 +3,6 @@ import type {
   HomeExtrasQueryResult,
   HomePageQueryResult,
 } from '@wisihe/sanity-queries';
-import { shuffleArray } from '@wisihe/utils';
 import type { PortableTextBlock } from 'next-sanity';
 import type { ReactNode } from 'react';
 import type { ShowcaseItem } from '@/app/components/marketing/HeroSection/HeroSection';
@@ -37,26 +36,35 @@ export function findHomeSection<T extends HomePageSection['_type']>(
   );
 }
 
+const HERO_COLLAGE_MAX_ITEMS = 14;
+
+function isShowcasePainting(item: ShowcaseItem): item is ShowcaseItem & { _type: 'painting' } {
+  return item._type === 'painting';
+}
+
+/** Interleave curated projects and paintings in CMS order (no shuffle). */
 export function buildHeroCollageItems(home: HomePageQueryResult | null): ShowcaseItem[] {
   const projectsSection = findHomeSection(home, 'homeProjectsSection');
   const paintingsSection = findHomeSection(home, 'homePaintingsSection');
 
-  const projects = projectsSection?.showcaseProjects ?? [];
-  const paintings = paintingsSection?.showcasePaintings ?? [];
-
-  const shuffledPaintings = paintings.length ? shuffleArray([...paintings]) : [];
-  const shuffledProjects = projects.length ? shuffleArray([...projects]) : [];
+  const projects = (projectsSection?.showcaseProjects ?? []).filter(
+    project => project.image?.asset?._ref,
+  );
+  const paintings = (paintingsSection?.showcasePaintings ?? []).filter(
+    painting => painting.image?.asset?._ref && painting.isNSFW !== true,
+  );
 
   const combined: ShowcaseItem[] = [];
-  const maxLen = Math.max(shuffledPaintings.length, shuffledProjects.length);
+  const maxLen = Math.max(projects.length, paintings.length);
+
   for (let i = 0; i < maxLen; i++) {
-    const painting = shuffledPaintings[i];
-    const project = shuffledProjects[i];
-    if (painting) combined.push(painting);
+    const project = projects[i];
+    const painting = paintings[i];
     if (project) combined.push(project);
+    if (painting && isShowcasePainting(painting)) combined.push(painting);
   }
 
-  return combined;
+  return combined.slice(0, HERO_COLLAGE_MAX_ITEMS);
 }
 
 export function getHeroOverview(home: HomePageQueryResult | null): PortableTextBlock[] | null {

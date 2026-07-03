@@ -1,10 +1,9 @@
-import createImageUrlBuilder from '@sanity/image-url';
+import { createImageUrlBuilder } from '@sanity/image-url';
+import { studioDataset, studioProjectId } from '../lib/env';
 
 const builder = createImageUrlBuilder({
-  // eslint-disable-next-line no-undef
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID || '',
-  // eslint-disable-next-line no-undef
-  dataset: process.env.SANITY_STUDIO_DATASET || '',
+  projectId: studioProjectId() || '',
+  dataset: studioDataset(),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

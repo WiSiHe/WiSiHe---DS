@@ -463,7 +463,7 @@ export const homePageQuery = defineQuery(`
             tagsV2[]->{name},
             image{ ..., "lqip": asset->metadata.lqip, "aspectRatio": asset->metadata.dimensions.aspectRatio, "palette": asset->metadata.palette }
           },
-          *[_type == "painting" && isFeatured == true && defined(slug.current)] | order(paintedAt desc) [0...20] {
+          *[_type == "painting" && defined(slug.current) && isNSFW != true && defined(image.asset)] | order(paintedAt desc) [0...20] {
             _type, _id, altText,
             "slug": slug.current,
             title, format, isFeatured, isNSFW, medium, paintedAt,
@@ -658,7 +658,7 @@ export const getFilteredPaintingsCount = defineQuery(`
 
 export const getAllProjects = defineQuery(`
     {
-      "ongoingProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && status in ["inProgress", "onHold", "notStarted", "planned"]]
+      "ongoingProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && status in ["inProgress", "onHold", "notStarted", "planned"] && coalesce(excludeFromOngoingSpotlight, false) != true]
         | order(projectStart desc) {
           _id,
           "slug": slug.current,
@@ -676,8 +676,11 @@ export const getAllProjects = defineQuery(`
             "lqip": asset->metadata.lqip
           }
         },
-      "pastProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && status in ["completed", "cancelled", "abandoned"] && defined(projectEnd)]
-        | order(projectEnd desc) {
+      "pastProjects": *[_type == "project" && defined(slug.current) && ${PUBLIC_PROJECT_FILTER} && (
+          (status in ["completed", "cancelled", "abandoned"] && defined(projectEnd))
+          || (status in ["inProgress", "onHold", "notStarted", "planned"] && excludeFromOngoingSpotlight == true)
+        )]
+        | order(coalesce(projectEnd, projectStart) desc) {
           _id,
           "slug": slug.current,
           "seoDescription": coalesce(seo.description, ""),

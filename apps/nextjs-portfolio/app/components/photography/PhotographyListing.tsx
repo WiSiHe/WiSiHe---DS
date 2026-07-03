@@ -148,7 +148,7 @@ export function PhotographyListing({ photos, activeCountry }: PhotographyListing
       )}
 
       {activeCountry ? (
-        <p className='text-center text-sm text-foreground-muted'>
+        <div className='text-center text-sm text-foreground-muted'>
           Showing {filteredPhotos.length} photo{filteredPhotos.length === 1 ? '' : 's'} from{' '}
           <Chip
             label={countryFilters.find(c => c.code === activeCountry)?.name ?? activeCountry}
@@ -156,7 +156,7 @@ export function PhotographyListing({ photos, activeCountry }: PhotographyListing
             interactive={false}
             className='inline-flex align-middle'
           />
-        </p>
+        </div>
       ) : null}
     </div>
   );

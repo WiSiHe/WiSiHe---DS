@@ -1,12 +1,11 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import { cleanTagName } from '@wisihe/utils';
 import gsap from 'gsap';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { HeroProjectUiHover } from '@/app/components/marketing/HeroSection/HeroProjectUiHover';
 import type { ShowcaseItem } from '@/app/components/marketing/HeroSection/HeroSection';
 import type { HeroCardPosition } from '@/app/components/marketing/HeroSection/heroArcLayout';
@@ -101,21 +100,17 @@ export function HeroFloatingCard({
     ? getBrushStrokeColors(strokeVariantIndex, item.image?.palette ?? null)
     : null;
   const projectAccent = getBrushStrokeColors(index, null).accentColor;
-  const paintingTags = useMemo(
-    () =>
-      isPainting
-        ? (item.tagsV2 ?? [])
-            .map(tag => cleanTagName(tag.name ?? ''))
-            .filter((tag): tag is string => Boolean(tag))
-        : [],
-    [isPainting, item],
-  );
   const paintingYear =
     isPainting && item.paintedAt ? new Date(item.paintedAt).getFullYear().toString() : null;
   const projectTags =
     item._type === 'project'
       ? (item.tags ?? []).map(tag => tag.name).filter((tag): tag is string => Boolean(tag))
       : [];
+  const projectClient = item._type === 'project' ? item.client?.trim() || null : null;
+  const projectTitle =
+    item._type === 'project'
+      ? item.name?.trim() || item.title?.trim() || displayTitle
+      : displayTitle;
 
   const arcRotate = pos.rotation + scatter.rotate;
   const inStack = !reducedMotion && !hasExploded;
@@ -195,14 +190,14 @@ export function HeroFloatingCard({
   const cardLink = (
     <Link
       href={href}
-      className='relative isolate block h-full w-full overflow-hidden rounded-lg ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-[box-shadow] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle hover:shadow-[0_28px_40px_-10px_rgba(0,0,0,0.35),0_12px_18px_-8px_rgba(0,0,0,0.22)] dark:ring-white/10'
+      className='relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-[box-shadow] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle hover:shadow-[0_28px_40px_-10px_rgba(0,0,0,0.35),0_12px_18px_-8px_rgba(0,0,0,0.22)] dark:ring-white/10'
     >
       <span className='sr-only'>
         {isPainting ? 'View painting' : 'View project'}: {displayTitle}
       </span>
       {isPainting ? (
         <BrushRevealWrap
-          profile='masonry'
+          profile='gridCard'
           hovered={hoverEnabled && isCardHovered}
           className='absolute inset-0'
         >
@@ -230,11 +225,10 @@ export function HeroFloatingCard({
             washColor={paintingBrush!.washColor}
             strokeVariantIndex={strokeVariantIndex}
             title={displayTitle}
-            medium={item.medium ?? null}
             year={paintingYear}
-            tags={paintingTags}
+            tags={[]}
             isNsfwBlurred={showNsfwBlur}
-            profile='masonry'
+            profile='gridCard'
             paintingFormat={item.format ?? 'square'}
           />
         </BrushRevealWrap>
@@ -247,13 +241,14 @@ export function HeroFloatingCard({
             fill
             priority={isPriority}
             fetchPriority={isPriority ? 'high' : undefined}
-            className='object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]'
+            className='object-cover'
             sizes='(max-width: 768px) 52vw, 250px'
           />
           {hoverEnabled ? (
             <HeroProjectUiHover
               accentColor={projectAccent}
-              title={displayTitle}
+              title={projectTitle}
+              client={projectClient}
               tags={projectTags}
               isHovered={isCardHovered}
             />
@@ -283,7 +278,7 @@ export function HeroFloatingCard({
     >
       <div
         ref={revealRef}
-        className='h-full w-full overflow-hidden rounded-lg will-change-[transform,clip-path]'
+        className='h-full w-full overflow-hidden rounded-xl will-change-[transform,clip-path]'
         style={
           reducedMotion
             ? undefined
@@ -296,9 +291,9 @@ export function HeroFloatingCard({
       >
         <motion.div
           animate={{
-            scale: isCardHovered && hoverEnabled ? 1.04 : 1,
+            scale: isCardHovered && hoverEnabled && !isPainting ? 1.03 : 1,
           }}
-          transition={{ type: 'spring', stiffness: 280, damping: 20, mass: 0.55 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 24, mass: 0.5 }}
           className='h-full w-full'
         >
           <motion.div

@@ -38,9 +38,9 @@ const PROJECT_PATCHES: Record<
 > = {
   '037afd2c-3c85-4d30-b964-7444eb903a2c': {
     slug: 'bad-ui-battle-hackathon',
-    seoTitle: 'BAD UI BATTLE | Hackathon',
+    seoTitle: 'Bad UI Battle',
     seoDescription:
-      'NoA Ignite BAD UI BATTLE (2024): TL;DR, hackathon format, anti-pattern playbook, and link to the Bad UI Gallery — deliberately terrible UIs judged by crowd vote.',
+      'Hosted BAD UI BATTLE at NoA Ignite (2024) — awful-UI hackathon with Next.js signup site, public gallery, and a Figma entry. Deliberately terrible interfaces, crowd-voted.',
     connectedPage: 'https://bad-ui-battle-signup.vercel.app/gallery',
   },
   '212bb547-d945-45d5-a06c-8527c7b8c8c4': {
@@ -60,21 +60,21 @@ const PROJECT_PATCHES: Record<
       'Logo and Squarespace store for Moldbakken, selling eco-friendly mushroom kits grown from recycled coffee grounds.',
   },
   'cb42f323-4d88-402e-91da-f729403ec045': {
-    seoTitle: 'Hastings | First House',
+    seoTitle: 'First House — Hastings',
     seoDescription:
-      'Media tracking dashboard for Hastings First House built with React, Vite, TypeScript, and Redux for real-time insights.',
+      'Hastings media-tracking dashboard for First House — React, RTK Query, and live AI-processed brand coverage for property clients.',
   },
   'f7b13fe2-566b-483e-855b-766521bbb64e': {
-    seoTitle: 'BAD UI BATTLE 2.0 | Hackathon',
+    seoTitle: 'Bad UI Battle 2.0',
     seoDescription:
-      "BAD UI BATTLE 2.0 (Nov 2025): second round of NoA Ignite's awful-UI hackathon — format, design lessons, anti-patterns, and link to the live submission gallery.",
+      'Hosted BAD UI BATTLE at NoA Ignite (2025) — awful-UI hackathon with Next.js signup site, public gallery, and Worst Authenticator (coded entry). Deliberately terrible interfaces, crowd-voted.',
     connectedPage: 'https://bad-ui-battle-signup.vercel.app/gallery',
   },
   '0fe76d1c-539b-48b9-bd5a-f831ad6beb97': {
-    seoTitle: 'WiSiHe Portfolio Website',
+    seoTitle: 'WiSiHe — Portfolio Website',
     seoDescription:
-      'The WiSiHe portfolio—a Next.js monorepo with Sanity CMS, design tokens, paintings, projects, and performance-focused UX.',
-    projectEnd: '2026-06-01',
+      'WiSiHe portfolio — Next.js monorepo with Sanity CMS, design tokens, Algolia search, shared React components, and performance-focused UX. Ongoing since 2021.',
+    status: 'inProgress',
     connectedPage: 'https://www.wisihe.no',
   },
   'fff206cc-e2e4-40f7-aa51-e6843aebe29d': {
@@ -91,7 +91,7 @@ const PROJECT_PATCHES: Record<
   },
   '03f8855c-bbfc-4933-a862-c49c0f8a47e4': {
     seoDescription:
-      'Project Babel (2016–2019): UE4 frozen-world adventure with Fabien Guillaume — shifting puzzle rooms, Tower of Babel finale, vertical slice, and lessons in scope, 3D pipeline, and Blueprint gameplay.',
+      'Project Babel (2016–2019): UE4 frozen-world adventure with Fabien Guillaume — shifting puzzle rooms, vertical slice, teaser trailer, and hard-won scope lessons from an unreleased game.',
     connectedPage: 'https://youtu.be/_vomTdWqdP8',
   },
   '030150dd-650c-48ae-9d85-a7d1e9401f9d': {
@@ -101,17 +101,23 @@ const PROJECT_PATCHES: Record<
       'The storefront supports real product catalogues, filtering, and checkout flows on a Turborepo monorepo—built for maintainability beyond the initial delivery.',
   },
   '7c2e6663-3d89-4463-b807-45402c101fb7': {
-    seoTitle: 'Bane NOR | Design System Lead',
+    seoTitle: 'Bane NOR — Design System Lead',
+    seoDescription:
+      'Succeeded design system lead at Bane NOR — maintaining and growing a live React library across 20+ rail product teams. Roadmap, releases, stakeholder reporting, and support at national-operator scale.',
     extraContent:
-      'The design system is in active use across Bane NOR product teams—shared tokens, documented React components, and a sustainable contribution model.',
+      'Succeeded the previous lead when they moved on — inherited tokens, pipelines, and 20+ components. Five months of roadmap, releases, stakeholder reporting, and support on a live system.',
   },
   '7ea4c1a3-1780-4a29-b3d5-bc1229725aef': {
-    seoTitle: 'TINE Designsystem - KREM',
+    seoTitle: 'TINE — KREM Design System',
+    connectedPage:
+      'https://main--65aef5010dff543cab28da32.chromatic.com/?path=/docs/welcome-tine-design-system--docs',
     extraContent:
-      'KREM cut redundant UI work across TINE teams and established a consistent, token-driven foundation for future digital products.',
+      'KREM gave TINE a shared foundation for React teams, with a token layer non-React products could adopt too. Button in production by end of Q1 2024; public Storybook on Chromatic.',
   },
   'ab9134d7-c675-4445-b4ce-8af4d5e76c58': {
-    seoTitle: 'TINE Kjøkken | Recipes',
+    seoTitle: 'TINE Kjøkken — Recipes',
+    seoDescription:
+      'Next.js rebuild for TINE Kjøkken — Enonic XP headless CMS, ISR, dynamic routing, and recipe structured data. Live at tine.no/kjokken.',
     connectedPage: 'https://www.tine.no/kjokken/',
   },
   '037cce21-55e4-44be-beb1-17991a33f877': {
@@ -123,7 +129,7 @@ const PROJECT_PATCHES: Record<
   'ed9b5322-8d87-4441-986b-8861ff3ade7b': {
     seoTitle: 'Spline Workshop',
     seoDescription:
-      'NoA Ignite Spline workshop: TL;DR, step-by-step rocket build, and link to the full Notion guide — model, animate, and embed interactive 3D in under 40 minutes without Three.js.',
+      'NoA Ignite Spline workshop for 20+ designers and developers — interactive 3D rocket in 2.5 hours, no Three.js. Full Notion guide: model, animate, and embed with Spline.',
     connectedPage:
       'https://thenorthalliance.notion.site/Spline-Workshop-1b2cf2f6604a8079876bd7b025269ed5',
   },
@@ -144,8 +150,8 @@ const SLUG_REDIRECTS = [
 
 const SHOWCASE_PROJECT_IDS = [
   '7c2e6663-3d89-4463-b807-45402c101fb7', // Bane NOR | Design System Lead
-  '037cce21-55e4-44be-beb1-17991a33f877', // 3D Black Hole
-  '030150dd-650c-48ae-9d85-a7d1e9401f9d', // Anton Sport Online Retail
+  'd128c4e9-c0d3-4527-8b22-2ef792aa3421', // NoA Ignite | Website Performance Dashboard
+  '030150dd-650c-48ae-9d85-a7d1e9401f9d', // Anton Sport | Online Retail
 ];
 
 async function main() {

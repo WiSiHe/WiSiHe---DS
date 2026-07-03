@@ -230,12 +230,12 @@ export default async function RootLayout({
                 />
                 <Analytics />
                 <SpeedInsights />
-                <CustomCursor />
                 <AppToaster />
               </PostHogProvider>
             </ThemeProvider>
           </ProgressBarProvider>
         </div>
+        <CustomCursor />
       </body>
     </html>
   );

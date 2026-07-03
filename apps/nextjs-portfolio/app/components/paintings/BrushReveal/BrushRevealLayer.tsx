@@ -480,12 +480,12 @@ export function BrushRevealLayer({
 
           <motion.div
             data-brush-overlay
-            className='pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2.5 sm:p-3'
+            className='pointer-events-none absolute inset-0 z-20 flex items-center justify-center p-2.5 sm:p-3'
             style={{ '--brush-accent': accentColor } as CSSProperties}
           >
             {badges.length > 0 ? (
               <motion.ul
-                className='flex shrink-0 flex-col items-end gap-1 self-end'
+                className='absolute top-2.5 right-2.5 flex shrink-0 flex-col items-end gap-1 sm:top-3 sm:right-3'
                 data-brush-badges
                 aria-label='Painting attributes'
                 initial={false}
@@ -504,14 +504,12 @@ export function BrushRevealLayer({
                   </li>
                 ))}
               </motion.ul>
-            ) : (
-              <span aria-hidden />
-            )}
+            ) : null}
 
             {title ? (
               <motion.p
                 data-brush-title
-                className={cn(GRID_BAND_TITLE_CLASS, 'mt-auto line-clamp-2 text-left')}
+                className={cn(GRID_BAND_TITLE_CLASS, 'line-clamp-2 max-w-full px-2 text-center')}
                 initial={false}
                 animate={{ opacity: isActive ? 1 : 0 }}
                 transition={brushBandBloomTransition(2, isActive, reduceMotion, liteMode)}
@@ -566,7 +564,7 @@ export function BrushRevealLayer({
           <motion.div
             data-brush-overlay
             className={cn(
-              'pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-2 sm:p-2.5',
+              'pointer-events-none absolute inset-0 z-20 flex items-center justify-center p-2 sm:p-2.5',
               isNsfwBlurred && 'pb-24',
             )}
             style={{ '--brush-wash': washColor } as CSSProperties}
@@ -576,7 +574,7 @@ export function BrushRevealLayer({
           >
             {badges.length > 0 ? (
               <motion.div
-                className='flex items-start justify-end gap-2'
+                className='absolute top-2 right-2 flex items-start justify-end gap-2 sm:top-2.5 sm:right-2.5'
                 variants={overlayGroupVariants}
               >
                 <motion.ul
@@ -603,15 +601,15 @@ export function BrushRevealLayer({
             {title && !isNsfwBlurred ? (
               <motion.div
                 data-brush-title
-                className='mt-auto flex flex-col items-start space-y-0.5 text-left'
+                className='flex max-w-full flex-col items-center justify-center space-y-0.5 px-2 text-center'
                 variants={overlayGroupVariants}
               >
-                <motion.p variants={chipVariants} className={TITLE_CLASS}>
+                <motion.p variants={chipVariants} className={cn(TITLE_CLASS, 'text-center')}>
                   {title}
                 </motion.p>
                 {year ? (
                   <motion.div
-                    className='flex flex-wrap items-center gap-1.5'
+                    className='flex flex-wrap items-center justify-center gap-1.5'
                     variants={overlayGroupVariants}
                   >
                     <motion.span

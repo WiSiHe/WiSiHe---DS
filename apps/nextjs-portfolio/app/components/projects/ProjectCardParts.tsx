@@ -82,27 +82,45 @@ export function ProjectCardBadge({ children, className }: ProjectCardBadgeProps)
 type ProjectCardImageOverlayProps = {
   projectType?: string | null;
   year?: number | null;
+  yearLabel?: string | null;
   statusLabel?: string | null;
 };
 
 export function ProjectCardImageOverlay({
   projectType,
   year,
+  yearLabel,
   statusLabel,
 }: ProjectCardImageOverlayProps) {
   const typeLabel = getProjectTypeLabel(projectType);
+  const trailingLabel = yearLabel ?? (year ? String(year) : null);
+
+  if (!typeLabel && !trailingLabel && !statusLabel) return null;
 
   return (
-    <div className='pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-3 md:p-4'>
-      <div className='flex items-start justify-between gap-2'>
-        {typeLabel ? <ProjectCardBadge>{typeLabel}</ProjectCardBadge> : <span aria-hidden />}
-        {year ? <ProjectCardBadge>{year}</ProjectCardBadge> : null}
-      </div>
+    <div className='pointer-events-none absolute inset-0 z-10 flex flex-col justify-between'>
       {statusLabel ? (
-        <ProjectCardBadge className='w-fit border-accent/25 bg-accent/10 text-accent'>
-          {statusLabel}
-        </ProjectCardBadge>
+        <div className='p-3 md:p-4'>
+          <ProjectCardBadge className='border-accent/30 bg-accent/15 text-accent'>
+            {statusLabel}
+          </ProjectCardBadge>
+        </div>
       ) : null}
+
+      <div className='mt-auto flex items-end justify-between gap-3 px-3 pb-3 pt-10 md:px-4 md:pb-4'>
+        {typeLabel ? (
+          <span className='text-[10px] font-semibold uppercase tracking-[0.14em] text-white/90 md:text-[11px]'>
+            {typeLabel}
+          </span>
+        ) : (
+          <span aria-hidden />
+        )}
+        {trailingLabel ? (
+          <span className='font-mono text-xs font-medium tabular-nums text-white/75'>
+            {trailingLabel}
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }
