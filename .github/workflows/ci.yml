@@ -40,10 +40,4 @@ jobs:
         run: pnpm install --frozen-lockfile --filter='!@wisihe/site-health-tools'
 
       - name: Run monorepo checks
-        env:
-          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
-          NEXT_PUBLIC_SANITY_API_READ_TOKEN: ${{ secrets.NEXT_PUBLIC_SANITY_API_READ_TOKEN }}
-          NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ vars.NEXT_PUBLIC_ALGOLIA_APP_ID }}
-          NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY }}
         run: pnpm run ci
