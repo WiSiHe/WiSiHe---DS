@@ -1,6 +1,7 @@
 'use client';
 
-import { useReducedMotion } from 'motion/react';
+import { cn } from '@wisihe/utils';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
@@ -19,7 +20,12 @@ import {
   seededSlotOrder,
 } from './heroArcLayout';
 import { heroFloatSquashStretch } from './heroSquashStretch';
-import { heroEntranceCompleteMs, heroExplodeAtMs, heroStackLayout } from './heroStackConfig';
+import {
+  BODY_DELAY_AFTER_EXPLODE,
+  heroEntranceCompleteMs,
+  heroExplodeAtMs,
+  heroStackLayout,
+} from './heroStackConfig';
 
 export type ShowcasePainting = {
   _type: 'painting';
@@ -119,21 +125,61 @@ type HeroImageSectionProps = {
   heroName?: string | null;
 };
 
+const bodyItemVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.55, ease: 'easeOut' as const },
+  },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.55, ease: 'easeOut' as const },
+  },
+};
+
 type HeroBodyCopyProps = {
   heroEyebrow?: string | null;
+  show: boolean;
+  reserveSpace: boolean;
+  skipEntrance: boolean;
 };
 
 const eyebrowClassName =
   'mb-2 w-full text-center text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:text-xs sm:tracking-[0.2em] md:mb-3 md:text-sm';
 
-function HeroBodyCopy({ heroEyebrow }: HeroBodyCopyProps) {
-  return (
-    <div className='flex w-full flex-col items-center'>
-      <p className={eyebrowClassName}>
-        {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
-      </p>
+function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBodyCopyProps) {
+  if (!show && !skipEntrance && !reserveSpace) return null;
 
-      <div className='pointer-events-auto mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'>
+  const isVisible = show || skipEntrance;
+
+  return (
+    <motion.div
+      initial={skipEntrance ? 'visible' : 'hidden'}
+      animate={isVisible ? 'visible' : 'hidden'}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
+      }}
+      aria-hidden={!isVisible}
+      className={cn(
+        'flex w-full flex-col items-center',
+        !isVisible && reserveSpace && 'invisible pointer-events-none',
+      )}
+    >
+      <motion.div variants={bodyItemVariants} className='w-full'>
+        <p className={eyebrowClassName}>
+          {heroEyebrow?.trim() || 'Senior frontend developer & digital artist'}
+        </p>
+      </motion.div>
+
+      <motion.div
+        variants={buttonVariants}
+        className='mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'
+      >
         <Link
           href='/paintings'
           className='inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover sm:px-6'
@@ -146,8 +192,8 @@ function HeroBodyCopy({ heroEyebrow }: HeroBodyCopyProps) {
         >
           View projects
         </Link>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -156,6 +202,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const reducedMotion = Boolean(prefersReducedMotion);
   const displayName = heroDisplayName(heroName);
   const [hasExploded, setHasExploded] = useState(reducedMotion);
+  const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
   const [entranceComplete, setEntranceComplete] = useState(reducedMotion);
   const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
   const [viewport, setViewport] = useState<HeroViewport>(() =>
@@ -192,6 +239,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     if (!reducedMotion) return;
 
     setHasExploded(true);
+    setShowHeroBody(true);
     setEntranceComplete(true);
     setShowScrollIndicator(true);
   }, [reducedMotion]);
@@ -203,6 +251,13 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
       setHasExploded(true);
     }, explodeAtMs);
 
+    const bodyTimer = window.setTimeout(
+      () => {
+        setShowHeroBody(true);
+      },
+      explodeAtMs + BODY_DELAY_AFTER_EXPLODE * 1000,
+    );
+
     const doneTimer = window.setTimeout(() => {
       setEntranceComplete(true);
       setShowScrollIndicator(true);
@@ -210,6 +265,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
 
     return () => {
       window.clearTimeout(explodeTimer);
+      window.clearTimeout(bodyTimer);
       window.clearTimeout(doneTimer);
     };
   }, [reducedMotion, explodeAtMs, entranceCompleteMs]);
@@ -348,9 +404,13 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
               text={displayName}
               hasExploded={hasExploded}
               reducedMotion={reducedMotion}
-              showImmediately={!reducedMotion}
             />
-            <HeroBodyCopy heroEyebrow={heroEyebrow} />
+            <HeroBodyCopy
+              heroEyebrow={heroEyebrow}
+              show={showHeroBody}
+              reserveSpace={hasExploded}
+              skipEntrance={reducedMotion}
+            />
           </div>
         </div>
       </div>
