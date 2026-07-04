@@ -1,3 +1,7 @@
+import type { HomeProjectsSection } from '@/lib/homePageBuilder';
+
+export type FeaturedProject = NonNullable<HomeProjectsSection['showcaseProjects']>[number];
+
 /** Matches project `status` values from Sanity for readable labels. */
 export const PROJECT_STATUS_LABELS: Record<string, string> = {
   inProgress: 'In progress',
