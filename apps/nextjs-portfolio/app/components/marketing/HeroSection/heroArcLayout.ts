@@ -34,16 +34,23 @@ type ArcConfig = {
   clearZone: typeof CLEAR_ZONE;
 };
 
-/** Left-wing orbit angles — each is mirrored to the right at `180 - angle`. */
-const ORBIT_WING_ANGLES: Record<HeroViewport, number[]> = {
+/** Wing layout — left angles mirrored to the right (desktop / tablet fan). */
+const ORBIT_WING_ANGLES: Record<Exclude<HeroViewport, 'ultraWide'>, number[]> = {
   mobile: [215, 195, 170],
   tablet: [210, 158],
   desktop: [200, 238, 162],
   wide: [198, 222, 246, 158],
-  ultraWide: [200, 215, 230, 245, 260, 170],
 };
 
-function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
+/**
+ * Ring layout — cards distributed around the center (ultrawide + wide 21:9).
+ * Angles are intentionally uneven for an organic, hand-placed feel.
+ */
+const ORBIT_RING_ANGLES: number[] = [92, 124, 156, 196, 232, 264, 298, 328, 356, 28, 52, 74];
+
+function arcConfigForViewport(viewport: HeroViewport, size?: HeroViewportSize): ArcConfig {
+  const aspect = size?.width && size?.height ? size.width / size.height : 1.78;
+
   switch (viewport) {
     case 'mobile':
       return {
@@ -74,8 +81,8 @@ function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
       };
     case 'wide':
       return {
-        rx: 42,
-        ry: 46,
+        rx: usesRingLayout('wide', size) ? 44 + Math.min((aspect - 2) * 4, 6) : 42,
+        ry: usesRingLayout('wide', size) ? 40 : 46,
         centerX: 50,
         centerY: 50,
         baseScale: 0.94,
@@ -83,23 +90,29 @@ function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
       };
     case 'ultraWide':
       return {
-        rx: 34,
-        ry: 36,
+        rx: 44 + Math.min(Math.max(aspect - 2.1, 0) * 5, 8),
+        ry: 38,
         centerX: 50,
         centerY: 50,
-        baseScale: 0.92,
+        baseScale: 0.9,
         clearZone: CLEAR_ZONE,
       };
   }
 }
 
-/** Push cards toward the side wings on 16:9+ displays (not ultrawide — those use a tight center ring). */
+export function usesRingLayout(viewport: HeroViewport, size?: HeroViewportSize): boolean {
+  if (viewport === 'ultraWide') return true;
+  if (viewport !== 'wide' || !size?.width || !size?.height) return false;
+  return size.width / size.height >= 2.05;
+}
+
+/** Push wing cards toward the sides on 16:9+ (ring layouts skip this). */
 function adjustConfigForViewportSize(
   config: ArcConfig,
   viewport: HeroViewport,
   size?: HeroViewportSize,
 ): ArcConfig {
-  if (viewport === 'ultraWide' || !size?.width || !size?.height) return config;
+  if (usesRingLayout(viewport, size) || !size?.width || !size?.height) return config;
 
   const aspect = size.width / size.height;
   if (aspect < 1.9) return config;
@@ -112,11 +125,10 @@ function adjustConfigForViewportSize(
   };
 }
 
-/** Keep card anchors inside the viewport, accounting for card width at the wings. */
 function clampOrbitPoint(left: number, top: number): { left: number; top: number } {
   return {
-    left: Math.max(4, Math.min(96, left)),
-    top: Math.max(8, Math.min(92, top)),
+    left: Math.max(3, Math.min(97, left)),
+    top: Math.max(6, Math.min(94, top)),
   };
 }
 
@@ -144,8 +156,13 @@ function isInClearZone(left: number, top: number, clearZone: ArcConfig['clearZon
   );
 }
 
-/** Subtle tangent tilt — clamped so cards stay mostly upright. */
-function orbitRotation(deg: number, config: ArcConfig, pairIndex: number): number {
+function orbitRotation(deg: number, config: ArcConfig, pairIndex: number, ring: boolean): number {
+  if (ring) {
+    const towardCenter = deg + 90;
+    const tilt = ((towardCenter % 360) - 180) * 0.04;
+    return Math.max(-8, Math.min(8, tilt + (pairIndex % 2 === 0 ? -1.5 : 1.5)));
+  }
+
   const rad = (deg * Math.PI) / 180;
   const tangent = Math.atan2(config.ry * Math.cos(rad), -config.rx * Math.sin(rad));
   const tangentDeg = (tangent * 180) / Math.PI;
@@ -153,7 +170,26 @@ function orbitRotation(deg: number, config: ArcConfig, pairIndex: number): numbe
   return lean + (pairIndex % 2 === 0 ? -1 : 1);
 }
 
-function buildBalancedOrbitAngles(viewport: HeroViewport, config: ArcConfig): number[] {
+function pseudoRandom(seed: number, salt: number): number {
+  return (((seed * 1103515245 + salt * 12345) & 0x7fffffff) % 1000) / 1000;
+}
+
+/** Per-card wobble so the ring feels hand-placed, not geometric. */
+function organicJitter(index: number, seed = 42) {
+  const base = seed + index * 97;
+  return {
+    angle: (pseudoRandom(base, 13) - 0.5) * 24,
+    rx: (pseudoRandom(base, 17) - 0.5) * 7,
+    ry: (pseudoRandom(base, 23) - 0.5) * 6,
+    rotation: (pseudoRandom(base, 29) - 0.5) * 10,
+    scale: (pseudoRandom(base, 31) - 0.5) * 0.08,
+  };
+}
+
+function buildWingOrbitAngles(
+  viewport: Exclude<HeroViewport, 'ultraWide'>,
+  config: ArcConfig,
+): number[] {
   const wingAngles = ORBIT_WING_ANGLES[viewport].filter(deg => {
     const { left, top } = pointFromAngle(deg, config);
     const mirrored = pointFromAngle(mirrorAngle(deg), config);
@@ -169,6 +205,21 @@ function buildBalancedOrbitAngles(viewport: HeroViewport, config: ArcConfig): nu
     angles.push(mirrorAngle(wing));
   }
   return angles;
+}
+
+function buildRingOrbitAngles(config: ArcConfig, count: number): number[] {
+  const valid = ORBIT_RING_ANGLES.filter(deg => {
+    const { left, top } = pointFromAngle(deg, config);
+    return !isInClearZone(left, top, config.clearZone);
+  });
+
+  if (valid.length >= count) return valid.slice(0, count);
+
+  const fallback: number[] = [];
+  for (let i = 0; i < count; i++) {
+    fallback.push((360 / count) * i + 18);
+  }
+  return fallback;
 }
 
 export function resolveHeroViewport(width: number): HeroViewport {
@@ -199,15 +250,23 @@ export function buildArcPositions(
   viewport: HeroViewport,
   viewportSize?: HeroViewportSize,
 ): HeroCardPosition[] {
+  const ring = usesRingLayout(viewport, viewportSize);
   const config = adjustConfigForViewportSize(
-    arcConfigForViewport(viewport),
+    arcConfigForViewport(viewport, viewportSize),
     viewport,
     viewportSize,
   );
-  const angles = buildBalancedOrbitAngles(viewport, config).slice(0, count);
 
-  return angles.map((deg, index) => {
-    const raw = pointFromAngle(deg, config);
+  const angles = ring
+    ? buildRingOrbitAngles(config, count)
+    : buildWingOrbitAngles(viewport as Exclude<HeroViewport, 'ultraWide'>, config).slice(0, count);
+
+  return angles.slice(0, count).map((deg, index) => {
+    const jitter = ring ? organicJitter(index) : organicJitter(index, 7);
+    const jitteredConfig = ring
+      ? { ...config, rx: config.rx + jitter.rx, ry: config.ry + jitter.ry }
+      : config;
+    const raw = pointFromAngle(deg + jitter.angle, jitteredConfig);
     const { left, top } = clampOrbitPoint(raw.left, raw.top);
     const side: HeroCardSide = left < config.centerX ? 'left' : 'right';
     const band: HeroCardBand = top < config.centerY ? 'top' : 'bottom';
@@ -216,8 +275,8 @@ export function buildArcPositions(
     return {
       top: `${top.toFixed(1)}%`,
       left: `${left.toFixed(1)}%`,
-      rotation: orbitRotation(deg, config, pairIndex),
-      scale: config.baseScale + (pairIndex % 3) * 0.02,
+      rotation: orbitRotation(deg, config, pairIndex, ring) + jitter.rotation,
+      scale: config.baseScale + (pairIndex % 3) * 0.02 + jitter.scale,
       side,
       band,
     };
@@ -239,6 +298,7 @@ export function seededSlotOrder(count: number, seed = 42): number[] {
   return order;
 }
 
+/** Wing-layout scatter — biased toward outer quadrants. */
 export function heroCardScatter(
   seed: number,
   side: HeroCardSide,
@@ -252,5 +312,20 @@ export function heroCardScatter(
     x: (side === 'left' ? -1 : 1) * (2 + r1 * 5),
     y: (band === 'top' ? -1 : 1) * (1 + r2 * 4),
     rotate: (r3 - 0.5) * 1.5,
+  };
+}
+
+/** Ring-layout scatter — omnidirectional wobble. */
+export function heroCardOrganicScatter(seed: number): { x: number; y: number; rotate: number } {
+  const r1 = (seed % 997) / 997;
+  const r2 = ((seed * 17) % 991) / 991;
+  const r3 = ((seed * 31) % 983) / 983;
+  const angle = r1 * Math.PI * 2;
+  const dist = 1.5 + r2 * 5;
+
+  return {
+    x: Math.cos(angle) * dist,
+    y: Math.sin(angle) * dist,
+    rotate: (r3 - 0.5) * 6,
   };
 }

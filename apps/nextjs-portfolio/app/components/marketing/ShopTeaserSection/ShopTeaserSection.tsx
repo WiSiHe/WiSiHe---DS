@@ -1,11 +1,9 @@
 'use client';
 
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowRight, IconShoppingBag } from '@tabler/icons-react';
 import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
-import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import PaintingCard from '@/app/components/paintings/PaintingCard/PaintingCard';
 import PaintingsCarousel from '@/app/components/paintings/PaintingsSection/PaintingsCarousel';
 import { paintingsShopHref } from '@/lib/algolia/constants';
@@ -45,15 +43,12 @@ export default function ShopTeaserSection({
   paintings,
   forSaleCount,
 }: ShopTeaserSectionProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = mounted && prefersReducedMotion;
-
   if (paintings.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
   const description = buildShopDescription(copy.description, forSaleCount);
+  const [featuredPainting, ...restPaintings] = paintings;
+  const showFeaturedLayout = paintings.length >= 3;
 
   return (
     <section
@@ -61,14 +56,20 @@ export default function ShopTeaserSection({
       aria-labelledby='shop-teaser-heading'
     >
       <div className='mx-auto max-w-7xl'>
-        <div className='mb-12 flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between'>
-          <HomeSectionHeader
-            eyebrow={copy.eyebrow}
-            title={copy.title}
-            description={description}
-            headingId='shop-teaser-heading'
-            align='left'
-          />
+        <div className='mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between'>
+          <div className='flex flex-col gap-4 md:flex-row md:items-end md:gap-8'>
+            <HomeSectionHeader
+              eyebrow={copy.eyebrow}
+              title={copy.title}
+              description={description}
+              headingId='shop-teaser-heading'
+              align='left'
+            />
+            <p className='flex items-center gap-2 self-start rounded-full border border-accent/25 bg-accent/8 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent backdrop-blur-sm md:self-auto'>
+              <IconShoppingBag className='size-3.5' aria-hidden />
+              {forSaleCount} for sale
+            </p>
+          </div>
           <Button
             as={Link}
             href={paintingsShopHref()}
@@ -76,7 +77,7 @@ export default function ShopTeaserSection({
             size='medium'
             Icon={IconArrowRight}
             iconPosition='right'
-            className='shrink-0 rounded-full'
+            className='shrink-0 self-start rounded-full md:self-auto'
           >
             {copy.linkLabel}
           </Button>
@@ -85,17 +86,24 @@ export default function ShopTeaserSection({
         <PaintingsCarousel paintings={paintings} showFooter={false} />
 
         <ul className='hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3'>
-          {paintings.map((painting, index) => (
-            <motion.li
-              key={painting._id}
-              initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: index * 0.08 }}
-            >
-              <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
-            </motion.li>
-          ))}
+          {showFeaturedLayout ? (
+            <>
+              <li className='lg:col-span-2 lg:row-span-2'>
+                <PaintingCard paintingData={featuredPainting as any} shouldBeLazy alwaysShowTags />
+              </li>
+              {restPaintings.map(painting => (
+                <li key={painting._id}>
+                  <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
+                </li>
+              ))}
+            </>
+          ) : (
+            paintings.map(painting => (
+              <li key={painting._id}>
+                <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </section>

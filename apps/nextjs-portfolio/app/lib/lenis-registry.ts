@@ -84,11 +84,3 @@ export function shouldSkipDocumentScrollRestoration(pathname: string | null): bo
   if (shouldUsePresentationScrollMode(pathname)) return true;
   return false;
 }
-
-/** Register dynamically rendered [data-scroll] nodes with Locomotive Scroll */
-export function registerScrollElements(container: HTMLElement) {
-  const loco = locomotiveInstance;
-  if (!loco) return;
-  loco.addScrollElements(container);
-  loco.resize();
-}
