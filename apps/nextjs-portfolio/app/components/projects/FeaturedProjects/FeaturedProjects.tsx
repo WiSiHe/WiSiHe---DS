@@ -1,19 +1,20 @@
 'use client';
 
 /**
- * Featured projects — full-bleed scroll panels with a compact section intro.
+ * Featured projects — scroll-stacked cards (React Bits Scroll Stack pattern).
  */
 
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowRight, IconFolder } from '@tabler/icons-react';
 import type { BlockContentMinimal } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
 import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
+import ScrollStack, { ScrollStackItem } from '@/app/components/ui/ScrollStack/ScrollStack';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
-import FeaturedProjectCard from './FeaturedProjectCard';
+import FeaturedProjectStackCard from './FeaturedProjectStackCard';
 
 type FeaturedProjectsProps = {
   showcaseProjects?: HomeProjectsSection['showcaseProjects'];
@@ -41,27 +42,28 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
 
   return (
     <section
-      className='relative w-full overflow-hidden border-t border-border/10 bg-background'
+      className='border-t border-border/20 bg-background'
       aria-labelledby='featured-projects-heading'
       aria-describedby='featured-projects-desc'
     >
-      <div
-        className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.03)_1px,transparent_1px)] bg-size-[3rem_3rem] mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_20%,transparent_100%)]'
-        aria-hidden
-      />
+      <div className='mx-auto max-w-7xl px-4 pt-16 pb-4 md:px-8 md:pt-24 md:pb-6'>
+        <div className='flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
+          <div className='lg:col-span-7'>
+            <HomeSectionHeader
+              align='left'
+              eyebrow={INTRO_EYEBROW}
+              title={INTRO_TITLE}
+              headingId='featured-projects-heading'
+              descriptionId='featured-projects-desc'
+              description={descriptionContent}
+            />
+          </div>
 
-      <div className='relative z-10 mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-20'>
-        <div className='flex flex-col gap-8 md:flex-row md:items-end md:justify-between'>
-          <HomeSectionHeader
-            align='left'
-            eyebrow={INTRO_EYEBROW}
-            title={INTRO_TITLE}
-            headingId='featured-projects-heading'
-            descriptionId='featured-projects-desc'
-            description={descriptionContent}
-          />
-
-          <div className='flex shrink-0 flex-col items-start md:items-end'>
+          <div className='flex flex-wrap items-center gap-3 lg:col-span-5 lg:justify-end'>
+            <p className='inline-flex items-center gap-2 rounded-full border border-border/40 bg-surface px-3.5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground-subtle md:text-[11px]'>
+              <IconFolder className='size-3.5 text-accent' aria-hidden />
+              {displayedProjects.length} featured
+            </p>
             <Button
               as={Link}
               href='/projects'
@@ -71,7 +73,9 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
               iconPosition='right'
               className='rounded-full'
               onClick={() =>
-                trackEvent(AnalyticsEvent.EXPLORE_ALL_PROJECTS_CLICKED, { source: 'home_featured' })
+                trackEvent(AnalyticsEvent.EXPLORE_ALL_PROJECTS_CLICKED, {
+                  source: 'home_featured',
+                })
               }
             >
               Explore all projects
@@ -80,13 +84,22 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
         </div>
       </div>
 
-      <div className='relative z-10 flex w-full flex-col'>
+      <ScrollStack
+        className='mx-auto max-w-5xl px-4 md:px-6'
+        itemDistance={100}
+        itemStackDistance={28}
+        stackPosition='18%'
+        baseScale={0.88}
+        itemScale={0.025}
+      >
         {displayedProjects.map((project, index) => (
-          <FeaturedProjectCard key={project._id} project={project} index={index} />
+          <ScrollStackItem key={project._id} index={index}>
+            <FeaturedProjectStackCard project={project} index={index} />
+          </ScrollStackItem>
         ))}
-      </div>
+      </ScrollStack>
 
-      <div className='relative z-10 border-t border-border/10 px-4 py-12 md:px-8 md:py-14'>
+      <div className='border-t border-border/20 px-4 py-12 md:px-8 md:py-14'>
         <div className='mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
           <p className='max-w-md text-sm leading-relaxed text-foreground-subtle md:text-base'>
             More engineering and design work in the full archive.
