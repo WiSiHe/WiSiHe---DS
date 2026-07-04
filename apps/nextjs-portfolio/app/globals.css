@@ -324,3 +324,10 @@ html[data-presentation-mode] #main-content {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ============================================================================
+   LOCOMOTIVE SCROLL
+   Smooth scroll runs globally via SmoothScroll.tsx.
+   Add data-scroll attributes on elements when you want scroll effects.
+   @see https://scroll.locomotive.ca/docs/documentation/attributes
+   ========================================================================= */

@@ -6,10 +6,9 @@ import { motion, useInView, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { getProjectCardTags } from '@/app/components/projects/ProjectCardParts';
 import { GlassSurface } from '@/app/components/ui/GlassSurface';
-import { registerScrollElements } from '@/app/lib/lenis-registry';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
 import { portableTextToPlainText, urlForImage } from '@/sanity/lib/utils';
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
@@ -63,10 +62,6 @@ type FeaturedProjectCardProps = {
   index: number;
 };
 
-function parallaxAttrs(mounted: boolean, speed: string) {
-  return mounted ? { 'data-scroll': true, 'data-scroll-speed': speed } : {};
-}
-
 function MetaPill({ children }: { children: ReactNode }) {
   return (
     <span className='inline-flex items-center rounded-full border border-white/15 bg-white/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-sm md:text-[11px]'>
@@ -77,16 +72,8 @@ function MetaPill({ children }: { children: ReactNode }) {
 
 const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  useLayoutEffect(() => {
-    if (!mounted || !cardRef.current) return;
-    registerScrollElements(cardRef.current);
-  }, [mounted]);
   const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = Boolean(mounted && prefersReducedMotion);
+  const motionReduced = Boolean(prefersReducedMotion);
   const isCardInView = useInView(cardRef, {
     once: true,
     amount: 0.38,
@@ -95,7 +82,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
 
   const isEven = index % 2 === 0;
   const panelFromX = isEven ? -20 : 20;
-  const panelAnimate = reducedMotion ? false : isCardInView ? 'visible' : 'hidden';
+  const panelAnimate = motionReduced ? false : isCardInView ? 'visible' : 'hidden';
   const titleId = `featured-project-title-${project._id}`;
   const clientLabel = (project.client as string | null | undefined)?.trim() || null;
   const nameTrimmed = (project.name as string | undefined)?.trim();
@@ -132,16 +119,14 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
         <div className='pointer-events-none absolute inset-0 z-10 bg-black/35 transition-colors duration-300 dark:bg-black/45' />
 
         {heroUrl ? (
-          <div className='absolute inset-0 z-0' {...parallaxAttrs(mounted, '-0.5')}>
-            <Image
-              src={heroUrl}
-              alt={backdropAlt}
-              fill
-              className='z-0 scale-115 object-cover select-none'
-              sizes='(max-width: 768px) 100vw, 60vw'
-              priority={index === 0}
-            />
-          </div>
+          <Image
+            src={heroUrl}
+            alt={backdropAlt}
+            fill
+            className='z-0 scale-115 object-cover select-none'
+            sizes='(max-width: 768px) 100vw, 60vw'
+            priority={index === 0}
+          />
         ) : (
           <div className='h-full w-full bg-surface-subtle' />
         )}
@@ -158,12 +143,12 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
         <GlassSurface variant='backdrop' className='w-full rounded-2xl p-6 md:p-8'>
           <motion.div
             className='flex flex-col'
-            variants={reducedMotion ? undefined : panelContainerVariants}
-            initial={reducedMotion ? false : 'hidden'}
+            variants={motionReduced ? undefined : panelContainerVariants}
+            initial={motionReduced ? false : 'hidden'}
             animate={panelAnimate}
           >
             <motion.div
-              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+              variants={motionReduced ? undefined : panelItemVariants(panelFromX)}
               className='mb-4 flex flex-wrap items-center gap-2'
             >
               <MetaPill>{statusLabel}</MetaPill>
@@ -171,7 +156,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
             </motion.div>
 
             <motion.div
-              variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+              variants={motionReduced ? undefined : panelItemVariants(panelFromX)}
               className='mb-4 space-y-2'
             >
               {clientLabel ? (
@@ -189,7 +174,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
 
             {summaryText ? (
               <motion.p
-                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                variants={motionReduced ? undefined : panelItemVariants(panelFromX)}
                 className='mb-5 line-clamp-4 text-sm leading-relaxed text-white/72 md:text-[15px]'
               >
                 {summaryText}
@@ -198,7 +183,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
 
             {visibleTags.length > 0 ? (
               <motion.div
-                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                variants={motionReduced ? undefined : panelItemVariants(panelFromX)}
                 className='mb-6 flex flex-wrap gap-1.5'
               >
                 {visibleTags.map(tag => (
@@ -219,7 +204,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
 
             {previewSources.length > 1 ? (
               <motion.div
-                variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}
+                variants={motionReduced ? undefined : panelItemVariants(panelFromX)}
                 className='mb-6 flex gap-2'
               >
                 {previewSources.map(src => {
@@ -238,7 +223,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
               </motion.div>
             ) : null}
 
-            <motion.div variants={reducedMotion ? undefined : panelItemVariants(panelFromX)}>
+            <motion.div variants={motionReduced ? undefined : panelItemVariants(panelFromX)}>
               <Link
                 href={`/projects/${project.slug}`}
                 className='group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast shadow-md transition-[background-color,transform] duration-200 hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98]'

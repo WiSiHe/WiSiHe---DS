@@ -14,10 +14,12 @@ import {
   buildArcPositions,
   type HeroViewport,
   type HeroViewportSize,
+  heroCardOrganicScatter,
   heroCardScatter,
   heroVisibleCount,
   resolveHeroViewport,
   seededSlotOrder,
+  usesRingLayout,
 } from './heroArcLayout';
 import { heroFloatSquashStretch } from './heroSquashStretch';
 import {
@@ -303,6 +305,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     [visibleCount, viewport, viewportSize],
   );
   const slotOrder = useMemo(() => seededSlotOrder(visibleCount), [visibleCount]);
+  const ringLayout = usesRingLayout(viewport, viewportSize);
   const hoverEnabled = canHover && entranceComplete;
   const floatActive = entranceComplete && !reducedMotion;
 
@@ -342,11 +345,10 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     const pos = arcPositions[slotIndex] ?? arcPositions[index] ?? arcPositions[0];
     if (!pos) return null;
 
-    const scatter = heroCardScatter(
-      paintingBrushSeed(`${item._id}:hero-scatter`),
-      pos.side,
-      pos.band,
-    );
+    const scatterSeed = paintingBrushSeed(`${item._id}:hero-scatter`);
+    const scatter = ringLayout
+      ? heroCardOrganicScatter(scatterSeed)
+      : heroCardScatter(scatterSeed, pos.side, pos.band);
 
     const isCardHovered = hoveredIndex === index;
     const cardZIndex = (slotIndex % 3) + 1;
