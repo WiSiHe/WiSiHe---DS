@@ -152,7 +152,7 @@ type HeroBodyCopyProps = {
 };
 
 const eyebrowClassName =
-  'mb-2 w-full text-center text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:text-xs sm:tracking-[0.2em] md:mb-3 md:text-sm';
+  'mx-auto mb-2 w-full max-w-[28ch] text-center text-pretty text-[10px] font-bold uppercase tracking-[0.16em] text-foreground-subtle sm:max-w-none sm:text-xs sm:tracking-[0.2em] md:mb-3 md:text-sm';
 
 function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBodyCopyProps) {
   if (!show && !skipEntrance && !reserveSpace) return null;
@@ -181,17 +181,17 @@ function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBod
 
       <motion.div
         variants={buttonVariants}
-        className='mt-4 flex w-full max-w-xs flex-col items-stretch gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'
+        className='mx-auto mt-4 flex w-full max-w-[17rem] flex-col items-center gap-2.5 pointer-events-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-3 md:mt-5'
       >
         <Link
           href='/paintings'
-          className='inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover sm:px-6'
+          className='inline-flex w-full items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold tracking-wide text-accent-contrast shadow-lg transition-all hover:scale-105 hover:bg-accent-hover sm:w-auto sm:px-6'
         >
           View Paintings
         </Link>
         <Link
           href='/projects'
-          className='inline-flex items-center justify-center rounded-full border border-border/70 bg-background px-5 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg sm:px-6'
+          className='inline-flex w-full items-center justify-center rounded-full border border-border/70 bg-background px-5 py-2.5 text-sm font-bold tracking-wide text-foreground shadow-md backdrop-blur-sm transition-[transform,background-color,border-color,box-shadow] duration-300 hover:scale-105 hover:border-accent/45 hover:bg-surface hover:shadow-lg sm:w-auto sm:px-6'
         >
           View projects
         </Link>
@@ -412,8 +412,8 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
           {visibleItems.map((item, index) => renderArcCard(item, index))}
         </div>
 
-        <div className='pointer-events-none absolute inset-0 z-[60] flex items-start justify-center px-4 pt-[min(17svh,8.5rem)] pb-8 sm:px-6 md:items-center md:px-10 md:py-8'>
-          <div className='relative flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl'>
+        <div className='pointer-events-none absolute inset-0 z-[60] flex items-center justify-center px-4 py-10 sm:px-6 md:px-10 md:py-8'>
+          <div className='relative mx-auto flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl'>
             <HeroPersistentName
               text={displayName}
               hasExploded={hasExploded}
