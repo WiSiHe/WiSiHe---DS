@@ -63,11 +63,25 @@ export function scrollDocumentToTop(options: ScrollDocumentOptions = {}): void {
   });
 }
 
-/** Routes that use a nested scroll container instead of the document. */
-export function shouldSkipDocumentScrollRestoration(pathname: string | null): boolean {
+/** Paintings listing + detail — native document scroll only (no Lenis handoff). */
+export function isPaintingsRoute(pathname: string | null): boolean {
+  if (!pathname) return false;
+  return pathname === '/paintings' || pathname.startsWith('/paintings/');
+}
+
+/** Routes with a nested scroll container instead of the document (decks, 3D). */
+export function shouldUsePresentationScrollMode(pathname: string | null): boolean {
   if (!pathname) return false;
   if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
   if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
+  return false;
+}
+
+/** Let Next.js handle scroll restoration — skip Lenis scroll-to-top on these routes. */
+export function shouldSkipDocumentScrollRestoration(pathname: string | null): boolean {
+  if (!pathname) return false;
+  if (isPaintingsRoute(pathname)) return true;
+  if (shouldUsePresentationScrollMode(pathname)) return true;
   return false;
 }
 

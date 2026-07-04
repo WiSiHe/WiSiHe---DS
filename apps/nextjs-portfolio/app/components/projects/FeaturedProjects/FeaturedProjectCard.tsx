@@ -129,7 +129,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
       className='relative flex h-screen w-full items-center justify-center overflow-hidden border-t border-border/20 bg-surface dark:border-white/5'
     >
       <div className='absolute inset-0 z-0 h-full w-full overflow-hidden'>
-        <div className='pointer-events-none absolute inset-0 z-10 bg-black/50 transition-colors duration-300 dark:bg-black/60' />
+        <div className='pointer-events-none absolute inset-0 z-10 bg-black/35 transition-colors duration-300 dark:bg-black/45' />
 
         {heroUrl ? (
           <div className='absolute inset-0 z-0' {...parallaxAttrs(mounted, '-0.5')}>
@@ -155,7 +155,7 @@ const FeaturedProjectCard = ({ project, index }: FeaturedProjectCardProps) => {
             : 'md:right-[10%] lg:right-[15%] md:left-auto',
         )}
       >
-        <GlassSurface variant='overlay' className='w-full rounded-2xl p-6 shadow-2xl md:p-8'>
+        <GlassSurface variant='backdrop' className='w-full rounded-2xl p-6 md:p-8'>
           <motion.div
             className='flex flex-col'
             variants={reducedMotion ? undefined : panelContainerVariants}

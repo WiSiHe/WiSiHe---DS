@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { shouldSkipDocumentScrollRestoration } from '@/app/lib/lenis-registry';
+import { shouldUsePresentationScrollMode } from '@/app/lib/lenis-registry';
 
 /**
  * Locks the page to a single native scroll container for slide decks.
@@ -10,7 +10,7 @@ import { shouldSkipDocumentScrollRestoration } from '@/app/lib/lenis-registry';
  */
 export function PresentationMode() {
   const pathname = usePathname();
-  const immersive = shouldSkipDocumentScrollRestoration(pathname);
+  const immersive = shouldUsePresentationScrollMode(pathname);
 
   useEffect(() => {
     if (!immersive) return;

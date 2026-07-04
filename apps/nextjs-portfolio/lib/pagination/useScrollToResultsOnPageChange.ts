@@ -25,16 +25,10 @@ export function useScrollToResultsOnPageChange({ page, isLoading, targetId }: Op
 
     pendingScrollRef.current = false;
 
-    let innerFrame = 0;
-    const outerFrame = requestAnimationFrame(() => {
-      innerFrame = requestAnimationFrame(() => {
-        scrollToSearchResults(targetId);
-      });
+    const frameId = requestAnimationFrame(() => {
+      scrollToSearchResults(targetId);
     });
 
-    return () => {
-      cancelAnimationFrame(outerFrame);
-      cancelAnimationFrame(innerFrame);
-    };
+    return () => cancelAnimationFrame(frameId);
   }, [isLoading, targetId]);
 }

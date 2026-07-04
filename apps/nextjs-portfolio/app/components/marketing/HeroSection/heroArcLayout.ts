@@ -25,14 +25,6 @@ const CLEAR_ZONE = {
   topMax: 68,
 };
 
-/** Slightly tighter copy lane on very wide screens so cards can use the wings. */
-const CLEAR_ZONE_ULTRA_WIDE = {
-  leftMin: 32,
-  leftMax: 68,
-  topMin: 24,
-  topMax: 68,
-};
-
 type ArcConfig = {
   rx: number;
   ry: number;
@@ -44,11 +36,11 @@ type ArcConfig = {
 
 /** Left-wing orbit angles — each is mirrored to the right at `180 - angle`. */
 const ORBIT_WING_ANGLES: Record<HeroViewport, number[]> = {
-  mobile: [218, 162],
+  mobile: [215, 195, 170],
   tablet: [210, 158],
   desktop: [200, 238, 162],
   wide: [198, 222, 246, 158],
-  ultraWide: [192, 210, 228, 246, 264, 156],
+  ultraWide: [200, 215, 230, 245, 260, 170],
 };
 
 function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
@@ -56,10 +48,10 @@ function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
     case 'mobile':
       return {
         rx: 44,
-        ry: 46,
+        ry: 48,
         centerX: 50,
         centerY: 50,
-        baseScale: 0.74,
+        baseScale: 0.72,
         clearZone: CLEAR_ZONE,
       };
     case 'tablet':
@@ -91,19 +83,23 @@ function arcConfigForViewport(viewport: HeroViewport): ArcConfig {
       };
     case 'ultraWide':
       return {
-        rx: 47,
-        ry: 44,
+        rx: 34,
+        ry: 36,
         centerX: 50,
         centerY: 50,
-        baseScale: 0.96,
-        clearZone: CLEAR_ZONE_ULTRA_WIDE,
+        baseScale: 0.92,
+        clearZone: CLEAR_ZONE,
       };
   }
 }
 
-/** Push cards toward the side wings on 16:9+ and ultrawide displays. */
-function adjustConfigForViewportSize(config: ArcConfig, size?: HeroViewportSize): ArcConfig {
-  if (!size?.width || !size?.height) return config;
+/** Push cards toward the side wings on 16:9+ displays (not ultrawide — those use a tight center ring). */
+function adjustConfigForViewportSize(
+  config: ArcConfig,
+  viewport: HeroViewport,
+  size?: HeroViewportSize,
+): ArcConfig {
+  if (viewport === 'ultraWide' || !size?.width || !size?.height) return config;
 
   const aspect = size.width / size.height;
   if (aspect < 1.9) return config;
@@ -186,7 +182,7 @@ export function resolveHeroViewport(width: number): HeroViewport {
 export function heroVisibleCount(viewport: HeroViewport): number {
   switch (viewport) {
     case 'mobile':
-      return 4;
+      return 6;
     case 'tablet':
       return 4;
     case 'desktop':
@@ -203,7 +199,11 @@ export function buildArcPositions(
   viewport: HeroViewport,
   viewportSize?: HeroViewportSize,
 ): HeroCardPosition[] {
-  const config = adjustConfigForViewportSize(arcConfigForViewport(viewport), viewportSize);
+  const config = adjustConfigForViewportSize(
+    arcConfigForViewport(viewport),
+    viewport,
+    viewportSize,
+  );
   const angles = buildBalancedOrbitAngles(viewport, config).slice(0, count);
 
   return angles.map((deg, index) => {

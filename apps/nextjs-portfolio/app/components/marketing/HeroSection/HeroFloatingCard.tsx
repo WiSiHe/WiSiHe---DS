@@ -238,25 +238,26 @@ export function HeroFloatingCard({
         </BrushRevealWrap>
       ) : (
         <>
-          <Image
-            src={imageUrl}
-            alt=''
-            aria-hidden
-            fill
-            priority={isPriority}
-            fetchPriority={isPriority ? 'high' : undefined}
-            placeholder={imageLqip ? 'blur' : 'empty'}
-            blurDataURL={imageLqip ?? undefined}
-            className='object-cover'
-            sizes='(max-width: 768px) 52vw, 250px'
-          />
+          <div className='absolute inset-0 overflow-hidden'>
+            <Image
+              src={imageUrl}
+              alt=''
+              aria-hidden
+              fill
+              priority={isPriority}
+              fetchPriority={isPriority ? 'high' : undefined}
+              placeholder={imageLqip ? 'blur' : 'empty'}
+              blurDataURL={imageLqip ?? undefined}
+              className='object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none'
+              sizes='(max-width: 768px) 52vw, 250px'
+            />
+          </div>
           {hoverEnabled ? (
             <HeroProjectUiHover
               accentColor={projectAccent}
               title={projectTitle}
               client={projectClient}
               tags={projectTags}
-              isHovered={isCardHovered}
             />
           ) : null}
         </>
@@ -295,13 +296,7 @@ export function HeroFloatingCard({
               }
         }
       >
-        <motion.div
-          animate={{
-            scale: isCardHovered && hoverEnabled && !isPainting ? 1.03 : 1,
-          }}
-          transition={{ type: 'spring', stiffness: 320, damping: 24, mass: 0.5 }}
-          className='h-full w-full'
-        >
+        <div className='h-full w-full'>
           <motion.div
             animate={{ x: hasExploded ? scatter.x : 0, y: hasExploded ? scatter.y : 0 }}
             transition={arcTransition}
@@ -325,7 +320,7 @@ export function HeroFloatingCard({
               </motion.div>
             </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </motion.div>
   );
