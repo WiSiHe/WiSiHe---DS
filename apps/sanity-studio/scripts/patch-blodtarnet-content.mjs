@@ -27,8 +27,7 @@ const DATASET =
   'production';
 
 const DOCUMENT_ID = '5e65b3fc-fbf3-481f-a777-22573220d887';
-const PLAY_URL =
-  'https://play.unity.com/en/games/29bffa25-928f-4283-b5ef-97cc5c1f5a0a/game-web';
+const PLAY_URL = 'https://play.unity.com/en/games/29bffa25-928f-4283-b5ef-97cc5c1f5a0a/game-web';
 
 function span(key, text, marks = []) {
   return { _key: key, _type: 'span', marks, text };
@@ -112,10 +111,16 @@ const content = [
     ),
   ]),
 
-  bullet('jam-1', 'Theme: Blodtårnet — Norse saga material, loosely rooted in old tapestry storytelling.'),
+  bullet(
+    'jam-1',
+    'Theme: Blodtårnet — Norse saga material, loosely rooted in old tapestry storytelling.',
+  ),
   bullet('jam-2', 'Hard deadline: playable in the browser by Sunday 18:00 — no extensions.'),
   bullet('jam-3', 'One game, one team — not a room full of separate prototypes.'),
-  bullet('jam-4', 'Assignments so artists, musicians, and minigame makers knew what to build toward.'),
+  bullet(
+    'jam-4',
+    'Assignments so artists, musicians, and minigame makers knew what to build toward.',
+  ),
 
   heading('game-heading', 'The game'),
 
@@ -126,8 +131,14 @@ const content = [
     ),
   ]),
 
-  bullet('game-1', 'Core loop: platform through the tower, hit minigame rooms, survive the boss, face the moral choice.'),
-  bullet('game-2', 'Contributors built minigames, soundtracks, and art in parallel while I held the spine together.'),
+  bullet(
+    'game-1',
+    'Core loop: platform through the tower, hit minigame rooms, survive the boss, face the moral choice.',
+  ),
+  bullet(
+    'game-2',
+    'Contributors built minigames, soundtracks, and art in parallel while I held the spine together.',
+  ),
   bullet('game-3', 'Unity 6.3, shipped as a WebGL build on Unity Play.'),
 
   heading('my-role-heading', 'What I built'),

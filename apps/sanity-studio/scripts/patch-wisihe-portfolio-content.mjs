@@ -173,12 +173,24 @@ packages/
   ]),
 
   bullet('stack-1', 'Next.js and TypeScript on the frontend, deployed to Vercel.'),
-  bullet('stack-2', 'Sanity as headless CMS — projects, paintings, recipes, and page builder content.'),
+  bullet(
+    'stack-2',
+    'Sanity as headless CMS — projects, paintings, recipes, and page builder content.',
+  ),
   bullet('stack-3', 'Tailwind CSS v4 with tokens from packages/tokens, not one-off hex values.'),
-  bullet('stack-4', 'Motion (motion/react) for page transitions, carousels, and scroll-driven UI — not Framer Motion.'),
+  bullet(
+    'stack-4',
+    'Motion (motion/react) for page transitions, carousels, and scroll-driven UI — not Framer Motion.',
+  ),
   bullet('stack-5', 'Three.js for presentations and experiments where flat design is not enough.'),
-  bullet('stack-6', 'Algolia for paintings search — faceted filters, instant results, synced from Sanity.'),
-  bullet('stack-7', 'Biome for lint and format, Turbo for builds, Changesets when library packages version.'),
+  bullet(
+    'stack-6',
+    'Algolia for paintings search — faceted filters, instant results, synced from Sanity.',
+  ),
+  bullet(
+    'stack-7',
+    'Biome for lint and format, Turbo for builds, Changesets when library packages version.',
+  ),
 
   heading('rebuild-heading', 'What I keep rebuilding'),
 
@@ -243,7 +255,7 @@ const patchPayload = {
     paragraph('wh-s0', [
       span(
         'wh-s0-s',
-        "WiSiHe — my portfolio and playground in one. Illustration, client work, and experiments on a Next.js monorepo with Sanity CMS, design tokens, Algolia search, and Motion.",
+        'WiSiHe — my portfolio and playground in one. Illustration, client work, and experiments on a Next.js monorepo with Sanity CMS, design tokens, Algolia search, and Motion.',
       ),
     ]),
     paragraph('wh-s1', [
@@ -294,10 +306,6 @@ const client = createClient({
   useCdn: false,
 });
 
-await client
-  .patch(DOCUMENT_ID)
-  .set(patchPayload)
-  .unset(['projectEnd'])
-  .commit();
+await client.patch(DOCUMENT_ID).set(patchPayload).unset(['projectEnd']).commit();
 
 console.log('Updated WiSiHe portfolio website project content');
