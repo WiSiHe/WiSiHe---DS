@@ -12,13 +12,13 @@ type PaintingsShowcaseCarouselProps = {
   paintings: any[];
 };
 
-/** Accessible Embla fallback when reduced motion is preferred. */
+/** Accessible Embla carousel — used on mobile and when reduced motion is preferred. */
 export default function PaintingsShowcaseCarousel({ paintings }: PaintingsShowcaseCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
+    align: 'center',
     loop: false,
     skipSnaps: false,
-    dragFree: false,
+    dragFree: true,
     containScroll: 'trimSnaps',
   });
 
@@ -57,14 +57,13 @@ export default function PaintingsShowcaseCarousel({ paintings }: PaintingsShowca
   }
 
   return (
-    <section className='relative' aria-label='Featured paintings carousel'>
-      <div className='overflow-hidden' ref={emblaRef}>
+    <div className='relative touch-pan-x'>
+      <div className='overflow-hidden py-1' ref={emblaRef}>
         <div className='flex gap-3 md:gap-4'>
           {items.map((painting, index) => (
             <div
               key={painting._id ?? painting.objectID ?? index}
-              className='w-[min(88vw,340px)] shrink-0 md:w-[min(38vw,380px)] lg:w-[min(28vw,340px)]'
-              onPointerDown={event => event.stopPropagation()}
+              className='w-[min(78vw,320px)] shrink-0 md:w-[min(38vw,380px)] lg:w-[min(28vw,340px)]'
             >
               <PaintingCard
                 paintingData={painting}
@@ -99,6 +98,6 @@ export default function PaintingsShowcaseCarousel({ paintings }: PaintingsShowca
           isDisabled={!canScrollNext}
         />
       </div>
-    </section>
+    </div>
   );
 }

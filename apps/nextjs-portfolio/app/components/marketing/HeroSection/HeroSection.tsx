@@ -16,6 +16,7 @@ import {
   type HeroViewportSize,
   heroCardOrganicScatter,
   heroCardScatter,
+  heroCardScatterMobile,
   heroVisibleCount,
   resolveHeroViewport,
   seededSlotOrder,
@@ -93,10 +94,10 @@ const HERO_CARD_ASPECT_PRESETS = [
 ] as const;
 
 const ARC_CARD_SIZES = [
-  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
-  'w-[36vw] max-w-[156px] sm:w-48 sm:max-w-none md:w-60 lg:w-80 xl:w-80 xl:max-w-80 2xl:max-w-[21rem] min-[2560px]:max-w-[22rem]',
-  'w-[32vw] max-w-[140px] sm:w-40 sm:max-w-none md:w-52 lg:w-64 xl:w-64 xl:max-w-64 2xl:max-w-72 min-[2560px]:max-w-[19rem]',
-  'w-[34vw] max-w-[148px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
+  'w-[42vw] max-w-[188px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
+  'w-[44vw] max-w-[196px] sm:w-48 sm:max-w-none md:w-60 lg:w-80 xl:w-80 xl:max-w-80 2xl:max-w-[21rem] min-[2560px]:max-w-[22rem]',
+  'w-[40vw] max-w-[180px] sm:w-40 sm:max-w-none md:w-52 lg:w-64 xl:w-64 xl:max-w-64 2xl:max-w-72 min-[2560px]:max-w-[19rem]',
+  'w-[42vw] max-w-[188px] sm:w-44 sm:max-w-none md:w-56 lg:w-72 xl:w-72 xl:max-w-72 2xl:max-w-80 min-[2560px]:max-w-[20rem]',
 ] as const;
 
 function readViewportSize(): HeroViewportSize {
@@ -217,19 +218,28 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const floatKeyframes = useMemo(
     () =>
       Array.from({ length: 12 }).map((_, i) => {
-        const yPeak = Math.random() * 10 + 5;
+        const isMobile = viewport === 'mobile';
+        const yPeak = isMobile ? Math.random() * 3 + 2 : Math.random() * 10 + 5;
         const squashStretch = heroFloatSquashStretch(yPeak);
         return {
           y: [0, yPeak, 0] as [number, number, number],
-          x: [0, Math.random() * 6 - 3, 0] as [number, number, number],
-          rotate: [0, Math.random() * 1.2 - 0.6, 0] as [number, number, number],
+          x: [0, isMobile ? Math.random() * 2 - 1 : Math.random() * 6 - 3, 0] as [
+            number,
+            number,
+            number,
+          ],
+          rotate: [0, isMobile ? Math.random() * 0.6 - 0.3 : Math.random() * 1.2 - 0.6, 0] as [
+            number,
+            number,
+            number,
+          ],
           scaleX: squashStretch.scaleX,
           scaleY: squashStretch.scaleY,
           duration: Math.random() * 1.5 + 5.5,
           delay: i * 0.1,
         };
       }),
-    [],
+    [viewport],
   );
 
   const visibleCount = heroVisibleCount(viewport);
@@ -348,7 +358,9 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     const scatterSeed = paintingBrushSeed(`${item._id}:hero-scatter`);
     const scatter = ringLayout
       ? heroCardOrganicScatter(scatterSeed)
-      : heroCardScatter(scatterSeed, pos.side, pos.band);
+      : viewport === 'mobile'
+        ? heroCardScatterMobile(scatterSeed, pos.side, pos.band)
+        : heroCardScatter(scatterSeed, pos.side, pos.band);
 
     const isCardHovered = hoveredIndex === index;
     const cardZIndex = (slotIndex % 3) + 1;
@@ -400,7 +412,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
           {visibleItems.map((item, index) => renderArcCard(item, index))}
         </div>
 
-        <div className='pointer-events-none absolute inset-0 z-[60] flex items-center justify-center px-4 py-8 sm:px-6 md:px-10'>
+        <div className='pointer-events-none absolute inset-0 z-[60] flex items-start justify-center px-4 pt-[min(17svh,8.5rem)] pb-8 sm:px-6 md:items-center md:px-10 md:py-8'>
           <div className='relative flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl'>
             <HeroPersistentName
               text={displayName}

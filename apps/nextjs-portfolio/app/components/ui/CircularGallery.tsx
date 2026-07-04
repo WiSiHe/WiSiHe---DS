@@ -6,6 +6,7 @@
  * @see https://reactbits.dev/components/circular-gallery
  */
 
+import { cn } from '@wisihe/utils';
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
 import { useEffect, useRef } from 'react';
 
@@ -550,7 +551,12 @@ class App {
   isDown: boolean = false;
   hasMoved: boolean = false;
   start: number = 0;
+  startY: number = 0;
+  /** null = undecided, 'x' = horizontal drag (capture), 'y' = vertical (let page scroll). */
+  dragAxis: 'x' | 'y' | null = null;
+  isTouch: boolean = false;
   dragThreshold = 8;
+  axisLockThreshold = 6;
 
   constructor(
     container: HTMLElement,
@@ -725,22 +731,49 @@ class App {
   onTouchDown(e: MouseEvent | TouchEvent) {
     this.isDown = true;
     this.hasMoved = false;
+    this.isTouch = 'touches' in e;
+    // Pointer drags decide direction; mouse is always horizontal.
+    this.dragAxis = this.isTouch ? null : 'x';
     this.scroll.position = this.scroll.current;
     this.start = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    this.startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
   }
 
   onTouchMove(e: MouseEvent | TouchEvent) {
     if (!this.isDown) return;
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    if (Math.abs(this.start - x) > this.dragThreshold) {
+    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const dx = this.start - x;
+    const dy = this.startY - y;
+
+    // First meaningful move on touch locks the axis: horizontal drives the
+    // gallery (and we capture the gesture); vertical is left to the page.
+    if (this.dragAxis === null) {
+      if (Math.abs(dx) > this.axisLockThreshold || Math.abs(dy) > this.axisLockThreshold) {
+        this.dragAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      } else {
+        return;
+      }
+    }
+
+    if (this.dragAxis === 'y') return;
+
+    // Horizontal gesture owns the interaction — stop the page from scrolling.
+    if (this.isTouch && e.cancelable) e.preventDefault();
+
+    if (Math.abs(dx) > this.dragThreshold) {
       this.hasMoved = true;
     }
-    const distance = (this.start - x) * (this.scrollSpeed * 0.025);
+    const distance = dx * (this.scrollSpeed * 0.025);
     this.scroll.target = (this.scroll.position ?? 0) + distance;
   }
 
   onTouchUp() {
+    if (!this.isDown) return;
+    const wasHorizontal = this.dragAxis !== 'y';
     this.isDown = false;
+    this.dragAxis = null;
+    if (!wasHorizontal) return;
     this.onCheck();
     if (!this.hasMoved) {
       this.emitCenteredItemClick();
@@ -834,8 +867,10 @@ class App {
     this.container.addEventListener('mousemove', this.boundOnTouchMove);
     this.container.addEventListener('mouseup', this.boundOnTouchUp);
     this.container.addEventListener('touchstart', this.boundOnTouchDown, { passive: true });
-    this.container.addEventListener('touchmove', this.boundOnTouchMove, { passive: true });
+    // Non-passive so a horizontal drag can preventDefault() and own the gesture.
+    this.container.addEventListener('touchmove', this.boundOnTouchMove, { passive: false });
     this.container.addEventListener('touchend', this.boundOnTouchUp);
+    this.container.addEventListener('touchcancel', this.boundOnTouchUp);
     this.container.addEventListener('keydown', this.boundOnKeyDown);
     this.gl.canvas.addEventListener('click', this.boundOnClick);
   }
@@ -852,6 +887,7 @@ class App {
     this.container.removeEventListener('touchstart', this.boundOnTouchDown);
     this.container.removeEventListener('touchmove', this.boundOnTouchMove);
     this.container.removeEventListener('touchend', this.boundOnTouchUp);
+    this.container.removeEventListener('touchcancel', this.boundOnTouchUp);
     this.container.removeEventListener('keydown', this.boundOnKeyDown);
     this.gl?.canvas?.removeEventListener('click', this.boundOnClick);
     if (this.renderer?.gl?.canvas.parentNode) {
@@ -921,7 +957,10 @@ export default function CircularGallery({
 
   return (
     <div
-      className={className ?? 'size-full overflow-hidden cursor-grab active:cursor-grabbing'}
+      className={cn(
+        'touch-pan-y',
+        className ?? 'size-full overflow-hidden cursor-grab active:cursor-grabbing',
+      )}
       ref={containerRef}
       role='region'
       aria-label='Featured paintings gallery. Drag to browse, click to open.'

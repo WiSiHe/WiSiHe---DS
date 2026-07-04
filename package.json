@@ -36,14 +36,18 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm build:packages && changeset publish",
-    "analytics:weekly-review": "node scripts/weekly-analytics-review.mjs",
-    "analytics:weekly-review:dry-run": "node scripts/weekly-analytics-review.mjs --dry-run"
+    "site-health:weekly": "node scripts/weekly-site-health.mjs",
+    "site-health:weekly:dry-run": "node scripts/weekly-site-health.mjs --dry-run",
+    "analytics:weekly-review": "node scripts/weekly-site-health.mjs --only=analytics",
+    "analytics:weekly-review:dry-run": "node scripts/weekly-site-health.mjs --only=analytics --dry-run"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.1",
     "@changesets/cli": "^2.31.0",
+    "chrome-launcher": "^1.2.1",
     "knip": "6.23.0",
     "lefthook": "2.1.8",
+    "lighthouse": "^13.4.0",
     "turbo": "^2.10.0"
   },
   "packageManager": "pnpm@10.23.0",

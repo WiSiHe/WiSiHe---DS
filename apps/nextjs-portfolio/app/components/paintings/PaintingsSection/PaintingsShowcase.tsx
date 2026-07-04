@@ -4,14 +4,7 @@ import { cn } from '@wisihe/utils';
 import { useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  type CSSProperties,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import CircularGallery, { type CircularGalleryItem } from '@/app/components/ui/CircularGallery';
 import { paintingsToCircularGalleryItems } from '@/lib/paintings/paintingsToCircularGalleryItems';
 import PaintingsShowcaseCarousel from './PaintingsShowcaseCarousel';
@@ -26,44 +19,38 @@ type PaintingsShowcaseProps = {
 
 function readGalleryThemeColors() {
   if (typeof window === 'undefined') {
-    return { textColor: '#171717', fadeColor: 'var(--color-surface)' };
+    return { textColor: '#171717' };
   }
 
-  const root = document.documentElement;
-  const styles = getComputedStyle(root);
+  const styles = getComputedStyle(document.documentElement);
 
   return {
-    textColor: styles.getPropertyValue('--color-foreground').trim() || '#171717',
-    fadeColor: styles.getPropertyValue('--color-surface').trim() || 'var(--color-surface)',
+    textColor: styles.getPropertyValue('--color-foreground-val').trim() || '#171717',
   };
 }
 
 function readGalleryBend(width: number): number {
-  if (width < 768) return 2;
+  if (width < 768) return 1.4;
   if (width < 1024) return 2.5;
   return 3;
 }
 
 type PaintingsGalleryFrameProps = {
-  fadeColor: string;
   className?: string;
   children: ReactNode;
 };
 
-function PaintingsGalleryFrame({ fadeColor, className, children }: PaintingsGalleryFrameProps) {
+function PaintingsGalleryFrame({ className, children }: PaintingsGalleryFrameProps) {
   return (
-    <div
-      className={cn('relative isolate w-full overflow-hidden', className)}
-      style={{ '--paintings-gallery-fade': fadeColor } as CSSProperties}
-    >
+    <div className={cn('relative isolate w-full overflow-hidden', className)}>
       {children}
       <div
         aria-hidden
-        className='pointer-events-none absolute inset-y-0 left-0 z-10 w-[clamp(32px,10%,160px)] bg-[linear-gradient(to_right,var(--paintings-gallery-fade)_0%,transparent_100%)]'
+        className='pointer-events-none absolute inset-y-0 left-0 z-10 w-[clamp(32px,12%,160px)] bg-gradient-to-r from-surface to-transparent'
       />
       <div
         aria-hidden
-        className='pointer-events-none absolute inset-y-0 right-0 z-10 w-[clamp(32px,10%,160px)] bg-[linear-gradient(to_left,var(--paintings-gallery-fade)_0%,transparent_100%)]'
+        className='pointer-events-none absolute inset-y-0 right-0 z-10 w-[clamp(32px,12%,160px)] bg-gradient-to-l from-surface to-transparent'
       />
     </div>
   );
@@ -78,21 +65,23 @@ const PaintingsShowcase = ({
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [textColor, setTextColor] = useState('#171717');
-  const [fadeColor, setFadeColor] = useState('var(--color-surface)');
   const [bend, setBend] = useState(2.5);
 
   useEffect(() => {
+    const mobileMq = window.matchMedia('(max-width: 767px)');
+
     const sync = () => {
       setMounted(true);
-      const colors = readGalleryThemeColors();
-      setTextColor(colors.textColor);
-      setFadeColor(colors.fadeColor);
+      setIsMobile(mobileMq.matches);
+      setTextColor(readGalleryThemeColors().textColor);
       setBend(readGalleryBend(window.innerWidth));
     };
 
     sync();
     window.addEventListener('resize', sync);
+    mobileMq.addEventListener('change', sync);
 
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, {
@@ -102,11 +91,15 @@ const PaintingsShowcase = ({
 
     return () => {
       window.removeEventListener('resize', sync);
+      mobileMq.removeEventListener('change', sync);
       observer.disconnect();
     };
   }, []);
 
   const reducedMotion = Boolean(mounted && prefersReducedMotion);
+  // The WebGL orbit now handles touch with axis-locking, so it stays on mobile.
+  // Embla is reserved as the accessible reduced-motion fallback.
+  const useCarousel = reducedMotion;
   const galleryItems = useMemo(() => paintingsToCircularGalleryItems(paintings), [paintings]);
 
   const handleItemClick = useCallback(
@@ -125,25 +118,22 @@ const PaintingsShowcase = ({
       <div className='mx-auto max-w-7xl'>
         {intro ? <div className='mb-8 max-w-prose'>{intro}</div> : null}
 
-        {reducedMotion ? (
-          <PaintingsGalleryFrame fadeColor={fadeColor}>
+        {useCarousel ? (
+          <PaintingsGalleryFrame>
             <PaintingsShowcaseCarousel paintings={paintings} />
           </PaintingsGalleryFrame>
         ) : (
           <>
-            <PaintingsGalleryFrame
-              fadeColor={fadeColor}
-              className='h-[420px] sm:h-[480px] md:h-[540px]'
-            >
+            <PaintingsGalleryFrame className='h-[360px] sm:h-[480px] md:h-[540px]'>
               <div className='size-full'>
                 <CircularGallery
                   items={galleryItems}
                   onItemClick={handleItemClick}
                   bend={bend}
                   textColor={textColor}
-                  scrollSpeed={1.1}
+                  scrollSpeed={isMobile ? 1.4 : 1.1}
                   borderRadius={0.06}
-                  font='bold 22px Oswald, sans-serif'
+                  font={isMobile ? 'bold 18px Oswald, sans-serif' : 'bold 22px Oswald, sans-serif'}
                 />
               </div>
             </PaintingsGalleryFrame>
@@ -157,7 +147,9 @@ const PaintingsShowcase = ({
             </ul>
 
             <p className='mt-3 text-center text-sm text-foreground-subtle'>
-              Drag to explore · Tap the center painting to open
+              {isMobile
+                ? 'Swipe to explore · Tap the center painting to open'
+                : 'Drag to explore · Click the center painting to open'}
             </p>
           </>
         )}

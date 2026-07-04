@@ -25,6 +25,17 @@ const CLEAR_ZONE = {
   topMax: 68,
 };
 
+/**
+ * Mobile keeps a taller dead zone so cards clear the copy/CTA vertically and
+ * float in the bands above and below it rather than crowding the sides.
+ */
+const MOBILE_CLEAR_ZONE = {
+  leftMin: 14,
+  leftMax: 86,
+  topMin: 28,
+  topMax: 70,
+};
+
 type ArcConfig = {
   rx: number;
   ry: number;
@@ -36,7 +47,8 @@ type ArcConfig = {
 
 /** Wing layout — left angles mirrored to the right (desktop / tablet fan). */
 const ORBIT_WING_ANGLES: Record<Exclude<HeroViewport, 'ultraWide'>, number[]> = {
-  mobile: [215, 195, 170],
+  // Mobile: one upper pair + two lower pairs so cards fill the space below copy/CTA.
+  mobile: [228, 155, 138],
   tablet: [210, 158],
   desktop: [200, 238, 162],
   wide: [198, 222, 246, 158],
@@ -54,12 +66,12 @@ function arcConfigForViewport(viewport: HeroViewport, size?: HeroViewportSize): 
   switch (viewport) {
     case 'mobile':
       return {
-        rx: 44,
-        ry: 48,
+        rx: 40,
+        ry: 44,
         centerX: 50,
-        centerY: 50,
-        baseScale: 0.72,
-        clearZone: CLEAR_ZONE,
+        centerY: 58,
+        baseScale: 0.86,
+        clearZone: MOBILE_CLEAR_ZONE,
       };
     case 'tablet':
       return {
@@ -125,10 +137,24 @@ function adjustConfigForViewportSize(
   };
 }
 
-function clampOrbitPoint(left: number, top: number): { left: number; top: number } {
+type OrbitClamp = { topMin: number; topMax: number };
+
+const DEFAULT_ORBIT_CLAMP: OrbitClamp = { topMin: 6, topMax: 94 };
+
+/**
+ * Mobile keeps card centers away from the top corners (logo + theme toggle at
+ * top-4) and the fixed bottom dock nav so no card floats over the chrome.
+ */
+const MOBILE_ORBIT_CLAMP: OrbitClamp = { topMin: 14, topMax: 82 };
+
+function clampOrbitPoint(
+  left: number,
+  top: number,
+  clamp: OrbitClamp = DEFAULT_ORBIT_CLAMP,
+): { left: number; top: number } {
   return {
     left: Math.max(3, Math.min(97, left)),
-    top: Math.max(6, Math.min(94, top)),
+    top: Math.max(clamp.topMin, Math.min(clamp.topMax, top)),
   };
 }
 
@@ -262,12 +288,23 @@ export function buildArcPositions(
     : buildWingOrbitAngles(viewport as Exclude<HeroViewport, 'ultraWide'>, config).slice(0, count);
 
   return angles.slice(0, count).map((deg, index) => {
-    const jitter = ring ? organicJitter(index) : organicJitter(index, 7);
+    const jitter = ring
+      ? organicJitter(index)
+      : viewport === 'mobile'
+        ? {
+            angle: (pseudoRandom(index * 97, 13) - 0.5) * 10,
+            rx: 0,
+            ry: 0,
+            rotation: (pseudoRandom(index * 97, 29) - 0.5) * 4,
+            scale: 0,
+          }
+        : organicJitter(index, 7);
     const jitteredConfig = ring
       ? { ...config, rx: config.rx + jitter.rx, ry: config.ry + jitter.ry }
       : config;
     const raw = pointFromAngle(deg + jitter.angle, jitteredConfig);
-    const { left, top } = clampOrbitPoint(raw.left, raw.top);
+    const orbitClamp = viewport === 'mobile' ? MOBILE_ORBIT_CLAMP : DEFAULT_ORBIT_CLAMP;
+    const { left, top } = clampOrbitPoint(raw.left, raw.top, orbitClamp);
     const side: HeroCardSide = left < config.centerX ? 'left' : 'right';
     const band: HeroCardBand = top < config.centerY ? 'top' : 'bottom';
     const pairIndex = Math.floor(index / 2);
@@ -312,6 +349,23 @@ export function heroCardScatter(
     x: (side === 'left' ? -1 : 1) * (2 + r1 * 5),
     y: (band === 'top' ? -1 : 1) * (1 + r2 * 4),
     rotate: (r3 - 0.5) * 1.5,
+  };
+}
+
+/** Tighter scatter on mobile — keeps a little organic wobble without stacking cards. */
+export function heroCardScatterMobile(
+  seed: number,
+  side: HeroCardSide,
+  band: HeroCardBand,
+): { x: number; y: number; rotate: number } {
+  const r1 = (seed % 997) / 997;
+  const r2 = ((seed * 17) % 991) / 991;
+  const r3 = ((seed * 31) % 983) / 983;
+
+  return {
+    x: (side === 'left' ? -1 : 1) * (1 + r1 * 2),
+    y: (band === 'top' ? -1 : 1) * (band === 'bottom' ? 2 + r2 * 4 : 0.5 + r2 * 1.5),
+    rotate: (r3 - 0.5) * 0.8,
   };
 }
 

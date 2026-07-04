@@ -111,6 +111,51 @@ Legacy `VITE_*` names still work as fallbacks in local `.env.local`.
 
 ---
 
+## CI: Weekly site health
+
+The `Weekly site health` GitHub Action (`.github/workflows/weekly-analytics-review.yml`, Mondays 08:00 UTC + manual) runs `scripts/weekly-site-health.mjs`, which composes three check sources and opens deduplicated GitHub issues (labels: source category + `improvement`):
+
+- **PostHog analytics** — product/engagement heuristics (HogQL, last 7 days)
+- **Lighthouse** — accessibility + SEO (+ opt-in performance) on key routes; needs Chrome in CI
+- **Structured data** — JSON-LD validation on key routes (plain fetch, no Chrome)
+
+### Secrets (GitHub repo secrets)
+
+| Variable | Notes |
+|----------|--------|
+| `POSTHOG_PERSONAL_API_KEY` | Personal API key with `query:read` scope |
+| `POSTHOG_PROJECT_ID` | PostHog project ID |
+| `GITHUB_TOKEN` | Provided automatically by Actions (`issues: write`) |
+
+### Vars (GitHub repo variables, all optional)
+
+| Variable | Default | Notes |
+|----------|---------|--------|
+| `POSTHOG_API_HOST` | `https://us.posthog.com` | PostHog Query API host |
+| `SITE_HEALTH_BASE_URL` | `https://www.wisihe.no` | Target for Lighthouse + JSON-LD |
+| `SITE_HEALTH_A11Y_MIN` | `0.9` | Accessibility score floor (0–1) |
+| `SITE_HEALTH_SEO_MIN` | `0.9` | SEO score floor (0–1) |
+| `SITE_HEALTH_PERF_MIN` | `0.75` | Performance floor (only used with `--perf`) |
+| `SITE_HEALTH_MAX_ISSUES` | `5` | Cap on issues created per run |
+
+### Local runs
+
+```bash
+# Full preview (reads apps/nextjs-portfolio/.env.local for PostHog keys)
+pnpm site-health:weekly:dry-run
+
+# Scope to one source
+node scripts/weekly-site-health.mjs --dry-run --only=structured-data
+node scripts/weekly-site-health.mjs --dry-run --only=lighthouse --perf
+
+# Analytics-only aliases (unchanged behavior)
+pnpm analytics:weekly-review:dry-run
+```
+
+Lighthouse launches headless Chrome locally; the CI job installs it via `browser-actions/setup-chrome`.
+
+---
+
 ## Local dev
 
 ```bash
