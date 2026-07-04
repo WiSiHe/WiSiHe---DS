@@ -189,7 +189,10 @@ function buildV2Content() {
     ]),
 
     bullet('entry-1', 'Built in code — a real auth flow, not a Figma prototype.'),
-    bullet('entry-2', 'Leaned into real anti-patterns: fake urgency, mystery steps, broken hierarchy.'),
+    bullet(
+      'entry-2',
+      'Leaned into real anti-patterns: fake urgency, mystery steps, broken hierarchy.',
+    ),
     bullet('entry-3', 'The worse the live reaction, the better the score.'),
 
     heading('lesson-heading', 'Why it works'),
@@ -202,7 +205,9 @@ function buildV2Content() {
     ]),
 
     linkedParagraph('outro', [
-      { text: 'This was the second time we ran it. The first edition — September 2024, Figma entry, how the format started — is on the ' },
+      {
+        text: 'This was the second time we ran it. The first edition — September 2024, Figma entry, how the format started — is on the ',
+      },
       { text: 'BAD UI BATTLE (2024)', link: V1_PROJECT_URL },
       { text: ' project page.' },
     ]),

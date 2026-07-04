@@ -87,10 +87,22 @@ const content = [
     ),
   ]),
 
-  bullet('mandate-1', 'Roadmap — what ships next, what waits, and what we deprecate with a clear migration path.'),
-  bullet('mandate-2', 'Stakeholder reporting — regular updates to Bane NOR and NoA leads on progress, risk, and adoption.'),
-  bullet('mandate-3', 'Release cadence — predictable drops through the existing NX monorepo and Azure Artifacts pipeline.'),
-  bullet('mandate-4', 'Support model — triage, DevOps tickets, logging, and the unglamorous work that keeps teams unblocked.'),
+  bullet(
+    'mandate-1',
+    'Roadmap — what ships next, what waits, and what we deprecate with a clear migration path.',
+  ),
+  bullet(
+    'mandate-2',
+    'Stakeholder reporting — regular updates to Bane NOR and NoA leads on progress, risk, and adoption.',
+  ),
+  bullet(
+    'mandate-3',
+    'Release cadence — predictable drops through the existing NX monorepo and Azure Artifacts pipeline.',
+  ),
+  bullet(
+    'mandate-4',
+    'Support model — triage, DevOps tickets, logging, and the unglamorous work that keeps teams unblocked.',
+  ),
 
   heading('inherited-heading', 'What was already there'),
 
@@ -103,8 +115,14 @@ const content = [
 
   bullet('inherited-1', 'Token architecture and build pipelines were in place before I arrived.'),
   bullet('inherited-2', 'A broad component set was already shipping to active product teams.'),
-  bullet('inherited-3', 'Internal Storybook and package distribution via Azure Artifacts — no public docs site.'),
-  bullet('inherited-4', 'Design support from Bane NOR designers; I focused on delivery, process, and engineering coordination.'),
+  bullet(
+    'inherited-3',
+    'Internal Storybook and package distribution via Azure Artifacts — no public docs site.',
+  ),
+  bullet(
+    'inherited-4',
+    'Design support from Bane NOR designers; I focused on delivery, process, and engineering coordination.',
+  ),
 
   heading('process-heading', 'How we ran the system'),
 
@@ -115,11 +133,26 @@ const content = [
     ),
   ]),
 
-  bullet('process-1', 'Sprint cadence for the core team — planned work, support load, and space for urgent fixes.'),
-  bullet('process-2', 'Design–dev sync so component APIs matched what designers actually specified.'),
-  bullet('process-3', 'Backlog grooming to separate "nice idea" from "three teams blocked on this".'),
-  bullet('process-4', 'Adoption surveys, tutorials, showcases, and demos to surface friction before it became a fork.'),
-  bullet('process-5', 'Developer feedback sessions — I started recording attendance so we had a paper trail of who was in the room and what was decided.'),
+  bullet(
+    'process-1',
+    'Sprint cadence for the core team — planned work, support load, and space for urgent fixes.',
+  ),
+  bullet(
+    'process-2',
+    'Design–dev sync so component APIs matched what designers actually specified.',
+  ),
+  bullet(
+    'process-3',
+    'Backlog grooming to separate "nice idea" from "three teams blocked on this".',
+  ),
+  bullet(
+    'process-4',
+    'Adoption surveys, tutorials, showcases, and demos to surface friction before it became a fork.',
+  ),
+  bullet(
+    'process-5',
+    'Developer feedback sessions — I started recording attendance so we had a paper trail of who was in the room and what was decided.',
+  ),
 
   heading('shipped-heading', 'What I pushed forward'),
 

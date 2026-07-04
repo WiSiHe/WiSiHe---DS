@@ -116,7 +116,10 @@ const content = [
 
   bullet('built-1', 'Spline only — browser-based modelling, materials, animation, and publish.'),
   bullet('built-2', 'Interactive controls so the rocket feels alive, not like a static render.'),
-  bullet('built-3', 'Embed workflow — participants left with something that runs in a normal browser tab.'),
+  bullet(
+    'built-3',
+    'Embed workflow — participants left with something that runs in a normal browser tab.',
+  ),
 
   heading('guide-heading', 'Full walkthrough on Notion'),
 

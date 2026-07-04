@@ -131,10 +131,7 @@ const content = [
     'built-1',
     'Third-person traversal through frozen ruins and puzzle-dense interiors — mood over open-world sprawl.',
   ),
-  bullet(
-    'built-2',
-    'Shifting rooms and labyrinths — disorientation as a deliberate mechanic.',
-  ),
+  bullet('built-2', 'Shifting rooms and labyrinths — disorientation as a deliberate mechanic.'),
   bullet(
     'built-3',
     'Concept art made physical — sketches and paintings turned into in-engine geometry, materials, and light.',
