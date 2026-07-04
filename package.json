@@ -35,7 +35,9 @@
     "format": "biome format --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm build:packages && changeset publish"
+    "release": "pnpm build:packages && changeset publish",
+    "analytics:weekly-review": "node scripts/weekly-analytics-review.mjs",
+    "analytics:weekly-review:dry-run": "node scripts/weekly-analytics-review.mjs --dry-run"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.1",
