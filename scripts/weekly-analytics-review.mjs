@@ -15,17 +15,45 @@
  *   ANALYTICS_REVIEW_MAX_ISSUES — cap per run, default 5
  */
 
-import { createRequire } from 'node:module';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.join(__dirname, '..');
-const studioRoot = path.join(repoRoot, 'apps/sanity-studio');
-const require = createRequire(path.join(studioRoot, 'package.json'));
-const { config } = require('dotenv');
 
-config({ path: path.join(repoRoot, 'apps/nextjs-portfolio/.env.local') });
+/** Load apps/nextjs-portfolio/.env.local when present (local dev only). */
+function loadLocalEnvFile() {
+  const envPath = path.join(repoRoot, 'apps/nextjs-portfolio/.env.local');
+
+  try {
+    const content = fs.readFileSync(envPath, 'utf8');
+
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+
+      const separatorIndex = trimmed.indexOf('=');
+      if (separatorIndex === -1) continue;
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      let value = trimmed.slice(separatorIndex + 1).trim();
+
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+
+      if (!process.env[key]) process.env[key] = value;
+    }
+  } catch {
+    // CI and doppler run inject env directly — no local file needed.
+  }
+}
+
+loadLocalEnvFile();
 
 const LOOKBACK_DAYS = 7;
 const DEFAULT_MAX_ISSUES = 5;
