@@ -5,7 +5,7 @@
   "scripts": {
     "build:packages": "turbo run build --filter=./packages/*",
     "build": "turbo run build --filter=!sanity-studio --filter=!ui-docs --filter=!ui-svelte-docs --filter=!ui-web-components-docs",
-    "ci": "pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build:packages",
+    "ci": "pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build:packages && turbo run build --filter=nextjs-portfolio",
     "doppler:setup": "doppler setup --project portfolio --config dev",
     "dev": "doppler run -- turbo run dev --filter=nextjs-portfolio... --filter=ui-docs... --filter=sanity-studio... --filter=wisihe-ai",
     "dev:local": "turbo run dev --filter=nextjs-portfolio... --filter=ui-docs... --filter=sanity-studio... --filter=wisihe-ai",
@@ -37,17 +37,13 @@
     "version-packages": "changeset version",
     "release": "pnpm build:packages && changeset publish",
     "site-health:weekly": "node scripts/weekly-site-health.mjs",
-    "site-health:weekly:dry-run": "node scripts/weekly-site-health.mjs --dry-run",
-    "analytics:weekly-review": "node scripts/weekly-site-health.mjs --only=analytics",
-    "analytics:weekly-review:dry-run": "node scripts/weekly-site-health.mjs --only=analytics --dry-run"
+    "site-health:weekly:dry-run": "node scripts/weekly-site-health.mjs --dry-run"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.1",
     "@changesets/cli": "^2.31.0",
-    "chrome-launcher": "^1.2.1",
     "knip": "6.23.0",
     "lefthook": "2.1.8",
-    "lighthouse": "^13.4.0",
     "turbo": "^2.10.0"
   },
   "packageManager": "pnpm@10.23.0",

@@ -113,7 +113,7 @@ Legacy `VITE_*` names still work as fallbacks in local `.env.local`.
 
 ## CI: Weekly site health
 
-The `Weekly site health` GitHub Action (`.github/workflows/weekly-analytics-review.yml`, Mondays 08:00 UTC + manual) runs `scripts/weekly-site-health.mjs`, which composes three check sources and opens deduplicated GitHub issues (labels: source category + `improvement`):
+The `Weekly site health` GitHub Action (`.github/workflows/weekly-site-health.yml`, Mondays 08:00 UTC + manual) runs `scripts/weekly-site-health.mjs`, which composes three check sources and opens deduplicated GitHub issues (labels: source category + `improvement`):
 
 - **PostHog analytics** — product/engagement heuristics (HogQL, last 7 days)
 - **Lighthouse** — accessibility + SEO (+ opt-in performance) on key routes; needs Chrome in CI
@@ -147,12 +147,10 @@ pnpm site-health:weekly:dry-run
 # Scope to one source
 node scripts/weekly-site-health.mjs --dry-run --only=structured-data
 node scripts/weekly-site-health.mjs --dry-run --only=lighthouse --perf
-
-# Analytics-only aliases (unchanged behavior)
-pnpm analytics:weekly-review:dry-run
+node scripts/weekly-site-health.mjs --dry-run --only=analytics
 ```
 
-Lighthouse launches headless Chrome locally; the CI job installs it via `browser-actions/setup-chrome`.
+Lighthouse tooling lives in `tools/site-health/` (installed with a full `pnpm install`). PR CI skips that package to keep installs lean; the weekly workflow runs a full install. Lighthouse launches headless Chrome locally; the CI job installs it via `browser-actions/setup-chrome`.
 
 ---
 

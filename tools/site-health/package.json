@@ -1,0 +1,9 @@
+{
+  "name": "@wisihe/site-health-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.4.0"
+  }
+}
