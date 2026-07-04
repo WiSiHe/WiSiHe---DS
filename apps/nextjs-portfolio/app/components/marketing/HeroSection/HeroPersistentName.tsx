@@ -98,7 +98,7 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
         'pointer-events-none w-full',
         isIntroStyle
           ? 'absolute inset-0 z-[55] flex items-center justify-center px-4'
-          : 'relative mb-3 flex justify-center md:mb-4',
+          : 'relative mb-3 flex w-full justify-center md:mb-4',
       )}
     >
       <div className='relative inline-flex max-w-none flex-nowrap items-start justify-center whitespace-nowrap text-center'>
@@ -107,7 +107,7 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
             'font-black leading-none tracking-tighter whitespace-nowrap text-center transition-[color,font-size,text-shadow] duration-700 ease-out',
             isIntroStyle
               ? 'uppercase text-foreground [text-shadow:0_0_28px_var(--color-background-subtle-val),0_2px_12px_rgba(0,0,0,0.1)] text-[clamp(2rem,10vw,9rem)] md:text-[clamp(2.5rem,12vw,11rem)]'
-              : 'text-foreground text-4xl sm:text-5xl md:text-6xl lg:text-8xl',
+              : 'w-full text-foreground text-4xl sm:text-5xl md:text-6xl lg:text-8xl',
           )}
         >
           <HeroSplitChars
