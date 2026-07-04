@@ -16,9 +16,33 @@
  *   SITE_HEALTH_PERF_MIN  — default 0.75
  */
 
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildFinding } from '../lib/site-health-report.mjs';
 
 /** @typedef {import('../lib/site-health-report.mjs').Finding} Finding */
+
+const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+function siteHealthToolImport(moduleName) {
+  const resolvers = [
+    createRequire(path.join(repoRoot, 'tools', 'site-health', 'package.json')),
+    createRequire(path.join(repoRoot, 'package.json')),
+  ];
+
+  for (const resolver of resolvers) {
+    try {
+      return import(pathToFileURL(resolver.resolve(moduleName)).href);
+    } catch {
+      // try next resolver
+    }
+  }
+
+  throw new Error(
+    `Missing ${moduleName}. Run "pnpm install" (tools/site-health) or use --only=analytics,structured-data.`,
+  );
+}
 
 /** Representative, stable routes (no slug fragility). */
 const ROUTES = ['/', '/projects', '/paintings', '/videos', '/contact'];
@@ -108,8 +132,8 @@ export function createLighthouseChecks(config) {
 
     resultsPromise = (async () => {
       const [{ default: lighthouse }, chromeLauncher] = await Promise.all([
-        import('lighthouse'),
-        import('chrome-launcher'),
+        siteHealthToolImport('lighthouse'),
+        siteHealthToolImport('chrome-launcher'),
       ]);
 
       const chrome = await chromeLauncher.launch({
