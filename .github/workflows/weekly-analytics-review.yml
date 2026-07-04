@@ -1,4 +1,4 @@
-name: Weekly analytics review
+name: Weekly site health
 
 on:
   schedule:
@@ -12,17 +12,37 @@ permissions:
 
 jobs:
   review:
-    name: PostHog → GitHub issues
+    name: PostHog + Lighthouse + JSON-LD → GitHub issues
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Run analytics review
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run site-health review
         env:
           POSTHOG_PERSONAL_API_KEY: ${{ secrets.POSTHOG_PERSONAL_API_KEY }}
           POSTHOG_PROJECT_ID: ${{ secrets.POSTHOG_PROJECT_ID }}
           POSTHOG_API_HOST: ${{ vars.POSTHOG_API_HOST }}
+          SITE_HEALTH_BASE_URL: ${{ vars.SITE_HEALTH_BASE_URL }}
+          SITE_HEALTH_A11Y_MIN: ${{ vars.SITE_HEALTH_A11Y_MIN }}
+          SITE_HEALTH_SEO_MIN: ${{ vars.SITE_HEALTH_SEO_MIN }}
+          SITE_HEALTH_PERF_MIN: ${{ vars.SITE_HEALTH_PERF_MIN }}
+          SITE_HEALTH_MAX_ISSUES: ${{ vars.SITE_HEALTH_MAX_ISSUES }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: node scripts/weekly-analytics-review.mjs
+        run: node scripts/weekly-site-health.mjs

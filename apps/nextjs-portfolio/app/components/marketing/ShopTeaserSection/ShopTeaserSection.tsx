@@ -1,36 +1,20 @@
 'use client';
 
-import { IconArrowRight, IconShoppingBag } from '@tabler/icons-react';
+import { IconShoppingBag } from '@tabler/icons-react';
 import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
-import { Button } from '@wisihe/ui-react';
-import Link from 'next/link';
-import PaintingCard from '@/app/components/paintings/PaintingCard/PaintingCard';
-import PaintingsCarousel from '@/app/components/paintings/PaintingsSection/PaintingsCarousel';
 import { paintingsShopHref } from '@/lib/algolia/constants';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
-import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
+import ShopPrintShowcase from './ShopPrintShowcase';
 
 type PaintingItem = NonNullable<HomeExtrasQueryResult>['forSalePaintings'][number];
 
 const DEFAULT_COPY = {
   eyebrow: '// Shop',
-  title: 'Available as prints',
+  title: 'Take home a print',
   description:
-    'Selected works available through print-on-demand — take a piece of the gallery home.',
-  linkLabel: 'Browse gallery',
+    'Selected works, ready to order — museum-quality reproductions shipped to your door.',
+  linkLabel: 'Browse all prints',
 };
-
-function formatForSaleCount(count: number): string {
-  if (count === 1) return '1 work is currently available as a print';
-  return `${count} works are currently available as prints`;
-}
-
-function buildShopDescription(baseDescription: string, forSaleCount: number): string {
-  const countPhrase = formatForSaleCount(forSaleCount);
-  const trimmed = baseDescription.trim();
-  if (!trimmed) return `${countPhrase}.`;
-  return `${trimmed} ${countPhrase}.`;
-}
 
 type ShopTeaserSectionProps = {
   intro: HomeSectionIntroCopy | null | undefined;
@@ -46,65 +30,45 @@ export default function ShopTeaserSection({
   if (paintings.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
-  const description = buildShopDescription(copy.description, forSaleCount);
-  const [featuredPainting, ...restPaintings] = paintings;
-  const showFeaturedLayout = paintings.length >= 3;
 
   return (
     <section
-      className='border-t border-border/20 bg-background py-24 px-4 md:px-8'
+      className='relative isolate overflow-hidden border-t border-border/20 bg-background px-4 py-16 md:px-8 md:py-24'
       aria-labelledby='shop-teaser-heading'
     >
       <div className='mx-auto max-w-7xl'>
-        <div className='mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between'>
-          <div className='flex flex-col gap-4 md:flex-row md:items-end md:gap-8'>
-            <HomeSectionHeader
-              eyebrow={copy.eyebrow}
-              title={copy.title}
-              description={description}
-              headingId='shop-teaser-heading'
-              align='left'
-            />
-            <p className='flex items-center gap-2 self-start rounded-full border border-accent/25 bg-accent/8 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent backdrop-blur-sm md:self-auto'>
+        <header className='relative z-10 mb-10 md:mb-14 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
+          <div className='lg:col-span-7'>
+            <p className='mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent md:text-xs'>
+              {copy.eyebrow}
+            </p>
+            <h2
+              id='shop-teaser-heading'
+              className='max-w-xl font-serif text-[clamp(2rem,8vw,3.75rem)] font-extrabold leading-[0.95] tracking-tight text-foreground'
+            >
+              {copy.title}
+            </h2>
+            {copy.description ? (
+              <p className='mt-4 max-w-lg text-base leading-relaxed text-foreground-subtle text-pretty md:text-lg'>
+                {copy.description}
+              </p>
+            ) : null}
+          </div>
+
+          <div className='mt-5 flex items-center gap-3 lg:col-span-5 lg:mt-0 lg:justify-end'>
+            <p className='inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-3.5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent backdrop-blur-sm'>
               <IconShoppingBag className='size-3.5' aria-hidden />
               {forSaleCount} for sale
             </p>
           </div>
-          <Button
-            as={Link}
-            href={paintingsShopHref()}
-            variant='secondary'
-            size='medium'
-            Icon={IconArrowRight}
-            iconPosition='right'
-            className='shrink-0 self-start rounded-full md:self-auto'
-          >
-            {copy.linkLabel}
-          </Button>
-        </div>
+        </header>
 
-        <PaintingsCarousel paintings={paintings} showFooter={false} />
-
-        <ul className='hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3'>
-          {showFeaturedLayout ? (
-            <>
-              <li className='lg:col-span-2 lg:row-span-2'>
-                <PaintingCard paintingData={featuredPainting as any} shouldBeLazy alwaysShowTags />
-              </li>
-              {restPaintings.map(painting => (
-                <li key={painting._id}>
-                  <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
-                </li>
-              ))}
-            </>
-          ) : (
-            paintings.map(painting => (
-              <li key={painting._id}>
-                <PaintingCard paintingData={painting as any} shouldBeLazy alwaysShowTags />
-              </li>
-            ))
-          )}
-        </ul>
+        <ShopPrintShowcase
+          paintings={paintings}
+          forSaleCount={forSaleCount}
+          shopHref={paintingsShopHref()}
+          linkLabel={copy.linkLabel}
+        />
       </div>
     </section>
   );
