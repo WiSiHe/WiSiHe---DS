@@ -19,8 +19,8 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
-import Breadcrumbs, { type Crumb } from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
+import { PaintingsDetailNav } from '@/app/components/paintings/PaintingDetails/PaintingsDetailNav';
 import { useTheme } from '@/app/providers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { getPaintingImageLqip } from '@/lib/paintings/paintingCardImage';
@@ -29,12 +29,12 @@ import {
   paintingAmbientGlowColor,
   paintingAmbientGlowSecondary,
 } from '@/lib/paintings/paintingPaletteGlow';
+import { paintingsTagSearchHref } from '@/lib/paintings/paintingsGalleryReturnUrl';
 import { urlForImage } from '@/sanity/lib/utils';
 
 // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
 type PaintingDetailProps = {
   paintingData: any;
-  breadcrumbs?: Crumb[];
 };
 
 const paintingCarouselNavButtonClass = cn(
@@ -45,7 +45,7 @@ const paintingCarouselNavButtonClass = cn(
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
-const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
+const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -348,11 +348,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
 
   return (
     <div className='overflow-visible pb-16 pt-32 md:pb-20 md:pt-36 lg:pt-40'>
-      {breadcrumbs ? (
-        <div className='mx-auto mb-8 max-w-screen-2xl px-4 lg:px-8'>
-          <Breadcrumbs crumbs={breadcrumbs} />
-        </div>
-      ) : null}
+      <PaintingsDetailNav title={title ?? 'Painting'} />
       <section className='mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-10 overflow-visible px-4 text-foreground lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:gap-y-8 lg:px-8 xl:gap-x-12'>
         <section className='relative flex w-full min-w-0 flex-col items-center overflow-visible'>
           <div
@@ -628,7 +624,7 @@ const PaintingDetail = ({ paintingData, breadcrumbs }: PaintingDetailProps) => {
                     const { name } = tag;
                     if (!name) return null;
                     return (
-                      <Link key={name} href={`/paintings?filter=${name}`} className='inline-flex'>
+                      <Link key={name} href={paintingsTagSearchHref(name)} className='inline-flex'>
                         <Chip
                           variation='primary'
                           label={name}

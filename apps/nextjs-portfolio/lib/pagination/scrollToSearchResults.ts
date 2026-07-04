@@ -1,4 +1,4 @@
-import { getGlobalLenis, scrollDocumentToTop } from '@/app/lib/lenis-registry';
+import { getGlobalLenis } from '@/app/lib/lenis-registry';
 
 const HEADER_OFFSET_PX = 120;
 
@@ -7,17 +7,22 @@ function prefersReducedMotion(): boolean {
   return globalThis.window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/** Scroll listing results into view after pagination — respects Lenis when active. */
+function resolveResultsAnchor(targetId?: string): HTMLElement | null {
+  if (!targetId) return null;
+  return document.getElementById(`${targetId}-top`) ?? document.getElementById(targetId);
+}
+
+/** Scroll listing results into view after pagination. Uses Lenis only when it is active. */
 export function scrollToSearchResults(targetId?: string) {
   if (typeof globalThis.window === 'undefined') return;
 
+  const target = resolveResultsAnchor(targetId);
+  if (!target) return;
+
   const reducedMotion = prefersReducedMotion();
-  const behavior = reducedMotion ? 'auto' : 'smooth';
-  const anchor = targetId ? document.getElementById(`${targetId}-top`) : null;
-  const target = anchor ?? (targetId ? document.getElementById(targetId) : null);
   const lenis = getGlobalLenis();
 
-  if (target && lenis) {
+  if (lenis) {
     lenis.scrollTo(target, {
       offset: -HEADER_OFFSET_PX,
       immediate: reducedMotion,
@@ -26,10 +31,8 @@ export function scrollToSearchResults(targetId?: string) {
     return;
   }
 
-  if (target) {
-    target.scrollIntoView({ behavior, block: 'start' });
-    return;
-  }
-
-  scrollDocumentToTop({ immediate: behavior === 'auto' });
+  target.scrollIntoView({
+    behavior: reducedMotion ? 'auto' : 'smooth',
+    block: 'start',
+  });
 }

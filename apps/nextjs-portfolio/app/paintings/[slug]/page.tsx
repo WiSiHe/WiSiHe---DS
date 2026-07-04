@@ -110,14 +110,7 @@ export default async function PaintingPage(props: Props) {
     <>
       <JsonLd data={structuredData} />
       <JsonLd data={breadcrumbData} />
-      <PaintingDetail
-        paintingData={painting}
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Paintings', href: '/paintings' },
-          { label: painting.title ?? 'Painting' },
-        ]}
-      />
+      <PaintingDetail paintingData={painting} />
     </>
   );
 }

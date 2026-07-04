@@ -9,7 +9,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { setGlobalLenis, setGlobalLocomotive } from '@/app/lib/lenis-registry';
+import { isPaintingsRoute, setGlobalLenis, setGlobalLocomotive } from '@/app/lib/lenis-registry';
 import { bindScrollTriggerToLenis } from '@/app/lib/scrollTriggerLenis';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,9 +18,9 @@ const LISTING_PATHS = new Set(['/projects', '/photography', '/videos']);
 
 function shouldDisableSmoothScroll(pathname: string | null): boolean {
   if (!pathname) return false;
+  if (isPaintingsRoute(pathname)) return true;
   if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
   if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
-  if (pathname === '/paintings') return true;
   return false;
 }
 

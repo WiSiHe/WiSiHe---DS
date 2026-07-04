@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react';
 import { searchClient } from '@/lib/algolia/searchClient';
+import { writePaintingsGalleryReturnUrl } from '@/lib/paintings/paintingsGalleryReturnUrl';
 import { buildPaintingsSearchRequest } from './buildPaintingsSearchRequest';
 import { PAINTINGS_HITS_PER_PAGE } from './constants';
 import { buildTagFacetItems, facetMapToItems, isNsfwTagFilterActive } from './facetItems';
@@ -150,6 +151,12 @@ export function PaintingsSearchProvider({
     if (s !== sort) setSortState(s);
     if (p !== page) setPageState(p);
   }, [searchParams, query, tagFilters, colorFilters, forSale, sort, page]);
+
+  useEffect(() => {
+    if (pathname !== '/paintings') return;
+    const qs = searchParams.toString();
+    writePaintingsGalleryReturnUrl(qs ? `/paintings?${qs}` : '/paintings');
+  }, [pathname, searchParams]);
 
   const setQuery = useCallback(
     (next: string) => {

@@ -29,8 +29,8 @@ function scrollToHashTarget(hash: string): boolean {
 }
 
 /**
- * Resets document scroll on client navigations. Next.js scroll restoration does not
- * reach Lenis, so route changes would otherwise keep the previous page's position.
+ * Resets document scroll on client navigations when Lenis owns the document.
+ * Skipped on paintings routes and other native-scroll pages — Next.js handles those.
  */
 export function ScrollToTopOnNavigate() {
   const pathname = usePathname();
