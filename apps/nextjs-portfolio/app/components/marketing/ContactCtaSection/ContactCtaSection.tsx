@@ -3,10 +3,12 @@
 import { IconArrowRight } from '@tabler/icons-react';
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { buildContactCtaCopy, type ContactCtaSectionData } from '@/lib/homeSectionCopy';
+import { useSectionReveal } from '@/lib/motion/sectionReveal';
 
 type ContactCtaSectionProps = {
   section: ContactCtaSectionData | null;
@@ -14,15 +16,11 @@ type ContactCtaSectionProps = {
 };
 
 export default function ContactCtaSection({ section, about }: ContactCtaSectionProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = mounted && prefersReducedMotion;
-
+  const { fadeUpInitial, fadeUpAnimate, viewport, transition } = useSectionReveal();
   const copy = useMemo(() => buildContactCtaCopy(section, about), [section, about]);
 
   return (
-    <section
+    <ScrollGrowSection
       className='relative overflow-hidden border-t border-border/30 bg-surface/40 px-4 py-24 sm:py-32 md:px-8'
       aria-labelledby='contact-cta-heading'
     >
@@ -32,10 +30,10 @@ export default function ContactCtaSection({ section, about }: ContactCtaSectionP
       />
 
       <motion.div
-        initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
+        initial={fadeUpInitial}
+        whileInView={fadeUpAnimate}
+        viewport={viewport}
+        transition={transition}
         className='relative mx-auto max-w-3xl text-center'
       >
         <p className='font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent md:text-xs'>
@@ -74,6 +72,6 @@ export default function ContactCtaSection({ section, about }: ContactCtaSectionP
           </Button>
         </div>
       </motion.div>
-    </section>
+    </ScrollGrowSection>
   );
 }

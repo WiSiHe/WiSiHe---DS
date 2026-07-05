@@ -9,6 +9,25 @@ alwaysApply: false
 - Prefer small, focused components. When a file grows large (hundreds of lines), extract subcomponents, hooks, or helpers into colocated files in the same folder.
 - Keep the default export readable: orchestration at the top level, details in named subcomponents or `use*` hooks.
 - Reuse shared UI from workspace packages (e.g. `@wisihe/ui-react`) before duplicating markup.
+- **`@wisihe/ui-react`** — atoms and molecules (Button, Card, Pagination, Breadcrumbs, SectionHeader, etc.). Use Tailwind `flex`/`grid` for layout in apps. Documented in Storybook (`apps/ui-docs`).
+- **`app/components/effects/`** — site-specific motion/visual FX (Dock, ScrollStack, CircularGallery). Lazy-load with `next/dynamic` at call sites.
+- **`app/components/{domain}/`** — CMS-backed sections and page composition (marketing, paintings, projects, …).
+
+## Storybook (`apps/ui-docs`)
+
+Stories live in `@wisihe/ui-react` (colocated `*.stories.tsx`) and `apps/ui-docs/src/stories/` (tokens, app-only docs).
+
+**Sidebar structure** (top-level order is fixed in `preview.ts`):
+
+1. **Design System** — `Atoms/*` and `Molecules/*` (Button, Dialog, RecipeMetaBadges, …)
+2. **Cards** — domain views: `Painting/*`, `Project/*`, `Photography/*`
+3. **Effects** — motion/visual FX (e.g. BrushReveal)
+4. **Tokens** — design token reference (e.g. Color)
+
+**Adding or renaming a story**
+
+- Set `title` to a **string literal** matching the value in `packages/ui-react/src/storybook/titles.ts` (`STORY.*`). Storybook 10 rejects dynamic title references.
+- When renaming, update `STORY` and add the old → new mapping to `LEGACY_STORY_TITLE_MIGRATIONS` in the same file for bookmark redirects.
 
 ## React Compiler
 

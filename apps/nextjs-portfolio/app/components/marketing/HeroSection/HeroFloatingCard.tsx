@@ -1,6 +1,7 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
+import { BrushRevealLayer, BrushRevealWrap } from '@wisihe/ui-react';
 import gsap from 'gsap';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -21,9 +22,6 @@ import {
   STACK_CLIP_OPEN,
   STACK_REVEAL_DELAY,
 } from '@/app/components/marketing/HeroSection/heroStackConfig';
-import { BrushRevealLayer } from '@/app/components/paintings/BrushReveal/BrushRevealLayer';
-import { BrushRevealWrap } from '@/app/components/paintings/BrushReveal/BrushRevealWrap';
-import { NsfwBrushCover } from '@/app/components/paintings/BrushReveal/NsfwBrushCover';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
@@ -199,7 +197,7 @@ export function HeroFloatingCard({
       </span>
       {isPainting ? (
         <BrushRevealWrap
-          profile='gridCard'
+          enabled
           hovered={hoverEnabled && isCardHovered}
           className='absolute inset-0'
         >
@@ -215,25 +213,14 @@ export function HeroFloatingCard({
             className={`object-cover ${showNsfwBlur ? getNsfwImageBlurClass('card') : ''}`}
             sizes='(max-width: 768px) 52vw, 250px'
           />
-          {showNsfwBlur ? (
-            <NsfwBrushCover
-              accentColor={paintingBrush!.accentColor}
-              secondaryColor={paintingBrush!.secondaryColor}
-              washColor={paintingBrush!.washColor}
-              strokeVariantIndex={strokeVariantIndex}
-            />
-          ) : null}
           <BrushRevealLayer
             accentColor={paintingBrush!.accentColor}
             secondaryColor={paintingBrush!.secondaryColor}
-            washColor={paintingBrush!.washColor}
             strokeVariantIndex={strokeVariantIndex}
+            revealSeed={strokeVariantIndex}
+            paintingFormat={item.format ?? 'square'}
             title={displayTitle}
             year={paintingYear}
-            tags={[]}
-            isNsfwBlurred={showNsfwBlur}
-            profile='gridCard'
-            paintingFormat={item.format ?? 'square'}
           />
         </BrushRevealWrap>
       ) : (

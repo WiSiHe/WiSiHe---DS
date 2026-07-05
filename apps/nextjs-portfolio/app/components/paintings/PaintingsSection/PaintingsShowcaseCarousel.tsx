@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PaintingCard from '@/app/components/paintings/PaintingCard/PaintingCard';
 import { paintingSlug } from '@/lib/paintings/paintingCompactCardProps';
 
-// biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
+// biome-ignore lint/suspicious/noExplicitAny: shared with Algolia hit shape in PaintingCard
 type PaintingsShowcaseCarouselProps = {
   paintings: any[];
 };
@@ -69,7 +69,7 @@ export default function PaintingsShowcaseCarousel({ paintings }: PaintingsShowca
                 paintingData={painting}
                 shouldBeLazy={index > 2}
                 isNsfwFilterActive={false}
-                disableBrushReveal
+                layout='carousel'
               />
             </div>
           ))}

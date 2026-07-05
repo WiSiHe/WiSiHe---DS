@@ -1,20 +1,27 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import CircularGallery, { type CircularGalleryItem } from '@/app/components/ui/CircularGallery';
+import type { CircularGalleryItem } from '@/app/components/effects/CircularGallery';
+import type { HomePaintingsSection } from '@/lib/homePageBuilder';
+import { useSectionReveal } from '@/lib/motion/sectionReveal';
 import { paintingsToCircularGalleryItems } from '@/lib/paintings/paintingsToCircularGalleryItems';
 import PaintingsShowcaseCarousel from './PaintingsShowcaseCarousel';
 
-// biome-ignore lint/suspicious/noExplicitAny: Painting data shape varies between Sanity and Algolia
+const CircularGallery = dynamic(() => import('@/app/components/effects/CircularGallery'), {
+  ssr: false,
+});
+
+type ShowcasePainting = NonNullable<HomePaintingsSection['showcasePaintings']>[number];
+
 type PaintingsShowcaseProps = {
-  paintings: any[];
+  paintings: ShowcasePainting[];
   showFooter?: boolean;
   className?: string;
-  intro?: ReactNode;
 };
 
 function readGalleryThemeColors() {
@@ -56,12 +63,7 @@ function PaintingsGalleryFrame({ className, children }: PaintingsGalleryFramePro
   );
 }
 
-const PaintingsShowcase = ({
-  paintings,
-  showFooter = true,
-  className,
-  intro,
-}: PaintingsShowcaseProps) => {
+const PaintingsShowcase = ({ paintings, showFooter = true, className }: PaintingsShowcaseProps) => {
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -97,6 +99,14 @@ const PaintingsShowcase = ({
   }, []);
 
   const reducedMotion = Boolean(mounted && prefersReducedMotion);
+  const {
+    horizontalSlideInitial,
+    horizontalSlideAnimate,
+    fadeUpInitial,
+    fadeUpAnimate,
+    viewport,
+    transition,
+  } = useSectionReveal();
   // The WebGL orbit now handles touch with axis-locking, so it stays on mobile.
   // Embla is reserved as the accessible reduced-motion fallback.
   const useCarousel = reducedMotion;
@@ -116,46 +126,59 @@ const PaintingsShowcase = ({
   return (
     <section className={cn('px-4', className)} aria-label='Featured paintings gallery'>
       <div className='mx-auto max-w-7xl'>
-        {intro ? <div className='mb-8 max-w-prose'>{intro}</div> : null}
-
-        {useCarousel ? (
-          <PaintingsGalleryFrame>
-            <PaintingsShowcaseCarousel paintings={paintings} />
-          </PaintingsGalleryFrame>
-        ) : (
-          <>
-            <PaintingsGalleryFrame className='h-[360px] sm:h-[480px] md:h-[540px]'>
-              <div className='size-full'>
-                <CircularGallery
-                  items={galleryItems}
-                  onItemClick={handleItemClick}
-                  bend={bend}
-                  textColor={textColor}
-                  scrollSpeed={isMobile ? 1.4 : 1.1}
-                  borderRadius={0.06}
-                  font={isMobile ? 'bold 18px Oswald, sans-serif' : 'bold 22px Oswald, sans-serif'}
-                />
-              </div>
+        <motion.div
+          initial={horizontalSlideInitial}
+          whileInView={horizontalSlideAnimate}
+          viewport={viewport}
+          transition={transition}
+        >
+          {useCarousel ? (
+            <PaintingsGalleryFrame>
+              <PaintingsShowcaseCarousel paintings={paintings} />
             </PaintingsGalleryFrame>
+          ) : (
+            <>
+              <PaintingsGalleryFrame className='h-[360px] sm:h-[480px] md:h-[540px]'>
+                <div className='size-full'>
+                  <CircularGallery
+                    items={galleryItems}
+                    onItemClick={handleItemClick}
+                    bend={bend}
+                    textColor={textColor}
+                    scrollSpeed={isMobile ? 1.4 : 1.1}
+                    borderRadius={0.06}
+                    font={
+                      isMobile ? 'bold 18px Oswald, sans-serif' : 'bold 22px Oswald, sans-serif'
+                    }
+                  />
+                </div>
+              </PaintingsGalleryFrame>
 
-            <ul className='sr-only'>
-              {galleryItems.map(item => (
-                <li key={item.href ?? item.image}>
-                  <Link href={item.href ?? '/paintings'}>{item.text}</Link>
-                </li>
-              ))}
-            </ul>
+              <ul className='sr-only'>
+                {galleryItems.map(item => (
+                  <li key={item.href ?? item.image}>
+                    <Link href={item.href ?? '/paintings'}>{item.text}</Link>
+                  </li>
+                ))}
+              </ul>
 
-            <p className='mt-3 text-center text-sm text-foreground-subtle'>
-              {isMobile
-                ? 'Swipe to explore · Tap the center painting to open'
-                : 'Drag to explore · Click the center painting to open'}
-            </p>
-          </>
-        )}
+              <p className='mt-3 text-center text-sm text-foreground-subtle'>
+                {isMobile
+                  ? 'Swipe to explore · Tap the center painting to open'
+                  : 'Drag to explore · Click the center painting to open'}
+              </p>
+            </>
+          )}
+        </motion.div>
 
         {showFooter ? (
-          <div className='mt-10 flex flex-col items-center justify-center gap-4 text-foreground md:mt-16'>
+          <motion.div
+            className='mt-10 flex flex-col items-center justify-center gap-4 text-foreground md:mt-16'
+            initial={fadeUpInitial}
+            whileInView={fadeUpAnimate}
+            viewport={viewport}
+            transition={transition}
+          >
             <p>Like what you see?</p>
             <Link
               href='/paintings'
@@ -163,7 +186,7 @@ const PaintingsShowcase = ({
             >
               Explore all paintings
             </Link>
-          </div>
+          </motion.div>
         ) : null}
       </div>
     </section>

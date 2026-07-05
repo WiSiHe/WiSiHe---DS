@@ -3,6 +3,7 @@
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 @import "@wisihe/tokens/tailwind-v4-dark";
+@import "@wisihe/ui-react/style.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

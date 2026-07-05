@@ -1,7 +1,7 @@
 'use client';
 
 import type { GetAllRecipesResult } from '@wisihe/sanity-queries';
-import { Chip } from '@wisihe/ui-react';
+import { Card, CardContent, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -84,35 +84,30 @@ export function RecipesListing({ recipes }: RecipesListingProps) {
       ) : null}
 
       {filteredRecipes.length === 0 ? (
-        <div className='rounded-2xl border border-dashed border-border bg-surface/50 px-6 py-16 text-center'>
-          <p className='font-serif text-2xl font-bold text-foreground'>No recipes found</p>
-          <p className='mt-2 text-foreground-muted'>
-            Try another tag or browse the full collection.
-          </p>
-          <button
-            type='button'
-            onClick={() => setActiveTag(null)}
-            className='mt-6 text-sm font-semibold text-accent hover:underline'
-          >
-            Clear filter
-          </button>
-        </div>
+        <Card variant='outlined' padding='lg' className='border-dashed bg-surface/50 text-center'>
+          <CardContent padding='lg'>
+            <p className='font-serif text-2xl font-bold text-foreground'>No recipes found</p>
+            <p className='mt-2 text-foreground-muted'>
+              Try another tag or browse the full collection.
+            </p>
+            <button
+              type='button'
+              onClick={() => setActiveTag(null)}
+              className='mt-6 text-sm font-semibold text-accent hover:underline'
+            >
+              Clear filter
+            </button>
+          </CardContent>
+        </Card>
       ) : (
         <>
           {showFeatured ? <RecipeCard recipe={featured} featured className='mb-10' /> : null}
 
-          <ul
-            className={cn(
-              'grid grid-cols-1 gap-6 md:grid-cols-2',
-              showFeatured ? 'lg:grid-cols-3' : 'lg:grid-cols-3',
-            )}
-          >
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
             {(showFeatured ? rest : filteredRecipes).map(recipe => (
-              <li key={recipe._id}>
-                <RecipeCard recipe={recipe} />
-              </li>
+              <RecipeCard key={recipe._id} recipe={recipe} />
             ))}
-          </ul>
+          </div>
         </>
       )}
 

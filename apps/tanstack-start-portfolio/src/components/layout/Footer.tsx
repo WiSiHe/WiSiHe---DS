@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router';
 import { footerLinks } from '@wisihe/constants';
-import { Flex } from '@wisihe/ui-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 export function Footer() {
@@ -35,7 +34,7 @@ export function Footer() {
 
         <div className='space-y-6'>
           <h4 className='text-xl font-bold text-accent'>Connect</h4>
-          <Flex gap={16}>
+          <div className='flex gap-4'>
             <a
               href='https://github.com/wisihe'
               target='_blank'
@@ -54,7 +53,7 @@ export function Footer() {
               <FaLinkedin className='w-5 h-5 transition-transform group-hover:scale-110' />
               <span>LinkedIn</span>
             </a>
-          </Flex>
+          </div>
         </div>
       </div>
 

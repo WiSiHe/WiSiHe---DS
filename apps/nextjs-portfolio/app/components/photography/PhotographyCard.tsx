@@ -1,5 +1,5 @@
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
-import { cn } from '@wisihe/utils';
+import { type PhotographyCardImageComponentProps, PhotographyCardView } from '@wisihe/ui-react';
 import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { urlForFullImage } from '@/sanity/lib/utils';
@@ -21,18 +21,17 @@ function formatPlaceLabel(photo: PhotographyListItem): string | null {
   return null;
 }
 
-function getImageDimensions(photo: PhotographyListItem): { width: number; height: number } {
+function getAspectRatio(photo: PhotographyListItem): number {
   const width = photo.image?.width;
   const height = photo.image?.height;
   if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-    return { width, height };
+    return width / height;
   }
 
   const rawRatio = photo.image?.aspectRatio;
-  const aspectRatio =
-    typeof rawRatio === 'number' && rawRatio > 0 ? Math.min(1.9, Math.max(0.62, rawRatio)) : 4 / 3;
-
-  return { width: 1200, height: Math.round(1200 / aspectRatio) };
+  return typeof rawRatio === 'number' && rawRatio > 0
+    ? Math.min(1.9, Math.max(0.62, rawRatio))
+    : 4 / 3;
 }
 
 function getYear(capturedAt?: string | null): string | null {
@@ -40,6 +39,30 @@ function getYear(capturedAt?: string | null): string | null {
   const date = new Date(capturedAt);
   if (Number.isNaN(date.getTime())) return null;
   return String(date.getFullYear());
+}
+
+function PhotographyImage({
+  src,
+  alt,
+  fill,
+  className,
+  sizes,
+  priority,
+  placeholder,
+  blurDataURL,
+}: PhotographyCardImageComponentProps) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+      placeholder={placeholder}
+      blurDataURL={blurDataURL}
+    />
+  );
 }
 
 export function PhotographyCard({
@@ -55,72 +78,22 @@ export function PhotographyCard({
     : null;
   if (!imageUrl) return null;
 
-  const placeLabel = formatPlaceLabel(photo);
-  const alt = photo.image?.alt ?? photo.title ?? 'Photograph';
-  const { width: imageWidth, height: imageHeight } = getImageDimensions(photo);
-  const aspectRatio = imageWidth / imageHeight;
-  const year = getYear(photo.capturedAt);
-
   return (
-    <article className={cn('group', className)}>
-      <Link
-        href={`/photography/${photo.slug}`}
-        className='block space-y-3.5'
-        aria-label={photo.title ?? 'View photograph'}
-      >
-        <div
-          className={cn(
-            'relative w-full overflow-hidden rounded-2xl bg-surface/60 ring-1 ring-border/45 shadow-sm transition-all duration-500',
-            'group-hover:ring-accent/35 group-hover:shadow-xl group-hover:shadow-black/[0.08]',
-          )}
-          style={{ aspectRatio }}
-        >
-          <Image
-            src={imageUrl}
-            alt={alt}
-            fill
-            priority={priority}
-            className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]'
-            sizes={
-              size === 'large'
-                ? '(max-width: 1024px) 100vw, 66vw'
-                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
-            }
-            placeholder={photo.image?.lqip ? 'blur' : 'empty'}
-            blurDataURL={photo.image?.lqip ?? undefined}
-          />
-          <div
-            className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
-            aria-hidden
-          />
-          {year ? (
-            <span className='absolute left-3 top-3 rounded-md border border-white/20 bg-black/35 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide text-white backdrop-blur-md'>
-              {year}
-            </span>
-          ) : null}
-        </div>
-
-        <div className='px-0.5'>
-          <h2
-            className={cn(
-              'font-serif font-bold leading-snug text-foreground text-pretty transition-colors group-hover:text-accent',
-              size === 'large' ? 'text-2xl sm:text-[1.65rem]' : 'text-lg sm:text-xl',
-            )}
-          >
-            {photo.title}
-          </h2>
-          {placeLabel ? (
-            <p className='mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground-muted'>
-              {placeLabel}
-            </p>
-          ) : null}
-          {photo.caption ? (
-            <p className='mt-2 line-clamp-2 text-sm leading-relaxed text-foreground-subtle text-pretty'>
-              {photo.caption}
-            </p>
-          ) : null}
-        </div>
-      </Link>
-    </article>
+    <PhotographyCardView
+      title={photo.title}
+      href={`/photography/${photo.slug}`}
+      imageSrc={imageUrl}
+      imageAlt={photo.image?.alt ?? photo.title ?? 'Photograph'}
+      blurDataURL={photo.image?.lqip ?? null}
+      aspectRatio={getAspectRatio(photo)}
+      placeLabel={formatPlaceLabel(photo)}
+      caption={photo.caption}
+      yearLabel={getYear(photo.capturedAt)}
+      priority={priority}
+      size={size}
+      className={className}
+      LinkComponent={Link}
+      ImageComponent={PhotographyImage}
+    />
   );
 }

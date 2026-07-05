@@ -11,6 +11,11 @@ export const designSystemStack = [
 
 export const STORYBOOK_URL = process.env['NEXT_PUBLIC_STORYBOOK_URL'] ?? 'http://localhost:6006';
 
+/** Optional deep links into Storybook stories (path + query). */
+export const storybookStoryPaths: Partial<Record<string, string>> = {
+  PaintingCard: '/?path=/story/molecules-paintingcard--default',
+};
+
 type SemanticColor = {
   name: string;
   class: string;
@@ -327,13 +332,16 @@ export const uiReactComponents = [
   { name: 'Switch', category: 'Atom' },
   { name: 'Tag', category: 'Atom' },
   { name: 'Textarea', category: 'Atom' },
+  { name: 'Breadcrumbs', category: 'Molecule' },
   { name: 'Card', category: 'Molecule' },
   { name: 'Combobox', category: 'Molecule' },
   { name: 'Dialog', category: 'Molecule' },
+  { name: 'GlassSurface', category: 'Molecule' },
+  { name: 'Pagination', category: 'Molecule' },
   { name: 'Popover', category: 'Molecule' },
   { name: 'Select', category: 'Molecule' },
+  { name: 'SectionHeader', category: 'Molecule' },
   { name: 'Tabs', category: 'Molecule' },
   { name: 'PaintingCard', category: 'Molecule' },
-  { name: 'Flex', category: 'Layout' },
-  { name: 'Grid', category: 'Layout' },
+  { name: 'ScrollGrowSection', category: 'Layout' },
 ] as const;

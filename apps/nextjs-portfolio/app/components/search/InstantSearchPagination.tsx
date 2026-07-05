@@ -1,7 +1,7 @@
 'use client';
 
+import { Pagination } from '@wisihe/ui-react';
 import { useInstantSearch, usePagination, useStats } from 'react-instantsearch';
-import SearchPagination from '@/app/components/search/SearchPagination';
 import { useScrollToResultsOnPageChange } from '@/lib/pagination/useScrollToResultsOnPageChange';
 
 type InstantSearchPaginationProps = Readonly<{
@@ -26,7 +26,7 @@ export default function InstantSearchPagination({
   if (nbHits === 0 || nbPages <= 1) return null;
 
   return (
-    <SearchPagination
+    <Pagination
       page={currentRefinement}
       nbPages={nbPages}
       onPageChange={refine}

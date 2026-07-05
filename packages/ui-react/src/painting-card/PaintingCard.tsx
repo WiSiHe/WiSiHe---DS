@@ -1,61 +1,16 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { motion, type Variants } from 'motion/react';
 import type * as React from 'react';
-import { PaintingCardBadgeItem } from './PaintingCardBadgeItem';
-import { PaintingCardTag } from './PaintingCardTag';
+import { NsfwContentIndicator } from './brush-reveal/NsfwContentIndicator';
+import { PaintingCardImageChrome } from './PaintingCardImageChrome';
 
-// ---------------------------------------------------------------------------
-// Motion variants
-// ---------------------------------------------------------------------------
-const listVariants: Variants = {
-  rest: { opacity: 0, y: -20 },
-  hover: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
-};
-
-const iconsListVariants: Variants = {
-  rest: { opacity: 0, x: 50 },
-  hover: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } },
-};
-
-/** When hover is unavailable (touch), keep chips / badges readable without :hover. */
-const alwaysVisibleTagVariants: Variants = {
-  rest: { opacity: 1, y: 0 },
-  hover: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
-};
-
-const alwaysVisibleIconsVariants: Variants = {
-  rest: { opacity: 1, x: 0 },
-  hover: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } },
-};
-
-// ---------------------------------------------------------------------------
-// Placeholder for missing images
-// ---------------------------------------------------------------------------
 function ImagePlaceholder() {
   return (
-    <div className='relative w-full h-full bg-linear-to-br from-surface-subtle via-surface to-surface-elevated flex items-center justify-center overflow-hidden'>
-      {/* Grid overlay */}
+    <div className='relative flex h-full w-full items-center justify-center overflow-hidden bg-linear-to-br from-surface-subtle via-surface to-surface-elevated'>
       <svg
         aria-hidden='true'
-        className='absolute inset-0 w-full h-full opacity-10'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <defs>
-          <pattern id='pc-grid' width='24' height='24' patternUnits='userSpaceOnUse'>
-            <path d='M 24 0 L 0 0 0 24' fill='none' stroke='currentColor' strokeWidth='0.5' />
-          </pattern>
-        </defs>
-        <rect width='100%' height='100%' fill='url(#pc-grid)' />
-      </svg>
-      {/* Soft glowing blobs */}
-      <div className='absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-accent/20 blur-2xl' />
-      <div className='absolute bottom-1/4 right-1/4 w-16 h-16 rounded-full bg-accent/10 blur-xl' />
-      {/* Palette icon */}
-      <svg
-        aria-hidden='true'
-        className='relative z-10 w-12 h-12 text-foreground-muted opacity-40'
+        className='h-12 w-12 text-foreground-muted opacity-40'
         xmlns='http://www.w3.org/2000/svg'
         fill='none'
         viewBox='0 0 24 24'
@@ -72,257 +27,123 @@ function ImagePlaceholder() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+function PaintingCardCaption({
+  title,
+  badges = [],
+}: {
+  title: string;
+  badges?: PaintingCardBadge[];
+}) {
+  return (
+    <div className='px-0.5 pt-3'>
+      <h3 className='line-clamp-2 font-serif text-lg font-bold leading-snug tracking-tight text-foreground text-pretty transition-colors duration-200 group-hover:text-accent sm:text-xl'>
+        {title}
+      </h3>
+      {badges.length > 0 ? (
+        <PaintingCardImageChrome badges={badges} tone='surface' className='mt-2.5' />
+      ) : null}
+    </div>
+  );
+}
+
+/** @deprecated Use `caption` — kept for adapter compatibility. */
+export type PaintingCardLayout = 'default' | 'carousel';
 
 export interface PaintingCardBadge {
-  /** Unique key */
   key: string;
-  /** Icon to display */
   icon: React.ReactNode;
-  /** Accessible label for screen readers */
   label: string;
-  /** Optional visual variant — defaults to accent */
   variant?: import('../icon-badge/IconBadge').IconBadgeProps['variant'];
 }
 
 export interface PaintingCardProps {
-  /** Title of the painting — shown in the hover footer and used for layout IDs */
   title: string;
-  /** Absolute or relative URL of the painting detail page */
   href: string;
-  /**
-   * Optional link component to use instead of a plain `<a>` tag.
-   * Pass `next/link` here to get client-side soft navigation in Next.js.
-   * @example `LinkComponent={Link}` (from 'next/link')
-   */
   LinkComponent?: React.ComponentType<{
     href: string;
     className?: string;
     'aria-label'?: string;
     children: React.ReactNode;
   }>;
-  /**
-   * The image element to render inside the card.
-   * The consumer is responsible for providing a filled, cover-positioned image.
-   * @example `<Image src={src} alt={title} fill className="object-cover w-full h-full" />`
-   */
   image?: React.ReactNode;
-  /**
-   * Tag labels displayed as animated chips on the card.
-   * Passed as plain strings so the component is data-source agnostic.
-   */
-  tags?: string[];
-  /** Whether the painting is marked NSFW — shows a soft blur overlay until the user filters for mature content */
-  isNsfw?: boolean;
-  /** When true, the NSFW blur is lifted (e.g. user has actively filtered for NSFW content) */
-  isNsfwVisible?: boolean;
-  /** Highlights the card when the work is available to buy (store link or for-sale flag) */
-  isForSale?: boolean;
-  /**
-   * Extra icon badges revealed on hover in the top-right corner (fan art, video, etc.).
-   */
   badges?: PaintingCardBadge[];
-  /**
-   * Show tag chips, secondary badges, and the title strip without requiring hover.
-   * Use on touch-first layouts (e.g. mobile carousel) where hover metadata would stay hidden.
-   */
-  alwaysShowTags?: boolean;
-  /**
-   * SVG brush reveal on the image — hides default tag/footer hover UI so metadata appears in the brush overlay.
-   */
-  brushReveal?: boolean;
-  /** The medium used to create the painting */
-  medium?: string;
-  /** Year or date the painting was completed */
+  /** Title below image — SFW carousel slides only. */
+  caption?: boolean;
+  /** @deprecated NSFW uses on-image badge only — kept for adapter compatibility. */
+  nsfwFooter?: boolean;
+  /** @deprecated Carousel captions no longer show attribute badges. */
+  captionBadges?: boolean;
+  /** @deprecated Caption modes no longer show painted year. */
   paintedAt?: string;
-  /** Human-readable mature content label (e.g. "Mature content", "Mild nudity") */
   matureContentLabel?: string;
-  /** Passed through to the wrapping `motion.article` */
+  /** Aspect ratio class on the image frame. */
   className?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
+/** Painting card shell — reveal (grid band) or caption (carousel). */
 export function PaintingCard({
   title,
   href,
   LinkComponent,
   image,
-  tags = [],
-  isNsfw = false,
-  isNsfwVisible = false,
-  isForSale = false,
   badges = [],
-  alwaysShowTags = false,
-  brushReveal = false,
-  className,
-  medium,
-  paintedAt,
+  caption = false,
+  captionBadges = false,
   matureContentLabel,
+  className,
 }: PaintingCardProps) {
-  const showBlur = isNsfw && !isNsfwVisible;
-  const showDefaultTags = false;
-  const showDefaultBadges = !brushReveal && badges.length > 0;
-  const showHoverFooter = !brushReveal;
-  const showNsfwBlurredFooter = showBlur && brushReveal && Boolean(matureContentLabel);
-  const tagVariants = alwaysShowTags ? alwaysVisibleTagVariants : listVariants;
-  const iconBadgeVariants = alwaysShowTags ? alwaysVisibleIconsVariants : iconsListVariants;
-
+  const aspectClass = className ?? 'aspect-[3/4]';
   const LinkEl = LinkComponent ?? 'a';
+  const linkLabel = `View painting: ${title}${matureContentLabel ? ' (mature content)' : ''}`;
+
+  const imageFrame = (
+    <div
+      className={cn(
+        'relative isolate w-full overflow-hidden rounded-xl',
+        caption && 'border border-border/40 bg-surface shadow-sm',
+        caption &&
+          'transition-[border-color,box-shadow] duration-300 group-hover:border-border group-hover:shadow-md',
+        aspectClass,
+      )}
+    >
+      <div className='absolute inset-0'>{image ?? <ImagePlaceholder />}</div>
+      {matureContentLabel ? (
+        <div className='pointer-events-none absolute top-2 left-2 z-20'>
+          <NsfwContentIndicator label={matureContentLabel} compact />
+        </div>
+      ) : null}
+      {!caption && badges.length > 0 ? (
+        <PaintingCardImageChrome
+          badges={badges}
+          tone='overlay'
+          className='pointer-events-none absolute top-2 right-2 z-20'
+        />
+      ) : null}
+    </div>
+  );
+
+  if (caption) {
+    return (
+      <article className='group w-full rounded-xl focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background'>
+        <LinkEl href={href} className='block' aria-label={linkLabel}>
+          {imageFrame}
+          <PaintingCardCaption title={title} badges={captionBadges ? badges : []} />
+        </LinkEl>
+      </article>
+    );
+  }
 
   return (
-    <motion.article
-      inherit={false}
+    <article
       className={cn(
-        'relative aspect-3/4 group overflow-hidden rounded-xl',
-        'focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background',
-        'bg-surface border border-border/40',
-        'transition-all duration-300',
-        !brushReveal &&
-          'hover:border-border hover:bg-surface-hover hover:shadow-lg hover:-translate-y-1',
-        className,
+        'group relative w-full overflow-hidden rounded-xl border border-border/40 bg-surface',
+        aspectClass,
       )}
-      whileHover={brushReveal ? undefined : 'hover'}
-      initial='rest'
-      animate='rest'
-      layout
     >
-      {/* ------------------------------------------------------------------ */}
-      {/* Tag chips                                                           */}
-      {/* ------------------------------------------------------------------ */}
-      {showDefaultTags ? (
-        <motion.ul
-          className='absolute z-20 flex flex-wrap items-start gap-1 pr-10 text-xs top-2 left-2 right-2'
-          variants={tagVariants}
-        >
-          {(showBlur ? tags.filter(tag => !/^nsfw$/i.test(tag.trim())) : tags).map(tag => (
-            <PaintingCardTag key={tag} label={tag} alwaysVisible={alwaysShowTags} />
-          ))}
-        </motion.ul>
-      ) : null}
-
-      {showDefaultBadges && (
-        <motion.ul
-          className='absolute z-20 flex flex-col gap-1 text-xs right-2 top-2'
-          variants={iconBadgeVariants}
-        >
-          {badges.map(badge => (
-            <PaintingCardBadgeItem
-              key={badge.key}
-              icon={badge.icon}
-              label={badge.label}
-              variant={badge.variant ?? 'surface'}
-              size='sm'
-              shadow='none'
-              alwaysVisible={alwaysShowTags}
-            />
-          ))}
-        </motion.ul>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Image container                                                    */}
-      {/* ------------------------------------------------------------------ */}
-      {brushReveal ? (
-        <motion.div
-          className='absolute inset-0'
-          layoutId={`image-${title}`}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {image ?? <ImagePlaceholder />}
-        </motion.div>
-      ) : (
-        <div
-          className={cn(
-            'absolute inset-0 transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
-            !showBlur && 'group-hover:scale-105',
-          )}
-        >
-          {image ?? <ImagePlaceholder />}
-        </div>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* NSFW blur overlay                                                  */}
-      {/* ------------------------------------------------------------------ */}
-      {/* NSFW blur lives inside brushReveal image stack; only use card-level blur otherwise. */}
-      {showBlur && !brushReveal && (
-        <div
-          className='absolute inset-0 w-full h-full bg-background/40 backdrop-blur-lg z-10'
-          aria-hidden='true'
-        />
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Hover footer / link                                                */}
-      {/* ------------------------------------------------------------------ */}
-      <LinkEl
-        href={href}
-        className={cn(
-          brushReveal && 'absolute inset-0 z-[1]',
-          !brushReveal && 'before:absolute before:inset-0 before:z-0',
-        )}
-      >
-        <span className='sr-only'>
-          View painting: {title}
-          {isNsfw ? ' (mature content)' : ''}
-          {isForSale ? ' (available as print)' : ''}
-        </span>
-        {showNsfwBlurredFooter ? (
-          <div
-            aria-hidden
-            className='pointer-events-none absolute bottom-0 left-0 right-0 z-[25] border-t border-border/30 bg-surface/95 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3'
-          >
-            <motion.p
-              layoutId={`title-${title}`}
-              className='line-clamp-1 font-inter text-sm font-black capitalize text-foreground sm:text-base'
-            >
-              {title}
-            </motion.p>
-            {paintedAt ? (
-              <div className='mt-1'>
-                <span className='rounded border border-border bg-surface-hover/80 px-1.5 py-0.5 font-sans text-[10px] font-bold text-foreground-subtle'>
-                  {paintedAt}
-                </span>
-              </div>
-            ) : null}
-            <p className='mt-1.5 text-[10px] font-medium leading-snug text-foreground-subtle'>
-              {matureContentLabel}
-            </p>
-          </div>
-        ) : showHoverFooter ? (
-          <div
-            aria-hidden
-            className={cn(
-              'absolute bottom-0 left-0 right-0 z-20 flex min-h-[4.5rem] items-center justify-center px-4 py-3 transition-all duration-500 ease-in-out bg-surface/90 backdrop-blur-md border-t border-border/30 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0',
-              alwaysShowTags && 'opacity-100 translate-y-0',
-            )}
-          >
-            <div className='flex w-full flex-col items-center justify-center text-center'>
-              <motion.p
-                layoutId={`title-${title}`}
-                className={cn(
-                  'text-base text-foreground font-black capitalize lg:text-lg line-clamp-1 font-inter transition-colors duration-300 group-hover:text-accent',
-                  alwaysShowTags && 'text-accent',
-                )}
-              >
-                {title}
-              </motion.p>
-              {paintedAt ? (
-                <div className='mt-1'>
-                  <span className='font-sans text-[10px] font-bold bg-surface-hover/80 px-1.5 py-0.5 rounded border border-border'>
-                    {paintedAt}
-                  </span>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
+      {imageFrame}
+      <LinkEl href={href} className='absolute inset-0 z-[1]' aria-label={linkLabel}>
+        <span className='sr-only'>{linkLabel}</span>
       </LinkEl>
-    </motion.article>
+    </article>
   );
 }

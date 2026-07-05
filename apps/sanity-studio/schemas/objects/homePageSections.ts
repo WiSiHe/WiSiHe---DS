@@ -283,6 +283,7 @@ export const homePageSectionInsertMenu = {
         'homeVideosTeaserSection',
         'homeShopTeaserSection',
         'homeSkillsSection',
+        'homeContactCtaSection',
       ],
     },
   ],

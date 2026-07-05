@@ -2,8 +2,10 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
+import { mergeConfig, searchForWorkspaceRoot } from 'vite';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const nextjsPortfolioRoot = join(__dirname, '../../nextjs-portfolio');
 
 const require = createRequire(import.meta.url);
 
@@ -32,6 +34,40 @@ const config: StorybookConfig = {
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
+  },
+  async viteFinal(config) {
+    const uiReactRoot = getAbsolutePath('@wisihe/ui-react');
+    const workspaceRoot = searchForWorkspaceRoot(process.cwd());
+    const existingAllow = config.server?.fs?.allow;
+    const fsAllow = Array.isArray(existingAllow)
+      ? existingAllow
+      : existingAllow
+        ? [existingAllow]
+        : [];
+
+    return mergeConfig(config, {
+      server: {
+        fs: {
+          allow: [...fsAllow, workspaceRoot, nextjsPortfolioRoot, uiReactRoot],
+        },
+      },
+      optimizeDeps: {
+        include: ['motion/react'],
+      },
+      resolve: {
+        alias: [
+          { find: '@/sanity/lib/api', replacement: join(__dirname, 'mocks/sanity-api.ts') },
+          { find: '@/sanity/lib/utils', replacement: join(__dirname, 'mocks/sanity-utils.ts') },
+          { find: /^@\/(.*)/, replacement: join(nextjsPortfolioRoot, '$1') },
+          {
+            find: /^@wisihe\/ui-react$/,
+            replacement: join(uiReactRoot, 'src/index.tsx'),
+          },
+          { find: 'next/image', replacement: join(__dirname, 'mocks/next-image.tsx') },
+          { find: 'next/link', replacement: join(__dirname, 'mocks/next-link.tsx') },
+        ],
+      },
+    });
   },
 };
 export default config;

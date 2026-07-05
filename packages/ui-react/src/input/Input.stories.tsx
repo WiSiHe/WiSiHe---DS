@@ -3,7 +3,7 @@ import { IconMail, IconSearch } from '@tabler/icons-react';
 import { Input } from './Input';
 
 const meta = {
-  title: 'Atoms/Input',
+  title: 'Design System/Atoms/Input',
   component: Input,
   tags: ['autodocs', 'new'],
   parameters: {

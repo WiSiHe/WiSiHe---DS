@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Button, Flex, Tag } from '@wisihe/ui-react';
+import { Button, Tag } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
@@ -138,28 +138,20 @@ function PaintingDetail() {
 
         {/* Right Column: Details */}
         <div className='lg:col-span-4 lg:sticky lg:top-40 h-fit'>
-          <Flex direction='column' gap={24}>
+          <div className='flex flex-col gap-6'>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h1 className='text-4xl font-bold mb-4'>{title}</h1>
 
-              <Flex gap={12} wrap='wrap' className='mb-6'>
-                <Flex
-                  align='center'
-                  gap={6}
-                  className='text-sm bg-surface px-3 py-1 rounded-full border border-border'
-                >
+              <div className='mb-6 flex flex-wrap gap-3'>
+                <div className='flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-sm'>
                   <BsClockFill className='text-accent' />
                   <span>{formattedDate}</span>
-                </Flex>
-                <Flex
-                  align='center'
-                  gap={6}
-                  className='text-sm bg-surface px-3 py-1 rounded-full border border-border'
-                >
+                </div>
+                <div className='flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-sm'>
                   <BsEye className='text-accent' />
                   <span>{viewsCount} views</span>
-                </Flex>
-              </Flex>
+                </div>
+              </div>
 
               <p className='text-foreground/70 leading-relaxed whitespace-pre-wrap mb-8'>
                 {description}
@@ -170,7 +162,7 @@ function PaintingDetail() {
                   <h4 className='text-sm font-semibold text-foreground/40 uppercase tracking-wider mb-3'>
                     Tags
                   </h4>
-                  <Flex gap={8} wrap='wrap'>
+                  <div className='flex flex-wrap gap-2'>
                     {tags.map(tag => (
                       <Tag
                         key={tag}
@@ -180,7 +172,7 @@ function PaintingDetail() {
                         {tag}
                       </Tag>
                     ))}
-                  </Flex>
+                  </div>
                 </div>
               )}
 
@@ -205,7 +197,7 @@ function PaintingDetail() {
                 </div>
               )}
             </motion.div>
-          </Flex>
+          </div>
         </div>
       </div>
     </div>

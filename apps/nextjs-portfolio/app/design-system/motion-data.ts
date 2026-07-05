@@ -25,11 +25,22 @@ export const motionLibraries = [
   },
 ] as const;
 
-export const motionSnippet = `const reduced = useReducedMotion();
+export const motionSnippet = `import { motion } from 'motion/react';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
+import { useSectionReveal } from '@/lib/motion/sectionReveal';
 
-<motion.section
-  initial={reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: '-80px' }}
-  transition={reduced ? { duration: 0 } : { duration: 0.5, ease: 'easeOut' }}
-/>`;
+/** ScrollGrowSection: one-shot section entrance (fade + rise). */
+function SectionReveal() {
+  const { fadeUpInitial, fadeUpAnimate, viewport, transition } = useSectionReveal();
+
+  return (
+    <ScrollGrowSection className='border-t border-border/20 bg-background py-24'>
+      <motion.div
+        initial={fadeUpInitial}
+        whileInView={fadeUpAnimate}
+        viewport={viewport}
+        transition={transition}
+      />
+    </ScrollGrowSection>
+  );
+}`;

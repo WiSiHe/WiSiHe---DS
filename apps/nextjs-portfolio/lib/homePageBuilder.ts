@@ -1,5 +1,6 @@
 import type {
   AboutQueryResult,
+  HomeContactCtaSection as HomeContactCtaSectionSchema,
   HomeExtrasQueryResult,
   HomePageQueryResult,
 } from '@wisihe/sanity-queries';
@@ -8,7 +9,9 @@ import type { ReactNode } from 'react';
 import type { ShowcaseItem } from '@/app/components/marketing/HeroSection/HeroSection';
 import { urlForImage } from '@/sanity/lib/utils';
 
-export type HomePageSection = NonNullable<NonNullable<HomePageQueryResult>['sections']>[number];
+export type HomePageSection =
+  | NonNullable<NonNullable<HomePageQueryResult>['sections']>[number]
+  | (HomeContactCtaSectionSchema & { _key: string });
 
 export type HomeHeroSection = Extract<HomePageSection, { _type: 'homeHeroSection' }>;
 export type HomeProjectsSection = Extract<HomePageSection, { _type: 'homeProjectsSection' }>;
@@ -23,9 +26,7 @@ export type HomeSkillsSection = Extract<HomePageSection, { _type: 'homeSkillsSec
 export type HomeContactCtaSection = Extract<HomePageSection, { _type: 'homeContactCtaSection' }>;
 
 export function getHomeSections(home: HomePageQueryResult | null): HomePageSection[] {
-  return (home?.sections ?? []).filter(
-    section => (section._type as string) !== 'homeContactCtaSection',
-  ) as HomePageSection[];
+  return (home?.sections ?? []) as HomePageSection[];
 }
 
 export function findHomeSection<T extends HomePageSection['_type']>(

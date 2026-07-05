@@ -10,7 +10,7 @@ import {
 import { IconBadge } from './IconBadge';
 
 const meta: Meta<typeof IconBadge> = {
-  title: 'Atoms/IconBadge',
+  title: 'Design System/Atoms/IconBadge',
   component: IconBadge,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

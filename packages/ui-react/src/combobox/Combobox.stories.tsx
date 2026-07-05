@@ -18,7 +18,7 @@ const FRUITS: ComboboxItem<string>[] = [
 ];
 
 const meta = {
-  title: 'Atoms/Combobox',
+  title: 'Design System/Atoms/Combobox',
   component: Combobox,
   tags: ['autodocs', 'new'],
   parameters: {

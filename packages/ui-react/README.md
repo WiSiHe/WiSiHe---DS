@@ -122,44 +122,6 @@ import { Badge } from '@wisihe/ui-react';
 <Badge variant="outline">Outline</Badge>
 ```
 
-### Flex
-
-A flexible container component for layout.
-
-```tsx
-import { Flex } from '@wisihe/ui-react';
-
-<Flex direction="row" justify="center" align="center" gap={4}>
-  <div>Item 1</div>
-  <div>Item 2</div>
-</Flex>
-
-<Flex direction="column" gap={2}>
-  <div>Item 1</div>
-  <div>Item 2</div>
-</Flex>
-```
-
-### Grid
-
-A grid layout component.
-
-```tsx
-import { Grid } from '@wisihe/ui-react';
-
-<Grid columns={3} gap={4}>
-  <div>Item 1</div>
-  <div>Item 2</div>
-  <div>Item 3</div>
-</Grid>
-
-// With GridCol
-<Grid columns={12}>
-  <Grid.Col span={6}>Half width</Grid.Col>
-  <Grid.Col span={6}>Half width</Grid.Col>
-</Grid>
-```
-
 ### Spinner
 
 A loading spinner component.
@@ -219,14 +181,14 @@ src/
 Components should be conceptually organized and exported using **Atomic Design** principles:
 
 - **Atoms**: Pure, foundational building blocks (e.g. `Button`, `Badge`, `Spinner`, `Skeleton`)
-- **Layout**: Invisible structural containers (e.g. `Flex`, `Grid`)
+- **Layout**: Use Tailwind `flex` and `grid` utilities in apps — not wrapper components in this package.
 - **Molecules**: Combinations of atoms functioning together (e.g. `Card` and its subcomponents)
 - **Organisms**: Complex, distinct sections of an interface (built from molecules/atoms)
 
 ### 2. File Naming Rules
 
 - **Component Files:** Must use `PascalCase` (e.g., `Button.tsx`, `Card.tsx`).
-- **Storybook Titles:** The Story meta `title` string must categorize the component by its atomic level (e.g., `title: 'Atoms/Button'`, `title: 'Molecules/Card'`, `title: 'Layout/Flex'`).
+- **Storybook Titles:** The Story meta `title` string must categorize the component by its atomic level (e.g., `title: 'Atoms/Button'`, `title: 'Molecules/Card'`, `title: 'Molecules/Pagination'`).
 - **Component Name:** The React function component and its `displayName` must match the file's `PascalCase` name.
 
 ### 3. Prop Types & Exports

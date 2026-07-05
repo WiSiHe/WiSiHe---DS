@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Select, type SelectOption } from './Select';
 
 const meta = {
-  title: 'Atoms/Select',
+  title: 'Design System/Atoms/Select',
   component: Select,
   tags: ['autodocs', 'new'],
   parameters: {
