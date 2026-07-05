@@ -28,6 +28,7 @@ export default defineType({
         { type: 'homeVideosTeaserSection' },
         { type: 'homeShopTeaserSection' },
         { type: 'homeSkillsSection' },
+        { type: 'homeContactCtaSection' },
       ],
       options: {
         insertMenu: homePageSectionInsertMenu,

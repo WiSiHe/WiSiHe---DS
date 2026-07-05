@@ -3,10 +3,17 @@
 import { IconArrowRight, IconMapPin } from '@tabler/icons-react';
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
 import { Button, Chip } from '@wisihe/ui-react';
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { LOCATION_TYPE_META, normalizeJourneyItems } from '@/app/about/components/lifeJourneyTypes';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { type AboutTeaserSectionData, buildAboutTeaserCopy } from '@/lib/homeSectionCopy';
+import {
+  staggerContainerVariants,
+  staggerFadeUpItemVariants,
+  useSectionReveal,
+} from '@/lib/motion/sectionReveal';
 import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
 type AboutTeaserSectionProps = {
@@ -15,6 +22,11 @@ type AboutTeaserSectionProps = {
 };
 
 export default function AboutTeaserSection({ section, about }: AboutTeaserSectionProps) {
+  const { reducedMotion, viewport, transition, slideInRightInitial, slideInRightAnimate } =
+    useSectionReveal();
+  const chipContainerVariants = staggerContainerVariants(reducedMotion, 0.06);
+  const chipItemVariants = staggerFadeUpItemVariants(reducedMotion);
+
   const eyebrow = section?.eyebrow?.trim() || '// About';
   const title = section?.title?.trim() || 'Code, canvas, and curiosity';
   const description = buildAboutTeaserCopy(section, about);
@@ -36,7 +48,7 @@ export default function AboutTeaserSection({ section, about }: AboutTeaserSectio
     : null;
 
   return (
-    <section
+    <ScrollGrowSection
       className='border-t border-border/20 bg-background py-24 px-4 md:px-8'
       aria-labelledby='about-teaser-heading'
     >
@@ -51,41 +63,64 @@ export default function AboutTeaserSection({ section, about }: AboutTeaserSectio
           />
 
           {knowsAbout.length > 0 ? (
-            <ul aria-label='Areas of expertise' className='mt-6 flex flex-wrap gap-2'>
+            <motion.ul
+              aria-label='Areas of expertise'
+              className='mt-6 flex flex-wrap gap-2'
+              initial='hidden'
+              whileInView='visible'
+              viewport={viewport}
+              variants={chipContainerVariants}
+            >
               {knowsAbout.map(topic => (
-                <li key={topic}>
+                <motion.li key={topic} variants={chipItemVariants}>
                   <Chip label={topic} variation='secondary' interactive={false} />
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
           ) : null}
 
-          <div className='mt-8 flex flex-wrap gap-3'>
-            <Button
-              as={Link}
-              href='/about'
-              variant='primary'
-              size='large'
-              Icon={IconArrowRight}
-              iconPosition='right'
-              className='rounded-full'
-            >
-              {primaryLabel}
-            </Button>
-            <Button
-              as={Link}
-              href='/contact'
-              variant='secondary'
-              size='large'
-              className='rounded-full'
-            >
-              {secondaryLabel}
-            </Button>
-          </div>
+          <motion.div
+            className='mt-8 flex flex-wrap gap-3'
+            initial='hidden'
+            whileInView='visible'
+            viewport={viewport}
+            variants={chipContainerVariants}
+          >
+            <motion.div variants={chipItemVariants}>
+              <Button
+                as={Link}
+                href='/about'
+                variant='primary'
+                size='large'
+                Icon={IconArrowRight}
+                iconPosition='right'
+                className='rounded-full'
+              >
+                {primaryLabel}
+              </Button>
+            </motion.div>
+            <motion.div variants={chipItemVariants}>
+              <Button
+                as={Link}
+                href='/contact'
+                variant='secondary'
+                size='large'
+                className='rounded-full'
+              >
+                {secondaryLabel}
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
 
         {journeyHighlight ? (
-          <aside className='lg:col-span-5'>
+          <motion.aside
+            className='lg:col-span-5'
+            initial={slideInRightInitial}
+            whileInView={slideInRightAnimate}
+            viewport={viewport}
+            transition={transition}
+          >
             <Link
               href='/about'
               className='group block rounded-2xl border border-border bg-surface p-6 shadow-sm transition-all hover:border-accent-border hover:shadow-md md:p-8'
@@ -124,9 +159,9 @@ export default function AboutTeaserSection({ section, about }: AboutTeaserSectio
                 <IconArrowRight className='size-4 transition-transform group-hover:translate-x-0.5' />
               </span>
             </Link>
-          </aside>
+          </motion.aside>
         ) : null}
       </div>
-    </section>
+    </ScrollGrowSection>
   );
 }

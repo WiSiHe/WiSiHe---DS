@@ -1,88 +1,27 @@
-/** Shared NSFW thumbnail treatment — light blur under painted brush strokes. */
-
-export type NsfwCoverVariant = 'thumbnail' | 'card';
-
-export const NSFW_IMAGE_BLUR_CLASS = 'scale-[1.02] blur-md saturate-[0.88]';
-
-/** Thumbnails use the same base blur; strokes provide the cover. */
-export const NSFW_IMAGE_BLUR_THUMBNAIL_CLASS = NSFW_IMAGE_BLUR_CLASS;
-
-export function getNsfwImageBlurClass(variant: NsfwCoverVariant = 'card'): string {
-  return variant === 'thumbnail' ? NSFW_IMAGE_BLUR_THUMBNAIL_CLASS : NSFW_IMAGE_BLUR_CLASS;
-}
-
-/** Thumbnail — full opaque wash + strokes (search compact, carousel, hero). */
-export const NSFW_WASH_OPACITY_THUMBNAIL = 1;
-
-export const NSFW_WASH_OPACITY_THUMBNAIL_HOVER = 1;
-
-export const NSFW_STROKE_OPACITY_REST_THUMBNAIL = 1;
-
-export const NSFW_STROKE_OPACITY_HOVER_THUMBNAIL = 1;
-
-/** Grid card — light concealment; blur carries the cover, strokes are accent only. */
-export const NSFW_WASH_OPACITY_CARD = 0;
-
-export const NSFW_WASH_OPACITY_CARD_HOVER = 0;
-
-export const NSFW_STROKE_OPACITY_REST_CARD = 0.32;
-
-export const NSFW_STROKE_OPACITY_HOVER_CARD = 0.85;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_WASH_OPACITY = NSFW_WASH_OPACITY_CARD;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_WASH_OPACITY_HOVER = NSFW_WASH_OPACITY_CARD_HOVER;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_STROKE_OPACITY_REST = NSFW_STROKE_OPACITY_REST_CARD;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_STROKE_OPACITY_HOVER = NSFW_STROKE_OPACITY_HOVER_CARD;
-
-export function getNsfwWashOpacity(variant: NsfwCoverVariant, hover = false): number {
-  if (variant === 'thumbnail') {
-    return hover ? NSFW_WASH_OPACITY_THUMBNAIL_HOVER : NSFW_WASH_OPACITY_THUMBNAIL;
-  }
-  return hover ? NSFW_WASH_OPACITY_CARD_HOVER : NSFW_WASH_OPACITY_CARD;
-}
-
-export function getNsfwStrokeOpacity(variant: NsfwCoverVariant, hover = false): number {
-  if (variant === 'thumbnail') {
-    return hover ? NSFW_STROKE_OPACITY_HOVER_THUMBNAIL : NSFW_STROKE_OPACITY_REST_THUMBNAIL;
-  }
-  return hover ? NSFW_STROKE_OPACITY_HOVER_CARD : NSFW_STROKE_OPACITY_REST_CARD;
-}
-
-export const NSFW_MATURE_LABEL = 'Mature content';
-
-export const NSFW_FILTER_HINT = 'Use the NSFW tag filter to view';
-
-const NSFW_TAG_RE = /^nsfw$/i;
-const MATURE_RATING_RE = /nudity|mature|explicit|sensitive/i;
-
-/** Human-readable NSFW rating from tags (e.g. "Mild nudity") or default label. */
-export function resolveNsfwRatingLabel(tags: string[]): string {
-  const normalized = tags.map(tag => tag.trim()).filter(Boolean);
-  const rating = normalized.find(tag => MATURE_RATING_RE.test(tag) && !NSFW_TAG_RE.test(tag));
-  return rating ?? NSFW_MATURE_LABEL;
-}
-
-/** Shorter label for small thumbnails (e.g. "18+" instead of "Mature content"). */
-export function resolveNsfwCompactLabel(tags: string[]): string {
-  const rating = resolveNsfwRatingLabel(tags);
-  if (rating === NSFW_MATURE_LABEL) return '18+';
-  return rating;
-}
-
-/** Hide the generic NSFW tag when the cover is active; keep descriptive tags. */
-export function filterTagsForNsfwCover(tags: string[]): string[] {
-  return tags.map(tag => tag.trim()).filter(tag => tag.length > 0 && !NSFW_TAG_RE.test(tag));
-}
-
-/** Thumbnail — broad strokes; wash provides full coverage. */
-export const NSFW_THUMBNAIL_LAYER_COUNT = 3;
-
-/** Grid card — 1–2 accent strokes at rest. */
-export const NSFW_CARD_LAYER_COUNT = 2;
+export {
+  filterTagsForNsfwCover,
+  getNsfwImageBlurClass,
+  getNsfwStrokeOpacity,
+  getNsfwWashOpacity,
+  NSFW_CARD_LAYER_COUNT,
+  NSFW_FILTER_HINT,
+  NSFW_IMAGE_BLUR_CLASS,
+  NSFW_IMAGE_BLUR_THUMBNAIL_CLASS,
+  NSFW_MATURE_LABEL,
+  NSFW_STROKE_OPACITY_HOVER,
+  NSFW_STROKE_OPACITY_HOVER_CARD,
+  NSFW_STROKE_OPACITY_HOVER_THUMBNAIL,
+  NSFW_STROKE_OPACITY_REST,
+  NSFW_STROKE_OPACITY_REST_CARD,
+  NSFW_STROKE_OPACITY_REST_THUMBNAIL,
+  NSFW_THUMBNAIL_LAYER_COUNT,
+  NSFW_WASH_OPACITY,
+  NSFW_WASH_OPACITY_CARD,
+  NSFW_WASH_OPACITY_CARD_HOVER,
+  NSFW_WASH_OPACITY_HOVER,
+  NSFW_WASH_OPACITY_THUMBNAIL,
+  NSFW_WASH_OPACITY_THUMBNAIL_HOVER,
+  type NsfwCoverVariant,
+  resolveNsfwCompactLabel,
+  resolveNsfwRatingLabel,
+} from '@wisihe/ui-react/painting-card/nsfw-cover';

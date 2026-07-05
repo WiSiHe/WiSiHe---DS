@@ -2,7 +2,7 @@
 
 import { IconExternalLink } from '@tabler/icons-react';
 import { DesignSystemPageHeader } from '../components/DesignSystemPageHeader';
-import { STORYBOOK_URL, uiReactComponents } from '../token-data';
+import { STORYBOOK_URL, storybookStoryPaths, uiReactComponents } from '../token-data';
 
 export default function ComponentsPage() {
   return (
@@ -24,21 +24,26 @@ export default function ComponentsPage() {
 
       <section className='mb-0'>
         <ul className='grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4'>
-          {uiReactComponents.map(component => (
-            <li key={component.name}>
-              <a
-                href={STORYBOOK_URL}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='flex flex-col rounded-lg border border-border bg-surface/40 px-3 py-2.5 text-sm transition-colors hover:border-accent hover:text-accent'
-              >
-                <span className='font-medium'>{component.name}</span>
-                <span className='text-[10px] uppercase tracking-wider text-foreground-muted'>
-                  {component.category}
-                </span>
-              </a>
-            </li>
-          ))}
+          {uiReactComponents.map(component => {
+            const storyPath = storybookStoryPaths[component.name];
+            const href = storyPath ? `${STORYBOOK_URL}${storyPath}` : STORYBOOK_URL;
+
+            return (
+              <li key={component.name}>
+                <a
+                  href={href}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='flex flex-col rounded-lg border border-border bg-surface/40 px-3 py-2.5 text-sm transition-colors hover:border-accent hover:text-accent'
+                >
+                  <span className='font-medium'>{component.name}</span>
+                  <span className='text-[10px] uppercase tracking-wider text-foreground-muted'>
+                    {component.category}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>

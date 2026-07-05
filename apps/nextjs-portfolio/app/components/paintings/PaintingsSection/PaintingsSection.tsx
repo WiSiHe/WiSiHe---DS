@@ -2,10 +2,13 @@ import type { BlockContentMinimal } from '@wisihe/sanity-queries';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import HomePaintingsSectionAnalytics from '@/app/components/analytics/HomePaintingsSectionAnalytics';
+import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
 import type { HomePaintingsSection } from '@/lib/homePageBuilder';
 import PaintingsShowcase from './PaintingsShowcase';
 
 const FEATURED_PAINTING_COUNT = 10;
+const PAINTINGS_EYEBROW = '// Gallery';
+const PAINTINGS_TITLE = 'Featured paintings';
 
 type ShowcasePainting = NonNullable<HomePaintingsSection['showcasePaintings']>[number];
 
@@ -26,16 +29,26 @@ const PaintingsSection = ({
     return null;
   }
 
+  const descriptionContent = paintingsDescription?.length ? (
+    <PortableText value={paintingsDescription as PortableTextBlock[]} />
+  ) : undefined;
+
   return (
     <>
       <HomePaintingsSectionAnalytics
         paintingCount={featuredPaintings.length}
         source={paintingsSource}
       />
-      <PaintingsShowcase
-        paintings={featuredPaintings}
-        intro={<PortableText value={paintingsDescription as PortableTextBlock[]} />}
-      />
+      <div className='mx-auto mb-10 max-w-7xl md:mb-12'>
+        <HomeSectionHeader
+          align='left'
+          eyebrow={PAINTINGS_EYEBROW}
+          title={PAINTINGS_TITLE}
+          headingId='home-paintings-heading'
+          description={descriptionContent}
+        />
+      </div>
+      <PaintingsShowcase paintings={featuredPaintings} />
     </>
   );
 };

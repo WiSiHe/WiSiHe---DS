@@ -5,7 +5,7 @@ import { Button } from './Button';
 
 /** Storybook tag badges: https://storybook.js.org/addons/storybook-addon-tag-badges */
 const meta = {
-  title: 'Atoms/Button',
+  title: 'Design System/Atoms/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {

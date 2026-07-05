@@ -1,6 +1,6 @@
 // src/routes/index.tsx
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Button, Card, CardContent, CardHeader, CardTitle, Flex, Grid } from '@wisihe/ui-react';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@wisihe/ui-react';
 import { getHomeData } from '../server/fns';
 
 export const Route = createFileRoute('/')({
@@ -12,25 +12,25 @@ function Home() {
   const data = Route.useLoaderData();
 
   return (
-    <Flex direction='column' gap={64} className='home-page'>
+    <div className='home-page flex flex-col gap-16'>
       <section className='hero'>
-        <Flex direction='column' align='center' gap={32} style={{ textAlign: 'center' }}>
+        <div className='flex flex-col items-center gap-8 text-center'>
           <h1>{data.title}</h1>
           <p>{data.overview}</p>
-          <Flex gap={16} justify='center'>
+          <div className='flex justify-center gap-4'>
             <Link to='/projects'>
               <Button>View My Work</Button>
             </Link>
             <Link to='/about'>
               <Button variant='secondary'>Learn More</Button>
             </Link>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </section>
 
       <section>
         <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Core Focus</h2>
-        <Grid columns={3} gap={32}>
+        <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
           <Card>
             <CardHeader>
               <CardTitle style={{ color: 'var(--accent)' }}>Frontend Excellence</CardTitle>
@@ -64,7 +64,7 @@ function Home() {
               </p>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
       </section>
 
       {data.featuredProjects.length > 0 && (
@@ -75,7 +75,7 @@ function Home() {
               {data.projectsDescription}
             </p>
           ) : null}
-          <Grid columns={3} gap={32}>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
             {data.featuredProjects.map(project => (
               <Card key={project._id} style={{ overflow: 'hidden' }}>
                 {project.imageUrl && (
@@ -93,7 +93,7 @@ function Home() {
                 </CardContent>
               </Card>
             ))}
-          </Grid>
+          </div>
         </section>
       )}
 
@@ -107,7 +107,7 @@ function Home() {
           borderRadius: '2.5rem',
         }}
       >
-        <Flex direction='column' align='center' gap={24}>
+        <div className='flex flex-col items-center gap-6'>
           <h2 style={{ marginBottom: '0.5rem' }}>Ready to start a project?</h2>
           <p style={{ color: 'var(--muted)', maxWidth: '600px' }}>
             Whether you have a fully-fledged idea or just a spark of inspiration, I'm here to help
@@ -118,8 +118,8 @@ function Home() {
               Get in Touch
             </Button>
           </Link>
-        </Flex>
+        </div>
       </section>
-    </Flex>
+    </div>
   );
 }

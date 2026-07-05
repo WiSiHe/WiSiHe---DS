@@ -1,0 +1,21 @@
+<script>
+  (function () {
+    /** Early redirect for stale manager URLs; full map in preview.ts via resolveLegacyStoryId. */
+    var map = {
+      'molecules-paintingcard-shell--default': 'cards-painting-paintingcard--default',
+      'molecules-paintingcard-shell--for-sale': 'cards-painting-paintingcard--default',
+      'molecules-paintingcard-shell--with-badges': 'cards-painting-paintingcard--default',
+      'molecules-paintingcard-shell--nsfw-blurred': 'cards-painting-paintingcard--nsfw-blurred',
+      'molecules-paintingcard-shell--nsfw-visible': 'cards-painting-paintingcard--nsfw-visible',
+      'molecules-paintingcard-shell--no-image': 'cards-painting-paintingcard--default',
+    };
+    var params = new URLSearchParams(window.location.search);
+    var path = params.get('path');
+    if (!path || path.indexOf('/story/') !== 0) return;
+    var id = path.slice('/story/'.length);
+    var next = map[id];
+    if (!next) return;
+    params.set('path', '/story/' + next);
+    window.location.replace(window.location.pathname + '?' + params.toString());
+  })();
+</script>

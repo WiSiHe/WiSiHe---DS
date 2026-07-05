@@ -6,7 +6,9 @@
   "module": "./dist/index.js",
   "source": "./src/index.tsx",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "./src/style.css"
+  ],
   "license": "MIT",
   "files": [
     "dist/**",
@@ -18,7 +20,48 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./skeleton": {
+      "types": "./dist/skeleton.d.ts",
+      "import": "./dist/skeleton.js",
+      "default": "./dist/skeleton.js"
+    },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "import": "./dist/motion.js",
+      "default": "./dist/motion.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js",
+      "default": "./dist/pagination.js"
+    },
+    "./painting-card/layout": {
+      "types": "./dist/painting-card/layout.d.ts",
+      "import": "./dist/painting-card/layout.js",
+      "default": "./dist/painting-card/layout.js"
+    },
+    "./painting-card/nsfw-cover": {
+      "types": "./dist/painting-card/nsfw-cover.d.ts",
+      "import": "./dist/painting-card/nsfw-cover.js",
+      "default": "./dist/painting-card/nsfw-cover.js"
+    },
+    "./painting-card/brush-stroke-colors": {
+      "types": "./dist/painting-card/brush-stroke-colors.d.ts",
+      "import": "./dist/painting-card/brush-stroke-colors.js",
+      "default": "./dist/painting-card/brush-stroke-colors.js"
+    },
+    "./painting-card/brush-stroke-variants": {
+      "types": "./dist/painting-card/brush-stroke-variants.d.ts",
+      "import": "./dist/painting-card/brush-stroke-variants.js",
+      "default": "./dist/painting-card/brush-stroke-variants.js"
+    },
+    "./painting-card/brush-stroke-constants": {
+      "types": "./dist/painting-card/brush-stroke-constants.d.ts",
+      "import": "./dist/painting-card/brush-stroke-constants.js",
+      "default": "./dist/painting-card/brush-stroke-constants.js"
+    },
+    "./package.json": "./package.json",
+    "./style.css": "./src/style.css"
   },
   "scripts": {
     "build": "tsup",
@@ -43,6 +86,7 @@
     "@headlessui/react": "^2.2.10",
     "@tabler/icons-react": "^3.44.0",
     "@wisihe/tokens": "workspace:*",
+    "@wisihe/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "motion": "^12.42.0"
   },

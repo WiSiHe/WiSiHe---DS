@@ -2,6 +2,7 @@
 
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
+import { motion, type Variants } from 'motion/react';
 import Image from 'next/image';
 import {
   getVideoCategory,
@@ -15,6 +16,7 @@ type VideoPlaylistProps = {
   activeId: string;
   onSelect: (video: VideoItem) => void;
   className?: string;
+  itemVariants?: Variants;
 };
 
 export default function VideoPlaylist({
@@ -22,8 +24,11 @@ export default function VideoPlaylist({
   activeId,
   onSelect,
   className,
+  itemVariants,
 }: VideoPlaylistProps) {
   if (videos.length === 0) return null;
+
+  const ItemTag = itemVariants ? motion.li : 'li';
 
   return (
     <div className={className}>
@@ -38,7 +43,7 @@ export default function VideoPlaylist({
           const thumbSrc = getVideoThumbnailSrc(video, 'thumb');
 
           return (
-            <li key={video._id}>
+            <ItemTag key={video._id} variants={itemVariants}>
               <button
                 type='button'
                 onClick={() => onSelect(video)}
@@ -101,7 +106,7 @@ export default function VideoPlaylist({
                   </div>
                 </div>
               </button>
-            </li>
+            </ItemTag>
           );
         })}
       </ul>

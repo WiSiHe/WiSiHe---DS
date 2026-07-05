@@ -2,10 +2,12 @@ import { ABOUT_PAGE_ENABLED, ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants'
 import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { Suspense } from 'react';
 import AboutTeaserSection from '@/app/components/marketing/AboutTeaserSection/AboutTeaserSection';
+import ContactCtaSection from '@/app/components/marketing/ContactCtaSection/ContactCtaSection';
 import HeroImageSection from '@/app/components/marketing/HeroSection/HeroSection';
 import ShopTeaserSection from '@/app/components/marketing/ShopTeaserSection/ShopTeaserSection';
 import SkillsSection from '@/app/components/marketing/SkillsSection/SkillsSection';
 import VideosTeaserSection from '@/app/components/marketing/VideosTeaserSection/VideosTeaserSection';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import PaintingsSection from '@/app/components/paintings/PaintingsSection/PaintingsSection';
 import FeaturedProjects from '@/app/components/projects/FeaturedProjects/FeaturedProjects';
 import type { HomePageSection, HomePageSectionsContext } from '@/lib/homePageBuilder';
@@ -66,7 +68,10 @@ function renderSection(
 
     case 'homePaintingsSection':
       return (
-        <section key={key} className='bg-surface py-24 px-4 md:px-8'>
+        <ScrollGrowSection
+          key={key}
+          className='border-t border-border/20 bg-surface py-24 px-4 md:px-8'
+        >
           <Suspense fallback={<SectionSkeleton />}>
             <PaintingsSection
               paintingsDescription={section.description}
@@ -76,7 +81,7 @@ function renderSection(
               }
             />
           </Suspense>
-        </section>
+        </ScrollGrowSection>
       );
 
     case 'homeAboutTeaserSection':
@@ -105,8 +110,8 @@ function renderSection(
         </Suspense>
       );
 
-    case 'homeContactCtaSection' as any:
-      return null;
+    case 'homeContactCtaSection':
+      return <ContactCtaSection key={key} section={section} about={about} />;
 
     default:
       return null;

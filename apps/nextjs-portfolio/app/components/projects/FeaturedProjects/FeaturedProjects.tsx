@@ -7,11 +7,25 @@
 import { IconArrowRight, IconFolder } from '@tabler/icons-react';
 import type { BlockContentMinimal } from '@wisihe/sanity-queries';
 import { Button } from '@wisihe/ui-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
-import ScrollStack, { ScrollStackItem } from '@/app/components/ui/ScrollStack/ScrollStack';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
+
+const ScrollStack = dynamic(
+  () => import('@/app/components/effects/ScrollStack/ScrollStack').then(m => m.default),
+  { ssr: false },
+);
+const ScrollStackItem = dynamic(
+  () =>
+    import('@/app/components/effects/ScrollStack/ScrollStack').then(m => ({
+      default: m.ScrollStackItem,
+    })),
+  { ssr: false },
+);
+
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import type { HomeProjectsSection } from '@/lib/homePageBuilder';
 import FeaturedProjectStackCard from './FeaturedProjectStackCard';
@@ -41,7 +55,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
   );
 
   return (
-    <section
+    <ScrollGrowSection
       className='border-t border-border/20 bg-background'
       aria-labelledby='featured-projects-heading'
       aria-describedby='featured-projects-desc'
@@ -121,7 +135,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
           </Link>
         </div>
       </div>
-    </section>
+    </ScrollGrowSection>
   );
 };
 

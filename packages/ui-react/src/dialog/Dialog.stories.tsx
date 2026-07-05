@@ -11,7 +11,7 @@ import {
 } from './Dialog';
 
 const meta = {
-  title: 'Molecules/Dialog',
+  title: 'Design System/Molecules/Dialog',
   component: Dialog,
   tags: ['autodocs', 'new'],
   parameters: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Switch, SwitchField } from './Switch';
 
 const meta = {
-  title: 'Atoms/Switch',
+  title: 'Design System/Atoms/Switch',
   component: SwitchField,
   tags: ['autodocs', 'new'],
   parameters: {

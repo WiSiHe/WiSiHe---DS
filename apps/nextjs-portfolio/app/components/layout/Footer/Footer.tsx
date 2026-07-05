@@ -4,10 +4,10 @@ import { IconArrowUpRight } from '@tabler/icons-react';
 import { footerLinks, footerSecondaryLinks } from '@wisihe/constants';
 import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { motion, useReducedMotion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { scrollDocumentToTop } from '@/app/lib/lenis-registry';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import { useSectionReveal } from '@/lib/motion/sectionReveal';
 import { SITE_TAGLINE } from '@/lib/siteCopy';
 import { APP_VERSION } from '@/lib/version';
 import IconLogo from '../icons/IconLogo';
@@ -23,10 +23,7 @@ type FooterProps = {
 };
 
 const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: FooterProps) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = mounted && prefersReducedMotion;
+  const { fadeUpInitial, fadeUpAnimate, viewport, transition, reducedMotion } = useSectionReveal();
 
   const currentYear = new Date().getFullYear();
   const displayName = heroSubtitle?.trim() || 'Henrik Wilhelm Sissener';
@@ -34,9 +31,12 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
   const contactHref = ctaHref?.trim() || '/contact';
   const contactLabel = ctaLabel?.trim() || 'Get in touch';
 
-  const motionProps = reducedMotion
-    ? { initial: { opacity: 1, y: 0 }, whileInView: { opacity: 1, y: 0 } }
-    : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 } };
+  const motionProps = {
+    initial: fadeUpInitial,
+    whileInView: fadeUpAnimate,
+    viewport,
+    transition,
+  };
 
   const scrollToTop = () => {
     scrollDocumentToTop({ immediate: Boolean(reducedMotion) });
@@ -56,12 +56,7 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
       <div className='relative mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 py-16 sm:px-6 md:px-8 lg:px-12'>
         <div className='grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10'>
           {/* Brand + bio */}
-          <motion.div
-            {...motionProps}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className='space-y-5 lg:col-span-5'
-          >
+          <motion.div {...motionProps} className='space-y-5 lg:col-span-5'>
             <Link
               href='/'
               aria-label='WiSiHe home'
@@ -109,8 +104,7 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
           <div className='grid grid-cols-1 gap-10 sm:grid-cols-2 lg:col-span-7 lg:grid-cols-3'>
             <motion.nav
               {...motionProps}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.05 }}
+              transition={{ ...transition, delay: reducedMotion ? 0 : 0.05 }}
               className='space-y-4'
               aria-label='Site navigation'
             >
@@ -133,8 +127,7 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
 
             <motion.nav
               {...motionProps}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.1 }}
+              transition={{ ...transition, delay: reducedMotion ? 0 : 0.1 }}
               className='space-y-4'
               aria-label='Additional pages'
             >
@@ -157,8 +150,7 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
 
             <motion.div
               {...motionProps}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, ease: 'easeOut', delay: reducedMotion ? 0 : 0.15 }}
+              transition={{ ...transition, delay: reducedMotion ? 0 : 0.15 }}
               className='space-y-4'
             >
               <h3 className='text-xs font-semibold uppercase tracking-widest text-foreground-muted'>

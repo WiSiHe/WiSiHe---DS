@@ -1,4 +1,4 @@
-import type { CircularGalleryItem } from '@/app/components/ui/CircularGallery';
+import type { CircularGalleryItem } from '@/app/components/effects/CircularGallery';
 import { urlForImage } from '@/sanity/lib/utils';
 import { paintingSlug } from './paintingCompactCardProps';
 

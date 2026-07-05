@@ -1,14 +1,14 @@
 import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { cleanTagName } from '@wisihe/utils';
 import {
-  type PaintingCardLayout,
+  type PaintingCardAspectLayout,
   resolvePaintingCardLayout,
 } from '@/lib/paintings/paintingCardImage';
 
 export type ShopPainting = NonNullable<HomeExtrasQueryResult>['forSalePaintings'][number];
 
 /** Unified mat opening — keeps rack/duo frames visually consistent regardless of source format. */
-export const SHOP_PRINT_FRAME_LAYOUT: PaintingCardLayout = {
+export const SHOP_PRINT_FRAME_LAYOUT: PaintingCardAspectLayout = {
   format: 'portrait',
   aspectClass: 'aspect-[4/5]',
   aspectRatio: 4 / 5,
@@ -16,7 +16,7 @@ export const SHOP_PRINT_FRAME_LAYOUT: PaintingCardLayout = {
   cropHeight: 1000,
 };
 
-export function getShopPrintFrameLayout(): PaintingCardLayout {
+export function getShopPrintFrameLayout(): PaintingCardAspectLayout {
   return SHOP_PRINT_FRAME_LAYOUT;
 }
 
@@ -37,7 +37,7 @@ export function getPaintingHref(slug: string | null | undefined): string {
   return `/paintings/${slug ?? ''}`;
 }
 
-export function getShopPaintingLayout(painting: ShopPainting): PaintingCardLayout {
+export function getShopPaintingLayout(painting: ShopPainting): PaintingCardAspectLayout {
   return resolvePaintingCardLayout({
     aspectRatio: painting.image?.aspectRatio ?? null,
   });

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Tag } from './Tag';
 
 const meta: Meta<typeof Tag> = {
-  title: 'Atoms/Tag',
+  title: 'Design System/Atoms/Tag',
   component: Tag,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

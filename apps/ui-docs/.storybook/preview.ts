@@ -1,7 +1,10 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import type { Preview } from '@storybook/react-vite';
 import '../src/index.css';
+import { redirectLegacyStorybookUrl } from './legacyStoryRedirects';
 import './preview.css';
+
+redirectLegacyStorybookUrl();
 
 const preview: Preview = {
   decorators: [
@@ -14,6 +17,11 @@ const preview: Preview = {
     }),
   ],
   parameters: {
+    options: {
+      storySort: {
+        order: ['Design System', 'Cards', 'Effects', 'Tokens'],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

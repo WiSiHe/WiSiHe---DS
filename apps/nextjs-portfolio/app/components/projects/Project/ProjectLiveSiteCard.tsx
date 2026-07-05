@@ -2,7 +2,15 @@
 
 import { IconArrowUpRight } from '@tabler/icons-react';
 import type { ProjectQueryResult } from '@wisihe/sanity-queries';
-import { Button } from '@wisihe/ui-react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@wisihe/ui-react';
 import { getProjectDisplayTitle } from '@/app/components/projects/projectCardHelpers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import {
@@ -33,28 +41,34 @@ export function ProjectLiveSiteCard({ project }: ProjectLiveSiteCardProps) {
   };
 
   return (
-    <div className='rounded-2xl border border-border/80 bg-surface p-5 shadow-sm'>
-      <p className='text-xs font-semibold uppercase tracking-wider text-foreground-muted'>
-        {presentation.eyebrow}
-      </p>
-      <p className='mt-1 truncate font-medium text-foreground'>{presentation.title}</p>
-      <p className='mt-2 text-sm leading-relaxed text-foreground-subtle'>
-        {presentation.description}
-      </p>
-      <Button
-        as='a'
-        href={connectedPage}
-        target='_blank'
-        rel='noopener noreferrer'
-        variant='primary'
-        size='large'
-        Icon={IconArrowUpRight}
-        iconPosition='right'
-        className='mt-4 w-full rounded-full'
-        onClick={handleVisitClick}
-      >
-        {presentation.cta}
-      </Button>
-    </div>
+    <Card variant='default' padding='md' className='rounded-2xl shadow-sm'>
+      <CardHeader padding='md' className='pb-0'>
+        <p className='text-xs font-semibold uppercase tracking-wider text-foreground-muted'>
+          {presentation.eyebrow}
+        </p>
+        <CardTitle size='sm' className='mt-1 truncate font-medium'>
+          {presentation.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent padding='md' className='pt-2'>
+        <CardDescription>{presentation.description}</CardDescription>
+      </CardContent>
+      <CardFooter padding='md' className='pt-0'>
+        <Button
+          as='a'
+          href={connectedPage}
+          target='_blank'
+          rel='noopener noreferrer'
+          variant='primary'
+          size='large'
+          Icon={IconArrowUpRight}
+          iconPosition='right'
+          className='w-full rounded-full'
+          onClick={handleVisitClick}
+        >
+          {presentation.cta}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

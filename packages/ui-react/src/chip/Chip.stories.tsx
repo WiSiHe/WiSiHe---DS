@@ -3,7 +3,7 @@ import { IconTag } from '@tabler/icons-react';
 import { Chip } from './Chip';
 
 const meta: Meta<typeof Chip> = {
-  title: 'Molecules/Chip',
+  title: 'Design System/Molecules/Chip',
   component: Chip,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

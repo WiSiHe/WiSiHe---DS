@@ -1,3 +1,4 @@
+import { Skeleton } from '@wisihe/ui-react/skeleton';
 import { cn } from '@wisihe/utils';
 import type { CSSProperties } from 'react';
 
@@ -80,7 +81,7 @@ export function PaintingGridSkeleton({ count = 12, className }: PaintingGridSkel
 }
 
 function SidebarLabelSkeleton({ widthClass }: { widthClass: string }) {
-  return <div className={cn('h-3 rounded-sm bg-surface-hover/90 animate-pulse', widthClass)} />;
+  return <Skeleton variant='text' className={cn('h-3', widthClass)} />;
 }
 
 export function PaintingsSearchSidebarSkeleton() {
@@ -130,8 +131,8 @@ export function PaintingsSearchSidebarSkeleton() {
 export function PaintingsSearchHitStatsSkeleton() {
   return (
     <div className='mb-2 flex items-center justify-between gap-4' aria-hidden>
-      <div className='h-4 w-44 max-w-[55%] animate-pulse rounded-sm bg-surface-hover/90' />
-      <div className='h-9 w-28 shrink-0 animate-pulse rounded-full border border-border/40 bg-surface' />
+      <Skeleton variant='text' className='h-4 w-44 max-w-[55%]' />
+      <Skeleton variant='rectangular' className='h-9 w-28 shrink-0 rounded-full' />
     </div>
   );
 }

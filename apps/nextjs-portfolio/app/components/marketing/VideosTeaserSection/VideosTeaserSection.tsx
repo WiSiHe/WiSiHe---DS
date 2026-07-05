@@ -2,8 +2,12 @@
 
 import { IconArrowRight, IconPlayerPlay } from '@tabler/icons-react';
 import { Button } from '@wisihe/ui-react';
+import { motion } from 'motion/react';
 import Link from 'next/link';
+import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
+import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
+import { useSectionReveal } from '@/lib/motion/sectionReveal';
 import VideoShowcase from './VideoShowcase';
 import { formatClipCount, type VideoItem } from './videoTeaserShared';
 
@@ -20,35 +24,37 @@ type VideosTeaserSectionProps = {
 };
 
 export default function VideosTeaserSection({ intro, videos }: VideosTeaserSectionProps) {
+  const { fadeUpInitial, fadeUpAnimate, viewport, transition, reducedMotion } = useSectionReveal();
+
   if (videos.length === 0) return null;
 
   const copy = pickSectionIntro(intro, DEFAULT_COPY);
 
   return (
-    <section
+    <ScrollGrowSection
       className='relative isolate overflow-hidden border-t border-border/20 bg-background px-4 py-16 md:px-8 md:py-24'
       aria-labelledby='videos-teaser-heading'
     >
       <div className='mx-auto max-w-7xl'>
         <header className='relative z-10 mb-10 md:mb-14 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
           <div className='lg:col-span-7'>
-            <p className='mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-accent md:text-xs'>
-              {copy.eyebrow}
-            </p>
-            <h2
-              id='videos-teaser-heading'
-              className='max-w-xl font-serif text-[clamp(2rem,8vw,3.75rem)] font-extrabold leading-[0.95] tracking-tight text-foreground'
-            >
-              {copy.title}
-            </h2>
-            {copy.description ? (
-              <p className='mt-4 max-w-lg text-base leading-relaxed text-foreground-subtle text-pretty md:text-lg'>
-                {copy.description}
-              </p>
-            ) : null}
+            <HomeSectionHeader
+              variant='display'
+              align='left'
+              eyebrow={copy.eyebrow}
+              title={copy.title}
+              headingId='videos-teaser-heading'
+              description={copy.description}
+            />
           </div>
 
-          <div className='mt-5 flex flex-wrap items-center gap-3 lg:col-span-5 lg:mt-0 lg:justify-end'>
+          <motion.div
+            className='mt-5 flex flex-wrap items-center gap-3 lg:col-span-5 lg:mt-0 lg:justify-end'
+            initial={fadeUpInitial}
+            whileInView={fadeUpAnimate}
+            viewport={viewport}
+            transition={{ ...transition, delay: reducedMotion ? 0 : 0.12 }}
+          >
             <p className='inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface/80 px-3.5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground-subtle backdrop-blur-sm'>
               <IconPlayerPlay className='size-3 text-accent' aria-hidden />
               {formatClipCount(videos.length)}
@@ -64,7 +70,7 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
             >
               {copy.linkLabel}
             </Button>
-          </div>
+          </motion.div>
         </header>
 
         <VideoShowcase videos={videos} />
@@ -83,6 +89,6 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
           </Button>
         </div>
       </div>
-    </section>
+    </ScrollGrowSection>
   );
 }

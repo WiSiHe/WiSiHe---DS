@@ -6,16 +6,20 @@
   "scripts": {
     "predev": "pnpm --filter @wisihe/tokens build",
     "prestorybook": "pnpm --filter @wisihe/tokens build",
-    "dev": "storybook dev -p 6006",
+    "dev": "storybook dev -p 6006 --no-open",
     "build": "tsc -b && storybook build",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook:clean": "rm -rf node_modules/.cache/storybook",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "storybook:fresh": "pnpm run storybook:clean && pnpm run storybook",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@tabler/icons-react": "^3.44.0",
     "@wisihe/tokens": "workspace:*",
     "@wisihe/ui-react": "workspace:*",
     "@wisihe/utils": "workspace:*",
+    "motion": "^12.42.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

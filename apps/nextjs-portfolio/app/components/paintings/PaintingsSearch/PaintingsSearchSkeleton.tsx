@@ -1,3 +1,4 @@
+import { Skeleton } from '@wisihe/ui-react/skeleton';
 import {
   PaintingGridSkeleton,
   PaintingsSearchHitStatsSkeleton,
@@ -12,10 +13,7 @@ export default function PaintingsSearchSkeleton() {
       aria-busy='true'
       aria-label='Loading paintings'
     >
-      <div
-        className='h-10 w-full animate-pulse rounded-full border border-border/40 bg-surface md:hidden'
-        aria-hidden
-      />
+      <Skeleton variant='rectangular' className='h-10 w-full rounded-full md:hidden' aria-hidden />
 
       <PaintingsSearchSidebarSkeleton />
 

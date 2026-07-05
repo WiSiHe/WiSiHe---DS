@@ -1,6 +1,6 @@
 'use client';
 
-import SearchPagination from '@/app/components/search/SearchPagination';
+import { Pagination } from '@wisihe/ui-react';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 
 export default function PaintingsSearchPagination() {
@@ -9,7 +9,7 @@ export default function PaintingsSearchPagination() {
   if (nbHits === 0 || nbPages <= 1) return null;
 
   return (
-    <SearchPagination
+    <Pagination
       page={page}
       nbPages={nbPages}
       onPageChange={setPage}

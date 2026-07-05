@@ -4,8 +4,14 @@ import { IconArrowNarrowLeft, IconArrowNarrowRight, IconArrowRight } from '@tabl
 import { Button } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
+import { motion } from 'motion/react';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import {
+  printLandingItemVariants,
+  staggerContainerVariants,
+  useSectionReveal,
+} from '@/lib/motion/sectionReveal';
 import ShopPrintFrame from './ShopPrintFrame';
 import {
   formatShopCount,
@@ -24,6 +30,45 @@ type ShopPrintShowcaseProps = {
 };
 
 const RACK_ROTATIONS = [-2.5, 1.5, -1];
+
+type ShopPrintFrameSize = 'hero' | 'duo-primary' | 'duo-secondary' | 'rack';
+
+function ShopPrintLandingGroup({ children }: { children: ReactNode }) {
+  const { reducedMotion, viewport } = useSectionReveal();
+
+  return (
+    <motion.div
+      initial='hidden'
+      whileInView='visible'
+      viewport={viewport}
+      variants={staggerContainerVariants(reducedMotion, 0.1)}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ShopAnimatedPrint({
+  painting,
+  priority,
+  size,
+  rotation,
+  className,
+}: {
+  painting: ShopPainting;
+  priority?: boolean;
+  size: ShopPrintFrameSize;
+  rotation: number;
+  className?: string;
+}) {
+  const { reducedMotion } = useSectionReveal();
+
+  return (
+    <motion.div className={className} variants={printLandingItemVariants(rotation, reducedMotion)}>
+      <ShopPrintFrame painting={painting} priority={priority} size={size} rotation={0} />
+    </motion.div>
+  );
+}
 
 function ShopPrintMeta({
   painting,
@@ -75,10 +120,12 @@ function ShopPrintMeta({
 
 function ShopSinglePrint({ painting }: { painting: ShopPainting }) {
   return (
-    <div className='flex flex-col items-center gap-8'>
-      <ShopPrintFrame painting={painting} priority size='hero' rotation={-1.5} />
-      <ShopPrintMeta painting={painting} index={0} total={1} />
-    </div>
+    <ShopPrintLandingGroup>
+      <div className='flex flex-col items-center gap-8'>
+        <ShopAnimatedPrint painting={painting} priority size='hero' rotation={-1.5} />
+        <ShopPrintMeta painting={painting} index={0} total={1} />
+      </div>
+    </ShopPrintLandingGroup>
   );
 }
 
@@ -88,28 +135,38 @@ function ShopDuoPrints({ paintings }: { paintings: ShopPainting[] }) {
   if (!primary || !secondary) return null;
 
   return (
-    <div className='mx-auto flex max-w-md flex-col gap-10 md:max-w-none'>
-      <div className='relative mx-auto h-[min(58svh,440px)] w-full max-w-sm md:max-w-md'>
-        <div className='absolute left-0 top-2 z-10 md:left-4'>
-          <ShopPrintFrame painting={primary} priority size='duo-primary' rotation={-3.5} />
+    <ShopPrintLandingGroup>
+      <div className='mx-auto flex max-w-md flex-col gap-10 md:max-w-none'>
+        <div className='relative mx-auto h-[min(58svh,440px)] w-full max-w-sm md:max-w-md'>
+          <ShopAnimatedPrint
+            painting={primary}
+            priority
+            size='duo-primary'
+            rotation={-3.5}
+            className='absolute left-0 top-2 z-10 md:left-4'
+          />
+          <ShopAnimatedPrint
+            painting={secondary}
+            size='duo-secondary'
+            rotation={2.5}
+            className='absolute bottom-0 right-0 z-20 md:right-4'
+          />
         </div>
-        <div className='absolute bottom-0 right-0 z-20 md:right-4'>
-          <ShopPrintFrame painting={secondary} size='duo-secondary' rotation={2.5} />
-        </div>
-      </div>
 
-      <ul className='grid gap-8 md:grid-cols-2'>
-        {paintings.map((painting, index) => (
-          <li key={painting._id}>
-            <ShopPrintMeta painting={painting} index={index} total={paintings.length} />
-          </li>
-        ))}
-      </ul>
-    </div>
+        <ul className='grid gap-8 md:grid-cols-2'>
+          {paintings.map((painting, index) => (
+            <li key={painting._id}>
+              <ShopPrintMeta painting={painting} index={index} total={paintings.length} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </ShopPrintLandingGroup>
   );
 }
 
 function ShopPrintRack({ paintings }: { paintings: ShopPainting[] }) {
+  const { reducedMotion, viewport } = useSectionReveal();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
     loop: false,
@@ -149,9 +206,15 @@ function ShopPrintRack({ paintings }: { paintings: ShopPainting[] }) {
     <div className='flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-center lg:gap-12 xl:gap-16'>
       <div className='relative select-none'>
         <div className='overflow-hidden touch-pan-x py-1' ref={emblaRef}>
-          <div className='flex gap-4 md:gap-6'>
+          <motion.div
+            className='flex gap-4 md:gap-6'
+            initial='hidden'
+            whileInView='visible'
+            viewport={viewport}
+            variants={staggerContainerVariants(reducedMotion, 0.1)}
+          >
             {paintings.map((painting, index) => (
-              <ShopPrintFrame
+              <ShopAnimatedPrint
                 key={painting._id}
                 painting={painting}
                 priority={index === 0}
@@ -159,7 +222,7 @@ function ShopPrintRack({ paintings }: { paintings: ShopPainting[] }) {
                 rotation={RACK_ROTATIONS[index % RACK_ROTATIONS.length] ?? 0}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
 
         {paintings.length > 1 ? (

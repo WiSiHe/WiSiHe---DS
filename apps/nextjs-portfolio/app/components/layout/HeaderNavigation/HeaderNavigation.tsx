@@ -4,12 +4,17 @@ import { IconBrush, IconCamera, IconDeviceTv, IconFolder, IconUser } from '@tabl
 import { navigationItems } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import type { JSX } from 'react';
-import { Dock } from '@/app/components/ui/Dock';
 import IconLogo from '../icons/IconLogo';
 import { Link } from '../ProgressLink';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
+
+const Dock = dynamic(
+  () => import('@/app/components/effects/Dock').then(m => ({ default: m.Dock })),
+  { ssr: false },
+);
 
 const NAV_ICONS: Record<string, JSX.Element> = {
   Paintings: <IconBrush className='size-5' stroke={2} aria-hidden />,

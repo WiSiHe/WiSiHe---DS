@@ -8,6 +8,7 @@ interface PaintingCardBadgeItemProps
   extends Pick<IconBadgeProps, 'variant' | 'size' | 'shape' | 'shadow'> {
   icon: React.ReactNode;
   label: string;
+  className?: string;
   /** Pinned badge: always visible, no motion animation */
   pinned?: boolean;
   /** When true, visible in parent `rest` for non-pinned badges (`PaintingCard` `alwaysShowTags`). */
@@ -28,6 +29,7 @@ export function PaintingCardBadgeItem({
   size,
   shape,
   shadow,
+  className,
 }: PaintingCardBadgeItemProps) {
   const badge = (
     <IconBadge
@@ -37,6 +39,7 @@ export function PaintingCardBadgeItem({
       size={size}
       shape={shape}
       shadow={shadow}
+      className={className}
     />
   );
 
