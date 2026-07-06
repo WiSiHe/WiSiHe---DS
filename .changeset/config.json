@@ -10,16 +10,11 @@
       "@wisihe/tokens",
       "@wisihe/typescript-config",
       "@wisihe/ui-react",
-      "@wisihe/ui-svelte",
-      "@wisihe/ui-web-components",
       "@wisihe/utils",
-      "apps-astro-portfolio",
       "nextjs-portfolio",
       "sanity-studio",
       "tanstack-start-portfolio",
       "ui-docs",
-      "ui-svelte-docs",
-      "ui-web-components-docs",
       "wisihe-ai"
     ]
   ],

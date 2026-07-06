@@ -14,24 +14,20 @@ The building blocks of the design system:
 
 - **`@wisihe/tokens`**: The single source of truth for design tokens (colors, typography, spacing). Outputs CSS variables and Tailwind v4 themes via Style Dictionary.
 - **`@wisihe/ui-react`**: React component library built with Tailwind CSS, `cva`, and `radix-ui`. Bundled with `tsup`.
-- **`@wisihe/ui-vue`**: Vue 3 component library. Bundled with Vite and `vue-tsc`.
-- **`@wisihe/ui-svelte`**: Svelte 5 component library. Bundled with `@sveltejs/package`.
-- **`@wisihe/ui-angular`**: Angular component library. Bundled with `ng-packagr`.
-- **`@wisihe/ui-web-components`**: Framework-agnostic Web Components. Bundled with `tsup`.
 - **`@wisihe/utils`**: Shared utilities and class-merging helpers (`cn()`).
-- **Config Packages**: `@wisihe/eslint-config`, `@wisihe/typescript-config`, `@wisihe/constants`, `@wisihe/sanity-queries`.
+- **`@wisihe/sanity-queries`**: Shared GROQ queries and Sanity client helpers.
+- **`@wisihe/sanity-bulk-ai`**: Sanity bulk AI tooling.
+- **Config Packages**: `@wisihe/typescript-config`, `@wisihe/constants`.
 
 ### Apps (`/apps`)
 
 Applications and documentation sites consuming the packages:
 
 - **`ui-docs`**: React Storybook documentation.
-- **`ui-vue-docs`**: Vue Storybook documentation.
-- **`ui-svelte-docs`**: Svelte Storybook documentation.
-- **`ui-web-components-docs`**: Web Components Storybook documentation.
 - **`nextjs-portfolio`**: Main Next.js application.
-- **`astro-portfolio`**: Alternate Astro.js portfolio.
+- **`tanstack-start-portfolio`**: TanStack Start portfolio application.
 - **`sanity-studio`**: Sanity CMS studio for managing content.
+- **`wisihe-ai`**: Sanity AI plugin and studio extension.
 
 ## 🛠 Getting Started
 
@@ -63,7 +59,7 @@ cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 - `pnpm run ci` - Run the full CI pipeline locally (`lint`, `typecheck`, `test`, `build:packages`).
 - `pnpm build` - Build all apps and packages (excluding docs and sanity-studio).
 - `pnpm lint` - Run ESLint across the monorepo.
-- `pnpm typecheck` - Run TypeScript type checking and Svelte/Vue/Angular diagnostics.
+- `pnpm typecheck` - Run TypeScript type checking across the monorepo.
 - `pnpm storybook` - Run the Storybook instances.
 - `pnpm clean` - Remove all `node_modules`, `dist`, and cache directories.
 
