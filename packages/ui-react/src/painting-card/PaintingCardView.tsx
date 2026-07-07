@@ -140,19 +140,18 @@ export function PaintingCardView({
   ) : undefined;
 
   const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
-  const ImageFrame = effectiveLayoutId ? motion.div : 'div';
 
   const imageNode = imageEl ? (
-    <ImageFrame
-      {...(effectiveLayoutId
-        ? {
-            layoutId: effectiveLayoutId,
-            initial: false as const,
-            transition: imageLayoutTransition,
-          }
-        : {})}
-      className='relative h-full w-full overflow-hidden rounded-xl'
-    >
+    <div className='relative h-full w-full overflow-hidden rounded-xl'>
+      {effectiveLayoutId ? (
+        <motion.div
+          layoutId={effectiveLayoutId}
+          initial={false}
+          transition={imageLayoutTransition}
+          className='absolute inset-0 bg-surface-subtle'
+          aria-hidden
+        />
+      ) : null}
       {imageEl}
       {useBrushReveal ? (
         <BrushRevealLayer
@@ -164,7 +163,7 @@ export function PaintingCardView({
           year={paintedAt ?? null}
         />
       ) : null}
-    </ImageFrame>
+    </div>
   ) : undefined;
 
   const card = (
