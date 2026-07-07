@@ -26,8 +26,7 @@ import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { getPaintingImageLqip } from '@/lib/paintings/paintingCardImage';
 import {
   paintingAmbientFrameShadow,
-  paintingAmbientGlowColor,
-  paintingAmbientGlowSecondary,
+  paintingAmbientHaloStyle,
 } from '@/lib/paintings/paintingPaletteGlow';
 import { paintingsTagSearchHref } from '@/lib/paintings/paintingsGalleryReturnUrl';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -180,8 +179,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         .slice(0, 5)
     : [];
 
-  const activeGlowPrimary = paintingAmbientGlowColor(activePalette);
-  const activeGlowSecondary = paintingAmbientGlowSecondary(activePalette);
+  const ambientHaloStyle = useMemo(
+    () => paintingAmbientHaloStyle(activePalette, { dark: isDark }),
+    [activePalette, isDark],
+  );
 
   const paintingFrameStyle = useMemo((): CSSProperties => {
     if (activeWidth && activeHeight) {
@@ -387,25 +388,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             )}
             style={paintingFrameStyle}
           >
-            {/* Palette halo — follows the active carousel slide */}
-            <div className='pointer-events-none absolute inset-0 -z-10' aria-hidden>
-              <motion.div
-                className='absolute left-1/2 top-1/2 h-[132%] w-[122%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[80px] sm:blur-[96px]'
-                animate={{
-                  backgroundColor: activeGlowPrimary,
-                  opacity: heroImageRevealed ? (isDark ? 0.62 : 0.46) : 0,
-                }}
-                transition={glowTransition}
-              />
-              <motion.div
-                className='absolute left-1/2 top-1/2 h-[118%] w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[52px] sm:blur-[64px]'
-                animate={{
-                  backgroundColor: activeGlowSecondary,
-                  opacity: heroImageRevealed ? (isDark ? 0.44 : 0.32) : 0,
-                }}
-                transition={glowTransition}
-              />
-            </div>
+            {/* Palette halo — radial gradient (Safari-safe, no filter blur) */}
+            <motion.div
+              className='pointer-events-none absolute inset-0 -z-10 rounded-[2rem]'
+              style={ambientHaloStyle}
+              animate={{ opacity: heroImageRevealed ? 1 : 0 }}
+              transition={glowTransition}
+              aria-hidden
+            />
 
             <SharedLayoutFrame
               title={title}

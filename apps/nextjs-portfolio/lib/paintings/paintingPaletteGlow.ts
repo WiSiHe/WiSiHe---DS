@@ -55,7 +55,7 @@ function hexToRgba(hex: string, alpha: number): string {
 
 const NEUTRAL_GLOW = '#8a9bab';
 
-/** Dominant palette colour for a soft blurred halo blob. */
+/** Dominant palette colour for ambient halo gradients and shadows. */
 export function paintingAmbientGlowColor(palette?: SanityPalette | null): string {
   const colors = palette ? extractPaletteColors(palette) : [];
   return colors[0] ?? NEUTRAL_GLOW;
@@ -68,13 +68,18 @@ export function paintingAmbientGlowSecondary(palette?: SanityPalette | null): st
   return colors[1] ?? lightenHex(primary, 0.18);
 }
 
-/** Soft palette halo — kept for optional use; prefer paintingAmbientGlowColor + blur. */
-export function paintingAmbientHaloStyle(palette?: SanityPalette | null): CSSProperties {
+/** Soft palette halo via radial gradient — Safari-safe (no filter blur). */
+export function paintingAmbientHaloStyle(
+  palette?: SanityPalette | null,
+  options?: { dark?: boolean },
+): CSSProperties {
   const primary = paintingAmbientGlowColor(palette);
   const secondary = extractPaletteColors(palette ?? {})[1] ?? lightenHex(primary, 0.18);
+  const primaryAlpha = options?.dark ? 0.5 : 0.38;
+  const secondaryAlpha = options?.dark ? 0.24 : 0.14;
 
   return {
-    backgroundImage: `radial-gradient(ellipse 80% 75% at 50% 50%, ${hexToRgba(primary, 0.35)} 0%, ${hexToRgba(secondary, 0.12)} 45%, transparent 72%)`,
+    backgroundImage: `radial-gradient(ellipse 88% 82% at 50% 50%, ${hexToRgba(primary, primaryAlpha)} 0%, ${hexToRgba(secondary, secondaryAlpha)} 44%, transparent 72%)`,
   };
 }
 
