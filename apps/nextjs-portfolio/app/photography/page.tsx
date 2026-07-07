@@ -1,9 +1,11 @@
 import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
+import { cn } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { Link } from '@/app/components/layout/ProgressLink';
 import ScrollToTopButton from '@/app/components/layout/ScrollToTop/ScrollToTop';
 import { PhotographyGallery } from '@/app/components/photography/PhotographyGallery';
+import { photographySectionLabelClass } from '@/app/components/photography/photographyStyles';
 import { sanityFetch } from '@/sanity/lib/live';
 import { photographyListQuery } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -64,54 +66,65 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
 
   return (
     <>
-      <main className='min-h-screen bg-background'>
-        <header className='relative overflow-hidden border-b border-border/40 pt-28 pb-16 sm:pt-32'>
-          <div className='pointer-events-none absolute inset-0 bg-accent/5' aria-hidden />
-          <div
-            className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_25%,transparent_100%)]'
-            aria-hidden
-          />
-          <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-            <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-accent'>
-              Through the lens
-            </p>
-            <h1 className='mt-3 font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl'>
-              Photography
-            </h1>
-            <p className='mt-4 max-w-2xl text-lg leading-relaxed text-foreground-subtle text-pretty'>
-              Travel shots and quiet frames from places I&apos;ve been
-              {ABOUT_PAGE_LINKS_ENABLED
-                ? ' — linked to the same stops on the '
-                : ' — grouped by country in the gallery below.'}
-              {ABOUT_PAGE_LINKS_ENABLED ? (
-                <>
-                  <Link href='/about#travel-map-section' className='text-accent hover:underline'>
-                    about map
-                  </Link>
-                  .
-                </>
-              ) : null}
-            </p>
-            {photos.length > 0 ? (
-              <p className='mt-6 text-sm font-medium text-foreground-muted'>
-                {photos.length} photo{photos.length === 1 ? '' : 's'} in the gallery
-              </p>
-            ) : null}
-          </div>
-        </header>
+      <main className='relative mx-auto min-h-screen w-full max-w-screen-2xl overflow-hidden px-4 pb-24 pt-32 lg:px-8'>
+        <div
+          className='pointer-events-none absolute inset-x-0 top-0 h-[min(52vh,520px)] bg-[radial-gradient(ellipse_90%_70%_at_50%_-10%,color-mix(in_srgb,var(--color-accent)_8%,transparent),transparent)]'
+          aria-hidden
+        />
+        <div
+          className='pointer-events-none absolute inset-x-0 top-0 h-48 bg-[linear-gradient(to_bottom,var(--color-background),transparent)]'
+          aria-hidden
+        />
 
-        <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
-          {photos.length > 0 ? (
-            <PhotographyGallery photos={photos} activeCountry={activeCountry} />
-          ) : (
-            <div className='rounded-2xl border border-dashed border-border bg-surface/40 px-6 py-20 text-center'>
-              <p className='font-serif text-2xl font-bold text-foreground'>Gallery coming soon</p>
-              <p className='mt-2 text-foreground-muted'>
-                New photographs will appear here as they are published in Sanity Studio.
+        <header className='relative pb-10 lg:pb-12'>
+          <div className='flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between'>
+            <div className='max-w-2xl space-y-3'>
+              <p className={cn(photographySectionLabelClass, 'text-accent')}>Through the lens</p>
+              <h1 className='font-serif text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-[3.25rem] lg:leading-[1.05]'>
+                Photography
+              </h1>
+              <p className='max-w-prose text-base leading-relaxed text-foreground-subtle text-pretty md:text-lg'>
+                Travel shots and quiet frames from places I&apos;ve been
+                {ABOUT_PAGE_LINKS_ENABLED
+                  ? ' — linked to the same stops on the '
+                  : ' — grouped by country below.'}
+                {ABOUT_PAGE_LINKS_ENABLED ? (
+                  <>
+                    <Link href='/about#travel-map-section' className='text-accent hover:underline'>
+                      about map
+                    </Link>
+                    .
+                  </>
+                ) : null}
               </p>
             </div>
-          )}
-        </div>
+
+            {photos.length > 0 ? (
+              <div className='flex shrink-0 flex-col items-start gap-2 lg:items-end lg:pb-1'>
+                <span className='inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-accent backdrop-blur-sm'>
+                  {photos.length} {photos.length === 1 ? 'frame' : 'frames'}
+                </span>
+                <p className='text-xs text-foreground-muted'>Documentary & travel</p>
+              </div>
+            ) : null}
+          </div>
+
+          <div
+            className='mt-8 h-px w-full bg-linear-to-r from-transparent via-border/70 to-transparent'
+            aria-hidden
+          />
+        </header>
+
+        {photos.length > 0 ? (
+          <PhotographyGallery photos={photos} activeCountry={activeCountry} />
+        ) : (
+          <div className='relative rounded-2xl border border-dashed border-border/70 bg-surface/30 px-6 py-20 text-center backdrop-blur-sm'>
+            <p className='font-serif text-2xl font-bold text-foreground'>Gallery coming soon</p>
+            <p className='mt-2 text-foreground-muted'>
+              New photographs will appear here as they are published in Sanity Studio.
+            </p>
+          </div>
+        )}
       </main>
       <ScrollToTopButton />
     </>

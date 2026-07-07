@@ -9,6 +9,8 @@ export type PaintingSearchHit = {
     asset?: { _ref?: string };
     lqip?: string;
     aspectRatio?: number | null;
+    width?: number | null;
+    height?: number | null;
     hotspot?: {
       x?: number;
       y?: number;

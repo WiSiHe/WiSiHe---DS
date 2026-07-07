@@ -3,9 +3,10 @@
 import { cn } from '@wisihe/utils';
 import { motion, type Transition, useReducedMotion } from 'motion/react';
 import type { ReactNode } from 'react';
-import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 
 type SharedLayoutFrameProps = {
+  /** Content slug — must match grid card layoutId key. */
   slug: string;
   className?: string;
   style?: React.CSSProperties;
@@ -15,7 +16,7 @@ type SharedLayoutFrameProps = {
   onLayoutAnimationComplete?: () => void;
 };
 
-/** Morph target/source wrapper for painting & project hero images. */
+/** Morph target wrapper for list → detail hero transitions. */
 export function SharedLayoutFrame({
   slug,
   className,
@@ -26,8 +27,9 @@ export function SharedLayoutFrame({
   onLayoutAnimationComplete,
 }: SharedLayoutFrameProps) {
   const reduceMotion = useReducedMotion();
+  const layoutId = contentSlugLayoutId(slug);
 
-  if (reduceMotion || !slug.trim()) {
+  if (!layoutId || reduceMotion) {
     return (
       <div className={className} style={style}>
         {children}
@@ -37,11 +39,11 @@ export function SharedLayoutFrame({
 
   return (
     <motion.div
-      layoutId={contentImageLayoutId(slug)}
+      layoutId={layoutId}
       initial={false}
       transition={transition}
       className={cn(className)}
-      style={{ borderRadius: 16, ...style }}
+      style={style}
       onLayoutAnimationStart={onLayoutAnimationStart}
       onLayoutAnimationComplete={onLayoutAnimationComplete}
     >

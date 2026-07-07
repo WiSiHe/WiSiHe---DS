@@ -1,18 +1,14 @@
-import { IconBrandYoutube, IconEye, IconHeart } from '@tabler/icons-react';
 import type { VideoBySlugQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
-import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
 import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
 import { buildContentMetadata, resolveSeoCopy } from '@/lib/seo/metadata';
-import { formatCount, getYouTubeStats } from '@/lib/youtube';
+import { getYouTubeStats } from '@/lib/youtube';
 import { sanityFetch } from '@/sanity/lib/live';
 import { videoBySlugQuery, videosSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
-import VideoActions from './VideoActions';
+import { VideoDetail } from './VideoDetail';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -80,10 +76,10 @@ export default async function VideoPage(props: Props) {
   const { data } = await sanityFetch({ query: videoBySlugQuery, params });
   const video = data as VideoBySlugQueryResult;
 
-  if (!video?._id) return notFound();
+  if (!video?._id || !video.slug) return notFound();
 
-  const videoId = getYouTubeId(video.videoUrl ?? '');
-  const youtubeStats = videoId ? await getYouTubeStats(videoId) : null;
+  const youtubeVideoId = getYouTubeId(video.videoUrl ?? '');
+  const youtubeStats = youtubeVideoId ? await getYouTubeStats(youtubeVideoId) : null;
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -94,7 +90,7 @@ export default async function VideoPage(props: Props) {
       ? urlForImage(video.thumbnail)?.width(640).height(360).url()
       : undefined,
     contentUrl: video.videoUrl,
-    embedUrl: videoId ? `https://www.youtube.com/embed/${videoId}` : undefined,
+    embedUrl: youtubeVideoId ? `https://www.youtube.com/embed/${youtubeVideoId}` : undefined,
     author: buildPersonReference(),
   };
 
@@ -104,133 +100,39 @@ export default async function VideoPage(props: Props) {
     { name: video.title ?? 'Video', path: `/videos/${params.slug}` },
   ]);
 
+  const linkedPaintingImage = video.linkedPainting?.image
+    ? urlForImage(video.linkedPainting.image)?.width(400).height(300).quality(75)
+    : null;
+
+  const linkedPainting = video.linkedPainting?.slug
+    ? {
+        slug: video.linkedPainting.slug,
+        title: video.linkedPainting.title ?? 'Painting',
+        imageUrl: linkedPaintingImage?.url() ?? null,
+        blurDataURL: video.linkedPainting.image?.lqip ?? null,
+      }
+    : null;
+
   return (
     <>
       <JsonLd data={structuredData} />
       <JsonLd data={breadcrumbData} />
 
-      <div className='min-h-screen pt-32 pb-20 max-w-5xl mx-auto px-4'>
-        <Breadcrumbs
-          crumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Videos', href: '/videos' },
-            { label: video.title ?? 'Video' },
-          ]}
-        />
-
-        <div className='aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-black mb-8'>
-          {videoId ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`}
-              title={video.title ?? undefined}
-              className='w-full h-full'
-              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-              allowFullScreen
-            />
-          ) : (
-            <div className='w-full h-full flex items-center justify-center text-foreground-muted'>
-              <IconBrandYoutube className='size-16 opacity-30' stroke={2} aria-hidden />
-            </div>
-          )}
-        </div>
-
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          <div className='lg:col-span-2 space-y-4'>
-            <h1 className='text-2xl md:text-3xl font-bold text-foreground'>{video.title}</h1>
-
-            {youtubeStats && (
-              <div className='flex items-center gap-5 text-sm text-foreground-muted'>
-                <span className='flex items-center gap-1.5'>
-                  <IconEye className='size-3.5' stroke={2} aria-hidden />
-                  <span className='font-semibold text-foreground'>
-                    {formatCount(youtubeStats.viewCount)}
-                  </span>{' '}
-                  views on YouTube
-                </span>
-                <span className='flex items-center gap-1.5'>
-                  <IconHeart className='size-3.5' stroke={2} aria-hidden />
-                  <span className='font-semibold text-foreground'>
-                    {formatCount(youtubeStats.likeCount)}
-                  </span>{' '}
-                  YouTube likes
-                </span>
-              </div>
-            )}
-
-            {(video.tags?.length ?? 0) > 0 && (
-              <div className='flex flex-wrap gap-2'>
-                {video.tags?.map(tag => (
-                  <span
-                    key={tag.name}
-                    className='text-xs font-medium px-2.5 py-1 rounded-full bg-surface border border-border text-foreground-subtle'
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {video.description && (
-              <p className='text-foreground-subtle leading-relaxed'>{video.description}</p>
-            )}
-
-            <VideoActions
-              videoId={video._id}
-              title={video.title ?? ''}
-              viewsCount={video.viewsCount ?? 0}
-              likesCount={video.likesCount ?? 0}
-            />
-
-            {video.videoUrl && (
-              <a
-                href={video.videoUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors'
-              >
-                <IconBrandYoutube className='size-4' stroke={2} aria-hidden />
-                Watch on YouTube
-              </a>
-            )}
-          </div>
-
-          {video.linkedPainting && (
-            <div className='space-y-3'>
-              <p className='text-xs font-semibold text-foreground-muted uppercase tracking-wider'>
-                Related Painting
-              </p>
-              <Link href={`/paintings/${video.linkedPainting.slug}`} className='group block'>
-                <div className='rounded-xl overflow-hidden border border-border transition-all duration-200 group-hover:border-accent-border group-hover:shadow-lg'>
-                  {video.linkedPainting.image && (
-                    <div className='relative aspect-[4/3] bg-surface-subtle'>
-                      <Image
-                        src={
-                          urlForImage(video.linkedPainting.image)
-                            ?.width(400)
-                            .height(300)
-                            .quality(75)
-                            .url() ?? ''
-                        }
-                        alt={video.linkedPainting.title ?? ''}
-                        fill
-                        className='object-cover transition-transform duration-300 group-hover:scale-105'
-                        placeholder={video.linkedPainting.image.lqip ? 'blur' : 'empty'}
-                        blurDataURL={video.linkedPainting.image.lqip ?? undefined}
-                      />
-                    </div>
-                  )}
-                  <div className='p-3'>
-                    <p className='text-sm font-medium text-foreground group-hover:text-accent transition-colors'>
-                      {video.linkedPainting.title}
-                    </p>
-                    <p className='text-xs text-foreground-muted mt-0.5'>View painting →</p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
+      <VideoDetail
+        slug={video.slug}
+        videoId={video._id}
+        title={video.title ?? 'Video'}
+        description={video.description ?? null}
+        tags={(video.tags ?? [])
+          .map(tag => tag.name?.trim())
+          .filter((name): name is string => Boolean(name))}
+        viewsCount={video.viewsCount ?? 0}
+        likesCount={video.likesCount ?? 0}
+        videoUrl={video.videoUrl ?? null}
+        youtubeVideoId={youtubeVideoId}
+        youtubeStats={youtubeStats}
+        linkedPainting={linkedPainting}
+      />
     </>
   );
 }

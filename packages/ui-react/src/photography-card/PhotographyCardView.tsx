@@ -78,18 +78,18 @@ export function PhotographyCardView({
   ImageComponent = DefaultImage,
 }: PhotographyCardViewProps) {
   const alt = imageAlt ?? title ?? 'Photograph';
+  const isLarge = size === 'large';
 
   return (
     <article className={cn('group', className)}>
-      <LinkComponent
-        href={href}
-        className='block space-y-3.5'
-        aria-label={title ?? 'View photograph'}
-      >
+      <LinkComponent href={href} className='block' aria-label={title ?? 'View photograph'}>
         <div
           className={cn(
-            'relative w-full overflow-hidden rounded-2xl bg-surface/60 ring-1 ring-border/45 shadow-sm transition-all duration-500',
-            'group-hover:ring-accent/35 group-hover:shadow-xl group-hover:shadow-black/[0.08]',
+            'relative w-full overflow-hidden rounded-xl bg-surface-subtle',
+            'shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-1 ring-border/20',
+            'transition-all duration-500 ease-out',
+            'group-hover:-translate-y-0.5 group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.14)] group-hover:ring-accent/25',
+            'dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)] dark:group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.5)]',
           )}
           style={{ aspectRatio }}
         >
@@ -98,46 +98,67 @@ export function PhotographyCardView({
             alt={alt}
             fill
             priority={priority}
-            className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]'
+            className='object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]'
             sizes={
-              size === 'large'
+              isLarge
                 ? '(max-width: 1024px) 100vw, 66vw'
                 : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
             }
             placeholder={blurDataURL ? 'blur' : 'empty'}
             blurDataURL={blurDataURL ?? undefined}
           />
+
           <div
-            className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+            className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100'
             aria-hidden
           />
+
           {yearLabel ? (
-            <span className='absolute left-3 top-3 rounded-md border border-white/20 bg-black/35 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide text-white backdrop-blur-md'>
+            <span className='absolute left-3 top-3 z-10 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-mono text-[10px] font-medium tracking-wide text-white/95 backdrop-blur-md'>
               {yearLabel}
             </span>
           ) : null}
-        </div>
 
-        <div className='px-0.5'>
-          <h2
+          <div
             className={cn(
-              'font-serif font-bold leading-snug text-foreground text-pretty transition-colors group-hover:text-accent',
-              size === 'large' ? 'text-2xl sm:text-[1.65rem]' : 'text-lg sm:text-xl',
+              'absolute inset-x-0 bottom-0 z-10 p-4 pt-12',
+              'translate-y-2 opacity-0 transition-all duration-500 ease-out',
+              'group-hover:translate-y-0 group-hover:opacity-100',
+              'group-focus-within:translate-y-0 group-focus-within:opacity-100',
+              !isLarge && 'sm:opacity-100 sm:translate-y-0',
             )}
           >
-            {title}
-          </h2>
-          {placeLabel ? (
-            <p className='mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground-muted'>
-              {placeLabel}
-            </p>
-          ) : null}
-          {caption ? (
-            <p className='mt-2 line-clamp-2 text-sm leading-relaxed text-foreground-subtle text-pretty'>
-              {caption}
-            </p>
-          ) : null}
+            <h2
+              className={cn(
+                'font-serif font-bold leading-snug text-white text-pretty drop-shadow-sm',
+                isLarge ? 'text-2xl sm:text-[1.65rem]' : 'text-lg',
+              )}
+            >
+              {title}
+            </h2>
+            {placeLabel ? (
+              <p className='mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75'>
+                {placeLabel}
+              </p>
+            ) : null}
+            {caption && isLarge ? (
+              <p className='mt-2 line-clamp-2 text-sm leading-relaxed text-white/80 text-pretty'>
+                {caption}
+              </p>
+            ) : null}
+          </div>
         </div>
+
+        {isLarge ? (
+          <div className='sr-only'>
+            {title}
+            {placeLabel ? ` — ${placeLabel}` : ''}
+          </div>
+        ) : (
+          <p className='mt-3 px-0.5 font-serif text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-accent sm:sr-only'>
+            {title}
+          </p>
+        )}
       </LinkComponent>
     </article>
   );

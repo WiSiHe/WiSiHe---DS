@@ -1,8 +1,8 @@
 'use client';
 import {
-  IconArrowRight,
   IconChevronLeft,
   IconChevronRight,
+  IconExternalLink,
   IconEye,
   IconHeart,
   IconHeartFilled,
@@ -13,11 +13,11 @@ import {
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
 import { PaintingsDetailNav } from '@/app/components/paintings/PaintingDetails/PaintingsDetailNav';
@@ -47,25 +47,16 @@ const paintingCarouselNavButtonClass = cn(
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
-const LAYOUT_MORPH_QUICK_REVEAL_MS = 150;
-
 const viewportWashTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
 
 type PaintingViewportWashProps = {
   palette?: SanityPalette | null;
   dark: boolean;
-  revealed: boolean;
   slideKey: number;
   layout: 'mobile' | 'desktop';
 };
 
-function PaintingViewportWash({
-  palette,
-  dark,
-  revealed,
-  slideKey,
-  layout,
-}: PaintingViewportWashProps) {
+function PaintingViewportWash({ palette, dark, slideKey, layout }: PaintingViewportWashProps) {
   const washStyle = useMemo(
     () => paintingViewportWashStyle(palette, { dark, layout }),
     [palette, dark, layout],
@@ -87,7 +78,7 @@ function PaintingViewportWash({
           className={layoutClassName}
           style={washStyle}
           initial={{ opacity: 0 }}
-          animate={{ opacity: revealed ? 1 : 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={viewportWashTransition}
         />
@@ -97,7 +88,7 @@ function PaintingViewportWash({
         className={cn(layoutClassName, 'mix-blend-soft-light')}
         style={grainStyle}
         initial={{ opacity: 0 }}
-        animate={{ opacity: revealed ? PAINTING_VIEWPORT_GRAIN_OPACITY : 0 }}
+        animate={{ opacity: PAINTING_VIEWPORT_GRAIN_OPACITY }}
         transition={viewportWashTransition}
       />
     </>
@@ -107,10 +98,6 @@ function PaintingViewportWash({
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
-  const reduceMotion = useReducedMotion();
-  const layoutMorphStartedRef = useRef(false);
-  const layoutMorphRevealRef = useRef(false);
-  const [atmosphericRevealed, setAtmosphericRevealed] = useState(Boolean(reduceMotion));
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -135,12 +122,18 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   } = paintingData as any;
 
   // Build the list of available stores — easy to extend with more platforms
-  const storeLinks: { label: string; url: string; icon: React.ReactNode }[] = [
+  const storeLinks: {
+    label: string;
+    url: string;
+    description: string;
+    icon: React.ReactNode;
+  }[] = [
     ...(redbubbleUrl
       ? [
           {
             label: 'Redbubble',
             url: redbubbleUrl,
+            description: 'Prints, stickers & apparel',
             icon: <IconShoppingBag className='size-4' stroke={2} aria-hidden />,
           },
         ]
@@ -150,6 +143,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
           {
             label: 'Gelato',
             url: gelatoUrl,
+            description: 'Museum-quality fine art prints',
             icon: <span className='text-xs font-black leading-none'>G</span>,
           },
         ]
@@ -257,29 +251,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   );
 
   const glowTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
-
-  const revealAtmosphere = useCallback(() => {
-    if (layoutMorphRevealRef.current) return;
-    layoutMorphRevealRef.current = true;
-    setAtmosphericRevealed(true);
-  }, []);
-
-  const handleLayoutMorphStart = useCallback(() => {
-    layoutMorphStartedRef.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      revealAtmosphere();
-      return;
-    }
-
-    const quickReveal = window.setTimeout(() => {
-      if (!layoutMorphStartedRef.current) revealAtmosphere();
-    }, LAYOUT_MORPH_QUICK_REVEAL_MS);
-
-    return () => window.clearTimeout(quickReveal);
-  }, [reduceMotion, revealAtmosphere]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -435,14 +406,12 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       <PaintingViewportWash
         palette={activePalette}
         dark={isDark}
-        revealed={atmosphericRevealed}
         slideKey={selectedIndex}
         layout='mobile'
       />
       <PaintingViewportWash
         palette={activePalette}
         dark={isDark}
-        revealed={atmosphericRevealed}
         slideKey={selectedIndex}
         layout='desktop'
       />
@@ -459,9 +428,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               style={paintingFrameStyle}
             >
               <SharedLayoutFrame
-                slug={slug ?? ''}
-                onLayoutAnimationStart={handleLayoutMorphStart}
-                onLayoutAnimationComplete={revealAtmosphere}
+                slug={typeof slug === 'string' ? slug : ''}
                 className={cn(
                   'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
                   activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
@@ -469,7 +436,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               >
                 <motion.div
                   className='pointer-events-none absolute inset-0 z-[5] rounded-2xl'
-                  animate={{ boxShadow: atmosphericRevealed ? ambientFrameShadow : 'none' }}
+                  animate={{ boxShadow: ambientFrameShadow }}
                   transition={glowTransition}
                   aria-hidden
                 />
@@ -747,43 +714,79 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
                 {/* Buy CTA — shows when at least one store is configured */}
                 {storeLinks.length > 0 && (
-                  <motion.div
+                  <motion.aside
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', delay: 0.3 }}
-                    className='rounded-xl border border-border bg-surface-subtle p-4 space-y-3'
+                    aria-label='Print shop'
+                    className='space-y-4 border-t border-border/40 pt-6'
                   >
-                    <div>
-                      <h2 className='font-semibold text-foreground text-sm'>Available to buy</h2>
-                      <p className='text-xs text-foreground-muted mt-0.5'>
-                        Prints, posters, stickers and more — shipped worldwide.
-                      </p>
+                    <div className='flex items-start justify-between gap-3'>
+                      <div className='space-y-1.5'>
+                        <p className='text-[11px] font-medium uppercase tracking-widest text-foreground-muted'>
+                          Print shop
+                        </p>
+                        <p className='text-sm leading-snug text-foreground-subtle text-pretty'>
+                          Order prints and merchandise — shipped worldwide.
+                        </p>
+                      </div>
+                      <span
+                        aria-hidden
+                        className='inline-flex shrink-0 items-center justify-center rounded-full border border-accent/20 bg-accent/8 p-2 text-accent'
+                      >
+                        <IconShoppingBag className='size-4' stroke={2} />
+                      </span>
                     </div>
-                    <div className='flex flex-col gap-2'>
+
+                    <ul className='flex flex-col gap-2'>
                       {storeLinks.map(store => (
-                        <a
-                          key={store.label}
-                          href={store.url}
-                          target='_blank'
-                          rel='noreferrer'
-                          onClick={() =>
-                            trackEvent(AnalyticsEvent.PAINTING_STORE_LINK_CLICKED, {
-                              painting_id: _id,
-                              title,
-                              store: store.label,
-                            })
-                          }
-                          className='flex items-center justify-between gap-2 w-full px-4 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-accent-contrast font-semibold text-sm transition-colors shadow-sm hover:shadow-md focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none'
-                        >
-                          <span className='flex items-center gap-2'>
-                            {store.icon}
-                            Shop on {store.label}
-                          </span>
-                          <IconArrowRight className='size-3.5 opacity-70' stroke={2} aria-hidden />
-                        </a>
+                        <li key={store.label}>
+                          <a
+                            href={store.url}
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={() =>
+                              trackEvent(AnalyticsEvent.PAINTING_STORE_LINK_CLICKED, {
+                                painting_id: _id,
+                                title,
+                                store: store.label,
+                              })
+                            }
+                            className={cn(
+                              'group flex items-center gap-3 rounded-xl border border-border/50 bg-background/30 px-3.5 py-3',
+                              'transition-colors duration-150',
+                              'hover:border-accent/35 hover:bg-accent/5',
+                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                            )}
+                          >
+                            <span
+                              aria-hidden
+                              className={cn(
+                                'flex size-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-surface',
+                                'text-foreground-muted transition-colors duration-150',
+                                'group-hover:border-accent/30 group-hover:text-accent',
+                              )}
+                            >
+                              {store.icon}
+                            </span>
+                            <span className='min-w-0 grow'>
+                              <span className='block text-sm font-semibold text-foreground'>
+                                {store.label}
+                              </span>
+                              <span className='block text-xs text-foreground-muted'>
+                                {store.description}
+                              </span>
+                            </span>
+                            <IconExternalLink
+                              className='size-4 shrink-0 text-foreground-muted opacity-60 transition-opacity duration-150 group-hover:opacity-100'
+                              stroke={2}
+                              aria-hidden
+                            />
+                          </a>
+                        </li>
                       ))}
-                    </div>
-                  </motion.div>
+                    </ul>
+                  </motion.aside>
                 )}
               </div>
             </motion.div>

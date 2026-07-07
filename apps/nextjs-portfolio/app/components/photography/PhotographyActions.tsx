@@ -15,6 +15,7 @@ type PhotographyActionsProps = {
   title: string;
   viewsCount: number;
   likesCount: number;
+  layout?: 'bar' | 'sidebar';
 };
 
 export function PhotographyActions({
@@ -22,6 +23,7 @@ export function PhotographyActions({
   title,
   viewsCount,
   likesCount,
+  layout = 'bar',
 }: PhotographyActionsProps) {
   const [localViews, setLocalViews] = useState(viewsCount ?? 0);
   const [localLikes, setLocalLikes] = useState(likesCount ?? 0);
@@ -116,7 +118,12 @@ export function PhotographyActions({
   };
 
   return (
-    <div className='flex flex-wrap items-center gap-4'>
+    <div
+      className={cn(
+        'flex gap-4',
+        layout === 'sidebar' ? 'flex-col items-stretch' : 'flex-wrap items-center',
+      )}
+    >
       <div className='flex items-center gap-4 text-sm text-foreground-muted'>
         <span className='flex items-center gap-1.5'>
           <IconEye className='size-3.5' stroke={2} aria-hidden />
@@ -132,12 +139,18 @@ export function PhotographyActions({
         </span>
       </div>
 
-      <div className='ml-auto flex items-center gap-2'>
+      <div
+        className={cn(
+          'flex items-center gap-2',
+          layout === 'sidebar' ? 'grid w-full grid-cols-2' : 'ml-auto',
+        )}
+      >
         <button
           type='button'
           onClick={handleLike}
           className={cn(
-            'flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150',
+            'flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150',
+            layout === 'sidebar' && 'w-full',
             hasLiked
               ? 'border-red-500/20 bg-red-500/10 text-red-500 hover:bg-red-500/20'
               : 'border-border bg-surface text-foreground-subtle hover:border-foreground-muted hover:text-foreground',
@@ -153,7 +166,10 @@ export function PhotographyActions({
         <button
           type='button'
           onClick={handleShare}
-          className='flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors duration-150 hover:border-foreground-muted hover:text-foreground'
+          className={cn(
+            'flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors duration-150 hover:border-foreground-muted hover:text-foreground',
+            layout === 'sidebar' && 'w-full',
+          )}
         >
           <IconShare className='size-4' stroke={2} aria-hidden />
           {shareText}

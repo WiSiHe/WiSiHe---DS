@@ -114,11 +114,11 @@ export function paintingViewportWashStyle(
     };
   }
 
-  const corePrimary = dark ? 0.52 : 0.4;
-  const coreSecondary = dark ? 0.3 : 0.2;
-  const midPrimary = dark ? 0.28 : 0.2;
-  const midSecondary = dark ? 0.16 : 0.1;
-  const edgePrimary = dark ? 0.1 : 0.06;
+  const corePrimary = dark ? 0.24 : 0.18;
+  const coreSecondary = dark ? 0.14 : 0.1;
+  const midPrimary = dark ? 0.14 : 0.1;
+  const midSecondary = dark ? 0.08 : 0.05;
+  const edgePrimary = dark ? 0.05 : 0.03;
 
   return {
     backgroundImage: [

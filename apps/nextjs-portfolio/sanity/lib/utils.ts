@@ -1,4 +1,5 @@
 import { createImageUrlBuilder } from '@sanity/image-url';
+import { getCroppedAspectRatio as resolveCroppedAspectRatio } from '@/lib/paintings/paintingImageDimensions';
 import { dataset, projectId } from '@/sanity/lib/api';
 import { client } from './client';
 
@@ -71,14 +72,7 @@ export const urlForImage = (source: SanityImageSource | null | undefined) => {
 
 /** Calculates the aspect ratio of the image after applying custom editor crop. */
 export function getCroppedAspectRatio(image: any): number {
-  if (!image) return 3 / 4;
-  const baseAr = image.aspectRatio ?? 3 / 4;
-  if (!image.crop) return baseAr;
-  const { top = 0, bottom = 0, left = 0, right = 0 } = image.crop;
-  const croppedWidth = 1 - left - right;
-  const croppedHeight = 1 - top - bottom;
-  if (croppedWidth <= 0 || croppedHeight <= 0) return baseAr;
-  return baseAr * (croppedWidth / croppedHeight);
+  return resolveCroppedAspectRatio(image) ?? 3 / 4;
 }
 
 /** Full-frame photo URL — ignores hotspot/crop so the entire image is shown. */

@@ -8,6 +8,7 @@ import { BrushRevealWrap } from './brush-reveal/BrushRevealWrap';
 import { type BrushPalette, getBrushStrokeColors } from './brush-stroke/brushStrokeColors';
 import { paintingBrushSeed } from './brush-stroke/brushStrokeVariants';
 import { resolvePaintingCardLayout } from './layout';
+import type { ContentMorphFrameComponent } from './morphFrame';
 import { getNsfwImageBlurClass, NSFW_COMPACT_LABEL } from './nsfwCover';
 import { PaintingCard, type PaintingCardBadge, type PaintingCardLayout } from './PaintingCard';
 
@@ -59,6 +60,8 @@ export type PaintingCardViewProps = {
   /** Enables shared layout morph into painting detail hero. */
   imageLayoutId?: string;
   imageLayoutTransition?: Transition;
+  /** App-provided frame so layoutId uses the same motion instance as the detail page. */
+  ImageMorphFrame?: ContentMorphFrameComponent;
   className?: string;
 };
 
@@ -108,6 +111,7 @@ export function PaintingCardView({
   ImageComponent = DefaultImage,
   imageLayoutId,
   imageLayoutTransition,
+  ImageMorphFrame,
   className,
 }: PaintingCardViewProps) {
   const reduceMotion = useReducedMotion();
@@ -140,38 +144,63 @@ export function PaintingCardView({
   ) : undefined;
 
   const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
-  const ImageFrame = effectiveLayoutId ? motion.div : 'div';
+  const imageFrameClassName = 'relative h-full w-full overflow-hidden rounded-xl';
 
   const imageNode = imageEl ? (
-    <ImageFrame
-      {...(effectiveLayoutId
-        ? {
-            layoutId: effectiveLayoutId,
-            initial: false as const,
-            transition: imageLayoutTransition,
-          }
-        : {})}
-      className='relative h-full w-full overflow-hidden rounded-xl'
-      style={effectiveLayoutId ? { borderRadius: 12 } : undefined}
-    >
-      {effectiveLayoutId ? (
-        <motion.div layout='position' className='relative h-full w-full'>
-          {imageEl}
-        </motion.div>
-      ) : (
-        imageEl
-      )}
-      {useBrushReveal ? (
-        <BrushRevealLayer
-          {...strokeColors}
-          strokeVariantIndex={brushIndex}
-          revealSeed={brushSeed}
-          paintingFormat={cardImageLayout.format}
-          title={title || null}
-          year={paintedAt ?? null}
-        />
-      ) : null}
-    </ImageFrame>
+    effectiveLayoutId && ImageMorphFrame ? (
+      <ImageMorphFrame
+        layoutId={effectiveLayoutId}
+        transition={imageLayoutTransition}
+        className={imageFrameClassName}
+      >
+        {imageEl}
+        {useBrushReveal ? (
+          <BrushRevealLayer
+            {...strokeColors}
+            strokeVariantIndex={brushIndex}
+            revealSeed={brushSeed}
+            paintingFormat={cardImageLayout.format}
+            title={title || null}
+            year={paintedAt ?? null}
+          />
+        ) : null}
+      </ImageMorphFrame>
+    ) : (
+      (() => {
+        const ImageFrame = effectiveLayoutId ? motion.div : 'div';
+
+        return (
+          <ImageFrame
+            {...(effectiveLayoutId
+              ? {
+                  layoutId: effectiveLayoutId,
+                  initial: false as const,
+                  transition: imageLayoutTransition,
+                }
+              : {})}
+            className={imageFrameClassName}
+          >
+            {effectiveLayoutId ? (
+              <motion.div layout='position' className='relative h-full w-full'>
+                {imageEl}
+              </motion.div>
+            ) : (
+              imageEl
+            )}
+            {useBrushReveal ? (
+              <BrushRevealLayer
+                {...strokeColors}
+                strokeVariantIndex={brushIndex}
+                revealSeed={brushSeed}
+                paintingFormat={cardImageLayout.format}
+                title={title || null}
+                year={paintedAt ?? null}
+              />
+            ) : null}
+          </ImageFrame>
+        );
+      })()
+    )
   ) : undefined;
 
   const card = (

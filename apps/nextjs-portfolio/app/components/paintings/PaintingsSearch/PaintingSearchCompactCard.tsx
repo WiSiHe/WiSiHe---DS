@@ -5,7 +5,8 @@ import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useMemo } from 'react';
-import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import {
   NSFW_MATURE_LABEL,
@@ -57,7 +58,7 @@ function getSearchCompactImageUrl(
   const cached = searchCompactImageUrlCache.get(cacheKey);
   if (cached) return cached;
 
-  const url = urlForPaintingCard(image, layout);
+  const url = urlForPaintingCard(image as Parameters<typeof urlForPaintingCard>[0], layout);
   if (url) searchCompactImageUrlCache.set(cacheKey, url);
   return url ?? null;
 }
@@ -92,7 +93,7 @@ function PaintingSearchCompactCardInner({
     [format, image?.aspectRatio],
   );
   const imageSrc = getSearchCompactImageUrl(image, layout);
-  const lqip = getPaintingImageLqip(image);
+  const lqip = getPaintingImageLqip(image as Parameters<typeof getPaintingImageLqip>[0]);
   const brushSeed = paintingBrushSeed(paintingId ?? slug ?? title);
   const strokeColors = getBrushStrokeColors(brushSeed, palette);
   const cleanedTags = useMemo(() => tags.map(tag => cleanTagName(tag)).filter(Boolean), [tags]);
@@ -120,7 +121,8 @@ function PaintingSearchCompactCardInner({
       availableForSale={availableForSale}
       LinkComponent={Link}
       ImageComponent={PaintingThumbnailImage}
-      imageLayoutId={slug ? contentImageLayoutId(slug) : undefined}
+      imageLayoutId={slug ? contentSlugLayoutId(slug) : undefined}
+      ImageMorphFrame={ContentMorphImageFrame}
       imageLayoutTransition={sharedLayoutTransition}
     />
   );

@@ -44,8 +44,7 @@ export function isNsfwFacetActive(refinements: CurrentRefinement[]): boolean {
 /**
  * Tag facet list for the paintings sidebar:
  * 1. Active filters first (so selections stay visible)
- * 2. NSFW utility filter next among unselected tags
- * 3. Subject tags by popularity, then A–Z
+ * 2. Remaining tags by popularity, then A–Z (NSFW included in that order)
  * Store / For sale are omitted — use the Shop toggle instead.
  */
 export function tagFacetTransformItems<
@@ -58,15 +57,6 @@ export function tagFacetTransformItems<
 
   return [...filtered].sort((a, b) => {
     if (a.isRefined !== b.isRefined) return a.isRefined ? -1 : 1;
-
-    if (a.isRefined && b.isRefined) {
-      return compareByCountThenName(a, b);
-    }
-
-    const nsfwA = isNsfwTag(a.label);
-    const nsfwB = isNsfwTag(b.label);
-    if (nsfwA !== nsfwB) return nsfwA ? -1 : 1;
-
     return compareByCountThenName(a, b);
   });
 }

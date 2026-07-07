@@ -4,6 +4,7 @@ import { cn } from '@wisihe/utils';
 import { motion, type Transition, useReducedMotion } from 'motion/react';
 import type * as React from 'react';
 import { Badge } from '../badge/Badge';
+import type { ContentMorphFrameComponent } from '../painting-card/morphFrame';
 import { BrushRevealLayer } from './brush-reveal/BrushRevealLayer';
 import { BrushRevealWrap } from './brush-reveal/BrushRevealWrap';
 import { NsfwContentIndicator } from './brush-reveal/NsfwContentIndicator';
@@ -57,6 +58,7 @@ export type PaintingThumbnailViewProps = {
   /** Enables shared layout morph into painting detail hero. */
   imageLayoutId?: string;
   imageLayoutTransition?: Transition;
+  ImageMorphFrame?: ContentMorphFrameComponent;
   className?: string;
 };
 
@@ -121,6 +123,7 @@ export function PaintingThumbnailView({
   ImageComponent = DefaultImage,
   imageLayoutId,
   imageLayoutTransition,
+  ImageMorphFrame,
   className,
 }: PaintingThumbnailViewProps) {
   const reduceMotion = useReducedMotion();
@@ -157,17 +160,26 @@ export function PaintingThumbnailView({
       )}
     >
       {imageSrc && effectiveLayoutId ? (
-        <motion.div
-          layoutId={effectiveLayoutId}
-          initial={false}
-          transition={imageLayoutTransition}
-          className='absolute inset-0'
-          style={{ borderRadius: 12 }}
-        >
-          <motion.div layout='position' className='relative h-full w-full'>
+        ImageMorphFrame ? (
+          <ImageMorphFrame
+            layoutId={effectiveLayoutId}
+            transition={imageLayoutTransition}
+            className='absolute inset-0'
+          >
             {image}
+          </ImageMorphFrame>
+        ) : (
+          <motion.div
+            layoutId={effectiveLayoutId}
+            initial={false}
+            transition={imageLayoutTransition}
+            className='absolute inset-0'
+          >
+            <motion.div layout='position' className='relative h-full w-full'>
+              {image}
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )
       ) : (
         image
       )}

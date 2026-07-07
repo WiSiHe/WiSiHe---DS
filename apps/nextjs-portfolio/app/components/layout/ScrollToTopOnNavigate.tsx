@@ -5,9 +5,14 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import {
   getGlobalLenis,
+  isPaintingsRoute,
+  restoreDocumentScroll,
+  restorePaintingsDocumentScroll,
   scrollDocumentToTop,
+  scrollPaintingsDocumentToTop,
   shouldSkipDocumentScrollRestoration,
 } from '@/app/lib/lenis-registry';
+import { consumeListScrollPosition } from '@/lib/navigation/listScrollRestoration';
 
 const HEADER_OFFSET_PX = 120;
 
@@ -29,8 +34,8 @@ function scrollToHashTarget(hash: string): boolean {
 }
 
 /**
- * Resets document scroll on client navigations when Lenis owns the document.
- * Skipped on paintings routes and other native-scroll pages — Next.js handles those.
+ * Resets document scroll on client navigations.
+ * Paintings use native document scroll (Lenis disabled on those routes).
  */
 export function ScrollToTopOnNavigate() {
   const pathname = usePathname();
@@ -50,12 +55,35 @@ export function ScrollToTopOnNavigate() {
       return;
     }
 
-    scrollDocumentToTop({ immediate: true });
+    const savedScrollY = consumeListScrollPosition(pathname);
+    if (savedScrollY != null) {
+      const restoreScroll = isPaintingsRoute(pathname)
+        ? () => restorePaintingsDocumentScroll(savedScrollY)
+        : () => restoreDocumentScroll(savedScrollY, { immediate: true });
 
-    // Lenis may mount shortly after navigation (e.g. paintings listing → detail).
-    const rafId = requestAnimationFrame(() => scrollDocumentToTop({ immediate: true }));
+      restoreScroll();
+
+      const rafId = requestAnimationFrame(() => restoreScroll());
+      const timeoutId = window.setTimeout(() => {
+        restoreScroll();
+        ScrollTrigger.refresh();
+      }, 150);
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.clearTimeout(timeoutId);
+      };
+    }
+
+    const scrollToTop = isPaintingsRoute(pathname)
+      ? scrollPaintingsDocumentToTop
+      : () => scrollDocumentToTop({ immediate: true });
+
+    scrollToTop();
+
+    const rafId = requestAnimationFrame(() => scrollToTop());
     const timeoutId = window.setTimeout(() => {
-      scrollDocumentToTop({ immediate: true });
+      scrollToTop();
       ScrollTrigger.refresh();
     }, 150);
 
