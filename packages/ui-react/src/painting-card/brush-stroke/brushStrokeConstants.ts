@@ -34,7 +34,7 @@ const GRID_CARD_BRUSH_PROFILE: BrushProfileConfig = {
   imageBlurPx: 0,
   solidFill: false,
   wedgeMode: true,
-  strokeBlendMode: 'hard-light',
+  strokeBlendMode: 'normal',
 };
 
 export function getBrushProfileConfig(
@@ -43,17 +43,10 @@ export function getBrushProfileConfig(
   return GRID_CARD_BRUSH_PROFILE;
 }
 
-/** Safari lite — same band wipe, drop expensive blend modes. */
+/** Grid card brush profile — blend mode kept normal for reliable image compositing. */
 export function resolveBrushProfile(
-  _profile: BrushStrokeProfile = 'gridCard',
-  lite: boolean,
+  profile: BrushStrokeProfile = 'gridCard',
+  _lite = false,
 ): BrushProfileConfig {
-  const base = GRID_CARD_BRUSH_PROFILE;
-  if (!lite) return base;
-
-  return {
-    ...base,
-    strokeBlendMode: 'normal',
-    strokeOpacity: Math.min(base.strokeOpacity, 0.82),
-  };
+  return getBrushProfileConfig(profile);
 }

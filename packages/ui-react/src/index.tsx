@@ -95,14 +95,11 @@ export {
   paintingBrushSeed,
 } from './painting-card/brush-stroke/brushStrokeVariants';
 export {
-  isSafariBrowser,
   prefersDesktopPaintingGrid,
   prefersFinePointerHover,
   prefersReducedMotion,
-  useBrushRevealLite,
   useCanBrushReveal,
   useIsDesktopPaintingGrid,
-  useSafariSharedLayout,
 } from './painting-card/hooks/useMediaCapabilities';
 export {
   deriveFormatFromAspectRatio,

@@ -54,6 +54,7 @@ export type PaintingThumbnailViewProps = {
     children: React.ReactNode;
   }>;
   ImageComponent?: React.ComponentType<PaintingThumbnailImageComponentProps>;
+  /** Enables shared layout morph into painting detail hero. */
   imageLayoutId?: string;
   imageLayoutTransition?: Transition;
   className?: string;
@@ -102,7 +103,7 @@ export function PaintingThumbnailView({
   title,
   href,
   imageSrc,
-  blurDataURL,
+  blurDataURL: _blurDataURL,
   aspectClass = 'aspect-[3/4]',
   priority = false,
   eager = false,
@@ -135,8 +136,7 @@ export function PaintingThumbnailView({
       sizes='(min-width: 640px) 33vw, 46vw'
       priority={priority}
       fetchPriority={priority ? 'high' : 'auto'}
-      placeholder={blurDataURL ? 'blur' : 'empty'}
-      blurDataURL={blurDataURL}
+      placeholder='empty'
       quality={82}
       loading={eager ? 'eager' : 'lazy'}
       className={cn('object-cover', showNsfwCover && getNsfwImageBlurClass('thumbnail'))}
@@ -151,7 +151,7 @@ export function PaintingThumbnailView({
   const imageFrame = (
     <div
       className={cn(
-        'relative isolate w-full overflow-hidden bg-transparent',
+        'relative w-full overflow-hidden bg-transparent',
         IMAGE_RADIUS_CLASS,
         aspectClass,
       )}

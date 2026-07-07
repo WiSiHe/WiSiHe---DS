@@ -56,6 +56,7 @@ export type PaintingCardViewProps = {
     children: React.ReactNode;
   }>;
   ImageComponent?: React.ComponentType<PaintingCardImageComponentProps>;
+  /** Enables shared layout morph into painting detail hero. */
   imageLayoutId?: string;
   imageLayoutTransition?: Transition;
   className?: string;
@@ -86,7 +87,7 @@ export function PaintingCardView({
   href,
   imageSrc,
   imageAlt,
-  blurDataURL,
+  blurDataURL: _blurDataURL,
   imagePriority = false,
   tags = [],
   badges = [],
@@ -132,26 +133,25 @@ export function PaintingCardView({
       sizes='(min-width: 1040px) 20vw, 50vw'
       priority={imagePriority}
       fetchPriority={imagePriority ? 'high' : 'auto'}
-      placeholder={blurDataURL ? 'blur' : 'empty'}
-      blurDataURL={blurDataURL}
+      placeholder='empty'
       quality={80}
       className={cn('h-full w-full object-cover', showNsfwBlur && getNsfwImageBlurClass('card'))}
     />
   ) : undefined;
 
-  const resolvedLayoutId = imageLayoutId ?? (title && !reduceMotion ? `image-${title}` : undefined);
-  const ImageFrame = resolvedLayoutId ? motion.div : 'div';
+  const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
+  const ImageFrame = effectiveLayoutId ? motion.div : 'div';
 
   const imageNode = imageEl ? (
     <ImageFrame
-      {...(resolvedLayoutId
+      {...(effectiveLayoutId
         ? {
-            layoutId: resolvedLayoutId,
+            layoutId: effectiveLayoutId,
             initial: false as const,
             transition: imageLayoutTransition,
           }
         : {})}
-      className='relative isolate h-full w-full overflow-hidden rounded-xl'
+      className='relative h-full w-full overflow-hidden rounded-xl'
     >
       {imageEl}
       {useBrushReveal ? (

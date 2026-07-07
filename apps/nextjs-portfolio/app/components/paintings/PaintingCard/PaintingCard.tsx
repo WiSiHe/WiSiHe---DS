@@ -3,10 +3,8 @@
 import { PaintingCardView } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
-import { useMemo } from 'react';
-import { SafariPaintingLink } from '@/app/components/paintings/SafariPaintingLink';
-import { sharedLayoutTransition } from '@/lib/motion/sharedLayout';
-import { usePaintingListImageLayoutId } from '@/lib/motion/usePaintingListImageLayoutId';
+import Link from 'next/link';
+import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { resolveNsfwCompactLabel } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
@@ -67,42 +65,12 @@ function PaintingCardLoaded({
     format,
     aspectRatio: image?.aspectRatio ?? null,
   });
-  const cardImageSrc = urlForPaintingCard(image, cardImageLayout);
-  const imageLayoutId = usePaintingListImageLayoutId(title);
-
-  const LinkEl = useMemo(
-    () =>
-      function PaintingLink({
-        href,
-        className: linkClassName,
-        'aria-label': ariaLabel,
-        children,
-      }: {
-        href: string;
-        className?: string;
-        'aria-label'?: string;
-        children: React.ReactNode;
-      }) {
-        return (
-          <SafariPaintingLink
-            href={href}
-            className={linkClassName}
-            aria-label={ariaLabel}
-            paintingTitle={title}
-            imageSrc={cardImageSrc}
-          >
-            {children}
-          </SafariPaintingLink>
-        );
-      },
-    [title, cardImageSrc],
-  );
 
   return (
     <PaintingCardView
       title={title}
       href={`/paintings/${slug ?? ''}`}
-      imageSrc={cardImageSrc}
+      imageSrc={urlForPaintingCard(image, cardImageLayout)}
       imageAlt={title || 'Painting'}
       blurDataURL={getPaintingImageLqip(image)}
       imagePriority={shouldBeLazy}
@@ -120,9 +88,9 @@ function PaintingCardLoaded({
       brushSeedKey={String(paintingData._id ?? slug ?? title ?? 'painting')}
       strokeVariantIndex={svgHoverIndex}
       palette={palette ?? image?.palette ?? null}
-      LinkComponent={LinkEl}
+      LinkComponent={Link}
       ImageComponent={Image}
-      imageLayoutId={imageLayoutId}
+      imageLayoutId={layout !== 'carousel' && title ? contentImageLayoutId(title) : undefined}
       imageLayoutTransition={sharedLayoutTransition}
       className={className ?? cardImageLayout.aspectClass}
     />

@@ -3,7 +3,7 @@
 import { cn } from '@wisihe/utils';
 import { useReducedMotion } from 'motion/react';
 import { type ReactNode, useMemo, useState } from 'react';
-import { prefersFinePointerHover, useBrushRevealLite } from '../hooks/useMediaCapabilities';
+import { prefersFinePointerHover } from '../hooks/useMediaCapabilities';
 import { BrushRevealProvider } from './BrushRevealContext';
 
 type BrushRevealWrapProps = {
@@ -23,7 +23,6 @@ export function BrushRevealWrap({
   hovered,
 }: BrushRevealWrapProps) {
   const reduceMotion = useReducedMotion();
-  const liteMode = useBrushRevealLite();
   const [pointerActive, setPointerActive] = useState(false);
 
   const isControlled = hovered !== undefined;
@@ -33,10 +32,10 @@ export function BrushRevealWrap({
     () => ({
       isActive,
       reduceMotion: Boolean(reduceMotion),
-      liteMode,
+      liteMode: false,
       profile: 'gridCard' as const,
     }),
-    [isActive, liteMode, reduceMotion],
+    [isActive, reduceMotion],
   );
 
   const activate = () => {
