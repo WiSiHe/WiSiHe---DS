@@ -73,18 +73,58 @@ export function paintingAmbientHaloStyle(
   palette?: SanityPalette | null,
   options?: { dark?: boolean },
 ): CSSProperties {
+  return paintingViewportWashStyle(palette, { ...options, layout: 'frame' });
+}
+
+type ViewportWashLayout = 'frame' | 'mobile' | 'desktop';
+
+function washCenter(layout: ViewportWashLayout): string {
+  switch (layout) {
+    case 'mobile':
+      return '50% 32%';
+    case 'desktop':
+      return '30% 38%';
+    default:
+      return '50% 50%';
+  }
+}
+
+/** Full-viewport or frame palette wash — Safari-safe radial gradients only. */
+export function paintingViewportWashStyle(
+  palette?: SanityPalette | null,
+  options?: { dark?: boolean; layout?: ViewportWashLayout },
+): CSSProperties {
   const primary = paintingAmbientGlowColor(palette);
   const secondary = extractPaletteColors(palette ?? {})[1] ?? lightenHex(primary, 0.18);
   const dark = options?.dark ?? false;
-  const innerPrimary = dark ? 0.58 : 0.42;
-  const innerSecondary = dark ? 0.32 : 0.2;
-  const outerPrimary = dark ? 0.28 : 0.18;
-  const outerSecondary = dark ? 0.14 : 0.08;
+  const layout = options?.layout ?? 'desktop';
+  const center = washCenter(layout);
+
+  if (layout === 'frame') {
+    const innerPrimary = dark ? 0.58 : 0.42;
+    const innerSecondary = dark ? 0.32 : 0.2;
+    const outerPrimary = dark ? 0.28 : 0.18;
+    const outerSecondary = dark ? 0.14 : 0.08;
+
+    return {
+      backgroundImage: [
+        `radial-gradient(ellipse 72% 68% at ${center}, ${hexToRgba(primary, innerPrimary)} 0%, ${hexToRgba(secondary, innerSecondary)} 48%, transparent 76%)`,
+        `radial-gradient(ellipse 100% 92% at ${center}, ${hexToRgba(primary, outerPrimary)} 0%, ${hexToRgba(secondary, outerSecondary)} 55%, transparent 82%)`,
+      ].join(', '),
+    };
+  }
+
+  const corePrimary = dark ? 0.52 : 0.4;
+  const coreSecondary = dark ? 0.3 : 0.2;
+  const midPrimary = dark ? 0.28 : 0.2;
+  const midSecondary = dark ? 0.16 : 0.1;
+  const edgePrimary = dark ? 0.1 : 0.06;
 
   return {
     backgroundImage: [
-      `radial-gradient(ellipse 72% 68% at 50% 50%, ${hexToRgba(primary, innerPrimary)} 0%, ${hexToRgba(secondary, innerSecondary)} 48%, transparent 76%)`,
-      `radial-gradient(ellipse 100% 92% at 50% 50%, ${hexToRgba(primary, outerPrimary)} 0%, ${hexToRgba(secondary, outerSecondary)} 55%, transparent 82%)`,
+      `radial-gradient(ellipse 52% 44% at ${center}, ${hexToRgba(primary, corePrimary)} 0%, ${hexToRgba(secondary, coreSecondary)} 52%, transparent 74%)`,
+      `radial-gradient(ellipse 88% 78% at ${center}, ${hexToRgba(primary, midPrimary)} 0%, ${hexToRgba(secondary, midSecondary)} 48%, transparent 80%)`,
+      `radial-gradient(ellipse 140% 115% at ${center}, ${hexToRgba(primary, edgePrimary)} 0%, transparent 68%)`,
     ].join(', '),
   };
 }
