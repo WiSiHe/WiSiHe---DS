@@ -6,6 +6,7 @@ import { Link } from '@/app/components/layout/ProgressLink';
 import ScrollToTopButton from '@/app/components/layout/ScrollToTop/ScrollToTop';
 import { PhotographyGallery } from '@/app/components/photography/PhotographyGallery';
 import { photographySectionLabelClass } from '@/app/components/photography/photographyStyles';
+import { parsePhotographyView } from '@/lib/photography/photographyUrl';
 import { sanityFetch } from '@/sanity/lib/live';
 import { photographyListQuery } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
@@ -54,12 +55,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type PhotographyPageProps = {
-  searchParams: Promise<{ country?: string }>;
+  searchParams: Promise<{ country?: string; view?: string }>;
 };
 
 export default async function PhotographyPage({ searchParams }: PhotographyPageProps) {
-  const { country } = await searchParams;
+  const { country, view } = await searchParams;
   const activeCountry = country?.trim().toUpperCase() || null;
+  const activeView = parsePhotographyView(view);
 
   const { data } = await sanityFetch({ query: photographyListQuery });
   const photos = (data ?? []) as PhotographyListQueryResult;
@@ -116,7 +118,11 @@ export default async function PhotographyPage({ searchParams }: PhotographyPageP
         </header>
 
         {photos.length > 0 ? (
-          <PhotographyGallery photos={photos} activeCountry={activeCountry} />
+          <PhotographyGallery
+            photos={photos}
+            activeCountry={activeCountry}
+            activeView={activeView}
+          />
         ) : (
           <div className='relative rounded-2xl border border-dashed border-border/70 bg-surface/30 px-6 py-20 text-center backdrop-blur-sm'>
             <p className='font-serif text-2xl font-bold text-foreground'>Gallery coming soon</p>

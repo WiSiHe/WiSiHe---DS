@@ -132,7 +132,8 @@ export const photographyListQuery = defineQuery(`
       _id,
       name,
       countryName,
-      countryCode
+      countryCode,
+      coordinates
     },
     image {
       ...,
@@ -140,7 +141,8 @@ export const photographyListQuery = defineQuery(`
       "lqip": asset->metadata.lqip,
       "aspectRatio": asset->metadata.dimensions.aspectRatio,
       "width": asset->metadata.dimensions.width,
-      "height": asset->metadata.dimensions.height
+      "height": asset->metadata.dimensions.height,
+      "location": asset->metadata.location
     }
   }
 `);

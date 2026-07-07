@@ -1,113 +1,68 @@
 'use client';
 
-import { IconMapPin } from '@tabler/icons-react';
-import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
-import { Link } from '@/app/components/layout/ProgressLink';
+import { useCallback, useEffect, useMemo } from 'react';
+import { buildPhotographyCountryFilters } from '@/lib/photography/photographyCountries';
+import { writePhotographyGalleryReturnUrl } from '@/lib/photography/photographyGalleryReturnUrl';
+import { buildPhotographyMapMarkers } from '@/lib/photography/photographyMapMarkers';
+import { buildPhotographyHref, type PhotographyView } from '@/lib/photography/photographyUrl';
 import { PhotographyCard } from './PhotographyCard';
+import { PhotographyCountryFilter } from './PhotographyCountryFilter';
 import { PhotographyFeaturedHero } from './PhotographyFeaturedHero';
-import { photographyGlassPanelClass, photographySectionLabelClass } from './photographyStyles';
+import { PhotographyMapView } from './PhotographyMapView';
+import { PhotographyViewTabs } from './PhotographyViewTabs';
+import { photographySectionLabelClass } from './photographyStyles';
+
+const GRID_LAYOUT_TRANSITION = {
+  layout: { duration: 0.38, ease: [0.22, 1, 0.36, 1] as const },
+  opacity: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
+  scale: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
+};
 
 type PhotographyListingProps = {
   photos: PhotographyListQueryResult;
   activeCountry: string | null;
+  activeView: PhotographyView;
 };
 
-type CountryFilter = {
-  code: string;
-  name: string;
-  count: number;
-};
-
-function buildCountryFilters(photos: PhotographyListQueryResult): CountryFilter[] {
-  const counts = new Map<string, CountryFilter>();
-
-  for (const photo of photos) {
-    const code = photo.place?.countryCode?.trim().toUpperCase();
-    const name = photo.place?.countryName?.trim();
-    if (!code || !name) continue;
-
-    const existing = counts.get(code);
-    if (existing) {
-      existing.count += 1;
-    } else {
-      counts.set(code, { code, name, count: 1 });
-    }
-  }
-
-  return [...counts.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-}
-
-function FilterOption({
-  active,
-  label,
-  count,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  count: number;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className={cn(
-        'group relative w-full overflow-hidden rounded-lg px-3 py-2.5 text-left transition-colors duration-200',
-        active
-          ? 'bg-accent/10 text-foreground'
-          : 'text-foreground-subtle hover:bg-surface-hover hover:text-foreground',
-      )}
-    >
-      <span
-        aria-hidden
-        className={cn(
-          'absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent transition-opacity duration-200',
-          active ? 'opacity-100' : 'opacity-0 group-hover:opacity-40',
-        )}
-      />
-      <span className='flex items-center justify-between gap-3 pl-2'>
-        <span className='text-sm font-medium'>{label}</span>
-        <span
-          className={cn(
-            'min-w-6 rounded-full px-1.5 py-0.5 text-center font-mono text-[10px] tabular-nums',
-            active ? 'bg-accent/15 text-accent' : 'bg-surface-subtle text-foreground-muted',
-          )}
-        >
-          {count}
-        </span>
-      </span>
-    </button>
-  );
-}
-
-export function PhotographyListing({ photos, activeCountry }: PhotographyListingProps) {
+export function PhotographyListing({ photos, activeCountry, activeView }: PhotographyListingProps) {
   const router = useRouter();
 
-  const countryFilters = useMemo(() => buildCountryFilters(photos), [photos]);
+  const countryFilters = useMemo(() => buildPhotographyCountryFilters(photos), [photos]);
 
   const setCountryFilter = useCallback(
     (code: string | null) => {
-      const query = code ? `/photography?country=${encodeURIComponent(code)}` : '/photography';
-      router.push(query, { scroll: false });
+      router.push(buildPhotographyHref({ view: activeView, country: code }), { scroll: false });
     },
-    [router],
+    [activeView, router],
   );
+
+  const switchToGallery = useCallback(() => {
+    router.push(buildPhotographyHref({ view: 'gallery', country: activeCountry }), {
+      scroll: false,
+    });
+  }, [activeCountry, router]);
+
+  const galleryHref = buildPhotographyHref({ view: activeView, country: activeCountry });
+
+  useEffect(() => {
+    writePhotographyGalleryReturnUrl(galleryHref);
+  }, [galleryHref]);
 
   const filteredPhotos = useMemo(() => {
     if (!activeCountry) return photos;
     return photos.filter(photo => photo.place?.countryCode?.trim().toUpperCase() === activeCountry);
   }, [activeCountry, photos]);
 
+  const mapMarkers = useMemo(() => buildPhotographyMapMarkers(filteredPhotos), [filteredPhotos]);
+
   const featuredPhoto = useMemo(() => {
-    if (activeCountry) return null;
+    if (activeCountry || activeView === 'map') return null;
     return filteredPhotos.find(photo => photo.isFeatured) ?? null;
-  }, [activeCountry, filteredPhotos]);
+  }, [activeCountry, activeView, filteredPhotos]);
 
   const gridPhotos = useMemo(() => {
     if (!featuredPhoto) return filteredPhotos;
@@ -133,19 +88,33 @@ export function PhotographyListing({ photos, activeCountry }: PhotographyListing
         </button>
       </div>
     ) : (
-      <AnimatePresence mode='wait'>
-        <motion.div
-          key={activeCountry ?? 'all'}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          className='space-y-12'
-        >
-          {featuredPhoto ? <PhotographyFeaturedHero photo={featuredPhoto} /> : null}
+      <motion.div layout transition={GRID_LAYOUT_TRANSITION.layout} className='space-y-12'>
+        <AnimatePresence mode='popLayout' initial={false}>
+          {featuredPhoto ? (
+            <motion.div
+              key={`featured-${featuredPhoto._id}`}
+              layout
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={GRID_LAYOUT_TRANSITION}
+            >
+              <PhotographyFeaturedHero photo={featuredPhoto} />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
+        <AnimatePresence mode='popLayout' initial={false}>
           {activeCountry && activeCountryName ? (
-            <div className='flex flex-wrap items-end justify-between gap-4 border-b border-border/40 pb-5'>
+            <motion.div
+              key={`filter-${activeCountry}`}
+              layout
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={GRID_LAYOUT_TRANSITION}
+              className='flex flex-wrap items-end justify-between gap-4 border-b border-border/40 pb-5'
+            >
               <div>
                 <p className={photographySectionLabelClass}>Filtered view</p>
                 <p className='mt-1 font-serif text-2xl font-bold text-foreground'>
@@ -159,77 +128,80 @@ export function PhotographyListing({ photos, activeCountry }: PhotographyListing
               >
                 Clear filter
               </button>
-            </div>
+            </motion.div>
           ) : gridPhotos.length > 0 ? (
-            <div className='flex items-end justify-between gap-4 border-b border-border/40 pb-4'>
+            <motion.div
+              key='gallery-heading'
+              layout
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={GRID_LAYOUT_TRANSITION}
+              className='flex items-end justify-between gap-4 border-b border-border/40 pb-4'
+            >
               <p className={photographySectionLabelClass}>Gallery</p>
               <p className='font-mono text-[10px] uppercase tracking-[0.16em] text-foreground-muted'>
                 {gridPhotos.length} {gridPhotos.length === 1 ? 'image' : 'images'}
               </p>
-            </div>
+            </motion.div>
           ) : null}
+        </AnimatePresence>
 
-          {gridPhotos.length > 0 ? (
-            <div className='columns-1 [column-gap:1.25rem] sm:columns-2 xl:columns-3'>
+        {gridPhotos.length > 0 ? (
+          <motion.div
+            layout
+            transition={GRID_LAYOUT_TRANSITION.layout}
+            className='columns-1 [column-gap:1.25rem] sm:columns-2 xl:columns-3'
+          >
+            <AnimatePresence mode='popLayout' initial={false}>
               {gridPhotos.map((photo, index) => (
-                <div key={photo._id} className='mb-5 break-inside-avoid'>
+                <motion.div
+                  key={photo._id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={GRID_LAYOUT_TRANSITION}
+                  className='mb-5 break-inside-avoid'
+                >
                   <PhotographyCard photo={photo} priority={!featuredPhoto && index < 2} />
-                </div>
+                </motion.div>
               ))}
-            </div>
-          ) : null}
-        </motion.div>
-      </AnimatePresence>
+            </AnimatePresence>
+          </motion.div>
+        ) : null}
+      </motion.div>
+    );
+
+  const mainContent =
+    activeView === 'map' ? (
+      <PhotographyMapView
+        markers={mapMarkers}
+        fitBoundsKey={`${activeView}-${activeCountry ?? 'all'}`}
+        activeCountry={activeCountry}
+        filteredPhotoCount={filteredPhotos.length}
+        onClearCountry={() => setCountryFilter(null)}
+        onSwitchToGallery={switchToGallery}
+      />
+    ) : (
+      galleryContent
     );
 
   return (
-    <div className='relative flex flex-col gap-10 md:flex-row md:items-start md:gap-10 lg:gap-14'>
-      {countryFilters.length > 1 ? (
-        <aside className='md:sticky md:top-32 md:w-52 md:shrink-0 lg:w-56 xl:top-36'>
-          <div className={photographyGlassPanelClass}>
-            <div className='space-y-5'>
-              <div className='space-y-1 border-b border-border/30 pb-4'>
-                <p className={photographySectionLabelClass}>Places</p>
-                <p className='text-sm leading-snug text-foreground-muted'>
-                  {filteredPhotos.length} of {photos.length} in view
-                </p>
-              </div>
+    <>
+      <PhotographyViewTabs activeView={activeView} activeCountry={activeCountry} />
 
-              <div className='flex flex-col gap-0.5'>
-                <FilterOption
-                  active={activeCountry === null}
-                  label='All places'
-                  count={photos.length}
-                  onClick={() => setCountryFilter(null)}
-                />
-                {countryFilters.map(country => (
-                  <FilterOption
-                    key={country.code}
-                    active={activeCountry === country.code}
-                    label={country.name}
-                    count={country.count}
-                    onClick={() =>
-                      setCountryFilter(country.code === activeCountry ? null : country.code)
-                    }
-                  />
-                ))}
-              </div>
+      <div className={cn('relative flex w-full flex-col gap-8 md:flex-row md:items-start')}>
+        <PhotographyCountryFilter
+          countries={countryFilters}
+          activeCountry={activeCountry}
+          totalCount={photos.length}
+          filteredCount={filteredPhotos.length}
+          onSelectCountry={setCountryFilter}
+        />
 
-              {ABOUT_PAGE_LINKS_ENABLED ? (
-                <Link
-                  href='/about#travel-map-section'
-                  className='inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border/40 bg-surface/40 px-3 py-2.5 text-sm font-medium text-foreground-subtle transition-all duration-200 hover:border-accent/35 hover:bg-surface hover:text-foreground'
-                >
-                  <IconMapPin className='size-4 shrink-0 text-accent' stroke={2} aria-hidden />
-                  Travel map
-                </Link>
-              ) : null}
-            </div>
-          </div>
-        </aside>
-      ) : null}
-
-      <div className='min-w-0 flex-1'>{galleryContent}</div>
-    </div>
+        <div className='min-w-0 flex-1'>{mainContent}</div>
+      </div>
+    </>
   );
 }

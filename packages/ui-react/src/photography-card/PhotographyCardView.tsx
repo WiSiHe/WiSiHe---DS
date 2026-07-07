@@ -1,5 +1,9 @@
+'use client';
+
 import { cn } from '@wisihe/utils';
+import { motion, type Transition, useReducedMotion } from 'motion/react';
 import type * as React from 'react';
+import type { ContentMorphFrameComponent } from '../painting-card/morphFrame';
 
 export type PhotographyCardImageComponentProps = {
   src: string;
@@ -8,8 +12,10 @@ export type PhotographyCardImageComponentProps = {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  fetchPriority?: 'high' | 'low' | 'auto';
   placeholder?: 'blur' | 'empty';
   blurDataURL?: string;
+  quality?: number;
 };
 
 export type PhotographyCardViewProps = {
@@ -26,6 +32,11 @@ export type PhotographyCardViewProps = {
   priority?: boolean;
   size?: 'default' | 'large';
   className?: string;
+  /** Enables shared layout morph into photography detail hero. */
+  imageLayoutId?: string;
+  imageLayoutTransition?: Transition;
+  /** App-provided frame so layoutId uses the same motion instance as the detail page. */
+  ImageMorphFrame?: ContentMorphFrameComponent;
   LinkComponent?: React.ComponentType<{
     href: string;
     className?: string;
@@ -74,11 +85,61 @@ export function PhotographyCardView({
   priority = false,
   size = 'default',
   className,
+  imageLayoutId,
+  imageLayoutTransition,
+  ImageMorphFrame,
   LinkComponent = DefaultLink,
   ImageComponent = DefaultImage,
 }: PhotographyCardViewProps) {
+  const reduceMotion = useReducedMotion();
   const alt = imageAlt ?? title ?? 'Photograph';
   const isLarge = size === 'large';
+  const hasBlur = Boolean(blurDataURL);
+
+  const imageEl = (
+    <ImageComponent
+      src={imageSrc}
+      alt={alt}
+      fill
+      priority={priority}
+      fetchPriority={priority ? 'high' : 'auto'}
+      className='object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]'
+      sizes={
+        isLarge
+          ? '(max-width: 1024px) 100vw, 66vw'
+          : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+      }
+      placeholder={hasBlur ? 'blur' : 'empty'}
+      blurDataURL={blurDataURL ?? undefined}
+    />
+  );
+
+  const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
+  const morphFrameClassName = 'relative h-full w-full overflow-hidden';
+
+  const imageNode =
+    effectiveLayoutId && ImageMorphFrame ? (
+      <ImageMorphFrame
+        layoutId={effectiveLayoutId}
+        transition={imageLayoutTransition}
+        className={morphFrameClassName}
+      >
+        {imageEl}
+      </ImageMorphFrame>
+    ) : effectiveLayoutId ? (
+      <motion.div
+        layoutId={effectiveLayoutId}
+        initial={false}
+        transition={imageLayoutTransition}
+        className={morphFrameClassName}
+      >
+        <motion.div layout='position' className='relative h-full w-full'>
+          {imageEl}
+        </motion.div>
+      </motion.div>
+    ) : (
+      imageEl
+    );
 
   return (
     <article className={cn('group', className)}>
@@ -93,20 +154,7 @@ export function PhotographyCardView({
           )}
           style={{ aspectRatio }}
         >
-          <ImageComponent
-            src={imageSrc}
-            alt={alt}
-            fill
-            priority={priority}
-            className='object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]'
-            sizes={
-              isLarge
-                ? '(max-width: 1024px) 100vw, 66vw'
-                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
-            }
-            placeholder={blurDataURL ? 'blur' : 'empty'}
-            blurDataURL={blurDataURL ?? undefined}
-          />
+          {imageNode}
 
           <div
             className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100'

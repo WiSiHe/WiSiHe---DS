@@ -3,7 +3,12 @@ import { getDocumentScrollTop } from '@/app/lib/lenis-registry';
 const STORAGE_PREFIX = 'wisihe:list-scroll:';
 
 /** Listing pages that should restore scroll when navigating back from detail. */
-export const SCROLL_RESTORE_LIST_ROUTES = ['/paintings', '/projects', '/videos'] as const;
+export const SCROLL_RESTORE_LIST_ROUTES = [
+  '/paintings',
+  '/projects',
+  '/videos',
+  '/photography',
+] as const;
 
 export type ScrollRestoreListRoute = (typeof SCROLL_RESTORE_LIST_ROUTES)[number];
 
