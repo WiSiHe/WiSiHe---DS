@@ -129,6 +129,27 @@ export function paintingViewportWashStyle(
   };
 }
 
+/** Subtle film grain tile — inline SVG feTurbulence, Safari-safe. */
+const PAINTING_GRAIN_TILE_SVG = [
+  '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256">',
+  '<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter>',
+  '<rect width="100%" height="100%" filter="url(#n)"/>',
+  '</svg>',
+].join('');
+
+const PAINTING_GRAIN_TILE_URL = `url("data:image/svg+xml,${encodeURIComponent(PAINTING_GRAIN_TILE_SVG)}")`;
+
+/** Opacity target when mixed with soft-light — very subtle film grain. */
+export const PAINTING_VIEWPORT_GRAIN_OPACITY = 0.42;
+
+export function paintingGrainOverlayStyle(): CSSProperties {
+  return {
+    backgroundImage: PAINTING_GRAIN_TILE_URL,
+    backgroundRepeat: 'repeat',
+    backgroundSize: '192px 192px',
+  };
+}
+
 /** Lift shadow with a subtle palette tint in both themes. */
 export function paintingAmbientFrameShadow(
   palette?: SanityPalette | null,

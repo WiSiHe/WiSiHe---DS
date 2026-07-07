@@ -25,7 +25,9 @@ import { useTheme } from '@/app/providers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import { getPaintingImageLqip } from '@/lib/paintings/paintingCardImage';
 import {
+  PAINTING_VIEWPORT_GRAIN_OPACITY,
   paintingAmbientFrameShadow,
+  paintingGrainOverlayStyle,
   paintingViewportWashStyle,
   type SanityPalette,
 } from '@/lib/paintings/paintingPaletteGlow';
@@ -68,25 +70,37 @@ function PaintingViewportWash({
     () => paintingViewportWashStyle(palette, { dark, layout }),
     [palette, dark, layout],
   );
+  const grainStyle = useMemo(() => paintingGrainOverlayStyle(), []);
+  const layoutClassName = cn(
+    'pointer-events-none z-0',
+    layout === 'mobile'
+      ? 'absolute inset-0 min-h-full w-full lg:hidden'
+      : 'fixed inset-0 hidden lg:block',
+  );
 
   return (
-    <AnimatePresence mode='sync'>
+    <>
+      <AnimatePresence mode='sync'>
+        <motion.div
+          key={slideKey}
+          aria-hidden
+          className={layoutClassName}
+          style={washStyle}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: revealed ? 1 : 0 }}
+          exit={{ opacity: 0 }}
+          transition={viewportWashTransition}
+        />
+      </AnimatePresence>
       <motion.div
-        key={slideKey}
         aria-hidden
-        className={cn(
-          'pointer-events-none z-0',
-          layout === 'mobile'
-            ? 'absolute inset-0 min-h-full w-full lg:hidden'
-            : 'fixed inset-0 hidden lg:block',
-        )}
-        style={washStyle}
+        className={cn(layoutClassName, 'mix-blend-soft-light')}
+        style={grainStyle}
         initial={{ opacity: 0 }}
-        animate={{ opacity: revealed ? 1 : 0 }}
-        exit={{ opacity: 0 }}
+        animate={{ opacity: revealed ? PAINTING_VIEWPORT_GRAIN_OPACITY : 0 }}
         transition={viewportWashTransition}
       />
-    </AnimatePresence>
+    </>
   );
 }
 
