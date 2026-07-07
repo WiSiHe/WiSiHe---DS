@@ -383,14 +383,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
         <section className='relative flex w-full min-w-0 flex-col items-center overflow-visible'>
           <div
             className={cn(
-              'relative isolate mx-auto w-full max-w-full overflow-visible',
+              'relative mx-auto w-full max-w-full overflow-visible',
               !(activeWidth && activeHeight) && cn('max-h-[min(78vh,920px)]', formatAspectClass),
             )}
             style={paintingFrameStyle}
           >
-            {/* Palette halo — radial gradient (Safari-safe, no filter blur) */}
+            {/* Palette halo — oversized radial gradient spills past the opaque frame */}
             <motion.div
-              className='pointer-events-none absolute inset-0 -z-10 rounded-[2rem]'
+              className='pointer-events-none absolute left-1/2 top-1/2 z-0 h-[140%] w-[128%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem]'
               style={ambientHaloStyle}
               animate={{ opacity: heroImageRevealed ? 1 : 0 }}
               transition={glowTransition}

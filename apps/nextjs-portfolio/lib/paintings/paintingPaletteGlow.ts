@@ -75,11 +75,17 @@ export function paintingAmbientHaloStyle(
 ): CSSProperties {
   const primary = paintingAmbientGlowColor(palette);
   const secondary = extractPaletteColors(palette ?? {})[1] ?? lightenHex(primary, 0.18);
-  const primaryAlpha = options?.dark ? 0.5 : 0.38;
-  const secondaryAlpha = options?.dark ? 0.24 : 0.14;
+  const dark = options?.dark ?? false;
+  const innerPrimary = dark ? 0.58 : 0.42;
+  const innerSecondary = dark ? 0.32 : 0.2;
+  const outerPrimary = dark ? 0.28 : 0.18;
+  const outerSecondary = dark ? 0.14 : 0.08;
 
   return {
-    backgroundImage: `radial-gradient(ellipse 88% 82% at 50% 50%, ${hexToRgba(primary, primaryAlpha)} 0%, ${hexToRgba(secondary, secondaryAlpha)} 44%, transparent 72%)`,
+    backgroundImage: [
+      `radial-gradient(ellipse 72% 68% at 50% 50%, ${hexToRgba(primary, innerPrimary)} 0%, ${hexToRgba(secondary, innerSecondary)} 48%, transparent 76%)`,
+      `radial-gradient(ellipse 100% 92% at 50% 50%, ${hexToRgba(primary, outerPrimary)} 0%, ${hexToRgba(secondary, outerSecondary)} 55%, transparent 82%)`,
+    ].join(', '),
   };
 }
 
