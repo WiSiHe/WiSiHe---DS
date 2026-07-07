@@ -1,13 +1,20 @@
+'use client';
+
 import { IconArrowUpRight } from '@tabler/icons-react';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
+import { useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
+import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
-  photographyImageFrameClass,
-  photographySectionLabelClass,
-} from '@/app/components/photography/photographyStyles';
-import { urlForFullImage } from '@/sanity/lib/utils';
+  getPhotographyAspectRatio,
+  isValidPhotographyLqip,
+  PHOTOGRAPHY_IMAGE_QUALITY,
+  urlForPhotographyFeatured,
+} from '@/lib/photography/photographyImage';
+import { photographySectionLabelClass } from './photographyStyles';
 
 type PhotographyListItem = PhotographyListQueryResult[number];
 
@@ -23,29 +30,36 @@ function formatPlaceLabel(photo: PhotographyListItem): string | null {
   return null;
 }
 
-function getAspectRatio(photo: PhotographyListItem): number {
-  const width = photo.image?.width;
-  const height = photo.image?.height;
-  if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-    return width / height;
-  }
-
-  const rawRatio = photo.image?.aspectRatio;
-  return typeof rawRatio === 'number' && rawRatio > 0
-    ? Math.min(1.85, Math.max(0.75, rawRatio))
-    : 4 / 3;
-}
-
 export function PhotographyFeaturedHero({ photo }: PhotographyFeaturedHeroProps) {
+  const reduceMotion = useReducedMotion();
+
   if (!photo.slug) return null;
 
-  const imageUrl = photo.image
-    ? urlForFullImage(photo.image)?.width(1800).quality(90).auto('format').url()
-    : null;
+  const aspectRatio = getPhotographyAspectRatio(photo.image);
+  const imageUrl = urlForPhotographyFeatured(photo.image, aspectRatio);
   if (!imageUrl) return null;
 
   const placeLabel = formatPlaceLabel(photo);
-  const aspectRatio = getAspectRatio(photo);
+  const lqip = photo.image?.lqip;
+  const hasLqip = isValidPhotographyLqip(lqip);
+  const morphLayoutId = reduceMotion ? '' : contentSlugLayoutId(photo.slug);
+  const displayRatio = Math.min(aspectRatio, 16 / 9);
+
+  const imageFrame = (
+    <Image
+      src={imageUrl}
+      alt={photo.image?.alt ?? photo.title ?? 'Featured photograph'}
+      fill
+      priority
+      fetchPriority='high'
+      quality={PHOTOGRAPHY_IMAGE_QUALITY}
+      unoptimized
+      className='object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]'
+      sizes='(max-width: 1024px) 100vw, 58vw'
+      placeholder={hasLqip ? 'blur' : 'empty'}
+      blurDataURL={hasLqip ? lqip : undefined}
+    />
+  );
 
   return (
     <article className='relative grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:gap-12'>
@@ -54,29 +68,28 @@ export function PhotographyFeaturedHero({ photo }: PhotographyFeaturedHeroProps)
         className='group relative block'
         aria-label={photo.title ?? 'View featured photograph'}
       >
-        <div className={cn(photographyImageFrameClass, 'rounded-2xl p-2 sm:p-3')}>
+        <div
+          className='relative overflow-hidden rounded-2xl p-2 ring-1 ring-border/20 sm:p-3'
+          style={{ aspectRatio: displayRatio }}
+        >
+          {morphLayoutId ? (
+            <ContentMorphImageFrame
+              layoutId={morphLayoutId}
+              transition={sharedLayoutTransition}
+              className='relative h-full w-full overflow-hidden rounded-xl'
+            >
+              {imageFrame}
+            </ContentMorphImageFrame>
+          ) : (
+            <div className='relative h-full w-full overflow-hidden rounded-xl'>{imageFrame}</div>
+          )}
           <div
-            className='relative overflow-hidden rounded-xl'
-            style={{ aspectRatio: Math.min(aspectRatio, 16 / 9) }}
-          >
-            <Image
-              src={imageUrl}
-              alt={photo.image?.alt ?? photo.title ?? 'Featured photograph'}
-              fill
-              priority
-              className='object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]'
-              sizes='(max-width: 1024px) 100vw, 58vw'
-              placeholder={photo.image?.lqip ? 'blur' : 'empty'}
-              blurDataURL={photo.image?.lqip ?? undefined}
-            />
-            <div
-              className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 via-black/5 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100'
-              aria-hidden
-            />
-            <span className='absolute left-4 top-4 rounded-full border border-white/20 bg-black/40 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md'>
-              Featured
-            </span>
-          </div>
+            className='pointer-events-none absolute inset-0 rounded-xl bg-linear-to-t from-black/45 via-black/5 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100'
+            aria-hidden
+          />
+          <span className='absolute left-4 top-4 z-10 rounded-full border border-white/20 bg-black/40 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md'>
+            Featured
+          </span>
         </div>
       </Link>
 

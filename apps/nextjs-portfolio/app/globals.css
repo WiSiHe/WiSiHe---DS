@@ -285,3 +285,35 @@ html[data-presentation-mode] #main-content {
    Add data-scroll attributes on elements when you want scroll effects.
    @see https://scroll.locomotive.ca/docs/documentation/attributes
    ========================================================================= */
+
+/* Photography map — Mapbox popup (custom close control in React) */
+.photography-map-popup.mapboxgl-popup {
+  z-index: 5;
+  max-width: min(280px, calc(100vw - 2rem));
+}
+
+.photography-map-popup .mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: var(--color-background);
+  background-color: color-mix(in srgb, var(--color-background-val, #fafafa) 100%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.14),
+    0 0 0 1px color-mix(in srgb, var(--color-foreground) 4%, transparent);
+}
+
+.dark .photography-map-popup .mapboxgl-popup-content {
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--color-foreground) 8%, transparent);
+}
+
+.photography-map-popup.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: color-mix(in srgb, var(--color-background-val, #fafafa) 100%, transparent);
+}
+
+.photography-map-popup.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+  border-bottom-color: color-mix(in srgb, var(--color-background-val, #fafafa) 100%, transparent);
+}

@@ -1,11 +1,10 @@
 import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { PhotographyQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
-import { cn } from '@wisihe/utils';
-import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
-import { urlForFullImage } from '@/sanity/lib/utils';
+import { urlForPhotographyDetail } from '@/lib/photography/photographyImage';
 import { PhotographyActions } from './PhotographyActions';
+import { PhotographyDetailImage } from './PhotographyDetailImage';
 import { PhotographyDetailNav } from './PhotographyDetailNav';
 import { PhotographyLocationMapSlot } from './PhotographyLocationMapSlot';
 import {
@@ -13,11 +12,7 @@ import {
   extractPaletteSwatches,
   resolvePhotographyMapPoint,
 } from './photographyMeta';
-import {
-  photographyGlassPanelClass,
-  photographyImageFrameClass,
-  photographySectionLabelClass,
-} from './photographyStyles';
+import { photographyGlassPanelClass, photographySectionLabelClass } from './photographyStyles';
 
 type PhotographyDetailViewProps = {
   photo: NonNullable<PhotographyQueryResult>;
@@ -49,22 +44,12 @@ function resolveDetailImageDimensions(image: NonNullable<PhotographyQueryResult>
   return { width: 1600, height: Math.round(1600 / aspectRatio) };
 }
 
-function buildGalleryHref(photo: NonNullable<PhotographyQueryResult>): string {
-  const code = photo.place?.countryCode?.trim().toUpperCase();
-  return code ? `/photography?country=${encodeURIComponent(code)}` : '/photography';
-}
-
-function matBackgroundColor(dominantColor?: string): string | undefined {
-  if (!dominantColor) return undefined;
-  return `color-mix(in srgb, ${dominantColor} 12%, var(--color-surface))`;
-}
-
 export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
   const image = photo.image;
   const { width: imageWidth, height: imageHeight } = resolveDetailImageDimensions(image);
   const imageAspectRatio = imageWidth / imageHeight;
 
-  const imageUrl = image ? urlForFullImage(image)?.width(2400).quality(92).url() : null;
+  const imageUrl = image ? urlForPhotographyDetail(image) : null;
 
   const paletteSwatches = extractPaletteSwatches(
     image?.palette as Record<string, unknown> | undefined,
@@ -92,8 +77,6 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
     includeGps: !mapPoint,
   });
 
-  const galleryHref = buildGalleryHref(photo);
-
   return (
     <div className='relative z-10 overflow-visible pb-16 pt-32 md:pb-20 md:pt-36 lg:pt-40'>
       {dominantColor ? (
@@ -106,41 +89,17 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
         />
       ) : null}
 
-      <PhotographyDetailNav title={photo.title ?? 'Photo'} galleryHref={galleryHref} />
+      <PhotographyDetailNav title={photo.title ?? 'Photo'} />
 
       <section className='relative mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-8 overflow-visible px-4 text-foreground lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:gap-y-8 lg:px-8 xl:gap-x-12'>
-        {imageUrl ? (
-          <div className='relative w-full min-w-0 -mx-4 sm:mx-0 lg:col-start-1 lg:row-start-1'>
-            <div
-              className={cn(
-                photographyImageFrameClass,
-                'rounded-none p-3 sm:rounded-2xl sm:p-4 md:p-5',
-              )}
-              style={{ backgroundColor: matBackgroundColor(dominantColor) }}
-            >
-              <div
-                className='relative mx-auto w-full overflow-hidden rounded-lg sm:rounded-xl'
-                style={{
-                  aspectRatio: imageAspectRatio,
-                  maxHeight: 'min(88vh, calc(100vh - 9rem))',
-                  backgroundColor: dominantColor
-                    ? `color-mix(in srgb, ${dominantColor} 22%, var(--color-surface-subtle))`
-                    : undefined,
-                }}
-              >
-                <Image
-                  src={imageUrl}
-                  alt={image?.alt ?? photo.title ?? 'Photograph'}
-                  fill
-                  className='object-contain'
-                  sizes='(max-width: 1024px) 100vw, 72vw'
-                  priority
-                  placeholder={image?.lqip ? 'blur' : 'empty'}
-                  blurDataURL={image?.lqip ?? undefined}
-                />
-              </div>
-            </div>
-          </div>
+        {imageUrl && photo.slug ? (
+          <PhotographyDetailImage
+            slug={photo.slug}
+            imageUrl={imageUrl}
+            alt={image?.alt ?? photo.title ?? 'Photograph'}
+            lqip={image?.lqip}
+            aspectRatio={imageAspectRatio}
+          />
         ) : null}
 
         <aside className='min-w-0 lg:sticky lg:top-36 lg:col-start-2 lg:row-start-1 lg:self-start xl:top-40'>

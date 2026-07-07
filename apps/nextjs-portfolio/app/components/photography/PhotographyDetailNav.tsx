@@ -4,10 +4,10 @@ import { IconArrowLeft } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import Link from 'next/link';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
+import { usePhotographyGalleryReturnUrl } from '@/lib/photography/usePhotographyGalleryReturnUrl';
 
 type PhotographyDetailNavProps = {
   title: string;
-  galleryHref: string;
 };
 
 const backLinkClass = cn(
@@ -16,7 +16,9 @@ const backLinkClass = cn(
   'focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
-export function PhotographyDetailNav({ title, galleryHref }: PhotographyDetailNavProps) {
+export function PhotographyDetailNav({ title }: PhotographyDetailNavProps) {
+  const galleryHref = usePhotographyGalleryReturnUrl();
+
   return (
     <nav
       aria-label='Photography navigation'

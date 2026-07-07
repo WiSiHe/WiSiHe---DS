@@ -1632,7 +1632,7 @@ export type AboutTravelPhotographyQueryResult = Array<{
 
 // Source: ../../packages/sanity-queries/src/index.ts
 // Variable: photographyListQuery
-// Query: *[_type == "photography" && defined(slug.current) && defined(image)]  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {    _id,    title,    "slug": slug.current,    caption,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode    },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    }  }
+// Query: *[_type == "photography" && defined(slug.current) && defined(image)]  | order(isFeatured desc, capturedAt desc, _updatedAt desc) {    _id,    title,    "slug": slug.current,    caption,    isFeatured,    capturedAt,    place-> {      _id,      name,      countryName,      countryCode,      coordinates    },    image {      ...,      alt,      "lqip": asset->metadata.lqip,      "aspectRatio": asset->metadata.dimensions.aspectRatio,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height,      "location": asset->metadata.location    }  }
 export type PhotographyListQueryResult = Array<{
   _id: string;
   title: string;
@@ -1645,6 +1645,7 @@ export type PhotographyListQueryResult = Array<{
     name: string;
     countryName: string;
     countryCode: string | null;
+    coordinates: Geopoint | null;
   } | null;
   image: {
     asset?: SanityImageAssetReference;
@@ -1657,6 +1658,7 @@ export type PhotographyListQueryResult = Array<{
     aspectRatio: number | null;
     width: number | null;
     height: number | null;
+    location: Geopoint | null;
   };
 }>;
 

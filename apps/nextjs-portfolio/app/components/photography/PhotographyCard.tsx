@@ -2,7 +2,14 @@ import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { type PhotographyCardImageComponentProps, PhotographyCardView } from '@wisihe/ui-react';
 import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
-import { urlForFullImage } from '@/sanity/lib/utils';
+import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import {
+  getPhotographyAspectRatio,
+  isValidPhotographyLqip,
+  PHOTOGRAPHY_IMAGE_QUALITY,
+  urlForPhotographyCard,
+} from '@/lib/photography/photographyImage';
 
 export type PhotographyListItem = PhotographyListQueryResult[number];
 
@@ -19,19 +26,6 @@ function formatPlaceLabel(photo: PhotographyListItem): string | null {
   if (place?.name) return place.name;
   if (place?.countryName) return place.countryName;
   return null;
-}
-
-function getAspectRatio(photo: PhotographyListItem): number {
-  const width = photo.image?.width;
-  const height = photo.image?.height;
-  if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
-    return width / height;
-  }
-
-  const rawRatio = photo.image?.aspectRatio;
-  return typeof rawRatio === 'number' && rawRatio > 0
-    ? Math.min(1.9, Math.max(0.62, rawRatio))
-    : 4 / 3;
 }
 
 function getYear(capturedAt?: string | null): string | null {
@@ -59,8 +53,12 @@ function PhotographyImage({
       className={className}
       sizes={sizes}
       priority={priority}
+      quality={PHOTOGRAPHY_IMAGE_QUALITY}
+      fetchPriority={priority ? 'high' : 'auto'}
       placeholder={placeholder}
       blurDataURL={blurDataURL}
+      // Sanity CDN URL is already width/height/quality/format optimized.
+      unoptimized
     />
   );
 }
@@ -73,10 +71,12 @@ export function PhotographyCard({
 }: PhotographyCardProps) {
   if (!photo.slug) return null;
 
-  const imageUrl = photo.image
-    ? urlForFullImage(photo.image)?.width(1200).quality(88).auto('format').url()
-    : null;
+  const aspectRatio = getPhotographyAspectRatio(photo.image);
+  const imageUrl = urlForPhotographyCard(photo.image, aspectRatio);
   if (!imageUrl) return null;
+
+  const lqip = photo.image?.lqip;
+  const morphLayoutId = contentSlugLayoutId(photo.slug);
 
   return (
     <PhotographyCardView
@@ -84,14 +84,17 @@ export function PhotographyCard({
       href={`/photography/${photo.slug}`}
       imageSrc={imageUrl}
       imageAlt={photo.image?.alt ?? photo.title ?? 'Photograph'}
-      blurDataURL={photo.image?.lqip ?? null}
-      aspectRatio={getAspectRatio(photo)}
+      blurDataURL={isValidPhotographyLqip(lqip) ? lqip : null}
+      aspectRatio={aspectRatio}
       placeLabel={formatPlaceLabel(photo)}
       caption={photo.caption}
       yearLabel={getYear(photo.capturedAt)}
       priority={priority}
       size={size}
       className={className}
+      imageLayoutId={morphLayoutId || undefined}
+      ImageMorphFrame={ContentMorphImageFrame}
+      imageLayoutTransition={sharedLayoutTransition}
       LinkComponent={Link}
       ImageComponent={PhotographyImage}
     />

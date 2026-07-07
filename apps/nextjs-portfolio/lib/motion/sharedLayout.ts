@@ -1,4 +1,4 @@
-/** Shared element id for list → detail hero morph (paintings, projects, videos). */
+/** Shared element id for list → detail hero morph (paintings, projects, videos, photography). */
 export function contentImageLayoutId(key: string): string {
   return `image-${key}`;
 }
@@ -24,4 +24,4 @@ export const sharedLayoutTransition = {
 };
 
 /** Detail routes where template fade would fight shared layout morphs. */
-export const SHARED_LAYOUT_DETAIL_ROUTE = /^\/(paintings|projects|videos)\/[^/]+$/;
+export const SHARED_LAYOUT_DETAIL_ROUTE = /^\/(paintings|projects|videos|photography)\/[^/]+$/;
