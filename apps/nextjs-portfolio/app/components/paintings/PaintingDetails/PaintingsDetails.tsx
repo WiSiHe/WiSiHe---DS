@@ -429,8 +429,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                             alt={`${title} - Image ${index + 1}`}
                             priority={index === 0}
                             fill
-                            placeholder={lqip ? 'blur' : 'empty'}
-                            blurDataURL={lqip}
+                            placeholder='empty'
                             className='object-contain'
                             sizes='(max-width: 1024px) 100vw, 72vw'
                           />
