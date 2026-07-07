@@ -13,11 +13,11 @@ import {
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
 import { PaintingsDetailNav } from '@/app/components/paintings/PaintingDetails/PaintingsDetailNav';
@@ -45,9 +45,15 @@ const paintingCarouselNavButtonClass = cn(
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
+const LAYOUT_MORPH_QUICK_REVEAL_MS = 150;
+
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const reduceMotion = useReducedMotion();
+  const layoutMorphStartedRef = useRef(false);
+  const layoutMorphRevealRef = useRef(false);
+  const [heroImageRevealed, setHeroImageRevealed] = useState(Boolean(reduceMotion));
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -196,6 +202,29 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   );
 
   const glowTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
+
+  const revealHeroImage = useCallback(() => {
+    if (layoutMorphRevealRef.current) return;
+    layoutMorphRevealRef.current = true;
+    setHeroImageRevealed(true);
+  }, []);
+
+  const handleLayoutMorphStart = useCallback(() => {
+    layoutMorphStartedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      revealHeroImage();
+      return;
+    }
+
+    const quickReveal = window.setTimeout(() => {
+      if (!layoutMorphStartedRef.current) revealHeroImage();
+    }, LAYOUT_MORPH_QUICK_REVEAL_MS);
+
+    return () => window.clearTimeout(quickReveal);
+  }, [reduceMotion, revealHeroImage]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -364,7 +393,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 className='absolute left-1/2 top-1/2 h-[132%] w-[122%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[80px] sm:blur-[96px]'
                 animate={{
                   backgroundColor: activeGlowPrimary,
-                  opacity: isDark ? 0.62 : 0.46,
+                  opacity: heroImageRevealed ? (isDark ? 0.62 : 0.46) : 0,
                 }}
                 transition={glowTransition}
               />
@@ -372,7 +401,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 className='absolute left-1/2 top-1/2 h-[118%] w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[52px] sm:blur-[64px]'
                 animate={{
                   backgroundColor: activeGlowSecondary,
-                  opacity: isDark ? 0.44 : 0.32,
+                  opacity: heroImageRevealed ? (isDark ? 0.44 : 0.32) : 0,
                 }}
                 transition={glowTransition}
               />
@@ -380,6 +409,8 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
 
             <SharedLayoutFrame
               title={title}
+              onLayoutAnimationStart={handleLayoutMorphStart}
+              onLayoutAnimationComplete={revealHeroImage}
               className={cn(
                 'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
                 activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
@@ -387,11 +418,17 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
             >
               <motion.div
                 className='pointer-events-none absolute inset-0 z-[5] rounded-2xl'
-                animate={{ boxShadow: ambientFrameShadow }}
+                animate={{ boxShadow: heroImageRevealed ? ambientFrameShadow : 'none' }}
                 transition={glowTransition}
                 aria-hidden
               />
-              <div ref={emblaRef} className='relative z-10 h-full w-full overflow-hidden'>
+              <div
+                ref={emblaRef}
+                className={cn(
+                  'relative z-10 h-full w-full overflow-hidden transition-opacity duration-300',
+                  heroImageRevealed ? 'opacity-100' : 'opacity-0',
+                )}
+              >
                 <div className='flex h-full w-full touch-pan-y'>
                   {allImages.map((img, index) => {
                     const slideWidth = img?.width ?? imageWidth;

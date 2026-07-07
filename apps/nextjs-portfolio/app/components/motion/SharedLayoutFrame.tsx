@@ -11,6 +11,8 @@ type SharedLayoutFrameProps = {
   style?: React.CSSProperties;
   children: ReactNode;
   transition?: Transition;
+  onLayoutAnimationStart?: () => void;
+  onLayoutAnimationComplete?: () => void;
 };
 
 /** Morph target/source wrapper for painting & project hero images. */
@@ -20,6 +22,8 @@ export function SharedLayoutFrame({
   style,
   children,
   transition = sharedLayoutTransition,
+  onLayoutAnimationStart,
+  onLayoutAnimationComplete,
 }: SharedLayoutFrameProps) {
   const reduceMotion = useReducedMotion();
 
@@ -38,6 +42,8 @@ export function SharedLayoutFrame({
       transition={transition}
       className={cn(className)}
       style={style}
+      onLayoutAnimationStart={onLayoutAnimationStart}
+      onLayoutAnimationComplete={onLayoutAnimationComplete}
     >
       {children}
     </motion.div>
