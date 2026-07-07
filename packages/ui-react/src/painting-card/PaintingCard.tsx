@@ -99,7 +99,7 @@ export function PaintingCard({
   const imageFrame = (
     <div
       className={cn(
-        'relative isolate w-full overflow-hidden rounded-xl',
+        'relative w-full overflow-hidden rounded-xl',
         caption && 'border border-border/40 bg-surface shadow-sm',
         caption &&
           'transition-[border-color,box-shadow] duration-300 group-hover:border-border group-hover:shadow-md',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 export function prefersFinePointerHover(): boolean {
   if (typeof window === 'undefined') return false;
@@ -10,30 +10,6 @@ export function prefersFinePointerHover(): boolean {
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-/**
- * WebKit Safari — SVG filters, mix-blend, and pathLength animation are very costly.
- * Chrome/Firefox/Edge on macOS are excluded.
- */
-export function isSafariBrowser(): boolean {
-  if (typeof window === 'undefined') return false;
-  const ua = navigator.userAgent;
-  return /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua);
-}
-
-function subscribeNoop() {
-  return () => {};
-}
-
-/** Safari / WebKit — lighter brush reveal (no filters, blend modes, or path draw). */
-export function useBrushRevealLite(): boolean {
-  return useSyncExternalStore(subscribeNoop, isSafariBrowser, () => false);
-}
-
-/** Safari — skip layoutId shared morph; use manual painting transition instead. */
-export function useSafariSharedLayout(): boolean {
-  return useBrushRevealLite();
 }
 
 type BrushRevealListener = (canReveal: boolean) => void;
