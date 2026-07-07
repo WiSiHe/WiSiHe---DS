@@ -2,10 +2,12 @@
 
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/sanity/lib/utils';
 
 type VideoItem = {
@@ -54,6 +56,7 @@ interface VideosPageProps {
 
 export const VideosPage = ({ videos }: VideosPageProps) => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const reduceMotion = useReducedMotion();
 
   const filteredVideos = useMemo(() => {
     const sorted = [...videos].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
@@ -137,6 +140,51 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
             });
 
             const displayTags = (tags ?? []).slice(0, 3);
+            const morphLayoutId =
+              !reduceMotion && video.slug ? contentSlugLayoutId(video.slug) : undefined;
+
+            const thumbnailInner = (
+              <>
+                <div className='absolute inset-0 z-10 bg-black/20 transition-colors duration-300 group-hover:bg-black/40' />
+                <div className='absolute inset-0 z-20 flex items-center justify-center'>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30'>
+                    <IconPlayerPlay className='ml-0.5 size-4 text-white' stroke={2} aria-hidden />
+                  </div>
+                </div>
+
+                {featured ? (
+                  <div className='absolute left-3 top-3 z-20'>
+                    <span className='rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-contrast'>
+                      Featured
+                    </span>
+                  </div>
+                ) : null}
+
+                {displayTags.length > 0 ? (
+                  <div className='absolute right-3 top-3 z-20 flex gap-1.5'>
+                    {displayTags.map(tag => (
+                      <span
+                        key={tag.name}
+                        className='rounded-full bg-black/50 px-2 py-0.5 text-xs font-medium text-white/90 backdrop-blur-sm'
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                <picture className='absolute inset-0'>
+                  <source media='(min-width: 1000px)' srcSet={desktop} />
+                  <source media='(min-width: 500px)' srcSet={mobile} />
+                  <img
+                    {...rest}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    alt={title ?? 'Video thumbnail'}
+                    className='transition-transform duration-500 group-hover:scale-105'
+                  />
+                </picture>
+              </>
+            );
 
             return (
               <motion.div
@@ -161,58 +209,19 @@ export const VideosPage = ({ videos }: VideosPageProps) => {
                   )}
                 >
                   {/* Thumbnail */}
-                  <div
-                    className={cn(
-                      'relative w-full overflow-hidden',
-                      featured ? 'aspect-video' : 'aspect-video',
-                    )}
-                  >
-                    {/* Play overlay */}
-                    <div className='absolute inset-0 z-10 bg-black/20 group-hover:bg-black/40 transition-colors duration-300' />
-                    <div className='absolute inset-0 z-20 flex items-center justify-center'>
-                      <div className='w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300 border border-white/30'>
-                        <IconPlayerPlay
-                          className='size-4 text-white ml-0.5'
-                          stroke={2}
-                          aria-hidden
-                        />
-                      </div>
+                  {morphLayoutId ? (
+                    <ContentMorphImageFrame
+                      layoutId={morphLayoutId}
+                      transition={sharedLayoutTransition}
+                      className='relative aspect-video w-full overflow-hidden'
+                    >
+                      {thumbnailInner}
+                    </ContentMorphImageFrame>
+                  ) : (
+                    <div className='relative aspect-video w-full overflow-hidden'>
+                      {thumbnailInner}
                     </div>
-
-                    {/* Featured badge */}
-                    {featured && (
-                      <div className='absolute top-3 left-3 z-20'>
-                        <span className='text-xs font-semibold px-2.5 py-1 rounded-full bg-accent text-accent-contrast'>
-                          Featured
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Tags */}
-                    {displayTags.length > 0 && (
-                      <div className='absolute top-3 right-3 z-20 flex gap-1.5'>
-                        {displayTags.map(tag => (
-                          <span
-                            key={tag.name}
-                            className='text-xs font-medium px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90'
-                          >
-                            {tag.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <picture className='absolute inset-0'>
-                      <source media='(min-width: 1000px)' srcSet={desktop} />
-                      <source media='(min-width: 500px)' srcSet={mobile} />
-                      <img
-                        {...rest}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        alt={title ?? 'Video thumbnail'}
-                        className='transition-transform duration-500 group-hover:scale-105'
-                      />
-                    </picture>
-                  </div>
+                  )}
 
                   {/* Title */}
                   <div className='p-4 text-left flex-1 flex flex-col'>

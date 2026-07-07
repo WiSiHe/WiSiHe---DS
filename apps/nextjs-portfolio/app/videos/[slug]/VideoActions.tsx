@@ -11,6 +11,7 @@ interface VideoActionsProps {
   title: string;
   viewsCount: number;
   likesCount: number;
+  layout?: 'bar' | 'sidebar';
 }
 
 export default function VideoActions({
@@ -18,6 +19,7 @@ export default function VideoActions({
   title,
   viewsCount,
   likesCount,
+  layout = 'bar',
 }: VideoActionsProps) {
   const [localLikes, setLocalLikes] = useState(likesCount ?? 0);
   const [hasLiked, setHasLiked] = useState(false);
@@ -110,7 +112,12 @@ export default function VideoActions({
   };
 
   return (
-    <div className='flex items-center flex-wrap gap-4'>
+    <div
+      className={cn(
+        'flex gap-4',
+        layout === 'sidebar' ? 'flex-col items-stretch' : 'flex-wrap items-center',
+      )}
+    >
       <div className='flex items-center gap-4 text-sm text-foreground-muted'>
         <span className='flex items-center gap-1.5'>
           <IconEye className='size-3.5' stroke={2} aria-hidden />
@@ -126,12 +133,18 @@ export default function VideoActions({
         </span>
       </div>
 
-      <div className='flex items-center gap-2 ml-auto'>
+      <div
+        className={cn(
+          'flex items-center gap-2',
+          layout === 'sidebar' ? 'grid w-full grid-cols-2' : 'ml-auto',
+        )}
+      >
         <button
           type='button'
           onClick={handleLike}
           className={cn(
-            'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-colors duration-150',
+            'flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium border transition-colors duration-150',
+            layout === 'sidebar' && 'w-full',
             hasLiked
               ? 'text-red-500 border-red-500/20 bg-red-500/10 hover:bg-red-500/20'
               : 'border-border bg-surface text-foreground-subtle hover:text-foreground hover:border-foreground-muted',
@@ -147,7 +160,10 @@ export default function VideoActions({
         <button
           type='button'
           onClick={handleShare}
-          className='flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-border bg-surface text-foreground-subtle hover:text-foreground hover:border-foreground-muted transition-colors duration-150'
+          className={cn(
+            'flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors duration-150 hover:border-foreground-muted hover:text-foreground',
+            layout === 'sidebar' && 'w-full',
+          )}
         >
           <IconShare className='size-4' stroke={2} aria-hidden />
           {shareText}

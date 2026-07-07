@@ -4,6 +4,7 @@ import { cn } from '@wisihe/utils';
 import { motion, type Transition, useReducedMotion } from 'motion/react';
 import type * as React from 'react';
 import type { ReactNode } from 'react';
+import type { ContentMorphFrameComponent } from '../painting-card/morphFrame';
 import { Tag } from '../tag/Tag';
 
 const DEFAULT_TECH_TAG_NAMES = new Set([
@@ -93,6 +94,8 @@ export type ProjectCardImageFrameProps = {
   /** Enables shared layout morph into project detail hero. */
   layoutId?: string;
   layoutTransition?: Transition;
+  /** App-provided frame so layoutId uses the same motion instance as the detail page. */
+  ImageMorphFrame?: ContentMorphFrameComponent;
   /** Badges/metadata layered on the image. */
   overlay?: ReactNode;
   /** When true, only top corners are rounded (card header image). */
@@ -111,6 +114,7 @@ export function ProjectCardImageFrame({
   imageClassName = 'object-cover',
   layoutId,
   layoutTransition,
+  ImageMorphFrame,
   overlay,
   flushTop = true,
   ImageComponent = DefaultImage,
@@ -177,7 +181,16 @@ export function ProjectCardImageFrame({
 
   return (
     <div className={cn('relative overflow-hidden', aspectClassName)}>
-      {effectiveLayoutId ? (
+      {effectiveLayoutId && ImageMorphFrame ? (
+        <ImageMorphFrame
+          layoutId={effectiveLayoutId}
+          transition={layoutTransition}
+          className={frameClassName}
+          style={{ borderRadius: 16 }}
+        >
+          {frameBody}
+        </ImageMorphFrame>
+      ) : effectiveLayoutId ? (
         <motion.div
           layoutId={effectiveLayoutId}
           initial={false}

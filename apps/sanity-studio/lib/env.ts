@@ -49,7 +49,8 @@ export const studioDataset = () =>
 export const studioPreviewUrl = () =>
   readEnv('SANITY_STUDIO_PREVIEW_URL') ?? 'https://www.wisihe.no';
 
-export const sanityReadToken = () => readEnv('SANITY_API_READ_TOKEN');
+export const sanityReadToken = () =>
+  readEnv('SANITY_API_READ_TOKEN', 'NEXT_PUBLIC_SANITY_API_READ_TOKEN');
 
 export const sanityWriteToken = () =>
   readEnv(

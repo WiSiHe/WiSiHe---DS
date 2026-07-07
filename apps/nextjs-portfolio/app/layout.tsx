@@ -28,6 +28,7 @@ import type React from 'react';
 import { JsonLd } from './components/cms/JsonLd/JsonLd';
 import { ReactScanDev } from './components/dev/ReactScanDev';
 import CustomCursor from './components/layout/CustomCursor';
+import { ListScrollPreserver } from './components/layout/ListScrollPreserver';
 import { ScrollToTopOnNavigate } from './components/layout/ScrollToTopOnNavigate';
 import SmoothScroll from './components/layout/SmoothScroll';
 import { PresentationMode } from './components/presentations/PresentationMode';
@@ -209,6 +210,7 @@ export default async function RootLayout({
               <PostHogProvider>
                 <PresentationMode />
                 <SmoothScroll />
+                <ListScrollPreserver />
                 <ScrollToTopOnNavigate />
                 {isDraftMode && (
                   <>

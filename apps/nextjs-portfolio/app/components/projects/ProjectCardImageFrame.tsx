@@ -6,11 +6,12 @@ import {
   type ProjectCardImageFrameProps as ProjectCardImageFrameViewProps,
 } from '@wisihe/ui-react';
 import Image from 'next/image';
+import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
 import { sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 
 export type ProjectCardImageFrameProps = Omit<
   ProjectCardImageFrameViewProps,
-  'ImageComponent' | 'layoutTransition'
+  'ImageComponent' | 'layoutTransition' | 'ImageMorphFrame'
 >;
 
 function NextImage({
@@ -45,6 +46,7 @@ export function ProjectCardImageFrame(props: ProjectCardImageFrameProps) {
     <ProjectCardImageFrameView
       {...props}
       ImageComponent={NextImage}
+      ImageMorphFrame={ContentMorphImageFrame}
       layoutTransition={sharedLayoutTransition}
     />
   );

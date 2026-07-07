@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import type { JSX } from 'react';
-import IconLogo from '../icons/IconLogo';
+import { IconLogoBrand } from '../icons/IconLogoBrand';
 import { Link } from '../ProgressLink';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
@@ -51,24 +51,26 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
 
   return (
     <header className='pointer-events-none'>
-      <div className='fixed top-4 left-4 z-60'>
+      <div className='fixed top-4 left-4 z-60 pointer-events-auto'>
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-          whileHover={{ scale: 1.1, rotate: 90 }}
-          whileTap={{ scale: 0.95 }}
-          className='pointer-events-auto'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25, delay: 0.1, ease: 'easeOut' }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
         >
           <Link
             href='/'
             aria-label='Navigate to the homepage'
-            className='group relative flex items-center justify-center rounded-lg border border-border bg-surface p-1.5 shadow-lg transition-all duration-200 hover:scale-105 hover:border-accent-border hover:bg-surface-hover'
+            className={cn(
+              'group relative flex items-center justify-center rounded-lg border border-border bg-surface p-1.5 shadow-lg',
+              'transition-[border-color,background-color,box-shadow] duration-200',
+              'hover:border-accent-border hover:bg-surface-hover hover:shadow-xl',
+            )}
           >
-            <IconLogo
-              color='currentColor'
+            <IconLogoBrand
               className={cn(
-                'h-9 w-9 text-foreground transition-all duration-300 group-hover:text-accent md:h-12 md:w-12',
+                'h-9 w-9 transition-colors duration-300 group-hover:text-accent md:h-12 md:w-12',
               )}
               size='100%'
             />

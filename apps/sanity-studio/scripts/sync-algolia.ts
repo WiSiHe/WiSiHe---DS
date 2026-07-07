@@ -91,6 +91,8 @@ const query = `
         alt,
         "lqip": asset->metadata.lqip,
         "aspectRatio": asset->metadata.dimensions.aspectRatio,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
         "asset": {
           "_ref": asset._ref,
           "_type": "reference"
@@ -103,6 +105,8 @@ const query = `
         alt,
         "lqip": asset->metadata.lqip,
         "aspectRatio": asset->metadata.dimensions.aspectRatio,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height,
         "asset": {
           "_ref": asset._ref,
           "_type": "reference"

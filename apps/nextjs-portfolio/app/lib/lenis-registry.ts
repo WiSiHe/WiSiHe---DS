@@ -63,6 +63,45 @@ export function scrollDocumentToTop(options: ScrollDocumentOptions = {}): void {
   });
 }
 
+/** Native scroll reset for paintings routes (Lenis is disabled there). */
+export function scrollPaintingsDocumentToTop(): void {
+  restorePaintingsDocumentScroll(0);
+}
+
+/** Native scroll restore for paintings routes (Lenis is disabled there). */
+export function restorePaintingsDocumentScroll(y: number): void {
+  if (typeof window === 'undefined') return;
+  window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+  document.documentElement.scrollTop = y;
+  document.body.scrollTop = y;
+}
+
+export type RestoreDocumentScrollOptions = {
+  /** Jump instantly — default for route changes and when reduced motion is on. */
+  immediate?: boolean;
+};
+
+/** Restore document scroll — uses Lenis when smooth scroll is active. */
+export function restoreDocumentScroll(y: number, options: RestoreDocumentScrollOptions = {}): void {
+  if (typeof window === 'undefined') return;
+
+  const immediate = options.immediate ?? prefersReducedMotion();
+  const lenis = lenisInstance;
+
+  if (lenis) {
+    lenis.scrollTo(y, { immediate });
+    return;
+  }
+
+  window.scrollTo({
+    top: y,
+    left: 0,
+    behavior: immediate ? 'auto' : 'smooth',
+  });
+  document.documentElement.scrollTop = y;
+  document.body.scrollTop = y;
+}
+
 /** Paintings listing + detail — native document scroll only (no Lenis handoff). */
 export function isPaintingsRoute(pathname: string | null): boolean {
   if (!pathname) return false;
@@ -77,10 +116,9 @@ export function shouldUsePresentationScrollMode(pathname: string | null): boolea
   return false;
 }
 
-/** Let Next.js handle scroll restoration — skip Lenis scroll-to-top on these routes. */
+/** Let Next.js handle scroll restoration — skip Lenis scroll-to-top on nested scroll routes. */
 export function shouldSkipDocumentScrollRestoration(pathname: string | null): boolean {
   if (!pathname) return false;
-  if (isPaintingsRoute(pathname)) return true;
   if (shouldUsePresentationScrollMode(pathname)) return true;
   return false;
 }
