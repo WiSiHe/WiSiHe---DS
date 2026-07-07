@@ -140,19 +140,26 @@ export function PaintingCardView({
   ) : undefined;
 
   const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
+  const ImageFrame = effectiveLayoutId ? motion.div : 'div';
 
   const imageNode = imageEl ? (
-    <div className='relative h-full w-full overflow-hidden rounded-xl'>
+    <ImageFrame
+      {...(effectiveLayoutId
+        ? {
+            layoutId: effectiveLayoutId,
+            initial: false as const,
+            transition: imageLayoutTransition,
+          }
+        : {})}
+      className='relative h-full w-full overflow-hidden rounded-xl'
+    >
       {effectiveLayoutId ? (
-        <motion.div
-          layoutId={effectiveLayoutId}
-          initial={false}
-          transition={imageLayoutTransition}
-          className='absolute inset-0 bg-surface-subtle'
-          aria-hidden
-        />
-      ) : null}
-      {imageEl}
+        <motion.div layout='position' className='relative h-full w-full'>
+          {imageEl}
+        </motion.div>
+      ) : (
+        imageEl
+      )}
       {useBrushReveal ? (
         <BrushRevealLayer
           {...strokeColors}
@@ -163,7 +170,7 @@ export function PaintingCardView({
           year={paintedAt ?? null}
         />
       ) : null}
-    </div>
+    </ImageFrame>
   ) : undefined;
 
   const card = (

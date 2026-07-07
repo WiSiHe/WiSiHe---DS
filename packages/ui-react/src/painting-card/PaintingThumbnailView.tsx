@@ -156,16 +156,20 @@ export function PaintingThumbnailView({
         aspectClass,
       )}
     >
-      {effectiveLayoutId ? (
+      {imageSrc && effectiveLayoutId ? (
         <motion.div
           layoutId={effectiveLayoutId}
           initial={false}
           transition={imageLayoutTransition}
-          className='absolute inset-0 bg-surface-subtle'
-          aria-hidden
-        />
-      ) : null}
-      {image}
+          className='absolute inset-0'
+        >
+          <motion.div layout='position' className='relative h-full w-full'>
+            {image}
+          </motion.div>
+        </motion.div>
+      ) : (
+        image
+      )}
 
       {brushReveal && strokeColors ? (
         <BrushRevealLayer
