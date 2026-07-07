@@ -124,20 +124,39 @@ export function ProjectCardImageFrame({
   );
 
   const imageContent = imageSrc ? (
-    <ImageComponent
-      src={imageSrc}
-      alt={alt}
-      fill
-      priority={priority}
-      fetchPriority={fetchPriority}
-      sizes={sizes}
-      placeholder={lqip ? 'blur' : 'empty'}
-      blurDataURL={lqip ?? undefined}
-      className={cn(
-        'transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.02]',
-        imageClassName,
-      )}
-    />
+    effectiveLayoutId ? (
+      <motion.div layout='position' className='absolute inset-0'>
+        <ImageComponent
+          src={imageSrc}
+          alt={alt}
+          fill
+          priority={priority}
+          fetchPriority={fetchPriority}
+          sizes={sizes}
+          placeholder={lqip ? 'blur' : 'empty'}
+          blurDataURL={lqip ?? undefined}
+          className={cn(
+            'transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.02]',
+            imageClassName,
+          )}
+        />
+      </motion.div>
+    ) : (
+      <ImageComponent
+        src={imageSrc}
+        alt={alt}
+        fill
+        priority={priority}
+        fetchPriority={fetchPriority}
+        sizes={sizes}
+        placeholder={lqip ? 'blur' : 'empty'}
+        blurDataURL={lqip ?? undefined}
+        className={cn(
+          'transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.02]',
+          imageClassName,
+        )}
+      />
+    )
   ) : (
     <div
       className='absolute inset-0 bg-linear-to-br from-accent/[0.08] via-surface-subtle to-surface'
@@ -164,6 +183,7 @@ export function ProjectCardImageFrame({
           initial={false}
           transition={layoutTransition}
           className={frameClassName}
+          style={{ borderRadius: 16 }}
         >
           {frameBody}
         </motion.div>

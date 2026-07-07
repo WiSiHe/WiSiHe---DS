@@ -152,6 +152,7 @@ export function PaintingCardView({
           }
         : {})}
       className='relative h-full w-full overflow-hidden rounded-xl'
+      style={effectiveLayoutId ? { borderRadius: 12 } : undefined}
     >
       {effectiveLayoutId ? (
         <motion.div layout='position' className='relative h-full w-full'>

@@ -10,7 +10,7 @@ type ProjectImageSectionProps = {
 
 /** Server component: LCP hero image in HTML, carousel interactivity hydrates on the client. */
 export default function ProjectImageSection({ project }: ProjectImageSectionProps) {
-  const { name, client, image, extraImages = [] } = project;
+  const { name, client, image, extraImages = [], slug } = project;
   const projectTitle = getProjectDisplayTitle({ name, client });
   const allImages = collectProjectGalleryImages(image, extraImages);
 
@@ -27,6 +27,7 @@ export default function ProjectImageSection({ project }: ProjectImageSectionProp
 
   return (
     <ProjectImageGallery
+      projectSlug={slug ?? ''}
       projectTitle={projectTitle}
       allImages={allImages}
       heroSlide={<ProjectHeroSlide image={firstImage} alt={firstAlt} />}

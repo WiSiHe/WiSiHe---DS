@@ -59,7 +59,7 @@ const OngoingProjectCard = ({ project, index }: OngoingProjectCardProps) => {
           )}
         >
           <ProjectCardImageFrame
-            layoutId={contentImageLayoutId(projectTitle)}
+            layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}

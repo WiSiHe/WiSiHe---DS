@@ -70,7 +70,7 @@ const PastProjectCard = ({ project, isLcpCandidate = false }: PastProjectCardPro
           )}
         >
           <ProjectCardImageFrame
-            layoutId={contentImageLayoutId(projectTitle)}
+            layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}

@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 
 type SharedLayoutFrameProps = {
-  title: string;
+  slug: string;
   className?: string;
   style?: React.CSSProperties;
   children: ReactNode;
@@ -17,7 +17,7 @@ type SharedLayoutFrameProps = {
 
 /** Morph target/source wrapper for painting & project hero images. */
 export function SharedLayoutFrame({
-  title,
+  slug,
   className,
   style,
   children,
@@ -27,7 +27,7 @@ export function SharedLayoutFrame({
 }: SharedLayoutFrameProps) {
   const reduceMotion = useReducedMotion();
 
-  if (reduceMotion || !title.trim()) {
+  if (reduceMotion || !slug.trim()) {
     return (
       <div className={className} style={style}>
         {children}
@@ -37,11 +37,11 @@ export function SharedLayoutFrame({
 
   return (
     <motion.div
-      layoutId={contentImageLayoutId(title)}
+      layoutId={contentImageLayoutId(slug)}
       initial={false}
       transition={transition}
       className={cn(className)}
-      style={style}
+      style={{ borderRadius: 16, ...style }}
       onLayoutAnimationStart={onLayoutAnimationStart}
       onLayoutAnimationComplete={onLayoutAnimationComplete}
     >
