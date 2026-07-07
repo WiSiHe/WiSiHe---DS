@@ -13,11 +13,11 @@ import {
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
 import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
 import { PaintingsDetailNav } from '@/app/components/paintings/PaintingDetails/PaintingsDetailNav';
@@ -47,16 +47,25 @@ const paintingCarouselNavButtonClass = cn(
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
+const LAYOUT_MORPH_QUICK_REVEAL_MS = 150;
+
 const viewportWashTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
 
 type PaintingViewportWashProps = {
   palette?: SanityPalette | null;
   dark: boolean;
+  revealed: boolean;
   slideKey: number;
   layout: 'mobile' | 'desktop';
 };
 
-function PaintingViewportWash({ palette, dark, slideKey, layout }: PaintingViewportWashProps) {
+function PaintingViewportWash({
+  palette,
+  dark,
+  revealed,
+  slideKey,
+  layout,
+}: PaintingViewportWashProps) {
   const washStyle = useMemo(
     () => paintingViewportWashStyle(palette, { dark, layout }),
     [palette, dark, layout],
@@ -78,7 +87,7 @@ function PaintingViewportWash({ palette, dark, slideKey, layout }: PaintingViewp
           className={layoutClassName}
           style={washStyle}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: revealed ? 1 : 0 }}
           exit={{ opacity: 0 }}
           transition={viewportWashTransition}
         />
@@ -88,7 +97,7 @@ function PaintingViewportWash({ palette, dark, slideKey, layout }: PaintingViewp
         className={cn(layoutClassName, 'mix-blend-soft-light')}
         style={grainStyle}
         initial={{ opacity: 0 }}
-        animate={{ opacity: PAINTING_VIEWPORT_GRAIN_OPACITY }}
+        animate={{ opacity: revealed ? PAINTING_VIEWPORT_GRAIN_OPACITY : 0 }}
         transition={viewportWashTransition}
       />
     </>
@@ -98,6 +107,10 @@ function PaintingViewportWash({ palette, dark, slideKey, layout }: PaintingViewp
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const reduceMotion = useReducedMotion();
+  const layoutMorphStartedRef = useRef(false);
+  const layoutMorphRevealRef = useRef(false);
+  const [atmosphericRevealed, setAtmosphericRevealed] = useState(Boolean(reduceMotion));
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -105,6 +118,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
   const {
     title,
+    slug,
     _id,
     description,
     tagsV2 = [],
@@ -243,6 +257,29 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   );
 
   const glowTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
+
+  const revealAtmosphere = useCallback(() => {
+    if (layoutMorphRevealRef.current) return;
+    layoutMorphRevealRef.current = true;
+    setAtmosphericRevealed(true);
+  }, []);
+
+  const handleLayoutMorphStart = useCallback(() => {
+    layoutMorphStartedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      revealAtmosphere();
+      return;
+    }
+
+    const quickReveal = window.setTimeout(() => {
+      if (!layoutMorphStartedRef.current) revealAtmosphere();
+    }, LAYOUT_MORPH_QUICK_REVEAL_MS);
+
+    return () => window.clearTimeout(quickReveal);
+  }, [reduceMotion, revealAtmosphere]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -398,12 +435,14 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       <PaintingViewportWash
         palette={activePalette}
         dark={isDark}
+        revealed={atmosphericRevealed}
         slideKey={selectedIndex}
         layout='mobile'
       />
       <PaintingViewportWash
         palette={activePalette}
         dark={isDark}
+        revealed={atmosphericRevealed}
         slideKey={selectedIndex}
         layout='desktop'
       />
@@ -420,7 +459,9 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               style={paintingFrameStyle}
             >
               <SharedLayoutFrame
-                title={title}
+                slug={slug ?? ''}
+                onLayoutAnimationStart={handleLayoutMorphStart}
+                onLayoutAnimationComplete={revealAtmosphere}
                 className={cn(
                   'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
                   activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
@@ -428,7 +469,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
               >
                 <motion.div
                   className='pointer-events-none absolute inset-0 z-[5] rounded-2xl'
-                  animate={{ boxShadow: ambientFrameShadow }}
+                  animate={{ boxShadow: atmosphericRevealed ? ambientFrameShadow : 'none' }}
                   transition={glowTransition}
                   aria-hidden
                 />

@@ -90,7 +90,7 @@ function PaintingCardLoaded({
       palette={palette ?? image?.palette ?? null}
       LinkComponent={Link}
       ImageComponent={Image}
-      imageLayoutId={layout !== 'carousel' && title ? contentImageLayoutId(title) : undefined}
+      imageLayoutId={layout !== 'carousel' && slug ? contentImageLayoutId(slug) : undefined}
       imageLayoutTransition={sharedLayoutTransition}
       className={className ?? cardImageLayout.aspectClass}
     />

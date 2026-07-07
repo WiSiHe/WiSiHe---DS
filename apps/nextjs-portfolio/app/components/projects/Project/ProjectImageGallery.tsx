@@ -2,7 +2,7 @@
 
 import { IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
@@ -16,6 +16,7 @@ import ImageModal from './ImageModal';
 import { ProjectHeroSlideInteractive } from './ProjectHeroSlideInteractive';
 
 type ProjectImageGalleryProps = {
+  projectSlug: string;
   projectTitle: string;
   allImages: ProjectGalleryImage[];
   heroSlide: ReactNode;
@@ -197,10 +198,14 @@ function GalleryFilmstrip({ images, selectedIndex, onSelect, stripRef }: Filmstr
 }
 
 export default function ProjectImageGallery({
+  projectSlug,
   projectTitle,
   allImages,
   heroSlide,
 }: ProjectImageGalleryProps) {
+  const reduceMotion = useReducedMotion();
+  const sharedLayoutId =
+    !reduceMotion && projectSlug ? contentImageLayoutId(projectSlug) : undefined;
   const hasMultiple = allImages.length > 1;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -268,60 +273,74 @@ export default function ProjectImageGallery({
     else goPrev();
   };
 
-  return (
-    <div className='space-y-0'>
-      <motion.div
-        layoutId={contentImageLayoutId(projectTitle)}
-        initial={false}
-        transition={sharedLayoutTransition}
-        className='overflow-hidden rounded-2xl bg-surface shadow-lg ring-1 ring-border/50'
-      >
-        <section
-          className={cn('relative w-full overflow-hidden', PROJECT_GALLERY_VIEWPORT_HEIGHT)}
-          aria-label={`Project images for ${projectTitle}`}
-          aria-roledescription={hasMultiple ? 'carousel' : undefined}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          <AnimatePresence mode='wait' initial={false}>
-            {safeIndex === 0 ? (
-              <ProjectHeroSlideInteractive
-                key='hero-slide-0'
-                alt={firstAlt}
-                onOpen={() => openModal(0)}
-              >
-                {heroSlide}
-              </ProjectHeroSlideInteractive>
-            ) : (
-              <GalleryViewport
-                key={currentKey}
-                image={currentImage}
-                alt={currentAlt}
-                onOpen={() => openModal(safeIndex)}
-              />
-            )}
-          </AnimatePresence>
+  const galleryShellClass =
+    'overflow-hidden rounded-2xl bg-surface shadow-lg ring-1 ring-border/50';
 
-          {hasMultiple ? (
-            <GalleryOverlayNav
-              index={safeIndex}
-              total={allImages.length}
-              onPrev={goPrev}
-              onNext={goNext}
+  const galleryContent = (
+    <>
+      <section
+        className={cn('relative w-full overflow-hidden', PROJECT_GALLERY_VIEWPORT_HEIGHT)}
+        aria-label={`Project images for ${projectTitle}`}
+        aria-roledescription={hasMultiple ? 'carousel' : undefined}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <AnimatePresence mode='wait' initial={false}>
+          {safeIndex === 0 ? (
+            <ProjectHeroSlideInteractive
+              key='hero-slide-0'
+              alt={firstAlt}
+              onOpen={() => openModal(0)}
+            >
+              {heroSlide}
+            </ProjectHeroSlideInteractive>
+          ) : (
+            <GalleryViewport
+              key={currentKey}
+              image={currentImage}
+              alt={currentAlt}
               onOpen={() => openModal(safeIndex)}
             />
-          ) : null}
-        </section>
+          )}
+        </AnimatePresence>
 
         {hasMultiple ? (
-          <GalleryFilmstrip
-            images={allImages}
-            selectedIndex={safeIndex}
-            onSelect={goTo}
-            stripRef={filmstripRef}
+          <GalleryOverlayNav
+            index={safeIndex}
+            total={allImages.length}
+            onPrev={goPrev}
+            onNext={goNext}
+            onOpen={() => openModal(safeIndex)}
           />
         ) : null}
-      </motion.div>
+      </section>
+
+      {hasMultiple ? (
+        <GalleryFilmstrip
+          images={allImages}
+          selectedIndex={safeIndex}
+          onSelect={goTo}
+          stripRef={filmstripRef}
+        />
+      ) : null}
+    </>
+  );
+
+  return (
+    <div className='space-y-0'>
+      {sharedLayoutId ? (
+        <motion.div
+          layoutId={sharedLayoutId}
+          initial={false}
+          transition={sharedLayoutTransition}
+          className={galleryShellClass}
+          style={{ borderRadius: 16 }}
+        >
+          {galleryContent}
+        </motion.div>
+      ) : (
+        <div className={galleryShellClass}>{galleryContent}</div>
+      )}
 
       <ImageModal
         images={allImages}

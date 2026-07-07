@@ -162,6 +162,7 @@ export function PaintingThumbnailView({
           initial={false}
           transition={imageLayoutTransition}
           className='absolute inset-0'
+          style={{ borderRadius: 12 }}
         >
           <motion.div layout='position' className='relative h-full w-full'>
             {image}

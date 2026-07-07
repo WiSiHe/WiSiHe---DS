@@ -120,7 +120,7 @@ function PaintingSearchCompactCardInner({
       availableForSale={availableForSale}
       LinkComponent={Link}
       ImageComponent={PaintingThumbnailImage}
-      imageLayoutId={contentImageLayoutId(displayTitle)}
+      imageLayoutId={slug ? contentImageLayoutId(slug) : undefined}
       imageLayoutTransition={sharedLayoutTransition}
     />
   );
