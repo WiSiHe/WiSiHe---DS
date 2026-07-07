@@ -8,4 +8,5 @@ export {
   useBrushRevealLite,
   useCanBrushReveal,
   useIsDesktopPaintingGrid,
+  useSafariSharedLayout,
 } from '@wisihe/ui-react';

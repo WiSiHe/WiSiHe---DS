@@ -3,9 +3,10 @@
 import { type PaintingThumbnailImageComponentProps, PaintingThumbnailView } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
-import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { SafariPaintingLink } from '@/app/components/paintings/SafariPaintingLink';
+import { sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { usePaintingListImageLayoutId } from '@/lib/motion/usePaintingListImageLayoutId';
 import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
 import {
   NSFW_MATURE_LABEL,
@@ -124,6 +125,35 @@ function PaintingSearchCompactCardInner({
   const cleanedTags = useMemo(() => tags.map(tag => cleanTagName(tag)).filter(Boolean), [tags]);
   const nsfwLabel = resolveNsfwRatingLabel(cleanedTags);
   const nsfwCompactLabel = resolveNsfwCompactLabel(cleanedTags);
+  const imageLayoutId = usePaintingListImageLayoutId(displayTitle);
+
+  const LinkEl = useMemo(
+    () =>
+      function CompactPaintingLink({
+        href,
+        className,
+        'aria-label': ariaLabel,
+        children,
+      }: {
+        href: string;
+        className?: string;
+        'aria-label'?: string;
+        children: React.ReactNode;
+      }) {
+        return (
+          <SafariPaintingLink
+            href={href}
+            className={className}
+            aria-label={ariaLabel}
+            paintingTitle={displayTitle}
+            imageSrc={imageSrc}
+          >
+            {children}
+          </SafariPaintingLink>
+        );
+      },
+    [displayTitle, imageSrc],
+  );
 
   return (
     <PaintingThumbnailView
@@ -144,9 +174,9 @@ function PaintingSearchCompactCardInner({
       brushReveal
       paintedAt={null}
       availableForSale={availableForSale}
-      LinkComponent={Link}
+      LinkComponent={LinkEl}
       ImageComponent={PaintingThumbnailImage}
-      imageLayoutId={displayTitle ? contentImageLayoutId(displayTitle) : undefined}
+      imageLayoutId={imageLayoutId}
       imageLayoutTransition={sharedLayoutTransition}
     />
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
 
 export function prefersFinePointerHover(): boolean {
   if (typeof window === 'undefined') return false;
@@ -22,32 +22,18 @@ export function isSafariBrowser(): boolean {
   return /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua);
 }
 
-type BrushRevealLiteListener = (lite: boolean) => void;
-
-let brushRevealLiteSubscribed = false;
-let brushRevealLiteValue = false;
-const brushRevealLiteListeners = new Set<BrushRevealLiteListener>();
-
-function subscribeBrushRevealLite() {
-  if (brushRevealLiteSubscribed || typeof window === 'undefined') return;
-  brushRevealLiteSubscribed = true;
-  brushRevealLiteValue = isSafariBrowser();
+function subscribeNoop() {
+  return () => {};
 }
 
 /** Safari / WebKit — lighter brush reveal (no filters, blend modes, or path draw). */
 export function useBrushRevealLite(): boolean {
-  const [lite, setLite] = useState(false);
+  return useSyncExternalStore(subscribeNoop, isSafariBrowser, () => false);
+}
 
-  useLayoutEffect(() => {
-    subscribeBrushRevealLite();
-    setLite(brushRevealLiteValue);
-    brushRevealLiteListeners.add(setLite);
-    return () => {
-      brushRevealLiteListeners.delete(setLite);
-    };
-  }, []);
-
-  return lite;
+/** Safari — skip layoutId shared morph; use manual painting transition instead. */
+export function useSafariSharedLayout(): boolean {
+  return useBrushRevealLite();
 }
 
 type BrushRevealListener = (canReveal: boolean) => void;
