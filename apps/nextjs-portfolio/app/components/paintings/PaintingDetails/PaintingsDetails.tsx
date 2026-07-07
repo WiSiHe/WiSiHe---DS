@@ -13,16 +13,18 @@ import {
 import { Button, Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { incrementPaintingLike, incrementPaintingView, removePaintingLike } from '@/app/actions';
+import { SafariPaintingMorphOverlay } from '@/app/components/motion/SafariPaintingMorphOverlay';
 import { SharedLayoutFrame } from '@/app/components/motion/SharedLayoutFrame';
 import { PaintingsDetailNav } from '@/app/components/paintings/PaintingDetails/PaintingsDetailNav';
 import { useTheme } from '@/app/providers';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
+import { consumeSafariPaintingMorph } from '@/lib/motion/safariPaintingMorph';
 import { getPaintingImageLqip } from '@/lib/paintings/paintingCardImage';
 import {
   paintingAmbientFrameShadow,
@@ -48,6 +50,8 @@ const paintingCarouselNavButtonClass = cn(
 const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const reduceMotion = useReducedMotion();
+  const heroMorphRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -196,6 +200,17 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   );
 
   const glowTransition = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
+
+  const [safariMorphPayload] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return consumeSafariPaintingMorph(title ?? '');
+  });
+  const prefersReducedMotionOnMount =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const shouldRunSafariMorph =
+    safariMorphPayload !== null && !prefersReducedMotionOnMount && !reduceMotion;
+  const [safariMorphComplete, setSafariMorphComplete] = useState(() => !shouldRunSafariMorph);
+  const deferAmbientEffects = shouldRunSafariMorph && !safariMorphComplete;
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -352,19 +367,20 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
       <section className='mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-10 overflow-visible px-4 text-foreground lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:gap-y-8 lg:px-8 xl:gap-x-12'>
         <section className='relative flex w-full min-w-0 flex-col items-center overflow-visible'>
           <div
+            ref={heroMorphRef}
             className={cn(
               'relative isolate mx-auto w-full max-w-full overflow-visible',
               !(activeWidth && activeHeight) && cn('max-h-[min(78vh,920px)]', formatAspectClass),
             )}
             style={paintingFrameStyle}
           >
-            {/* Palette halo — follows the active carousel slide */}
+            {/* Palette halo — deferred on Safari until manual morph completes */}
             <div className='pointer-events-none absolute inset-0 -z-10' aria-hidden>
               <motion.div
                 className='absolute left-1/2 top-1/2 h-[132%] w-[122%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[80px] sm:blur-[96px]'
                 animate={{
                   backgroundColor: activeGlowPrimary,
-                  opacity: isDark ? 0.62 : 0.46,
+                  opacity: deferAmbientEffects ? 0 : isDark ? 0.62 : 0.46,
                 }}
                 transition={glowTransition}
               />
@@ -372,22 +388,33 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                 className='absolute left-1/2 top-1/2 h-[118%] w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] blur-[52px] sm:blur-[64px]'
                 animate={{
                   backgroundColor: activeGlowSecondary,
-                  opacity: isDark ? 0.44 : 0.32,
+                  opacity: deferAmbientEffects ? 0 : isDark ? 0.44 : 0.32,
                 }}
                 transition={glowTransition}
               />
             </div>
 
+            {shouldRunSafariMorph && safariMorphPayload && !safariMorphComplete ? (
+              <SafariPaintingMorphOverlay
+                payload={safariMorphPayload}
+                targetRef={heroMorphRef}
+                onComplete={() => setSafariMorphComplete(true)}
+              />
+            ) : null}
+
             <SharedLayoutFrame
               title={title}
               className={cn(
-                'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
+                'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20 transition-opacity duration-300',
                 activeHasAlpha ? 'bg-neutral-950' : 'bg-background',
+                deferAmbientEffects ? 'opacity-0' : 'opacity-100',
               )}
             >
               <motion.div
                 className='pointer-events-none absolute inset-0 z-[5] rounded-2xl'
-                animate={{ boxShadow: ambientFrameShadow }}
+                animate={{
+                  boxShadow: deferAmbientEffects ? 'none' : ambientFrameShadow,
+                }}
                 transition={glowTransition}
                 aria-hidden
               />
@@ -429,8 +456,10 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                             alt={`${title} - Image ${index + 1}`}
                             priority={index === 0}
                             fill
-                            placeholder={lqip ? 'blur' : 'empty'}
-                            blurDataURL={lqip}
+                            placeholder={
+                              deferAmbientEffects && index === 0 ? 'empty' : lqip ? 'blur' : 'empty'
+                            }
+                            blurDataURL={deferAmbientEffects && index === 0 ? undefined : lqip}
                             className='object-contain'
                             sizes='(max-width: 1024px) 100vw, 72vw'
                           />

@@ -3,8 +3,10 @@
 import { PaintingCardView } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
-import Link from 'next/link';
-import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { useMemo } from 'react';
+import { SafariPaintingLink } from '@/app/components/paintings/SafariPaintingLink';
+import { sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { usePaintingListImageLayoutId } from '@/lib/motion/usePaintingListImageLayoutId';
 import { resolveNsfwCompactLabel } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
@@ -32,7 +34,7 @@ type PaintingCardAdapterProps = {
   className?: string;
 };
 
-export default function PaintingCard({
+function PaintingCardLoaded({
   paintingData,
   shouldBeLazy = false,
   isNsfwFilterActive = false,
@@ -42,8 +44,6 @@ export default function PaintingCard({
   brushHovered,
   className,
 }: PaintingCardAdapterProps) {
-  if (!paintingData || Object.keys(paintingData).length === 0) return null;
-
   const {
     image,
     title = '',
@@ -67,12 +67,42 @@ export default function PaintingCard({
     format,
     aspectRatio: image?.aspectRatio ?? null,
   });
+  const cardImageSrc = urlForPaintingCard(image, cardImageLayout);
+  const imageLayoutId = usePaintingListImageLayoutId(title);
+
+  const LinkEl = useMemo(
+    () =>
+      function PaintingLink({
+        href,
+        className: linkClassName,
+        'aria-label': ariaLabel,
+        children,
+      }: {
+        href: string;
+        className?: string;
+        'aria-label'?: string;
+        children: React.ReactNode;
+      }) {
+        return (
+          <SafariPaintingLink
+            href={href}
+            className={linkClassName}
+            aria-label={ariaLabel}
+            paintingTitle={title}
+            imageSrc={cardImageSrc}
+          >
+            {children}
+          </SafariPaintingLink>
+        );
+      },
+    [title, cardImageSrc],
+  );
 
   return (
     <PaintingCardView
       title={title}
       href={`/paintings/${slug ?? ''}`}
-      imageSrc={urlForPaintingCard(image, cardImageLayout)}
+      imageSrc={cardImageSrc}
       imageAlt={title || 'Painting'}
       blurDataURL={getPaintingImageLqip(image)}
       imagePriority={shouldBeLazy}
@@ -90,11 +120,16 @@ export default function PaintingCard({
       brushSeedKey={String(paintingData._id ?? slug ?? title ?? 'painting')}
       strokeVariantIndex={svgHoverIndex}
       palette={palette ?? image?.palette ?? null}
-      LinkComponent={Link}
+      LinkComponent={LinkEl}
       ImageComponent={Image}
-      imageLayoutId={title ? contentImageLayoutId(title) : undefined}
+      imageLayoutId={imageLayoutId}
       imageLayoutTransition={sharedLayoutTransition}
       className={className ?? cardImageLayout.aspectClass}
     />
   );
+}
+
+export default function PaintingCard(props: PaintingCardAdapterProps) {
+  if (!props.paintingData || Object.keys(props.paintingData).length === 0) return null;
+  return <PaintingCardLoaded {...props} />;
 }

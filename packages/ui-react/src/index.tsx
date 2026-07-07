@@ -102,6 +102,7 @@ export {
   useBrushRevealLite,
   useCanBrushReveal,
   useIsDesktopPaintingGrid,
+  useSafariSharedLayout,
 } from './painting-card/hooks/useMediaCapabilities';
 export {
   deriveFormatFromAspectRatio,

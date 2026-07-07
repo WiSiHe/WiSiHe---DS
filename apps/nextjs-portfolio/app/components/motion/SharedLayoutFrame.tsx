@@ -4,6 +4,7 @@ import { cn } from '@wisihe/utils';
 import { motion, type Transition, useReducedMotion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
+import { useSafariSharedLayout } from '@/lib/paintings/mediaCapabilities';
 
 type SharedLayoutFrameProps = {
   title: string;
@@ -22,8 +23,9 @@ export function SharedLayoutFrame({
   transition = sharedLayoutTransition,
 }: SharedLayoutFrameProps) {
   const reduceMotion = useReducedMotion();
+  const safariSharedLayout = useSafariSharedLayout();
 
-  if (reduceMotion || !title.trim()) {
+  if (reduceMotion || safariSharedLayout || !title.trim()) {
     return (
       <div className={className} style={style}>
         {children}
