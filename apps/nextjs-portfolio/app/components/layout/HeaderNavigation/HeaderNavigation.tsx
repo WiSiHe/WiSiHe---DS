@@ -50,7 +50,7 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
   });
 
   return (
-    <header className='pointer-events-none print:hidden'>
+    <header className='pointer-events-none recipe-screen-only print:hidden'>
       <div className='fixed top-4 left-4 z-60 pointer-events-auto'>
         <motion.div
           initial={{ opacity: 0 }}

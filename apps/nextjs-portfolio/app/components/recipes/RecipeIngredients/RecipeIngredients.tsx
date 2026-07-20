@@ -80,8 +80,8 @@ export default function RecipeIngredients({
 
   return (
     <div className='w-full space-y-6'>
-      <div className='flex flex-col gap-4 border-b border-border/10 pb-5 sm:flex-row sm:items-end sm:justify-between'>
-        <div className='min-w-0 space-y-1'>
+      <div className='space-y-3 border-b border-border/10 pb-5'>
+        <div className='space-y-1'>
           <h2 className='font-sans text-2xl font-extrabold tracking-tight text-foreground'>
             Ingredients
           </h2>
@@ -93,12 +93,7 @@ export default function RecipeIngredients({
         </div>
 
         {baseServings ? (
-          <div
-            className={cn(
-              'inline-flex w-full items-center justify-between gap-3 rounded-2xl border border-border/50 bg-surface p-1.5 pl-3',
-              'shadow-sm sm:w-auto sm:justify-start',
-            )}
-          >
+          <div className='flex items-center justify-between gap-3 rounded-2xl border border-border/50 bg-surface p-1.5 pl-3 shadow-sm'>
             <div className='flex min-w-0 items-center gap-2'>
               <span
                 className='flex size-8 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent'
@@ -106,16 +101,13 @@ export default function RecipeIngredients({
               >
                 <IconUsers className='size-4' stroke={2} />
               </span>
-              <div className='min-w-0 leading-tight'>
-                <p className='text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground-muted'>
-                  Servings
-                </p>
-                <p className='truncate text-xs text-foreground-subtle'>Adjust amounts</p>
-              </div>
+              <p className='text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground-muted'>
+                Servings
+              </p>
             </div>
 
             <div
-              className='inline-flex items-center gap-0.5 rounded-xl bg-background p-0.5 ring-1 ring-border/60'
+              className='inline-flex shrink-0 items-center gap-0.5 rounded-xl bg-background p-0.5 ring-1 ring-border/60'
               role='group'
               aria-label='Adjust servings'
             >
