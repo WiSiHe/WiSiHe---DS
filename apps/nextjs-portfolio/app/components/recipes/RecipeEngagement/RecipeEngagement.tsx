@@ -1,6 +1,6 @@
 'use client';
 
-import { IconEye, IconShare, IconStar, IconStarFilled } from '@tabler/icons-react';
+import { IconEye, IconPrinter, IconShare, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { incrementRecipeView, rateRecipe } from '@/app/actions';
@@ -183,10 +183,16 @@ export default function RecipeEngagement({
     }
   };
 
+  const handlePrint = () => {
+    trackEvent(AnalyticsEvent.RECIPE_PRINTED, { recipe_id: recipeId, title });
+    window.print();
+  };
+
   return (
     <div
       className={cn(
         'flex flex-col gap-4 rounded-2xl border border-border/20 bg-surface/60 p-4 sm:flex-row sm:items-center sm:justify-between',
+        'print:hidden',
         className,
       )}
     >
@@ -241,14 +247,24 @@ export default function RecipeEngagement({
         </p>
       </div>
 
-      <button
-        type='button'
-        onClick={() => void handleShare()}
-        className='inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-foreground-muted hover:text-foreground sm:self-center'
-      >
-        <IconShare className='size-4' stroke={2} aria-hidden />
-        {shareText}
-      </button>
+      <div className='flex shrink-0 flex-wrap items-center gap-2 self-start sm:self-center'>
+        <button
+          type='button'
+          onClick={handlePrint}
+          className='inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-foreground-muted hover:text-foreground'
+        >
+          <IconPrinter className='size-4' stroke={2} aria-hidden />
+          Print
+        </button>
+        <button
+          type='button'
+          onClick={() => void handleShare()}
+          className='inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-foreground-muted hover:text-foreground'
+        >
+          <IconShare className='size-4' stroke={2} aria-hidden />
+          {shareText}
+        </button>
+      </div>
 
       {/* Hidden summary for crawlers that read visible aggregate text */}
       {localCount > 0 && localAverage != null ? (

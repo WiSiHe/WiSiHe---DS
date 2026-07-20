@@ -317,3 +317,41 @@ html[data-presentation-mode] #main-content {
 .photography-map-popup.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
   border-bottom-color: color-mix(in srgb, var(--color-background-val, #fafafa) 100%, transparent);
 }
+
+/* Recipe print sheet — hide site chrome and force a clean paper layout */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: auto !important;
+  }
+
+  #main-content {
+    background: #fff !important;
+  }
+
+  /* Progress bar, toasts, analytics chrome */
+  [data-react-transition-progress],
+  [data-sonner-toaster],
+  iframe[title="vercel-live-feedback"] {
+    display: none !important;
+  }
+
+  .recipe-print-view {
+    color: #111;
+  }
+
+  .recipe-print-view a {
+    color: #111;
+    text-decoration: none;
+  }
+}

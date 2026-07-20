@@ -1,6 +1,6 @@
 'use client';
 
-import { IconBasket, IconCheck, IconMinus, IconPlus } from '@tabler/icons-react';
+import { IconBasket, IconCheck, IconMinus, IconPlus, IconUsers } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
@@ -38,6 +38,15 @@ interface RecipeIngredientsProps {
   onServingsChange?: (servings: number) => void;
 }
 
+const stepperButtonClass = cn(
+  'flex size-9 shrink-0 items-center justify-center rounded-xl',
+  'text-foreground-subtle transition-colors',
+  'hover:bg-surface-hover hover:text-foreground',
+  'active:bg-surface-active',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+  'disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-foreground-subtle',
+);
+
 export default function RecipeIngredients({
   ingredientCategories,
   baseServings,
@@ -51,6 +60,7 @@ export default function RecipeIngredients({
   const setServings = onServingsChange !== undefined ? onServingsChange : setLocalServings;
 
   const multiplier = baseServings ? servings / baseServings : 1;
+  const isScaled = Boolean(baseServings && servings !== baseServings);
 
   const categories = useMemo(() => ingredientCategories ?? [], [ingredientCategories]);
 
@@ -70,22 +80,53 @@ export default function RecipeIngredients({
 
   return (
     <div className='w-full space-y-6'>
-      <div className='flex flex-col gap-4 border-b border-border/10 pb-4 sm:flex-row sm:items-center sm:justify-between'>
-        <h2 className='font-sans text-2xl font-extrabold tracking-tight text-foreground'>
-          Ingredients
-        </h2>
+      <div className='flex flex-col gap-4 border-b border-border/10 pb-5 sm:flex-row sm:items-end sm:justify-between'>
+        <div className='min-w-0 space-y-1'>
+          <h2 className='font-sans text-2xl font-extrabold tracking-tight text-foreground'>
+            Ingredients
+          </h2>
+          {isScaled && baseServings ? (
+            <p className='text-xs text-foreground-muted'>
+              Scaled from {baseServings} serving{baseServings === 1 ? '' : 's'}
+            </p>
+          ) : null}
+        </div>
+
         {baseServings ? (
-          <div className='flex items-center gap-2 text-sm text-foreground-subtle'>
-            <span className='font-medium'>Servings</span>
-            <div className='inline-flex items-center rounded-lg border border-border bg-background'>
+          <div
+            className={cn(
+              'inline-flex w-full items-center justify-between gap-3 rounded-2xl border border-border/50 bg-surface p-1.5 pl-3',
+              'shadow-sm sm:w-auto sm:justify-start',
+            )}
+          >
+            <div className='flex min-w-0 items-center gap-2'>
+              <span
+                className='flex size-8 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent'
+                aria-hidden
+              >
+                <IconUsers className='size-4' stroke={2} />
+              </span>
+              <div className='min-w-0 leading-tight'>
+                <p className='text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground-muted'>
+                  Servings
+                </p>
+                <p className='truncate text-xs text-foreground-subtle'>Adjust amounts</p>
+              </div>
+            </div>
+
+            <div
+              className='inline-flex items-center gap-0.5 rounded-xl bg-background p-0.5 ring-1 ring-border/60'
+              role='group'
+              aria-label='Adjust servings'
+            >
               <button
                 type='button'
                 onClick={() => setServings(clampServings(servings - 1))}
                 disabled={servings <= 1}
-                className='flex size-8 items-center justify-center rounded-l-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
+                className={stepperButtonClass}
                 aria-label='Decrease servings'
               >
-                <IconMinus className='size-3.5' stroke={2} aria-hidden />
+                <IconMinus className='size-4' stroke={2} aria-hidden />
               </button>
               <input
                 type='number'
@@ -94,17 +135,22 @@ export default function RecipeIngredients({
                 inputMode='numeric'
                 value={servings}
                 onChange={e => setServings(clampServings(Number(e.target.value) || 1))}
-                className='w-14 border-x border-border bg-transparent py-1.5 text-center text-sm font-medium tabular-nums text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
+                className={cn(
+                  'w-11 bg-transparent py-1.5 text-center text-base font-bold tabular-nums text-foreground',
+                  'outline-none focus-visible:text-accent',
+                  '[appearance:textfield]',
+                  '[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+                )}
                 aria-label='Number of servings'
               />
               <button
                 type='button'
                 onClick={() => setServings(clampServings(servings + 1))}
                 disabled={servings >= 999}
-                className='flex size-8 items-center justify-center rounded-r-lg text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
+                className={stepperButtonClass}
                 aria-label='Increase servings'
               >
-                <IconPlus className='size-3.5' stroke={2} aria-hidden />
+                <IconPlus className='size-4' stroke={2} aria-hidden />
               </button>
             </div>
           </div>

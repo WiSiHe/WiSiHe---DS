@@ -17,6 +17,7 @@ export const AnalyticsEvent = {
   PHOTOGRAPHY_UNLIKED: 'photography_unliked',
   RECIPE_VIEWED: 'recipe_viewed',
   RECIPE_RATED: 'recipe_rated',
+  RECIPE_PRINTED: 'recipe_printed',
   PROJECTS_LISTING_VIEWED: 'projects_listing_viewed',
   PROJECTS_FILTERED: 'projects_filtered',
   HOME_PAINTINGS_SECTION_VIEWED: 'home_paintings_section_viewed',
