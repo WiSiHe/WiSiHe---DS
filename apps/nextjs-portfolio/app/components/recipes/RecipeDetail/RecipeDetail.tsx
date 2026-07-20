@@ -16,6 +16,8 @@ import RecipeIngredients, { scaleAmount } from '../RecipeIngredients/RecipeIngre
 import RecipeInstructions from '../RecipeInstructions/RecipeInstructions';
 import { RecipeMetaBadges } from '../RecipeMetaBadges/RecipeMetaBadges';
 import RecipeNutrition from '../RecipeNutrition/RecipeNutrition';
+import { resolveCalories } from '../RecipeNutrition/recipeNutritionUtils';
+import RecipePrintView from '../RecipePrintView/RecipePrintView';
 import RecipeTipComponent from '../RecipeTip/RecipeTip';
 
 type RecipeDetailProps = {
@@ -119,7 +121,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
   }, [emblaApi, onSelect]);
 
   const breadcrumbs = (
-    <nav aria-label='Breadcrumb'>
+    <nav aria-label='Breadcrumb' className='print:hidden'>
       <ol className='flex flex-wrap items-center gap-2 text-sm'>
         <li>
           <Link href='/' className='text-foreground-muted transition-colors hover:text-accent'>
@@ -145,280 +147,317 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
     </nav>
   );
 
-  return (
-    <div className='min-h-screen bg-background'>
-      {/* Header section with split layout */}
-      <header className='relative overflow-hidden border-b border-border/10 pt-28 pb-12 sm:pt-32 sm:pb-16'>
-        <div
-          className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_25%,transparent_100%)]'
-          aria-hidden
-        />
-        <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center lg:gap-12'>
-            {/* Left Column: Text */}
-            <div
-              className={cn('lg:col-span-7 space-y-6', !mainImage && 'lg:col-span-12 max-w-4xl')}
-            >
-              <div className='mb-2 w-full'>{breadcrumbs}</div>
-              <h1 className='text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl font-sans'>
-                {title}
-              </h1>
-              {publishedLabel ? (
-                <p className='text-sm text-foreground-muted'>
-                  By{' '}
-                  {ABOUT_PAGE_LINKS_ENABLED ? (
-                    <Link href='/about' className='font-medium text-accent hover:underline'>
-                      Henrik Wilhelm Sissener
-                    </Link>
-                  ) : (
-                    <span className='font-medium text-foreground'>Henrik Wilhelm Sissener</span>
-                  )}
-                  {' · '}
-                  Published {publishedLabel}
-                </p>
-              ) : null}
-              {description ? (
-                <p className='text-lg leading-relaxed text-foreground-subtle sm:text-xl max-w-2xl'>
-                  {description}
-                </p>
-              ) : null}
-              {slug && _id ? (
-                <RecipeEngagement
-                  recipeId={_id}
-                  recipeSlug={slug}
-                  title={title ?? 'Recipe'}
-                  viewsCount={viewsCount ?? 0}
-                  averageRating={averageRating ?? null}
-                  ratingCount={ratingCount ?? 0}
-                />
-              ) : null}
-              <RecipeMetaBadges
-                prepTime={prepTime}
-                cookingTime={cookingTime}
-                totalTime={totalTime}
-                servings={servings}
-                difficulty={difficulty}
-                nutrition={nutrition}
-                className='pt-2'
-              />
-            </div>
+  const printIngredientCategories = useMemo(() => {
+    const multiplier = baseServings ? servings / baseServings : 1;
+    return cleanIngredientCategories.map(category => ({
+      categoryName: category.categoryName,
+      ingredients: category.ingredients.map(ingredient => ({
+        ingredient: ingredient.ingredient,
+        amount: scaleAmount(ingredient.amount, multiplier, ingredient.isDiscrete),
+        unit: ingredient.unit,
+        notes: ingredient.notes ?? undefined,
+      })),
+    }));
+  }, [baseServings, cleanIngredientCategories, servings]);
 
-            {/* Right Column: Image or Carousel */}
-            {allImages.length > 0 && firstImage ? (
-              allImages.length > 1 ? (
-                <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle group/carousel'>
-                  <div className='overflow-hidden w-full h-full' ref={emblaRef}>
-                    <div className='flex w-full h-full'>
-                      {allImages.map((img, index) => {
-                        const imageUrl = urlForImage(img)?.width(1000).quality(85).url() || '';
-                        return (
-                          <div
-                            key={index}
-                            className='relative flex-[0_0_100%] w-full h-full min-w-0'
-                          >
-                            <Image
-                              src={imageUrl}
-                              alt={img.alt || `${title} - Image ${index + 1}`}
-                              fill
-                              className='object-cover h-full w-full'
-                              priority={index === 0}
-                              sizes='(max-width: 768px) 100vw, 40vw'
-                              placeholder={img.lqip ? 'blur' : 'empty'}
-                              blurDataURL={img.lqip ?? undefined}
-                            />
-                          </div>
-                        );
-                      })}
+  const printUrl = `https://www.wisihe.no/recipes/${slug ?? ''}`;
+
+  return (
+    <div className='min-h-screen bg-background print:min-h-0 print:bg-white'>
+      <RecipePrintView
+        title={title ?? 'Recipe'}
+        description={description}
+        servings={servings}
+        prepTime={prepTime}
+        cookingTime={cookingTime}
+        totalTime={totalTime}
+        difficulty={difficulty}
+        caloriesPerServing={nutrition ? resolveCalories(nutrition) : null}
+        ingredientCategories={printIngredientCategories}
+        instructions={instructions as Parameters<typeof RecipePrintView>[0]['instructions']}
+        tips={
+          tips?.map(tip => ({
+            title: tip.title,
+            content: tip.content || '',
+          })) ?? null
+        }
+        url={printUrl}
+      />
+
+      <div className='print:hidden'>
+        {/* Header section with split layout */}
+        <header className='relative overflow-hidden border-b border-border/10 pt-28 pb-12 sm:pt-32 sm:pb-16'>
+          <div
+            className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_25%,transparent_100%)]'
+            aria-hidden
+          />
+          <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <div className='grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center lg:gap-12'>
+              {/* Left Column: Text */}
+              <div
+                className={cn('lg:col-span-7 space-y-6', !mainImage && 'lg:col-span-12 max-w-4xl')}
+              >
+                <div className='mb-2 w-full'>{breadcrumbs}</div>
+                <h1 className='text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl font-sans'>
+                  {title}
+                </h1>
+                {publishedLabel ? (
+                  <p className='text-sm text-foreground-muted'>
+                    By{' '}
+                    {ABOUT_PAGE_LINKS_ENABLED ? (
+                      <Link href='/about' className='font-medium text-accent hover:underline'>
+                        Henrik Wilhelm Sissener
+                      </Link>
+                    ) : (
+                      <span className='font-medium text-foreground'>Henrik Wilhelm Sissener</span>
+                    )}
+                    {' · '}
+                    Published {publishedLabel}
+                  </p>
+                ) : null}
+                {description ? (
+                  <p className='text-lg leading-relaxed text-foreground-subtle sm:text-xl max-w-2xl'>
+                    {description}
+                  </p>
+                ) : null}
+                {slug && _id ? (
+                  <RecipeEngagement
+                    recipeId={_id}
+                    recipeSlug={slug}
+                    title={title ?? 'Recipe'}
+                    viewsCount={viewsCount ?? 0}
+                    averageRating={averageRating ?? null}
+                    ratingCount={ratingCount ?? 0}
+                  />
+                ) : null}
+                <RecipeMetaBadges
+                  prepTime={prepTime}
+                  cookingTime={cookingTime}
+                  totalTime={totalTime}
+                  servings={servings}
+                  difficulty={difficulty}
+                  nutrition={nutrition}
+                  className='pt-2'
+                />
+              </div>
+
+              {/* Right Column: Image or Carousel */}
+              {allImages.length > 0 && firstImage ? (
+                allImages.length > 1 ? (
+                  <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle group/carousel'>
+                    <div className='overflow-hidden w-full h-full' ref={emblaRef}>
+                      <div className='flex w-full h-full'>
+                        {allImages.map((img, index) => {
+                          const imageUrl = urlForImage(img)?.width(1000).quality(85).url() || '';
+                          return (
+                            <div
+                              key={index}
+                              className='relative flex-[0_0_100%] w-full h-full min-w-0'
+                            >
+                              <Image
+                                src={imageUrl}
+                                alt={img.alt || `${title} - Image ${index + 1}`}
+                                fill
+                                className='object-cover h-full w-full'
+                                priority={index === 0}
+                                sizes='(max-width: 768px) 100vw, 40vw'
+                                placeholder={img.lqip ? 'blur' : 'empty'}
+                                blurDataURL={img.lqip ?? undefined}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Navigation Chevrons */}
+                    <button
+                      type='button'
+                      onClick={scrollPrev}
+                      className='absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
+                      aria-label='Previous image'
+                    >
+                      <IconChevronLeft className='size-5' stroke={2} aria-hidden />
+                    </button>
+                    <button
+                      type='button'
+                      onClick={scrollNext}
+                      className='absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
+                      aria-label='Next image'
+                    >
+                      <IconChevronRight className='size-5' stroke={2} aria-hidden />
+                    </button>
+
+                    {/* Dot Indicators */}
+                    <div className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5'>
+                      {allImages.map((_, index) => (
+                        <button
+                          key={index}
+                          type='button'
+                          onClick={() => emblaApi?.scrollTo(index)}
+                          className={cn(
+                            'w-2 h-2 rounded-full transition-all duration-200 cursor-pointer',
+                            index === selectedIndex
+                              ? 'bg-accent scale-110 shadow-sm'
+                              : 'bg-foreground/30 hover:bg-foreground/50',
+                          )}
+                          aria-label={`Go to slide ${index + 1}`}
+                        />
+                      ))}
                     </div>
                   </div>
-
-                  {/* Navigation Chevrons */}
-                  <button
-                    type='button'
-                    onClick={scrollPrev}
-                    className='absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
-                    aria-label='Previous image'
-                  >
-                    <IconChevronLeft className='size-5' stroke={2} aria-hidden />
-                  </button>
-                  <button
-                    type='button'
-                    onClick={scrollNext}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background border border-border/20 text-foreground transition-all duration-200 opacity-0 group-hover/carousel:opacity-100 cursor-pointer shadow-md'
-                    aria-label='Next image'
-                  >
-                    <IconChevronRight className='size-5' stroke={2} aria-hidden />
-                  </button>
-
-                  {/* Dot Indicators */}
-                  <div className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5'>
-                    {allImages.map((_, index) => (
-                      <button
-                        key={index}
-                        type='button'
-                        onClick={() => emblaApi?.scrollTo(index)}
-                        className={cn(
-                          'w-2 h-2 rounded-full transition-all duration-200 cursor-pointer',
-                          index === selectedIndex
-                            ? 'bg-accent scale-110 shadow-sm'
-                            : 'bg-foreground/30 hover:bg-foreground/50',
-                        )}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
+                ) : (
+                  <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle'>
+                    <Image
+                      src={urlForImage(firstImage)?.width(1000).quality(85).url() || ''}
+                      alt={firstImage.alt || title || ''}
+                      fill
+                      className='object-cover transition-transform duration-500 hover:scale-102'
+                      priority
+                      sizes='(max-width: 768px) 100vw, 40vw'
+                      placeholder={firstImage.lqip ? 'blur' : 'empty'}
+                      blurDataURL={firstImage.lqip ?? undefined}
+                    />
                   </div>
-                </div>
-              ) : (
-                <div className='lg:col-span-5 relative aspect-[16/10] sm:aspect-[2/1] lg:aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-border/20 shadow-lg bg-surface-subtle'>
-                  <Image
-                    src={urlForImage(firstImage)?.width(1000).quality(85).url() || ''}
-                    alt={firstImage.alt || title || ''}
-                    fill
-                    className='object-cover transition-transform duration-500 hover:scale-102'
-                    priority
-                    sizes='(max-width: 768px) 100vw, 40vw'
-                    placeholder={firstImage.lqip ? 'blur' : 'empty'}
-                    blurDataURL={firstImage.lqip ?? undefined}
-                  />
-                </div>
-              )
-            ) : null}
+                )
+              ) : null}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content section */}
-      <article className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
-        {story && story.length > 0 ? (
-          <section className='mx-auto mb-12 max-w-3xl' aria-labelledby='recipe-story-heading'>
-            <h2
-              id='recipe-story-heading'
-              className='mb-4 text-2xl font-extrabold tracking-tight text-foreground font-sans'
-            >
-              About this dish
-            </h2>
-            <div className='prose prose-neutral dark:prose-invert max-w-none text-foreground-subtle leading-relaxed'>
-              <PortableText value={story as Parameters<typeof PortableText>[0]['value']} />
-            </div>
-          </section>
-        ) : null}
-
-        <div className='grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12'>
-          {/* Ingredients Column */}
-          <aside className='lg:col-span-4 lg:sticky lg:top-24 h-fit'>
-            <div className='space-y-6'>
-              <RecipeIngredients
-                ingredientCategories={cleanIngredientCategories}
-                baseServings={baseServings}
-                servings={servings}
-                onServingsChange={setServings}
-              />
-              <RecipeNutrition
-                nutrition={nutrition}
-                servings={servings}
-                baseServings={baseServings ?? servings}
-              />
-            </div>
-          </aside>
-
-          {/* Instructions Column */}
-          <div className='min-w-0 lg:col-span-8'>
-            <RecipeInstructions
-              headerActions={<RecipeCookingMode />}
-              instructions={
-                instructions as Parameters<typeof RecipeInstructions>[0]['instructions']
-              }
-              ingredients={allIngredients.map(ingredient => {
-                const multiplier = baseServings ? servings / baseServings : 1;
-                const scaledAmount = scaleAmount(
-                  ingredient.amount,
-                  multiplier,
-                  ingredient.isDiscrete,
-                );
-                return {
-                  ingredient: ingredient.ingredient,
-                  amount: scaledAmount,
-                  unit: ingredient.unit,
-                  isDiscrete: ingredient.isDiscrete ?? undefined,
-                  notes: ingredient.notes ?? undefined,
-                };
-              })}
-            />
-          </div>
-        </div>
-
-        {/* Tips section */}
-        {tips && tips.length > 0 ? (
-          <section className='mt-20' aria-labelledby='recipe-tips-heading'>
-            <div className='mx-auto max-w-4xl'>
-              <div className='mb-10 text-center'>
-                <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-accent'>
-                  Pro tips
-                </p>
-                <h2
-                  id='recipe-tips-heading'
-                  className='mt-2 text-3xl font-extrabold text-foreground sm:text-4xl font-sans'
-                >
-                  Tips & tricks
-                </h2>
+        {/* Main Content section */}
+        <article className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16'>
+          {story && story.length > 0 ? (
+            <section className='mx-auto mb-12 max-w-3xl' aria-labelledby='recipe-story-heading'>
+              <h2
+                id='recipe-story-heading'
+                className='mb-4 text-2xl font-extrabold tracking-tight text-foreground font-sans'
+              >
+                About this dish
+              </h2>
+              <div className='prose prose-neutral dark:prose-invert max-w-none text-foreground-subtle leading-relaxed'>
+                <PortableText value={story as Parameters<typeof PortableText>[0]['value']} />
               </div>
-              <div className='grid gap-6 md:grid-cols-2'>
-                {tips.map((tip, index) => (
-                  <RecipeTipComponent
-                    key={tip.title ?? `tip-${index}`}
-                    tip={{
-                      title: tip.title ?? undefined,
-                      content: tip.content || '',
-                      icon: tip.icon ?? undefined,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
+            </section>
+          ) : null}
 
-        {/* Tags section */}
-        {tags && tags.length > 0 ? (
-          <section className='mt-20 border-t border-border/10 pt-12'>
-            <div className='mx-auto max-w-4xl text-center'>
-              <h3 className='mb-6 text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
-                Tags
-              </h3>
-              <div className='flex flex-wrap justify-center gap-3'>
-                {tags.map(tag => {
-                  if (!tag.name) return null;
-                  return (
-                    <Link
-                      key={tag.name}
-                      href={`/recipes?tag=${encodeURIComponent(tag.name)}`}
-                      className='rounded-full border border-border/20 bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-accent/40 hover:text-accent'
-                    >
-                      {tag.name}
-                    </Link>
+          <div className='grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12'>
+            {/* Ingredients Column */}
+            <aside className='lg:col-span-4 lg:sticky lg:top-24 h-fit'>
+              <div className='space-y-6'>
+                <RecipeIngredients
+                  ingredientCategories={cleanIngredientCategories}
+                  baseServings={baseServings}
+                  servings={servings}
+                  onServingsChange={setServings}
+                />
+                <RecipeNutrition
+                  nutrition={nutrition}
+                  servings={servings}
+                  baseServings={baseServings ?? servings}
+                />
+              </div>
+            </aside>
+
+            {/* Instructions Column */}
+            <div className='min-w-0 lg:col-span-8'>
+              <RecipeInstructions
+                headerActions={<RecipeCookingMode />}
+                instructions={
+                  instructions as Parameters<typeof RecipeInstructions>[0]['instructions']
+                }
+                ingredients={allIngredients.map(ingredient => {
+                  const multiplier = baseServings ? servings / baseServings : 1;
+                  const scaledAmount = scaleAmount(
+                    ingredient.amount,
+                    multiplier,
+                    ingredient.isDiscrete,
                   );
+                  return {
+                    ingredient: ingredient.ingredient,
+                    amount: scaledAmount,
+                    unit: ingredient.unit,
+                    isDiscrete: ingredient.isDiscrete ?? undefined,
+                    notes: ingredient.notes ?? undefined,
+                  };
                 })}
-              </div>
+              />
             </div>
-          </section>
-        ) : null}
+          </div>
 
-        {/* Footer info */}
-        <p className='mt-16 text-center text-sm text-foreground-muted'>
-          Recipe by{' '}
-          {ABOUT_PAGE_LINKS_ENABLED ? (
-            <Link href='/about' className='font-medium text-accent hover:underline'>
-              Henrik Wilhelm Sissener
+          {/* Tips section */}
+          {tips && tips.length > 0 ? (
+            <section className='mt-20' aria-labelledby='recipe-tips-heading'>
+              <div className='mx-auto max-w-4xl'>
+                <div className='mb-10 text-center'>
+                  <p className='font-mono text-xs font-semibold uppercase tracking-[0.28em] text-accent'>
+                    Pro tips
+                  </p>
+                  <h2
+                    id='recipe-tips-heading'
+                    className='mt-2 text-3xl font-extrabold text-foreground sm:text-4xl font-sans'
+                  >
+                    Tips & tricks
+                  </h2>
+                </div>
+                <div className='grid gap-6 md:grid-cols-2'>
+                  {tips.map((tip, index) => (
+                    <RecipeTipComponent
+                      key={tip.title ?? `tip-${index}`}
+                      tip={{
+                        title: tip.title ?? undefined,
+                        content: tip.content || '',
+                        icon: tip.icon ?? undefined,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
+
+          {/* Tags section */}
+          {tags && tags.length > 0 ? (
+            <section className='mt-20 border-t border-border/10 pt-12'>
+              <div className='mx-auto max-w-4xl text-center'>
+                <h3 className='mb-6 text-xs font-semibold uppercase tracking-widest text-foreground-muted'>
+                  Tags
+                </h3>
+                <div className='flex flex-wrap justify-center gap-3'>
+                  {tags.map(tag => {
+                    if (!tag.name) return null;
+                    return (
+                      <Link
+                        key={tag.name}
+                        href={`/recipes?tag=${encodeURIComponent(tag.name)}`}
+                        className='rounded-full border border-border/20 bg-surface px-4 py-2 text-sm font-medium text-foreground-subtle transition-colors hover:border-accent/40 hover:text-accent'
+                      >
+                        {tag.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          ) : null}
+
+          {/* Footer info */}
+          <p className='mt-16 text-center text-sm text-foreground-muted'>
+            Recipe by{' '}
+            {ABOUT_PAGE_LINKS_ENABLED ? (
+              <Link href='/about' className='font-medium text-accent hover:underline'>
+                Henrik Wilhelm Sissener
+              </Link>
+            ) : (
+              <span className='font-medium text-foreground'>Henrik Wilhelm Sissener</span>
+            )}
+            {' · '}
+            <Link href={`/recipes/${slug}`} className='hover:text-accent'>
+              Permalink
             </Link>
-          ) : (
-            <span className='font-medium text-foreground'>Henrik Wilhelm Sissener</span>
-          )}
-          {' · '}
-          <Link href={`/recipes/${slug}`} className='hover:text-accent'>
-            Permalink
-          </Link>
-        </p>
-      </article>
+          </p>
+        </article>
+      </div>
     </div>
   );
 }

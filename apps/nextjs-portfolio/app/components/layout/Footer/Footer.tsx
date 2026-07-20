@@ -43,7 +43,7 @@ const Footer = ({ socialLinks, jobTitle, heroSubtitle, ctaLabel, ctaHref }: Foot
   };
 
   return (
-    <footer className='relative w-full overflow-hidden border-t border-border bg-surface'>
+    <footer className='relative w-full overflow-hidden border-t border-border bg-surface print:hidden'>
       <div
         className='pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent'
         aria-hidden
