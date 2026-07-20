@@ -47,9 +47,6 @@ Deprecated names still work during migration; update Doppler / Vercel when conve
 
 | Variable | Notes |
 |----------|--------|
-| `RESEND_API_KEY` | Contact form |
-| `CONTACT_TO_EMAIL` | Inbox address |
-| `CONTACT_FROM_EMAIL` | Verified Resend sender |
 | `OPENAI_API_KEY` | AI tag suggestions API |
 | `OPENAI_TAG_SUGGEST_MODEL` | Optional, default `gpt-5.4-nano` |
 | `SANITY_AI_PROXY_SECRET` | Shared secret for Studio / wisihe-ai → `/api/wisihe-ai/suggest-tags` |

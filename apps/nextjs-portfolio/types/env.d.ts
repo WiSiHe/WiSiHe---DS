@@ -7,9 +7,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_POSTHOG_HOST?: string;
     NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN?: string;
     NEXT_PUBLIC_STORYBOOK_URL?: string;
-    RESEND_API_KEY?: string;
-    CONTACT_TO_EMAIL?: string;
-    CONTACT_FROM_EMAIL?: string;
     OPENAI_API_KEY?: string;
     OPENAI_TAG_SUGGEST_MODEL?: string;
     /** @deprecated Use SANITY_AI_PROXY_SECRET */
