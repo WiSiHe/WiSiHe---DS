@@ -44,14 +44,6 @@ Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/next
 | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project API key |
 | `NEXT_PUBLIC_POSTHOG_HOST` | e.g. `https://us.i.posthog.com` |
 
-### Contact form (production)
-
-| Secret | Notes |
-|--------|--------|
-| `RESEND_API_KEY` | From [resend.com](https://resend.com) |
-| `CONTACT_TO_EMAIL` | `hws902@gmail.com` |
-| `CONTACT_FROM_EMAIL` | Verified domain sender, e.g. `WiSiHe Contact <contact@wisihe.no>` |
-
 ### Optional
 
 | Secret | Feature |
@@ -160,16 +152,7 @@ Without this, unique visitor counts may be under-reported. No extra Doppler vari
 
 ---
 
-## 6. Resend (contact form)
-
-1. Create API key in Resend → store as `RESEND_API_KEY` in Doppler `prd`.
-2. Verify sending domain (e.g. `wisihe.no`) in Resend.
-3. Set `CONTACT_FROM_EMAIL` to an address on that domain.
-4. Redeploy production.
-
----
-
-## 7. Algolia index maintenance
+## 6. Algolia index maintenance
 
 After content or schema changes, from your machine:
 
@@ -182,21 +165,20 @@ Use `pnpm sync-algolia:dev` for the **dev** Doppler config when your Algolia ind
 
 ---
 
-## 8. Security notes
+## 7. Security notes
 
-- Never put **Algolia Admin** (`ALGOLIA_WRITE_KEY`) or **Resend** keys in `NEXT_PUBLIC_*`.
+- Never put **Algolia Admin** (`ALGOLIA_WRITE_KEY`) in `NEXT_PUBLIC_*`.
 - `NEXT_PUBLIC_SANITY_API_READ_TOKEN` is visible in the browser — use a token with **Viewer** permissions only.
 - Do not commit `.env`, `.env.local`, or downloaded secret files.
 - Rotate keys in Doppler; synced Vercel env updates on the next deploy.
 
 ---
 
-## 9. Troubleshooting
+## 8. Troubleshooting
 
 | Symptom | Check |
 |---------|--------|
 | `/paintings` search broken in production | `NEXT_PUBLIC_ALGOLIA_*` set in Doppler **prd** and redeployed |
-| Contact form “not configured” | `RESEND_API_KEY` in **prd** only (server secret) |
 | PostHog shows zero users | Cookieless hash mode enabled in PostHog UI |
 | Studio preview wrong site | `SANITY_STUDIO_PREVIEW_URL` matches deployed URL |
 | Local env not loading | Using `.env.local` in the **app folder**, not repo root — see [env-variables.md](./env-variables.md) |

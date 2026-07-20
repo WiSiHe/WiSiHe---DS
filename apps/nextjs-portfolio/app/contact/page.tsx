@@ -1,13 +1,12 @@
 import type { AboutQueryResult, SettingsQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata } from 'next';
-import { isContactEmailConfigured } from '@/lib/contact/config';
 import { sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import ContactPageClient from './ContactPageClient';
 
 const SITE_URL = 'https://www.wisihe.no';
 const CONTACT_DESCRIPTION =
-  'Questions about work, licensing, or collaboration — reach Henrik Sissener by email or the contact form.';
+  'Questions about work, licensing, or collaboration — reach Henrik Sissener by email or social media.';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -44,10 +43,5 @@ export default async function ContactPage() {
       ? settings.socialLinks
       : (about?.socialLinks ?? []);
 
-  return (
-    <ContactPageClient
-      socialLinks={socialLinks}
-      emailDeliveryEnabled={isContactEmailConfigured()}
-    />
-  );
+  return <ContactPageClient socialLinks={socialLinks} />;
 }

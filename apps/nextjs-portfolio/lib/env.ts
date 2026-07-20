@@ -54,12 +54,6 @@ export const posthogHost = () =>
 // Maps (client)
 export const mapboxAccessToken = () => trim(process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
 
-// Contact (server)
-export const resendApiKey = () => readEnv('RESEND_API_KEY');
-export const contactToEmail = () => readEnv('CONTACT_TO_EMAIL') ?? 'hws902@gmail.com';
-export const contactFromEmail = () =>
-  readEnv('CONTACT_FROM_EMAIL') ?? 'WiSiHe Contact <onboarding@resend.dev>';
-
 // AI proxy (server)
 export const sanityAiProxySecret = () => readEnv('SANITY_AI_PROXY_SECRET', 'SANITY_AI_BULK_SECRET');
 export const sanityAiProxyAllowedOrigins = () =>

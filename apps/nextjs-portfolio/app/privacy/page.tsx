@@ -4,12 +4,12 @@ import type { ReactNode } from 'react';
 import { CONTACT_DISPLAY_EMAIL } from '@/lib/contact/config';
 
 const SITE_URL = 'https://www.wisihe.no';
-const LAST_UPDATED = '12 June 2026';
+const LAST_UPDATED = '20 July 2026';
 
 export const metadata: Metadata = {
   title: 'Privacy',
   description:
-    'How WiSiHe handles analytics, local storage, and contact form data — privacy-first, anonymous usage statistics only.',
+    'How WiSiHe handles analytics and local storage — privacy-first, anonymous usage statistics only.',
   alternates: { canonical: `${SITE_URL}/privacy` },
   robots: { index: true, follow: true },
 };
@@ -90,28 +90,28 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title='Contact form'>
+        <Section title='Contact'>
           <p>
-            If you use the{' '}
-            <Link href='/contact' className='text-accent underline-offset-2 hover:underline'>
-              contact form
-            </Link>
-            , I receive the name, email, subject, and message you submit so I can reply. Messages
-            are sent by email to{' '}
+            This site does not collect messages through a form. To get in touch, email{' '}
             <a
               href={`mailto:${CONTACT_DISPLAY_EMAIL}`}
               className='text-accent underline-offset-2 hover:underline'
             >
               {CONTACT_DISPLAY_EMAIL}
             </a>{' '}
-            via a transactional email provider. I do not add you to marketing lists unless you ask.
+            or reach out via the social profiles on the{' '}
+            <Link href='/contact' className='text-accent underline-offset-2 hover:underline'>
+              contact page
+            </Link>
+            . Whatever you send that way is handled in the usual way for personal email or DMs — I
+            do not add you to marketing lists unless you ask.
           </p>
         </Section>
 
         <Section title='Your rights'>
           <p>
             Under GDPR and Norwegian privacy law you may request access, correction, or deletion of
-            personal data I hold about you (for example a contact form message). Email{' '}
+            personal data I hold about you (for example an email you sent me). Email{' '}
             <a
               href={`mailto:${CONTACT_DISPLAY_EMAIL}`}
               className='text-accent underline-offset-2 hover:underline'
@@ -129,9 +129,9 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title='Contact'>
+        <Section title='Privacy questions'>
           <p>
-            Questions about privacy?{' '}
+            Questions about this policy?{' '}
             <Link href='/contact' className='text-accent underline-offset-2 hover:underline'>
               Get in touch
             </Link>
