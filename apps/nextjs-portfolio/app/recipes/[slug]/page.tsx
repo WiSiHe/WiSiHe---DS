@@ -110,7 +110,7 @@ export default async function RecipePage({ params }: Props) {
     <>
       <JsonLd data={buildRecipeStructuredData(recipe)} />
       <RecipeDetail recipe={recipe} />
-      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 print:hidden'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 recipe-screen-only print:hidden'>
         <MoreRecipes recipes={allRecipes} currentSlug={recipe.slug || ''} />
       </div>
     </>

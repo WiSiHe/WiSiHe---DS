@@ -184,7 +184,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
         url={printUrl}
       />
 
-      <div className='print:hidden'>
+      <div className='recipe-screen-only print:hidden'>
         {/* Header section with split layout */}
         <header className='relative overflow-hidden border-b border-border/10 pt-28 pb-12 sm:pt-32 sm:pb-16'>
           <div
