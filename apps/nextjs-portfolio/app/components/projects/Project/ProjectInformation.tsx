@@ -142,27 +142,27 @@ const ProjectInformation = ({ project, summary }: ProjectInformationProps) => {
   // On mount, track project view via PostHog + increment Sanity counter
   useEffect(() => {
     if (!_id || hasAddedView) return;
-    const addView = async () => {
-      const storageKey = `viewed_project_${_id}`;
+    setHasAddedView(true);
+    const storageKey = `viewed_project_${_id}`;
+    try {
+      if (localStorage.getItem(storageKey)) return;
+    } catch {
+      /* private browsing — still attempt to count */
+    }
+
+    trackEvent(AnalyticsEvent.PROJECT_VIEWED, {
+      project_id: _id,
+      name: project?.name,
+    });
+    void incrementProjectView(_id).then(result => {
+      if (!result.success) return;
       try {
-        if (localStorage.getItem(storageKey)) return;
-        setHasAddedView(true);
         localStorage.setItem(storageKey, '1');
-        trackEvent(AnalyticsEvent.PROJECT_VIEWED, {
-          project_id: _id,
-          name: project?.name,
-        });
-        await incrementProjectView(_id);
       } catch {
-        trackEvent(AnalyticsEvent.PROJECT_VIEWED, {
-          project_id: _id,
-          name: project?.name,
-        });
-        await incrementProjectView(_id);
+        /* ignore */
       }
-    };
-    void addView();
-  }, [_id, hasAddedView, project]);
+    });
+  }, [_id, hasAddedView, project?.name]);
 
   if (!project) {
     return null;

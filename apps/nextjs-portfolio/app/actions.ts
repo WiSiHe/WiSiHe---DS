@@ -7,10 +7,15 @@ import { client } from '@/sanity/lib/client';
  * Views are tracked via PostHog on the client side.
  * This action just increments the viewsCount integer — no more array writes.
  * Deduplication is handled client-side via localStorage.
+ * Sanity rejects `.inc()` when the field is absent, so seed 0 first.
  */
+async function incrementViewsCount(documentId: string) {
+  await client.patch(documentId).setIfMissing({ viewsCount: 0 }).inc({ viewsCount: 1 }).commit();
+}
+
 export async function incrementPaintingView(paintingId: string) {
   try {
-    await client.patch(paintingId).inc({ viewsCount: 1 }).commit();
+    await incrementViewsCount(paintingId);
     return { success: true };
   } catch (error) {
     console.error('Failed to increment painting view:', error);
@@ -53,7 +58,7 @@ export async function removePaintingLike(paintingId: string, likerId: string) {
 
 export async function incrementProjectView(projectId: string) {
   try {
-    await client.patch(projectId).inc({ viewsCount: 1 }).commit();
+    await incrementViewsCount(projectId);
     return { success: true };
   } catch (error) {
     console.error('Failed to increment project view:', error);
@@ -96,7 +101,7 @@ export async function removeProjectLike(projectId: string, likerId: string) {
 
 export async function incrementVideoView(videoId: string) {
   try {
-    await client.patch(videoId).inc({ viewsCount: 1 }).commit();
+    await incrementViewsCount(videoId);
     return { success: true };
   } catch (error) {
     console.error('Failed to increment video view:', error);
@@ -135,7 +140,7 @@ export async function removeVideoLike(videoId: string, likerId: string) {
 
 export async function incrementPhotographyView(photographyId: string) {
   try {
-    await client.patch(photographyId).inc({ viewsCount: 1 }).commit();
+    await incrementViewsCount(photographyId);
     return { success: true };
   } catch (error) {
     console.error('Failed to increment photography view:', error);
@@ -174,7 +179,7 @@ export async function removePhotographyLike(photographyId: string, likerId: stri
 
 export async function incrementRecipeView(recipeId: string) {
   try {
-    await client.patch(recipeId).inc({ viewsCount: 1 }).commit();
+    await incrementViewsCount(recipeId);
     return { success: true };
   } catch (error) {
     console.error('Failed to increment recipe view:', error);
