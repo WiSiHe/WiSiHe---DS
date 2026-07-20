@@ -84,18 +84,25 @@ export default function RecipeEngagement({
 
   useEffect(() => {
     if (hasTrackedView.current) return;
-    const storageKey = `viewed_recipe_${recipeId}`;
+    hasTrackedView.current = true;
+    // v2: previous key was set even when Sanity .inc() failed for missing viewsCount
+    const storageKey = `viewed_recipe_v2_${recipeId}`;
     try {
       if (localStorage.getItem(storageKey)) return;
-      hasTrackedView.current = true;
-      localStorage.setItem(storageKey, '1');
-      setLocalViews(prev => prev + 1);
-      trackEvent(AnalyticsEvent.RECIPE_VIEWED, { recipe_id: recipeId, title });
-      void incrementRecipeView(recipeId);
     } catch {
-      trackEvent(AnalyticsEvent.RECIPE_VIEWED, { recipe_id: recipeId, title });
-      void incrementRecipeView(recipeId);
+      /* private browsing — still attempt to count */
     }
+
+    setLocalViews(prev => prev + 1);
+    trackEvent(AnalyticsEvent.RECIPE_VIEWED, { recipe_id: recipeId, title });
+    void incrementRecipeView(recipeId).then(result => {
+      if (!result.success) return;
+      try {
+        localStorage.setItem(storageKey, '1');
+      } catch {
+        /* ignore */
+      }
+    });
   }, [recipeId, title]);
 
   const handleRate = useCallback(

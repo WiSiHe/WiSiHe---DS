@@ -366,24 +366,24 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   // On mount, track view via PostHog + increment Sanity counter
   // Deduplication: localStorage key prevents counting the same painting twice per device
   useEffect(() => {
-    const addView = async () => {
-      if (hasAddedView) return;
-      const storageKey = `viewed_${_id}`;
+    if (hasAddedView) return;
+    setHasAddedView(true);
+    const storageKey = `viewed_${_id}`;
+    try {
+      if (localStorage.getItem(storageKey)) return;
+    } catch {
+      /* private browsing — still attempt to count */
+    }
+
+    trackEvent(AnalyticsEvent.PAINTING_VIEWED, { painting_id: _id, title });
+    void incrementPaintingView(_id).then(result => {
+      if (!result.success) return;
       try {
-        if (localStorage.getItem(storageKey)) return;
-        setHasAddedView(true);
         localStorage.setItem(storageKey, '1');
-        // Track in PostHog for analytics
-        trackEvent(AnalyticsEvent.PAINTING_VIEWED, { painting_id: _id, title });
-        // Increment counter in Sanity (no array, just inc)
-        await incrementPaintingView(_id);
       } catch {
-        // localStorage blocked (private browsing etc.) — still track in PostHog
-        trackEvent(AnalyticsEvent.PAINTING_VIEWED, { painting_id: _id, title });
-        await incrementPaintingView(_id);
+        /* ignore */
       }
-    };
-    void addView();
+    });
   }, [_id, title, hasAddedView]);
 
   // Provide higher max bounds to allow next/image to serve crisp retina images

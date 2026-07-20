@@ -42,18 +42,25 @@ export function PhotographyActions({
 
   useEffect(() => {
     if (hasTrackedView.current) return;
-    const storageKey = `viewed_photography_${photoId}`;
+    hasTrackedView.current = true;
+    // v2: previous key was set even when Sanity .inc() failed for missing viewsCount
+    const storageKey = `viewed_photography_v2_${photoId}`;
     try {
       if (localStorage.getItem(storageKey)) return;
-      hasTrackedView.current = true;
-      localStorage.setItem(storageKey, '1');
-      setLocalViews(prev => prev + 1);
-      trackEvent(AnalyticsEvent.PHOTOGRAPHY_VIEWED, { photography_id: photoId, title });
-      void incrementPhotographyView(photoId);
     } catch {
-      trackEvent(AnalyticsEvent.PHOTOGRAPHY_VIEWED, { photography_id: photoId, title });
-      void incrementPhotographyView(photoId);
+      /* private browsing — still attempt to count */
     }
+
+    setLocalViews(prev => prev + 1);
+    trackEvent(AnalyticsEvent.PHOTOGRAPHY_VIEWED, { photography_id: photoId, title });
+    void incrementPhotographyView(photoId).then(result => {
+      if (!result.success) return;
+      try {
+        localStorage.setItem(storageKey, '1');
+      } catch {
+        /* ignore */
+      }
+    });
   }, [photoId, title]);
 
   const generateOrRetrieveViewerId = useCallback((): string => {

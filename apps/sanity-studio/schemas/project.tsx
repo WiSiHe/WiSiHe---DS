@@ -279,6 +279,32 @@ export default defineType({
       },
       validation: rule => validateContentTags(rule, 3),
     }),
+    defineField({
+      name: 'viewsCount',
+      title: 'Views',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      group: 'main',
+      description: 'Tracked on the site — do not edit manually',
+    }),
+    defineField({
+      name: 'likes',
+      title: 'Likes',
+      type: 'array',
+      readOnly: true,
+      group: 'main',
+      description: 'Toggled by visitors — do not edit manually',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'likerId', type: 'string', title: 'Liker ID' },
+            { name: 'timestamp', type: 'datetime', title: 'Timestamp' },
+          ],
+        },
+      ],
+    }),
     defineField(seoType),
     defineField(redirectType),
     defineField(socialType),

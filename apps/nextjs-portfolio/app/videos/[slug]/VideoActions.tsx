@@ -37,17 +37,24 @@ export default function VideoActions({
 
   useEffect(() => {
     if (hasTrackedView.current) return;
-    const storageKey = `viewed_video_${videoId}`;
+    hasTrackedView.current = true;
+    // v2: previous key was set even when Sanity .inc() failed for missing viewsCount
+    const storageKey = `viewed_video_v2_${videoId}`;
     try {
       if (localStorage.getItem(storageKey)) return;
-      hasTrackedView.current = true;
-      localStorage.setItem(storageKey, '1');
-      trackEvent(AnalyticsEvent.VIDEO_VIEWED, { video_id: videoId, title });
-      void incrementVideoView(videoId);
     } catch {
-      trackEvent(AnalyticsEvent.VIDEO_VIEWED, { video_id: videoId, title });
-      void incrementVideoView(videoId);
+      /* private browsing — still attempt to count */
     }
+
+    trackEvent(AnalyticsEvent.VIDEO_VIEWED, { video_id: videoId, title });
+    void incrementVideoView(videoId).then(result => {
+      if (!result.success) return;
+      try {
+        localStorage.setItem(storageKey, '1');
+      } catch {
+        /* ignore */
+      }
+    });
   }, [videoId, title]);
 
   const generateOrRetrieveViewerId = useCallback((): string => {
