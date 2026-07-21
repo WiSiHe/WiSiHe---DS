@@ -4,16 +4,15 @@ import { IconArrowUpRight } from '@tabler/icons-react';
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { useReducedMotion } from 'motion/react';
-import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
 import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
   getPhotographyAspectRatio,
   isValidPhotographyLqip,
-  PHOTOGRAPHY_IMAGE_QUALITY,
   urlForPhotographyFeatured,
 } from '@/lib/photography/photographyImage';
+import { PhotographyBlurImage } from './PhotographyBlurImage';
 import { photographySectionLabelClass } from './photographyStyles';
 
 type PhotographyListItem = PhotographyListQueryResult[number];
@@ -46,18 +45,15 @@ export function PhotographyFeaturedHero({ photo }: PhotographyFeaturedHeroProps)
   const displayRatio = Math.min(aspectRatio, 16 / 9);
 
   const imageFrame = (
-    <Image
+    <PhotographyBlurImage
       src={imageUrl}
       alt={photo.image?.alt ?? photo.title ?? 'Featured photograph'}
       fill
       priority
-      fetchPriority='high'
-      quality={PHOTOGRAPHY_IMAGE_QUALITY}
-      unoptimized
-      className='object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]'
+      className='duration-[1.1s] ease-out group-hover:scale-[1.03]'
       sizes='(max-width: 1024px) 100vw, 58vw'
-      placeholder={hasLqip ? 'blur' : 'empty'}
       blurDataURL={hasLqip ? lqip : undefined}
+      objectFit='cover'
     />
   );
 

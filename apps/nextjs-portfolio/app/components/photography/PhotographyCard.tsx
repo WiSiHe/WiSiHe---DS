@@ -1,15 +1,14 @@
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { type PhotographyCardImageComponentProps, PhotographyCardView } from '@wisihe/ui-react';
-import Image from 'next/image';
 import { Link } from '@/app/components/layout/ProgressLink';
 import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
 import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
   getPhotographyAspectRatio,
   isValidPhotographyLqip,
-  PHOTOGRAPHY_IMAGE_QUALITY,
   urlForPhotographyCard,
 } from '@/lib/photography/photographyImage';
+import { PhotographyBlurImage } from './PhotographyBlurImage';
 
 export type PhotographyListItem = PhotographyListQueryResult[number];
 
@@ -35,30 +34,18 @@ function getYear(capturedAt?: string | null): string | null {
   return String(date.getFullYear());
 }
 
-function PhotographyImage({
-  src,
-  alt,
-  fill,
-  className,
-  sizes,
-  priority,
-  placeholder,
-  blurDataURL,
-}: PhotographyCardImageComponentProps) {
+function PhotographyImage(props: PhotographyCardImageComponentProps) {
   return (
-    <Image
-      src={src}
-      alt={alt}
-      fill={fill}
-      className={className}
-      sizes={sizes}
-      priority={priority}
-      quality={PHOTOGRAPHY_IMAGE_QUALITY}
-      fetchPriority={priority ? 'high' : 'auto'}
-      placeholder={placeholder}
-      blurDataURL={blurDataURL}
-      // Sanity CDN URL is already width/height/quality/format optimized.
-      unoptimized
+    <PhotographyBlurImage
+      src={props.src}
+      alt={props.alt}
+      fill={props.fill}
+      className={props.className}
+      sizes={props.sizes}
+      priority={props.priority}
+      blurDataURL={props.blurDataURL}
+      quality={props.quality}
+      objectFit='cover'
     />
   );
 }

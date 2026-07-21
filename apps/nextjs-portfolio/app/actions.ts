@@ -7,10 +7,21 @@ import { client } from '@/sanity/lib/client';
  * Views are tracked via PostHog on the client side.
  * This action just increments the viewsCount integer — no more array writes.
  * Deduplication is handled client-side via localStorage.
- * Sanity rejects `.inc()` when the field is absent, so seed 0 first.
+ *
+ * Sanity rejects `.inc()` when the field is absent *or* explicitly `null`.
+ * `setIfMissing` only covers the absent case, so null/non-numeric needs a set.
  */
 async function incrementViewsCount(documentId: string) {
-  await client.patch(documentId).setIfMissing({ viewsCount: 0 }).inc({ viewsCount: 1 }).commit();
+  const current = await client
+    .withConfig({ useCdn: false })
+    .fetch<number | null>(`*[_id == $id][0].viewsCount`, { id: documentId });
+
+  if (typeof current === 'number' && Number.isFinite(current)) {
+    await client.patch(documentId).inc({ viewsCount: 1 }).commit();
+    return;
+  }
+
+  await client.patch(documentId).set({ viewsCount: 1 }).commit();
 }
 
 export async function incrementPaintingView(paintingId: string) {
