@@ -103,7 +103,7 @@ export function PhotographyCardView({
       fill
       priority={priority}
       fetchPriority={priority ? 'high' : 'auto'}
-      className='object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]'
+      className='object-cover duration-[900ms] ease-out group-hover:scale-[1.04]'
       sizes={
         isLarge
           ? '(max-width: 1024px) 100vw, 66vw'
@@ -144,56 +144,62 @@ export function PhotographyCardView({
   return (
     <article className={cn('group', className)}>
       <LinkComponent href={href} className='block' aria-label={title ?? 'View photograph'}>
+        {/*
+          Shadow on an outer frame (no overflow/translate). Soft box-shadows inside
+          CSS columns bleed into the next column in Safari as a detached ghost.
+        */}
         <div
           className={cn(
-            'relative w-full overflow-hidden rounded-xl bg-surface-subtle',
-            'shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-1 ring-border/20',
-            'transition-all duration-500 ease-out',
-            'group-hover:-translate-y-0.5 group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.14)] group-hover:ring-accent/25',
-            'dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)] dark:group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.5)]',
+            'relative w-full rounded-xl bg-surface-subtle',
+            'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.06)] ring-1 ring-border/25',
+            'transition-[box-shadow,ring-color] duration-500 ease-out',
+            'group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),0_10px_28px_rgba(0,0,0,0.1)] group-hover:ring-accent/30',
+            'dark:shadow-[0_1px_2px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.35)]',
+            'dark:group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.25),0_12px_32px_rgba(0,0,0,0.45)]',
           )}
-          style={{ aspectRatio }}
         >
-          {imageNode}
+          <div className='relative w-full overflow-hidden rounded-xl' style={{ aspectRatio }}>
+            {imageNode}
 
-          <div
-            className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100'
-            aria-hidden
-          />
+            <div
+              className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100'
+              aria-hidden
+            />
 
-          {yearLabel ? (
-            <span className='absolute left-3 top-3 z-10 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-mono text-[10px] font-medium tracking-wide text-white/95 backdrop-blur-md'>
-              {yearLabel}
-            </span>
-          ) : null}
+            {yearLabel ? (
+              <span className='absolute left-3 top-3 z-10 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-mono text-[10px] font-medium tracking-wide text-white/95 backdrop-blur-md'>
+                {yearLabel}
+              </span>
+            ) : null}
 
-          <div
-            className={cn(
-              'absolute inset-x-0 bottom-0 z-10 p-4 pt-12',
-              'translate-y-2 opacity-0 transition-all duration-500 ease-out',
-              'group-hover:translate-y-0 group-hover:opacity-100',
-              'group-focus-within:translate-y-0 group-focus-within:opacity-100',
-              !isLarge && 'sm:opacity-100 sm:translate-y-0',
-            )}
-          >
-            <h2
+            <div
               className={cn(
-                'font-serif font-bold leading-snug text-white text-pretty drop-shadow-sm',
-                isLarge ? 'text-2xl sm:text-[1.65rem]' : 'text-lg',
+                'absolute inset-x-0 bottom-0 z-10 p-4 pt-12',
+                'translate-y-2 opacity-0 transition-all duration-500 ease-out',
+                'group-hover:translate-y-0 group-hover:opacity-100',
+                'group-focus-within:translate-y-0 group-focus-within:opacity-100',
+                !isLarge && 'sm:opacity-100 sm:translate-y-0',
               )}
             >
-              {title}
-            </h2>
-            {placeLabel ? (
-              <p className='mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75'>
-                {placeLabel}
-              </p>
-            ) : null}
-            {caption && isLarge ? (
-              <p className='mt-2 line-clamp-2 text-sm leading-relaxed text-white/80 text-pretty'>
-                {caption}
-              </p>
-            ) : null}
+              <h2
+                className={cn(
+                  'font-serif font-bold leading-snug text-white text-pretty drop-shadow-sm',
+                  isLarge ? 'text-2xl sm:text-[1.65rem]' : 'text-lg',
+                )}
+              >
+                {title}
+              </h2>
+              {placeLabel ? (
+                <p className='mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75'>
+                  {placeLabel}
+                </p>
+              ) : null}
+              {caption && isLarge ? (
+                <p className='mt-2 line-clamp-2 text-sm leading-relaxed text-white/80 text-pretty'>
+                  {caption}
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
 

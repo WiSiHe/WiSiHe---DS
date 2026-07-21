@@ -151,18 +151,21 @@ export function PhotographyListing({ photos, activeCountry, activeView }: Photog
           <motion.div
             layout
             transition={GRID_LAYOUT_TRANSITION.layout}
-            className='columns-1 [column-gap:1.25rem] sm:columns-2 xl:columns-3'
+            // Extra column-gap + item padding keeps card shadows inside their column
+            // (Safari otherwise paints soft shadows into the neighbouring column).
+            className='columns-1 [column-gap:1.75rem] sm:columns-2 xl:columns-3'
           >
             <AnimatePresence mode='popLayout' initial={false}>
               {gridPhotos.map((photo, index) => (
                 <motion.div
                   key={photo._id}
                   layout
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
+                  // Avoid opacity:0 entrance — it hides LQIP blur-up until the fade ends.
+                  initial={{ y: 10 }}
+                  animate={{ y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
                   transition={GRID_LAYOUT_TRANSITION}
-                  className='mb-5 break-inside-avoid'
+                  className='mb-6 break-inside-avoid'
                 >
                   <PhotographyCard photo={photo} priority={!featuredPhoto && index < 2} />
                 </motion.div>

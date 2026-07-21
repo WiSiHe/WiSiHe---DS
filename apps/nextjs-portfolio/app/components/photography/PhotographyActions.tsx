@@ -43,7 +43,7 @@ export function PhotographyActions({
   useEffect(() => {
     if (hasTrackedView.current) return;
     hasTrackedView.current = true;
-    // v2: previous key was set even when Sanity .inc() failed for missing viewsCount
+    // v2: previous key was set even when Sanity .inc() failed for missing/null viewsCount
     const storageKey = `viewed_photography_v2_${photoId}`;
     try {
       if (localStorage.getItem(storageKey)) return;
@@ -54,14 +54,18 @@ export function PhotographyActions({
     setLocalViews(prev => prev + 1);
     trackEvent(AnalyticsEvent.PHOTOGRAPHY_VIEWED, { photography_id: photoId, title });
     void incrementPhotographyView(photoId).then(result => {
-      if (!result.success) return;
+      if (!result.success) {
+        // Roll back optimistic count when the write fails.
+        setLocalViews(prev => Math.max(viewsCount ?? 0, prev - 1));
+        return;
+      }
       try {
         localStorage.setItem(storageKey, '1');
       } catch {
         /* ignore */
       }
     });
-  }, [photoId, title]);
+  }, [photoId, title, viewsCount]);
 
   const generateOrRetrieveViewerId = useCallback((): string => {
     try {
@@ -134,7 +138,7 @@ export function PhotographyActions({
       <div className='flex items-center gap-4 text-sm text-foreground-muted'>
         <span className='flex items-center gap-1.5'>
           <IconEye className='size-3.5' stroke={2} aria-hidden />
-          {localViews} views
+          {localViews} {localViews === 1 ? 'view' : 'views'}
         </span>
         <span className={cn('flex items-center gap-1.5', hasLiked && 'text-red-500')}>
           {hasLiked ? (

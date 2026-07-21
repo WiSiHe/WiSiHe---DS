@@ -44,13 +44,13 @@ function buildPhotographyUrl(
   );
 }
 
-/** Masonry card — sized for ~33vw column, capped height for tall portraits. */
+/** Masonry card — sized for ~33vw column @2x, capped height for tall portraits. */
 export function urlForPhotographyCard(
   image: PhotographyImageSource,
   aspectRatio: number,
 ): string | null {
-  const width = 840;
-  const height = Math.min(1400, Math.max(420, Math.round(width / aspectRatio)));
+  const width = 720;
+  const height = Math.min(1200, Math.max(360, Math.round(width / aspectRatio)));
   return buildPhotographyUrl(image, { width, height });
 }
 
@@ -59,15 +59,15 @@ export function urlForPhotographyFeatured(
   image: PhotographyImageSource,
   aspectRatio: number,
 ): string | null {
-  const width = 1600;
+  const width = 1400;
   const displayRatio = Math.min(aspectRatio, 16 / 9);
-  const height = Math.min(1200, Math.max(480, Math.round(width / displayRatio)));
+  const height = Math.min(1000, Math.max(420, Math.round(width / displayRatio)));
   return buildPhotographyUrl(image, { width, height });
 }
 
 /** Detail view — full frame, bounded so Sanity/Next never fetch multi‑MB originals. */
 export function urlForPhotographyDetail(image: PhotographyImageSource): string | null {
-  return buildPhotographyUrl(image, { width: 2400, height: 3200 });
+  return buildPhotographyUrl(image, { width: 2000, height: 2800 });
 }
 
 export function isValidPhotographyLqip(lqip: string | null | undefined): lqip is string {
