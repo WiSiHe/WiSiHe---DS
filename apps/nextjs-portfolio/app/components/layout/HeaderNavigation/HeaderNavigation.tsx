@@ -51,14 +51,14 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: iNavigationProps): JSX.E
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-          whileHover={{ scale: 1.1, rotate: 90 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
           className='pointer-events-auto'
         >
           <Link
             href='/'
             aria-label='Navigate to the homepage'
-            className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover hover:scale-105'
+            className='group relative flex items-center justify-center p-2 rounded-lg bg-surface border border-border shadow-lg transition-all duration-200 hover:border-accent-border hover:bg-surface-hover'
           >
             <IconLogo
               color='currentColor'
