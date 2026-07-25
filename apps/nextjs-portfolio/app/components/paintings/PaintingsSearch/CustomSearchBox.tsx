@@ -5,8 +5,6 @@ import * as React from 'react';
 import { IoCloseCircle, IoSearchOutline } from 'react-icons/io5';
 import { useSearchBox } from 'react-instantsearch';
 
-const SEARCH_DEBOUNCE_MS = 300;
-
 type CustomSearchBoxProps = Parameters<typeof useSearchBox>[0] & {
   inputLabel?: string;
   placeholder?: string;
@@ -17,22 +15,9 @@ export default function CustomSearchBox({
   placeholder = 'Search paintings…',
   ...searchBoxProps
 }: CustomSearchBoxProps) {
-  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { query, refine } = useSearchBox({
-    ...searchBoxProps,
-    queryHook(queryValue, search) {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => search(queryValue), SEARCH_DEBOUNCE_MS);
-    },
-  });
+  const { query, refine } = useSearchBox(searchBoxProps);
   const [inputValue, setInputValue] = React.useState(query);
   const inputRef = React.useRef<HTMLInputElement>(null);
-
-  React.useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, []);
 
   // Keep local value in sync with external query (e.g. cleared via URL)
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally only on query
@@ -41,7 +26,6 @@ export default function CustomSearchBox({
   }, [query]);
 
   const searchImmediately = (value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
     refine(value);
   };
 
@@ -67,7 +51,13 @@ export default function CustomSearchBox({
 
   return (
     <form onSubmit={handleSubmit} className='relative w-full'>
-      <IoSearchOutline className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted pointer-events-none' />
+      <button
+        type='submit'
+        aria-label='Search'
+        className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
+      >
+        <IoSearchOutline className='w-4 h-4' />
+      </button>
       <input
         ref={inputRef}
         type='search'
