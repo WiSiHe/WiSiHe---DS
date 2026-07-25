@@ -5,37 +5,17 @@ import { cn } from '@wisihe/utils';
 import { useEffect, useRef, useState } from 'react';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 
-const SEARCH_DEBOUNCE_MS = 300;
-
 export default function PaintingsSearchBox() {
   const { query, setQuery } = usePaintingsSearchContext();
   const [inputValue, setInputValue] = useState(query);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setInputValue(query);
   }, [query]);
 
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, []);
-
   const commitQuery = (value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
     setQuery(value);
-  };
-
-  const scheduleQuery = (value: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => setQuery(value), SEARCH_DEBOUNCE_MS);
-  };
-
-  const handleChange = (value: string) => {
-    setInputValue(value);
-    scheduleQuery(value);
   };
 
   const handleClear = () => {
@@ -52,17 +32,19 @@ export default function PaintingsSearchBox() {
         commitQuery(inputValue);
       }}
     >
-      <IconSearch
-        className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-foreground-muted pointer-events-none'
-        stroke={2}
-        aria-hidden
-      />
+      <button
+        type='submit'
+        aria-label='Search'
+        className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
+      >
+        <IconSearch className='size-4' stroke={2} aria-hidden />
+      </button>
       <input
         ref={inputRef}
         type='search'
         aria-label='Search paintings'
         value={inputValue}
-        onChange={event => handleChange(event.target.value)}
+        onChange={event => setInputValue(event.target.value)}
         onKeyDown={event => {
           if (event.key === 'Enter') commitQuery(inputValue);
           if (event.key === 'Escape') handleClear();
@@ -81,7 +63,7 @@ export default function PaintingsSearchBox() {
           type='button'
           onClick={handleClear}
           aria-label='Clear search'
-          className='absolute right-2.5 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground'
+          className='absolute right-2.5 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
         >
           <IconCircleX className='size-4' stroke={2} aria-hidden />
         </button>
