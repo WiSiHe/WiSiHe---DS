@@ -1,123 +1,183 @@
 'use client';
 
-import { IconArrowLeft, IconPalette } from '@tabler/icons-react';
-import { motion, useReducedMotion, type Variants } from 'motion/react';
+import { IconArrowLeft, IconArrowUpRight } from '@tabler/icons-react';
+import { navigationItems } from '@wisihe/constants';
+import { Button } from '@wisihe/ui-react';
+import { motion, useMotionValue, useReducedMotion, useSpring, type Variants } from 'motion/react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import type { PointerEvent } from 'react';
+import { Link } from '../ProgressLink';
 
-/** Place the painting asset at `public/explorer.png` (female explorer). */
+/** Explorer painting — character left, negative space right for copy. */
 const EXPLORER_IMAGE = '/images/explorer.png';
 
-const NotFoundSection = () => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+const DESTINATIONS = navigationItems.map(item => ({
+  href: item.href,
+  label: item.label,
+}));
 
+const NotFoundSection = () => {
   const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = mounted && prefersReducedMotion;
+  const reducedMotion = Boolean(prefersReducedMotion);
+
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const springX = useSpring(pointerX, { stiffness: 60, damping: 20, mass: 0.4 });
+  const springY = useSpring(pointerY, { stiffness: 60, damping: 20, mass: 0.4 });
+
+  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (reducedMotion) return;
+    const { currentTarget, clientX, clientY } = event;
+    const rect = currentTarget.getBoundingClientRect();
+    const x = (clientX - rect.left) / rect.width - 0.5;
+    const y = (clientY - rect.top) / rect.height - 0.5;
+    pointerX.set(x * -14);
+    pointerY.set(y * -10);
+  };
+
+  const resetPointer = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
 
   const textStaggerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: reducedMotion ? 0 : 0.1,
-        delayChildren: reducedMotion ? 0 : 0.06,
+        staggerChildren: reducedMotion ? 0 : 0.09,
+        delayChildren: reducedMotion ? 0 : 0.18,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: reducedMotion ? 0 : 12 },
+    hidden: { opacity: 0, y: reducedMotion ? 0 : 14 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         type: 'spring',
-        stiffness: 120,
-        damping: 20,
+        stiffness: 140,
+        damping: 22,
       },
     },
   };
 
   return (
     <section
-      className='relative min-h-screen w-full overflow-hidden bg-background'
+      className='relative min-h-dvh w-full overflow-hidden bg-background'
       aria-labelledby='not-found-heading'
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
     >
-      <div className='mx-auto flex min-h-screen max-w-7xl flex-col lg:flex-row'>
-        <motion.figure
-          className='relative aspect-4/5 w-full shrink-0 lg:aspect-auto lg:w-[min(58%,720px)] lg:min-h-screen'
-          initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: reducedMotion ? 0 : 0.55,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+      <motion.figure
+        className='pointer-events-none absolute inset-0'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: reducedMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.div
+          className='absolute inset-0 will-change-transform'
+          style={reducedMotion ? undefined : { x: springX, y: springY }}
+          initial={reducedMotion ? false : { scale: 1.08 }}
+          animate={reducedMotion ? undefined : { scale: 1.04 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <Image
             src={EXPLORER_IMAGE}
-            alt='Painting of a female explorer in outdoor gear, looking toward the horizon'
+            alt='Painting of a female explorer looking toward open trail ahead'
             fill
             priority
-            sizes='(max-width: 1024px) 100vw, 58vw'
-            className='object-cover object-[center_38%] max-lg:object-[center_35%] lg:object-[18%_42%]'
+            sizes='100vw'
+            className='object-cover object-[18%_42%] sm:object-[22%_40%] lg:object-left'
           />
-          <div
-            className='pointer-events-none absolute inset-0 bg-linear-to-t from-background/90 via-background/20 to-transparent lg:bg-linear-to-r lg:from-transparent lg:via-background/10 lg:to-background/95'
-            aria-hidden
-          />
-        </motion.figure>
+        </motion.div>
+        <div
+          className='absolute inset-0 bg-linear-to-t from-background via-background/55 to-background/10 sm:via-background/40 lg:bg-linear-to-r lg:from-background/15 lg:via-background/55 lg:to-background'
+          aria-hidden
+        />
+        <div
+          className='absolute inset-0 bg-[radial-gradient(ellipse_at_70%_40%,transparent_0%,var(--color-background)_78%)] opacity-80 max-lg:hidden'
+          aria-hidden
+        />
+      </motion.figure>
 
+      <div className='relative z-1 mx-auto flex min-h-dvh w-full max-w-7xl items-end px-6 pb-24 pt-28 sm:px-10 sm:pb-28 lg:items-center lg:justify-end lg:px-12 lg:pb-20 lg:pt-20'>
         <motion.div
-          className='relative z-1 flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:py-20 lg:pl-4 lg:pr-16'
+          className='w-full max-w-lg lg:max-w-md xl:max-w-lg'
           initial='hidden'
           animate='visible'
           variants={textStaggerVariants}
         >
-          <motion.div
+          <motion.p
             variants={itemVariants}
-            className='mb-3 font-mono text-xs uppercase tracking-[0.2em] text-foreground-subtle'
+            className='font-serif text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl'
+          >
+            WiSiHe
+          </motion.p>
+
+          <motion.p
+            variants={itemVariants}
+            className='mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-accent'
           >
             Error 404
-          </motion.div>
+          </motion.p>
 
           <motion.h1
             id='not-found-heading'
             variants={itemVariants}
-            className='font-serif text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl'
+            className='mt-3 font-serif text-2xl font-bold leading-snug tracking-tight text-foreground text-balance sm:text-3xl lg:text-4xl'
           >
             This trail doesn&apos;t exist
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
-            className='mt-5 max-w-md text-base leading-relaxed text-foreground-subtle sm:text-lg'
+            className='mt-5 max-w-md text-base leading-relaxed text-foreground-subtle text-pretty sm:text-lg'
           >
-            That page isn&apos;t on this site. Pick a destination below or start from the home page.
+            You&apos;ve wandered off the map. Head home, or choose another destination.
           </motion.p>
 
-          <motion.div
-            variants={itemVariants}
-            className='mt-10 flex flex-wrap items-center gap-3 sm:gap-4'
-          >
-            <Link
+          <motion.div variants={itemVariants} className='mt-9 flex flex-wrap items-center gap-3'>
+            <Button
+              as={Link}
               href='/'
-              className='inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast transition-colors hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+              variant='primary'
+              size='large'
+              Icon={IconArrowLeft}
+              iconPosition='left'
+              className='rounded-full'
             >
-              <IconArrowLeft aria-hidden className='h-4 w-4' />
               Back home
-            </Link>
-            <Link
-              href='/paintings'
-              className='inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent/40 hover:bg-surface-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
-            >
-              <IconPalette aria-hidden className='h-4 w-4' />
-              View paintings
-            </Link>
+            </Button>
           </motion.div>
+
+          <motion.nav
+            variants={itemVariants}
+            aria-label='Suggested destinations'
+            className='mt-10 border-t border-foreground/10 pt-6'
+          >
+            <p className='font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-foreground-subtle'>
+              Destinations
+            </p>
+            <ul className='mt-4 flex flex-col gap-1'>
+              {DESTINATIONS.map(destination => (
+                <li key={destination.href}>
+                  <Link
+                    href={destination.href}
+                    className='group inline-flex items-center gap-2 py-1.5 text-base font-medium text-foreground transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+                  >
+                    <span>{destination.label}</span>
+                    <IconArrowUpRight
+                      aria-hidden
+                      className='size-4 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100 group-focus-visible:opacity-100'
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.nav>
         </motion.div>
       </div>
     </section>
