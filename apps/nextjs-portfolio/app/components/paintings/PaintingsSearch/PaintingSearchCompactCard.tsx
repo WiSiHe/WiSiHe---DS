@@ -1,18 +1,19 @@
 'use client';
 
-import { type PaintingThumbnailImageComponentProps, PaintingThumbnailView } from '@wisihe/ui-react';
+import {
+  getBrushStrokeColors,
+  NSFW_MATURE_LABEL,
+  type PaintingThumbnailImageComponentProps,
+  PaintingThumbnailView,
+  resolveNsfwCompactLabel,
+  resolveNsfwRatingLabel,
+} from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
 import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
-import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
-import {
-  NSFW_MATURE_LABEL,
-  resolveNsfwCompactLabel,
-  resolveNsfwRatingLabel,
-} from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   type PaintingCardAspectLayout,

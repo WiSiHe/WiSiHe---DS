@@ -1,7 +1,12 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import { BrushRevealLayer, BrushRevealWrap } from '@wisihe/ui-react';
+import {
+  BrushRevealLayer,
+  BrushRevealWrap,
+  getBrushStrokeColors,
+  getNsfwImageBlurClass,
+} from '@wisihe/ui-react';
 import gsap from 'gsap';
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -22,8 +27,6 @@ import {
   STACK_CLIP_OPEN,
   STACK_REVEAL_DELAY,
 } from '@/app/components/marketing/HeroSection/heroStackConfig';
-import { getBrushStrokeColors } from '@/lib/paintings/brushStrokeColors';
-import { getNsfwImageBlurClass } from '@/lib/paintings/nsfwCover';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 
 type FloatMotion = {

@@ -2,9 +2,8 @@
 
 import { IconShoppingBag } from '@tabler/icons-react';
 import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
+import { ScrollGrowSection, SectionHeader } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
-import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { paintingsShopHref } from '@/lib/algolia/constants';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
 import { useSectionReveal } from '@/lib/motion/sectionReveal';
@@ -45,7 +44,7 @@ export default function ShopTeaserSection({
       <div className='mx-auto max-w-7xl'>
         <header className='relative z-10 mb-10 md:mb-14 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
           <div className='lg:col-span-7'>
-            <HomeSectionHeader
+            <SectionHeader
               variant='display'
               align='left'
               eyebrow={copy.eyebrow}

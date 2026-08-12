@@ -16,7 +16,7 @@ export default defineConfig(options => ({
   format: ['esm'],
   dts: true,
   sourcemap: true,
-  external: ['react', '@wisihe/utils', 'motion', 'motion/react'],
+  external: ['react', 'react-dom', '@wisihe/utils', 'motion', 'motion/react'],
   css: false, // Don't bundle CSS since consumers use Tailwind
   ...options,
 }));

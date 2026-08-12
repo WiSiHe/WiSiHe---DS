@@ -1,5 +1,6 @@
 import { ABOUT_PAGE_ENABLED, ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-queries';
+import { ScrollGrowSection, Skeleton } from '@wisihe/ui-react';
 import { Suspense } from 'react';
 import AboutTeaserSection from '@/app/components/marketing/AboutTeaserSection/AboutTeaserSection';
 import ContactCtaSection from '@/app/components/marketing/ContactCtaSection/ContactCtaSection';
@@ -7,7 +8,6 @@ import HeroImageSection from '@/app/components/marketing/HeroSection/HeroSection
 import ShopTeaserSection from '@/app/components/marketing/ShopTeaserSection/ShopTeaserSection';
 import SkillsSection from '@/app/components/marketing/SkillsSection/SkillsSection';
 import VideosTeaserSection from '@/app/components/marketing/VideosTeaserSection/VideosTeaserSection';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import PaintingsSection from '@/app/components/paintings/PaintingsSection/PaintingsSection';
 import FeaturedProjects from '@/app/components/projects/FeaturedProjects/FeaturedProjects';
 import type { HomePageSection, HomePageSectionsContext } from '@/lib/homePageBuilder';
@@ -15,17 +15,17 @@ import { buildHeroCollageItems, getHomeSections } from '@/lib/homePageBuilder';
 
 const HeroSkeleton = () => (
   <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>
-    <div className='w-full h-96 bg-surface-elevated animate-pulse rounded-2xl' />
+    <Skeleton variant='rectangular' className='w-full h-96 rounded-2xl' />
   </div>
 );
 
 const SectionSkeleton = () => (
   <div className='max-w-7xl mx-auto px-4 py-20'>
-    <div className='h-8 bg-surface-elevated animate-pulse rounded mb-4' />
-    <div className='h-4 bg-surface-elevated animate-pulse rounded mb-8' />
+    <Skeleton variant='text' className='h-8 w-1/3 mb-4' />
+    <Skeleton variant='text' className='h-4 w-2/3 mb-8' />
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
       {[1, 2, 3].map(i => (
-        <div key={i} className='h-64 bg-surface-elevated animate-pulse rounded' />
+        <Skeleton key={i} variant='rectangular' className='h-64 rounded' />
       ))}
     </div>
   </div>
@@ -105,7 +105,7 @@ function renderSection(
 
     case 'homeSkillsSection':
       return (
-        <Suspense key={key} fallback={<div className='h-64 bg-surface-elevated animate-pulse' />}>
+        <Suspense key={key} fallback={<Skeleton variant='rectangular' className='h-64' />}>
           <SkillsSection eyebrow={section.eyebrow} title={section.title} />
         </Suspense>
       );

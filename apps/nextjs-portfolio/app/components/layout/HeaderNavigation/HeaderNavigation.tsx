@@ -2,19 +2,23 @@
 
 import { IconBrush, IconCamera, IconDeviceTv, IconFolder, IconUser } from '@tabler/icons-react';
 import { navigationItems } from '@wisihe/constants';
+import {
+  type DockLinkComponentProps,
+  IconLogoBrand,
+  type ThemePreference,
+  ThemeToggle,
+} from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import type { JSX } from 'react';
-import { IconLogoBrand } from '../icons/IconLogoBrand';
+import { useTheme } from '../../../providers';
 import { Link } from '../ProgressLink';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
-const Dock = dynamic(
-  () => import('@/app/components/effects/Dock').then(m => ({ default: m.Dock })),
-  { ssr: false },
-);
+const LazyDock = dynamic(() => import('@wisihe/ui-react').then(m => ({ default: m.Dock })), {
+  ssr: false,
+});
 
 const NAV_ICONS: Record<string, JSX.Element> = {
   Paintings: <IconBrush className='size-5' stroke={2} aria-hidden />,
@@ -23,6 +27,32 @@ const NAV_ICONS: Record<string, JSX.Element> = {
   Photography: <IconCamera className='size-5' stroke={2} aria-hidden />,
   About: <IconUser className='size-5' stroke={2} aria-hidden />,
 };
+
+function DockLink({ href, className, children, ...props }: DockLinkComponentProps) {
+  return (
+    <Link href={href} className={className} {...props}>
+      {children}
+    </Link>
+  );
+}
+
+function HeaderThemeToggle() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  const cycleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
+
+  return (
+    <ThemeToggle
+      theme={theme as ThemePreference}
+      resolvedTheme={resolvedTheme as 'light' | 'dark'}
+      onCycle={cycleTheme}
+    />
+  );
+}
 
 interface NavigationProps {
   isAbsolute?: boolean;
@@ -79,7 +109,7 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
       </div>
 
       <div className='fixed top-4 right-4 z-40 pointer-events-auto'>
-        <ThemeToggle />
+        <HeaderThemeToggle />
       </div>
 
       {!hideBottomNav ? (
@@ -87,7 +117,7 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
           aria-label='Main navigation'
           className='pointer-events-auto fixed bottom-0 left-0 right-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-4'
         >
-          <Dock items={dockItems} aria-label='Main navigation' />
+          <LazyDock items={dockItems} linkComponent={DockLink} aria-label='Main navigation' />
         </nav>
       ) : null}
     </header>

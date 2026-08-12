@@ -26,7 +26,7 @@ export const motionLibraries = [
 ] as const;
 
 export const motionSnippet = `import { motion } from 'motion/react';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
+import { ScrollGrowSection } from '@wisihe/ui-react';
 import { useSectionReveal } from '@/lib/motion/sectionReveal';
 
 /** ScrollGrowSection: one-shot section entrance (fade + rise). */

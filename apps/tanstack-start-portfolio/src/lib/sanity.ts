@@ -1,15 +1,15 @@
-import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import { createSanityClient, getSanityClientForRequest } from './sanity/client';
 
-export const client = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  dataset: import.meta.env.VITE_SANITY_DATASET,
-  useCdn: true, // set to `false` to bypass the edge cache
-  apiVersion: import.meta.env.VITE_SANITY_API_VERSION, // use current date (YYYY-MM-DD) to target the latest API version
-});
+/** Published-content client (CDN). Prefer `getSanityClientForRequest` in server handlers. */
+export const client = createSanityClient();
 
 const builder = imageUrlBuilder(client);
 
-export function urlFor(source: any) {
+export function urlFor(source: Parameters<typeof builder.image>[0]) {
   return builder.image(source);
 }
+
+export const urlForImage = urlFor;
+
+export { createSanityClient, getSanityClientForRequest };

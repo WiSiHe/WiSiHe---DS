@@ -26,6 +26,8 @@ export {
 export { Checkbox, type CheckboxProps } from './checkbox/Checkbox';
 export { Chip, type ChipProps } from './chip/Chip';
 export { Combobox, type ComboboxItem, type ComboboxProps } from './combobox/Combobox';
+// --- Layout ---
+export { CustomCursor } from './custom-cursor/CustomCursor';
 export {
   Dialog,
   DialogBody,
@@ -35,9 +37,15 @@ export {
   type DialogProps,
   DialogTitle,
 } from './dialog/Dialog';
-// --- Layout ---
+export {
+  Dock,
+  type DockLinkComponentProps,
+  type DockLinkItem,
+  type DockProps,
+} from './dock/Dock';
 export { GlassSurface, type GlassSurfaceProps } from './glass-surface/GlassSurface';
 export { IconBadge, type IconBadgeProps } from './icon-badge/IconBadge';
+export { IconLogoBrand } from './icon-logo/IconLogoBrand';
 export { Input, type InputProps } from './input/Input';
 export {
   headerStaggerContainerVariants,
@@ -179,3 +187,8 @@ export {
 } from './tabs/Tabs';
 export { Tag, type TagProps } from './tag/Tag';
 export { Textarea, type TextareaProps } from './textarea/Textarea';
+export {
+  type ThemePreference,
+  ThemeToggle,
+  type ThemeToggleProps,
+} from './theme-toggle/ThemeToggle';

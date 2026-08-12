@@ -2,11 +2,10 @@
 
 import { IconArrowRight } from '@tabler/icons-react';
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
-import { Button } from '@wisihe/ui-react';
+import { Button, ScrollGrowSection } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { buildContactCtaCopy, type ContactCtaSectionData } from '@/lib/homeSectionCopy';
 import { useSectionReveal } from '@/lib/motion/sectionReveal';
 

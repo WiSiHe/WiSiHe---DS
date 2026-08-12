@@ -1,11 +1,9 @@
 'use client';
 
 import { IconArrowRight, IconPlayerPlay } from '@tabler/icons-react';
-import { Button } from '@wisihe/ui-react';
+import { Button, ScrollGrowSection, SectionHeader } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
-import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { type HomeSectionIntroCopy, pickSectionIntro } from '@/lib/homeSectionCopy';
 import { useSectionReveal } from '@/lib/motion/sectionReveal';
 import VideoShowcase from './VideoShowcase';
@@ -38,7 +36,7 @@ export default function VideosTeaserSection({ intro, videos }: VideosTeaserSecti
       <div className='mx-auto max-w-7xl'>
         <header className='relative z-10 mb-10 md:mb-14 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
           <div className='lg:col-span-7'>
-            <HomeSectionHeader
+            <SectionHeader
               variant='display'
               align='left'
               eyebrow={copy.eyebrow}

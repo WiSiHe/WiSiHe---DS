@@ -1,11 +1,11 @@
 'use client';
 
+import { useIsDesktopPaintingGrid } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { memo, useMemo } from 'react';
 import { PaintingGridSkeleton } from '@/app/components/paintings/PaintingGridSkeleton';
 import { usePaintingsSearchContext } from '@/lib/algolia/paintingsSearch/PaintingsSearchProvider';
 import type { PaintingAlgoliaHit } from '@/lib/algolia/paintingsSearch/types';
-import { useIsDesktopPaintingGrid } from '@/lib/paintings/mediaCapabilities';
 import PaintingCard from '../PaintingCard/PaintingCard';
 import { PaintingSearchCompactCard } from './PaintingSearchCompactCard';
 

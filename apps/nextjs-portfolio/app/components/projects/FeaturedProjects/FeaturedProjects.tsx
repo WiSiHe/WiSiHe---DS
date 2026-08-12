@@ -6,13 +6,11 @@
 
 import { IconArrowRight, IconFolder } from '@tabler/icons-react';
 import type { BlockContentMinimal } from '@wisihe/sanity-queries';
-import { Button } from '@wisihe/ui-react';
+import { Button, ScrollGrowSection, SectionHeader } from '@wisihe/ui-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
-import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 
 const ScrollStack = dynamic(
   () => import('@/app/components/effects/ScrollStack/ScrollStack').then(m => m.default),
@@ -63,7 +61,7 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
       <div className='mx-auto max-w-7xl px-4 pt-16 pb-4 md:px-8 md:pt-24 md:pb-6'>
         <div className='flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
           <div className='lg:col-span-7'>
-            <HomeSectionHeader
+            <SectionHeader
               align='left'
               eyebrow={INTRO_EYEBROW}
               title={INTRO_TITLE}

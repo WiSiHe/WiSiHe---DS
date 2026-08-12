@@ -1,117 +1,102 @@
+'use client';
+
+import { IconBrush, IconCamera, IconDeviceTv, IconFolder, IconUser } from '@tabler/icons-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { navigationItems } from '@wisihe/constants';
+import { type DockLinkComponentProps, IconLogoBrand, ThemeToggle } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { Box, Brush, Folder, Mail, Monitor, Moon, Sun, User } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useThemeStore } from '../../lib/store';
-import { IconLogo } from '../icons/IconLogo';
+import { motion } from 'motion/react';
+import type { JSX } from 'react';
+import { lazy, Suspense } from 'react';
+import { getResolvedTheme, useThemeStore } from '@/lib/store';
 
-const springJuicy = {
-  type: 'spring' as const,
-  stiffness: 400,
-  damping: 25,
-  mass: 1.2,
+const LazyDock = lazy(() => import('@wisihe/ui-react').then(m => ({ default: m.Dock })));
+
+const NAV_ICONS: Record<string, JSX.Element> = {
+  Paintings: <IconBrush className='size-5' stroke={2} aria-hidden />,
+  Projects: <IconFolder className='size-5' stroke={2} aria-hidden />,
+  Videos: <IconDeviceTv className='size-5' stroke={2} aria-hidden />,
+  Photography: <IconCamera className='size-5' stroke={2} aria-hidden />,
+  About: <IconUser className='size-5' stroke={2} aria-hidden />,
 };
 
-const juiceVariants = {
-  hover: { scale: 1.08, y: -2, transition: springJuicy },
-  tap: { scale: 0.94, y: 1, transition: { ...springJuicy, stiffness: 600 } },
-};
+function DockLink({ href, className, children, ...props }: DockLinkComponentProps) {
+  return (
+    <Link to={href as '/'} className={className} {...props}>
+      {children}
+    </Link>
+  );
+}
 
-const navContainerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1, ...springJuicy },
-  },
-};
+function HeaderThemeToggle() {
+  const { theme, cycleTheme } = useThemeStore();
+  const resolvedTheme = getResolvedTheme(theme);
 
-const navItemVariants = {
-  hidden: { opacity: 0, y: -20, scale: 0.9 },
-  show: { opacity: 1, y: 0, scale: 1, transition: springJuicy },
-};
+  return <ThemeToggle theme={theme} resolvedTheme={resolvedTheme} onCycle={cycleTheme} />;
+}
 
 export function Header() {
   const { pathname: pathName } = useLocation();
-  const { theme, toggleTheme } = useThemeStore();
+  const hideBottomNav =
+    pathName.startsWith('/design-system') ||
+    pathName === '/three-d' ||
+    pathName.startsWith('/three-d/') ||
+    (pathName.startsWith('/presentations/') && pathName !== '/presentations');
+
+  const dockItems = navigationItems.map(item => {
+    const isActive =
+      pathName === item.href || (item.href !== '/' && pathName.startsWith(item.href));
+
+    return {
+      href: item.href,
+      label: item.label,
+      icon: NAV_ICONS[item.label] ?? null,
+      isActive,
+      ariaLabel: `Navigate to ${item.label}`,
+    };
+  });
 
   return (
-    <header className='fixed top-4 left-4 right-4 z-50 pointer-events-none'>
-      <nav className='flex items-start justify-between max-w-7xl mx-auto w-full'>
+    <header className='pointer-events-none print:hidden'>
+      <div className='pointer-events-auto fixed top-4 left-4 z-60'>
         <motion.div
-          variants={juiceVariants as any}
-          initial={false}
-          whileHover='hover'
-          whileTap='tap'
-          className='pointer-events-auto'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25, delay: 0.1, ease: 'easeOut' }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
         >
           <Link
             to='/'
-            className='group flex items-center justify-center p-2 rounded-xl bg-surface/80 backdrop-blur-md border border-border shadow-lg transition-all hover:border-accent hover:bg-surface'
+            aria-label='Navigate to the homepage'
+            className={cn(
+              'group relative flex items-center justify-center rounded-lg border border-border bg-surface p-1.5 shadow-lg',
+              'transition-[border-color,background-color,box-shadow] duration-200',
+              'hover:border-accent-border hover:bg-surface-hover hover:shadow-xl',
+            )}
           >
-            <IconLogo className='w-10 h-10 md:w-12 md:h-12 text-foreground group-hover:text-accent transition-colors' />
+            <IconLogoBrand
+              className='h-9 w-9 transition-colors duration-300 group-hover:text-accent md:h-12 md:w-12'
+              size='100%'
+            />
           </Link>
         </motion.div>
+      </div>
 
-        <div className='flex items-center gap-2 pointer-events-auto'>
-          <motion.ul
-            variants={navContainerVariants}
-            initial='hidden'
-            animate='show'
-            className='flex items-center bg-surface/80 backdrop-blur-md border border-border rounded-full shadow-lg overflow-hidden px-2'
-          >
-            {navigationItems.map(item => {
-              const isActive =
-                pathName === item.href || (item.href !== '/' && pathName.startsWith(item.href));
-              const { href, label } = item;
+      <div className='pointer-events-auto fixed top-4 right-4 z-40'>
+        <HeaderThemeToggle />
+      </div>
 
-              return (
-                <motion.li key={href} variants={navItemVariants}>
-                  <Link
-                    to={href as any}
-                    className={cn(
-                      'flex items-center gap-2 px-4 py-2 text-sm md:text-base transition-all hover:text-accent group',
-                      isActive ? 'bg-accent text-accent-contrast' : 'text-foreground/70',
-                    )}
-                  >
-                    <span className='w-4 h-4 transition-transform group-hover:rotate-12 flex items-center justify-center'>
-                      {label === 'Paintings' && <Brush size={16} />}
-                      {label === 'Projects' && <Folder size={16} />}
-                      {label === 'Videos' && <Monitor size={16} />}
-                      {label === '3D' && <Box size={16} />}
-                      {label === 'About' && <User size={16} />}
-                      {label === 'Contact' && <Mail size={16} />}
-                    </span>
-                    <strong className='hidden md:block font-medium'>{label}</strong>
-                  </Link>
-                </motion.li>
-              );
-            })}
-          </motion.ul>
-
-          <motion.button
-            onClick={toggleTheme}
-            variants={juiceVariants as any}
-            whileHover='hover'
-            whileTap='tap'
-            className='p-3 rounded-full bg-surface/80 backdrop-blur-md border border-border shadow-lg text-foreground hover:text-accent transition-colors'
-            aria-label='Toggle theme'
-          >
-            <AnimatePresence mode='wait' initial={false}>
-              <motion.div
-                key={theme}
-                initial={{ y: 20, opacity: 0, rotate: -90 }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
-                exit={{ y: -20, opacity: 0, rotate: 90 }}
-                transition={{ duration: 0.2 }}
-                className='flex items-center justify-center'
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </motion.div>
-            </AnimatePresence>
-          </motion.button>
-        </div>
-      </nav>
+      {!hideBottomNav ? (
+        <nav
+          aria-label='Main navigation'
+          className='pointer-events-auto fixed right-0 bottom-0 left-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-4'
+        >
+          <Suspense fallback={null}>
+            <LazyDock items={dockItems} linkComponent={DockLink} aria-label='Main navigation' />
+          </Suspense>
+        </nav>
+      ) : null}
     </header>
   );
 }

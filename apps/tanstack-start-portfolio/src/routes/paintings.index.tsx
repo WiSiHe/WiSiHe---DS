@@ -1,62 +1,76 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { getPaintings } from '../server/fns';
+import { createFileRoute } from '@tanstack/react-router';
+import PaintingCard from '@/components/paintings/PaintingCard';
+import { PaintingsGalleryReturnUrlSync } from '@/components/paintings/PaintingsGalleryReturnUrlSync';
+import PaintingsSearch from '@/components/paintings/PaintingsSearch/PaintingsSearch';
+import { fetchPaintingsSearch } from '@/lib/algolia/paintingsSearch/fetchPaintingsSearch';
+import { parsePaintingsSearchParams } from '@/lib/algolia/paintingsSearch/parsePaintingsSearchParams';
+import { paintingsSearchSchema } from '@/lib/algolia/paintingsSearch/searchParamsSchema';
+import type { PaintingsSearchResults } from '@/lib/algolia/paintingsSearch/types';
+import { isAlgoliaConfigured } from '@/lib/algolia/searchClient';
+import { buildHead } from '@/lib/seo';
+import { getPaintings, type PaintingListItem } from '@/server/fns';
+
+type PaintingsLoaderData = {
+  paintings: PaintingListItem[];
+  initialResults: PaintingsSearchResults | null;
+  algoliaConfigured: boolean;
+};
 
 export const Route = createFileRoute('/paintings/')({
-  loader: () => getPaintings(),
-  component: Paintings,
+  validateSearch: search => paintingsSearchSchema.parse(search),
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
+    const parsedSearch = parsePaintingsSearchParams(deps);
+    const [paintings, initialResults] = await Promise.all([
+      getPaintings(),
+      isAlgoliaConfigured ? fetchPaintingsSearch(parsedSearch) : Promise.resolve(null),
+    ]);
+
+    return {
+      paintings,
+      initialResults,
+      algoliaConfigured: isAlgoliaConfigured,
+    };
+  },
+  head: () =>
+    buildHead({
+      title: 'Paintings | WiSiHe',
+      description: 'A curated collection of digital paintings and artwork by Henrik Sissener.',
+      path: '/paintings',
+    }),
+  component: PaintingsPage,
 });
 
-function Paintings() {
-  const paintings = Route.useLoaderData();
+function SanityPaintingsGrid({ paintings }: { paintings: PaintingListItem[] }) {
+  return (
+    <div className='mt-4 columns-2 gap-3 sm:columns-2 md:columns-3'>
+      {paintings.map(painting =>
+        painting.slug ? (
+          <div key={painting._id} className='mb-3 break-inside-avoid'>
+            <PaintingCard paintingData={painting} />
+          </div>
+        ) : null,
+      )}
+    </div>
+  );
+}
+
+function PaintingsPage() {
+  const { paintings, initialResults, algoliaConfigured } =
+    Route.useLoaderData() as PaintingsLoaderData;
 
   return (
-    <div className='paintings-page mx-auto flex max-w-7xl flex-col gap-12 px-4 py-32 md:px-8'>
-      <section className='hero max-w-prose'>
-        <div className='flex flex-col gap-4'>
-          <h1 className='text-4xl font-bold md:text-5xl'>Digital Art Gallery</h1>
-          <p className='text-lg leading-relaxed text-foreground/60'>
-            A curated collection of my digital paintings and artwork, exploring themes of
-            imagination, storytelling, and visual creativity.
-          </p>
-        </div>
-      </section>
-
-      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-        {paintings.map(painting => (
-          <Link
-            key={painting._id}
-            to='/paintings/$slug'
-            params={{ slug: painting.slug }}
-            className='group relative aspect-3/4 overflow-hidden rounded-2xl border border-border bg-surface shadow-md transition-all hover:border-accent/50 hover:shadow-2xl'
-          >
-            {painting.imageUrl ? (
-              <img
-                src={painting.imageUrl}
-                alt={painting.title}
-                className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-105'
-              />
-            ) : (
-              <div className='flex h-full w-full items-center justify-center bg-surface-elevated'>
-                <span className='text-foreground/20'>No Image</span>
-              </div>
-            )}
-
-            <div className='absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-
-            <div className='absolute inset-x-0 bottom-0 translate-y-4 p-6 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'>
-              <h3 className='text-xl font-bold text-white'>{painting.title}</h3>
-              {painting.date && (
-                <p className='mt-1 text-sm text-white/60'>
-                  {new Date(painting.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                  })}
-                </p>
-              )}
-            </div>
-          </Link>
-        ))}
+    <div className='w-full min-h-screen pt-32 pb-20 mx-auto max-w-7xl px-4'>
+      <PaintingsGalleryReturnUrlSync />
+      <div className='pb-5 flex items-baseline gap-3'>
+        <h1 className='font-semibold text-foreground text-2xl md:text-3xl'>Digital Art Gallery</h1>
       </div>
+
+      {algoliaConfigured ? (
+        <PaintingsSearch initialResults={initialResults as PaintingsSearchResults | null} />
+      ) : (
+        <SanityPaintingsGrid paintings={paintings} />
+      )}
     </div>
   );
 }
