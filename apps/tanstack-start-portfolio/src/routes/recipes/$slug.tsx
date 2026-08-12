@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { RecipeDetailView } from '../components/recipes/RecipeDetailView';
-import { portableTextToPlainText } from '../lib/portableText';
-import { buildHead } from '../lib/seo';
-import { buildRecipeStructuredData } from '../lib/seo/structuredData';
-import { getRecipeBySlug, getRecipes, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { RecipeDetailView } from '../../components/recipes/RecipeDetailView';
+import { portableTextToPlainText } from '../../lib/portableText';
+import { buildHead } from '../../lib/seo';
+import { buildRecipeStructuredData } from '../../lib/seo/structuredData';
+import { getRecipeBySlug, getRecipes, imageUrl } from '../../server/fns';
 
 function buildRecipeImageUrls(recipe: NonNullable<Awaited<ReturnType<typeof getRecipeBySlug>>>) {
   const urls = new Set<string>();

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { PresentationCard } from '../components/presentations/PresentationCard';
-import { buildHead } from '../lib/seo';
-import { getPresentations } from '../server/fns';
+import { PresentationCard } from '../../components/presentations/PresentationCard';
+import { buildHead } from '../../lib/seo';
+import { getPresentations } from '../../server/fns';
 
 export const Route = createFileRoute('/presentations/')({
   loader: () => getPresentations(),

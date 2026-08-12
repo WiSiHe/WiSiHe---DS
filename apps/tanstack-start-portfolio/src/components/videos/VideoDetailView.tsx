@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '@wisihe/utils';
 import { DetailNav } from '@/components/detail/DetailNav';
 import { ShareButton } from '@/components/detail/ShareButton';
+import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
 import { getYouTubeId } from '@/lib/youtube';
 import { imageUrl } from '@/server/fns';
@@ -63,7 +64,10 @@ export function VideoDetailView({ video, prevSlug, nextSlug }: VideoDetailViewPr
       )}
 
       <section className='mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-8 px-4 lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:px-8 xl:gap-x-12'>
-        <div className='relative aspect-video w-full min-w-0 overflow-hidden rounded-2xl border border-border bg-black shadow-2xl ring-1 ring-border/20'>
+        <SharedLayoutFrame
+          slug={typeof video.slug === 'string' ? video.slug : ''}
+          className='relative aspect-video w-full min-w-0 overflow-hidden rounded-2xl border border-border bg-black shadow-2xl ring-1 ring-border/20'
+        >
           {youtubeId ? (
             <iframe
               src={`https://www.youtube.com/embed/${youtubeId}?rel=0`}
@@ -77,7 +81,7 @@ export function VideoDetailView({ video, prevSlug, nextSlug }: VideoDetailViewPr
               <IconBrandYoutube className='size-16 opacity-30' stroke={2} aria-hidden />
             </div>
           )}
-        </div>
+        </SharedLayoutFrame>
 
         <aside className='min-w-0 lg:sticky lg:top-36 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start'>
           <div className={sidebarPanelClass}>

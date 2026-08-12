@@ -1,11 +1,11 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { ProjectDetailView } from '../components/projects/ProjectDetail/ProjectDetailView';
-import { portableTextToPlainText } from '../lib/portableText';
-import { buildHead } from '../lib/seo';
-import { buildBreadcrumbJsonLd } from '../lib/seo/jsonLd';
-import { buildProjectStructuredData } from '../lib/seo/structuredData';
-import { getProject, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { ProjectDetailView } from '../../components/projects/ProjectDetail/ProjectDetailView';
+import { portableTextToPlainText } from '../../lib/portableText';
+import { buildHead } from '../../lib/seo';
+import { buildBreadcrumbJsonLd } from '../../lib/seo/jsonLd';
+import { buildProjectStructuredData } from '../../lib/seo/structuredData';
+import { getProject, imageUrl } from '../../server/fns';
 
 export const Route = createFileRoute('/projects/$slug')({
   loader: async ({ params }) => {

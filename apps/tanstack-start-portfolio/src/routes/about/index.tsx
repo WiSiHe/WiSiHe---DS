@@ -1,13 +1,13 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { ABOUT_PAGE_ENABLED } from '@wisihe/constants';
-import { AboutPageClient } from '../about/AboutPageClient';
-import { normalizeTravelPhotos } from '../about/components/lifeJourneyTypes';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { buildHead } from '../lib/seo';
-import { buildAboutStructuredData } from '../lib/seo/structuredData';
-import { getAbout, getAboutTravelPhotography, imageUrl } from '../server/fns';
+import { AboutPageClient } from '../../about/AboutPageClient';
+import { normalizeTravelPhotos } from '../../about/components/lifeJourneyTypes';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { buildHead } from '../../lib/seo';
+import { buildAboutStructuredData } from '../../lib/seo/structuredData';
+import { getAbout, getAboutTravelPhotography, imageUrl } from '../../server/fns';
 
-export const Route = createFileRoute('/about')({
+export const Route = createFileRoute('/about/')({
   loader: async () => {
     if (!ABOUT_PAGE_ENABLED) throw notFound();
     const [about, travelPhotosRaw] = await Promise.all([getAbout(), getAboutTravelPhotography()]);

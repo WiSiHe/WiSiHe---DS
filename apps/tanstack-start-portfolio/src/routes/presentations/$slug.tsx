@@ -1,11 +1,11 @@
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { PresentationSlideDeck } from '../components/presentations/PresentationSlideDeck';
-import { WORKSHOP_SLUG } from '../lib/presentations/constants';
-import { transformPresentationSlides } from '../lib/presentations/transformPresentationSlides';
-import { buildHead } from '../lib/seo';
-import { getPresentation, getPreviewStatus, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { PresentationSlideDeck } from '../../components/presentations/PresentationSlideDeck';
+import { WORKSHOP_SLUG } from '../../lib/presentations/constants';
+import { transformPresentationSlides } from '../../lib/presentations/transformPresentationSlides';
+import { buildHead } from '../../lib/seo';
+import { getPresentation, getPreviewStatus, imageUrl } from '../../server/fns';
 
 export const Route = createFileRoute('/presentations/$slug')({
   loader: async ({ params }) => {

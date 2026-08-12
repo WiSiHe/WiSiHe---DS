@@ -45,7 +45,11 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
 
         {galleryImages.length > 0 ? (
           <section className='py-4 md:py-6'>
-            <ProjectImageGallery projectTitle={displayTitle} images={galleryImages} />
+            <ProjectImageGallery
+              projectSlug={typeof project.slug === 'string' ? project.slug : undefined}
+              projectTitle={displayTitle}
+              images={galleryImages}
+            />
           </section>
         ) : null}
       </div>

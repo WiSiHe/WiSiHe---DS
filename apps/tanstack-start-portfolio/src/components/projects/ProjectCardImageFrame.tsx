@@ -5,7 +5,9 @@ import {
   ProjectCardImageFrame as ProjectCardImageFrameView,
   type ProjectCardImageFrameProps as ProjectCardImageFrameViewProps,
 } from '@wisihe/ui-react';
+import { ContentMorphImageFrame } from '@/components/motion/ContentMorphImageFrame';
 import Image from '@/components/ui/Image';
+import { sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 
 export type ProjectCardImageFrameProps = Omit<
   ProjectCardImageFrameViewProps,
@@ -39,5 +41,12 @@ function AppImage({
 }
 
 export function ProjectCardImageFrame(props: ProjectCardImageFrameProps) {
-  return <ProjectCardImageFrameView {...props} ImageComponent={AppImage} />;
+  return (
+    <ProjectCardImageFrameView
+      {...props}
+      ImageComponent={AppImage}
+      ImageMorphFrame={ContentMorphImageFrame}
+      layoutTransition={sharedLayoutTransition}
+    />
+  );
 }

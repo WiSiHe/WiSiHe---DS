@@ -2,14 +2,17 @@
 
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
+import { motion } from 'motion/react';
 import { DetailNav } from '@/components/detail/DetailNav';
 import { ShareButton } from '@/components/detail/ShareButton';
+import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
 import {
   buildPhotographyMetaRows,
   extractPaletteSwatches,
   urlForPhotographyDetail,
 } from '@/lib/photography/photographyDetailMeta';
+import { isValidPhotographyLqip } from '@/lib/photography/photographyImage';
 
 const SWATCH_LABELS: Record<string, string> = {
   dominant: 'Dominant',
@@ -77,18 +80,27 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
 
       <section className='relative mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-x-6 gap-y-8 overflow-visible px-4 text-foreground lg:grid-cols-[minmax(0,1fr)_clamp(17.5rem,30vw,24rem)] lg:gap-x-10 lg:px-8 xl:gap-x-12'>
         {imageUrl && photo.slug ? (
-          <div
-            className='relative mx-auto w-full max-w-full overflow-hidden rounded-2xl border border-border/30 bg-surface-subtle shadow-2xl ring-1 ring-border/20'
-            style={{ aspectRatio }}
-          >
-            <Image
-              src={imageUrl}
-              alt={image?.alt ?? photo.title ?? 'Photograph'}
-              fill
-              priority
-              className='object-contain'
-              sizes='(max-width: 1024px) 100vw, 72vw'
-            />
+          <div className='relative w-full min-w-0 -mx-4 sm:mx-0 lg:col-start-1 lg:row-start-1'>
+            <SharedLayoutFrame
+              slug={photo.slug}
+              className='relative mx-auto w-full overflow-hidden rounded-none bg-surface-subtle sm:rounded-xl'
+              style={{
+                aspectRatio,
+                maxHeight: 'min(88vh, calc(100vh - 9rem))',
+              }}
+            >
+              <motion.div layout='position' className='relative h-full w-full'>
+                <Image
+                  src={imageUrl}
+                  alt={image?.alt ?? photo.title ?? 'Photograph'}
+                  fill
+                  priority
+                  className='object-contain'
+                  sizes='(max-width: 1024px) 100vw, 72vw'
+                  blurDataURL={isValidPhotographyLqip(image?.lqip) ? image.lqip : undefined}
+                />
+              </motion.div>
+            </SharedLayoutFrame>
           </div>
         ) : null}
 

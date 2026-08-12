@@ -1,14 +1,14 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { ThreeDWorkshopClient } from '../components/three-d/ThreeDWorkshopClient';
-import { WORKSHOP_SLUG } from '../lib/presentations/constants';
-import { transformPresentationSlides } from '../lib/presentations/transformPresentationSlides';
-import { buildHead } from '../lib/seo';
-import { presentationSlides as fallbackSlides } from '../lib/three-d/presentationSlides';
-import { getPresentation, getPreviewStatus, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { ThreeDWorkshopClient } from '../../components/three-d/ThreeDWorkshopClient';
+import { WORKSHOP_SLUG } from '../../lib/presentations/constants';
+import { transformPresentationSlides } from '../../lib/presentations/transformPresentationSlides';
+import { buildHead } from '../../lib/seo';
+import { presentationSlides as fallbackSlides } from '../../lib/three-d/presentationSlides';
+import { getPresentation, getPreviewStatus, imageUrl } from '../../server/fns';
 
-export const Route = createFileRoute('/three-d')({
+export const Route = createFileRoute('/three-d/')({
   loader: async () => {
     const [presentation, previewStatus] = await Promise.all([
       getPresentation({ data: { slug: WORKSHOP_SLUG } }),

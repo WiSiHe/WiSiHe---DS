@@ -2,11 +2,11 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
 import { cn } from '@wisihe/utils';
 import { z } from 'zod';
-import { PhotographyGallery } from '../components/photography/PhotographyGallery';
-import { photographySectionLabelClass } from '../components/photography/photographyStyles';
-import { parsePhotographyView } from '../lib/photography/photographyUrl';
-import { buildHead } from '../lib/seo';
-import { getPhotographyList, imageUrl } from '../server/fns';
+import { PhotographyGallery } from '../../components/photography/PhotographyGallery';
+import { photographySectionLabelClass } from '../../components/photography/photographyStyles';
+import { parsePhotographyView } from '../../lib/photography/photographyUrl';
+import { buildHead } from '../../lib/seo';
+import { getPhotographyList, imageUrl } from '../../server/fns';
 
 const photographySearchSchema = z.object({
   view: z.string().optional(),

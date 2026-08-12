@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { VideoDetailView } from '../components/videos/VideoDetailView';
-import { buildHead } from '../lib/seo';
-import { buildBreadcrumbJsonLd } from '../lib/seo/jsonLd';
-import { buildVideoStructuredData } from '../lib/seo/structuredData';
-import { getVideo, getVideos, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { VideoDetailView } from '../../components/videos/VideoDetailView';
+import { buildHead } from '../../lib/seo';
+import { buildBreadcrumbJsonLd } from '../../lib/seo/jsonLd';
+import { buildVideoStructuredData } from '../../lib/seo/structuredData';
+import { getVideo, getVideos, imageUrl } from '../../server/fns';
 
 function getYouTubeId(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -32,7 +32,10 @@ export const Route = createFileRoute('/videos/$slug')({
 
     if (!video?._id || !video.slug) throw notFound();
 
-    const slugs = (allVideos ?? [])
+    const videoList = Array.isArray(allVideos)
+      ? allVideos
+      : ((allVideos as { videos?: Array<{ slug?: string | null }> } | null)?.videos ?? []);
+    const slugs = videoList
       .map((v: { slug?: string | null }) => v.slug)
       .filter((slug): slug is string => Boolean(slug));
     const index = slugs.indexOf(params.slug);

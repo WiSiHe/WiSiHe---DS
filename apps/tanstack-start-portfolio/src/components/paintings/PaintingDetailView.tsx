@@ -16,6 +16,7 @@ import { motion } from 'motion/react';
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { DetailNav } from '@/components/detail/DetailNav';
 import { ShareButton } from '@/components/detail/ShareButton';
+import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
 import {
@@ -215,7 +216,8 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
               className='relative mx-auto w-full max-w-full overflow-visible'
               style={paintingFrameStyle}
             >
-              <div
+              <SharedLayoutFrame
+                slug={typeof slug === 'string' ? slug : ''}
                 className={cn(
                   'relative z-10 block h-full w-full overflow-hidden rounded-2xl ring-1 ring-border/20',
                   activeImage?.hasAlpha ? 'bg-neutral-950' : 'bg-background',
@@ -252,7 +254,7 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
                     ))}
                   </div>
                 </div>
-              </div>
+              </SharedLayoutFrame>
             </div>
 
             {isNSFW && !nsfwRevealed ? (
