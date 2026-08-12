@@ -1,8 +1,8 @@
 import type { BlockContentMinimal } from '@wisihe/sanity-queries';
+import { SectionHeader } from '@wisihe/ui-react';
 import type { PortableTextBlock } from 'next-sanity';
 import { PortableText } from 'next-sanity';
 import HomePaintingsSectionAnalytics from '@/app/components/analytics/HomePaintingsSectionAnalytics';
-import HomeSectionHeader from '@/app/components/marketing/HomeSectionHeader/HomeSectionHeader';
 import type { HomePaintingsSection } from '@/lib/homePageBuilder';
 import PaintingsShowcase from './PaintingsShowcase';
 
@@ -40,7 +40,7 @@ const PaintingsSection = ({
         source={paintingsSource}
       />
       <div className='mx-auto mb-10 max-w-7xl md:mb-12'>
-        <HomeSectionHeader
+        <SectionHeader
           align='left'
           eyebrow={PAINTINGS_EYEBROW}
           title={PAINTINGS_TITLE}

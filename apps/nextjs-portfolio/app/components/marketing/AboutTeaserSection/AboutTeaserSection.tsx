@@ -2,19 +2,17 @@
 
 import { IconArrowRight, IconMapPin } from '@tabler/icons-react';
 import type { AboutQueryResult } from '@wisihe/sanity-queries';
-import { Button, Chip } from '@wisihe/ui-react';
+import { Button, Chip, ScrollGrowSection, SectionHeader } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { LOCATION_TYPE_META, normalizeJourneyItems } from '@/app/about/components/lifeJourneyTypes';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import { type AboutTeaserSectionData, buildAboutTeaserCopy } from '@/lib/homeSectionCopy';
 import {
   staggerContainerVariants,
   staggerFadeUpItemVariants,
   useSectionReveal,
 } from '@/lib/motion/sectionReveal';
-import HomeSectionHeader from '../HomeSectionHeader/HomeSectionHeader';
 
 type AboutTeaserSectionProps = {
   section: AboutTeaserSectionData | null;
@@ -54,7 +52,7 @@ export default function AboutTeaserSection({ section, about }: AboutTeaserSectio
     >
       <div className='mx-auto grid max-w-7xl gap-12 lg:grid-cols-12 lg:gap-16 lg:items-center'>
         <div className='lg:col-span-7'>
-          <HomeSectionHeader
+          <SectionHeader
             align='left'
             eyebrow={eyebrow}
             title={title}

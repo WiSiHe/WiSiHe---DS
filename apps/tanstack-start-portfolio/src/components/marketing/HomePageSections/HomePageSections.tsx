@@ -1,0 +1,144 @@
+import { ABOUT_PAGE_ENABLED, ABOUT_PAGE_LINKS_ENABLED } from '@wisihe/constants';
+import type { AboutQueryResult, HomeExtrasQueryResult } from '@wisihe/sanity-queries';
+import { ScrollGrowSection, Skeleton } from '@wisihe/ui-react';
+import { Suspense } from 'react';
+import AboutTeaserSection from '@/components/marketing/AboutTeaserSection/AboutTeaserSection';
+import ContactCtaSection from '@/components/marketing/ContactCtaSection/ContactCtaSection';
+import HeroImageSection from '@/components/marketing/HeroSection/HeroSection';
+import ShopTeaserSection from '@/components/marketing/ShopTeaserSection/ShopTeaserSection';
+import SkillsSection from '@/components/marketing/SkillsSection/SkillsSection';
+import VideosTeaserSection from '@/components/marketing/VideosTeaserSection/VideosTeaserSection';
+import PaintingsSection from '@/components/paintings/PaintingsSection/PaintingsSection';
+import FeaturedProjects from '@/components/projects/FeaturedProjects/FeaturedProjects';
+import type { HomePageSection, HomePageSectionsContext } from '@/lib/homePageBuilder';
+import { buildHeroCollageItems, getHomeSections } from '@/lib/homePageBuilder';
+
+const HeroSkeleton = () => (
+  <div className='relative flex flex-col items-end justify-center h-fit w-full px-4 pt-20 pb-10 md:px-10 lg:min-h-[70vh] lg:pt-0 bg-surface overflow-clip'>
+    <Skeleton variant='rectangular' className='w-full h-96 rounded-2xl' />
+  </div>
+);
+
+const SectionSkeleton = () => (
+  <div className='max-w-7xl mx-auto px-4 py-20'>
+    <Skeleton variant='text' className='h-8 w-1/3 mb-4' />
+    <Skeleton variant='text' className='h-4 w-2/3 mb-8' />
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+      {[1, 2, 3].map(i => (
+        <Skeleton key={i} variant='rectangular' className='h-64 rounded' />
+      ))}
+    </div>
+  </div>
+);
+
+type HomePageSectionsProps = HomePageSectionsContext;
+
+function renderSection(
+  section: HomePageSection,
+  context: {
+    heroItems: ReturnType<typeof buildHeroCollageItems>;
+    heroEyebrow?: string | null;
+    heroName?: string | null;
+    about: AboutQueryResult | null;
+    extras: HomeExtrasQueryResult | null;
+  },
+) {
+  const { heroItems, heroEyebrow, heroName, about, extras } = context;
+  const key = section._key;
+
+  switch (section._type) {
+    case 'homeHeroSection':
+      return (
+        <div key={key} className='relative overflow-visible'>
+          <Suspense fallback={<HeroSkeleton />}>
+            <HeroImageSection items={heroItems} heroEyebrow={heroEyebrow} heroName={heroName} />
+          </Suspense>
+        </div>
+      );
+
+    case 'homeProjectsSection':
+      return (
+        <Suspense key={key} fallback={<SectionSkeleton />}>
+          <FeaturedProjects
+            showcaseProjects={section.showcaseProjects}
+            projectsDescription={section.description}
+          />
+        </Suspense>
+      );
+
+    case 'homePaintingsSection':
+      return (
+        <ScrollGrowSection
+          key={key}
+          className='border-t border-border/20 bg-surface py-24 px-4 md:px-8'
+        >
+          <Suspense fallback={<SectionSkeleton />}>
+            <PaintingsSection
+              paintingsDescription={section.description}
+              showcasePaintings={section.showcasePaintings}
+              paintingsSource={
+                section.showcasePaintingsCurated ? 'cms_showcase' : 'featured_fallback'
+              }
+            />
+          </Suspense>
+        </ScrollGrowSection>
+      );
+
+    case 'homeAboutTeaserSection':
+      if (!ABOUT_PAGE_ENABLED || !ABOUT_PAGE_LINKS_ENABLED) return null;
+      return <AboutTeaserSection key={key} section={section} about={about} />;
+
+    case 'homeVideosTeaserSection':
+      if (!extras?.videos?.length) return null;
+      return <VideosTeaserSection key={key} intro={section.intro} videos={extras.videos} />;
+
+    case 'homeShopTeaserSection':
+      if (!extras?.forSalePaintings?.length) return null;
+      return (
+        <ShopTeaserSection
+          key={key}
+          intro={section.intro}
+          paintings={extras.forSalePaintings}
+          forSaleCount={extras.forSalePaintingsCount}
+        />
+      );
+
+    case 'homeSkillsSection':
+      return (
+        <Suspense key={key} fallback={<Skeleton variant='rectangular' className='h-64' />}>
+          <SkillsSection eyebrow={section.eyebrow} title={section.title} />
+        </Suspense>
+      );
+
+    case 'homeContactCtaSection':
+      return <ContactCtaSection key={key} section={section} about={about} />;
+
+    default:
+      return null;
+  }
+}
+
+export default function HomePageSections({
+  home,
+  about,
+  extras,
+  heroEyebrow,
+  heroName,
+}: HomePageSectionsProps) {
+  const sections = getHomeSections(home);
+  const heroItems = buildHeroCollageItems(home);
+
+  return (
+    <>
+      {sections.map(section =>
+        renderSection(section, {
+          heroItems,
+          heroEyebrow,
+          heroName,
+          about,
+          extras,
+        }),
+      )}
+    </>
+  );
+}

@@ -1,10 +1,9 @@
 'use client';
 
-import { Chip } from '@wisihe/ui-react';
+import { Chip, ScrollGrowSection } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
 import React, { useMemo } from 'react';
 import { type LogoItem, LogoLoop } from '@/app/components/effects/LogoLoop';
-import ScrollGrowSection from '@/app/components/motion/ScrollGrowSection';
 import {
   SECTION_REVEAL_VIEWPORT,
   skillsContainerVariants,

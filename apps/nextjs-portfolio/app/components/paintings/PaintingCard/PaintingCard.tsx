@@ -1,12 +1,11 @@
 'use client';
 
-import { PaintingCardView } from '@wisihe/ui-react';
+import { PaintingCardView, resolveNsfwCompactLabel } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ContentMorphImageFrame } from '@/app/components/motion/ContentMorphImageFrame';
 import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
-import { resolveNsfwCompactLabel } from '@/lib/paintings/nsfwCover';
 import {
   getPaintingImageLqip,
   resolvePaintingCardLayout,
