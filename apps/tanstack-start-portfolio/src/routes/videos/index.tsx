@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Chip } from '@wisihe/ui-react';
 import { FaPlay } from 'react-icons/fa';
-import { PageHero } from '../components/layout/PageHero';
-import { SanityImage } from '../components/sanity/SanityImage';
-import { buildHead } from '../lib/seo';
-import { getVideos } from '../server/fns';
+import { PageHero } from '../../components/layout/PageHero';
+import { ContentMorphImageFrame } from '../../components/motion/ContentMorphImageFrame';
+import { SanityImage } from '../../components/sanity/SanityImage';
+import { contentSlugLayoutId, sharedLayoutTransition } from '../../lib/motion/sharedLayout';
+import { buildHead } from '../../lib/seo';
+import { getVideos } from '../../server/fns';
 
 export const Route = createFileRoute('/videos/')({
   loader: () => getVideos(),
@@ -30,32 +32,46 @@ function VideosPage() {
       />
 
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
-        {videos.map(video =>
-          video.slug ? (
+        {videos.map(video => {
+          if (!video.slug) return null;
+          const morphLayoutId = contentSlugLayoutId(video.slug);
+          const thumbnailInner = video.thumbnail ? (
+            <>
+              <SanityImage
+                asset={video.thumbnail}
+                alt={video.title}
+                className='h-full w-full transition-transform duration-500 group-hover:scale-110'
+              />
+              <div className='absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/40'>
+                <div className='flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-lg'>
+                  <FaPlay className='ml-1' />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className='flex h-full items-center justify-center bg-surface-subtle text-foreground/30'>
+              No thumbnail
+            </div>
+          );
+
+          return (
             <Link
               key={video._id}
               to='/videos/$slug'
               params={{ slug: video.slug }}
               className='group relative overflow-hidden rounded-2xl border border-border bg-surface text-left shadow-sm transition-all hover:border-accent/50 hover:shadow-xl'
             >
-              <div className='relative aspect-video overflow-hidden'>
-                {video.thumbnail ? (
-                  <SanityImage
-                    asset={video.thumbnail}
-                    alt={video.title}
-                    className='h-full w-full transition-transform duration-500 group-hover:scale-110'
-                  />
-                ) : (
-                  <div className='flex h-full items-center justify-center bg-surface-subtle text-foreground/30'>
-                    No thumbnail
-                  </div>
-                )}
-                <div className='absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/40'>
-                  <div className='flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-lg'>
-                    <FaPlay className='ml-1' />
-                  </div>
-                </div>
-              </div>
+              {morphLayoutId ? (
+                <ContentMorphImageFrame
+                  layoutId={morphLayoutId}
+                  transition={sharedLayoutTransition}
+                  className='relative aspect-video w-full overflow-hidden'
+                >
+                  {thumbnailInner}
+                </ContentMorphImageFrame>
+              ) : (
+                <div className='relative aspect-video overflow-hidden'>{thumbnailInner}</div>
+              )}
               <div className='p-5'>
                 <h2 className='mb-2 text-xl font-bold transition-colors group-hover:text-accent'>
                   {video.title}
@@ -76,8 +92,8 @@ function VideosPage() {
                 ) : null}
               </div>
             </Link>
-          ) : null,
-        )}
+          );
+        })}
       </div>
     </div>
   );

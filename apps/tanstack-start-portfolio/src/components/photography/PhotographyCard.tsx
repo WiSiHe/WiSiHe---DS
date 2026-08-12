@@ -3,7 +3,9 @@
 import type { PhotographyListQueryResult } from '@wisihe/sanity-queries';
 import { type PhotographyCardImageComponentProps, PhotographyCardView } from '@wisihe/ui-react';
 import { RouterLink } from '@/components/layout/RouterLink';
+import { ContentMorphImageFrame } from '@/components/motion/ContentMorphImageFrame';
 import Image from '@/components/ui/Image';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
   getPhotographyAspectRatio,
   isValidPhotographyLqip,
@@ -63,6 +65,7 @@ export function PhotographyCard({
   if (!imageUrl) return null;
 
   const lqip = photo.image?.lqip;
+  const morphLayoutId = contentSlugLayoutId(photo.slug);
 
   return (
     <PhotographyCardView
@@ -78,6 +81,9 @@ export function PhotographyCard({
       priority={priority}
       size={size}
       className={className}
+      imageLayoutId={morphLayoutId || undefined}
+      ImageMorphFrame={ContentMorphImageFrame}
+      imageLayoutTransition={sharedLayoutTransition}
       LinkComponent={RouterLink}
       ImageComponent={PhotographyImage}
     />

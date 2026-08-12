@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { buildHead } from '../lib/seo';
-import { CONTACT_DISPLAY_EMAIL } from '../lib/site';
+import { buildHead } from '../../lib/seo';
+import { CONTACT_DISPLAY_EMAIL } from '../../lib/site';
 
 const LAST_UPDATED = '20 July 2026';
 
-export const Route = createFileRoute('/privacy')({
+export const Route = createFileRoute('/privacy/')({
   head: () =>
     buildHead({
       title: 'Privacy | WiSiHe',

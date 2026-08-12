@@ -12,7 +12,9 @@ import {
 import { cleanTagName } from '@wisihe/utils';
 import { memo, useMemo } from 'react';
 import { RouterLink } from '@/components/layout/RouterLink';
+import { ContentMorphImageFrame } from '@/components/motion/ContentMorphImageFrame';
 import Image from '@/components/ui/Image';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
   getPaintingImageLqip,
   type PaintingCardAspectLayout,
@@ -120,6 +122,9 @@ function PaintingSearchCompactCardInner({
       availableForSale={availableForSale}
       LinkComponent={RouterLink}
       ImageComponent={PaintingThumbnailImage}
+      imageLayoutId={slug ? contentSlugLayoutId(slug) : undefined}
+      ImageMorphFrame={ContentMorphImageFrame}
+      imageLayoutTransition={sharedLayoutTransition}
     />
   );
 }

@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import type { GetAllProjectsResult } from '@wisihe/sanity-queries';
-import { PageHero } from '../components/layout/PageHero';
-import ProjectCategories from '../components/projects/ProjectCategories/ProjectCategories';
-import { buildHead } from '../lib/seo';
-import { getProjects } from '../server/fns';
+import { PageHero } from '../../components/layout/PageHero';
+import ProjectCategories from '../../components/projects/ProjectCategories/ProjectCategories';
+import { buildHead } from '../../lib/seo';
+import { getProjects } from '../../server/fns';
 
 export const Route = createFileRoute('/projects/')({
   loader: () => getProjects(),

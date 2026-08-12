@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { PhotographyDetailView } from '../components/photography/PhotographyDetailView';
-import { buildHead } from '../lib/seo';
-import { buildBreadcrumbJsonLd } from '../lib/seo/jsonLd';
-import { buildPhotographyStructuredData } from '../lib/seo/structuredData';
-import { getPhotography, imageUrl } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { PhotographyDetailView } from '../../components/photography/PhotographyDetailView';
+import { buildHead } from '../../lib/seo';
+import { buildBreadcrumbJsonLd } from '../../lib/seo/jsonLd';
+import { buildPhotographyStructuredData } from '../../lib/seo/structuredData';
+import { getPhotography, imageUrl } from '../../server/fns';
 
 export const Route = createFileRoute('/photography/$slug')({
   loader: async ({ params }) => {

@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { PageHero } from '../components/layout/PageHero';
-import { buildHead } from '../lib/seo';
+import { PageHero } from '../../components/layout/PageHero';
+import { buildHead } from '../../lib/seo';
 
-export const Route = createFileRoute('/design-system')({
+export const Route = createFileRoute('/design-system/')({
   head: () =>
     buildHead({
       title: 'Design System | WiSiHe',

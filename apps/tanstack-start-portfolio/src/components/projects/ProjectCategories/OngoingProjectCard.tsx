@@ -10,6 +10,7 @@ import {
   getProjectCardExcerpt,
   getProjectTypeLabel,
 } from '@/components/projects/projectCardHelpers';
+import { contentImageLayoutId } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/lib/sanity';
 
 type OngoingProjectCardProps = {
@@ -57,6 +58,7 @@ export default function OngoingProjectCard({ project, index }: OngoingProjectCar
           )}
         >
           <ProjectCardImageFrame
+            layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}

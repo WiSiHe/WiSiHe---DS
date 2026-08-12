@@ -15,6 +15,7 @@ import {
   getProjectCardExcerpt,
   getProjectDisplayTitle,
 } from '@/components/projects/projectCardHelpers';
+import { contentImageLayoutId } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/lib/sanity';
 
 type PastProjectCardProps = {
@@ -71,6 +72,7 @@ export default function PastProjectCard({ project, isLcpCandidate = false }: Pas
           )}
         >
           <ProjectCardImageFrame
+            layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}

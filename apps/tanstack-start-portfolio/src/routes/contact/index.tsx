@@ -3,11 +3,10 @@ import { socialMediaLinks } from '@wisihe/constants';
 import { Button } from '@wisihe/ui-react';
 import { motion } from 'motion/react';
 import { FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
-import { pageVariants } from '../lib/motion';
-import { buildHead } from '../lib/seo';
-import { CONTACT_DISPLAY_EMAIL, CONTACT_LOCATION } from '../lib/site';
+import { buildHead } from '../../lib/seo';
+import { CONTACT_DISPLAY_EMAIL, CONTACT_LOCATION } from '../../lib/site';
 
-export const Route = createFileRoute('/contact')({
+export const Route = createFileRoute('/contact/')({
   head: () =>
     buildHead({
       title: 'Contact | WiSiHe',
@@ -19,13 +18,7 @@ export const Route = createFileRoute('/contact')({
 
 function ContactPage() {
   return (
-    <motion.div
-      variants={pageVariants}
-      initial='initial'
-      animate='animate'
-      exit='exit'
-      className='container mx-auto min-h-screen px-4 pt-32 pb-20'
-    >
+    <div className='container mx-auto min-h-screen px-4 pt-32 pb-20'>
       <div className='grid grid-cols-1 items-start gap-16 lg:grid-cols-2'>
         <div className='max-w-xl'>
           <motion.h1
@@ -105,6 +98,6 @@ function ContactPage() {
           </a>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

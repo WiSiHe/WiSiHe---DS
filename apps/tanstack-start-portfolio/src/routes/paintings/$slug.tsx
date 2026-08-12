@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { NotFoundMessage } from '../components/layout/PageHero';
-import { PaintingDetailView } from '../components/paintings/PaintingDetailView';
-import { buildHead } from '../lib/seo';
-import { buildBreadcrumbJsonLd } from '../lib/seo/jsonLd';
-import { buildPaintingStructuredData } from '../lib/seo/structuredData';
-import { getPainting, type PaintingDetailData } from '../server/fns';
+import { NotFoundMessage } from '../../components/layout/PageHero';
+import { PaintingDetailView } from '../../components/paintings/PaintingDetailView';
+import { buildHead } from '../../lib/seo';
+import { buildBreadcrumbJsonLd } from '../../lib/seo/jsonLd';
+import { buildPaintingStructuredData } from '../../lib/seo/structuredData';
+import { getPainting, type PaintingDetailData } from '../../server/fns';
 
 export const Route = createFileRoute('/paintings/$slug')({
   loader: async ({ params }) => {

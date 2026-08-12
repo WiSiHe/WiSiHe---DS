@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Chip } from '@wisihe/ui-react';
-import { ContentCard, PageHero } from '../components/layout/PageHero';
-import { buildHead } from '../lib/seo';
-import { getRecipes, imageUrl } from '../server/fns';
+import { ContentCard, PageHero } from '../../components/layout/PageHero';
+import { buildHead } from '../../lib/seo';
+import { getRecipes, imageUrl } from '../../server/fns';
 
 export const Route = createFileRoute('/recipes/')({
   loader: () => getRecipes(),

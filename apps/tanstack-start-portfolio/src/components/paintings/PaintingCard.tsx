@@ -3,7 +3,9 @@
 import { PaintingCardView, resolveNsfwCompactLabel } from '@wisihe/ui-react';
 import { cleanTagName } from '@wisihe/utils';
 import { RouterLink } from '@/components/layout/RouterLink';
+import { ContentMorphImageFrame } from '@/components/motion/ContentMorphImageFrame';
 import Image from '@/components/ui/Image';
+import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
   getPaintingImageLqip,
   resolvePaintingCardLayout,
@@ -75,6 +77,8 @@ function PaintingCardLoaded({
     format,
     aspectRatio: image?.aspectRatio ?? null,
   });
+  const morphLayoutId =
+    layout !== 'carousel' && slug ? contentSlugLayoutId(String(slug)) : undefined;
 
   return (
     <PaintingCardView
@@ -100,6 +104,9 @@ function PaintingCardLoaded({
       palette={palette ?? image?.palette ?? null}
       LinkComponent={RouterLink}
       ImageComponent={Image}
+      imageLayoutId={morphLayoutId}
+      ImageMorphFrame={ContentMorphImageFrame}
+      imageLayoutTransition={sharedLayoutTransition}
       className={className ?? cardImageLayout.aspectClass}
     />
   );

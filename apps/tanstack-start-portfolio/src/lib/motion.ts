@@ -56,10 +56,15 @@ export const navItemVariants: Variants = {
 };
 
 /**
- * Page transition variants
+ * Page transition variants — match Next `app/template.tsx` (enter-only fade + y).
+ * Prefer `PageTransition` in the root route over wrapping individual pages.
  */
 export const pageVariants: Variants = {
-  initial: { opacity: 0, x: -10, filter: 'blur(4px)' },
-  animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
-  exit: { opacity: 0, x: 10, filter: 'blur(4px)' },
+  initial: { opacity: 0, y: 8 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] },
+  },
+  exit: { opacity: 0, y: -4, transition: { duration: 0.15 } },
 };
