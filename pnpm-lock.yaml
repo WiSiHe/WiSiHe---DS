@@ -7,6 +7,8 @@ settings:
 overrides:
   '@types/node': 25.3.5
 
+packageExtensionsChecksum: sha256-0/sBaznEFrgiqm7fvddXuiC/vvdveaMKnV2FRYBebmc=
+
 importers:
 
   .:
@@ -121,7 +123,7 @@ importers:
         version: 16.2.9(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       next-sanity:
         specifier: ^13.1.1
-        version: 13.1.1(@emotion/is-prop-valid@1.4.0)(@sanity/client@7.22.1)(@sanity/types@6.2.0(@types/react@19.2.15))(next@16.2.9(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react-is@19.2.7)(react@19.2.6)(sanity@6.0.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(svelte@5.56.4(@typescript-eslint/types@8.59.4))(typescript@6.0.3)
+        version: 13.1.1(e1796c6c31947ba7c8da6ec928d6ee89)
       ogl:
         specifier: 1.0.11
         version: 1.0.11
@@ -157,7 +159,7 @@ importers:
         version: 0.0.4(framer-motion@12.42.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(next@16.2.9(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       sanity:
         specifier: ^6.0.0
-        version: 6.0.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+        version: 6.0.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -197,22 +199,22 @@ importers:
     dependencies:
       '@sanity/assist':
         specifier: ^6.1.3
-        version: 6.1.3(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 6.1.3(0cc2d5fa7958aae0d422389ea000d448)
       '@sanity/blueprints':
         specifier: 0.21.0
         version: 0.21.0
       '@sanity/cli':
         specifier: ^7.4.0
-        version: 7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)
+        version: 7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)
       '@sanity/client':
         specifier: ^7.23.0
         version: 7.23.0
       '@sanity/code-input':
         specifier: 7.1.6
-        version: 7.1.6(9cf3f2e9be34b76d1f5b89ef0fedbc26)
+        version: 7.1.6(4f76b1756bfc1b8ab84539d270a665c6)
       '@sanity/document-internationalization':
         specifier: ^6.2.9
-        version: 6.2.9(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity-plugin-internationalized-array@5.1.9(9dd3e150e82f81a2ebcc58998fa399e8))(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 6.2.9(5d944953a796c2da327509344c4f4bf9)
       '@sanity/functions':
         specifier: 1.3.1
         version: 1.3.1
@@ -224,13 +226,13 @@ importers:
         version: 2.1.1
       '@sanity/studio-secrets':
         specifier: ^4.0.5
-        version: 4.0.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 4.0.5(2403dca73a4c57cc1f465cf8d714fb05)
       '@sanity/ui':
         specifier: ^3.2.0
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@sanity/vision':
         specifier: ^6.2.0
-        version: 6.2.0(@babel/runtime@7.29.7)(@codemirror/lint@6.9.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 6.2.0(8797c2c9394473e3843134a7ad104682)
       algoliasearch:
         specifier: 5.52.1
         version: 5.52.1
@@ -251,14 +253,17 @@ importers:
         version: 19.2.6
       sanity:
         specifier: ^6.2.0
-        version: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+        version: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       sanity-plugin-media:
         specifier: ^5.0.4
-        version: 5.0.4(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+        version: 5.0.4(0cc2d5fa7958aae0d422389ea000d448)
       styled-components:
         specifier: ^6.4.2
         version: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     devDependencies:
+      '@csstools/css-calc':
+        specifier: ^2.1.4
+        version: 2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@types/node':
         specifier: 25.3.5
         version: 25.3.5
@@ -515,7 +520,7 @@ importers:
         version: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
 
   apps/wisihe-ai:
     dependencies:
@@ -790,10 +795,14 @@ packages:
 
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
+    peerDependencies:
+      '@csstools/css-calc': '*'
 
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@csstools/css-calc': '*'
 
   '@asamuzakjp/dom-selector@6.8.1':
     resolution: {integrity: sha512-MvRz1nCqW0fsy8Qz4dnLIvhOlMzqDVBabZx6lH+YywFDdjXhMY37SmpV1XFX3JzG5GWHn63j6HX6QPr3lZXHvQ==}
@@ -10404,6 +10413,9 @@ packages:
   third-party-web@0.29.2:
     resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
 
+  third-party-web@0.30.0:
+    resolution: {integrity: sha512-p+PfyL5U0ediGzvwPzMSdD9MnC8rHW6nWJJVLIQvqN7RsSqfaZ+7n4c9GILqH36EYR0eXB9CzAeCRnKFr/9uJg==}
+
   three-mesh-bvh@0.8.3:
     resolution: {integrity: sha512-4G5lBaF+g2auKX3P0yqx+MJC6oVt6sB5k+CchS6Ob0qvH0YIhuUk1eYr7ktsIpY+albCqE80/FVQGV190PmiAg==}
     peerDependencies:
@@ -11470,15 +11482,31 @@ snapshots:
       '@aws-lite/client': 0.23.7
       lambda-runtimes: 3.0.0
 
-  '@asamuzakjp/css-color@3.2.0':
+  '@asamuzakjp/css-color@3.2.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))':
     dependencies:
-      '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
+      '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-color-parser': 3.1.0(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
 
-  '@asamuzakjp/css-color@5.1.11':
+  '@asamuzakjp/css-color@5.1.11(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))':
+    dependencies:
+      '@asamuzakjp/generational-cache': 1.0.1
+      '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-color-parser': 4.1.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-tokenizer': 4.0.0
+
+  '@asamuzakjp/css-color@5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))':
+    dependencies:
+      '@asamuzakjp/generational-cache': 1.0.1
+      '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
+      '@csstools/css-color-parser': 4.1.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-tokenizer': 4.0.0
+
+  '@asamuzakjp/css-color@5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))':
     dependencies:
       '@asamuzakjp/generational-cache': 1.0.1
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
@@ -12639,6 +12667,16 @@ snapshots:
   '@csstools/color-helpers@6.0.2': {}
 
   '@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
+    dependencies:
+      '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
+      '@csstools/css-tokenizer': 3.0.4
+
+  '@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
+    dependencies:
+      '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-tokenizer': 4.0.0
+
+  '@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
@@ -13845,7 +13883,7 @@ snapshots:
       - utf-8-validate
       - vue-tsc
 
-  '@module-federation/vite@1.16.0(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@module-federation/vite@1.16.0(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       '@module-federation/dts-plugin': 2.5.0(node-fetch@3.3.2)(typescript@6.0.3)
       '@module-federation/runtime': 2.5.0(node-fetch@3.3.2)
@@ -14575,7 +14613,7 @@ snapshots:
   '@paulirish/trace_engine@0.0.65':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.2
+      third-party-web: 0.30.0
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -15073,7 +15111,7 @@ snapshots:
 
   '@sanity/asset-utils@2.3.0': {}
 
-  '@sanity/assist@6.1.3(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@sanity/assist@6.1.3(0cc2d5fa7958aae0d422389ea000d448)':
     dependencies:
       '@portabletext/types': 4.0.2
       '@sanity/client': 7.23.0
@@ -15088,7 +15126,7 @@ snapshots:
       react-fast-compare: 3.2.2
       rxjs: 7.8.2
       rxjs-exhaustmap-with-trailing: 2.1.1(rxjs@7.8.2)
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
@@ -15107,16 +15145,16 @@ snapshots:
 
   '@sanity/blueprints@0.21.0': {}
 
-  '@sanity/cli-build@1.1.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+  '@sanity/cli-build@1.1.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@oclif/core': 4.11.11
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/schema': 6.2.0(@types/react@19.2.15)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/types': 6.2.0(@types/react@19.2.15)
-      '@sanity/workbench-cli': 1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/workbench-cli': 1.1.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       chokidar: 5.0.0
       cjs-module-lexer: 2.2.0
@@ -15137,6 +15175,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@types/react'
@@ -15190,6 +15229,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@types/react'
@@ -15213,16 +15253,16 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@sanity/cli-build@1.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+  '@sanity/cli-build@1.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@oclif/core': 4.11.11
       '@rolldown/plugin-babel': 0.2.3(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/schema': 6.2.0(@types/react@19.2.15)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/types': 6.2.0(@types/react@19.2.15)
-      '@sanity/workbench-cli': 1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/workbench-cli': 1.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))
       chokidar: 5.0.0
       cjs-module-lexer: 2.2.0
@@ -15243,6 +15283,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@types/react'
@@ -15266,7 +15307,7 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)':
+  '@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)':
     dependencies:
       '@inquirer/prompts': 8.5.2(@types/node@25.3.5)
       '@oclif/core': 4.11.11
@@ -15277,7 +15318,7 @@ snapshots:
       get-tsconfig: 4.14.0
       import-meta-resolve: 4.2.0
       jiti: 2.7.0
-      jsdom: 29.1.1(@noble/hashes@2.2.0)
+      jsdom: 29.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
       json-lexer: 1.2.0
       log-symbols: 7.0.1
       ora: 9.4.1
@@ -15290,6 +15331,7 @@ snapshots:
     optionalDependencies:
       babel-plugin-react-compiler: 1.0.0
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@vitejs/devtools'
@@ -15304,27 +15346,105 @@ snapshots:
       - terser
       - yaml
 
-  '@sanity/cli@7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)':
+  '@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)':
+    dependencies:
+      '@inquirer/prompts': 8.5.2(@types/node@25.3.5)
+      '@oclif/core': 4.11.11
+      '@sanity/client': 7.23.0
+      boxen: 8.0.1
+      debug: 4.4.3(supports-color@8.1.1)
+      get-it: 8.8.0
+      get-tsconfig: 4.14.0
+      import-meta-resolve: 4.2.0
+      jiti: 2.7.0
+      jsdom: 29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)
+      json-lexer: 1.2.0
+      log-symbols: 7.0.1
+      ora: 9.4.1
+      read-package-up: 12.0.0
+      rxjs: 7.8.2
+      tsx: 4.22.4
+      vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite-node: 6.0.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      zod: 4.4.3
+    optionalDependencies:
+      babel-plugin-react-compiler: 1.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - canvas
+      - esbuild
+      - less
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - yaml
+
+  '@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)':
+    dependencies:
+      '@inquirer/prompts': 8.5.2(@types/node@25.3.5)
+      '@oclif/core': 4.11.11
+      '@sanity/client': 7.23.0
+      boxen: 8.0.1
+      debug: 4.4.3(supports-color@8.1.1)
+      get-it: 8.8.0
+      get-tsconfig: 4.14.0
+      import-meta-resolve: 4.2.0
+      jiti: 2.7.0
+      jsdom: 29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
+      json-lexer: 1.2.0
+      log-symbols: 7.0.1
+      ora: 9.4.1
+      read-package-up: 12.0.0
+      rxjs: 7.8.2
+      tsx: 4.22.4
+      vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite-node: 6.0.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      zod: 4.4.3
+    optionalDependencies:
+      babel-plugin-react-compiler: 1.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - canvas
+      - esbuild
+      - less
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - yaml
+
+  '@sanity/cli@7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)':
     dependencies:
       '@oclif/core': 4.11.11
       '@oclif/plugin-help': 6.2.52
       '@oclif/plugin-not-found': 3.2.88(@types/node@25.3.5)
-      '@sanity/cli-build': 1.1.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-build': 1.1.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/client': 7.23.0
-      '@sanity/codegen': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)
+      '@sanity/codegen': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
       '@sanity/import': 6.0.3(@sanity/client@7.23.0)(@types/react@19.2.15)
-      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.2)
+      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.2)
       '@sanity/runtime-cli': 17.0.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0)
       '@sanity/schema': 6.2.0(@types/react@19.2.15)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/template-validator': 3.1.0
       '@sanity/types': 6.2.0(@types/react@19.2.15)
-      '@sanity/workbench-cli': 1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/workbench-cli': 1.1.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
       '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
@@ -15341,7 +15461,7 @@ snapshots:
       gunzip-maybe: 1.4.2
       import-meta-resolve: 4.2.0
       is-installed-globally: 1.0.0
-      isomorphic-dompurify: 2.36.0(@noble/hashes@2.2.0)
+      isomorphic-dompurify: 2.36.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
       json5: 2.2.3
       jsonc-parser: 3.3.1
       lodash-es: 4.18.1
@@ -15379,6 +15499,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@rolldown/plugin-babel'
       - '@types/node'
@@ -15429,7 +15550,7 @@ snapshots:
       '@sanity/workbench-cli': 1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
-      '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
       chokidar: 5.0.0
       console-table-printer: 2.16.1
       date-fns: 4.4.0
@@ -15481,6 +15602,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@rolldown/plugin-babel'
       - '@types/node'
@@ -15508,27 +15630,27 @@ snapshots:
       - vue-tsc
       - xstate
 
-  '@sanity/cli@7.4.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(typescript@6.0.3)(xstate@5.32.0)':
+  '@sanity/cli@7.4.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(typescript@6.0.3)(xstate@5.32.0)':
     dependencies:
       '@oclif/core': 4.11.11
       '@oclif/plugin-help': 6.2.52
       '@oclif/plugin-not-found': 3.2.88(@types/node@25.3.5)
-      '@sanity/cli-build': 1.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-build': 1.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/client': 7.23.0
-      '@sanity/codegen': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)
+      '@sanity/codegen': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
       '@sanity/import': 6.0.3(@sanity/client@7.23.0)(@types/react@19.2.15)
-      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)
+      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)
       '@sanity/runtime-cli': 17.0.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0)
       '@sanity/schema': 6.2.0(@types/react@19.2.15)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/template-validator': 3.1.0
       '@sanity/types': 6.2.0(@types/react@19.2.15)
-      '@sanity/workbench-cli': 1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@sanity/workbench-cli': 1.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
       '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -15545,7 +15667,7 @@ snapshots:
       gunzip-maybe: 1.4.2
       import-meta-resolve: 4.2.0
       is-installed-globally: 1.0.0
-      isomorphic-dompurify: 2.36.0(@noble/hashes@2.2.0)
+      isomorphic-dompurify: 2.36.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)
       json5: 2.2.3
       jsonc-parser: 3.3.1
       lodash-es: 4.18.1
@@ -15583,6 +15705,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@rolldown/plugin-babel'
       - '@types/node'
@@ -15624,7 +15747,7 @@ snapshots:
       nanoid: 3.3.15
       rxjs: 7.8.2
 
-  '@sanity/code-input@7.1.6(9cf3f2e9be34b76d1f5b89ef0fedbc26)':
+  '@sanity/code-input@7.1.6(4f76b1756bfc1b8ab84539d270a665c6)':
     dependencies:
       '@codemirror/lang-html': 6.4.11
       '@codemirror/lang-java': 6.0.2
@@ -15644,7 +15767,7 @@ snapshots:
       '@uiw/codemirror-themes': 4.25.10(@codemirror/language@6.12.4)(@codemirror/state@6.7.0)(@codemirror/view@6.43.4)
       '@uiw/react-codemirror': 4.25.10(@babel/runtime@7.29.7)(@codemirror/autocomplete@6.20.3)(@codemirror/language@6.12.4)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.1)(@codemirror/state@6.7.0)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.43.4)(codemirror@6.0.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@babel/runtime'
@@ -15656,6 +15779,64 @@ snapshots:
       - codemirror
       - react-dom
       - react-is
+
+  '@sanity/codegen@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)':
+    dependencies:
+      '@babel/core': 7.29.7
+      '@babel/generator': 7.29.7
+      '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-react': 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
+      '@babel/register': 7.29.7(@babel/core@7.29.7)
+      '@babel/traverse': 7.29.7
+      '@babel/types': 7.29.7
+      '@oclif/core': 4.11.11
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/telemetry': 1.1.0(react@19.2.7)
+      '@sanity/worker-channels': 2.0.0
+      chokidar: 3.6.0
+      debug: 4.4.3(supports-color@8.1.1)
+      globby: 11.1.0
+      groq: 6.2.0
+      groq-js: 1.30.3
+      json5: 2.2.3
+      lodash-es: 4.18.1
+      prettier: 3.9.1
+      reselect: 5.2.0
+      tsconfig-paths: 4.2.0
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - react
+      - supports-color
+
+  '@sanity/codegen@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)':
+    dependencies:
+      '@babel/core': 7.29.7
+      '@babel/generator': 7.29.7
+      '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-react': 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
+      '@babel/register': 7.29.7(@babel/core@7.29.7)
+      '@babel/traverse': 7.29.7
+      '@babel/types': 7.29.7
+      '@oclif/core': 4.11.11
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/telemetry': 1.1.0(react@19.2.7)
+      '@sanity/worker-channels': 2.0.0
+      chokidar: 3.6.0
+      debug: 4.4.3(supports-color@8.1.1)
+      globby: 11.1.0
+      groq: 6.2.0
+      groq-js: 1.30.3
+      json5: 2.2.3
+      lodash-es: 4.18.1
+      prettier: 3.9.1
+      reselect: 5.2.0
+      tsconfig-paths: 4.2.0
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - react
+      - supports-color
 
   '@sanity/codegen@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(react@19.2.7)':
     dependencies:
@@ -15716,8 +15897,8 @@ snapshots:
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
 
-  ? '@sanity/document-internationalization@6.2.9(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity-plugin-internationalized-array@5.1.9(9dd3e150e82f81a2ebcc58998fa399e8))(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))'
-  : dependencies:
+  '@sanity/document-internationalization@6.2.9(5d944953a796c2da327509344c4f4bf9)':
+    dependencies:
       '@sanity/icons': 3.7.4(react@19.2.6)
       '@sanity/mutator': 6.2.0(@types/react@19.2.15)
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
@@ -15726,9 +15907,9 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
-      sanity-plugin-internationalized-array: 5.1.9(9dd3e150e82f81a2ebcc58998fa399e8)
-      sanity-plugin-utils: 2.0.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity-plugin-internationalized-array: 5.1.9(a695bcb324dae7e8be491969d0f89e0d)
+      sanity-plugin-utils: 2.0.3(2403dca73a4c57cc1f465cf8d714fb05)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - '@types/react'
@@ -15833,7 +16014,7 @@ snapshots:
 
   '@sanity/json-match@1.0.5': {}
 
-  '@sanity/language-filter@5.0.4(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@sanity/language-filter@5.0.4(2403dca73a4c57cc1f465cf8d714fb05)':
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.6)
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
@@ -15841,7 +16022,7 @@ snapshots:
       react-dom: 19.2.6(react@19.2.6)
       react-rx: 4.2.2(react@19.2.6)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - react-is
@@ -15865,10 +16046,10 @@ snapshots:
     dependencies:
       '@sanity/comlink': 4.0.1
 
-  '@sanity/migrate@7.0.2(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)':
+  '@sanity/migrate@7.0.2(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)':
     dependencies:
       '@oclif/core': 4.11.11
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/client': 7.23.0
       '@sanity/mutate': 0.18.1(xstate@5.32.0)
       '@sanity/types': 6.2.0(@types/react@19.2.15)
@@ -15884,10 +16065,29 @@ snapshots:
       - supports-color
       - xstate
 
-  '@sanity/migrate@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)':
+  '@sanity/migrate@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.2)':
     dependencies:
       '@oclif/core': 4.11.11
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/client': 7.23.0
+      '@sanity/mutate': 0.18.1(xstate@5.32.2)
+      '@sanity/types': 6.2.0(@types/react@19.2.15)
+      '@sanity/util': 6.2.0(@types/react@19.2.15)
+      arrify: 2.0.1
+      console-table-printer: 2.16.1
+      debug: 4.4.3(supports-color@8.1.1)
+      fast-fifo: 1.3.2
+      groq-js: 1.30.3
+      p-map: 7.0.4
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+      - xstate
+
+  '@sanity/migrate@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)':
+    dependencies:
+      '@oclif/core': 4.11.11
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       '@sanity/client': 7.23.0
       '@sanity/mutate': 0.18.1(xstate@5.32.0)
       '@sanity/types': 6.2.0(@types/react@19.2.15)
@@ -16179,14 +16379,14 @@ snapshots:
       '@noble/ed25519': 3.1.0
       '@noble/hashes': 2.2.0
 
-  '@sanity/studio-secrets@4.0.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@sanity/studio-secrets@4.0.5(2403dca73a4c57cc1f465cf8d714fb05)':
     dependencies:
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       react-rx: 4.2.2(react@19.2.6)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - react-is
@@ -16297,7 +16497,7 @@ snapshots:
     dependencies:
       uuid: 11.1.1
 
-  '@sanity/vision@6.2.0(@babel/runtime@7.29.7)(@codemirror/lint@6.9.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))':
+  '@sanity/vision@6.2.0(8797c2c9394473e3843134a7ad104682)':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.10.4
@@ -16323,7 +16523,7 @@ snapshots:
       react: 19.2.6
       react-rx: 4.2.2(react@19.2.6)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@babel/runtime'
@@ -16397,13 +16597,44 @@ snapshots:
 
   '@sanity/webhook@4.0.4': {}
 
-  '@sanity/workbench-cli@1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+  '@sanity/workbench-cli@1.1.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@module-federation/vite': 1.16.0(node-fetch@3.3.2)(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
-      '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
       zod: 4.4.3
     transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - babel-plugin-react-compiler
+      - bufferutil
+      - canvas
+      - esbuild
+      - jiti
+      - less
+      - node-fetch
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - utf-8-validate
+      - vue-tsc
+      - yaml
+
+  '@sanity/workbench-cli@1.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+    dependencies:
+      '@module-federation/vite': 1.16.0(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@sanity/cli-core': 2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
+      vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@vitejs/devtools'
@@ -16428,11 +16659,12 @@ snapshots:
 
   '@sanity/workbench-cli@1.1.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
-      '@module-federation/vite': 1.16.0(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@module-federation/vite': 1.16.0(typescript@6.0.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(tsx@4.22.4)(yaml@2.9.0))
       '@sanity/cli-core': 2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0)
       vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
       zod: 4.4.3
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - '@types/node'
       - '@vitejs/devtools'
@@ -16636,7 +16868,7 @@ snapshots:
     optionalDependencies:
       '@vitest/browser': 4.1.7(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.7)
       '@vitest/runner': 4.1.7
-      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
     transitivePeerDependencies:
       - react
       - react-dom
@@ -17666,7 +17898,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
       ws: 8.20.1
     transitivePeerDependencies:
       - bufferutil
@@ -17686,7 +17918,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
     optionalDependencies:
       '@vitest/browser': 4.1.7(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.7)
 
@@ -18522,17 +18754,39 @@ snapshots:
 
   csscolorparser@1.0.3: {}
 
-  cssstyle@4.6.0:
+  cssstyle@4.6.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)):
     dependencies:
-      '@asamuzakjp/css-color': 3.2.0
+      '@asamuzakjp/css-color': 3.2.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
       rrweb-cssom: 0.8.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
 
   cssstyle@6.2.0:
     dependencies:
-      '@asamuzakjp/css-color': 5.1.11
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))
       '@csstools/css-syntax-patches-for-csstree': 1.1.5(css-tree@3.2.1)
       css-tree: 3.2.1
       lru-cache: 11.5.1
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+
+  cssstyle@6.2.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)):
+    dependencies:
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))
+      '@csstools/css-syntax-patches-for-csstree': 1.1.5(css-tree@3.2.1)
+      css-tree: 3.2.1
+      lru-cache: 11.5.1
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+
+  cssstyle@6.2.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)):
+    dependencies:
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
+      '@csstools/css-syntax-patches-for-csstree': 1.1.5(css-tree@3.2.1)
+      css-tree: 3.2.1
+      lru-cache: 11.5.1
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
 
   csstype@3.2.3: {}
 
@@ -20140,21 +20394,43 @@ snapshots:
 
   isobject@3.0.1: {}
 
-  isomorphic-dompurify@2.26.0:
+  isomorphic-dompurify@2.26.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)):
     dependencies:
       dompurify: 3.4.11
-      jsdom: 26.1.0
+      jsdom: 26.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - bufferutil
       - canvas
       - supports-color
       - utf-8-validate
+
+  isomorphic-dompurify@2.36.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0):
+    dependencies:
+      dompurify: 3.4.11
+      jsdom: 28.1.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - canvas
+      - supports-color
+
+  isomorphic-dompurify@2.36.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0):
+    dependencies:
+      dompurify: 3.4.11
+      jsdom: 28.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - canvas
+      - supports-color
 
   isomorphic-dompurify@2.36.0(@noble/hashes@2.2.0):
     dependencies:
       dompurify: 3.4.11
       jsdom: 28.1.0(@noble/hashes@2.2.0)
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - canvas
       - supports-color
@@ -20226,9 +20502,9 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jsdom@26.1.0:
+  jsdom@26.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)):
     dependencies:
-      cssstyle: 4.6.0
+      cssstyle: 4.6.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
       data-urls: 5.0.0
       decimal.js: 10.6.0
       html-encoding-sniffer: 4.0.0
@@ -20249,9 +20525,66 @@ snapshots:
       ws: 8.21.0
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - bufferutil
       - supports-color
       - utf-8-validate
+
+  jsdom@28.1.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0):
+    dependencies:
+      '@acemir/cssom': 0.9.31
+      '@asamuzakjp/dom-selector': 6.8.1
+      '@bramus/specificity': 2.4.2
+      '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
+      cssstyle: 6.2.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))
+      data-urls: 7.0.0(@noble/hashes@2.2.0)
+      decimal.js: 10.6.0
+      html-encoding-sniffer: 6.0.0(@noble/hashes@2.2.0)
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      is-potential-custom-element-name: 1.0.1
+      parse5: 8.0.1
+      saxes: 6.0.0
+      symbol-tree: 3.2.4
+      tough-cookie: 6.0.1
+      undici: 7.28.0
+      w3c-xmlserializer: 5.0.0
+      webidl-conversions: 8.0.1
+      whatwg-mimetype: 5.0.0
+      whatwg-url: 16.0.1(@noble/hashes@2.2.0)
+      xml-name-validator: 5.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - supports-color
+
+  jsdom@28.1.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0):
+    dependencies:
+      '@acemir/cssom': 0.9.31
+      '@asamuzakjp/dom-selector': 6.8.1
+      '@bramus/specificity': 2.4.2
+      '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
+      cssstyle: 6.2.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
+      data-urls: 7.0.0(@noble/hashes@2.2.0)
+      decimal.js: 10.6.0
+      html-encoding-sniffer: 6.0.0(@noble/hashes@2.2.0)
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      is-potential-custom-element-name: 1.0.1
+      parse5: 8.0.1
+      saxes: 6.0.0
+      symbol-tree: 3.2.4
+      tough-cookie: 6.0.1
+      undici: 7.28.0
+      w3c-xmlserializer: 5.0.0
+      webidl-conversions: 8.0.1
+      whatwg-mimetype: 5.0.0
+      whatwg-url: 16.0.1(@noble/hashes@2.2.0)
+      xml-name-validator: 5.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+      - supports-color
 
   jsdom@28.1.0(@noble/hashes@2.2.0):
     dependencies:
@@ -20277,12 +20610,13 @@ snapshots:
       whatwg-url: 16.0.1(@noble/hashes@2.2.0)
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
       - supports-color
 
-  jsdom@29.1.1(@noble/hashes@2.2.0):
+  jsdom@29.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0):
     dependencies:
-      '@asamuzakjp/css-color': 5.1.11
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))
       '@asamuzakjp/dom-selector': 7.1.1
       '@bramus/specificity': 2.4.2
       '@csstools/css-syntax-patches-for-csstree': 1.1.4(css-tree@3.2.1)
@@ -20304,6 +20638,61 @@ snapshots:
       whatwg-url: 16.0.1(@noble/hashes@2.2.0)
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+
+  jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0):
+    dependencies:
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
+      '@asamuzakjp/dom-selector': 7.1.1
+      '@bramus/specificity': 2.4.2
+      '@csstools/css-syntax-patches-for-csstree': 1.1.4(css-tree@3.2.1)
+      '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
+      css-tree: 3.2.1
+      data-urls: 7.0.0(@noble/hashes@2.2.0)
+      decimal.js: 10.6.0
+      html-encoding-sniffer: 6.0.0(@noble/hashes@2.2.0)
+      is-potential-custom-element-name: 1.0.1
+      lru-cache: 11.5.0
+      parse5: 8.0.1
+      saxes: 6.0.0
+      symbol-tree: 3.2.4
+      tough-cookie: 6.0.1
+      undici: 7.25.0
+      w3c-xmlserializer: 5.0.0
+      webidl-conversions: 8.0.1
+      whatwg-mimetype: 5.0.0
+      whatwg-url: 16.0.1(@noble/hashes@2.2.0)
+      xml-name-validator: 5.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
+      - '@noble/hashes'
+
+  jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0):
+    dependencies:
+      '@asamuzakjp/css-color': 5.1.11(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))
+      '@asamuzakjp/dom-selector': 7.1.1
+      '@bramus/specificity': 2.4.2
+      '@csstools/css-syntax-patches-for-csstree': 1.1.4(css-tree@3.2.1)
+      '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
+      css-tree: 3.2.1
+      data-urls: 7.0.0(@noble/hashes@2.2.0)
+      decimal.js: 10.6.0
+      html-encoding-sniffer: 6.0.0(@noble/hashes@2.2.0)
+      is-potential-custom-element-name: 1.0.1
+      lru-cache: 11.5.0
+      parse5: 8.0.1
+      saxes: 6.0.0
+      symbol-tree: 3.2.4
+      tough-cookie: 6.0.1
+      undici: 7.25.0
+      w3c-xmlserializer: 5.0.0
+      webidl-conversions: 8.0.1
+      whatwg-mimetype: 5.0.0
+      whatwg-url: 16.0.1(@noble/hashes@2.2.0)
+      xml-name-validator: 5.0.0
+    transitivePeerDependencies:
+      - '@csstools/css-calc'
       - '@noble/hashes'
 
   jsesc@3.1.0: {}
@@ -20908,7 +21297,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-sanity@13.1.1(@emotion/is-prop-valid@1.4.0)(@sanity/client@7.22.1)(@sanity/types@6.2.0(@types/react@19.2.15))(next@16.2.9(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react-is@19.2.7)(react@19.2.6)(sanity@6.0.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(svelte@5.56.4(@typescript-eslint/types@8.59.4))(typescript@6.0.3):
+  next-sanity@13.1.1(e1796c6c31947ba7c8da6ec928d6ee89):
     dependencies:
       '@portabletext/react': 6.2.0(react@19.2.6)
       '@sanity/client': 7.22.1
@@ -20921,7 +21310,7 @@ snapshots:
       next: 16.2.9(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      sanity: 6.0.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.0.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
@@ -22160,25 +22549,25 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sanity-plugin-internationalized-array@5.1.9(9dd3e150e82f81a2ebcc58998fa399e8):
+  sanity-plugin-internationalized-array@5.1.9(a695bcb324dae7e8be491969d0f89e0d):
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.6)
-      '@sanity/language-filter': 5.0.4(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+      '@sanity/language-filter': 5.0.4(2403dca73a4c57cc1f465cf8d714fb05)
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
       '@sanity/util': 6.2.0(@types/react@19.2.15)
       lodash-es: 4.18.1
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
     optionalDependencies:
-      '@sanity/assist': 6.1.3(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
+      '@sanity/assist': 6.1.3(0cc2d5fa7958aae0d422389ea000d448)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - '@types/react'
       - react-is
       - styled-components
 
-  sanity-plugin-media@5.0.4(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)):
+  sanity-plugin-media@5.0.4(0cc2d5fa7958aae0d422389ea000d448):
     dependencies:
       '@hookform/resolvers': 4.1.3(react-hook-form@7.80.0(react@19.2.6))
       '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@19.2.15)(react@19.2.6)(redux@5.0.1))(react@19.2.6)
@@ -22207,7 +22596,7 @@ snapshots:
       redux: 5.0.1
       redux-observable: 3.0.0-rc.2(redux@5.0.1)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       zod: 3.25.76
     transitivePeerDependencies:
@@ -22215,7 +22604,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  sanity-plugin-utils@2.0.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3))(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)):
+  sanity-plugin-utils@2.0.3(2403dca73a4c57cc1f465cf8d714fb05):
     dependencies:
       '@sanity/asset-utils': 2.3.0
       '@sanity/icons': 3.7.4(react@19.2.6)
@@ -22225,13 +22614,13 @@ snapshots:
       react-dom: 19.2.6(react@19.2.6)
       react-fast-compare: 3.2.2
       rxjs: 7.8.2
-      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      sanity: 6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - react-is
 
-  sanity@6.0.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3):
+  sanity@6.0.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(immer@11.1.8)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -22255,7 +22644,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.6)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
-      '@sanity/cli': 7.4.0(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(typescript@6.0.3)(xstate@5.32.0)
+      '@sanity/cli': 7.4.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(typescript@6.0.3)(xstate@5.32.0)
       '@sanity/client': 7.23.0
       '@sanity/color': 3.0.6
       '@sanity/comlink': 4.0.1
@@ -22270,7 +22659,7 @@ snapshots:
       '@sanity/logos': 2.2.2(react@19.2.6)
       '@sanity/media-library-types': 1.4.0
       '@sanity/message-protocol': 0.23.0
-      '@sanity/migrate': 7.0.2(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)
+      '@sanity/migrate': 7.0.2(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.0)
       '@sanity/mutate': 0.18.1(xstate@5.32.0)
       '@sanity/mutator': 6.0.0(@types/react@19.2.15)
       '@sanity/presentation-comlink': 2.1.0(@sanity/client@7.23.0)(@sanity/types@6.0.0(@types/react@19.2.15))
@@ -22298,7 +22687,7 @@ snapshots:
       history: 5.3.0
       i18next: 26.3.0(typescript@6.0.3)
       is-hotkey-esm: 1.0.0
-      isomorphic-dompurify: 2.26.0
+      isomorphic-dompurify: 2.26.0(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4))
       json-reduce: 3.0.0
       json-stable-stringify: 1.3.0
       lodash-es: 4.18.1
@@ -22341,6 +22730,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@emotion/is-prop-valid'
       - '@noble/hashes'
       - '@oclif/core'
@@ -22375,7 +22765,7 @@ snapshots:
       - utf-8-validate
       - vue-tsc
 
-  sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3):
+  sanity@6.2.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(prismjs@1.30.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rolldown@1.1.3)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -22399,7 +22789,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.6)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
-      '@sanity/cli': 7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)
+      '@sanity/cli': 7.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)))(@types/node@25.3.5)(@types/react@19.2.15)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(node-fetch@3.3.2)(rolldown@1.1.3)(typescript@6.0.3)(xstate@5.32.2)
       '@sanity/client': 7.23.0
       '@sanity/color': 3.0.6
       '@sanity/comlink': 4.0.1
@@ -22414,7 +22804,7 @@ snapshots:
       '@sanity/logos': 2.2.2(react@19.2.6)
       '@sanity/media-library-types': 1.4.0
       '@sanity/message-protocol': 0.23.0
-      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.2)
+      '@sanity/migrate': 7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.1.1(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)(@types/node@25.3.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(yaml@2.9.0))(@types/react@19.2.15)(xstate@5.32.2)
       '@sanity/mutate': 0.18.1(xstate@5.32.2)
       '@sanity/mutator': 6.2.0(@types/react@19.2.15)
       '@sanity/presentation-comlink': 2.1.0(@sanity/client@7.23.0)(@sanity/types@6.2.0(@types/react@19.2.15))
@@ -22442,7 +22832,7 @@ snapshots:
       history: 5.3.0
       i18next: 26.3.3(typescript@6.0.3)
       is-hotkey-esm: 1.0.0
-      isomorphic-dompurify: 2.36.0(@noble/hashes@2.2.0)
+      isomorphic-dompurify: 2.36.0(@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
       json-reduce: 3.0.0
       json-stable-stringify: 1.3.0
       lodash-es: 4.18.1
@@ -22485,6 +22875,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@emotion/is-prop-valid'
       - '@noble/hashes'
       - '@oclif/core'
@@ -22629,6 +23020,7 @@ snapshots:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
       - '@babel/runtime'
+      - '@csstools/css-calc'
       - '@emotion/is-prop-valid'
       - '@noble/hashes'
       - '@oclif/core'
@@ -23247,6 +23639,8 @@ snapshots:
 
   third-party-web@0.29.2: {}
 
+  third-party-web@0.30.0: {}
+
   three-mesh-bvh@0.8.3(three@0.184.0):
     dependencies:
       three: 0.184.0
@@ -23760,7 +24154,7 @@ snapshots:
     optionalDependencies:
       vite: 8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  vitest@4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)):
+  vitest@4.1.7(@opentelemetry/api@1.9.1)(@types/node@25.3.5)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0))(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.7
       '@vitest/mocker': 4.1.7(vite@8.1.0(@types/node@25.3.5)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -23786,7 +24180,7 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@types/node': 25.3.5
       '@vitest/coverage-v8': 4.1.7(@vitest/browser@4.1.7)(vitest@4.1.7)
-      jsdom: 29.1.1(@noble/hashes@2.2.0)
+      jsdom: 29.1.1(@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0))(@noble/hashes@2.2.0)
     transitivePeerDependencies:
       - msw
 
