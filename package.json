@@ -48,6 +48,13 @@
     "overrides": {
       "@types/node": "25.3.5"
     },
+    "packageExtensions": {
+      "@asamuzakjp/css-color": {
+        "peerDependencies": {
+          "@csstools/css-calc": "*"
+        }
+      }
+    },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "@vercel/speed-insights",
