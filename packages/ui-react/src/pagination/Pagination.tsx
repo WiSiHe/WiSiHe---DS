@@ -1,5 +1,3 @@
-'use client';
-
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -7,12 +5,14 @@ import {
   IconChevronsRight,
 } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
+import type React from 'react';
 import { buildPaginationItems } from './buildPaginationItems';
 
 export type PaginationProps = Readonly<{
   page: number;
   nbPages: number;
   onPageChange: (page: number) => void;
+  getPageHref?: (page: number) => string;
   disabled?: boolean;
   ariaLabel?: string;
   className?: string;
@@ -45,6 +45,7 @@ export function Pagination({
   page,
   nbPages,
   onPageChange,
+  getPageHref,
   disabled = false,
   ariaLabel = 'Pagination',
   className,
@@ -60,6 +61,44 @@ export function Pagination({
     onPageChange(nextPage);
   };
 
+  const renderNavAction = (
+    targetPage: number,
+    isDisabled: boolean,
+    label: string,
+    icon: React.ReactNode,
+  ) => {
+    const href = getPageHref && !isDisabled ? getPageHref(targetPage) : undefined;
+    if (href && !disabled) {
+      return (
+        <a
+          href={href}
+          className={navButtonClass}
+          onClick={e => {
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+              e.preventDefault();
+              goToPage(targetPage);
+            }
+          }}
+          aria-label={label}
+        >
+          {icon}
+        </a>
+      );
+    }
+
+    return (
+      <button
+        type='button'
+        className={navButtonClass}
+        disabled={disabled || isDisabled}
+        onClick={() => goToPage(targetPage)}
+        aria-label={label}
+      >
+        {icon}
+      </button>
+    );
+  };
+
   return (
     <nav
       className={cn('mt-12 flex w-full flex-col items-center gap-3', className)}
@@ -73,24 +112,18 @@ export function Pagination({
           disabled && 'opacity-70',
         )}
       >
-        <button
-          type='button'
-          className={navButtonClass}
-          disabled={disabled || isFirstPage}
-          onClick={() => goToPage(0)}
-          aria-label='First page'
-        >
-          <IconChevronsLeft className='size-4' stroke={2} aria-hidden />
-        </button>
-        <button
-          type='button'
-          className={navButtonClass}
-          disabled={disabled || isFirstPage}
-          onClick={() => goToPage(page - 1)}
-          aria-label='Previous page'
-        >
-          <IconChevronLeft className='size-4' stroke={2} aria-hidden />
-        </button>
+        {renderNavAction(
+          0,
+          isFirstPage,
+          'First page',
+          <IconChevronsLeft className='size-4' stroke={2} aria-hidden />,
+        )}
+        {renderNavAction(
+          page - 1,
+          isFirstPage,
+          'Previous page',
+          <IconChevronLeft className='size-4' stroke={2} aria-hidden />,
+        )}
 
         <ul className='mx-0.5 m-0 flex list-none flex-wrap items-center justify-center gap-0.5 p-0'>
           {items.map(item =>
@@ -104,43 +137,64 @@ export function Pagination({
               </li>
             ) : (
               <li key={item.page}>
-                <button
-                  type='button'
-                  className={cn(
+                {(() => {
+                  const isActive = item.page === page;
+                  const href = getPageHref && !disabled ? getPageHref(item.page) : undefined;
+                  const itemClass = cn(
                     pageButtonClass,
-                    item.page === page &&
+                    isActive &&
                       'bg-accent font-semibold text-accent-contrast shadow-sm hover:bg-accent hover:text-accent-contrast',
-                  )}
-                  disabled={disabled}
-                  onClick={() => goToPage(item.page)}
-                  aria-label={`Page ${item.page + 1}`}
-                  aria-current={item.page === page ? 'page' : undefined}
-                >
-                  {item.page + 1}
-                </button>
+                  );
+
+                  if (href) {
+                    return (
+                      <a
+                        href={href}
+                        className={itemClass}
+                        onClick={e => {
+                          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                            e.preventDefault();
+                            goToPage(item.page);
+                          }
+                        }}
+                        aria-label={`Page ${item.page + 1}`}
+                        aria-current={isActive ? 'page' : undefined}
+                      >
+                        {item.page + 1}
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <button
+                      type='button'
+                      className={itemClass}
+                      disabled={disabled}
+                      onClick={() => goToPage(item.page)}
+                      aria-label={`Page ${item.page + 1}`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {item.page + 1}
+                    </button>
+                  );
+                })()}
               </li>
             ),
           )}
         </ul>
 
-        <button
-          type='button'
-          className={navButtonClass}
-          disabled={disabled || isLastPage}
-          onClick={() => goToPage(page + 1)}
-          aria-label='Next page'
-        >
-          <IconChevronRight className='size-4' stroke={2} aria-hidden />
-        </button>
-        <button
-          type='button'
-          className={navButtonClass}
-          disabled={disabled || isLastPage}
-          onClick={() => goToPage(nbPages - 1)}
-          aria-label='Last page'
-        >
-          <IconChevronsRight className='size-4' stroke={2} aria-hidden />
-        </button>
+        {renderNavAction(
+          page + 1,
+          isLastPage,
+          'Next page',
+          <IconChevronRight className='size-4' stroke={2} aria-hidden />,
+        )}
+        {renderNavAction(
+          nbPages - 1,
+          isLastPage,
+          'Last page',
+          <IconChevronsRight className='size-4' stroke={2} aria-hidden />,
+        )}
       </div>
 
       <p className='text-xs tabular-nums text-foreground-muted' aria-live='polite'>

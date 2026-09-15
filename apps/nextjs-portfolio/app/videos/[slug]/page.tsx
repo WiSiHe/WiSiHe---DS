@@ -10,6 +10,8 @@ import { videoBySlugQuery, videosSlugs } from '@/sanity/lib/queries';
 import { urlForImage } from '@/sanity/lib/utils';
 import { VideoDetail } from './VideoDetail';
 
+export const revalidate = 86400;
+
 type Props = { params: Promise<{ slug: string }> };
 
 function getYouTubeId(url: string): string | null {

@@ -1,13 +1,11 @@
 import { ThemeProvider } from '@teispace/next-themes';
-import { getTheme } from '@teispace/next-themes/server';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { AboutQueryResult, SettingsQueryResult } from '@wisihe/sanity-queries';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-import { draftMode } from 'next/headers';
-import { VisualEditing } from 'next-sanity/visual-editing';
+import { Suspense } from 'react';
 import { ProgressBar, ProgressBarProvider } from 'react-transition-progress';
 import HeaderNavigation from '@/app/components/layout/HeaderNavigation';
 import { MotionLayoutGroup } from '@/app/components/layout/MotionLayoutGroup';
@@ -20,7 +18,7 @@ import { SanityLive, sanityFetch } from '@/sanity/lib/live';
 import { aboutQuery, settingsQuery } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import { handleError } from './client-utils';
-import DraftModeToast from './components/cms/DraftModeToast';
+import { DraftModeBridge } from './components/cms/DraftModeBridge';
 import AppToaster from './components/layout/AppToaster/AppToaster';
 import Footer from './components/layout/Footer/Footer';
 import './globals.css';
@@ -94,9 +92,6 @@ export async function generateMetadata(): Promise<Metadata> {
       telephone: false,
     },
     metadataBase: new URL('https://www.wisihe.no'),
-    alternates: {
-      canonical: 'https://www.wisihe.no',
-    },
     openGraph: {
       type: 'website',
       locale: 'en_US',
@@ -162,8 +157,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isEnabled: isDraftMode } = await draftMode();
-
   const [{ data: _settings2 }, { data: _aboutData }] = await Promise.all([
     sanityFetch({ query: settingsQuery, stega: false }),
     sanityFetch({ query: aboutQuery, stega: false }),
@@ -184,7 +177,6 @@ export default async function RootLayout({
   }
 
   const { socialLinks } = settings;
-  const initialTheme = await getTheme();
 
   return (
     <html lang='en' suppressHydrationWarning>
@@ -201,23 +193,15 @@ export default async function RootLayout({
           <ReactScanDev />
           <ProgressBarProvider>
             <ProgressBar className='fixed h-1 shadow-lg shadow-accent bg-accent top-0 z-50' />
-            <ThemeProvider
-              attribute='class'
-              defaultTheme='system'
-              enableSystem
-              initialTheme={initialTheme ?? undefined}
-            >
+            <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
               <PostHogProvider>
                 <PresentationMode />
                 <SmoothScroll />
                 <ListScrollPreserver />
                 <ScrollToTopOnNavigate />
-                {isDraftMode && (
-                  <>
-                    <DraftModeToast />
-                    <VisualEditing />
-                  </>
-                )}
+                <Suspense fallback={null}>
+                  <DraftModeBridge />
+                </Suspense>
                 <SanityLive onError={handleError} />
                 <HeaderNavigation />
                 <main id='main-content' className='bg-transparent'>

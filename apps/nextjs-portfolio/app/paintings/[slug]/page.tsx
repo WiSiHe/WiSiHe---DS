@@ -2,12 +2,15 @@ import type { PaintingQueryResult, PaintingsSlugsResult } from '@wisihe/sanity-q
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
+import { MorePaintings } from '@/app/components/paintings/PaintingDetails/MorePaintings';
 import PaintingDetail from '@/app/components/paintings/PaintingDetails/PaintingsDetails';
 import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
 import { buildContentMetadata, resolveSeoCopy, truncateMetaDescription } from '@/lib/seo/metadata';
 import { sanityFetch } from '@/sanity/lib/live';
 import { paintingQuery, paintingsSlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
+
+export const revalidate = 86400;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -60,11 +63,27 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   });
 }
 
+const morePaintingsQuery = `*[_type == "painting" && defined(slug.current) && slug.current != $slug && isNSFW != true && defined(image.asset)] | order(paintedAt desc)[0...4] {
+  _id,
+  title,
+  "slug": slug.current,
+  paintedAt,
+  image{
+    ...,
+    "lqip": asset->metadata.lqip,
+    "altText": altText
+  }
+}`;
+
 export default async function PaintingPage(props: Props) {
   const params = await props.params;
 
-  const [{ data: _painting }] = await Promise.all([sanityFetch({ query: paintingQuery, params })]);
+  const [{ data: _painting }, { data: _morePaintings }] = await Promise.all([
+    sanityFetch({ query: paintingQuery, params }),
+    sanityFetch({ query: morePaintingsQuery, params }),
+  ]);
   const painting = _painting as PaintingQueryResult;
+  const morePaintings = (_morePaintings as any) ?? [];
 
   if (!painting?._id) {
     return notFound();
@@ -111,6 +130,7 @@ export default async function PaintingPage(props: Props) {
       <JsonLd data={structuredData} />
       <JsonLd data={breadcrumbData} />
       <PaintingDetail paintingData={painting} />
+      <MorePaintings paintings={morePaintings} />
     </>
   );
 }

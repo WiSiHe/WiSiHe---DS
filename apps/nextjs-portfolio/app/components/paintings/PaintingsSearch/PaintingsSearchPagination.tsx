@@ -13,6 +13,7 @@ export default function PaintingsSearchPagination() {
       page={page}
       nbPages={nbPages}
       onPageChange={setPage}
+      getPageHref={(p: number) => (p === 0 ? '/paintings' : `/paintings?p=${p + 1}`)}
       disabled={status === 'loading'}
       ariaLabel='Paintings pagination'
     />
