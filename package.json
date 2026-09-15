@@ -37,7 +37,7 @@
     "site-health:weekly:dry-run": "node scripts/weekly-site-health.mjs --dry-run"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.13",
     "@changesets/cli": "^2.31.0",
     "knip": "6.23.0",
     "lefthook": "2.1.8",
