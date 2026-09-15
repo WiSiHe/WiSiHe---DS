@@ -7,7 +7,6 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: ['/private/', '/api/', '/_next/', '/test/'],
-        crawlDelay: 1, // Reduced from 10 to 1 second for better SEO
       },
       {
         userAgent: 'GPTBot',

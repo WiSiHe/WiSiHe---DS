@@ -3,7 +3,6 @@ import { cn, isNotEmptyObject } from '@wisihe/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from 'next-sanity';
-import { Suspense } from 'react';
 import { preload } from 'react-dom';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import Breadcrumbs from '@/app/components/layout/Breadcrumbs/Breadcrumbs';
@@ -31,19 +30,6 @@ const PROJECT_TYPE_SCHEMA: Record<string, string> = {
   design: 'CreativeWork',
   other: 'CreativeWork',
 };
-
-function ProjectSectionSkeleton() {
-  return (
-    <div className='animate-pulse space-y-4'>
-      <div className='h-96 rounded-3xl border border-border/20 bg-surface-subtle' />
-      <div className='space-y-3'>
-        <div className='h-4 w-3/4 rounded bg-surface-subtle' />
-        <div className='h-4 w-1/2 rounded bg-surface-subtle' />
-        <div className='h-4 w-5/6 rounded bg-surface-subtle' />
-      </div>
-    </div>
-  );
-}
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -211,19 +197,15 @@ export default async function ProjectPage(props: Props) {
                 showRelated ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]' : 'grid-cols-1',
               )}
             >
-              <Suspense fallback={<ProjectSectionSkeleton />}>
-                <ProjectInformation project={project} summary={sidebarSummary} />
-              </Suspense>
+              <ProjectInformation project={project} summary={sidebarSummary} />
 
               {showRelated ? (
                 <div className='lg:sticky lg:top-28 lg:self-start'>
-                  <Suspense fallback={<ProjectSectionSkeleton />}>
-                    <ProjectRelatedContent
-                      project={project}
-                      connectedPaintings={connectedPaintings}
-                      connectedVideoUrl={connectedVideoUrl}
-                    />
-                  </Suspense>
+                  <ProjectRelatedContent
+                    project={project}
+                    connectedPaintings={connectedPaintings}
+                    connectedVideoUrl={connectedVideoUrl}
+                  />
                 </div>
               ) : null}
             </div>
@@ -231,9 +213,7 @@ export default async function ProjectPage(props: Props) {
         </section>
 
         {caseStudyBody && caseStudyBody.length > 0 ? (
-          <Suspense fallback={<ProjectSectionSkeleton />}>
-            <ProjectCaseStudy content={caseStudyBody} />
-          </Suspense>
+          <ProjectCaseStudy content={caseStudyBody} />
         ) : null}
       </div>
     );

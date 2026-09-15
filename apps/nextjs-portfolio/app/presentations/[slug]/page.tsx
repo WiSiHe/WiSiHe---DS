@@ -11,6 +11,8 @@ import { presentationQuery, presentationSlugsQuery } from '@/sanity/lib/queries'
 
 const WORKSHOP_SLUG = 'houston-we-re-coding-3d';
 
+export const revalidate = 86400;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

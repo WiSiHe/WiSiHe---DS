@@ -9,6 +9,8 @@ import { sanityFetch } from '@/sanity/lib/live';
 import { photographyQuery, photographySlugs } from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 
+export const revalidate = 86400;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

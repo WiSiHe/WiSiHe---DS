@@ -1,21 +1,18 @@
-'use client';
-
-import { useServerInsertedHTML } from 'next/navigation';
-
 /**
- * JSON-LD for structured data. Injected via useServerInsertedHTML so React 19
- * does not warn about <script> tags inside the component tree.
+ * JSON-LD for structured data. Renders directly into HTML so search engine
+ * crawlers (Googlebot, Bingbot, etc.) parse valid JSON-LD inside the document
+ * without duplicated or post-body injections.
  */
 export function JsonLd(props: { data: unknown }) {
-  const json = JSON.stringify(props.data);
+  if (!props.data) return null;
 
-  useServerInsertedHTML(() => (
+  const json = JSON.stringify(props.data).replace(/</g, '\\u003c');
+
+  return (
     <script
       type='application/ld+json'
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is JSON.stringify output only.
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: Sanitized JSON-LD output
       dangerouslySetInnerHTML={{ __html: json }}
     />
-  ));
-
-  return null;
+  );
 }
