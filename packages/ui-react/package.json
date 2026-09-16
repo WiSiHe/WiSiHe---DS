@@ -70,14 +70,14 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@types/react": "^19.2.15",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@wisihe/typescript-config": "workspace:*",
     "@wisihe/utils": "workspace:*",
-    "react": "^19.3.0",
-    "tailwindcss": "^4.3.1",
-    "tsup": "^8.5.1",
-    "typescript": "^6.0.3"
+    "react": "catalog:",
+    "tailwindcss": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:tsup"
   },
   "publishConfig": {
     "access": "public"
@@ -88,7 +88,7 @@
     "@wisihe/tokens": "workspace:*",
     "@wisihe/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "motion": "^12.42.0"
+    "motion": "catalog:"
   },
   "peerDependencies": {
     "react": ">=18",

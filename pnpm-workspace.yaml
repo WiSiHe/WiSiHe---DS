@@ -5,3 +5,36 @@ packages:
 
 onlyBuiltDependencies:
   - lefthook
+
+catalog:
+  # React
+  react: 19.3.0
+  react-dom: 19.3.0
+  '@types/react': ^19.2.15
+  '@types/react-dom': ^19.2.3
+
+  # TypeScript
+  typescript: ^7.0.2
+  tsup: ^8.5.1
+
+  # Styling & Animation
+  tailwindcss: ^4.3.1
+  motion: ^12.42.0
+  clsx: ^2.1.1
+
+  # 3D Graphics
+  three: 0.184.0
+  '@types/three': 0.184.1
+
+  # Sanity & CMS
+  sanity: ^6.2.0
+  '@sanity/client': ^7.23.0
+
+  # Search & Analytics
+  algoliasearch: 5.52.1
+  posthog-js: ^1.395.0
+
+catalogs:
+  # Used by library packages compiling .d.ts with tsup (until rollup-plugin-dts supports TS 7 native engine)
+  tsup:
+    typescript: ^6.0.3
