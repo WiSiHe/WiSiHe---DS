@@ -19,9 +19,9 @@
     "@wisihe/tokens": "workspace:*",
     "@wisihe/ui-react": "workspace:*",
     "@wisihe/utils": "workspace:*",
-    "motion": "^12.42.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "motion": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
@@ -31,8 +31,8 @@
     "@storybook/addon-vitest": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",
     "@tailwindcss/vite": "^4.3.1",
-    "@types/react": "^19.2.15",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/browser": "^4.1.7",
     "@vitest/coverage-v8": "^4.1.7",
@@ -41,8 +41,8 @@
     "postcss": "^8.5.16",
     "storybook": "^10.4.6",
     "storybook-addon-tag-badges": "^3.1.0",
-    "tailwindcss": "^4.3.1",
-    "typescript": "~7.0.2",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
     "vite": "^8.1.0",
     "vitest": "^4.1.7"
   }
