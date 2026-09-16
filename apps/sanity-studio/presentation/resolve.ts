@@ -40,6 +40,10 @@ export const presentationResolve: PresentationPluginOptions['resolve'] = {
       filter: `_type == "painting" && slug.current == $slug`,
     },
     {
+      route: '/photography/:slug',
+      filter: `_type == "photography" && slug.current == $slug`,
+    },
+    {
       route: '/projects/:slug',
       filter: `_type == "project" && slug.current == $slug`,
     },
@@ -90,9 +94,8 @@ export const presentationResolve: PresentationPluginOptions['resolve'] = {
 
     photography: defineLocations({
       select: { title: 'title', slug: 'slug.current' },
-      resolve: () => ({
-        locations: [{ title: 'About', href: '/about' }],
-      }),
+      resolve: doc =>
+        slugLocations(doc, '/photography', { title: 'Photography', href: '/photography' }),
     }),
 
     project: defineLocations({
