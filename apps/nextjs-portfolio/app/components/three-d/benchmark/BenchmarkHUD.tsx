@@ -18,7 +18,12 @@ import {
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { type BenchmarkConfig, type BenchmarkMetrics, COUNT_PRESETS } from './types';
+import {
+  type BenchmarkConfig,
+  type BenchmarkMetrics,
+  COUNT_PRESETS,
+  COUNT_PRESETS_WEBGPU,
+} from './types';
 
 interface BenchmarkHUDProps {
   metrics: BenchmarkMetrics;
@@ -224,8 +229,8 @@ export function BenchmarkHUD({
                   <span className='font-bold text-white/90'>{config.count.toLocaleString()}</span>
                 </div>
 
-                <div className='grid grid-cols-6 gap-1'>
-                  {COUNT_PRESETS.map(preset => (
+                <div className={`grid gap-1 ${isWebGPU ? 'grid-cols-3' : 'grid-cols-6'}`}>
+                  {(isWebGPU ? COUNT_PRESETS_WEBGPU : COUNT_PRESETS).map(preset => (
                     <button
                       key={preset.value}
                       type='button'

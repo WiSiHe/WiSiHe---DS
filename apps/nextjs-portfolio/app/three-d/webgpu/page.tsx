@@ -7,6 +7,7 @@ import { BenchmarkHUD } from '@/app/components/three-d/benchmark/BenchmarkHUD';
 import { ComparisonSwitcher } from '@/app/components/three-d/benchmark/ComparisonSwitcher';
 import {
   type BenchmarkConfig,
+  clampCountForBackend,
   DEFAULT_CONFIG,
   normalizePalette,
   normalizeShape,
@@ -44,7 +45,10 @@ function WebGPUContent() {
     const shapeParam = searchParams.get('shape');
 
     return {
-      count: countParam ? parseInt(countParam, 10) : DEFAULT_CONFIG.count,
+      count: clampCountForBackend(
+        countParam ? parseInt(countParam, 10) : DEFAULT_CONFIG.count,
+        true,
+      ),
       palette: normalizePalette(searchParams.get('palette')),
       shape: normalizeShape(shapeParam),
       speed: speedParam ? parseFloat(speedParam) : DEFAULT_CONFIG.speed,
@@ -59,7 +63,11 @@ function WebGPUContent() {
 
   // Sync state changes with URL query parameters so comparisons remain in sync
   const handleConfigChange = (newConfig: Partial<BenchmarkConfig>) => {
-    const next = { ...config, ...newConfig };
+    const next = {
+      ...config,
+      ...newConfig,
+      count: clampCountForBackend(newConfig.count ?? config.count, true),
+    };
     setConfig(next);
 
     if (typeof window !== 'undefined') {

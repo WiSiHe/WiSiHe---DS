@@ -28,6 +28,19 @@ export const COUNT_PRESETS = [
   { label: '1M', value: 1_000_000 },
 ] as const;
 
+// three.js's WebGPU/TSL compute pipeline has a real, unfixed performance
+// cliff well past this point (confirmed: the GPU work itself stays under a
+// few ms — the overhead is in three.js's own per-frame compute bookkeeping,
+// see https://github.com/mrdoob/three.js/issues/34590), so the WebGPU demo
+// caps its particle count here instead of letting the count buttons walk
+// into a ~1fps result. WebGL has no such ceiling and keeps the full range.
+export const WEBGPU_MAX_COUNT = 100_000;
+export const COUNT_PRESETS_WEBGPU = COUNT_PRESETS.filter(p => p.value <= WEBGPU_MAX_COUNT);
+
+export function clampCountForBackend(count: number, isWebGPU: boolean): number {
+  return isWebGPU ? Math.min(count, WEBGPU_MAX_COUNT) : count;
+}
+
 export const SHAPE_PRESETS = [
   {
     id: 'gargantua' as const,
