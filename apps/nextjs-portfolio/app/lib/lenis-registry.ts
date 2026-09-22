@@ -108,10 +108,16 @@ export function isPaintingsRoute(pathname: string | null): boolean {
   return pathname === '/paintings' || pathname.startsWith('/paintings/');
 }
 
-/** Routes with a nested scroll container instead of the document (decks, 3D). */
+/** Routes with a nested scroll container or fullscreen canvas instead of the document (decks, full-canvas 3D). */
 export function shouldUsePresentationScrollMode(pathname: string | null): boolean {
   if (!pathname) return false;
-  if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
+  if (
+    pathname === '/three-d/webgpu' ||
+    pathname === '/three-d/webgl' ||
+    pathname === '/three-d/shaders'
+  ) {
+    return true;
+  }
   if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
   return false;
 }
