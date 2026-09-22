@@ -51,11 +51,14 @@ const PresentationModel = ({ step, progress: _progress }: { step: number; progre
   // Create a complex mesh once to reuse for vertex/edge/face views
   const torusGeometry = useMemo(() => new THREE.TorusKnotGeometry(1, 0.3, 128, 32), []);
 
-  useFrame(state => {
+  const timeRef = useRef(0);
+
+  useFrame((_state, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.005;
+      timeRef.current += delta;
       // Subtle floating animation
-      groupRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
+      groupRef.current.position.y = Math.sin(timeRef.current) * 0.1;
     }
   });
 

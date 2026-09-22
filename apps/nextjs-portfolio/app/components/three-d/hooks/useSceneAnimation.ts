@@ -1,6 +1,7 @@
 'use client';
 
 import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
 import type { SlideMode } from '../../../three-d/types';
 import { ANIMATION_SPEEDS } from '../constants';
 import type { SceneRef } from '../types';
@@ -27,11 +28,14 @@ export function useSceneAnimation({
   isVisible = true,
   refs,
 }: UseSceneAnimationProps) {
+  const elapsedTimeRef = useRef(0);
+
   // Pause animations when not visible
-  useFrame(state => {
+  useFrame((_state, delta) => {
     if (!isVisible) return;
 
-    const elapsedTime = state.clock.elapsedTime;
+    elapsedTimeRef.current += delta;
+    const elapsedTime = elapsedTimeRef.current;
 
     if (mode === 'showcase' && refs.showcase?.current && autoRotate) {
       // Rotate only on Y-axis (vertical rotation) for beer can

@@ -8,10 +8,10 @@ import type * as THREE from 'three';
 const AnimatedSphere = () => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  useFrame(state => {
+  useFrame((_state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.2;
-      meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.3;
+      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y += delta * 0.3;
     }
   });
 

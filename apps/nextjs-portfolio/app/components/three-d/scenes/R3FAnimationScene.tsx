@@ -9,8 +9,7 @@ export const R3FAnimationScene = forwardRef<THREE.Mesh>((_props, ref) => {
   const meshRef = (ref as React.RefObject<THREE.Mesh>) || internalRef;
 
   // The useFrame hook runs on every single frame render
-  // state: contains clock, mouse, viewport, etc.
-  // delta: time since last frame (for smooth animation regardless of framerate)
+  // delta: time since last frame in seconds (recommended over deprecated THREE.Clock)
   useFrame((_state, delta) => {
     // Check if ref is attached
     if (meshRef.current) {
