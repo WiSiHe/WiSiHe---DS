@@ -27,9 +27,15 @@ import {
   vec3,
 } from 'three/tsl';
 import { MeshBasicNodeMaterial, StorageBufferAttribute } from 'three/webgpu';
-import { BASE_ORB_RADIUS, generateOrbBase, makeStarfieldPoints } from './orbGeometry';
+import { useTheme } from '@/app/providers';
+import {
+  BASE_ORB_RADIUS,
+  generateOrbBase,
+  makeLightMotePoints,
+  makeStarfieldPoints,
+} from './orbGeometry';
 import type { BenchmarkConfig } from './types';
-import { getPalette } from './types';
+import { getThemedPalette } from './types';
 
 interface WebGPUCanvasProps {
   config: BenchmarkConfig;
@@ -39,10 +45,14 @@ interface WebGPUCanvasProps {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Background Starfield — plain THREE.Points with vertex colors, no shading.
+// Background depth layer — a bright starfield in dark mode, soft floating
+// light motes in light mode (stars don't read against a daylight sky).
 // ─────────────────────────────────────────────────────────────────────────────
-function BackgroundStarfield({ count = 10000 }: { count?: number }) {
-  const points = useMemo(() => makeStarfieldPoints(count), [count]);
+function BackgroundDepthField({ isDark }: { isDark: boolean }) {
+  const points = useMemo(
+    () => (isDark ? makeStarfieldPoints(10000) : makeLightMotePoints(700)),
+    [isDark],
+  );
   return <primitive object={points} />;
 }
 
@@ -58,12 +68,14 @@ const BURST_SLOTS = 4;
 function ParticleOrb({
   config,
   onFrame,
+  isDark,
 }: {
   config: BenchmarkConfig;
   onFrame: (drawCalls: number, triangles: number, backend: string) => void;
+  isDark: boolean;
 }) {
   const { gl, camera, pointer } = useThree();
-  const palette = getPalette(config.palette);
+  const palette = getThemedPalette(isDark);
 
   const uniforms = useMemo(
     () => ({
@@ -315,7 +327,11 @@ function ParticleOrb({
 
 export function WebGPUCanvas({ config, onFrame, onWebGPUFallback, resetKey }: WebGPUCanvasProps) {
   const [hasWebGPU, setHasWebGPU] = useState<boolean | null>(null);
-  const palette = getPalette(config.palette);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = !mounted || resolvedTheme !== 'light';
+  const palette = getThemedPalette(isDark);
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
@@ -395,8 +411,13 @@ export function WebGPUCanvas({ config, onFrame, onWebGPUFallback, resetKey }: We
           autoRotate
           autoRotateSpeed={0.3}
         />
-        <ParticleOrb key={`${config.count}-${resetKey}`} config={config} onFrame={onFrame} />
-        <BackgroundStarfield count={10000} />
+        <ParticleOrb
+          key={`${config.count}-${resetKey}`}
+          config={config}
+          onFrame={onFrame}
+          isDark={isDark}
+        />
+        <BackgroundDepthField isDark={isDark} />
       </Canvas>
     </div>
   );

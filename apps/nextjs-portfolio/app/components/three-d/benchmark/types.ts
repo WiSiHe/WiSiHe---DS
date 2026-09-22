@@ -57,6 +57,21 @@ export const PALETTES: Record<ColorPalette, PaletteData> = {
   },
 };
 
+const LIGHT_PALETTE: PaletteData = {
+  name: 'Halcyon Daybreak',
+  primary: '#2f6bff', // Vivid azure plasma
+  secondary: '#ff3ea5', // Magenta-pink edge
+  hot: '#ffd76b', // Warm gold core
+  bg: '#dce4f4', // Soft daylight periwinkle — not paper-white, so the
+  // additive-blended glow still reads as brighter than the backdrop
+  groundGrid: '#2f6bff',
+};
+
+/** Picks the orb's color palette to match the site's current light/dark theme. */
+export function getThemedPalette(isDark: boolean): PaletteData {
+  return isDark ? PALETTES.gargantua : LIGHT_PALETTE;
+}
+
 export const DEFAULT_CONFIG: BenchmarkConfig = {
   count: 50_000,
   palette: 'gargantua',
