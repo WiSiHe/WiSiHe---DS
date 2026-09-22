@@ -19,7 +19,13 @@ const LISTING_PATHS = new Set(['/projects', '/photography', '/videos']);
 function shouldDisableSmoothScroll(pathname: string | null): boolean {
   if (!pathname) return false;
   if (isPaintingsRoute(pathname)) return true;
-  if (pathname === '/three-d' || pathname.startsWith('/three-d/')) return true;
+  if (
+    pathname === '/three-d/webgpu' ||
+    pathname === '/three-d/webgl' ||
+    pathname === '/three-d/shaders'
+  ) {
+    return true;
+  }
   if (pathname.startsWith('/presentations/') && pathname !== '/presentations') return true;
   return false;
 }
