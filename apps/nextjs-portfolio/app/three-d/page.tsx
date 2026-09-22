@@ -178,11 +178,11 @@ export default function ThreeDLabPage() {
               <IconBrandThreejs className='size-3.5 text-accent' />
               Three.js r184
             </span>
-            <span className='inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-mono font-semibold text-cyan-700 dark:text-cyan-300 shadow-xs'>
+            <span className='inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-mono font-semibold text-accent shadow-xs'>
               <IconSparkles className='size-3.5' />
               WebGPU WGSL Compute
             </span>
-            <span className='inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-mono font-semibold text-amber-700 dark:text-amber-300 shadow-xs'>
+            <span className='inline-flex items-center gap-1.5 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-mono font-semibold text-warning shadow-xs'>
               <IconCpu className='size-3.5' />
               WebGL 2.0 (GLSL)
             </span>
@@ -222,29 +222,29 @@ export default function ThreeDLabPage() {
 
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
             {/* WebGPU Card (The New) */}
-            <article className='group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-surface p-7 sm:p-8 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-2xl hover:shadow-cyan-500/5 hover:-translate-y-1'>
+            <article className='group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-surface p-7 sm:p-8 transition-all duration-300 hover:border-accent/50 hover:shadow-2xl hover:shadow-accent/5 hover:-translate-y-1'>
               <div className='space-y-5'>
                 {/* Visual Header Graphic */}
-                <div className='relative h-32 w-full overflow-hidden rounded-xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/40 via-black to-blue-950/30 p-4 flex flex-col justify-between'>
-                  <div className='pointer-events-none absolute -right-6 -bottom-6 size-32 rounded-full bg-cyan-500/10 blur-2xl' />
+                <div className='relative h-32 w-full overflow-hidden rounded-xl border border-accent/20 bg-gradient-to-br from-accent/15 via-surface-raised to-surface p-4 flex flex-col justify-between'>
+                  <div className='pointer-events-none absolute -right-6 -bottom-6 size-32 rounded-full bg-accent/10 blur-2xl' />
                   <div className='flex items-center justify-between'>
-                    <span className='inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/15 px-2.5 py-1 text-[11px] font-mono font-semibold text-cyan-300'>
+                    <span className='inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/15 px-2.5 py-1 text-[11px] font-mono font-semibold text-accent'>
                       <IconSparkles className='size-3.5' />
                       Next-Gen Compute
                     </span>
-                    <span className='font-mono text-[11px] text-cyan-400/70'>WGSL Pipelines</span>
+                    <span className='font-mono text-[11px] text-accent/70'>WGSL Pipelines</span>
                   </div>
 
                   <div className='flex items-baseline justify-between'>
                     <div>
-                      <div className='font-mono text-2xl font-bold text-white'>1,000,000</div>
-                      <div className='font-mono text-[10px] uppercase text-white/50'>
+                      <div className='font-mono text-2xl font-bold text-foreground'>1,000,000</div>
+                      <div className='font-mono text-[10px] uppercase text-foreground-muted'>
                         Simulated Particles
                       </div>
                     </div>
                     <div className='text-right'>
-                      <div className='font-mono text-xl font-bold text-emerald-400'>60 FPS</div>
-                      <div className='font-mono text-[10px] uppercase text-white/50'>
+                      <div className='font-mono text-xl font-bold text-success'>60 FPS</div>
+                      <div className='font-mono text-[10px] uppercase text-foreground-muted'>
                         Sustained VRAM
                       </div>
                     </div>
@@ -252,7 +252,7 @@ export default function ThreeDLabPage() {
                 </div>
 
                 <div>
-                  <h3 className='font-serif text-2xl font-bold text-foreground transition-colors group-hover:text-cyan-600 dark:group-hover:text-cyan-400'>
+                  <h3 className='font-serif text-2xl font-bold text-foreground transition-colors group-hover:text-accent'>
                     Three.js WebGPU (The New)
                   </h3>
                   <p className='mt-2 text-sm leading-relaxed text-foreground-subtle text-pretty'>
@@ -264,19 +264,19 @@ export default function ThreeDLabPage() {
 
                 <ul className='space-y-2.5 pt-1 font-mono text-xs text-foreground-subtle'>
                   <li className='flex items-center gap-2.5'>
-                    <IconBolt className='size-4 text-cyan-500 shrink-0' />
+                    <IconBolt className='size-4 text-accent shrink-0' />
                     <span>Parallel GPU compute workgroups (64–128 threads/group)</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconDatabase className='size-4 text-cyan-500 shrink-0' />
+                    <IconDatabase className='size-4 text-accent shrink-0' />
                     <span>Storage Buffers in VRAM (0 bytes PCIe bus bandwidth)</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconDeviceDesktopAnalytics className='size-4 text-cyan-500 shrink-0' />
+                    <IconDeviceDesktopAnalytics className='size-4 text-accent shrink-0' />
                     <span>Stateful fluid physics with true inertia & momentum</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconSparkles className='size-4 text-cyan-500 shrink-0' />
+                    <IconSparkles className='size-4 text-accent shrink-0' />
                     <span>Effortlessly scales to 1,000,000 particles at 60 FPS</span>
                   </li>
                 </ul>
@@ -285,7 +285,7 @@ export default function ThreeDLabPage() {
               <div className='mt-8 pt-6 border-t border-border/40'>
                 <Link
                   href='/three-d/webgpu'
-                  className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white dark:bg-cyan-500 dark:text-black dark:hover:bg-cyan-400 px-5 py-3 text-sm font-semibold shadow-md transition-all active:scale-[0.98]'
+                  className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent text-accent-foreground hover:opacity-90 px-5 py-3 text-sm font-semibold shadow-md transition-all active:scale-[0.98]'
                 >
                   <span>Launch WebGPU Benchmark</span>
                   <IconArrowRight className='size-4' />
@@ -294,29 +294,29 @@ export default function ThreeDLabPage() {
             </article>
 
             {/* WebGL Card (The Old) */}
-            <article className='group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-surface p-7 sm:p-8 transition-all duration-300 hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/5 hover:-translate-y-1'>
+            <article className='group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-surface p-7 sm:p-8 transition-all duration-300 hover:border-warning/50 hover:shadow-2xl hover:shadow-warning/5 hover:-translate-y-1'>
               <div className='space-y-5'>
                 {/* Visual Header Graphic */}
-                <div className='relative h-32 w-full overflow-hidden rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-950/40 via-black to-orange-950/30 p-4 flex flex-col justify-between'>
-                  <div className='pointer-events-none absolute -right-6 -bottom-6 size-32 rounded-full bg-amber-500/10 blur-2xl' />
+                <div className='relative h-32 w-full overflow-hidden rounded-xl border border-warning/20 bg-gradient-to-br from-warning/15 via-surface-raised to-surface p-4 flex flex-col justify-between'>
+                  <div className='pointer-events-none absolute -right-6 -bottom-6 size-32 rounded-full bg-warning/10 blur-2xl' />
                   <div className='flex items-center justify-between'>
-                    <span className='inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/15 px-2.5 py-1 text-[11px] font-mono font-semibold text-amber-300'>
+                    <span className='inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/15 px-2.5 py-1 text-[11px] font-mono font-semibold text-warning'>
                       <IconCpu className='size-3.5' />
                       Legacy Rasterization
                     </span>
-                    <span className='font-mono text-[11px] text-amber-400/70'>OpenGL ES 3.0</span>
+                    <span className='font-mono text-[11px] text-warning/70'>OpenGL ES 3.0</span>
                   </div>
 
                   <div className='flex items-baseline justify-between'>
                     <div>
-                      <div className='font-mono text-2xl font-bold text-white'>GLSL 2.0</div>
-                      <div className='font-mono text-[10px] uppercase text-white/50'>
+                      <div className='font-mono text-2xl font-bold text-foreground'>GLSL 2.0</div>
+                      <div className='font-mono text-[10px] uppercase text-foreground-muted'>
                         Draw Pipeline
                       </div>
                     </div>
                     <div className='text-right'>
-                      <div className='font-mono text-xl font-bold text-amber-300'>Universal</div>
-                      <div className='font-mono text-[10px] uppercase text-white/50'>
+                      <div className='font-mono text-xl font-bold text-warning'>Universal</div>
+                      <div className='font-mono text-[10px] uppercase text-foreground-muted'>
                         Global Compatibility
                       </div>
                     </div>
@@ -324,7 +324,7 @@ export default function ThreeDLabPage() {
                 </div>
 
                 <div>
-                  <h3 className='font-serif text-2xl font-bold text-foreground transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-400'>
+                  <h3 className='font-serif text-2xl font-bold text-foreground transition-colors group-hover:text-warning'>
                     Three.js WebGL (The Old)
                   </h3>
                   <p className='mt-2 text-sm leading-relaxed text-foreground-subtle text-pretty'>
@@ -336,19 +336,19 @@ export default function ThreeDLabPage() {
 
                 <ul className='space-y-2.5 pt-1 font-mono text-xs text-foreground-subtle'>
                   <li className='flex items-center gap-2.5'>
-                    <IconLayersLinked className='size-4 text-amber-500 shrink-0' />
+                    <IconLayersLinked className='size-4 text-warning shrink-0' />
                     <span>Fixed-function vertex and fragment rasterizer</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconScale className='size-4 text-amber-500 shrink-0' />
+                    <IconScale className='size-4 text-warning shrink-0' />
                     <span>Stateless vertex displacement without particle memory</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconCpu className='size-4 text-amber-500 shrink-0' />
+                    <IconCpu className='size-4 text-warning shrink-0' />
                     <span>Synchronous OpenGL state validation per draw call</span>
                   </li>
                   <li className='flex items-center gap-2.5'>
-                    <IconSparkles className='size-4 text-amber-500 shrink-0' />
+                    <IconSparkles className='size-4 text-warning shrink-0' />
                     <span>Universal 99.5% compatibility across all legacy browsers</span>
                   </li>
                 </ul>
@@ -357,7 +357,7 @@ export default function ThreeDLabPage() {
               <div className='mt-8 pt-6 border-t border-border/40'>
                 <Link
                   href='/three-d/webgl'
-                  className='inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border/80 bg-surface hover:bg-surface-raised text-foreground hover:text-amber-600 dark:hover:text-amber-400 px-5 py-3 text-sm font-semibold transition-all active:scale-[0.98]'
+                  className='inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border/80 bg-surface hover:bg-surface-raised text-foreground hover:text-warning px-5 py-3 text-sm font-semibold transition-all active:scale-[0.98]'
                 >
                   <span>Launch WebGL Benchmark</span>
                   <IconArrowRight className='size-4' />
@@ -463,14 +463,14 @@ export default function ThreeDLabPage() {
             <div className='flex items-center gap-3'>
               <Link
                 href='/three-d/webgpu'
-                className='inline-flex items-center gap-1 text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline'
+                className='inline-flex items-center gap-1 text-xs font-mono text-accent hover:underline'
               >
                 Launch WebGPU →
               </Link>
               <span className='text-border'>|</span>
               <Link
                 href='/three-d/webgl'
-                className='inline-flex items-center gap-1 text-xs font-mono text-amber-600 dark:text-amber-400 hover:underline'
+                className='inline-flex items-center gap-1 text-xs font-mono text-warning hover:underline'
               >
                 Launch WebGL →
               </Link>
@@ -482,10 +482,8 @@ export default function ThreeDLabPage() {
               <thead>
                 <tr className='border-b border-border/60 text-foreground-muted font-mono'>
                   <th className='py-3.5 px-4 font-semibold'>Dimension</th>
-                  <th className='py-3.5 px-4 font-semibold text-cyan-700 dark:text-cyan-300'>
-                    WebGPU (WebGPURenderer)
-                  </th>
-                  <th className='py-3.5 px-4 font-semibold text-amber-700 dark:text-amber-300'>
+                  <th className='py-3.5 px-4 font-semibold text-accent'>WebGPU (WebGPURenderer)</th>
+                  <th className='py-3.5 px-4 font-semibold text-warning'>
                     WebGL 2.0 (WebGLRenderer)
                   </th>
                 </tr>
@@ -493,7 +491,7 @@ export default function ThreeDLabPage() {
               <tbody className='divide-y divide-border/40 font-mono'>
                 <tr>
                   <td className='py-3.5 px-4 font-medium text-foreground'>Compute Architecture</td>
-                  <td className='py-3.5 px-4 text-cyan-700 dark:text-cyan-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-accent font-semibold'>
                     Native WGSL general-purpose compute workgroups
                   </td>
                   <td className='py-3.5 px-4 text-foreground-muted'>
@@ -502,16 +500,16 @@ export default function ThreeDLabPage() {
                 </tr>
                 <tr>
                   <td className='py-3.5 px-4 font-medium text-foreground'>Memory Bandwidth</td>
-                  <td className='py-3.5 px-4 text-cyan-700 dark:text-cyan-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-accent font-semibold'>
                     GPU Storage Buffers (0 bytes CPU-to-GPU PCIe transfer)
                   </td>
-                  <td className='py-3.5 px-4 text-amber-700 dark:text-amber-400'>
+                  <td className='py-3.5 px-4 text-warning'>
                     Requires Float32Array PCIe upload per frame (needsUpdate)
                   </td>
                 </tr>
                 <tr>
                   <td className='py-3.5 px-4 font-medium text-foreground'>Physical Simulation</td>
-                  <td className='py-3.5 px-4 text-cyan-700 dark:text-cyan-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-accent font-semibold'>
                     Stateful integration in VRAM (persistent velocity & inertia)
                   </td>
                   <td className='py-3.5 px-4 text-foreground-muted'>
@@ -520,19 +518,19 @@ export default function ThreeDLabPage() {
                 </tr>
                 <tr>
                   <td className='py-3.5 px-4 font-medium text-foreground'>Driver Overhead</td>
-                  <td className='py-3.5 px-4 text-cyan-700 dark:text-cyan-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-accent font-semibold'>
                     Pre-baked Pipeline State Objects (PSOs) & command encoders
                   </td>
-                  <td className='py-3.5 px-4 text-amber-700 dark:text-amber-400'>
+                  <td className='py-3.5 px-4 text-warning'>
                     Synchronous OpenGL ES state validation in JS thread
                   </td>
                 </tr>
                 <tr>
                   <td className='py-3.5 px-4 font-medium text-foreground'>Throughput at 1M pts</td>
-                  <td className='py-3.5 px-4 text-cyan-700 dark:text-cyan-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-accent font-semibold'>
                     Sustained 60 FPS across massive GPU hardware concurrency
                   </td>
-                  <td className='py-3.5 px-4 text-amber-700 dark:text-amber-400'>
+                  <td className='py-3.5 px-4 text-warning'>
                     Severe framerate drop-offs beyond 100K–250K particles
                   </td>
                 </tr>
@@ -541,7 +539,7 @@ export default function ThreeDLabPage() {
                   <td className='py-3.5 px-4 text-foreground-subtle'>
                     Chrome 113+, Safari 17.4+, Edge, Firefox Nightly
                   </td>
-                  <td className='py-3.5 px-4 text-emerald-700 dark:text-emerald-400 font-semibold'>
+                  <td className='py-3.5 px-4 text-success font-semibold'>
                     Universal (99.5% of all global browsers)
                   </td>
                 </tr>
@@ -569,10 +567,10 @@ export default function ThreeDLabPage() {
           </div>
 
           {/* Spline & 3D Workshop Spotlight Banner */}
-          <div className='overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/20 via-surface to-surface-raised p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
+          <div className='overflow-hidden rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/20 via-surface to-surface-raised p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
             <div className='space-y-2.5 max-w-2xl'>
               <div className='flex items-center gap-2'>
-                <span className='inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-0.5 text-xs font-mono font-semibold text-cyan-700 dark:text-cyan-300'>
+                <span className='inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-0.5 text-xs font-mono font-semibold text-accent'>
                   <IconSparkles className='size-3.5' />
                   Interactive 3D Design
                 </span>
@@ -594,7 +592,7 @@ export default function ThreeDLabPage() {
                 href='https://thenorthalliance.notion.site/Spline-Workshop-1b2cf2f6604a8079876bd7b025269ed5'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='inline-flex items-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white dark:bg-cyan-500 dark:text-black dark:hover:bg-cyan-400 px-5 py-3 text-xs font-semibold shadow-md transition-all active:scale-[0.98]'
+                className='inline-flex items-center gap-2 rounded-xl bg-accent text-accent-foreground hover:opacity-90 px-5 py-3 text-xs font-semibold shadow-md transition-all active:scale-[0.98]'
               >
                 <IconRocket className='size-4' />
                 <span>Spline Rocket Workshop</span>
