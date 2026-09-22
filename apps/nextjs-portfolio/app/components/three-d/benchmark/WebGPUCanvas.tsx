@@ -53,6 +53,8 @@ function BackgroundStarfield({ count = 10000 }: { count?: number }) {
 // strength uniform), and rides an expanding ring of displacement on click.
 // Depth cueing (near = brighter, far = dimmer) reinforces the spherical read.
 // ─────────────────────────────────────────────────────────────────────────────
+const BURST_SLOTS = 4;
+
 function ParticleOrb({
   config,
   onFrame,
@@ -72,9 +74,13 @@ function ParticleOrb({
       uMouseSmooth: uniform(new THREE.Vector3(0, 0, 1000)),
       uMouseStrength: uniform(0),
       uHoverRadius: uniform(1.6),
-      uClickPoint: uniform(new THREE.Vector3(0, 0, 1000)),
-      uBurstProgress: uniform(0),
-      uBurstActive: uniform(0),
+      // A small fixed pool of click bursts so repeated clicks stack instead
+      // of resetting one shared ripple — each slot animates independently.
+      burstPoints: Array.from({ length: BURST_SLOTS }, () =>
+        uniform(new THREE.Vector3(0, 0, 1000)),
+      ),
+      burstProgress: Array.from({ length: BURST_SLOTS }, () => uniform(0)),
+      burstActive: Array.from({ length: BURST_SLOTS }, () => uniform(0)),
     }),
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
@@ -119,23 +125,32 @@ function ParticleOrb({
         .mul(uniforms.uMouseStrength)
         .mul(float(0.8));
 
-      // Click burst: a ring of displacement expands outward from the click
-      // point and fades as it grows, then uBurstActive resets it to inert.
-      const toClick = basePos.sub(uniforms.uClickPoint);
-      const clickDist = length(toClick);
-      const ringRadius = uniforms.uBurstProgress.mul(uniforms.uScale.mul(float(9.0)));
-      const ringWidth = uniforms.uScale.mul(float(1.6));
-      const ringMask = clamp(
-        float(1.0).sub(abs(clickDist.sub(ringRadius)).div(ringWidth)),
-        float(0.0),
-        float(1.0),
-      );
-      const burstFade = float(1.0).sub(uniforms.uBurstProgress);
-      const burstPush = normalize(toClick.add(float(1e-4)))
-        .mul(ringMask)
-        .mul(burstFade)
-        .mul(uniforms.uBurstActive)
-        .mul(float(1.6));
+      // Click bursts: each active slot rides its own expanding ring of
+      // displacement that fades as it grows; contributions from multiple
+      // slots simply add, so stacking clicks compounds instead of resetting.
+      let burstPush: any = vec3(0.0, 0.0, 0.0);
+      for (let i = 0; i < BURST_SLOTS; i++) {
+        const burstPoint = uniforms.burstPoints[i]!;
+        const burstProgress = uniforms.burstProgress[i]!;
+        const burstActive = uniforms.burstActive[i]!;
+        const toClick = basePos.sub(burstPoint);
+        const clickDist = length(toClick);
+        const ringRadius = burstProgress.mul(uniforms.uScale.mul(float(9.0)));
+        const ringWidth = uniforms.uScale.mul(float(1.6));
+        const ringMask = clamp(
+          float(1.0).sub(abs(clickDist.sub(ringRadius)).div(ringWidth)),
+          float(0.0),
+          float(1.0),
+        );
+        const burstFade = float(1.0).sub(burstProgress);
+        burstPush = burstPush.add(
+          normalize(toClick.add(float(1e-4)))
+            .mul(ringMask)
+            .mul(burstFade)
+            .mul(burstActive)
+            .mul(float(0.9)),
+        );
+      }
 
       pos.assign(basePos.add(hoverPush).add(burstPush));
     });
@@ -149,7 +164,11 @@ function ParticleOrb({
       side: THREE.DoubleSide,
     });
     const finalPos = posStorage.element(instanceIndex);
-    material.vertexNode = billboarding({ position: finalPos });
+    // vertical:true makes this a full spherical billboard (always fully
+    // facing the camera) instead of the default cylindrical one, which only
+    // cancels horizontal rotation and looks wrong/stretched as the camera
+    // orbits vertically.
+    material.vertexNode = billboarding({ position: finalPos, vertical: true });
 
     const tempValue = tempStorage.element(instanceIndex);
     const cCool = color(new THREE.Color(palette.secondary));
@@ -174,18 +193,23 @@ function ParticleOrb({
     );
     const depthFade = mix(float(1.3), float(0.55), depthT);
 
-    // Click-burst brightness ring, evaluated against the settled position.
-    const toClickC = finalPos.sub(uniforms.uClickPoint);
-    const ringRadiusC = uniforms.uBurstProgress.mul(uniforms.uScale.mul(float(9.0)));
-    const ringWidthC = uniforms.uScale.mul(float(1.6));
-    const ringMaskC = clamp(
-      float(1.0).sub(abs(length(toClickC).sub(ringRadiusC)).div(ringWidthC)),
-      float(0.0),
-      float(1.0),
-    );
-    const burstGlow = ringMaskC
-      .mul(float(1.0).sub(uniforms.uBurstProgress))
-      .mul(uniforms.uBurstActive);
+    // Click-burst brightness rings, evaluated against the settled position —
+    // same additive-slots approach as the displacement above.
+    let burstGlow: any = float(0.0);
+    for (let i = 0; i < BURST_SLOTS; i++) {
+      const burstPoint = uniforms.burstPoints[i]!;
+      const burstProgress = uniforms.burstProgress[i]!;
+      const burstActive = uniforms.burstActive[i]!;
+      const toClickC = finalPos.sub(burstPoint);
+      const ringRadiusC = burstProgress.mul(uniforms.uScale.mul(float(9.0)));
+      const ringWidthC = uniforms.uScale.mul(float(1.6));
+      const ringMaskC = clamp(
+        float(1.0).sub(abs(length(toClickC).sub(ringRadiusC)).div(ringWidthC)),
+        float(0.0),
+        float(1.0),
+      );
+      burstGlow = burstGlow.add(ringMaskC.mul(float(1.0).sub(burstProgress)).mul(burstActive));
+    }
 
     const centred = uv().sub(vec2(0.5, 0.5));
     const d = length(centred);
@@ -194,7 +218,7 @@ function ParticleOrb({
       .div(max(float(0.03), d))
       .mul(clamp(float(1.0).sub(d.mul(float(2.0))), float(0.0), float(1.0)));
 
-    material.colorNode = finalColor.mul(depthFade).mul(float(1.0).add(burstGlow.mul(float(1.6))));
+    material.colorNode = finalColor.mul(depthFade).mul(float(1.0).add(burstGlow.mul(float(1.0))));
     material.opacityNode = circleMask.mul(glow).mul(float(0.5));
 
     const quadSize = config.particleSize * 0.05 * Math.sqrt(50_000 / count);
@@ -211,7 +235,10 @@ function ParticleOrb({
   const _forward = useRef(new THREE.Vector3());
   const _target = useRef(new THREE.Vector3());
   const _smooth = useRef(new THREE.Vector3(0, 0, 1000));
-  const burstState = useRef({ active: false, progress: 0.0 });
+  const burstSlots = useRef(
+    Array.from({ length: BURST_SLOTS }, () => ({ active: false, progress: 0.0 })),
+  );
+  const nextBurstSlot = useRef(0);
 
   // Project the pointer onto a camera-facing plane through the orb's center —
   // gives a stable 3D point to measure particle distance against, without
@@ -230,10 +257,14 @@ function ParticleOrb({
   useEffect(() => {
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
-      if (projectPointer(pointer.x, pointer.y, uniforms.uClickPoint.value)) {
-        burstState.current.progress = 0.001;
-        burstState.current.active = true;
-        uniforms.uBurstActive.value = 1;
+      // Round-robin through the slot pool so repeated clicks stack as
+      // independent, overlapping ripples instead of restarting one ripple.
+      const slot = nextBurstSlot.current;
+      nextBurstSlot.current = (slot + 1) % BURST_SLOTS;
+      if (projectPointer(pointer.x, pointer.y, uniforms.burstPoints[slot]!.value)) {
+        burstSlots.current[slot]!.progress = 0.001;
+        burstSlots.current[slot]!.active = true;
+        uniforms.burstActive[slot]!.value = 1;
       }
     };
 
@@ -262,14 +293,16 @@ function ParticleOrb({
     uniforms.uMouseStrength.value +=
       (targetStrength - uniforms.uMouseStrength.value) * Math.min(1.0, dt * 4.0);
 
-    if (burstState.current.active) {
-      burstState.current.progress += dt * 1.1;
-      if (burstState.current.progress >= 1.0) {
-        burstState.current.progress = 0;
-        burstState.current.active = false;
-        uniforms.uBurstActive.value = 0;
+    for (let i = 0; i < BURST_SLOTS; i++) {
+      const slot = burstSlots.current[i]!;
+      if (!slot.active) continue;
+      slot.progress += dt * 1.1;
+      if (slot.progress >= 1.0) {
+        slot.progress = 0;
+        slot.active = false;
+        uniforms.burstActive[i]!.value = 0;
       }
-      uniforms.uBurstProgress.value = burstState.current.progress;
+      uniforms.burstProgress[i]!.value = slot.progress;
     }
 
     (gl as any).compute(computeNode);
