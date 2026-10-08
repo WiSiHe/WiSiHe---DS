@@ -2,22 +2,45 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     "apps/nextjs-portfolio": {
-      "entry": [
-        "app/**/*.{ts,tsx}",
-        "next.config.ts",
-        "postcss.config.mjs",
-        "sanity/**/*.ts",
-        "utils/**/*.ts",
-        "hooks/**/*.ts"
-      ],
-      "ignore": ["sanity.types.ts", "lib/utils.ts"]
+      "entry": ["app/**/*.{ts,tsx}", "sanity/**/*.ts", "utils/**/*.ts", "hooks/**/*.ts"]
     },
     "apps/sanity-studio": {
-      "entry": ["sanity.config.ts", "sanity.cli.ts", "components/**/*.tsx", "schemas/**/*.{ts,tsx}"]
+      "entry": [
+        "components/**/*.tsx",
+        "schemas/**/*.{ts,tsx}",
+        "scripts/**/*.{ts,mjs}",
+        "migrations/**/*.ts",
+        "functions/**/*.ts",
+        "gen-schema.ts",
+        "generate-schema.mjs"
+      ],
+      "ignore": ["generate-schema.mjs", "gen-schema.ts"]
     },
     "apps/ui-docs": {
-      "entry": ["src/**/*.{ts,tsx}", "vite.config.ts", "vitest.shims.d.ts"]
+      "entry": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@storybook/react", "playwright", "postcss", "motion"]
+    },
+    "apps/wisihe-ai": {
+      "entry": ["src/App.tsx", "sanity.cli.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@sanity/sdk", "@sanity/workflow-blueprint", "rolldown", "prettier"]
+    },
+    "tools/site-health": {
+      "ignoreDependencies": ["chrome-launcher", "lighthouse"]
+    },
+    ".": {
+      "entry": ["scripts/**/*.mjs"],
+      "ignoreDependencies": ["@sanity/client", "dotenv", "lighthouse", "@csstools/css-calc"]
+    },
+    "packages/ui-react": {
+      "entry": ["src/**/*.stories.tsx"],
+      "ignoreDependencies": ["@wisihe/utils", "@storybook/react", "@storybook/react-vite"]
+    },
+    "packages/tokens": {
+      "entry": ["scripts/**/*.js"]
     }
   },
-  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts", "**/vitest.shims.d.ts"]
+  "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts"],
+  "ignoreBinaries": ["doppler", "vercel"],
+  "ignoreDependencies": ["@storybook/react"]
 }

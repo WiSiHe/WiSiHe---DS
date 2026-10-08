@@ -14,15 +14,15 @@
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "openai": "^6.45.0"
+    "openai": "^7.30.1"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
-    "tsup": "catalog:",
-    "typescript": "catalog:tsup"
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   }
 }

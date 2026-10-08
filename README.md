@@ -13,7 +13,7 @@ This repository is organized into `apps` and `packages`. The design system is fr
 The building blocks of the design system:
 
 - **`@wisihe/tokens`**: The single source of truth for design tokens (colors, typography, spacing). Outputs CSS variables and Tailwind v4 themes via Style Dictionary.
-- **`@wisihe/ui-react`**: React component library built with Tailwind CSS, `cva`, and `radix-ui`. Bundled with `tsup`.
+- **`@wisihe/ui-react`**: React component library built with Tailwind CSS, `cva`, and `radix-ui`. Bundled with `tsdown`.
 - **`@wisihe/utils`**: Shared utilities and class-merging helpers (`cn()`).
 - **`@wisihe/sanity-queries`**: Shared GROQ queries and Sanity client helpers.
 - **`@wisihe/sanity-bulk-ai`**: Sanity bulk AI tooling.

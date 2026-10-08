@@ -1,7 +1,7 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig(options => ({
-  entryPoints: {
+  entry: {
     index: 'src/index.tsx',
     skeleton: 'src/skeleton/Skeleton.tsx',
     motion: 'src/motion/motionTokens.ts',
@@ -13,7 +13,9 @@ export default defineConfig(options => ({
     'painting-card/brush-stroke-constants':
       'src/painting-card/brush-stroke/brushStrokeConstants.ts',
   },
+  tsconfig: 'tsconfig.build.json',
   format: ['esm'],
+  fixedExtension: false,
   dts: true,
   sourcemap: true,
   external: ['react', 'react-dom', '@wisihe/utils', 'motion', 'motion/react'],
