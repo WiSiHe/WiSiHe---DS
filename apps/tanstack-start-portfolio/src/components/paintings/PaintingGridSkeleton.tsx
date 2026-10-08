@@ -16,8 +16,9 @@ type PaintingGridSkeletonItemProps = {
 
 /** Single masonry tile — compact caption below on mobile/tablet, image-only on lg+ desktop grid. */
 export function PaintingGridSkeletonItem({ index }: PaintingGridSkeletonItemProps) {
-  const aspectClass = SKELETON_ASPECTS[index % SKELETON_ASPECTS.length]!;
-  const titleWidth = SKELETON_TITLE_WIDTHS[index % SKELETON_TITLE_WIDTHS.length]!;
+  const aspectClass = SKELETON_ASPECTS[index % SKELETON_ASPECTS.length] ?? SKELETON_ASPECTS[0];
+  const titleWidth =
+    SKELETON_TITLE_WIDTHS[index % SKELETON_TITLE_WIDTHS.length] ?? SKELETON_TITLE_WIDTHS[0];
 
   return (
     <div className='mb-3 w-full break-inside-avoid' aria-hidden>
@@ -69,6 +70,7 @@ export function PaintingGridSkeleton({ count = 12, className }: PaintingGridSkel
   return (
     <div
       className={cn('mt-4 columns-2 gap-3 sm:columns-2 md:columns-3', className)}
+      role='status'
       aria-busy='true'
       aria-label='Loading paintings'
     >

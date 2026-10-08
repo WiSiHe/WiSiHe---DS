@@ -138,7 +138,7 @@ function hexToHsl(hex: string): [number, number, number] {
 
 /** Map a hex colour to a broad human-readable colour family */
 function hexToColorName(hex: string): string {
-  if (!hex || !hex.startsWith('#') || hex.length < 7) return 'Other';
+  if (!hex?.startsWith('#') || hex.length < 7) return 'Other';
   try {
     const [h, s, l] = hexToHsl(hex);
     if (l < 12) return 'Black';
@@ -158,7 +158,9 @@ function hexToColorName(hex: string): string {
 }
 
 /** Extract unique colour names from a Sanity palette object */
-function extractColors(palette: Record<string, any> | null | undefined): string[] {
+function extractColors(
+  palette: Record<string, { background?: string } | undefined> | null | undefined,
+): string[] {
   if (!palette) return [];
   const swatches = ['dominant', 'vibrant', 'lightVibrant', 'darkVibrant', 'muted'];
   const colorNames = new Set<string>();

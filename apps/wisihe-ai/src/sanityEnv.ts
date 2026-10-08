@@ -7,7 +7,7 @@
  * Legacy **`VITE_SANITY_*`** / **`VITE_AI_*`** entries in `.env.local` still work as fallbacks.
  */
 
-const DEFAULT_PROJECT_ID = 'ns25bkom';
+const DEFAULT_PROJECT_ID = 'cbjsv7wi';
 const DEFAULT_DATASET = 'production';
 
 /** Reads `process.env` injected by `sanity dev` / `sanity build` for `SANITY_APP_*` keys. */
@@ -25,11 +25,15 @@ function pickViteOptional(key: keyof ImportMetaEnv): string | undefined {
 
 export const PROJECT_ID =
   readSanityAppProcessEnv('SANITY_APP_PROJECT_ID') ??
+  readSanityAppProcessEnv('NEXT_PUBLIC_SANITY_PROJECT_ID') ??
+  readSanityAppProcessEnv('SANITY_STUDIO_PROJECT_ID') ??
   pickViteOptional('VITE_SANITY_PROJECT_ID') ??
   DEFAULT_PROJECT_ID;
 
 export const DATASET =
   readSanityAppProcessEnv('SANITY_APP_DATASET') ??
+  readSanityAppProcessEnv('NEXT_PUBLIC_SANITY_DATASET') ??
+  readSanityAppProcessEnv('SANITY_STUDIO_DATASET') ??
   pickViteOptional('VITE_SANITY_DATASET') ??
   DEFAULT_DATASET;
 

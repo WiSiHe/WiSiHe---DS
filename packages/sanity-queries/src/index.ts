@@ -1,3 +1,6 @@
+// Loads @sanity/client so the generated SanityQueries augmentation in sanity.types.ts resolves.
+import '@sanity/client';
+
 import { defineQuery } from 'groq';
 
 /** Omit pre-launch / NDA projects from public listings and detail pages. */

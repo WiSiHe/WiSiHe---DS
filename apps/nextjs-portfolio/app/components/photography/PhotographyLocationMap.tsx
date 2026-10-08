@@ -8,7 +8,7 @@ import { useTheme } from '@/app/providers';
 import type { PhotographyMapPoint } from './photographyMeta';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const MAPBOX_TOKEN = process.env['NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN'];
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const MAP_STYLE_DARK = 'mapbox://styles/mapbox/dark-v11';
 const MAP_STYLE_LIGHT = 'mapbox://styles/mapbox/light-v11';
 

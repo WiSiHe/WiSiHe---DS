@@ -7,6 +7,10 @@ interface ContentItemListProps {
   slideDesign: SlideDesign;
 }
 
+function contentItemKey(item: ContentItem): string {
+  return typeof item === 'string' ? item : `${item.text}|${item.url ?? ''}`;
+}
+
 // Recursive component for rendering nested bullets
 const ContentItemRenderer = ({
   contentItem,
@@ -83,7 +87,7 @@ const ContentItemRenderer = ({
               })
               .map((child, childIndex) => (
                 <ContentItemRenderer
-                  key={childIndex}
+                  key={contentItemKey(child)}
                   contentItem={child}
                   index={childIndex}
                   level={level + 1}
@@ -117,7 +121,7 @@ export const ContentItemList = ({ items, slideDesign }: ContentItemListProps) =>
       )}
     >
       {filteredItems.map((item, itemIndex) => (
-        <ContentItemRenderer key={itemIndex} contentItem={item} index={itemIndex} />
+        <ContentItemRenderer key={contentItemKey(item)} contentItem={item} index={itemIndex} />
       ))}
     </ul>
   );

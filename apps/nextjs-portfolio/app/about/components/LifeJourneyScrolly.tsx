@@ -134,6 +134,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     [mappedItems, releaseNavigationLock, setActiveIndexIfChanged],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items.length` is an intentional trigger — ScrollTrigger must re-measure when the item count changes
   useEffect(() => {
     const timer = globalThis.window?.setTimeout(() => ScrollTrigger.refresh(), 250);
     return () => {
@@ -141,6 +142,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     };
   }, [items.length]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items.length` is an intentional trigger — the scroll listener is re-attached when the item list changes
   useEffect(() => {
     let detach: (() => void) | undefined;
     let attachRaf = 0;

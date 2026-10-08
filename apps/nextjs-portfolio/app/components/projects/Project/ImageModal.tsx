@@ -42,11 +42,13 @@ const ImageModal = ({ images, initialIndex, isOpen, onClose }: ImageModalProps) 
     }
   }, [isOpen, initialIndex]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `currentIndex` is an intentional trigger — scroll back to the top when the image changes
   useEffect(() => {
     if (!isOpen) return;
     scrollPaneRef.current?.scrollTo({ top: 0, behavior: 'auto' });
   }, [currentIndex, isOpen]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `currentIndex` is an intentional trigger — re-measure the scroll pane when the image changes
   useEffect(() => {
     const scrollPane = scrollPaneRef.current;
     if (!isOpen || !scrollPane) return;

@@ -2,7 +2,7 @@
 
 import { OrbitControls } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { type ComponentRef, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import {
   abs,
@@ -26,7 +26,7 @@ import {
   vec2,
   vec3,
 } from 'three/tsl';
-import { MeshBasicNodeMaterial, StorageBufferAttribute } from 'three/webgpu';
+import { MeshBasicNodeMaterial, type Node, StorageBufferAttribute } from 'three/webgpu';
 import { useTheme } from '@/app/providers';
 import {
   BASE_ORB_RADIUS,
@@ -77,6 +77,7 @@ function ParticleOrb({
   const { gl, camera, pointer } = useThree();
   const palette = getThemedPalette(isDark);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: uniforms are created once and mutated in place every frame (useFrame); rebuilding them would recreate the compute node and material
   const uniforms = useMemo(
     () => ({
       uTime: uniform(0),
@@ -94,7 +95,7 @@ function ParticleOrb({
       burstProgress: Array.from({ length: BURST_SLOTS }, () => uniform(0)),
       burstActive: Array.from({ length: BURST_SLOTS }, () => uniform(0)),
     }),
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+    [],
   );
 
   const { computeNode, particleMesh } = useMemo(() => {
@@ -140,11 +141,12 @@ function ParticleOrb({
       // Click bursts: each active slot rides its own expanding ring of
       // displacement that fades as it grows; contributions from multiple
       // slots simply add, so stacking clicks compounds instead of resetting.
-      let burstPush: any = vec3(0.0, 0.0, 0.0);
+      let burstPush: Node<'vec3'> = vec3(0.0, 0.0, 0.0);
       for (let i = 0; i < BURST_SLOTS; i++) {
-        const burstPoint = uniforms.burstPoints[i]!;
-        const burstProgress = uniforms.burstProgress[i]!;
-        const burstActive = uniforms.burstActive[i]!;
+        const burstPoint = uniforms.burstPoints[i];
+        const burstProgress = uniforms.burstProgress[i];
+        const burstActive = uniforms.burstActive[i];
+        if (!burstPoint || !burstProgress || !burstActive) continue;
         const toClick = basePos.sub(burstPoint);
         const clickDist = length(toClick);
         const ringRadius = burstProgress.mul(uniforms.uScale.mul(float(9.0)));
@@ -167,7 +169,7 @@ function ParticleOrb({
       pos.assign(basePos.add(hoverPush).add(burstPush));
     });
 
-    const computeNode = (computeOrb as any)().compute(count);
+    const computeNode = computeOrb().compute(count);
 
     const material = new MeshBasicNodeMaterial({
       transparent: true,
@@ -207,11 +209,12 @@ function ParticleOrb({
 
     // Click-burst brightness rings, evaluated against the settled position —
     // same additive-slots approach as the displacement above.
-    let burstGlow: any = float(0.0);
+    let burstGlow: Node<'float'> = float(0.0);
     for (let i = 0; i < BURST_SLOTS; i++) {
-      const burstPoint = uniforms.burstPoints[i]!;
-      const burstProgress = uniforms.burstProgress[i]!;
-      const burstActive = uniforms.burstActive[i]!;
+      const burstPoint = uniforms.burstPoints[i];
+      const burstProgress = uniforms.burstProgress[i];
+      const burstActive = uniforms.burstActive[i];
+      if (!burstPoint || !burstProgress || !burstActive) continue;
       const toClickC = finalPos.sub(burstPoint);
       const ringRadiusC = burstProgress.mul(uniforms.uScale.mul(float(9.0)));
       const ringWidthC = uniforms.uScale.mul(float(1.6));
@@ -266,6 +269,7 @@ function ParticleOrb({
     return true;
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the listener only needs to be (re)bound when the canvas element changes; projectPointer/pointer/uniforms are stable or read live, and re-binding on every change would drop clicks
   useEffect(() => {
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
@@ -273,17 +277,24 @@ function ParticleOrb({
       // independent, overlapping ripples instead of restarting one ripple.
       const slot = nextBurstSlot.current;
       nextBurstSlot.current = (slot + 1) % BURST_SLOTS;
-      if (projectPointer(pointer.x, pointer.y, uniforms.burstPoints[slot]!.value)) {
-        burstSlots.current[slot]!.progress = 0.001;
-        burstSlots.current[slot]!.active = true;
-        uniforms.burstActive[slot]!.value = 1;
+      const burst = burstSlots.current[slot];
+      const burstPoint = uniforms.burstPoints[slot];
+      const burstActive = uniforms.burstActive[slot];
+      if (
+        burst &&
+        burstPoint &&
+        burstActive &&
+        projectPointer(pointer.x, pointer.y, burstPoint.value)
+      ) {
+        burst.progress = 0.001;
+        burst.active = true;
+        burstActive.value = 1;
       }
     };
 
     const dom = gl.domElement;
     dom.addEventListener('pointerdown', handlePointerDown);
     return () => dom.removeEventListener('pointerdown', handlePointerDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
   useFrame((_state, delta) => {
@@ -306,18 +317,20 @@ function ParticleOrb({
       (targetStrength - uniforms.uMouseStrength.value) * Math.min(1.0, dt * 4.0);
 
     for (let i = 0; i < BURST_SLOTS; i++) {
-      const slot = burstSlots.current[i]!;
-      if (!slot.active) continue;
+      const slot = burstSlots.current[i];
+      const burstActive = uniforms.burstActive[i];
+      const burstProgress = uniforms.burstProgress[i];
+      if (!slot?.active || !burstActive || !burstProgress) continue;
       slot.progress += dt * 1.1;
       if (slot.progress >= 1.0) {
         slot.progress = 0;
         slot.active = false;
-        uniforms.burstActive[i]!.value = 0;
+        burstActive.value = 0;
       }
-      uniforms.burstProgress[i]!.value = slot.progress;
+      burstProgress.value = slot.progress;
     }
 
-    (gl as any).compute(computeNode);
+    (gl as unknown as { compute: (node: unknown) => void }).compute(computeNode);
 
     onFrame(2, config.count * 2, 'WebGPU Compute (TSL Storage Buffers)');
   });
@@ -332,13 +345,15 @@ export function WebGPUCanvas({ config, onFrame, onWebGPUFallback, resetKey }: We
   useEffect(() => setMounted(true), []);
   const isDark = !mounted || resolvedTheme !== 'light';
   const palette = getThemedPalette(isDark);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<ComponentRef<typeof OrbitControls>>(null);
 
   useEffect(() => {
     async function checkSupport() {
       if (typeof navigator !== 'undefined' && 'gpu' in navigator) {
         try {
-          const adapter = await (navigator as any).gpu.requestAdapter();
+          const adapter = await (
+            navigator as Navigator & { gpu: { requestAdapter: () => Promise<unknown> } }
+          ).gpu.requestAdapter();
           if (adapter) {
             setHasWebGPU(true);
           } else {
@@ -392,9 +407,11 @@ export function WebGPUCanvas({ config, onFrame, onWebGPUFallback, resetKey }: We
     <div className='relative h-full w-full overflow-hidden' style={{ backgroundColor: palette.bg }}>
       <Canvas
         camera={{ position: [0, 4, 16], fov: 35, near: 0.1, far: 900 }}
-        gl={async (props: any) => {
+        gl={async props => {
           const { WebGPURenderer } = await import('three/webgpu');
-          const renderer = new WebGPURenderer(props);
+          const renderer = new WebGPURenderer(
+            props as unknown as ConstructorParameters<typeof WebGPURenderer>[0],
+          );
           await renderer.init();
           return renderer;
         }}

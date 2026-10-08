@@ -251,7 +251,7 @@ export function LifeJourneyMap({
       });
       flyToCoordinates(`city-${city._key}`, city.coordinates.lng, city.coordinates.lat);
     },
-    [flyToCoordinates],
+    [flyToCoordinates, setTravelSelection],
   );
 
   const selectAdventure = useCallback(
@@ -269,11 +269,12 @@ export function LifeJourneyMap({
         7.5,
       );
     },
-    [flyToCoordinates],
+    [flyToCoordinates, setTravelSelection],
   );
 
   const lastPannedIndexRef = useRef(-1);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items` is a trigger — the pan index must reset whenever the journey items change
   useEffect(() => {
     lastPannedIndexRef.current = -1;
   }, [items]);
@@ -322,6 +323,7 @@ export function LifeJourneyMap({
     return applyMapAtmosphereWhenReady(map, isDarkMap);
   }, [isDarkMap, themeMounted]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `mapMode` is a trigger — selection and fit state must reset when the map mode switches
   useEffect(() => {
     hasFittedTravelRef.current = false;
     setTravelSelection(null);

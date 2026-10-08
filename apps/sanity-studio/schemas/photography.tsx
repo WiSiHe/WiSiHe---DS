@@ -1,4 +1,4 @@
-import { ImageIcon } from '@sanity/icons';
+import { ImageIcon } from '@sanity/icons/Image';
 import { defineField, defineType } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
 import { PhotographyFileMetadataInput } from '../components/PhotographyFileMetadataInput';

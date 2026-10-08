@@ -16,7 +16,7 @@ interface RecipeTipProps {
 }
 
 export default function RecipeTipComponent({ tip, className = '' }: RecipeTipProps) {
-  if (!tip || !tip.content) {
+  if (!tip?.content) {
     return null;
   }
 

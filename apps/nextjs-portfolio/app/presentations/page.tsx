@@ -39,10 +39,7 @@ export default async function PresentationsPage() {
     hasPart: presentations.map(p => ({
       '@type': 'CreativeWork',
       name: p.title,
-      url:
-        p.slug === 'houston-we-re-coding-3d'
-          ? `${SITE_URL}/three-d`
-          : `${SITE_URL}/presentations/${p.slug}`,
+      url: `${SITE_URL}/presentations/${p.slug}`,
     })),
   };
 

@@ -1,4 +1,6 @@
-import { EarthGlobeIcon, InfoOutlineIcon, WarningOutlineIcon } from '@sanity/icons';
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe';
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import { Badge, Button, Card, Flex, Spinner, Stack, Text } from '@sanity/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {

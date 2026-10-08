@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { urlFor } from '../../lib/sanity';
 
 interface SanityImageProps {
-  asset: any;
+  asset: Parameters<typeof urlFor>[0] | null | undefined;
   alt: string;
   className?: string;
   width?: number;

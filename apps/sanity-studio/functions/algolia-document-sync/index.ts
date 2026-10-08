@@ -26,7 +26,19 @@ export const handler = documentEventHandler(async ({ event }) => {
     operation,
     medium,
     paintedAt,
-  } = event.data as any;
+  } = event.data as {
+    _id: string;
+    _type?: string;
+    title?: string;
+    name?: string;
+    description?: string;
+    slug?: { current?: string };
+    hideFromSearch?: boolean;
+    image?: unknown;
+    operation?: string;
+    medium?: string;
+    paintedAt?: string;
+  };
 
   // fallback for title/name depending on document schema
   const documentTitle = title || name || 'Untitled';

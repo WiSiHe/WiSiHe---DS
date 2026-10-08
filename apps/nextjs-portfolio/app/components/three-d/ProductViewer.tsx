@@ -66,6 +66,7 @@ const ProductViewer = () => {
             <div className='flex gap-3'>
               {colors.map(c => (
                 <button
+                  type='button'
                   key={c.hex}
                   onClick={() => setActiveColor(c.hex)}
                   className={`w-10 h-10 rounded-full border-2 transition-all ${
@@ -88,7 +89,10 @@ const ProductViewer = () => {
               </div>
               <span className='text-foreground/40 text-[10px] font-bold italic'>Ready to ship</span>
             </div>
-            <button className='w-full py-4 bg-foreground text-background font-bold rounded-2xl hover:bg-accent hover:text-accent-contrast transition-all shadow-xl uppercase tracking-widest text-xs'>
+            <button
+              type='button'
+              className='w-full py-4 bg-foreground text-background font-bold rounded-2xl hover:bg-accent hover:text-accent-contrast transition-all shadow-xl uppercase tracking-widest text-xs'
+            >
               Customize & Buy
             </button>
           </div>

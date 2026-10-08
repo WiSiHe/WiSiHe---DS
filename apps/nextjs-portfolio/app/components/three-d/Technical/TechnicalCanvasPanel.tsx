@@ -74,6 +74,7 @@ export function TechnicalCanvasPanel({
             <div className='flex items-center gap-3 mb-4'>
               <div className='w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center'>
                 <svg
+                  aria-hidden='true'
                   className='w-6 h-6 text-red-500'
                   fill='none'
                   stroke='currentColor'
@@ -94,6 +95,7 @@ export function TechnicalCanvasPanel({
             </div>
             <p className='text-sm text-foreground/80 mb-4'>{contextError}</p>
             <button
+              type='button'
               onClick={() => window.location.reload()}
               className='w-full px-4 py-2 bg-accent text-accent-contrast rounded-lg font-semibold hover:bg-accent-hover transition-colors'
             >

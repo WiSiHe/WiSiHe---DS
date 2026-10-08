@@ -10,6 +10,7 @@ export default function PaintingsSearchSkeleton() {
   return (
     <div
       className='mt-4 flex w-full flex-col gap-8 md:flex-row'
+      role='status'
       aria-busy='true'
       aria-label='Loading paintings'
     >

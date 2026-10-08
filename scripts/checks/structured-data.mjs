@@ -88,7 +88,7 @@ function nodeType(node) {
  * @param {string} html
  * @returns {string[]}
  */
-function validateUrl(url, html) {
+function validateUrl(_url, html) {
   /** @type {string[]} */
   const problems = [];
   const blocks = extractLdJsonBlocks(html);

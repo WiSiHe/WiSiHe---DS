@@ -3,15 +3,11 @@
 import { createServerFn } from '@tanstack/react-start';
 import {
   type AboutQueryResult,
-  type AllPresentationsQueryResult,
   aboutQuery,
   aboutTravelPhotographyQuery,
   allPresentationsQuery,
   type GetAllProjectsResult,
-  type GetAllRecipesResult,
-  type GetAllVideosResult,
   type GetPaginatedPaintingsResult,
-  type GetRecipeResult,
   getAllProjects,
   getAllRecipes,
   getAllVideos,
@@ -22,31 +18,22 @@ import {
   type HomePageQueryResult,
   homeExtrasQuery,
   homePageQuery,
-  type IndexableContentSlugsResult,
   indexableContentSlugs,
-  type PaintingQueryResult,
-  type PhotographyListQueryResult,
-  type PhotographyQueryResult,
-  type PresentationQueryResult,
-  type ProjectQueryResult,
   paintingQuery,
   photographyListQuery,
   photographyQuery,
   presentationQuery,
   projectQuery,
-  type SettingsQueryResult,
   settingsQuery,
-  type VideoBySlugQueryResult,
   videoBySlugQuery,
 } from '@wisihe/sanity-queries';
 import { z } from 'zod';
-import { portableTextToPlainText } from '../lib/portableText';
 import { getSanityClientForRequest, urlFor } from '../lib/sanity';
 import { isPreviewEnabled } from '../lib/sanity/draftMode';
 
 const slugInput = z.object({ slug: z.string().min(1) });
 
-async function fetchSanity<T = any>(
+async function fetchSanity(
   request: Request | undefined,
   query: string,
   params?: Record<string, unknown>,
@@ -64,6 +51,23 @@ function imageUrl(
   let builder = urlFor(image).width(width).auto('format').quality(85);
   if (height) builder = builder.height(height);
   return builder.url();
+}
+
+interface RawPaintingImage {
+  asset?: { _ref?: string | null } | null;
+  width?: number | null;
+  height?: number | null;
+  lqip?: string | null;
+  aspectRatio?: number | null;
+  hasAlpha?: boolean | null;
+  palette?: Record<string, unknown> | null;
+}
+
+interface RawRelatedPainting {
+  _id: string;
+  slug?: string | null;
+  title?: string | null;
+  image?: (RawPaintingImage & Parameters<typeof urlFor>[0]) | null;
 }
 
 export type PaintingListItem = GetPaginatedPaintingsResult[number];
@@ -147,23 +151,40 @@ export const getPainting = createServerFn({ method: 'GET' })
   .handler(async ({ data, request }) => {
     const painting = (await fetchSanity(request, paintingQuery, {
       slug: data.slug,
-    })) as any;
+    })) as unknown as {
+      _id: string;
+      slug?: string | null;
+      title: string;
+      description?: string | null;
+      paintedAt?: string | null;
+      image?: RawPaintingImage | null;
+      images?: RawPaintingImage[] | null;
+      tagsV2?: Array<{ name: string | null }> | null;
+      video?: string | null;
+      redbubbleUrl?: string | null;
+      gelatoUrl?: string | null;
+      format?: string | null;
+      viewsCount?: number | null;
+      likesCount?: number | null;
+      isNSFW?: boolean | null;
+      isFanArt?: boolean | null;
+    } | null;
 
     if (!painting) return null;
 
     const allRawImages = [painting.image, ...(painting.images || [])].filter(Boolean);
     const seenRefs = new Set<string>();
-    const dedupedImages = allRawImages.filter((img: any) => {
+    const dedupedImages = allRawImages.filter(img => {
       const ref = img?.asset?._ref;
       if (!ref || seenRefs.has(ref)) return false;
       seenRefs.add(ref);
       return true;
     });
 
-    const mapImage = (img: any): PaintingDetailImage => {
+    const mapImage = (img: RawPaintingImage): PaintingDetailImage => {
       const width = img?.width ?? null;
       const height = img?.height ?? null;
-      const builder = urlFor(img);
+      const builder = urlFor(img as Parameters<typeof urlFor>[0]);
       return {
         url: builder.width(1600).fit('max').auto('format').quality(90).url(),
         thumbUrl: builder.width(128).height(128).fit('crop').format('webp').quality(70).url(),
@@ -177,13 +198,14 @@ export const getPainting = createServerFn({ method: 'GET' })
       };
     };
 
-    const tagNames = painting.tagsV2?.map((t: any) => t?.name).filter(Boolean) ?? [];
+    const tagNames = painting.tagsV2?.map(t => t?.name).filter(Boolean) ?? [];
 
     let relatedPaintings: PaintingDetailData['relatedPaintings'] = [];
     if (tagNames.length > 0) {
-      relatedPaintings = ((await fetchSanity(
-        request,
-        `*[_type == "painting" && slug.current != $slug && isNSFW != true && count((tagsV2[]->name)[@ in $tagNames]) > 0]
+      const rawRelated =
+        (await fetchSanity<RawRelatedPainting[] | null>(
+          request,
+          `*[_type == "painting" && slug.current != $slug && isNSFW != true && count((tagsV2[]->name)[@ in $tagNames]) > 0]
           | order(paintedAt desc) [0...4] {
             _id,
             title,
@@ -193,14 +215,14 @@ export const getPainting = createServerFn({ method: 'GET' })
               "lqip": asset->metadata.lqip
             }
           }`,
-        { slug: data.slug, tagNames },
-      )) ?? []) as any[];
+          { slug: data.slug, tagNames },
+        )) ?? [];
 
-      relatedPaintings = relatedPaintings
-        .filter((p: any) => p?.slug)
-        .map((p: any) => ({
+      relatedPaintings = rawRelated
+        .filter(p => p?.slug)
+        .map(p => ({
           _id: p._id,
-          slug: p.slug,
+          slug: p.slug as string,
           title: p.title ?? 'Painting',
           imageUrl: p.image ? urlFor(p.image).width(600).fit('max').url() : null,
           lqip: p.image?.lqip ?? null,
@@ -235,11 +257,11 @@ export const getFooterData = createServerFn({ method: 'GET' }).handler(async ({ 
   ]);
 
   return {
-    socialLinks: (about as any)?.socialLinks ?? (settings as any)?.socialLinks ?? null,
-    jobTitle: (about as any)?.jobTitle ?? null,
-    heroSubtitle: (about as any)?.heroSubtitle ?? null,
-    ctaLabel: (about as any)?.ctaButtonText ?? null,
-    ctaHref: (about as any)?.ctaButtonUrl ?? null,
+    socialLinks: about?.socialLinks ?? settings?.socialLinks ?? null,
+    jobTitle: about?.jobTitle ?? null,
+    heroSubtitle: about?.heroSubtitle ?? null,
+    ctaLabel: about?.ctaButtonText ?? null,
+    ctaHref: about?.ctaButtonUrl ?? null,
     previewEnabled: isPreviewEnabled(request),
   };
 });
@@ -257,7 +279,7 @@ export const getVideo = createServerFn({ method: 'GET' })
   });
 
 export const getPhotographyList = createServerFn({ method: 'GET' }).handler(async ({ request }) => {
-  return ((await fetchSanity(request, photographyListQuery)) ?? []) as any;
+  return (await fetchSanity(request, photographyListQuery)) ?? [];
 });
 
 export const getPhotography = createServerFn({ method: 'GET' })
@@ -269,7 +291,7 @@ export const getPhotography = createServerFn({ method: 'GET' })
   });
 
 export const getRecipes = createServerFn({ method: 'GET' }).handler(async ({ request }) => {
-  return ((await fetchSanity(request, getAllRecipes)) ?? []) as any;
+  return (await fetchSanity(request, getAllRecipes)) ?? [];
 });
 
 export const getRecipeBySlug = createServerFn({ method: 'GET' })
@@ -279,7 +301,7 @@ export const getRecipeBySlug = createServerFn({ method: 'GET' })
   });
 
 export const getPresentations = createServerFn({ method: 'GET' }).handler(async ({ request }) => {
-  return ((await fetchSanity(request, allPresentationsQuery)) ?? []) as any;
+  return (await fetchSanity(request, allPresentationsQuery)) ?? [];
 });
 
 export const getPresentation = createServerFn({ method: 'GET' })
@@ -296,7 +318,7 @@ export const getAbout = createServerFn({ method: 'GET' }).handler(async ({ reque
 
 export const getAboutTravelPhotography = createServerFn({ method: 'GET' }).handler(
   async ({ request }) => {
-    return ((await fetchSanity(request, aboutTravelPhotographyQuery)) ?? []) as any;
+    return (await fetchSanity(request, aboutTravelPhotographyQuery)) ?? [];
   },
 );
 
@@ -305,7 +327,7 @@ export const getSettings = createServerFn({ method: 'GET' }).handler(async ({ re
 });
 
 export const getSitemapEntries = createServerFn({ method: 'GET' }).handler(async ({ request }) => {
-  return ((await fetchSanity(request, indexableContentSlugs)) ?? []) as any;
+  return (await fetchSanity(request, indexableContentSlugs)) ?? [];
 });
 
 export const getPreviewStatus = createServerFn({ method: 'GET' }).handler(async ({ request }) => ({

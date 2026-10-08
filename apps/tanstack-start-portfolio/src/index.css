@@ -238,6 +238,7 @@ html ::-moz-selection {
 @media (pointer: fine) {
   body.custom-cursor-active,
   body.custom-cursor-active * {
+    /* biome-ignore lint/complexity/noImportantStyles: must override inline/third-party element cursors */
     cursor: none !important;
   }
 }
@@ -263,10 +264,12 @@ html[data-presentation-mode] #main-content {
 
 @media screen {
   .recipe-print-view {
+    /* biome-ignore lint/complexity/noImportantStyles: print-only view must stay hidden regardless of component display utilities */
     display: none !important;
   }
 }
 
+/* biome-ignore-start lint/complexity/noImportantStyles: print stylesheet must override Tailwind utilities and inline styles */
 @media print {
   @page {
     margin: 12mm;
@@ -396,3 +399,4 @@ html[data-presentation-mode] #main-content {
     color: #666;
   }
 }
+/* biome-ignore-end lint/complexity/noImportantStyles: end of print stylesheet */

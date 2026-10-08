@@ -12,8 +12,8 @@ const { semanticDark, semanticLight } = loadLayeredTokens();
 const darkColors = semanticDark.semantic?.dark ?? {};
 const lightSemanticColors = semanticLight.semantic?.color ?? {};
 const lightSizeRadius = semanticLight.semantic?.size?.radius ?? {};
-const darkSemanticColors = darkColors.color ?? {};
-const darkSizeTokens = darkColors.size ?? {};
+const _darkSemanticColors = darkColors.color ?? {};
+const _darkSizeTokens = darkColors.size ?? {};
 const tokenRoot = buildTokenResolutionRoot();
 
 function createColorBlock(selector, colors, additionalVars = []) {

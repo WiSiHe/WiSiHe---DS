@@ -173,10 +173,12 @@ export function PresentationSlideDeck({
 
     const position = tldrPosition ?? 'top';
 
-    if (tldr && position === 'top' && tldrSlide) {
-      list.push(slides[0]!);
+    const [firstSlide, ...restSlides] = slides;
+
+    if (tldr && position === 'top' && tldrSlide && firstSlide) {
+      list.push(firstSlide);
       list.push(tldrSlide);
-      list.push(...slides.slice(1));
+      list.push(...restSlides);
     } else {
       list.push(...slides);
     }

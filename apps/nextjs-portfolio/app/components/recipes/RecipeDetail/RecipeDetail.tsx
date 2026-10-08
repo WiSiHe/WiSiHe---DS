@@ -251,6 +251,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                           const imageUrl = urlForImage(img)?.width(1000).quality(85).url() || '';
                           return (
                             <div
+                              // biome-ignore lint/suspicious/noArrayIndexKey: image objects have no stable id; the list is static for the lifetime of the carousel
                               key={index}
                               className='relative flex-[0_0_100%] w-full h-full min-w-0'
                             >
@@ -292,6 +293,7 @@ export default function RecipeDetail({ recipe }: RecipeDetailProps) {
                     <div className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5'>
                       {allImages.map((_, index) => (
                         <button
+                          // biome-ignore lint/suspicious/noArrayIndexKey: dots map 1:1 to carousel slides, which have no stable id
                           key={index}
                           type='button'
                           onClick={() => emblaApi?.scrollTo(index)}

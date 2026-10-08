@@ -253,6 +253,9 @@ export type BlockContent = Array<
       _type: "codeBlock";
       _key: string;
     }
+  | ({
+      _key: string;
+    } & MermaidDiagram)
   | {
       type?: "info" | "warning" | "success" | "error";
       title?: string;
@@ -397,6 +400,12 @@ export type Redirect = {
   destination?: string;
   permanent?: boolean;
   isEnabled?: boolean;
+};
+
+export type MermaidDiagram = {
+  _type: "mermaidDiagram";
+  code: string;
+  caption?: string;
 };
 
 export type BlockContentMinimal = Array<{
@@ -798,6 +807,9 @@ export type Home = {
     | ({
         _key: string;
       } & HomeSkillsSection)
+    | ({
+        _key: string;
+      } & HomeContactCtaSection)
   >;
   projectsTitle?: string;
   projectsListingDescription: BlockContentMinimal;
@@ -1103,6 +1115,7 @@ export type Project = {
     | "planned";
   projectType: "design" | "development" | "gameDevelopment" | "other";
   slug: Slug;
+  excludeFromOngoingSpotlight?: boolean;
   projectStart?: string;
   projectEnd?: string;
   summary?: BlockContentMinimal;
@@ -1135,6 +1148,12 @@ export type Project = {
       _key: string;
     } & TagReference
   >;
+  viewsCount?: number;
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
   seo?: Seo1;
   redirect?: {
     source?: string;
@@ -1358,6 +1377,7 @@ export type AllSanitySchemaTypes =
   | RecipeNutrition
   | Social
   | Redirect
+  | MermaidDiagram
   | BlockContentMinimal
   | Tag
   | Post
@@ -1891,6 +1911,7 @@ export type ProjectQueryResult = {
     | "unknown";
   projectType: "design" | "development" | "gameDevelopment" | "other";
   slug: string;
+  excludeFromOngoingSpotlight?: boolean;
   projectStart?: string;
   projectEnd?: string;
   summary?: BlockContentMinimal;
@@ -1937,6 +1958,12 @@ export type ProjectQueryResult = {
   tags: Array<{
     name: string;
   }>;
+  viewsCount: number | null;
+  likes?: Array<{
+    likerId?: string;
+    timestamp?: string;
+    _key: string;
+  }>;
   seo: {
     title: string;
     description: string | "";
@@ -1953,8 +1980,7 @@ export type ProjectQueryResult = {
     linkedIn?: string;
     x?: string;
   };
-  likesCount: null;
-  viewsCount: null;
+  likesCount: number | null;
   type: "design" | "development" | "gameDevelopment" | "other";
 } | null;
 
@@ -2019,6 +2045,17 @@ export type HomePageQueryResult = {
         secondaryLabel: string | null;
         journeyEyebrow: string | null;
         journeyLinkLabel: string | null;
+      }
+    | {
+        _key: string;
+        _type: "homeContactCtaSection";
+        eyebrow: string | null;
+        title: string | null;
+        description: string | null;
+        primaryLabel: string | null;
+        primaryUrl: string | null;
+        secondaryLabel: string | null;
+        secondaryUrl: string | null;
       }
     | {
         _key: string;
@@ -5110,8 +5147,7 @@ export type GetPaginatedProjectsResult = Array<{
 export type GetProjectsCountResult = number;
 
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+declare global {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
     '\n  *[_type == "about" && _id == "about"][0] {\n    heroTitle,\n    heroSubtitle,\n    bio,\n    jobTitle,\n    portrait { ..., "lqip": asset->metadata.lqip },\n    seoTitle,\n    seoDescription,\n    knowsAbout,\n    journeyItems[] {\n      _key,\n      year,\n      title,\n      content,\n      placeName,\n      locationType,\n      coordinates,\n      mapZoom,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip }\n    },\n    visitedCountries[] {\n      _key,\n      country,\n      countryCode,\n      placeName,\n      coordinates,\n      notes,\n      cities[] {\n        _key,\n        name,\n        coordinates,\n        isHighlight,\n        notes,\n        funFact,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip },\n        place-> {\n          _id,\n          name,\n          kind,\n          countryName,\n          countryCode,\n          coordinates,\n          isHighlight,\n          funFact,\n          notes,\n          stats[] { label, value },\n          image { ..., "lqip": asset->metadata.lqip }\n        }\n      }\n    },\n    adventurePlaces[] {\n      _key,\n      name,\n      placeName,\n      coordinates,\n      notes,\n      funFact,\n      stats[] { label, value },\n      image { ..., "lqip": asset->metadata.lqip },\n      place-> {\n        _id,\n        name,\n        kind,\n        countryName,\n        countryCode,\n        coordinates,\n        isHighlight,\n        funFact,\n        notes,\n        stats[] { label, value },\n        image { ..., "lqip": asset->metadata.lqip }\n      }\n    },\n    ctaTitle,\n    ctaDescription,\n    ctaButtonText,\n    ctaButtonUrl,\n    socialLinks[] { _key, platform, url }\n  }\n': AboutQueryResult;
@@ -5157,4 +5193,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "project" && defined(slug.current) && coalesce(seo.noIndex, false) != true]\n  | order(projectStart desc, _updatedAt desc) [$start...$end] {\n    _id,\n    "slug": slug.current,\n    description,\n    seoDescription,\n    projectType,\n    projectStart,\n    projectEnd,\n    status,\n    content,\n    name,\n    client,\n    "tags": tags[]->{name},\n    image {\n      ...,\n      "lqip": asset->metadata.lqip\n    }\n  }\n': GetPaginatedProjectsResult;
     '\n  count(*[_type == "project" && defined(slug.current) && coalesce(seo.noIndex, false) != true])\n': GetProjectsCountResult;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }

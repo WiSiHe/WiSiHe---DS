@@ -30,7 +30,7 @@ export function TravelCityDot({
 
   if (!onClick) {
     return (
-      <span className='group/marker relative' title={label} aria-label={label}>
+      <span className='group/marker relative' title={label} role='img' aria-label={label}>
         {tooltip}
         {dot}
       </span>

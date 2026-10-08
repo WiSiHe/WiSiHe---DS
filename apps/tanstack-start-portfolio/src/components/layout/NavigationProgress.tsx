@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
  */
 export function NavigationProgress() {
   const isLoading = useRouterState({
-    select: state => state.isLoading || state.isTransitioning,
+    select: state => state.isLoading,
   });
   const [visible, setVisible] = useState(false);
   const [complete, setComplete] = useState(false);

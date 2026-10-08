@@ -1,6 +1,8 @@
 'use client';
 
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
+import type { ComponentProps } from 'react';
 import CustomPortableText from '@/components/cms/PortableText/PortableText';
 import { DetailNav } from '@/components/detail/DetailNav';
 import { getProjectDisplayTitle } from '@/components/projects/projectCardHelpers';
@@ -13,8 +15,10 @@ import { ProjectImageGallery } from './ProjectImageGallery';
 import { ProjectInformation } from './ProjectInformation';
 import { ProjectLiveSiteCard } from './ProjectLiveSiteCard';
 
+type PortableTextValue = ComponentProps<typeof CustomPortableText>['value'];
+
 type ProjectDetailViewProps = {
-  project: Record<string, any>;
+  project: NonNullable<ProjectQueryResult>;
 };
 
 export function ProjectDetailView({ project }: ProjectDetailViewProps) {
@@ -96,7 +100,10 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
           aria-label='Project case study'
         >
           <div className='mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8'>
-            <CustomPortableText variant='article' value={caseStudyBody as any} />
+            <CustomPortableText
+              variant='article'
+              value={caseStudyBody as unknown as PortableTextValue}
+            />
           </div>
         </section>
       ) : null}

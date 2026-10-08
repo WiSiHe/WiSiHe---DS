@@ -1,4 +1,4 @@
-import { EarthGlobeIcon } from '@sanity/icons';
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe';
 import { Card, Flex, Spinner, Stack, Text } from '@sanity/ui';
 import { useEffect, useState } from 'react';
 import type { ObjectInputProps } from 'sanity';

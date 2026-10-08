@@ -9,35 +9,65 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as PaintingsRouteRouteImport } from './routes/paintings/route'
+import { Route as PhotographyRouteRouteImport } from './routes/photography/route'
+import { Route as PresentationsRouteRouteImport } from './routes/presentations/route'
+import { Route as ProjectsRouteRouteImport } from './routes/projects/route'
+import { Route as RecipesRouteRouteImport } from './routes/recipes/route'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as VideosRouteRouteImport } from './routes/videos/route'
-import { Route as RecipesRouteRouteImport } from './routes/recipes/route'
-import { Route as ProjectsRouteRouteImport } from './routes/projects/route'
-import { Route as PresentationsRouteRouteImport } from './routes/presentations/route'
-import { Route as PhotographyRouteRouteImport } from './routes/photography/route'
-import { Route as PaintingsRouteRouteImport } from './routes/paintings/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as VideosIndexRouteImport } from './routes/videos/index'
-import { Route as ThreeDIndexRouteImport } from './routes/three-d/index'
-import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
-import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
-import { Route as PrivacyIndexRouteImport } from './routes/privacy/index'
-import { Route as PresentationsIndexRouteImport } from './routes/presentations/index'
-import { Route as PhotographyIndexRouteImport } from './routes/photography/index'
-import { Route as PaintingsIndexRouteImport } from './routes/paintings/index'
-import { Route as DesignSystemIndexRouteImport } from './routes/design-system/index'
-import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
-import { Route as VideosSlugRouteImport } from './routes/videos/$slug'
-import { Route as RecipesSlugRouteImport } from './routes/recipes/$slug'
-import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
-import { Route as PresentationsSlugRouteImport } from './routes/presentations/$slug'
-import { Route as PhotographySlugRouteImport } from './routes/photography/$slug'
-import { Route as PaintingsSlugRouteImport } from './routes/paintings/$slug'
+import { Route as ContactIndexRouteImport } from './routes/contact/index'
+import { Route as DesignSystemIndexRouteImport } from './routes/design-system/index'
 import { Route as IngestSplatRouteImport } from './routes/ingest/$'
-import { Route as ApiDraftModeEnableRouteImport } from './routes/api/draft-mode/enable'
+import { Route as PaintingsIndexRouteImport } from './routes/paintings/index'
+import { Route as PaintingsSlugRouteImport } from './routes/paintings/$slug'
+import { Route as PhotographyIndexRouteImport } from './routes/photography/index'
+import { Route as PhotographySlugRouteImport } from './routes/photography/$slug'
+import { Route as PresentationsIndexRouteImport } from './routes/presentations/index'
+import { Route as PresentationsSlugRouteImport } from './routes/presentations/$slug'
+import { Route as PrivacyIndexRouteImport } from './routes/privacy/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
+import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
+import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
+import { Route as RecipesSlugRouteImport } from './routes/recipes/$slug'
+import { Route as ThreeDIndexRouteImport } from './routes/three-d/index'
+import { Route as VideosIndexRouteImport } from './routes/videos/index'
+import { Route as VideosSlugRouteImport } from './routes/videos/$slug'
 import { Route as ApiDraftModeDisableRouteImport } from './routes/api/draft-mode/disable'
+import { Route as ApiDraftModeEnableRouteImport } from './routes/api/draft-mode/enable'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaintingsRouteRoute = PaintingsRouteRouteImport.update({
+  id: '/paintings',
+  path: '/paintings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhotographyRouteRoute = PhotographyRouteRouteImport.update({
+  id: '/photography',
+  path: '/photography',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationsRouteRoute = PresentationsRouteRouteImport.update({
+  id: '/presentations',
+  path: '/presentations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRouteRoute = ProjectsRouteRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecipesRouteRoute = RecipesRouteRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -48,79 +78,9 @@ const VideosRouteRoute = VideosRouteRouteImport.update({
   path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecipesRouteRoute = RecipesRouteRouteImport.update({
-  id: '/recipes',
-  path: '/recipes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRouteRoute = ProjectsRouteRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentationsRouteRoute = PresentationsRouteRouteImport.update({
-  id: '/presentations',
-  path: '/presentations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PhotographyRouteRoute = PhotographyRouteRouteImport.update({
-  id: '/photography',
-  path: '/photography',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PaintingsRouteRoute = PaintingsRouteRouteImport.update({
-  id: '/paintings',
-  path: '/paintings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VideosIndexRoute = VideosIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => VideosRouteRoute,
-} as any)
-const ThreeDIndexRoute = ThreeDIndexRouteImport.update({
-  id: '/three-d/',
-  path: '/three-d/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RecipesIndexRoute = RecipesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => RecipesRouteRoute,
-} as any)
-const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProjectsRouteRoute,
-} as any)
-const PrivacyIndexRoute = PrivacyIndexRouteImport.update({
-  id: '/privacy/',
-  path: '/privacy/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentationsIndexRoute = PresentationsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PresentationsRouteRoute,
-} as any)
-const PhotographyIndexRoute = PhotographyIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PhotographyRouteRoute,
-} as any)
-const PaintingsIndexRoute = PaintingsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PaintingsRouteRoute,
-} as any)
-const DesignSystemIndexRoute = DesignSystemIndexRouteImport.update({
-  id: '/design-system/',
-  path: '/design-system/',
+const AboutIndexRoute = AboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactIndexRoute = ContactIndexRouteImport.update({
@@ -128,54 +88,94 @@ const ContactIndexRoute = ContactIndexRouteImport.update({
   path: '/contact/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutIndexRoute = AboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
+const DesignSystemIndexRoute = DesignSystemIndexRouteImport.update({
+  id: '/design-system/',
+  path: '/design-system/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const VideosSlugRoute = VideosSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => VideosRouteRoute,
-} as any)
-const RecipesSlugRoute = RecipesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => RecipesRouteRoute,
-} as any)
-const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ProjectsRouteRoute,
-} as any)
-const PresentationsSlugRoute = PresentationsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PresentationsRouteRoute,
-} as any)
-const PhotographySlugRoute = PhotographySlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PhotographyRouteRoute,
-} as any)
-const PaintingsSlugRoute = PaintingsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PaintingsRouteRoute,
 } as any)
 const IngestSplatRoute = IngestSplatRouteImport.update({
   id: '/ingest/$',
   path: '/ingest/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDraftModeEnableRoute = ApiDraftModeEnableRouteImport.update({
-  id: '/api/draft-mode/enable',
-  path: '/api/draft-mode/enable',
+const PaintingsIndexRoute = PaintingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PaintingsRouteRoute,
+} as any)
+const PaintingsSlugRoute = PaintingsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PaintingsRouteRoute,
+} as any)
+const PhotographyIndexRoute = PhotographyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PhotographyRouteRoute,
+} as any)
+const PhotographySlugRoute = PhotographySlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PhotographyRouteRoute,
+} as any)
+const PresentationsIndexRoute = PresentationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PresentationsRouteRoute,
+} as any)
+const PresentationsSlugRoute = PresentationsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PresentationsRouteRoute,
+} as any)
+const PrivacyIndexRoute = PrivacyIndexRouteImport.update({
+  id: '/privacy/',
+  path: '/privacy/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProjectsRouteRoute,
+} as any)
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ProjectsRouteRoute,
+} as any)
+const RecipesIndexRoute = RecipesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RecipesRouteRoute,
+} as any)
+const RecipesSlugRoute = RecipesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => RecipesRouteRoute,
+} as any)
+const ThreeDIndexRoute = ThreeDIndexRouteImport.update({
+  id: '/three-d/',
+  path: '/three-d/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosIndexRoute = VideosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VideosRouteRoute,
+} as any)
+const VideosSlugRoute = VideosSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => VideosRouteRoute,
 } as any)
 const ApiDraftModeDisableRoute = ApiDraftModeDisableRouteImport.update({
   id: '/api/draft-mode/disable',
   path: '/api/draft-mode/disable',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDraftModeEnableRoute = ApiDraftModeEnableRouteImport.update({
+  id: '/api/draft-mode/enable',
+  path: '/api/draft-mode/enable',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -372,6 +372,48 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paintings': {
+      id: '/paintings'
+      path: '/paintings'
+      fullPath: '/paintings'
+      preLoaderRoute: typeof PaintingsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/photography': {
+      id: '/photography'
+      path: '/photography'
+      fullPath: '/photography'
+      preLoaderRoute: typeof PhotographyRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentations': {
+      id: '/presentations'
+      path: '/presentations'
+      fullPath: '/presentations'
+      preLoaderRoute: typeof PresentationsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recipes': {
+      id: '/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -386,109 +428,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VideosRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recipes': {
-      id: '/recipes'
-      path: '/recipes'
-      fullPath: '/recipes'
-      preLoaderRoute: typeof RecipesRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentations': {
-      id: '/presentations'
-      path: '/presentations'
-      fullPath: '/presentations'
-      preLoaderRoute: typeof PresentationsRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/photography': {
-      id: '/photography'
-      path: '/photography'
-      fullPath: '/photography'
-      preLoaderRoute: typeof PhotographyRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/paintings': {
-      id: '/paintings'
-      path: '/paintings'
-      fullPath: '/paintings'
-      preLoaderRoute: typeof PaintingsRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/videos/': {
-      id: '/videos/'
-      path: '/'
-      fullPath: '/videos/'
-      preLoaderRoute: typeof VideosIndexRouteImport
-      parentRoute: typeof VideosRouteRoute
-    }
-    '/three-d/': {
-      id: '/three-d/'
-      path: '/three-d'
-      fullPath: '/three-d/'
-      preLoaderRoute: typeof ThreeDIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/recipes/': {
-      id: '/recipes/'
-      path: '/'
-      fullPath: '/recipes/'
-      preLoaderRoute: typeof RecipesIndexRouteImport
-      parentRoute: typeof RecipesRouteRoute
-    }
-    '/projects/': {
-      id: '/projects/'
-      path: '/'
-      fullPath: '/projects/'
-      preLoaderRoute: typeof ProjectsIndexRouteImport
-      parentRoute: typeof ProjectsRouteRoute
-    }
-    '/privacy/': {
-      id: '/privacy/'
-      path: '/privacy'
-      fullPath: '/privacy/'
-      preLoaderRoute: typeof PrivacyIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentations/': {
-      id: '/presentations/'
-      path: '/'
-      fullPath: '/presentations/'
-      preLoaderRoute: typeof PresentationsIndexRouteImport
-      parentRoute: typeof PresentationsRouteRoute
-    }
-    '/photography/': {
-      id: '/photography/'
-      path: '/'
-      fullPath: '/photography/'
-      preLoaderRoute: typeof PhotographyIndexRouteImport
-      parentRoute: typeof PhotographyRouteRoute
-    }
-    '/paintings/': {
-      id: '/paintings/'
-      path: '/'
-      fullPath: '/paintings/'
-      preLoaderRoute: typeof PaintingsIndexRouteImport
-      parentRoute: typeof PaintingsRouteRoute
-    }
-    '/design-system/': {
-      id: '/design-system/'
-      path: '/design-system'
-      fullPath: '/design-system/'
-      preLoaderRoute: typeof DesignSystemIndexRouteImport
+    '/about/': {
+      id: '/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact/': {
@@ -498,54 +442,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/': {
-      id: '/about/'
-      path: '/about'
-      fullPath: '/about/'
-      preLoaderRoute: typeof AboutIndexRouteImport
+    '/design-system/': {
+      id: '/design-system/'
+      path: '/design-system'
+      fullPath: '/design-system/'
+      preLoaderRoute: typeof DesignSystemIndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/videos/$slug': {
-      id: '/videos/$slug'
-      path: '/$slug'
-      fullPath: '/videos/$slug'
-      preLoaderRoute: typeof VideosSlugRouteImport
-      parentRoute: typeof VideosRouteRoute
-    }
-    '/recipes/$slug': {
-      id: '/recipes/$slug'
-      path: '/$slug'
-      fullPath: '/recipes/$slug'
-      preLoaderRoute: typeof RecipesSlugRouteImport
-      parentRoute: typeof RecipesRouteRoute
-    }
-    '/projects/$slug': {
-      id: '/projects/$slug'
-      path: '/$slug'
-      fullPath: '/projects/$slug'
-      preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof ProjectsRouteRoute
-    }
-    '/presentations/$slug': {
-      id: '/presentations/$slug'
-      path: '/$slug'
-      fullPath: '/presentations/$slug'
-      preLoaderRoute: typeof PresentationsSlugRouteImport
-      parentRoute: typeof PresentationsRouteRoute
-    }
-    '/photography/$slug': {
-      id: '/photography/$slug'
-      path: '/$slug'
-      fullPath: '/photography/$slug'
-      preLoaderRoute: typeof PhotographySlugRouteImport
-      parentRoute: typeof PhotographyRouteRoute
-    }
-    '/paintings/$slug': {
-      id: '/paintings/$slug'
-      path: '/$slug'
-      fullPath: '/paintings/$slug'
-      preLoaderRoute: typeof PaintingsSlugRouteImport
-      parentRoute: typeof PaintingsRouteRoute
     }
     '/ingest/$': {
       id: '/ingest/$'
@@ -554,18 +456,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IngestSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/draft-mode/enable': {
-      id: '/api/draft-mode/enable'
-      path: '/api/draft-mode/enable'
-      fullPath: '/api/draft-mode/enable'
-      preLoaderRoute: typeof ApiDraftModeEnableRouteImport
+    '/paintings/': {
+      id: '/paintings/'
+      path: '/'
+      fullPath: '/paintings/'
+      preLoaderRoute: typeof PaintingsIndexRouteImport
+      parentRoute: typeof PaintingsRouteRoute
+    }
+    '/paintings/$slug': {
+      id: '/paintings/$slug'
+      path: '/$slug'
+      fullPath: '/paintings/$slug'
+      preLoaderRoute: typeof PaintingsSlugRouteImport
+      parentRoute: typeof PaintingsRouteRoute
+    }
+    '/photography/': {
+      id: '/photography/'
+      path: '/'
+      fullPath: '/photography/'
+      preLoaderRoute: typeof PhotographyIndexRouteImport
+      parentRoute: typeof PhotographyRouteRoute
+    }
+    '/photography/$slug': {
+      id: '/photography/$slug'
+      path: '/$slug'
+      fullPath: '/photography/$slug'
+      preLoaderRoute: typeof PhotographySlugRouteImport
+      parentRoute: typeof PhotographyRouteRoute
+    }
+    '/presentations/': {
+      id: '/presentations/'
+      path: '/'
+      fullPath: '/presentations/'
+      preLoaderRoute: typeof PresentationsIndexRouteImport
+      parentRoute: typeof PresentationsRouteRoute
+    }
+    '/presentations/$slug': {
+      id: '/presentations/$slug'
+      path: '/$slug'
+      fullPath: '/presentations/$slug'
+      preLoaderRoute: typeof PresentationsSlugRouteImport
+      parentRoute: typeof PresentationsRouteRoute
+    }
+    '/privacy/': {
+      id: '/privacy/'
+      path: '/privacy'
+      fullPath: '/privacy/'
+      preLoaderRoute: typeof PrivacyIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/projects/': {
+      id: '/projects/'
+      path: '/'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof ProjectsRouteRoute
+    }
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
+      parentRoute: typeof ProjectsRouteRoute
+    }
+    '/recipes/': {
+      id: '/recipes/'
+      path: '/'
+      fullPath: '/recipes/'
+      preLoaderRoute: typeof RecipesIndexRouteImport
+      parentRoute: typeof RecipesRouteRoute
+    }
+    '/recipes/$slug': {
+      id: '/recipes/$slug'
+      path: '/$slug'
+      fullPath: '/recipes/$slug'
+      preLoaderRoute: typeof RecipesSlugRouteImport
+      parentRoute: typeof RecipesRouteRoute
+    }
+    '/three-d/': {
+      id: '/three-d/'
+      path: '/three-d'
+      fullPath: '/three-d/'
+      preLoaderRoute: typeof ThreeDIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos/': {
+      id: '/videos/'
+      path: '/'
+      fullPath: '/videos/'
+      preLoaderRoute: typeof VideosIndexRouteImport
+      parentRoute: typeof VideosRouteRoute
+    }
+    '/videos/$slug': {
+      id: '/videos/$slug'
+      path: '/$slug'
+      fullPath: '/videos/$slug'
+      preLoaderRoute: typeof VideosSlugRouteImport
+      parentRoute: typeof VideosRouteRoute
     }
     '/api/draft-mode/disable': {
       id: '/api/draft-mode/disable'
       path: '/api/draft-mode/disable'
       fullPath: '/api/draft-mode/disable'
       preLoaderRoute: typeof ApiDraftModeDisableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/draft-mode/enable': {
+      id: '/api/draft-mode/enable'
+      path: '/api/draft-mode/enable'
+      fullPath: '/api/draft-mode/enable'
+      preLoaderRoute: typeof ApiDraftModeEnableRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

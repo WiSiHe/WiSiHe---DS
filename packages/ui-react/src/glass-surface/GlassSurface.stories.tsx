@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { GlassSurface } from './GlassSurface';
 
-const meta = {
+const meta: Meta<typeof GlassSurface> = {
   title: 'Design System/Molecules/GlassSurface',
   component: GlassSurface,
   tags: ['autodocs'],
@@ -15,10 +15,10 @@ const meta = {
       options: ['default', 'overlay', 'backdrop'],
     },
   },
-} satisfies Meta<typeof GlassSurface>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GlassSurface>;
 
 export const Default: Story = {
   render: args => (

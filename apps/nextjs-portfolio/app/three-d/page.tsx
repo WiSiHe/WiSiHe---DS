@@ -1,4 +1,5 @@
 import {
+  type Icon,
   IconArrowRight,
   IconBolt,
   IconBook,
@@ -29,7 +30,7 @@ interface ToolItem {
 
 interface ToolCategory {
   title: string;
-  icon: any;
+  icon: Icon;
   description: string;
   tools: ToolItem[];
 }
@@ -612,11 +613,11 @@ export default function ThreeDLabPage() {
 
           {/* 4-Category Toolchain Matrix */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-            {TOOL_CATEGORIES.map((cat, idx) => {
+            {TOOL_CATEGORIES.map(cat => {
               const CatIcon = cat.icon;
               return (
                 <div
-                  key={idx}
+                  key={cat.title}
                   className='rounded-2xl border border-border/50 bg-surface p-6 sm:p-7 space-y-5 transition-all hover:border-accent/40'
                 >
                   <div className='flex items-center justify-between border-b border-border/40 pb-4'>
@@ -634,9 +635,9 @@ export default function ThreeDLabPage() {
                   </div>
 
                   <div className='space-y-3.5'>
-                    {cat.tools.map((t, tIdx) => (
+                    {cat.tools.map(t => (
                       <a
-                        key={tIdx}
+                        key={t.name}
                         href={t.url}
                         target='_blank'
                         rel='noopener noreferrer'

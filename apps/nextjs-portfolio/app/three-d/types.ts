@@ -87,7 +87,7 @@ export interface PresentationSlide {
   chartType?: 'performance' | 'business-impact' | 'engagement' | 'history-timeline';
   currentEra?: string; // Used for history timeline to indicate which era is active
   customComponent?: string;
-  customProps?: Record<string, any>;
+  customProps?: Record<string, unknown>;
   // Design and organization
   slideDesign?: 'default' | 'centered' | 'split' | 'full-width' | 'minimal' | 'hero' | 'bold';
   category?: string;

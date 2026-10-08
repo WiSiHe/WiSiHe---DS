@@ -59,7 +59,8 @@ export default async function ProjectsPage() {
     sanityFetch({ query: getAllProjects }),
     sanityFetch({ query: homeSectionCopyQuery }),
   ]);
-  const { ongoingProjects, pastProjects, tags } = (projectsData ?? {}) as GetAllProjectsResult;
+  const { ongoingProjects, pastProjects, tags } = (projectsData ??
+    {}) as unknown as GetAllProjectsResult;
   const home = homeData as HomeSectionCopyQueryResult | null;
   const pageTitle = home?.projectsTitle?.trim() || PROJECTS_TITLE_FALLBACK;
   const listingDescription = home?.projectsListingDescription;

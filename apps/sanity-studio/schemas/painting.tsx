@@ -1,4 +1,4 @@
-import { ImageIcon } from '@sanity/icons';
+import { ImageIcon } from '@sanity/icons/Image';
 // import ImageAltTextGenerator from 'components/sanity/ImageAltTextGenerator'
 // import ImageDescriptionGenerator from 'components/sanity/ImageDescriptionGenerator'
 // import SEODescriptionGenerator from 'components/sanity/SEODescriptionGenerator'
@@ -13,7 +13,6 @@ import {
   PAINTING_SEO_FROM_DESCRIPTION_PROMPT,
   validatePaintingDescription,
 } from './descriptionGuidance';
-import { seoType } from './seoType';
 import { PAINTING_TAG_GUIDE, validateContentTags } from './tagGuidance';
 
 export default defineType({

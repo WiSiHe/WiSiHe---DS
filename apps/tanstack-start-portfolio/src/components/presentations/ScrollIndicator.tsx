@@ -16,6 +16,11 @@ export function ScrollIndicator({
   return (
     <div
       className='pointer-events-none fixed top-0 left-0 z-40 hidden h-full w-1.5 md:block'
+      role='progressbar'
+      aria-label='Presentation progress'
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(progress)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

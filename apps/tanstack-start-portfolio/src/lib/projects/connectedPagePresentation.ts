@@ -66,7 +66,7 @@ export function isDuplicateOfEmbeddedVideo(
   return pageKey !== null && videoKey !== null && pageKey === videoKey;
 }
 
-function detectKind(url: string, parsed: URL): ConnectedPageKind {
+function detectKind(_url: string, parsed: URL): ConnectedPageKind {
   const host = parsed.hostname.replace(/^www\./, '');
 
   if (host === 'youtu.be' || host.includes('youtube') || host.includes('vimeo')) return 'video';

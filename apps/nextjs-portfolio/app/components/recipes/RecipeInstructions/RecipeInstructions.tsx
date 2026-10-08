@@ -56,7 +56,12 @@ export default function RecipeInstructions({
     return [...content].map(block => {
       if (block._type === 'block' && block.children) {
         // Merge adjacent plain-text spans (spans without marks) to avoid curly braces being split across spans.
-        const mergedChildren: any[] = [];
+        const mergedChildren: Array<{
+          _key?: string;
+          _type: string;
+          text?: string;
+          marks?: string[];
+        }> = [];
         for (const child of block.children) {
           const lastChild = mergedChildren[mergedChildren.length - 1];
           if (

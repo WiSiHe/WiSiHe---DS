@@ -157,6 +157,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                         className='group relative flex-1 h-12 cursor-default transition-[flex,background-color] duration-700 ease-out hover:flex-[1.6]'
                         style={{ backgroundColor: swatch.color }}
                         title={`${SWATCH_LABELS[swatch.key] ?? swatch.label}: ${swatch.color.toUpperCase()}`}
+                        role='img'
                         aria-label={`${SWATCH_LABELS[swatch.key] ?? swatch.label}: ${swatch.color}`}
                       >
                         <span className='pointer-events-none absolute inset-x-0 bottom-1 text-center text-[9px] font-mono font-medium text-white opacity-0 [text-shadow:0_1px_2px_rgba(0,0,0,0.8)] transition-opacity duration-200 group-hover:opacity-100'>
