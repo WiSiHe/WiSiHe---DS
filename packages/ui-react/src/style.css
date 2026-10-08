@@ -49,7 +49,9 @@
     .glass-surface-backdrop,
     .glass-surface-default,
     .glass-surface-overlay {
+      /* biome-ignore lint/complexity/noImportantStyles: user preference (reduced transparency) must override every glass utility variant */
       -webkit-backdrop-filter: none !important;
+      /* biome-ignore lint/complexity/noImportantStyles: user preference (reduced transparency) must override every glass utility variant */
       backdrop-filter: none !important;
     }
 

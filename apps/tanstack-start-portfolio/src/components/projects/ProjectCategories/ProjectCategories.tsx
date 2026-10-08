@@ -76,14 +76,8 @@ export default function ProjectCategories({
         matchesTags(p, activeFilters),
     );
 
-  const filteredOngoing = useMemo(
-    () => filterProjects(ongoingProjects),
-    [ongoingProjects, searchQuery, activeType, activeFilters],
-  );
-  const filteredPast = useMemo(
-    () => filterProjects(pastProjects),
-    [pastProjects, searchQuery, activeType, activeFilters],
-  );
+  const filteredOngoing = filterProjects(ongoingProjects);
+  const filteredPast = filterProjects(pastProjects);
 
   const totalFiltered = filteredOngoing.length + filteredPast.length;
   const totalCount = ongoingProjects.length + pastProjects.length;

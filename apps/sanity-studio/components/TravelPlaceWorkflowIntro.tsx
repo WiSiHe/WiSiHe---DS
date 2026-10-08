@@ -1,4 +1,4 @@
-import { EarthGlobeIcon, InfoOutlineIcon } from '@sanity/icons';
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
 import { Card, Flex, Stack, Text } from '@sanity/ui';
 import type { StringInputProps } from 'sanity';
 

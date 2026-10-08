@@ -239,17 +239,18 @@ document.body.appendChild(renderer.domElement)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 
-const clock = new THREE.Clock()
+const timer = new THREE.Timer()
 
-function tick() {
-  const elapsedTime = clock.getElapsedTime()
+function tick(timestamp) {
+  timer.update(timestamp)
+  const elapsedTime = timer.getElapsed()
   // Pass elapsedTime into shader uniforms here
   controls.update()
   renderer.render(scene, camera)
   requestAnimationFrame(tick)
 }
 
-tick()`,
+requestAnimationFrame(tick)`,
     'main.js',
   ),
 

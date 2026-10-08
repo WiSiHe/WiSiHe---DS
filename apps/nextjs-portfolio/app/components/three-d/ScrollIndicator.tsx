@@ -14,6 +14,7 @@ export const ScrollIndicator = ({
   const progress = ((currentSlide + 1) / totalSlides) * 100;
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: hover handlers only toggle a decorative progress tooltip; not an interactive control
     <div
       className='hidden md:block fixed left-0 top-0 h-full w-1.5 z-40 pointer-events-none'
       onMouseEnter={() => setIsHovered(true)}

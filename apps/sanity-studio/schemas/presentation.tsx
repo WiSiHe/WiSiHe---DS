@@ -1,7 +1,6 @@
-import { PresentationIcon } from '@sanity/icons';
+import { PresentationIcon } from '@sanity/icons/Presentation';
 import { defineField, defineType, type ValidationContext } from 'sanity';
 import GenericAIGenerator from '../components/GenericAIGenerator';
-import { seoType } from './seoType';
 import { tag } from './tag';
 
 // Source object type (inline)
@@ -146,7 +145,15 @@ const exampleType = defineType({
       description: 'description',
       image: 'image',
     },
-    prepare({ name, description, image }: { name?: string; description?: string; image?: any }) {
+    prepare({
+      name,
+      description,
+      image,
+    }: {
+      name?: string;
+      description?: string;
+      image?: unknown;
+    }) {
       return {
         title: name || 'Example',
         subtitle: description,
@@ -442,10 +449,10 @@ const mediaType = defineType({
       metrics,
     }: {
       mediaType?: string;
-      image?: any;
+      image?: unknown;
       chartType?: string;
       componentName?: string;
-      metrics?: any[];
+      metrics?: unknown[];
     }) {
       const titles: Record<string, string> = {
         none: 'No Media',
@@ -869,7 +876,7 @@ export default defineType({
     }: {
       title?: string;
       description?: string;
-      slidesCount?: any[];
+      slidesCount?: unknown[];
     }) {
       const count = Array.isArray(slidesCount) ? slidesCount.length : 0;
       return {

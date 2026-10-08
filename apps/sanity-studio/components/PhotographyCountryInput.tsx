@@ -1,4 +1,4 @@
-import { WarningOutlineIcon } from '@sanity/icons';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import { Button, Flex, Select, Stack, Text } from '@sanity/ui';
 import OpenAI from 'openai';
 import type { ChangeEvent } from 'react';

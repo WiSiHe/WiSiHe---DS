@@ -6,7 +6,7 @@ export type TagCatalogEntry = {
 };
 
 export type TagSuggestRequest = {
-  documentKind: 'painting' | 'project';
+  documentKind: 'painting' | 'project' | 'photography' | 'post';
   title: string;
   textBody: string;
   tagsCatalog: TagCatalogEntry[];
@@ -47,16 +47,24 @@ export async function runTagSuggest(
   const allowed = new Set(body.tagsCatalog.map(t => t.id));
   const catalogLines = body.tagsCatalog.map(t => `- ${t.id}: ${t.name}`).join('\n');
 
-  const paintingRules =
+  const typeRules =
     body.documentKind === 'painting'
       ? `
 Painting rules:
 - Pick 3–5 tag ids when possible (minimum 2 if only two clearly apply).
 - 1–2 subject or theme; 1 medium/style when relevant; 1 mood or technique when helpful.
-- Do NOT pick framework/stack tags (NextJS, Sanity, React, TypeScript, etc.) unless the artwork is literally about that topic.
-- Do NOT pick generic project/work tags (Design System, Hackathon, Workshop, E-commerce) unless clearly relevant.
+- Do NOT pick framework/stack tags unless the artwork is literally about that topic.
 - Prefer tags already used on paintings in this portfolio when they fit.`
-      : `
+      : body.documentKind === 'photography'
+        ? `
+Photography rules:
+- Pick 2–4 tag ids (landscape, travel, architecture, mood, lighting, location).
+- Do NOT pick programming or code tags.`
+        : body.documentKind === 'post'
+          ? `
+Blog post rules:
+- Pick 2–5 tag ids reflecting key themes, technical subjects, and topics.`
+          : `
 Project rules:
 - Prefer 4–6 tags when possible: stack, domain, and context when useful.
 - Reuse featured tags; skip generic labels like "Work".`;
@@ -78,7 +86,7 @@ Rules:
 - ONLY include ids that appear in the catalog below (exact id match).
 - Omit tags that are unrelated.
 - If nothing fits, return an empty array.
-${paintingRules}
+${typeRules}
 
 ${contextLines}
 

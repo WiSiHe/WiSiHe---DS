@@ -237,6 +237,7 @@ export default function ProjectImageGallery({
     return () => globalThis.removeEventListener('keydown', handleKeyDown);
   }, [goNext, goPrev, hasMultiple]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `selectedIndex` is an intentional trigger — scroll the filmstrip to the active thumbnail
   useEffect(() => {
     const strip = filmstripRef.current;
     if (!strip || !hasMultiple) return;

@@ -3,7 +3,7 @@
  * Bypasses the CLI's broken module resolution in this monorepo.
  */
 import { writeFileSync } from 'node:fs';
-import { createSchema } from 'sanity';
+import { createSchema, type SchemaTypeDefinition } from 'sanity';
 
 // Import all schema types
 import blockContent from './schemas/blockContent';
@@ -63,18 +63,21 @@ const schemaTypes = [
   presentation,
 ];
 
-const compiled = createSchema({ name: 'default', types: schemaTypes as any });
+const compiled = createSchema({ name: 'default', types: schemaTypes as SchemaTypeDefinition[] });
 
 // Access the internal schema representation
-// biome-ignore lint/suspicious/noExplicitAny: internal Sanity API
-const allTypes =
-  (compiled as any)._schema?.types ??
-  (compiled as any)._original?.types ??
-  Object.values((compiled as any)._typeMap ?? {});
+type InternalType = { name: string };
+const internal = compiled as unknown as {
+  _schema?: { types?: InternalType[] };
+  _original?: { types?: InternalType[] };
+  _typeMap?: Record<string, InternalType>;
+};
+const allTypes: InternalType[] =
+  internal._schema?.types ?? internal._original?.types ?? Object.values(internal._typeMap ?? {});
 
 writeFileSync('schema.json', JSON.stringify(allTypes, null, 2));
 const custom = allTypes.filter(
-  (t: any) => !t.name.startsWith('sanity.') && !['geopoint', 'slug'].includes(t.name),
+  (t: InternalType) => !t.name.startsWith('sanity.') && !['geopoint', 'slug'].includes(t.name),
 );
 console.log(`✅ schema.json written: ${allTypes.length} total, ${custom.length} custom`);
-console.log('   Custom types:', custom.map((t: any) => t.name).join(', '));
+console.log('   Custom types:', custom.map((t: InternalType) => t.name).join(', '));

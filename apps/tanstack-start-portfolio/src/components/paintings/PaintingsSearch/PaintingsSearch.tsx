@@ -139,7 +139,7 @@ function SortDropdown() {
   const { sort, setSort } = usePaintingsSearchContext();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const current = SORT_ITEMS.find(item => item.key === sort) ?? SORT_ITEMS[0]!;
+  const current = SORT_ITEMS.find(item => item.key === sort) ?? SORT_ITEMS[0];
 
   useEffect(() => {
     const handler = (event: MouseEvent) => {
@@ -323,9 +323,9 @@ function PaintingsSearchLayout() {
             : 'max-md:translate-y-full max-md:pointer-events-none',
           'md:relative md:w-56 md:shrink-0 md:translate-y-0 md:pointer-events-auto md:p-0 md:border-0 md:shadow-none md:max-h-none md:overflow-visible',
         )}
-        role={!isDesktopLayout && isMobileFiltersOpen ? 'dialog' : undefined}
-        aria-modal={!isDesktopLayout && isMobileFiltersOpen ? true : undefined}
-        aria-label={!isDesktopLayout && isMobileFiltersOpen ? 'Filters & Search' : undefined}
+        {...(!isDesktopLayout && isMobileFiltersOpen
+          ? { role: 'dialog', 'aria-modal': true, 'aria-label': 'Filters & Search' }
+          : {})}
       >
         <div className='flex items-center justify-between pb-2 border-b border-border/50 md:hidden'>
           <h2 className='text-xl font-bold text-foreground'>Filters &amp; Search</h2>

@@ -24,7 +24,7 @@ export function JourneyMobileNav({
   const canNext = activeIndex < total - 1;
 
   return (
-    <div
+    <nav
       className={cn(
         'flex items-center gap-2 rounded-xl border border-border/60 bg-background/95 p-2.5 shadow-lg backdrop-blur-md lg:hidden',
         className,
@@ -67,6 +67,6 @@ export function JourneyMobileNav({
       >
         <IconChevronRight className='size-5' stroke={2} aria-hidden />
       </button>
-    </div>
+    </nav>
   );
 }

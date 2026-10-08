@@ -10,7 +10,8 @@ import {
 
 export const runtime = 'nodejs';
 
-const SECRET = sanityAiProxySecret();
+const SECRET =
+  sanityAiProxySecret() || (process.env.NODE_ENV !== 'production' ? 'wisihe-dev-local-secret' : '');
 const OPENAI_KEY = openaiApiKey();
 const TAG_MODEL = openaiTagSuggestModel();
 
@@ -70,7 +71,8 @@ export async function POST(req: Request) {
 
   const o = body as Record<string, unknown>;
   const dk = o['documentKind'];
-  const documentKind = dk === 'painting' || dk === 'project' ? dk : null;
+  const documentKind =
+    dk === 'painting' || dk === 'project' || dk === 'photography' || dk === 'post' ? dk : null;
   const title = typeof o['title'] === 'string' ? o['title'] : '';
   const textBody = typeof o['textBody'] === 'string' ? o['textBody'] : '';
   const rawCatalog = o['tagsCatalog'];
@@ -92,7 +94,7 @@ export async function POST(req: Request) {
 
   try {
     const openai = new OpenAI({ apiKey: OPENAI_KEY });
-    const result = await runTagSuggest(openai as any, TAG_MODEL, {
+    const result = await runTagSuggest(openai, TAG_MODEL, {
       documentKind,
       title,
       textBody,

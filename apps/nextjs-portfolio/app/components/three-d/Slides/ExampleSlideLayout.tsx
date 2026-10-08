@@ -24,6 +24,7 @@ export const ExampleSlideLayout = ({ slideData, index, slideDesign }: ExampleSli
 
   const ExternalLinkIcon = () => (
     <svg
+      aria-hidden='true'
       width='16'
       height='16'
       viewBox='0 0 24 24'
@@ -80,7 +81,7 @@ export const ExampleSlideLayout = ({ slideData, index, slideDesign }: ExampleSli
         <div className='max-w-6xl mx-auto w-full space-y-2'>
           {slideData.examples?.map((example, exampleIndex) => (
             <button
-              key={exampleIndex}
+              key={example.name}
               onClick={() => setSelectedExampleIndex(exampleIndex)}
               type='button'
               className={cn(

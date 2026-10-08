@@ -10,8 +10,10 @@ import {
   IconLoader2,
   IconPlayerPause,
 } from '@tabler/icons-react';
+import type { ProjectQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
+import type { ComponentProps } from 'react';
 import CustomPortableText from '@/components/cms/PortableText/PortableText';
 import { ShareButton } from '@/components/detail/ShareButton';
 import {
@@ -39,8 +41,10 @@ function getProjectYearMeta(projectStart?: string | null, projectEnd?: string | 
   return null;
 }
 
+type PortableTextValue = ComponentProps<typeof CustomPortableText>['value'];
+
 type ProjectInformationProps = {
-  project: Record<string, any>;
+  project: NonNullable<ProjectQueryResult>;
   summary?: readonly Record<string, unknown>[] | null;
 };
 
@@ -125,7 +129,7 @@ export function ProjectInformation({ project, summary }: ProjectInformationProps
             <h2 className='text-[11px] font-semibold uppercase tracking-wider text-foreground-muted'>
               Overview
             </h2>
-            <CustomPortableText variant='minimal' value={summary as any} />
+            <CustomPortableText variant='minimal' value={summary as unknown as PortableTextValue} />
           </div>
         ) : null}
       </div>

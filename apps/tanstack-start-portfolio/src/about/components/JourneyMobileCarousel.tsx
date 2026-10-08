@@ -16,7 +16,12 @@ export function JourneyMobileCarousel({ item, displayIndex, total }: JourneyMobi
   if (!item) return null;
 
   return (
-    <div className='mt-4 lg:hidden' aria-live='polite' aria-atomic='true' aria-label='City details'>
+    <section
+      className='mt-4 lg:hidden'
+      aria-live='polite'
+      aria-atomic='true'
+      aria-label='City details'
+    >
       <AnimatePresence mode='wait' initial={false}>
         <motion.div
           key={item._key}
@@ -28,6 +33,6 @@ export function JourneyMobileCarousel({ item, displayIndex, total }: JourneyMobi
           <JourneyCityCard item={item} index={displayIndex} total={total} isActive />
         </motion.div>
       </AnimatePresence>
-    </div>
+    </section>
   );
 }

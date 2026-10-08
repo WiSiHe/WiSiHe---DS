@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
-import { PackageIcon } from '@sanity/icons';
+import { PackageIcon } from '@sanity/icons/Package';
 import { FaArrowRight, FaInfoCircle, FaWeibo } from 'react-icons/fa';
 import { defineField, defineType } from 'sanity';
 import ImageAltTextGenerator from '../components/ImageAltGenerator';

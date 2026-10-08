@@ -107,7 +107,7 @@ export function PresentationSlideDeck({
       list.push(HERO_SLIDE);
     }
 
-    const tldrSlide: PresentationSlide = tldr
+    const tldrSlide: PresentationSlide | null = tldr
       ? {
           title: 'TL;DR Summary 📝',
           type: 'content',
@@ -115,17 +115,18 @@ export function PresentationSlideDeck({
           slideDesign: 'bold',
           category: 'Summary',
         }
-      : null!;
+      : null;
 
     const position = tldrPosition ?? 'top';
 
     // Top TL;DR: Insert as first slide (or second slide if there is a Hero slide)
-    if (tldr && position === 'top') {
+    if (tldrSlide && position === 'top') {
       if (isWorkshopDeck) {
         list.push(tldrSlide);
         list.push(...slides);
       } else {
-        list.push(slides[0]!);
+        const [firstSlide] = slides;
+        if (firstSlide) list.push(firstSlide);
         list.push(tldrSlide);
         list.push(...slides.slice(1));
       }
@@ -134,7 +135,7 @@ export function PresentationSlideDeck({
     }
 
     // Bottom TL;DR: Insert before final showcase slides or at the very end
-    if (tldr && position === 'bottom') {
+    if (tldrSlide && position === 'bottom') {
       list.push(tldrSlide);
     }
 

@@ -19,11 +19,11 @@ export default async function TestPage() {
     <div className='p-8'>
       <h1 className='text-2xl font-bold mb-4'>Debug: All Paintings and Tags</h1>
       <div className='space-y-4'>
-        {paintings?.map((painting: any) => (
+        {paintings?.map(painting => (
           <div key={painting._id} className='border p-4 rounded'>
             <h2 className='font-semibold'>{painting.title}</h2>
             <p className='text-sm text-gray-600'>
-              Tags: {painting.tagsV2?.map((t: any) => t.name).join(', ') || 'No tags'}
+              Tags: {painting.tagsV2?.map(t => t.name).join(', ') || 'No tags'}
             </p>
             <div className='mt-2'>
               <p className='text-xs text-gray-500'>Raw tags data:</p>

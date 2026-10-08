@@ -42,6 +42,7 @@ const IconLogo = ({
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       className={cn('inline-block', className)}
+      aria-hidden='true'
       {...props}
     >
       {ICON_LOGO_PATHS.map(pathDef => (

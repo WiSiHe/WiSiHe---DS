@@ -167,7 +167,7 @@ async function main() {
   console.log(`\nPatched ${patched} travel places. Skipped ${skipped} without source facts.`);
   if (missing.length) {
     console.log('Still missing fun fact or stats:');
-    missing.forEach(line => console.log(`  - ${line}`));
+    for (const line of missing) console.log(`  - ${line}`);
   } else {
     console.log('All linked travel places have fun facts and stats.');
   }

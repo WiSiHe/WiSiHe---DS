@@ -3,17 +3,17 @@ import { useState } from 'react';
 
 import { Pagination } from './Pagination';
 
-const meta = {
+const meta: Meta<typeof Pagination> = {
   title: 'Design System/Molecules/Pagination',
   component: Pagination,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
   },
-} satisfies Meta<typeof Pagination>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Pagination>;
 
 function PaginationDemo({ nbPages = 12 }: { nbPages?: number }) {
   const [page, setPage] = useState(0);

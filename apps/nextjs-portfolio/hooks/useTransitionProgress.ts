@@ -15,13 +15,13 @@ export function useTransitionProgress() {
    * Wraps a function with startTransition and automatically shows
    * the progress bar during the transition.
    */
-  const withProgress = <T extends (...args: any[]) => any>(fn: T): T => {
+  const withProgress = <T extends (...args: never[]) => unknown>(fn: T): T => {
     return ((...args: Parameters<T>) => {
       return new Promise<ReturnType<T>>((resolve, reject) => {
         startTransition(async () => {
           try {
             startProgress();
-            const result = await fn(...args);
+            const result = (await fn(...args)) as ReturnType<T>;
             resolve(result);
           } catch (error) {
             reject(error);

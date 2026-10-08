@@ -12,7 +12,7 @@ export type TagSuggestResult = {
 const defaultProxy = 'http://localhost:1992';
 
 export async function suggestTagsFromProxy(input: {
-  documentKind: 'painting' | 'project';
+  documentKind: 'painting' | 'project' | 'photography' | 'post';
   title: string;
   textBody: string;
   tagsCatalog: TagCatalogEntry[];
@@ -23,7 +23,8 @@ export async function suggestTagsFromProxy(input: {
     defaultProxy;
   const secret =
     readSanityAppProcessEnv('SANITY_APP_AI_PROXY_SECRET') ??
-    import.meta.env.VITE_AI_PROXY_SECRET?.trim();
+    import.meta.env.VITE_AI_PROXY_SECRET?.trim() ??
+    (import.meta.env.DEV ? 'wisihe-dev-local-secret' : '');
   if (!secret) {
     throw new Error(
       'Missing SANITY_APP_AI_PROXY_SECRET (or legacy VITE_AI_PROXY_SECRET). Use the same value as SANITY_AI_PROXY_SECRET on the Next.js server.',

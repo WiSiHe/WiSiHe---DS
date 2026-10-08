@@ -71,10 +71,13 @@ export default function SmoothScroll() {
           },
         });
 
-        const lenis = locomotiveScroll.lenisInstance;
+        // locomotive-scroll bundles its own lenis copy; the registry uses the app's lenis types.
+        const lenis = locomotiveScroll.lenisInstance as unknown as Parameters<
+          typeof setGlobalLenis
+        >[0];
         if (lenis) {
-          setGlobalLenis(lenis as any);
-          unbindScrollTrigger = bindScrollTriggerToLenis(lenis as any);
+          setGlobalLenis(lenis);
+          unbindScrollTrigger = bindScrollTriggerToLenis(lenis);
         }
         setGlobalLocomotive(locomotiveScroll);
 

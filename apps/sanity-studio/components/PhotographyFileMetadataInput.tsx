@@ -1,4 +1,5 @@
-import { InfoOutlineIcon, WarningOutlineIcon } from '@sanity/icons';
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import { Badge, Button, Card, Flex, Spinner, Stack, Text } from '@sanity/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -64,16 +65,22 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
 
   const summaryLines = summarizeAssetMetadata(asset);
   const extract = extractPhotographyFileMetadata(asset);
-  const patchOptions = {
-    existingCapturedAt: capturedAt as string | undefined,
-    existingCamera: camera as string | undefined,
+  const existingCapturedAt = capturedAt as string | undefined;
+  const existingCamera = camera as string | undefined;
+  const pendingPatches = buildPhotographyApplyPatches(extract, {
+    existingCapturedAt,
+    existingCamera,
     exifOnly: true,
-  };
-  const pendingPatches = buildPhotographyApplyPatches(extract, patchOptions);
+  });
 
   const applyMetadata = useCallback(
     (overwrite: boolean) => {
-      const patches = buildPhotographyApplyPatches(extract, { ...patchOptions, overwrite });
+      const patches = buildPhotographyApplyPatches(extract, {
+        existingCapturedAt,
+        existingCamera,
+        exifOnly: true,
+        overwrite,
+      });
 
       if (patches.length === 0) {
         setError('Nothing to apply from this file — no capture date or camera EXIF found.');
@@ -84,7 +91,7 @@ export function PhotographyFileMetadataInput(_props: StringInputProps) {
       patchDocument(PatchEvent.from(patches.map(p => set(p.value, [p.path]))));
       setApplied(true);
     },
-    [extract, patchDocument, patchOptions],
+    [extract, patchDocument, existingCapturedAt, existingCamera],
   );
 
   const hasExif = Boolean(extract.capturedAt || extract.camera);

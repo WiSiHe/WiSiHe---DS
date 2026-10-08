@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@wisihe/ui-react';
-import { getProjectDisplayTitle } from '@/components/projects/projectCardHelpers';
 import { getConnectedPagePresentation } from '@/lib/projects/connectedPagePresentation';
 
 type ProjectLiveSiteCardProps = {

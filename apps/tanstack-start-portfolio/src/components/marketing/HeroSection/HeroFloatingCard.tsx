@@ -216,15 +216,17 @@ export function HeroFloatingCard({
             className={`object-cover ${showNsfwBlur ? getNsfwImageBlurClass('card') : ''}`}
             sizes='(max-width: 768px) 52vw, 250px'
           />
-          <BrushRevealLayer
-            accentColor={paintingBrush!.accentColor}
-            secondaryColor={paintingBrush!.secondaryColor}
-            strokeVariantIndex={strokeVariantIndex}
-            revealSeed={strokeVariantIndex}
-            paintingFormat={item.format ?? 'square'}
-            title={displayTitle}
-            year={paintingYear}
-          />
+          {paintingBrush ? (
+            <BrushRevealLayer
+              accentColor={paintingBrush.accentColor}
+              secondaryColor={paintingBrush.secondaryColor}
+              strokeVariantIndex={strokeVariantIndex}
+              revealSeed={strokeVariantIndex}
+              paintingFormat={item.format ?? 'square'}
+              title={displayTitle}
+              year={paintingYear}
+            />
+          ) : null}
         </BrushRevealWrap>
       ) : (
         <>

@@ -1,13 +1,11 @@
-import {
-  ComposeIcon,
-  HomeIcon,
-  ImagesIcon,
-  PlayIcon,
-  RocketIcon,
-  SparklesIcon,
-  TagIcon,
-  UsersIcon,
-} from '@sanity/icons';
+import { ComposeIcon } from '@sanity/icons/Compose';
+import { HomeIcon } from '@sanity/icons/Home';
+import { ImagesIcon } from '@sanity/icons/Images';
+import { PlayIcon } from '@sanity/icons/Play';
+import { RocketIcon } from '@sanity/icons/Rocket';
+import { SparklesIcon } from '@sanity/icons/Sparkles';
+import { TagIcon } from '@sanity/icons/Tag';
+import { UsersIcon } from '@sanity/icons/Users';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import {
   HERO_INTRO_MAX_CHARS,

@@ -1,7 +1,7 @@
+import path from 'node:path';
 import { createClient } from '@sanity/client';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
-import path from 'path';
 
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });

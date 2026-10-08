@@ -2,6 +2,7 @@
 
 import { IconArrowLeft, IconArrowRight, IconBrandYoutube, IconEye } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
+import type { VideoBySlugQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { DetailNav } from '@/components/detail/DetailNav';
 import { ShareButton } from '@/components/detail/ShareButton';
@@ -16,7 +17,7 @@ const sidebarPanelClass = cn(
 );
 
 type VideoDetailViewProps = {
-  video: Record<string, any>;
+  video: NonNullable<VideoBySlugQueryResult>;
   prevSlug: string | null;
   nextSlug: string | null;
 };

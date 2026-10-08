@@ -6,10 +6,19 @@ import { type StringInputProps, set, unset, useFormValue } from 'sanity';
 import { OPENAI_API_KEY } from '../environment';
 import { urlFor } from '../utils/image';
 
-const client = new OpenAI({
-  apiKey: OPENAI_API_KEY, // This is the default and can be omitted
-  dangerouslyAllowBrowser: true, // This is the default and can be omitted
-});
+let _client: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!_client) {
+    if (!OPENAI_API_KEY) {
+      throw new Error('Missing OpenAI API key. Please set OPENAI_API_KEY in your environment.');
+    }
+    _client = new OpenAI({
+      apiKey: OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
+  }
+  return _client;
+}
 
 const BASE_PROMPT = `You write museum wall labels for a digital art portfolio.
 
@@ -49,6 +58,7 @@ const ImageDescriptionGenerator = (props: StringInputProps) => {
     }
 
     try {
+      const client = getClient();
       const params: OpenAI.Chat.ChatCompletionCreateParams = {
         model: 'gpt-4o',
         messages: [

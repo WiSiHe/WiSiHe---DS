@@ -20,8 +20,11 @@ export const SlideSources = ({ sources, variant = 'default' }: SlideSourcesProps
         Sources:
       </p>
       <ul className='space-y-2'>
-        {sources.map((source, sourceIndex) => (
-          <li key={sourceIndex} className='text-sm text-foreground/50 flex items-start'>
+        {sources.map(source => (
+          <li
+            key={`${source.text}-${source.url ?? ''}`}
+            className='text-sm text-foreground/50 flex items-start'
+          >
             <span className='mr-2 text-accent'>•</span>
             {source.url ? (
               <a

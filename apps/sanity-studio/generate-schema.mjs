@@ -2,10 +2,11 @@
  * Generates schema.json directly from the local schema definitions,
  * bypassing the `sanity schema extract` CLI which only returns built-ins.
  */
+
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createSchema } from '@sanity/schema/lib/index.js';
-import { writeFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

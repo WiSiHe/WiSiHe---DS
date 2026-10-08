@@ -4,7 +4,7 @@ import { assist } from '@sanity/assist';
 import { codeInput } from '@sanity/code-input';
 import { documentInternationalization } from '@sanity/document-internationalization';
 import { visionTool } from '@sanity/vision';
-import { defineConfig } from 'sanity';
+import { defineConfig, type PluginOptions } from 'sanity';
 import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
@@ -64,7 +64,7 @@ const config = defineConfig({
 
         // Development tools (only in dev mode)
         ...(isDevelopment ? [visionTool()] : []),
-      ] as any), // Type assertion needed due to Sanity plugin type limitations
+      ] as PluginOptions[]), // Type assertion needed due to Sanity plugin type limitations
 
   schema: {
     types: schemaTypes,

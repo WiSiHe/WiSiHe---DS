@@ -42,6 +42,7 @@ export const SlideMedia = ({
                     {tool.name}
                   </h3>
                   <svg
+                    aria-hidden='true'
                     className='w-5 h-5 text-foreground/50 group-hover:text-accent transition-colors'
                     fill='none'
                     stroke='currentColor'
@@ -103,7 +104,13 @@ export const SlideMedia = ({
                   rel='noopener noreferrer'
                   className='inline-flex items-center gap-2 px-4 py-2 bg-accent-subtle hover:bg-accent-surface text-accent-text border-2 border-accent-border rounded-lg font-semibold text-sm transition-all duration-200'
                 >
-                  <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <svg
+                    aria-hidden='true'
+                    className='w-4 h-4'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                  >
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'

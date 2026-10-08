@@ -75,7 +75,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     let bestDistance = Number.POSITIVE_INFINITY;
 
     for (const section of sections) {
-      const mapIndex = Number(section.dataset['mapIndex'] ?? -1);
+      const mapIndex = Number(section.dataset.mapIndex ?? -1);
       if (mapIndex < 0) continue;
 
       const rect = section.getBoundingClientRect();
@@ -134,6 +134,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     [mappedItems, releaseNavigationLock, setActiveIndexIfChanged],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items.length` is a trigger — ScrollTrigger must re-measure when the item count changes
   useEffect(() => {
     const timer = globalThis.window?.setTimeout(() => ScrollTrigger.refresh(), 250);
     return () => {
@@ -141,6 +142,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
     };
   }, [items.length]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items.length` is a trigger — scroll listeners must re-attach when the item count changes
   useEffect(() => {
     let detach: (() => void) | undefined;
     let attachRaf = 0;

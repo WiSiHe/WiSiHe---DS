@@ -1,8 +1,8 @@
 import type { PresentationPluginOptions } from 'sanity/presentation';
-
+import { studioPreviewUrl } from '../lib/env';
 import { presentationResolve } from './resolve';
 
-const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://www.wisihe.no';
+const previewUrl = studioPreviewUrl();
 
 /** Stable reference — avoids duplicate Presentation "Used on" banners on HMR/re-register. */
 export const presentationToolOptions = {
