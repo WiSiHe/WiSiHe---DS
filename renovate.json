@@ -16,7 +16,7 @@
   "postUpdateOptions": ["pnpmDedupe"],
   "labels": ["dependencies", "renovate"],
   "constraints": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   },
   "ignorePaths": ["**/node_modules/**", "**/dist/**", "**/build/**"],
   "ignoreDeps": ["lefthook"],
@@ -32,9 +32,11 @@
   },
   "packageRules": [
     {
-      "description": "Disable major updates globally.",
+      "description": "Major updates: one grouped PR, first Monday-ish of the month, for manual review.",
       "matchUpdateTypes": ["major"],
-      "enabled": false
+      "groupName": "major updates",
+      "groupSlug": "major",
+      "schedule": ["before 5am on the first day of the month"]
     },
     {
       "description": "Require manual review; do not automerge dependency PRs.",
