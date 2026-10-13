@@ -521,6 +521,9 @@ importers:
       '@wisihe/constants':
         specifier: workspace:*
         version: link:../../packages/constants
+      '@wisihe/sanity-bulk-ai':
+        specifier: workspace:*
+        version: link:../../packages/sanity-bulk-ai
       '@wisihe/sanity-queries':
         specifier: workspace:*
         version: link:../../packages/sanity-queries
@@ -560,6 +563,9 @@ importers:
       ogl:
         specifier: 1.0.11
         version: 1.0.11
+      openai:
+        specifier: ^7.30.1
+        version: 7.30.1(undici@7.30.0)(ws@8.22.0)(zod@4.6.5)
       posthog-js:
         specifier: 'catalog:'
         version: 1.438.3(@types/react@19.3.0)(react@19.3.0)
