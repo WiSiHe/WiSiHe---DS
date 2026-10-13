@@ -72,6 +72,24 @@ const STATIC_PAGES: SitemapEntry[] = [
     priority: 0.6,
     lastmod: new Date().toISOString(),
   },
+  {
+    loc: `${SITE_URL}/three-d/shaders`,
+    changefreq: 'monthly',
+    priority: 0.6,
+    lastmod: new Date().toISOString(),
+  },
+  {
+    loc: `${SITE_URL}/three-d/webgl`,
+    changefreq: 'monthly',
+    priority: 0.6,
+    lastmod: new Date().toISOString(),
+  },
+  {
+    loc: `${SITE_URL}/three-d/webgpu`,
+    changefreq: 'monthly',
+    priority: 0.6,
+    lastmod: new Date().toISOString(),
+  },
   ...(ABOUT_PAGE_LINKS_ENABLED
     ? [
         {
