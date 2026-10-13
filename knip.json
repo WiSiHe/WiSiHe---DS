@@ -14,14 +14,14 @@
         "gen-schema.ts",
         "generate-schema.mjs"
       ],
-      "ignore": ["generate-schema.mjs", "gen-schema.ts"]
+      "ignore": ["generate-schema.mjs"]
     },
     "apps/ui-docs": {
       "entry": ["src/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}"],
       "ignoreDependencies": ["@storybook/react", "playwright", "postcss", "motion"]
     },
     "apps/wisihe-ai": {
-      "entry": ["src/App.tsx", "sanity.cli.ts"],
+      "entry": ["src/App.tsx"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": ["@sanity/sdk", "@sanity/workflow-blueprint", "rolldown", "prettier"]
     },
@@ -41,6 +41,5 @@
     }
   },
   "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts"],
-  "ignoreBinaries": ["doppler", "vercel"],
-  "ignoreDependencies": ["@storybook/react"]
+  "ignoreBinaries": ["doppler", "vercel"]
 }
