@@ -28,7 +28,7 @@ import {
   videoBySlugQuery,
 } from '@wisihe/sanity-queries';
 import { z } from 'zod';
-import { getSanityClientForRequest, urlFor } from '../lib/sanity';
+import { getSanityClientForRequest, urlForImage } from '../lib/sanity';
 import { isPreviewEnabled } from '../lib/sanity/draftMode';
 
 const slugInput = z.object({ slug: z.string().min(1) });
@@ -43,12 +43,12 @@ async function fetchSanity(
 }
 
 function imageUrl(
-  image: Parameters<typeof urlFor>[0] | null | undefined,
+  image: Parameters<typeof urlForImage>[0] | null | undefined,
   width = 800,
   height?: number,
 ): string | null {
   if (!image) return null;
-  let builder = urlFor(image).width(width).auto('format').quality(85);
+  let builder = urlForImage(image).width(width).auto('format').quality(85);
   if (height) builder = builder.height(height);
   return builder.url();
 }
@@ -67,7 +67,7 @@ interface RawRelatedPainting {
   _id: string;
   slug?: string | null;
   title?: string | null;
-  image?: (RawPaintingImage & Parameters<typeof urlFor>[0]) | null;
+  image?: (RawPaintingImage & Parameters<typeof urlForImage>[0]) | null;
 }
 
 export type PaintingListItem = GetPaginatedPaintingsResult[number];
@@ -184,7 +184,7 @@ export const getPainting = createServerFn({ method: 'GET' })
     const mapImage = (img: RawPaintingImage): PaintingDetailImage => {
       const width = img?.width ?? null;
       const height = img?.height ?? null;
-      const builder = urlFor(img as Parameters<typeof urlFor>[0]);
+      const builder = urlForImage(img as Parameters<typeof urlForImage>[0]);
       return {
         url: builder.width(1600).fit('max').auto('format').quality(90).url(),
         thumbUrl: builder.width(128).height(128).fit('crop').format('webp').quality(70).url(),
@@ -224,7 +224,7 @@ export const getPainting = createServerFn({ method: 'GET' })
           _id: p._id,
           slug: p.slug as string,
           title: p.title ?? 'Painting',
-          imageUrl: p.image ? urlFor(p.image).width(600).fit('max').url() : null,
+          imageUrl: p.image ? urlForImage(p.image).width(600).fit('max').url() : null,
           lqip: p.image?.lqip ?? null,
         }));
     }

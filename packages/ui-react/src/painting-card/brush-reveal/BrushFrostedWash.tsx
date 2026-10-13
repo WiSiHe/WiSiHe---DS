@@ -37,6 +37,3 @@ export function BrushPaletteWash({
     />
   );
 }
-
-/** @deprecated Use BrushPaletteWash */
-export const BrushFrostedWash = BrushPaletteWash;

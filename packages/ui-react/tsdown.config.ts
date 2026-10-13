@@ -18,7 +18,10 @@ export default defineConfig(options => ({
   fixedExtension: false,
   dts: true,
   sourcemap: true,
-  external: ['react', 'react-dom', '@wisihe/utils', 'motion', 'motion/react'],
+  deps: {
+    neverBundle: ['react', 'react-dom', '@wisihe/utils', 'motion', 'motion/react'],
+  },
   css: false, // Don't bundle CSS since consumers use Tailwind
+  suppressWarnings: ['MODULE_LEVEL_DIRECTIVE'],
   ...options,
 }));

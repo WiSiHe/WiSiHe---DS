@@ -31,6 +31,3 @@ export const goldenRules: DesignRule[] = [
     href: '/design-system/tone-of-voice',
   },
 ];
-
-/** @deprecated unused — goldenRules is canonical */
-export const goldenRulesSummary = goldenRules;

@@ -30,18 +30,6 @@ export const NSFW_STROKE_OPACITY_REST_CARD = 0.58;
 
 export const NSFW_STROKE_OPACITY_HOVER_CARD = 0.58;
 
-/** @deprecated Use variant-specific constants. */
-export const NSFW_WASH_OPACITY = NSFW_WASH_OPACITY_CARD;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_WASH_OPACITY_HOVER = NSFW_WASH_OPACITY_CARD_HOVER;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_STROKE_OPACITY_REST = NSFW_STROKE_OPACITY_REST_CARD;
-
-/** @deprecated Use variant-specific constants. */
-export const NSFW_STROKE_OPACITY_HOVER = NSFW_STROKE_OPACITY_HOVER_CARD;
-
 export function getNsfwWashOpacity(variant: NsfwCoverVariant, hover = false): number {
   if (variant === 'thumbnail') {
     return hover ? NSFW_WASH_OPACITY_THUMBNAIL_HOVER : NSFW_WASH_OPACITY_THUMBNAIL;
