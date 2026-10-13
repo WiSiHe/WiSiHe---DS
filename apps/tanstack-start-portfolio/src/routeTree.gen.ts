@@ -20,6 +20,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ThreeDRouteRouteImport } from './routes/three-d/route'
 import { Route as VideosRouteRouteImport } from './routes/videos/route'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as ApiOgRouteImport } from './routes/api/og'
 import { Route as ApiPaintingsRouteImport } from './routes/api/paintings'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as DesignSystemIndexRouteImport } from './routes/design-system/index'
@@ -40,6 +41,10 @@ import { Route as VideosIndexRouteImport } from './routes/videos/index'
 import { Route as VideosSlugRouteImport } from './routes/videos/$slug'
 import { Route as ApiDraftModeDisableRouteImport } from './routes/api/draft-mode/disable'
 import { Route as ApiDraftModeEnableRouteImport } from './routes/api/draft-mode/enable'
+import { Route as ApiWisiheAiBulkDescribeRouteImport } from './routes/api/wisihe-ai/bulk-describe'
+import { Route as ApiWisiheAiCopilotRouteImport } from './routes/api/wisihe-ai/copilot'
+import { Route as ApiWisiheAiSuggestTagsRouteImport } from './routes/api/wisihe-ai/suggest-tags'
+import { Route as ApiWisiheAiUploadImageRouteImport } from './routes/api/wisihe-ai/upload-image'
 import { Route as DesignSystemColorsIndexRouteImport } from './routes/design-system/colors/index'
 import { Route as DesignSystemComponentsIndexRouteImport } from './routes/design-system/components/index'
 import { Route as DesignSystemIconographyIndexRouteImport } from './routes/design-system/iconography/index'
@@ -105,6 +110,11 @@ const VideosRouteRoute = VideosRouteRouteImport.update({
 const AboutIndexRoute = AboutIndexRouteImport.update({
   id: '/about/',
   path: '/about/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOgRoute = ApiOgRouteImport.update({
+  id: '/api/og',
+  path: '/api/og',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPaintingsRoute = ApiPaintingsRouteImport.update({
@@ -207,6 +217,26 @@ const ApiDraftModeEnableRoute = ApiDraftModeEnableRouteImport.update({
   path: '/api/draft-mode/enable',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWisiheAiBulkDescribeRoute = ApiWisiheAiBulkDescribeRouteImport.update({
+  id: '/api/wisihe-ai/bulk-describe',
+  path: '/api/wisihe-ai/bulk-describe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWisiheAiCopilotRoute = ApiWisiheAiCopilotRouteImport.update({
+  id: '/api/wisihe-ai/copilot',
+  path: '/api/wisihe-ai/copilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWisiheAiSuggestTagsRoute = ApiWisiheAiSuggestTagsRouteImport.update({
+  id: '/api/wisihe-ai/suggest-tags',
+  path: '/api/wisihe-ai/suggest-tags',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWisiheAiUploadImageRoute = ApiWisiheAiUploadImageRouteImport.update({
+  id: '/api/wisihe-ai/upload-image',
+  path: '/api/wisihe-ai/upload-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DesignSystemColorsIndexRoute = DesignSystemColorsIndexRouteImport.update({
   id: '/colors/',
   path: '/colors/',
@@ -279,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/three-d': typeof ThreeDRouteRouteWithChildren
   '/videos': typeof VideosRouteRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/og': typeof ApiOgRoute
   '/api/paintings': typeof ApiPaintingsRoute
   '/ingest/$': typeof IngestSplatRoute
   '/paintings/$slug': typeof PaintingsSlugRoute
@@ -300,6 +331,10 @@ export interface FileRoutesByFullPath {
   '/videos/': typeof VideosIndexRoute
   '/api/draft-mode/disable': typeof ApiDraftModeDisableRoute
   '/api/draft-mode/enable': typeof ApiDraftModeEnableRoute
+  '/api/wisihe-ai/bulk-describe': typeof ApiWisiheAiBulkDescribeRoute
+  '/api/wisihe-ai/copilot': typeof ApiWisiheAiCopilotRoute
+  '/api/wisihe-ai/suggest-tags': typeof ApiWisiheAiSuggestTagsRoute
+  '/api/wisihe-ai/upload-image': typeof ApiWisiheAiUploadImageRoute
   '/design-system/colors/': typeof DesignSystemColorsIndexRoute
   '/design-system/components/': typeof DesignSystemComponentsIndexRoute
   '/design-system/iconography/': typeof DesignSystemIconographyIndexRoute
@@ -315,6 +350,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/og': typeof ApiOgRoute
   '/api/paintings': typeof ApiPaintingsRoute
   '/ingest/$': typeof IngestSplatRoute
   '/paintings/$slug': typeof PaintingsSlugRoute
@@ -336,6 +372,10 @@ export interface FileRoutesByTo {
   '/videos': typeof VideosIndexRoute
   '/api/draft-mode/disable': typeof ApiDraftModeDisableRoute
   '/api/draft-mode/enable': typeof ApiDraftModeEnableRoute
+  '/api/wisihe-ai/bulk-describe': typeof ApiWisiheAiBulkDescribeRoute
+  '/api/wisihe-ai/copilot': typeof ApiWisiheAiCopilotRoute
+  '/api/wisihe-ai/suggest-tags': typeof ApiWisiheAiSuggestTagsRoute
+  '/api/wisihe-ai/upload-image': typeof ApiWisiheAiUploadImageRoute
   '/design-system/colors': typeof DesignSystemColorsIndexRoute
   '/design-system/components': typeof DesignSystemComponentsIndexRoute
   '/design-system/iconography': typeof DesignSystemIconographyIndexRoute
@@ -360,6 +400,7 @@ export interface FileRoutesById {
   '/three-d': typeof ThreeDRouteRouteWithChildren
   '/videos': typeof VideosRouteRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/og': typeof ApiOgRoute
   '/api/paintings': typeof ApiPaintingsRoute
   '/ingest/$': typeof IngestSplatRoute
   '/paintings/$slug': typeof PaintingsSlugRoute
@@ -381,6 +422,10 @@ export interface FileRoutesById {
   '/videos/': typeof VideosIndexRoute
   '/api/draft-mode/disable': typeof ApiDraftModeDisableRoute
   '/api/draft-mode/enable': typeof ApiDraftModeEnableRoute
+  '/api/wisihe-ai/bulk-describe': typeof ApiWisiheAiBulkDescribeRoute
+  '/api/wisihe-ai/copilot': typeof ApiWisiheAiCopilotRoute
+  '/api/wisihe-ai/suggest-tags': typeof ApiWisiheAiSuggestTagsRoute
+  '/api/wisihe-ai/upload-image': typeof ApiWisiheAiUploadImageRoute
   '/design-system/colors/': typeof DesignSystemColorsIndexRoute
   '/design-system/components/': typeof DesignSystemComponentsIndexRoute
   '/design-system/iconography/': typeof DesignSystemIconographyIndexRoute
@@ -406,6 +451,7 @@ export interface FileRouteTypes {
     | '/three-d'
     | '/videos'
     | '/sitemap.xml'
+    | '/api/og'
     | '/api/paintings'
     | '/ingest/$'
     | '/paintings/$slug'
@@ -427,6 +473,10 @@ export interface FileRouteTypes {
     | '/videos/'
     | '/api/draft-mode/disable'
     | '/api/draft-mode/enable'
+    | '/api/wisihe-ai/bulk-describe'
+    | '/api/wisihe-ai/copilot'
+    | '/api/wisihe-ai/suggest-tags'
+    | '/api/wisihe-ai/upload-image'
     | '/design-system/colors/'
     | '/design-system/components/'
     | '/design-system/iconography/'
@@ -442,6 +492,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/sitemap.xml'
+    | '/api/og'
     | '/api/paintings'
     | '/ingest/$'
     | '/paintings/$slug'
@@ -463,6 +514,10 @@ export interface FileRouteTypes {
     | '/videos'
     | '/api/draft-mode/disable'
     | '/api/draft-mode/enable'
+    | '/api/wisihe-ai/bulk-describe'
+    | '/api/wisihe-ai/copilot'
+    | '/api/wisihe-ai/suggest-tags'
+    | '/api/wisihe-ai/upload-image'
     | '/design-system/colors'
     | '/design-system/components'
     | '/design-system/iconography'
@@ -486,6 +541,7 @@ export interface FileRouteTypes {
     | '/three-d'
     | '/videos'
     | '/sitemap.xml'
+    | '/api/og'
     | '/api/paintings'
     | '/ingest/$'
     | '/paintings/$slug'
@@ -507,6 +563,10 @@ export interface FileRouteTypes {
     | '/videos/'
     | '/api/draft-mode/disable'
     | '/api/draft-mode/enable'
+    | '/api/wisihe-ai/bulk-describe'
+    | '/api/wisihe-ai/copilot'
+    | '/api/wisihe-ai/suggest-tags'
+    | '/api/wisihe-ai/upload-image'
     | '/design-system/colors/'
     | '/design-system/components/'
     | '/design-system/iconography/'
@@ -531,6 +591,7 @@ export interface RootRouteChildren {
   ThreeDRouteRoute: typeof ThreeDRouteRouteWithChildren
   VideosRouteRoute: typeof VideosRouteRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiOgRoute: typeof ApiOgRoute
   ApiPaintingsRoute: typeof ApiPaintingsRoute
   IngestSplatRoute: typeof IngestSplatRoute
   AboutIndexRoute: typeof AboutIndexRoute
@@ -538,6 +599,10 @@ export interface RootRouteChildren {
   PrivacyIndexRoute: typeof PrivacyIndexRoute
   ApiDraftModeDisableRoute: typeof ApiDraftModeDisableRoute
   ApiDraftModeEnableRoute: typeof ApiDraftModeEnableRoute
+  ApiWisiheAiBulkDescribeRoute: typeof ApiWisiheAiBulkDescribeRoute
+  ApiWisiheAiCopilotRoute: typeof ApiWisiheAiCopilotRoute
+  ApiWisiheAiSuggestTagsRoute: typeof ApiWisiheAiSuggestTagsRoute
+  ApiWisiheAiUploadImageRoute: typeof ApiWisiheAiUploadImageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -617,6 +682,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about/'
       preLoaderRoute: typeof AboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/og': {
+      id: '/api/og'
+      path: '/api/og'
+      fullPath: '/api/og'
+      preLoaderRoute: typeof ApiOgRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/paintings': {
@@ -757,6 +829,34 @@ declare module '@tanstack/react-router' {
       path: '/api/draft-mode/enable'
       fullPath: '/api/draft-mode/enable'
       preLoaderRoute: typeof ApiDraftModeEnableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/wisihe-ai/bulk-describe': {
+      id: '/api/wisihe-ai/bulk-describe'
+      path: '/api/wisihe-ai/bulk-describe'
+      fullPath: '/api/wisihe-ai/bulk-describe'
+      preLoaderRoute: typeof ApiWisiheAiBulkDescribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/wisihe-ai/copilot': {
+      id: '/api/wisihe-ai/copilot'
+      path: '/api/wisihe-ai/copilot'
+      fullPath: '/api/wisihe-ai/copilot'
+      preLoaderRoute: typeof ApiWisiheAiCopilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/wisihe-ai/suggest-tags': {
+      id: '/api/wisihe-ai/suggest-tags'
+      path: '/api/wisihe-ai/suggest-tags'
+      fullPath: '/api/wisihe-ai/suggest-tags'
+      preLoaderRoute: typeof ApiWisiheAiSuggestTagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/wisihe-ai/upload-image': {
+      id: '/api/wisihe-ai/upload-image'
+      path: '/api/wisihe-ai/upload-image'
+      fullPath: '/api/wisihe-ai/upload-image'
+      preLoaderRoute: typeof ApiWisiheAiUploadImageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/design-system/colors/': {
@@ -977,6 +1077,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThreeDRouteRoute: ThreeDRouteRouteWithChildren,
   VideosRouteRoute: VideosRouteRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiOgRoute: ApiOgRoute,
   ApiPaintingsRoute: ApiPaintingsRoute,
   IngestSplatRoute: IngestSplatRoute,
   AboutIndexRoute: AboutIndexRoute,
@@ -984,6 +1085,10 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyIndexRoute: PrivacyIndexRoute,
   ApiDraftModeDisableRoute: ApiDraftModeDisableRoute,
   ApiDraftModeEnableRoute: ApiDraftModeEnableRoute,
+  ApiWisiheAiBulkDescribeRoute: ApiWisiheAiBulkDescribeRoute,
+  ApiWisiheAiCopilotRoute: ApiWisiheAiCopilotRoute,
+  ApiWisiheAiSuggestTagsRoute: ApiWisiheAiSuggestTagsRoute,
+  ApiWisiheAiUploadImageRoute: ApiWisiheAiUploadImageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
