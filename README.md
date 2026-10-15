@@ -33,7 +33,7 @@ Applications and documentation sites consuming the packages:
 
 ### Prerequisites
 
-- Node.js `22.21.1` (see `.nvmrc`)
+- Node.js `22.21.1` (see `.node-version`)
 - `pnpm` (latest)
 
 ### Installation

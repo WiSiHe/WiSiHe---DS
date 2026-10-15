@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "vp pack",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

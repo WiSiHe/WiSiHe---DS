@@ -15,8 +15,8 @@
     }
   },
   "scripts": {
-    "build": "tsdown",
-    "dev": "tsdown --watch"
+    "build": "vp pack",
+    "dev": "vp pack --watch"
   },
   "dependencies": {
     "@sanity/client": "catalog:",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

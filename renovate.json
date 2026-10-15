@@ -57,7 +57,7 @@
       "groupSlug": "monorepo-tooling"
     },
     {
-      "description": "Node.js in engines, .nvmrc, and GitHub Actions.",
+      "description": "Node.js in engines, .node-version, and GitHub Actions.",
       "matchManagers": ["nvm", "nodenv", "node-version", "github-actions"],
       "matchPackageNames": ["node"],
       "groupName": "Node.js",
