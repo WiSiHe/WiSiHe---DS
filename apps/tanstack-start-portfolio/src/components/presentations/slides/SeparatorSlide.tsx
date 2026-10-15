@@ -1,4 +1,3 @@
-import { cn } from '@wisihe/utils';
 import type { PresentationSlide } from '@/lib/presentations/types';
 
 type SeparatorSlideProps = {

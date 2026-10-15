@@ -13,7 +13,7 @@ export function JourneyMapProgress({ items, activeIndex, onSelect }: JourneyMapP
   if (items.length === 0) return null;
 
   return (
-    <div
+    <section
       className='hidden shrink-0 rounded-xl border border-border/50 bg-background/80 p-3 backdrop-blur-md lg:block'
       aria-label='Journey progress'
     >
@@ -68,6 +68,6 @@ export function JourneyMapProgress({ items, activeIndex, onSelect }: JourneyMapP
           );
         })}
       </ol>
-    </div>
+    </section>
   );
 }

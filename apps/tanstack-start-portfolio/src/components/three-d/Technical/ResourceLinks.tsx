@@ -23,9 +23,9 @@ export function ResourceLinks({
     <div className='mb-8 space-y-3'>
       <h3 className='text-lg font-bold text-foreground mb-3'>Resources:</h3>
       <div className='flex flex-wrap gap-3'>
-        {links.map((link, linkIndex) => (
+        {links.map(link => (
           <motion.a
-            key={linkIndex}
+            key={link.url}
             href={link.url}
             target='_blank'
             rel='noopener noreferrer'

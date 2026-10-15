@@ -2,7 +2,7 @@
 
 import { OrbitControls } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { type ComponentRef, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useTheme } from '@/app/providers';
 import {
@@ -177,6 +177,7 @@ function ParticleOrb({
     return geo;
   }, [config.count, config.particleSize]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: uniforms are created once and mutated in place (useFrame / palette effect); rebuilding them would recreate the shader material and reset the orb
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -195,7 +196,7 @@ function ParticleOrb({
       uBurstProgress: { value: new Array(BURST_SLOTS).fill(0) },
       uBurstActive: { value: new Array(BURST_SLOTS).fill(0) },
     }),
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+    [],
   );
 
   // Palette can change live (theme toggle) without rebuilding the geometry —
@@ -243,6 +244,7 @@ function ParticleOrb({
     return true;
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the listener only needs to be (re)bound when the canvas element changes; projectPointer/pointer/uniforms are stable or read live from refs, and re-binding on every change would drop clicks
   useEffect(() => {
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
@@ -250,9 +252,11 @@ function ParticleOrb({
       // independent, overlapping ripples instead of restarting one ripple.
       const slot = nextBurstSlot.current;
       nextBurstSlot.current = (slot + 1) % BURST_SLOTS;
-      if (projectPointer(pointer.x, pointer.y, uniforms.uBurstPoints.value[slot]!)) {
-        burstSlots.current[slot]!.progress = 0.001;
-        burstSlots.current[slot]!.active = true;
+      const burst = burstSlots.current[slot];
+      const burstPoint = uniforms.uBurstPoints.value[slot];
+      if (burst && burstPoint && projectPointer(pointer.x, pointer.y, burstPoint)) {
+        burst.progress = 0.001;
+        burst.active = true;
         uniforms.uBurstActive.value[slot] = 1;
       }
     };
@@ -260,7 +264,6 @@ function ParticleOrb({
     const dom = gl.domElement;
     dom.addEventListener('pointerdown', handlePointerDown);
     return () => dom.removeEventListener('pointerdown', handlePointerDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
   useFrame((state, delta) => {
@@ -282,8 +285,8 @@ function ParticleOrb({
       (targetStrength - uniforms.uMouseStrength.value) * Math.min(1.0, dt * 4.0);
 
     for (let i = 0; i < BURST_SLOTS; i++) {
-      const slot = burstSlots.current[i]!;
-      if (!slot.active) continue;
+      const slot = burstSlots.current[i];
+      if (!slot?.active) continue;
       slot.progress += dt * 1.1;
       if (slot.progress >= 1.0) {
         slot.progress = 0;
@@ -317,7 +320,7 @@ export function WebGLCanvas({ config, onFrame, resetKey }: WebGLCanvasProps) {
   useEffect(() => setMounted(true), []);
   const isDark = !mounted || resolvedTheme !== 'light';
   const palette = getThemedPalette(isDark);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<ComponentRef<typeof OrbitControls>>(null);
 
   useEffect(() => {
     if (resetKey && controlsRef.current) {

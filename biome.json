@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -66,6 +66,9 @@
         "noNoninteractiveElementToInteractiveRole": "warn",
         "useAriaPropsSupportedByRole": "warn",
         "useSemanticElements": "warn"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
       }
     }
   },
@@ -96,6 +99,16 @@
       }
     },
     {
+      "includes": ["apps/tanstack-start-portfolio/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noUndeclaredEnvVars": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": [
         "**/node_modules/**",
         "**/dist/**",
@@ -103,8 +116,12 @@
         "**/.next/**",
         "**/.turbo/**"
       ],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
     }
   ]
 }

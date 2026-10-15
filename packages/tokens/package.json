@@ -31,6 +31,6 @@
     "clean": "node scripts/clean.js"
   },
   "devDependencies": {
-    "style-dictionary": "5.5.0"
+    "style-dictionary": "5.6.0"
   }
 }

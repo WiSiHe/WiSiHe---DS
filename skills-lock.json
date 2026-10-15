@@ -4,36 +4,38 @@
     "content-experimentation-best-practices": {
       "source": "sanity-io/agent-toolkit",
       "sourceType": "github",
-      "computedHash": "5b70e63ed5ebd5588ef7b3130516315b62ef94195fb902d7f7876dc898cb023d"
+      "skillPath": "skills/content-experimentation-best-practices/SKILL.md",
+      "computedHash": "13357b87af0cf35ea8df33e9b47ffbe149825de93cfba9881f8a651bea347d92"
     },
     "content-modeling-best-practices": {
       "source": "sanity-io/agent-toolkit",
       "sourceType": "github",
-      "computedHash": "43b7d7db0bb36a858827616204c0060ae29fcf7cf278efdf6c496e6494411bd7"
+      "skillPath": "skills/content-modeling-best-practices/SKILL.md",
+      "computedHash": "9f0c62274cf8ccf41dd32fc2f2629f4c9a8e5a920826f30c2eb226d7e796b031"
     },
     "design-system-patterns": {
       "source": "wshobson/agents",
       "sourceType": "github",
       "skillPath": "plugins/ui-design/skills/design-system-patterns/SKILL.md",
-      "computedHash": "b6ba14bf8809ee027a3c4c9e88bdc71626eb7f68604b65dce000519d8e4ad458"
+      "computedHash": "e1d2631eab1a7113fb60e6df3ace05aac0ddce6207bceec87721119a8e1a1c78"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
       "skillPath": "skills/find-skills/SKILL.md",
-      "computedHash": "781bd6d3f9b19f8c9af6b53d8d0e4876d0183841b565db34ca7092ffa412d111"
+      "computedHash": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
     },
     "grill-me": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/productivity/grill-me/SKILL.md",
-      "computedHash": "f321507f77702a54af1db66549ec1685fc625390d06c57d7949cdcda8eb1b5c7"
+      "computedHash": "9cdbb4b8f7a3aeaef82e6230c9e823500d4a8a1214c726cf342cf9829d34fc7d"
     },
     "grilling": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/productivity/grilling/SKILL.md",
-      "computedHash": "ef685a6fa0bbe73b05bbd8dc1ec97258191587f07c6aa7dbc9006675ceb8f90f"
+      "computedHash": "ef1641a2047b71b60f1942cd35efb47d3afc9d584dff5a0b01f8c7db923aaa08"
     },
     "gsap-framer-scroll-animation": {
       "source": "github/awesome-copilot",
@@ -41,21 +43,47 @@
       "skillPath": "skills/gsap-framer-scroll-animation/SKILL.md",
       "computedHash": "e6a4caf23b818ffc5185d51339e941ca783944b6693da877fc1206693b2dff66"
     },
+    "portable-text-conversion": {
+      "source": "sanity-io/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/portable-text-conversion/SKILL.md",
+      "computedHash": "dbd566eeed7f19061c9d8982fe8d14c05b9f7cefc2bcc059cdf37150290e7bfe"
+    },
+    "portable-text-serialization": {
+      "source": "sanity-io/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/portable-text-serialization/SKILL.md",
+      "computedHash": "a4cec92378298c8ef502bf9698112f054d86fc03e814257fa07d6aaac12b9376"
+    },
     "sanity-best-practices": {
       "source": "sanity-io/agent-toolkit",
       "sourceType": "github",
-      "computedHash": "462e01667b4f0a10d4f8cceb8c328131bce5413b004db7685e8a065b538c8112"
+      "skillPath": "skills/sanity-best-practices/SKILL.md",
+      "computedHash": "c2d7c02f61cf060ac77a8eb4d99154d560dff3dec14a1d8da6d5a1f699fbd9c7"
+    },
+    "sanity-migration": {
+      "source": "sanity-io/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/sanity-migration/SKILL.md",
+      "computedHash": "b265ef004ade84f27a083e54bf3798242edf87c677fe2852b6ced4bd38517e0f"
+    },
+    "sanity-studio-upgrade": {
+      "source": "sanity-io/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/sanity-studio-upgrade/SKILL.md",
+      "computedHash": "bfe3d646c6adb565c83219789891663e84442c366b14a92ce66ec35ab74bb251"
     },
     "seo-aeo-best-practices": {
       "source": "sanity-io/agent-toolkit",
       "sourceType": "github",
-      "computedHash": "b5f1e019f8521a927b07f794882c309798fdbde5a0ca12af1da7b6e2cc2b69b9"
+      "skillPath": "skills/seo-aeo-best-practices/SKILL.md",
+      "computedHash": "edb99db85683ff99678fcb1bebc3a5653c3ea927eea9ee2534f19be86c7b8b81"
     },
     "tailwind-design-system": {
       "source": "wshobson/agents",
       "sourceType": "github",
       "skillPath": "plugins/frontend-mobile-development/skills/tailwind-design-system/SKILL.md",
-      "computedHash": "992ab1e874c4f4159aa18d4ff45d1c3f86f322f0bd2a6744cc32f7d6147f9f06"
+      "computedHash": "4e5bfe5af9b5da504752432dc45ed605af350cf1489a58419afad4123a514f89"
     }
   }
 }

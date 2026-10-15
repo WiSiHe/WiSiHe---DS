@@ -13,15 +13,18 @@ function Box({
   rotationSpeed: number;
   color: string;
 }) {
-  const mesh = useRef<THREE.Mesh>(null!);
+  const mesh = useRef<THREE.Mesh>(null);
   const [active, setActive] = useState(false);
 
   useFrame(() => {
     // Slower rotation as requested
-    mesh.current.rotation.x = mesh.current.rotation.y += rotationSpeed / 400;
+    const current = mesh.current;
+    if (!current) return;
+    current.rotation.x = current.rotation.y += rotationSpeed / 400;
   });
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: react-three-fiber <mesh>, not a DOM element
     <mesh
       position={position}
       ref={mesh}
@@ -57,7 +60,7 @@ export const R3FBasicsScene = forwardRef<THREE.Group, R3FBasicsSceneProps>(
             (Math.random() - 0.5) * 4,
             (Math.random() - 0.5) * 2,
           ] as [number, number, number],
-          color: colors[i % colors.length]!,
+          color: colors[i % colors.length] ?? '#0e9aa7',
           speed: 2 + Math.random() * 3,
         });
       }

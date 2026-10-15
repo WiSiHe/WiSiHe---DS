@@ -1,4 +1,4 @@
-import { SparklesIcon } from '@sanity/icons';
+import { SparklesIcon } from '@sanity/icons/Sparkles';
 import { Box, Button, Card, Flex, Stack, Text } from '@sanity/ui';
 import OpenAI from 'openai';
 import { useState } from 'react';

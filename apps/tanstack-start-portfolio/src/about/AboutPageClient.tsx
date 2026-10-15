@@ -130,6 +130,7 @@ export function AboutPageClient({ about, travelPhotos = [] }: AboutPageClientPro
             ) : (
               <div
                 className='relative flex aspect-4/5 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-dashed border-border/70 bg-surface/40'
+                role='img'
                 aria-label='Portrait placeholder'
               >
                 <span className='font-serif text-5xl font-bold text-accent/35' aria-hidden>

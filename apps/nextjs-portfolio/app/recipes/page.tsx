@@ -58,7 +58,7 @@ export default async function RecipesPage() {
 
   return (
     <>
-      <JsonLd data={buildRecipesListStructuredData(validRecipes as any)} />
+      <JsonLd data={buildRecipesListStructuredData(validRecipes)} />
       <div className='min-h-screen bg-background'>
         <header className='relative overflow-hidden border-b border-border/40 pt-28 pb-16 sm:pt-32'>
           <div className='pointer-events-none absolute inset-0 bg-accent/5' aria-hidden />

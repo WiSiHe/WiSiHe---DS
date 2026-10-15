@@ -19,8 +19,7 @@ export function PresentationCard({
   featured?: boolean;
   className?: string;
 }) {
-  const href =
-    presentation.slug === WORKSHOP_SLUG ? '/three-d' : `/presentations/${presentation.slug}`;
+  const href = `/presentations/${presentation.slug}`;
   const imageUrl = presentation.coverImage
     ? urlForImage(presentation.coverImage)?.width(900).height(560).quality(85).url()
     : null;

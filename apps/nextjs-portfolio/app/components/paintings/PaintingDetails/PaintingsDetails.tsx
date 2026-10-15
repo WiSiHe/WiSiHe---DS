@@ -34,8 +34,8 @@ import {
 import { paintingsTagSearchHref } from '@/lib/paintings/paintingsGalleryReturnUrl';
 import { urlForImage } from '@/sanity/lib/utils';
 
-// biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
 type PaintingDetailProps = {
+  // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
   paintingData: any;
 };
 
@@ -102,7 +102,6 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   const [hasAddedView, setHasAddedView] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
-  // biome-ignore lint/suspicious/noExplicitAny: PaintingQueryResult resolves to null until typegen is fixed
   const {
     title,
     slug,
@@ -119,7 +118,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
     gelatoUrl,
     format,
     isFanArt,
-  } = paintingData as any;
+  } = paintingData;
 
   // Build the list of available stores — easy to extend with more platforms
   const storeLinks: {
@@ -220,9 +219,11 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
   ];
 
   const paletteSwatches: { key: string; color: string; population: number }[] = activePalette
-    ? Object.entries(activePalette)
+    ? Object.entries(
+        activePalette as Record<string, { background?: string; population?: number } | null>,
+      )
         .filter(([key]) => !key.startsWith('_'))
-        .map(([key, swatch]: [string, any]) => ({
+        .map(([key, swatch]) => ({
           key,
           color: swatch?.background as string,
           population: (swatch?.population as number) ?? 0,
@@ -665,6 +666,7 @@ const PaintingDetail = ({ paintingData }: PaintingDetailProps) => {
                           className='group relative flex-1 h-12 cursor-default transition-[flex,background-color] duration-700 ease-out hover:flex-[1.6]'
                           style={{ backgroundColor: swatch.color }}
                           title={`${SWATCH_LABELS[swatch.key] ?? swatch.key} · ${swatch.color.toUpperCase()}`}
+                          role='img'
                           aria-label={`${SWATCH_LABELS[swatch.key] ?? swatch.key}: ${swatch.color}`}
                         >
                           <span className='pointer-events-none absolute inset-x-0 bottom-1 text-center text-[9px] font-mono font-medium text-white opacity-0 [text-shadow:0_1px_2px_rgba(0,0,0,0.8)] transition-opacity duration-200 group-hover:opacity-100'>

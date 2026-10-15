@@ -16,8 +16,9 @@ export function getPhotosForTravelSelection(
 ): TravelPhotoItem[] {
   if (!selection) return [];
 
-  if (selection.placeId) {
-    const placePhotos = photos.filter(p => photoMatchesPlaceId(p, selection.placeId!));
+  const { placeId } = selection;
+  if (placeId) {
+    const placePhotos = photos.filter(p => photoMatchesPlaceId(p, placeId));
     if (placePhotos.length > 0) return placePhotos;
   }
 
@@ -25,8 +26,8 @@ export function getPhotosForTravelSelection(
     return photos.filter(photo => matchesCountryContext(photo, countryContext));
   }
 
-  if (selection.type === 'adventure' && selection.placeId) {
-    return photos.filter(p => photoMatchesPlaceId(p, selection.placeId!));
+  if (selection.type === 'adventure' && placeId) {
+    return photos.filter(p => photoMatchesPlaceId(p, placeId));
   }
 
   return [];

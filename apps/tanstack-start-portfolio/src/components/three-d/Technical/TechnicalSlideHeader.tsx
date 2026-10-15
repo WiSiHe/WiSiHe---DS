@@ -24,6 +24,7 @@ export function TechnicalSlideHeader({
       <div className='flex items-center justify-between gap-8 max-w-5xl'>
         <div className='flex items-center gap-4'>
           <button
+            type='button'
             onClick={onPrev}
             disabled={currentSlide === 0}
             className='p-2 -ml-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'
@@ -49,6 +50,7 @@ export function TechnicalSlideHeader({
         />
 
         <button
+          type='button'
           onClick={onNext}
           disabled={currentSlide === totalSlides - 1}
           className='p-2 -mr-2 rounded-full hover:bg-surface-elevated disabled:opacity-0 transition-all text-foreground/40 hover:text-accent active:scale-90'

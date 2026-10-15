@@ -231,6 +231,7 @@ export function TextPressure({
       >
         {chars.map((char, i) => (
           <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: characters are positional and have no stable identity
             key={`${char}-${i}`}
             ref={el => {
               spansRef.current[i] = el;

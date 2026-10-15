@@ -1,6 +1,6 @@
 ---
 name: sanity-best-practices
-description: Sanity development best practices for schema design, GROQ queries, TypeGen, Visual Editing, images, Portable Text, Studio structure, localization, migrations, and framework integrations such as Next.js, Nuxt, Astro, Remix, SvelteKit, Angular, Hydrogen, and the App SDK. Use this skill whenever working with Sanity schemas, defineType or defineField, GROQ or defineQuery, content modeling, Presentation or preview setups, Sanity-powered frontend integrations, or when reviewing and fixing a Sanity codebase.
+description: Sanity development best practices for schema design, GROQ queries, TypeGen, Visual Editing, images, Portable Text, Studio structure, localization, migrations, Sanity Functions, webhooks, Blueprints, and framework integrations such as Next.js, Nuxt, Astro, Remix, SvelteKit, Angular, Hydrogen, and the App SDK. Use this skill whenever working with Sanity schemas, defineType or defineField, GROQ or defineQuery, content modeling, Presentation or preview setups, Sanity-powered frontend integrations, event-driven content automation, documentEventHandler, defineDocumentFunction, defineMediaLibraryAssetFunction, @sanity/functions, @sanity/blueprints, sanity.blueprint.ts, event-driven content automation, or when reviewing and fixing a Sanity codebase.
 ---
 
 # Sanity Best Practices
@@ -22,22 +22,37 @@ Reference these guidelines when:
 - Migrating content from other systems
 - Building custom apps with the Sanity App SDK
 - Managing infrastructure with Blueprints
+- Automating content workflows with Sanity Functions or webhooks
+
+## Global Rules
+
+- Let Sanity generate `_id` values for ordinary documents. Do not create deterministic UUIDs, slug-derived IDs, or legacy-system IDs when creating documents.
+- Model relationships with `reference` fields, then resolve related documents with GROQ lookups, source-key fields, or returned `_id` values from created documents.
+- Use explicit document IDs mainly for singleton documents controlled by Studio Structure, including localized singletons such as `homePage-en`.
+
+## Video
+
+- Do not store or serve video from Sanity `file` assets for production playback. File assets are delivered as raw downloads with no transcoding or adaptive streaming, and video traffic drives very high bandwidth usage and unexpectedly large bills.
+- On Enterprise plans with the video add-on, use Sanity Media Library for video: uploads are transcoded and streamed adaptively via Mux. Model video fields with `defineVideoField()` from `sanity/media-library` and play them with `@mux/mux-player-react` using the asset's playback ID.
+- On other plans, use a dedicated video service: install `sanity-plugin-mux-input` to upload and manage videos in your Mux account from the Studio, or host video on a platform such as YouTube or Vimeo and store only the embed URL in Sanity.
+- Small clips and short previews in a `file` field are acceptable, but any user-facing video at scale must go through Media Library or a streaming service.
 
 ## Quick Reference
 
 ### Integration Guides
 
 - `get-started` - Interactive onboarding for new Sanity projects
-- `nextjs` - Next.js App Router, Live Content API, embedded Studio
+- `nextjs` - Next.js App Router, Live Content API, standalone Studio
 - `nuxt` - Nuxt integration with @nuxtjs/sanity
 - `angular` - Angular integration with @sanity/client, signals, resource API
 - `astro` - Astro integration with @sanity/astro
 - `remix` - React Router / Remix integration
 - `svelte` - SvelteKit integration with @sanity/svelte-loader
 - `hydrogen` - Shopify Hydrogen with Sanity
-- `project-structure` - Monorepo and embedded Studio patterns
+- `project-structure` - Standalone Studio and monorepo patterns
 - `app-sdk` - Custom applications with Sanity App SDK
-- `blueprints` - Infrastructure as Code with Sanity Blueprints
+- `blueprints` - Infrastructure as Code: blueprint files, stacks, plan/deploy workflow, error recovery, CI deploys
+- `functions` - Automating content workflows with Sanity Functions and webhooks
 
 ### Topic Guides
 
@@ -69,4 +84,3 @@ Each reference file contains:
 - Incorrect and correct code examples
 - Decision matrices and workflow guidance
 - Framework-specific patterns where applicable
-

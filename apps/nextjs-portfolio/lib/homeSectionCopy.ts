@@ -44,7 +44,15 @@ export function buildAboutTeaserCopy(
   return `${name} — ${jobTitle}. ${bio}`;
 }
 
-export type ContactCtaSectionData = any;
+export type ContactCtaSectionData = {
+  eyebrow?: string | null;
+  title?: string | null;
+  description?: string | null;
+  primaryLabel?: string | null;
+  primaryUrl?: string | null;
+  secondaryLabel?: string | null;
+  secondaryUrl?: string | null;
+};
 
 export function buildContactCtaCopy(
   section: ContactCtaSectionData | null,

@@ -1,4 +1,4 @@
-import { EarthGlobeIcon } from '@sanity/icons';
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe';
 import { defineField, defineType } from 'sanity';
 import { CountryNameWithIsoField } from '../components/CountryNameWithIsoField';
 import GenericAIGenerator from '../components/GenericAIGenerator';

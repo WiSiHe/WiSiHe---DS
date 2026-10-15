@@ -2,17 +2,17 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { ScrollGrowSection, SectionHeader } from './ScrollGrowSection';
 
-const meta = {
+const meta: Meta<typeof SectionHeader> = {
   title: 'Design System/Molecules/SectionHeader',
   component: SectionHeader,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
   },
-} satisfies Meta<typeof SectionHeader>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SectionHeader>;
 
 export const Default: Story = {
   args: {

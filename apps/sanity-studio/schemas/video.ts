@@ -1,6 +1,5 @@
-import { DocumentVideoIcon } from '@sanity/icons';
+import { DocumentVideoIcon } from '@sanity/icons/DocumentVideo';
 import { defineField, defineType } from 'sanity';
-import { seoType } from './seoType';
 
 // import tagType from './tag'
 // import VideoDescriptionGenerator from 'components/sanity/VideoDescriptionGenerator'

@@ -15,16 +15,16 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "dev": "tsup src/index.ts --format esm --dts --watch"
+    "build": "vp pack",
+    "dev": "vp pack --watch"
   },
   "dependencies": {
     "@sanity/client": "catalog:",
-    "groq": "^6.2.0"
+    "groq": "^6.18.0"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
-    "tsup": "catalog:",
-    "typescript": "catalog:tsup"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

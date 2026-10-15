@@ -29,7 +29,7 @@ export function extractYouTubeId(url: string): string | null {
 
 /** Fetch statistics for a single YouTube video. Cached for 1 hour. */
 export async function getYouTubeStats(videoId: string): Promise<YouTubeStats | null> {
-  const apiKey = process.env['YOUTUBE_API_KEY'];
+  const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
     console.warn('YOUTUBE_API_KEY is not set');
     return null;

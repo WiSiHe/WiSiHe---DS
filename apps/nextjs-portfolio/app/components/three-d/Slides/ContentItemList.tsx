@@ -83,6 +83,7 @@ const ContentItemRenderer = ({
               })
               .map((child, childIndex) => (
                 <ContentItemRenderer
+                  // biome-ignore lint/suspicious/noArrayIndexKey: content items are strings or objects without ids; the list is static
                   key={childIndex}
                   contentItem={child}
                   index={childIndex}
@@ -117,6 +118,7 @@ export const ContentItemList = ({ items, slideDesign }: ContentItemListProps) =>
       )}
     >
       {filteredItems.map((item, itemIndex) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: content items are strings or objects without ids; the list is static
         <ContentItemRenderer key={itemIndex} contentItem={item} index={itemIndex} />
       ))}
     </ul>

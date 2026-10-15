@@ -79,16 +79,18 @@ const nextConfig: NextConfig = {
     try {
       const redirects = await fetchRedirects();
 
-      return redirects
+      type RedirectDoc = { source?: string; destination?: string; permanent?: boolean };
+
+      return (redirects as RedirectDoc[])
         .filter(
           (
-            redirect: any,
-          ): redirect is { source: string; destination: string; permanent: boolean } =>
+            redirect,
+          ): redirect is Required<Pick<RedirectDoc, 'source' | 'destination'>> & RedirectDoc =>
             Boolean(redirect.source && redirect.destination),
         )
-        .map((redirect: any) => ({
-          source: redirect.source!,
-          destination: redirect.destination!,
+        .map(redirect => ({
+          source: redirect.source,
+          destination: redirect.destination,
           permanent: redirect.permanent ?? false,
         }));
     } catch (error) {

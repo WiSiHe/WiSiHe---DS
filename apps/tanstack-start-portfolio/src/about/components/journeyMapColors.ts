@@ -20,5 +20,6 @@ export function readJourneyMapColors(): JourneyMapColors {
 }
 
 export function useJourneyMapColors(themeKey: string): JourneyMapColors {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `themeKey` is a trigger — CSS variables must be re-read when the theme changes
   return useMemo(() => readJourneyMapColors(), [themeKey]);
 }

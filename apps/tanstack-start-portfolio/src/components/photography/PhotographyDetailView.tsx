@@ -1,5 +1,6 @@
 'use client';
 
+import type { PhotographyQueryResult } from '@wisihe/sanity-queries';
 import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
@@ -32,7 +33,7 @@ const glassPanelClass = cn(
 const sectionLabelClass = 'text-xs font-medium uppercase tracking-wider text-foreground-muted';
 
 type PhotographyDetailViewProps = {
-  photo: Record<string, any>;
+  photo: NonNullable<PhotographyQueryResult>;
 };
 
 export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {

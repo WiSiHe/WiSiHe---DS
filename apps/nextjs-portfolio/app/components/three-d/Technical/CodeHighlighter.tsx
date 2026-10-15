@@ -75,6 +75,7 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
           aria-label='Decrease code font size'
         >
           <svg
+            aria-hidden='true'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
@@ -107,6 +108,7 @@ export function CodeHighlighter({ language, code }: CodeHighlighterProps) {
           aria-label='Increase code font size'
         >
           <svg
+            aria-hidden='true'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'

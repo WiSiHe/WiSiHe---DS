@@ -198,7 +198,10 @@ export default function RecipeEngagement({
     >
       <div className='space-y-2'>
         <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
-          <div className='flex items-center gap-1' role='group' aria-label='Rate this recipe'>
+          <fieldset
+            className='m-0 flex min-w-0 items-center gap-1 border-0 p-0'
+            aria-label='Rate this recipe'
+          >
             {[1, 2, 3, 4, 5].map(star => {
               const filled = star <= (hoverRating ?? userRating ?? Math.round(localAverage ?? 0));
               return (
@@ -225,7 +228,7 @@ export default function RecipeEngagement({
                 </button>
               );
             })}
-          </div>
+          </fieldset>
           <p className='text-sm text-foreground-subtle'>
             <span className='font-semibold text-foreground'>{formatRating(localAverage)}</span>
             {localCount > 0 ? (

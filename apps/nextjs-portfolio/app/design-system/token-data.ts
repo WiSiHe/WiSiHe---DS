@@ -9,7 +9,7 @@ export const designSystemStack = [
   'Motion',
 ] as const;
 
-export const STORYBOOK_URL = process.env['NEXT_PUBLIC_STORYBOOK_URL'] ?? 'http://localhost:6006';
+export const STORYBOOK_URL = process.env.NEXT_PUBLIC_STORYBOOK_URL ?? 'http://localhost:6006';
 
 /** Optional deep links into Storybook stories (path + query). */
 export const storybookStoryPaths: Partial<Record<string, string>> = {

@@ -2,6 +2,8 @@ import type { Example, PresentationSlide, Source, Tool } from '@/app/three-d/typ
 import { sanityFetch } from './live';
 import { presentationQuery } from './queries';
 
+type SanitySlide = NonNullable<SanityPresentationResponse['slides']>[number];
+
 // Type for the raw Sanity presentation response
 interface SanityPresentationResponse {
   slides?: Array<{
@@ -16,6 +18,8 @@ interface SanityPresentationResponse {
             asset?: { _ref?: string; _type?: string; url?: string };
             alt?: string;
             url?: string;
+            hotspot?: unknown;
+            crop?: unknown;
           }
         | string;
       imageAspectRatio?: string;
@@ -66,7 +70,7 @@ export async function fetchPresentationSlides(
     // Cast to expected type since sanityFetch returns generic data
     const data = result.data as SanityPresentationResponse | null;
 
-    if (!data || !data.slides || !Array.isArray(data.slides)) {
+    if (!data?.slides || !Array.isArray(data.slides)) {
       return null;
     }
 
@@ -74,8 +78,8 @@ export async function fetchPresentationSlides(
     // Each slide has a _type field that indicates its block type
     // Filter out slides that are not published (status !== 'published')
     return data.slides
-      .filter((slide: any) => !slide.status || slide.status === 'published')
-      .map((slide: any) => {
+      .filter(slide => !slide.status || slide.status === 'published')
+      .map(slide => {
         // Determine the type based on _type field
         let type: 'title' | 'content' | 'separator' = 'content';
         if (slide._type === 'titleSlide') {
@@ -87,53 +91,54 @@ export async function fetchPresentationSlides(
         }
 
         // Extract media based on mediaType
-        const extractMedia = (media: any) => {
+        const extractMedia = (media: NonNullable<SanitySlide['media']> | undefined) => {
           if (!media || media.mediaType === 'none') return {};
 
           const mediaType = media.mediaType;
-          const result: any = {};
+          const result: Record<string, unknown> = {};
+          const mediaImage = typeof media.image === 'object' ? media.image : undefined;
 
           if (mediaType === 'image') {
             // Preserve the full Sanity image object structure for urlForImage to work
             // If image has asset._ref, use the full object; otherwise fall back to URL string
-            if (media.image?.asset?._ref) {
-              result.image = {
+            if (mediaImage?.asset?._ref) {
+              result['image'] = {
                 _type: 'image', // Required by @sanity/image-url builder
                 asset: {
-                  _ref: media.image.asset._ref,
-                  _type: media.image.asset._type,
+                  _ref: mediaImage.asset._ref,
+                  _type: mediaImage.asset._type,
                 },
-                alt: media.image.alt,
+                alt: mediaImage.alt,
                 // Preserve hotspot and crop if they exist (for proper image cropping)
-                ...(media.image.hotspot && { hotspot: media.image.hotspot }),
-                ...(media.image.crop && { crop: media.image.crop }),
+                ...(mediaImage.hotspot ? { hotspot: mediaImage.hotspot } : {}),
+                ...(mediaImage.crop ? { crop: mediaImage.crop } : {}),
               };
             } else {
               // Fallback to URL string if asset reference is not available
-              result.image = media.image?.url || media.image;
+              result['image'] = mediaImage?.url || media.image;
             }
-            result.imageAspectRatio = media.imageAspectRatio;
+            result['imageAspectRatio'] = media.imageAspectRatio;
           } else if (mediaType === 'video') {
-            result.videoUrl = media.videoUrl;
+            result['videoUrl'] = media.videoUrl;
           } else if (mediaType === 'iframe') {
-            result.iframe = media.iframeUrl;
-            result.iframeAspectRatio = media.iframeAspectRatio;
+            result['iframe'] = media.iframeUrl;
+            result['iframeAspectRatio'] = media.iframeAspectRatio;
           } else if (mediaType === 'numbers') {
-            result.metrics = media.metrics || [];
+            result['metrics'] = media.metrics || [];
           } else if (mediaType === 'graph') {
-            result.chartType = media.chartType;
+            result['chartType'] = media.chartType;
           } else if (mediaType === 'custom') {
-            result.customComponent = media.componentName;
+            result['customComponent'] = media.componentName;
             // Parse JSON string if it exists
             if (media.componentProps) {
               try {
-                result.customProps = JSON.parse(media.componentProps);
+                result['customProps'] = JSON.parse(media.componentProps);
               } catch (e) {
                 console.warn('Failed to parse componentProps JSON:', e);
-                result.customProps = {};
+                result['customProps'] = {};
               }
             } else {
-              result.customProps = {};
+              result['customProps'] = {};
             }
           }
 
@@ -141,10 +146,11 @@ export async function fetchPresentationSlides(
         };
 
         // Extract category name from reference
-        const categoryName = slide.category?.name || slide.category;
+        const categoryName =
+          (typeof slide.category === 'object' ? slide.category?.name : undefined) || slide.category;
 
         // Base fields common to all slide types
-        const baseSlide: any = {
+        const baseSlide = {
           title: slide.title || '',
           subtitle: slide.subtitle,
           type,
@@ -160,11 +166,11 @@ export async function fetchPresentationSlides(
             // Pass raw Portable Text blocks directly - they will be rendered by PresentationPortableText
             content: slide.content || null,
             ...mediaData,
-            sources: slide.sources?.map((source: any) => ({
+            sources: slide.sources?.map(source => ({
               text: source.text || '',
               url: source.url,
             })) as Source[] | undefined,
-            tools: slide.tools?.map((tool: any) => ({
+            tools: slide.tools?.map(tool => ({
               name: tool.name || '',
               description: tool.description || '',
               url: tool.url || '',
@@ -172,10 +178,12 @@ export async function fetchPresentationSlides(
               workshopUrl: tool.workshopUrl,
               nerdLevel: tool.nerdLevel,
             })) as Tool[] | undefined,
-            examples: slide.examples?.map((example: any) => ({
+            examples: slide.examples?.map(example => ({
               name: example.name || '',
               description: example.description || '',
-              image: example.image?.url || example.image,
+              image:
+                (typeof example.image === 'object' ? example.image.url : undefined) ||
+                example.image,
               iframe: example.iframe,
               url: example.url,
             })) as Example[] | undefined,

@@ -22,6 +22,7 @@ export function TechnicalSlideIndicators({
 
         return (
           <button
+            // biome-ignore lint/suspicious/noArrayIndexKey: indicators are purely positional (one per slide)
             key={index}
             onClick={() => onSlideClick?.(index)}
             type='button'

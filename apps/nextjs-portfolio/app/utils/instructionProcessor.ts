@@ -12,13 +12,13 @@ function getIngredientVariations(ingredient: string): string[] {
   if (ing.endsWith('s')) {
     variations.push(ing.slice(0, -1)); // e.g. eggs -> egg
   } else {
-    variations.push(ing + 's'); // e.g. egg -> eggs
+    variations.push(`${ing}s`); // e.g. egg -> eggs
   }
   if (ing.endsWith('y')) {
-    variations.push(ing.slice(0, -1) + 'ies'); // e.g. cherry -> cherries
+    variations.push(`${ing.slice(0, -1)}ies`); // e.g. cherry -> cherries
   }
   if (ing.endsWith('ies')) {
-    variations.push(ing.slice(0, -3) + 'y'); // e.g. cherries -> cherry
+    variations.push(`${ing.slice(0, -3)}y`); // e.g. cherries -> cherry
   }
   return variations;
 }

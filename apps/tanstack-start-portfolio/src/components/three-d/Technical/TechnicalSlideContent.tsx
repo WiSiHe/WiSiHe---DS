@@ -78,6 +78,7 @@ export function TechnicalSlideContent({
               className='flex justify-start'
             >
               <button
+                type='button'
                 onClick={onAddBox}
                 className='px-4 py-2 bg-accent text-accent-contrast rounded-lg font-medium hover:bg-accent-hover transition-all shadow-lg active:scale-95 text-sm'
               >

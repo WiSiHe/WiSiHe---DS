@@ -40,6 +40,7 @@ export function Numbers({ metrics }: NumbersProps) {
 
             return (
               <motion.div
+                // biome-ignore lint/suspicious/noArrayIndexKey: metric labels are not guaranteed unique; the list is static
                 key={`${metric.label}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

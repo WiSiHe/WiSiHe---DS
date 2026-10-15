@@ -20,16 +20,16 @@
     }
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "vp pack",
+    "dev": "vp pack --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
     "@wisihe/typescript-config": "workspace:*",
     "clsx": "catalog:",
-    "tailwind-merge": "^3.6.0",
-    "tsup": "catalog:",
-    "typescript": "catalog:tsup"
+    "tailwind-merge": "^3.7.0",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   },
   "publishConfig": {
     "access": "public"

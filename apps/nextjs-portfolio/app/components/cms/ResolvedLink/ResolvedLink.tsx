@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { linkResolver } from '@/sanity/lib/utils';
+import { linkResolver, type Link as SanityLink } from '@/sanity/lib/utils';
 
 interface ResolvedLinkProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  link: any;
+  link: SanityLink | undefined;
   children: React.ReactNode;
   className?: string;
 }

@@ -19,18 +19,33 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/sdk": "^2.15.0",
-    "@sanity/sdk-react": "^2.15.0",
+    "@lexical/code": "^0.52.0",
+    "@lexical/code-prism": "0.52.0",
+    "@lexical/link": "^0.52.0",
+    "@lexical/list": "^0.52.0",
+    "@lexical/markdown": "^0.52.0",
+    "@lexical/react": "^0.52.0",
+    "@lexical/rich-text": "^0.52.0",
+    "@lexical/selection": "^0.52.0",
+    "@lexical/utils": "^0.52.0",
+    "@sanity/icons": "^5.2.3",
+    "@sanity/sdk": "^3.8.0",
+    "@sanity/sdk-react": "^3.8.0",
+    "lexical": "^0.52.0",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^6.0.0",
+    "@sanity/eslint-config-studio": "^7.0.0",
+    "@sanity/workflow-blueprint": "^0.36.0",
+    "@types/node": "26.6.4",
     "@types/react": "catalog:",
-    "eslint": "^10.4.0",
-    "prettier": "^3.8.3",
+    "@types/react-dom": "catalog:",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.9",
+    "rolldown": "^1.2.13",
     "sanity": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8.1.0"
+    "vite": "^8.3.4"
   }
 }
