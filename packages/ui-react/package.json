@@ -64,10 +64,10 @@
     "./style.css": "./src/style.css"
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "vp pack",
     "typecheck": "tsc --noEmit",
     "predev": "pnpm --filter @wisihe/tokens build",
-    "dev": "tsdown --watch",
+    "dev": "vp pack --watch",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
@@ -77,8 +77,8 @@
     "@wisihe/utils": "workspace:*",
     "react": "catalog:",
     "tailwindcss": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   },
   "publishConfig": {
     "access": "public"

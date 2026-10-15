@@ -33,7 +33,16 @@
       "ignoreDependencies": ["@sanity/client", "dotenv", "lighthouse", "@csstools/css-calc"]
     },
     "packages/ui-react": {
-      "entry": ["src/**/*.stories.tsx"],
+      "entry": [
+        "src/**/*.stories.tsx",
+        "src/index.tsx",
+        "src/skeleton/Skeleton.tsx",
+        "src/motion/motionTokens.ts",
+        "src/pagination/buildPaginationItems.ts",
+        "src/painting-card/layout.ts",
+        "src/painting-card/nsfwCover.ts",
+        "src/painting-card/brush-stroke/*.ts"
+      ],
       "ignoreDependencies": ["@wisihe/utils", "@storybook/react", "@storybook/react-vite"]
     },
     "packages/tokens": {
@@ -41,5 +50,5 @@
     }
   },
   "ignore": ["**/*.config.{js,ts,mjs}", "**/sanity.types.ts"],
-  "ignoreBinaries": ["doppler", "vercel"]
+  "ignoreBinaries": ["doppler", "vercel", "vite"]
 }

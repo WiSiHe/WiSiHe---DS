@@ -17,8 +17,10 @@ catalog:
   sanity: ^6.18.0
   tailwindcss: ^4.3.3
   three: 0.186.1
-  tsdown: ^0.23.0
   typescript: ^7.0.2
+  vite: npm:@voidzero-dev/vite-plus-core@1.2.0
+  vitest: 5.0.4
+  vite-plus: 1.2.0
 
 minimumReleaseAgeExclude:
   - '@sanity/language-filter@5.0.20'
@@ -124,6 +126,8 @@ overrides:
   'katex@<0.18.2': '^0.19.0'
   'vue@<3.5.43': '^3.5.43'
   '@vue/server-renderer@<3.5.43': '^3.5.43'
+  vite@*: 'catalog:'
+  vitest@*: 'catalog:'
 
 packageExtensions:
   '@asamuzakjp/css-color':
@@ -148,9 +152,14 @@ peerDependencyRules:
     react-dom: '19'
     sanity: '6'
     typescript: '7'
+    vite: '*'
+    vitest: '*'
   ignoreMissing:
     - react
     - react-dom
+  allowAny:
+    - vite
+    - vitest
 
 allowedDeprecatedVersions:
   glob: '8.1.0'
