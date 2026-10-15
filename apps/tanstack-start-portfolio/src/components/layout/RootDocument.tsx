@@ -1,3 +1,4 @@
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import { Scripts } from '@tanstack/react-router';
 import { cn } from '@wisihe/utils';
 import type { CSSProperties, ReactNode } from 'react';
@@ -11,6 +12,13 @@ export function RootDocument({ children }: { children: ReactNode }) {
   return (
     <html lang='en' className={cn(resolved, 'scroll-smooth')}>
       <head>
+        <link
+          rel='preload'
+          href={interLatinWoff2}
+          as='font'
+          type='font/woff2'
+          crossOrigin='anonymous'
+        />
         <Meta />
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: Flash prevention
@@ -44,7 +52,7 @@ export function RootDocument({ children }: { children: ReactNode }) {
           {
             '--font-geist-sans': '"Geist Sans", ui-sans-serif, system-ui, sans-serif',
             '--font-geist-mono': '"Geist Mono", ui-monospace, monospace',
-            '--font-inter': '"Inter", ui-sans-serif, system-ui, sans-serif',
+            '--font-inter': '"Inter Variable", ui-sans-serif, system-ui, sans-serif',
           } as CSSProperties
         }
       >
