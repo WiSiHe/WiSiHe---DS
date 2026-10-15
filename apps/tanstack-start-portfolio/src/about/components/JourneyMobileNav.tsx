@@ -29,6 +29,7 @@ export function JourneyMobileNav({
         'flex items-center gap-2 rounded-xl border border-border/60 bg-background/95 p-2.5 shadow-lg backdrop-blur-md lg:hidden',
         className,
       )}
+      role='toolbar'
       aria-label='Journey navigation'
     >
       <button

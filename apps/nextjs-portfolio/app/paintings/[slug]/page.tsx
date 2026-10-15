@@ -2,7 +2,10 @@ import type { PaintingQueryResult, PaintingsSlugsResult } from '@wisihe/sanity-q
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
-import { MorePaintings } from '@/app/components/paintings/PaintingDetails/MorePaintings';
+import {
+  MorePaintings,
+  type RelatedPainting,
+} from '@/app/components/paintings/PaintingDetails/MorePaintings';
 import PaintingDetail from '@/app/components/paintings/PaintingDetails/PaintingsDetails';
 import { buildBreadcrumbJsonLd, buildPersonReference } from '@/lib/seo/jsonLd';
 import { buildContentMetadata, resolveSeoCopy, truncateMetaDescription } from '@/lib/seo/metadata';
@@ -83,7 +86,7 @@ export default async function PaintingPage(props: Props) {
     sanityFetch({ query: morePaintingsQuery, params }),
   ]);
   const painting = _painting as PaintingQueryResult;
-  const morePaintings = (_morePaintings as any) ?? [];
+  const morePaintings = (_morePaintings as RelatedPainting[] | null) ?? [];
 
   if (!painting?._id) {
     return notFound();

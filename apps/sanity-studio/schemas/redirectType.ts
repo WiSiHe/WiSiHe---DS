@@ -1,4 +1,4 @@
-import { LinkIcon } from '@sanity/icons';
+import { LinkIcon } from '@sanity/icons/Link';
 import { defineField, defineType, type SanityDocumentLike } from 'sanity';
 
 function isValidInternalPath(value: string | undefined) {

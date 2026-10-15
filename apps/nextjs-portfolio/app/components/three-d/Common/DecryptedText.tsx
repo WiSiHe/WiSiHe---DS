@@ -84,7 +84,12 @@ export default function DecryptedText({
 
         for (let i = nonSpaceChars.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [nonSpaceChars[i], nonSpaceChars[j]] = [nonSpaceChars[j]!, nonSpaceChars[i]!];
+          const first = nonSpaceChars[i];
+          const second = nonSpaceChars[j];
+          if (first !== undefined && second !== undefined) {
+            nonSpaceChars[i] = second;
+            nonSpaceChars[j] = first;
+          }
         }
 
         let charIndex = 0;
@@ -206,6 +211,7 @@ export default function DecryptedText({
           const isRevealedOrDone = revealedIndices.has(index) || !isScrambling || !isHovering;
 
           return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: characters are positional and have no stable identity
             <span key={index} className={isRevealedOrDone ? className : encryptedClassName}>
               {char}
             </span>

@@ -210,7 +210,9 @@ html ::-moz-selection {
   @media (prefers-reduced-transparency: reduce) {
     @media (min-width: 1024px) {
       .painting-detail-sidebar-glass {
+        /* biome-ignore lint/complexity/noImportantStyles: must win over the glass utility styles when the user prefers reduced transparency */
         -webkit-backdrop-filter: none !important;
+        /* biome-ignore lint/complexity/noImportantStyles: must win over the glass utility styles when the user prefers reduced transparency */
         backdrop-filter: none !important;
         background-color: color-mix(in oklab, var(--color-surface) 92%, transparent);
       }
@@ -255,6 +257,7 @@ html ::-moz-selection {
 @media (pointer: fine) {
   body.custom-cursor-active,
   body.custom-cursor-active * {
+    /* biome-ignore lint/complexity/noImportantStyles: custom cursor must override per-element cursor styles */
     cursor: none !important;
   }
 }
@@ -321,6 +324,7 @@ html[data-presentation-mode] #main-content {
 /* Recipe print sheet — Safari-safe single-column layout */
 @media screen {
   .recipe-print-view {
+    /* biome-ignore lint/complexity/noImportantStyles: hide the print-only sheet on screen regardless of other display utilities */
     display: none !important;
   }
 }
@@ -332,22 +336,31 @@ html[data-presentation-mode] #main-content {
 
   html,
   body {
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     background: #fff !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     color: #111 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     height: auto !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     overflow: visible !important;
   }
 
   body.custom-cursor-active,
   body.custom-cursor-active * {
+    /* biome-ignore lint/complexity/noImportantStyles: custom cursor must override per-element cursor styles */
     cursor: auto !important;
   }
 
   #main-content,
   #main-content > * {
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     background: #fff !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     height: auto !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     min-height: 0 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     overflow: visible !important;
   }
 
@@ -355,20 +368,29 @@ html[data-presentation-mode] #main-content {
   [data-react-transition-progress],
   [data-sonner-toaster],
   iframe[title="vercel-live-feedback"] {
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     display: none !important;
   }
 
   .recipe-screen-only {
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     display: none !important;
   }
 
   .recipe-print-view {
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     display: block !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     width: 100% !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     max-width: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     margin: 0 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     padding: 0 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     color: #111 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: print stylesheet must override screen and utility styles */
     background: #fff !important;
     font-size: 11pt;
     line-height: 1.45;

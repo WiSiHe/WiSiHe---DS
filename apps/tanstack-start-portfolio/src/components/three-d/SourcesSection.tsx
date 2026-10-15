@@ -178,6 +178,7 @@ export function SourcesSection() {
               >
                 <span>View Workshop</span>
                 <svg
+                  aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
@@ -242,6 +243,7 @@ export function SourcesSection() {
                     <div className='mt-4 flex items-center gap-2 text-accent opacity-0 group-hover:opacity-100 transition-opacity'>
                       <span className='text-sm font-semibold'>Visit site</span>
                       <svg
+                        aria-hidden='true'
                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'
                         viewBox='0 0 24 24'
@@ -397,6 +399,7 @@ export function SourcesSection() {
                 >
                   <div className='mt-0.5 shrink-0'>
                     <svg
+                      aria-hidden='true'
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
                       viewBox='0 0 24 24'

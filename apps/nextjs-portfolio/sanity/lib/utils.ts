@@ -1,5 +1,8 @@
 import { createImageUrlBuilder } from '@sanity/image-url';
-import { getCroppedAspectRatio as resolveCroppedAspectRatio } from '@/lib/paintings/paintingImageDimensions';
+import {
+  getCroppedAspectRatio as resolveCroppedAspectRatio,
+  type SanityPaintingImageDimensions,
+} from '@/lib/paintings/paintingImageDimensions';
 import { dataset, projectId } from '@/sanity/lib/api';
 import { client } from './client';
 
@@ -71,7 +74,9 @@ export const urlForImage = (source: SanityImageSource | null | undefined) => {
 };
 
 /** Calculates the aspect ratio of the image after applying custom editor crop. */
-export function getCroppedAspectRatio(image: any): number {
+export function getCroppedAspectRatio(
+  image: SanityPaintingImageDimensions | null | undefined,
+): number {
   return resolveCroppedAspectRatio(image) ?? 3 / 4;
 }
 

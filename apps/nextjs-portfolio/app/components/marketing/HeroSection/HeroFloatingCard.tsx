@@ -198,7 +198,7 @@ export function HeroFloatingCard({
       <span className='sr-only'>
         {isPainting ? 'View painting' : 'View project'}: {displayTitle}
       </span>
-      {isPainting ? (
+      {isPainting && paintingBrush ? (
         <BrushRevealWrap
           enabled
           hovered={hoverEnabled && isCardHovered}
@@ -217,8 +217,8 @@ export function HeroFloatingCard({
             sizes='(max-width: 768px) 52vw, 250px'
           />
           <BrushRevealLayer
-            accentColor={paintingBrush!.accentColor}
-            secondaryColor={paintingBrush!.secondaryColor}
+            accentColor={paintingBrush.accentColor}
+            secondaryColor={paintingBrush.secondaryColor}
             strokeVariantIndex={strokeVariantIndex}
             revealSeed={strokeVariantIndex}
             paintingFormat={item.format ?? 'square'}

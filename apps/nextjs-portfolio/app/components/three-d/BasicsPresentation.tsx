@@ -93,8 +93,8 @@ const PresentationModel = ({ step, progress: _progress }: { step: number; progre
             [1.2, 0, 0],
             [0, 1.2, 0],
             [0, -1.2, 0],
-          ].map((p, i) => (
-            <mesh key={i} position={p as [number, number, number]}>
+          ].map(p => (
+            <mesh key={p.join(',')} position={p as [number, number, number]}>
               <sphereGeometry args={[0.08, 16, 16]} />
               <meshBasicMaterial color='#ffffff' />
             </mesh>
@@ -326,7 +326,7 @@ export default function BasicsPresentation() {
           <div className='flex justify-between items-end'>
             <div className='text-[10px] bg-black/80 p-4 border border-[#00ff00]/20'>
               {['COMPILING...', 'LINKING...', 'READY'].map((t, i) => (
-                <div key={i} className={cn(i === 2 && 'text-white', i !== 2 && 'opacity-40')}>
+                <div key={t} className={cn(i === 2 && 'text-white', i !== 2 && 'opacity-40')}>
                   {t}
                 </div>
               ))}
@@ -346,7 +346,7 @@ export default function BasicsPresentation() {
       <div className='relative z-30'>
         {slides.map((slide, i) => (
           <section
-            key={i}
+            key={slide.title}
             className='slide-trigger h-screen flex flex-col justify-center px-4 md:px-24'
           >
             <div className='slide-content max-w-xl bg-black/95 border border-[#00ff00]/20 p-8 md:p-12 shadow-[0_0_100px_rgba(0,255,0,0.05)] transform transition-all duration-700'>

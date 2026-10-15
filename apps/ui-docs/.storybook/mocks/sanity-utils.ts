@@ -31,4 +31,9 @@ export function getCroppedAspectRatio(image: { aspectRatio?: number; crop?: unkn
   return image.aspectRatio ?? 3 / 4;
 }
 
-export const urlForFullImage = urlForImage;
+export const urlForFullImage = (source: SanityImageSource | null | undefined) => {
+  if (!source?.asset?._ref) {
+    return undefined;
+  }
+  return createImageBuilder();
+};

@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { urlForImage } from '@/sanity/lib/utils';
 import RecipeTipComponent from '../../recipes/RecipeTip/RecipeTip';
 import ResolvedLink from '../ResolvedLink/ResolvedLink';
+import { PortableTextAccordion, type PortableTextAccordionValue } from './PortableTextAccordion';
 import { PortableTextCodeBlock } from './PortableTextCodeBlock';
 import { PortableTextMermaid } from './PortableTextMermaid';
 
@@ -287,6 +288,9 @@ function createPortableTextComponents(variant: PortableTextVariant): PortableTex
         />
       ),
       videoEmbed: createPortableTextVideo(wide),
+      accordion: ({ value }) => (
+        <PortableTextAccordion value={value as PortableTextAccordionValue} wide={wide} />
+      ),
     },
     block: {
       h1: createHeadingBlock(variant, 'h1', headingClass.h1),

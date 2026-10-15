@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  type Icon,
   IconArrowsRightLeft,
   IconBolt,
   IconChartBar,
@@ -35,7 +36,7 @@ interface BenchmarkHUDProps {
 
 interface ComparisonRow {
   category: string;
-  icon: any;
+  icon: Icon;
   legacyTitle: string;
   legacyDesc: string;
   modernTitle: string;
@@ -323,11 +324,14 @@ export function BenchmarkHUD({
       {/* Persistent 'Old vs New' Architectural Comparison Drawer           */}
       {/* ─────────────────────────────────────────────────────────────────── */}
       {showDrawer && (
+        // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click-to-dismiss; the drawer has its own close button for keyboard users
         <aside
           aria-label='Old vs New Architectural Comparison'
           className='fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-opacity'
           onClick={() => setShowDrawer(false)}
         >
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: stops click propagation so clicks inside the drawer do not dismiss it; not an interactive control */}
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: stops click propagation so clicks inside the drawer do not dismiss it; not an interactive control */}
           <div
             className='h-full w-full max-w-2xl overflow-y-auto border-l border-white/15 bg-zinc-950/95 p-6 shadow-2xl backdrop-blur-2xl text-foreground sm:p-8'
             onClick={e => e.stopPropagation()}
@@ -421,11 +425,11 @@ export function BenchmarkHUD({
                 Architectural Breakdown
               </h3>
 
-              {COMPARISON_MATRIX.map((item, idx) => {
+              {COMPARISON_MATRIX.map(item => {
                 const IconComponent = item.icon;
                 return (
                   <div
-                    key={idx}
+                    key={item.category}
                     className='rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3 transition-colors hover:border-white/20 hover:bg-white/[0.04]'
                   >
                     {/* Row Header */}

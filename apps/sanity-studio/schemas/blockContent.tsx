@@ -273,6 +273,68 @@ export default defineType({
         },
       },
     }),
+    defineArrayMember({
+      type: 'object',
+      name: 'accordion',
+      title: 'Accordion / Collapsible Section',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Accordion Title / Summary',
+          type: 'string',
+          description: 'The heading shown on the collapsible card header',
+          validation: Rule => Rule.required(),
+        }),
+        defineField({
+          name: 'badge',
+          title: 'Optional Badge / Label',
+          type: 'string',
+          description: 'E.g., "Deep Dive", "Technical Spec", "Details"',
+        }),
+        defineField({
+          name: 'variant',
+          title: 'Style Variant',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Card (Default, elevated background)', value: 'card' },
+              { title: 'Subtle (Minimalist divider line)', value: 'subtle' },
+              { title: 'Glassmorphic (Frosted glass glow)', value: 'glass' },
+            ],
+          },
+          initialValue: 'card',
+        }),
+        defineField({
+          name: 'defaultOpen',
+          title: 'Expanded by Default',
+          type: 'boolean',
+          initialValue: false,
+        }),
+        defineField({
+          name: 'content',
+          title: 'Collapsible Content',
+          type: 'array',
+          of: [{ type: 'block' }, { type: 'code' }, { type: 'codeBlock' }],
+        }),
+      ],
+      preview: {
+        select: { title: 'title', badge: 'badge', defaultOpen: 'defaultOpen' },
+        prepare({
+          title,
+          badge,
+          defaultOpen,
+        }: {
+          title?: string;
+          badge?: string;
+          defaultOpen?: boolean;
+        }) {
+          return {
+            title: `🔽 ${title || 'Untitled Accordion'}`,
+            subtitle: `${badge ? `[${badge}] ` : ''}${defaultOpen ? 'Initially Open' : 'Initially Collapsed'}`,
+          };
+        },
+      },
+    }),
   ],
 });
 

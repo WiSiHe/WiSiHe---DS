@@ -31,7 +31,7 @@ import { MapPlaceSidePanel } from './MapPlaceSidePanel';
 import { formatCityLabel } from './PlaceFactsGrid';
 import { TravelCityDot } from './TravelCityDot';
 
-const MAPBOX_TOKEN = process.env['NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN'];
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const DEFAULT_CENTER = { longitude: 10.75, latitude: 59.91 };
 const DEFAULT_ZOOM = 4.8;
 const MAP_STYLE_DARK = 'mapbox://styles/mapbox/dark-v11';
@@ -250,7 +250,7 @@ export function LifeJourneyMap({
       });
       flyToCoordinates(`city-${city._key}`, city.coordinates.lng, city.coordinates.lat);
     },
-    [flyToCoordinates],
+    [flyToCoordinates, setTravelSelection],
   );
 
   const selectAdventure = useCallback(
@@ -268,11 +268,12 @@ export function LifeJourneyMap({
         7.5,
       );
     },
-    [flyToCoordinates],
+    [flyToCoordinates, setTravelSelection],
   );
 
   const lastPannedIndexRef = useRef(-1);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `items` is an intentional trigger — the pan cursor must reset whenever the journey items change
   useEffect(() => {
     lastPannedIndexRef.current = -1;
   }, [items]);
@@ -321,6 +322,7 @@ export function LifeJourneyMap({
     return applyMapAtmosphereWhenReady(map, isDarkMap);
   }, [isDarkMap, themeMounted]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `mapMode` is an intentional trigger — selection state must reset whenever the map mode switches
   useEffect(() => {
     hasFittedTravelRef.current = false;
     setTravelSelection(null);

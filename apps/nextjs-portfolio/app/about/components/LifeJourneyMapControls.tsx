@@ -39,6 +39,7 @@ export function LifeJourneyMapControls({
         'absolute bottom-4 right-4 z-10 flex flex-col gap-0.5 rounded-lg border border-border/60 bg-background/92 p-1 shadow-lg backdrop-blur-md',
         className,
       )}
+      role='toolbar'
       aria-label='Map controls'
     >
       <button

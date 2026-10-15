@@ -27,7 +27,7 @@ function CustomComponentRenderer({
   slideIndex,
 }: {
   name: string;
-  props?: any;
+  props?: Record<string, unknown>;
   currentSlide: number;
   slideIndex: number;
 }) {

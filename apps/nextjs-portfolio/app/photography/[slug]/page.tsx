@@ -70,7 +70,7 @@ export default async function PhotographyDetailPage(props: Props) {
 
   const place = photo.place;
   const image = photo.image;
-  const contentUrl = image ? resolveOpenGraphImage(image as any)?.url : undefined;
+  const contentUrl = image ? resolveOpenGraphImage(image)?.url : undefined;
 
   const structuredData = {
     '@context': 'https://schema.org',

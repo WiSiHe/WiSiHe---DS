@@ -1,4 +1,5 @@
-import { EarthGlobeIcon, InfoOutlineIcon } from '@sanity/icons';
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe';
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
 import { Card, Flex, Stack, Text } from '@sanity/ui';
 import { useEffect, useState } from 'react';
 import type { ReferenceInputProps } from 'sanity';

@@ -62,7 +62,6 @@ const Navigation = ({ isAbsolute: _isAbsolute = true }: NavigationProps): JSX.El
   const pathName = usePathname();
   const hideBottomNav =
     pathName?.startsWith('/design-system') ||
-    pathName === '/three-d' ||
     pathName?.startsWith('/three-d/') ||
     (pathName?.startsWith('/presentations/') && pathName !== '/presentations');
 

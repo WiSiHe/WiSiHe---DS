@@ -10,6 +10,7 @@ export const R3FInteractionScene = forwardRef<THREE.Mesh>((_props, ref) => {
   const [active, setActive] = useState(false);
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: react-three-fiber <mesh>, not a DOM element
     <mesh
       ref={ref}
       // Scale changes based on active state

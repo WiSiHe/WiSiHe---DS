@@ -1,5 +1,5 @@
 <script>
-  (function () {
+  (() => {
     /** Early redirect for stale manager URLs; full map in preview.ts via resolveLegacyStoryId. */
     var map = {
       'molecules-paintingcard-shell--default': 'cards-painting-paintingcard--default',
@@ -11,11 +11,11 @@
     };
     var params = new URLSearchParams(window.location.search);
     var path = params.get('path');
-    if (!path || path.indexOf('/story/') !== 0) return;
+    if (path?.indexOf('/story/') !== 0) return;
     var id = path.slice('/story/'.length);
     var next = map[id];
     if (!next) return;
-    params.set('path', '/story/' + next);
-    window.location.replace(window.location.pathname + '?' + params.toString());
+    params.set('path', `/story/${next}`);
+    window.location.replace(`${window.location.pathname}?${params.toString()}`);
   })();
 </script>

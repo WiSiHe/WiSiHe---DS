@@ -442,39 +442,40 @@ Key considerations for Sanity + Angular SSR:
 Angular's built-in HTTP Transfer Cache does not cover `@sanity/client` requests. Without manual transfer, the client re-fetches every query during hydration. Add `TransferState` to the service from Section 2:
 
 ```typescript
-+ async function hashQuery(query: string, params?: QueryParams): Promise<string> {
-+   const input = query + JSON.stringify(params ?? {})
-+   const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
-+   return Array.from(new Uint8Array(buffer), b => b.toString(16).padStart(2, '0')).join('')
-+ }
-
-import { Injectable, inject } from '@angular/core'
-+ import { isPlatformBrowser, isPlatformServer } from '@angular/common'
-+ import { PLATFORM_ID, makeStateKey, TransferState } from '@angular/core'
+import { Injectable, inject, PLATFORM_ID, makeStateKey, TransferState } from '@angular/core'
+import { isPlatformBrowser, isPlatformServer } from '@angular/common'
 import { createClient, type ClientReturn, type QueryParams, type SanityClient } from '@sanity/client'
+
+async function hashQuery(query: string, params?: QueryParams): Promise<string> {
+  const input = query + JSON.stringify(params ?? {})
+  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
+  return Array.from(new Uint8Array(buffer), b => b.toString(16).padStart(2, '0')).join('')
+}
 
 export class SanityService {
   private client: SanityClient
-+  private transferState = inject(TransferState)
-+  private platformId = inject(PLATFORM_ID)
+  private transferState = inject(TransferState)
+  private platformId = inject(PLATFORM_ID)
 
   async fetch<Query extends string>(query: Query, params?: QueryParams): Promise<ClientReturn<Query>> {
-+    const key = makeStateKey<ClientReturn<Query>>(await hashQuery(query, params))
-+
-+    if (isPlatformBrowser(this.platformId)) {
-+      const cached = this.transferState.get(key, null)
-+      if (cached !== null) {
-+        this.transferState.remove(key)
-+        return cached
-+      }
-+    }
-+
+    // The key type includes `null` so `get(key, null)` type-checks against
+    // Angular's `get<T>(key: StateKey<T>, defaultValue: T): T` signature.
+    const key = makeStateKey<ClientReturn<Query> | null>(await hashQuery(query, params))
+
+    if (isPlatformBrowser(this.platformId)) {
+      const cached = this.transferState.get(key, null)
+      if (cached !== null) {
+        this.transferState.remove(key)
+        return cached
+      }
+    }
+
     const result = await this.client.fetch(query, params)
-+
-+    if (isPlatformServer(this.platformId)) {
-+      this.transferState.set(key, result)
-+    }
-+
+
+    if (isPlatformServer(this.platformId)) {
+      this.transferState.set(key, result)
+    }
+
     return result
   }
 }
@@ -555,8 +556,8 @@ Common errors when integrating Angular with Sanity:
 
 | Error | Cause | Solution |
 |---|---|---|
-| `401 Unauthorized` | Invalid or missing API token | Verify token in Sanity management console. Ensure it has correct permissions. |
-| `403 Forbidden` | CORS origin not allowed | Add your Angular dev/production URL to CORS origins in `sanity.io/manage`. |
+| `401 Unauthorized` | Invalid or missing API token | Verify token in [Sanity Manage](https://www.sanity.io/manage). Ensure it has correct permissions. |
+| `403 Forbidden` | CORS origin not allowed | Add your Angular dev/production URL to CORS origins in [Sanity Manage](https://www.sanity.io/manage). |
 | `422 Invalid query` | GROQ syntax error | Test queries in Vision plugin or Sanity's GROQ playground. See `groq.md`. |
 | Hydration mismatch | Conditional rendering based on platform | Use `@defer` or `afterNextRender()` instead of `isPlatformBrowser()` checks. |
 | Empty response | Missing dataset or wrong `apiVersion` | Verify environment config. Use a date-based `apiVersion` (e.g., `'2025-05-01'`). |

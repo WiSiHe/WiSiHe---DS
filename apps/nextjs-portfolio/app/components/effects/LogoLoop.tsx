@@ -77,8 +77,11 @@ const useResizeObserver = (
     callback();
 
     return () => {
-      observers.forEach(observer => observer?.disconnect());
+      observers.forEach(observer => {
+        observer?.disconnect();
+      });
     };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: generic hook; the caller supplies the dependency list
   }, dependencies);
 };
 
@@ -119,6 +122,7 @@ const useImageLoader = (
         img.removeEventListener('error', handleImageLoad);
       });
     };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: generic hook; the caller supplies the dependency list
   }, dependencies);
 };
 
@@ -136,6 +140,7 @@ const useAnimationLoop = (
   const offsetRef = useRef(0);
   const velocityRef = useRef(0);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: trackRef.current is only read to start the animation loop; re-running on ref identity is unnecessary and would restart the animation
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
@@ -364,6 +369,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             {item.node}
           </span>
         ) : isImageLogoItem(item) ? (
+          // biome-ignore lint/performance/noImgElement: marquee logos come from arbitrary sources with srcSet/sizes; next/image is not suitable here
           <img
             className={cx(
               'h-[var(--logoloop-logoHeight)] w-auto block object-contain',
@@ -433,6 +439,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
         Array.from({ length: copyCount }, (_, copyIndex) => (
           <ul
             className={cx('flex items-center', isVertical && 'flex-col')}
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length list of identical duplicated copies with no stable identity
             key={`copy-${copyIndex}`}
             aria-hidden={copyIndex > 0}
             ref={copyIndex === 0 ? seqRef : undefined}
@@ -457,11 +464,10 @@ export const LogoLoop = React.memo<LogoLoopProps>(
     );
 
     return (
-      <div
+      <section
         ref={containerRef}
         className={rootClasses}
         style={containerStyle}
-        role='region'
         aria-label={ariaLabel}
       >
         {fadeOut ? (
@@ -505,7 +511,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             </>
           )
         ) : null}
-
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: hover only pauses the marquee; no keyboard equivalent needed */}
         <div
           className={cx(
             'flex will-change-transform select-none relative z-0',
@@ -518,11 +524,9 @@ export const LogoLoop = React.memo<LogoLoopProps>(
         >
           {logoLists}
         </div>
-      </div>
+      </section>
     );
   },
 );
 
 LogoLoop.displayName = 'LogoLoop';
-
-export default LogoLoop;

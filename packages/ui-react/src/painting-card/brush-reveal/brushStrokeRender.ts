@@ -85,9 +85,6 @@ export function gridBandClipTransition(
   return { delay: 0, duration, ease: GRID_BAND_DRAW_EASES[drawEase] };
 }
 
-/** @deprecated Use gridBandClipTransition */
-export const gridBandSideClipTransition = gridBandClipTransition;
-
 /** Grid band — path draw with optional second-stroke stagger and variant easing. */
 export function gridBandDrawPathTransitions(
   active: boolean,

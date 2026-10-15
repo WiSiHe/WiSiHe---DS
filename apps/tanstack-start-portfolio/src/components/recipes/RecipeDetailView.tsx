@@ -1,10 +1,11 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
+import type { GetAllRecipesResult, GetRecipeResult } from '@wisihe/sanity-queries';
 import { Breadcrumbs, RecipeMetaBadges } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
 import CustomPortableText from '@/components/cms/PortableText/PortableText';
 import { renderBreadcrumbLink } from '@/components/detail/breadcrumbLink';
 import { RecipeCookingMode } from '@/components/recipes/RecipeCookingMode';
@@ -15,9 +16,11 @@ import { portableTextToPlainText } from '@/lib/portableText';
 import { SITE_URL } from '@/lib/site';
 import { imageUrl } from '@/server/fns';
 
+type PortableTextValue = ComponentProps<typeof CustomPortableText>['value'];
+
 type RecipeDetailViewProps = {
-  recipe: Record<string, any>;
-  moreRecipes: Array<Record<string, any>>;
+  recipe: NonNullable<GetRecipeResult>;
+  moreRecipes: GetAllRecipesResult;
 };
 
 function resolveCalories(nutrition: Record<string, unknown> | null | undefined): number | null {
@@ -31,7 +34,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const allImages = useMemo(() => {
-    const list: unknown[] = [];
+    const list: NonNullable<typeof recipe.mainImage>[] = [];
     if (recipe.mainImage) list.push(recipe.mainImage);
     if (recipe.additionalImages?.length) list.push(...recipe.additionalImages);
     return list;
@@ -39,9 +42,9 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
 
   const printIngredientCategories = useMemo(() => {
     const multiplier = recipe.servings ? servings / recipe.servings : 1;
-    return (recipe.ingredientCategories ?? []).map((category: any) => ({
+    return (recipe.ingredientCategories ?? []).map(category => ({
       categoryName: category.categoryName || '',
-      ingredients: (category.ingredients ?? []).map((item: any) => {
+      ingredients: (category.ingredients ?? []).map(item => {
         const amount = item.amount ?? '';
         const scaled =
           multiplier !== 1 && amount && !Number.isNaN(Number.parseFloat(amount))
@@ -59,7 +62,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
 
   const printInstructions = useMemo(
     () =>
-      (recipe.instructions ?? []).map((step: any) => ({
+      (recipe.instructions ?? []).map(step => ({
         title: step.title,
         content: portableTextToPlainText(step.content),
       })),
@@ -94,9 +97,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
         difficulty={recipe.difficulty}
         ingredientCategories={printIngredientCategories}
         instructions={printInstructions}
-        tips={
-          recipe.tips?.map((tip: any) => ({ title: tip.title, content: tip.content || '' })) ?? null
-        }
+        tips={recipe.tips?.map(tip => ({ title: tip.title, content: tip.content || '' })) ?? null}
         url={`${SITE_URL}/recipes/${recipe.slug ?? ''}`}
       />
 
@@ -144,11 +145,14 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                     <>
                       <div className='h-full w-full overflow-hidden' ref={emblaRef}>
                         <div className='flex h-full w-full'>
-                          {allImages.map((img: any, index: number) => {
+                          {allImages.map((img, index) => {
                             const src = imageUrl(img, 1000);
                             if (!src) return null;
                             return (
-                              <div key={index} className='relative min-w-0 flex-[0_0_100%]'>
+                              <div
+                                key={img.asset?._ref ?? src}
+                                className='relative min-w-0 flex-[0_0_100%]'
+                              >
                                 <Image
                                   src={src}
                                   alt={img.alt || recipe.title}
@@ -163,9 +167,9 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                         </div>
                       </div>
                       <div className='absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5'>
-                        {allImages.map((_: unknown, index: number) => (
+                        {allImages.map((img, index) => (
                           <button
-                            key={index}
+                            key={img.asset?._ref ?? `slide-${index}`}
                             type='button'
                             onClick={() => emblaApi?.scrollTo(index)}
                             className={cn(
@@ -199,7 +203,10 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
               <h2 className='mb-4 font-sans text-2xl font-extrabold tracking-tight'>
                 About this dish
               </h2>
-              <CustomPortableText value={recipe.story} variant='article' />
+              <CustomPortableText
+                value={recipe.story as unknown as PortableTextValue}
+                variant='article'
+              />
             </section>
           ) : null}
 
@@ -220,14 +227,17 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                     />
                   </label>
                 </div>
-                {recipe.ingredientCategories?.map((category: any) => (
+                {recipe.ingredientCategories?.map(category => (
                   <div key={category.categoryName || 'ingredients'}>
                     {category.categoryName ? (
                       <h3 className='mb-2 font-semibold text-accent'>{category.categoryName}</h3>
                     ) : null}
                     <ul className='space-y-2'>
-                      {category.ingredients?.map((item: any, i: number) => (
-                        <li key={`${item.ingredient}-${i}`} className='text-foreground/80'>
+                      {category.ingredients?.map(item => (
+                        <li
+                          key={`${item.ingredient}-${item.amount}-${item.unit}`}
+                          className='text-foreground/80'
+                        >
                           {[item.amount, item.unit, item.ingredient].filter(Boolean).join(' ')}
                           {item.notes ? (
                             <span className='text-foreground/50'> — {item.notes}</span>
@@ -246,11 +256,17 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                 <RecipeCookingMode />
               </div>
               <ol className='list-decimal space-y-4 pl-5'>
-                {recipe.instructions?.map((step: any, i: number) => (
-                  <li key={step.title || i} className='pl-2'>
+                {recipe.instructions?.map((step, i) => (
+                  <li // biome-ignore lint/suspicious/noArrayIndexKey: steps have no stable id and titles may be empty or repeated; the list is static
+                    key={i}
+                    className='pl-2'
+                  >
                     {step.title ? <strong className='mb-1 block'>{step.title}</strong> : null}
                     {Array.isArray(step.content) && step.content.length > 0 ? (
-                      <CustomPortableText value={step.content} variant='minimal' />
+                      <CustomPortableText
+                        value={step.content as unknown as PortableTextValue}
+                        variant='minimal'
+                      />
                     ) : (
                       <span className='text-foreground/80'>
                         {portableTextToPlainText(step.content) || String(step.content ?? '')}
@@ -269,10 +285,15 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                   Tips & tricks
                 </h2>
                 <div className='grid gap-6 md:grid-cols-2'>
-                  {recipe.tips.map((tip: any, index: number) => (
+                  {recipe.tips.map((tip, index) => (
                     <RecipeTipComponent
-                      key={tip.title || index}
-                      tip={{ title: tip.title, content: tip.content || '', icon: tip.icon }}
+                      // biome-ignore lint/suspicious/noArrayIndexKey: tips have no stable id and titles may be empty or repeated; the list is static
+                      key={index}
+                      tip={{
+                        title: tip.title ?? undefined,
+                        content: tip.content || '',
+                        icon: tip.icon ?? undefined,
+                      }}
                     />
                   ))}
                 </div>

@@ -142,6 +142,7 @@ export default function RecipePrintView({
             ) : null}
             <ul className='recipe-print-ingredients'>
               {category.ingredients.map((ingredient, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: ingredients can repeat within a category and have no id
                 <li key={`${category.categoryName}-${ingredient.ingredient}-${index}`}>
                   <span className='recipe-print-ingredient-name'>
                     {ingredient.ingredient}
@@ -174,6 +175,7 @@ export default function RecipePrintView({
                     if (paragraph.kind === 'tip') {
                       return (
                         <p
+                          // biome-ignore lint/suspicious/noArrayIndexKey: paragraphs derived from portable text have no id
                           key={`${index}-tip-${paragraphIndex}`}
                           className='recipe-print-inline-tip'
                         >
@@ -188,12 +190,14 @@ export default function RecipePrintView({
                     }
                     if (paragraph.kind === 'list') {
                       return (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: paragraphs derived from portable text have no id
                         <p key={`${index}-list-${paragraphIndex}`} className='recipe-print-bullet'>
                           • {paragraph.text}
                         </p>
                       );
                     }
                     return (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: paragraphs derived from portable text have no id
                       <p key={`${index}-text-${paragraphIndex}`} className='recipe-print-body'>
                         {paragraph.text}
                       </p>

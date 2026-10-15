@@ -28,10 +28,9 @@ export function PaintingCardImageChrome({
 
   if (tone === 'overlay') {
     return (
-      <div
-        className={cn(OVERLAY_DOCK_CLASS, className)}
+      <fieldset
+        className={cn(OVERLAY_DOCK_CLASS, 'min-w-0', className)}
         data-card-badges
-        role='group'
         aria-label='Painting attributes'
       >
         {badges.map((badge, index) => (
@@ -47,7 +46,7 @@ export function PaintingCardImageChrome({
             </span>
           </span>
         ))}
-      </div>
+      </fieldset>
     );
   }
 

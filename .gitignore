@@ -18,6 +18,7 @@ apps/sanity-studio/.env.production
 .tanstack
 .vinxi
 .vercel
+.output
 .env*
 .pnpm-store/
 .doppler.yaml

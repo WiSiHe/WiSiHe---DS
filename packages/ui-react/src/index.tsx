@@ -62,7 +62,7 @@ export {
   type PaginationItem,
 } from './pagination/buildPaginationItems';
 export { Pagination, type PaginationProps } from './pagination/Pagination';
-export { BrushFrostedWash, BrushPaletteWash } from './painting-card/brush-reveal/BrushFrostedWash';
+export { BrushPaletteWash } from './painting-card/brush-reveal/BrushFrostedWash';
 export {
   BrushRevealFrame,
   type BrushRevealFrameProps,

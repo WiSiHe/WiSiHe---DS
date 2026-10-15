@@ -1,11 +1,9 @@
-import {
-  ApiIcon,
-  CheckmarkCircleIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  DocumentIcon,
-  WarningOutlineIcon,
-} from '@sanity/icons';
+import { ApiIcon } from '@sanity/icons/Api';
+import { CheckmarkCircleIcon } from '@sanity/icons/CheckmarkCircle';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { DocumentIcon } from '@sanity/icons/Document';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import { Badge, Button, Card, Flex, Spinner, Text, TextArea } from '@sanity/ui';
 import OpenAI from 'openai';
 import type React from 'react';
@@ -39,9 +37,9 @@ function extractTextFromBlockContent(blockContent: unknown): string {
   if (!blockContent || !Array.isArray(blockContent)) return '';
 
   return blockContent
-    .map((block: any) => {
+    .map((block: { _type?: string; children?: { text?: string }[] }) => {
       if (block._type === 'block' && block.children) {
-        return block.children.map((child: any) => child.text || '').join('');
+        return block.children.map(child => child.text || '').join('');
       }
       return '';
     })
@@ -53,7 +51,7 @@ function extractTagNames(tags: unknown): string {
   if (!tags || !Array.isArray(tags)) return '';
 
   return tags
-    .map((tag: any) => {
+    .map((tag: string | { name?: string } | null) => {
       if (typeof tag === 'string') return tag;
       if (tag && typeof tag === 'object' && tag.name) return tag.name;
       return '';

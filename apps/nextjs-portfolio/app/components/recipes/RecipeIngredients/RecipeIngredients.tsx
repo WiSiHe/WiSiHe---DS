@@ -106,9 +106,8 @@ export default function RecipeIngredients({
               </p>
             </div>
 
-            <div
-              className='inline-flex shrink-0 items-center gap-0.5 rounded-xl bg-background p-0.5 ring-1 ring-border/60'
-              role='group'
+            <fieldset
+              className='inline-flex min-w-0 shrink-0 items-center gap-0.5 rounded-xl bg-background p-0.5 ring-1 ring-border/60'
               aria-label='Adjust servings'
             >
               <button
@@ -144,7 +143,7 @@ export default function RecipeIngredients({
               >
                 <IconPlus className='size-4' stroke={2} aria-hidden />
               </button>
-            </div>
+            </fieldset>
           </div>
         ) : null}
       </div>
@@ -165,7 +164,7 @@ export default function RecipeIngredients({
               );
 
               return (
-                <li key={`${ingredient.ingredient}-${ingredientIndex}`}>
+                <li key={ingredientId}>
                   <button
                     type='button'
                     onClick={() => toggleIngredient(ingredientId)}

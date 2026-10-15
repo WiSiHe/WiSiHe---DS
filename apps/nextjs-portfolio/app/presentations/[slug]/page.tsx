@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { JsonLd } from '@/app/components/cms/JsonLd/JsonLd';
 import { PresentationSlideDeck } from '@/app/components/presentations/PresentationSlideDeck';
 import { SITE_URL } from '@/lib/seo/constants';
@@ -19,9 +19,7 @@ type Props = {
 
 export async function generateStaticParams() {
   const slugs = await client.fetch(presentationSlugsQuery);
-  return (slugs as Array<{ slug: string }>)
-    .filter(item => item.slug !== WORKSHOP_SLUG)
-    .map(({ slug }) => ({ slug }));
+  return (slugs as Array<{ slug: string }>).map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -71,10 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PresentationPage({ params }: Props) {
   const { slug } = await params;
-
-  if (slug === WORKSHOP_SLUG) {
-    redirect('/three-d');
-  }
+  const isWorkshop = slug === WORKSHOP_SLUG;
 
   const { data } = await sanityFetch({
     query: presentationQuery,
@@ -133,7 +128,8 @@ export default async function PresentationPage({ params }: Props) {
       <JsonLd data={jsonLd} />
       <PresentationSlideDeck
         slides={slides}
-        showSkipControl={false}
+        showSkipControl={isWorkshop}
+        isWorkshopDeck={isWorkshop}
         tldr={presentation.tldr}
         tldrPosition={presentation.tldrPosition}
       />

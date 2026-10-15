@@ -18,9 +18,9 @@ export type CircularGalleryItem = {
 
 type GL = Renderer['gl'];
 
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+function debounce<A extends unknown[]>(func: (...args: A) => void, wait: number) {
   let timeout: number;
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: A) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(() => func.apply(this, args), wait);
   };
@@ -30,11 +30,13 @@ function lerp(p1: number, p2: number, t: number): number {
   return p1 + (p2 - p1) * t;
 }
 
-function autoBind(instance: any): void {
+function autoBind(instance: object): void {
+  const target = instance as Record<string, unknown>;
   const proto = Object.getPrototypeOf(instance);
   Object.getOwnPropertyNames(proto).forEach(key => {
-    if (key !== 'constructor' && typeof instance[key] === 'function') {
-      instance[key] = instance[key].bind(instance);
+    const member = target[key];
+    if (key !== 'constructor' && typeof member === 'function') {
+      target[key] = member.bind(instance);
     }
   });
 }
@@ -106,7 +108,7 @@ async function resolveFont(font: string, fontUrl?: string): Promise<string> {
     // A custom family was supplied without a URL – make sure it is ready (in
     // case the host page declares it) before we draw it to the canvas,
     // otherwise the first paint silently falls back to a system font.
-    if (document.fonts && document.fonts.load) {
+    if (document.fonts?.load) {
       try {
         await document.fonts.load(font);
         await document.fonts.ready;
@@ -121,7 +123,7 @@ async function resolveFont(font: string, fontUrl?: string): Promise<string> {
     const sizeMatch = font.match(/^\s*(.*?\d+px)/);
     const prefix = sizeMatch ? sizeMatch[1].trim() : 'bold 30px';
     const resolved = `${prefix} "${family}"`;
-    if (document.fonts && document.fonts.load) {
+    if (document.fonts?.load) {
       try {
         await document.fonts.load(resolved);
       } catch {
@@ -532,7 +534,7 @@ class App {
     last: number;
     position?: number;
   };
-  onCheckDebounce: (...args: any[]) => void;
+  onCheckDebounce: (...args: unknown[]) => void;
   renderer!: Renderer;
   gl!: GL;
   camera!: Camera;
@@ -681,7 +683,7 @@ class App {
         text: 'Palm Trees',
       },
     ];
-    const galleryItems = items && items.length ? items : defaultItems;
+    const galleryItems = items?.length ? items : defaultItems;
     this.galleryItems = galleryItems;
     this.mediasImages = galleryItems.concat(galleryItems);
     this.medias = this.mediasImages.map((data, index) => {
@@ -797,7 +799,8 @@ class App {
     e.preventDefault();
     e.stopPropagation();
     const wheelEvent = e as WheelEvent;
-    const delta = wheelEvent.deltaY || (wheelEvent as any).wheelDelta || (wheelEvent as any).detail;
+    const legacyWheel = wheelEvent as WheelEvent & { wheelDelta?: number; detail?: number };
+    const delta = wheelEvent.deltaY || legacyWheel.wheelDelta || legacyWheel.detail;
     this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
     this.onCheckDebounce();
   }
@@ -819,7 +822,7 @@ class App {
   }
 
   onCheck() {
-    if (!this.medias || !this.medias[0]) return;
+    if (!this.medias?.[0]) return;
     const width = this.medias[0].width;
     const itemIndex = Math.round(Math.abs(this.scroll.target) / width);
     const item = width * itemIndex;
@@ -840,9 +843,9 @@ class App {
     const width = height * this.camera.aspect;
     this.viewport = { width, height };
     if (this.medias) {
-      this.medias.forEach(media =>
-        media.onResize({ screen: this.screen, viewport: this.viewport }),
-      );
+      for (const media of this.medias) {
+        media.onResize({ screen: this.screen, viewport: this.viewport });
+      }
     }
   }
 
@@ -850,7 +853,9 @@ class App {
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
-      this.medias.forEach(media => media.update(this.scroll, direction));
+      for (const media of this.medias) {
+        media.update(this.scroll, direction);
+      }
     }
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
@@ -963,13 +968,12 @@ export default function CircularGallery({
   }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase, wheelScroll]);
 
   return (
-    <div
+    <section
       className={cn(
         'touch-pan-y',
         className ?? 'size-full overflow-hidden cursor-grab active:cursor-grabbing',
       )}
       ref={containerRef}
-      role='region'
       aria-label='Featured paintings gallery. Drag to browse, click to open.'
     />
   );

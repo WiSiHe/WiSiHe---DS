@@ -31,6 +31,7 @@ function PlasmaOrb({ config }: { config: ShaderConfig }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const palette = SHADER_PALETTES[config.palette];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: uniforms are created once; the effect below keeps frequency/displacement in sync without recreating them
   const uniforms = useMemo(() => {
     return {
       uTime: uniform(0),
@@ -90,6 +91,7 @@ function LiquidGyroid({ config }: { config: ShaderConfig }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const palette = SHADER_PALETTES[config.palette];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: uniforms are created once; the effect below keeps frequency/displacement in sync without recreating them
   const uniforms = useMemo(() => {
     return {
       uTime: uniform(0),
@@ -150,6 +152,7 @@ function CyberWave({ config }: { config: ShaderConfig }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const palette = SHADER_PALETTES[config.palette];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: uniforms are created once; the effect below keeps frequency/displacement in sync without recreating them
   const uniforms = useMemo(() => {
     return {
       uTime: uniform(0),
@@ -216,7 +219,7 @@ export function WebGPUShaderCanvas({ config }: WebGPUShaderCanvasProps) {
             powerPreference: 'high-performance',
           });
           await renderer.init();
-          return renderer as any;
+          return renderer;
         }}
       >
         <ambientLight intensity={0.5} />

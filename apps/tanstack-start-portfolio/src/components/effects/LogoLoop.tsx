@@ -77,8 +77,11 @@ const useResizeObserver = (
     callback();
 
     return () => {
-      observers.forEach(observer => observer?.disconnect());
+      for (const observer of observers) {
+        observer?.disconnect();
+      }
     };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: caller-supplied dependency list is the hook's API
   }, dependencies);
 };
 
@@ -119,6 +122,7 @@ const useImageLoader = (
         img.removeEventListener('error', handleImageLoad);
       });
     };
+    // biome-ignore lint/correctness/useExhaustiveDependencies: caller-supplied dependency list is the hook's API
   }, dependencies);
 };
 
@@ -198,7 +202,7 @@ const useAnimationLoop = (
       }
       lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical]);
+  }, [trackRef, targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical]);
 };
 
 function isNodeLogoItem(item: LogoItem): item is Extract<LogoItem, { node: React.ReactNode }> {
@@ -433,6 +437,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
         Array.from({ length: copyCount }, (_, copyIndex) => (
           <ul
             className={cx('flex items-center', isVertical && 'flex-col')}
+            // biome-ignore lint/suspicious/noArrayIndexKey: copies are identical, fixed-length and have no identity besides position
             key={`copy-${copyIndex}`}
             aria-hidden={copyIndex > 0}
             ref={copyIndex === 0 ? seqRef : undefined}
@@ -457,12 +462,13 @@ export const LogoLoop = React.memo<LogoLoopProps>(
     );
 
     return (
-      <div
+      <section
         ref={containerRef}
         className={rootClasses}
         style={containerStyle}
-        role='region'
         aria-label={ariaLabel}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {fadeOut ? (
           isVertical ? (
@@ -513,16 +519,12 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             isVertical ? 'flex-col h-max w-full' : 'flex-row w-max',
           )}
           ref={trackRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           {logoLists}
         </div>
-      </div>
+      </section>
     );
   },
 );
 
 LogoLoop.displayName = 'LogoLoop';
-
-export default LogoLoop;

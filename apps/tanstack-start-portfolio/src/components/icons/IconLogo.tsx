@@ -1,12 +1,14 @@
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
-import type React from 'react';
+import type { ComponentProps } from 'react';
+
+type MotionSvgProps = ComponentProps<typeof motion.svg>;
 
 export interface IconLogoProps {
   size?: number | string;
   color?: string;
   animated?: boolean;
-  motionProps?: any;
+  motionProps?: MotionSvgProps;
   className?: string;
   width?: number | string;
   height?: number | string;
@@ -45,7 +47,6 @@ const IconLogo = ({
 
   const paths = (
     <>
-      <title>WiSiHe Logo</title>
       <path d='M0 62V124H62H124V62V0H62H0V62ZM106 62V106H62H18V62V18H62H106V62Z' {...pathProps} />
       <path d='M36 62V88H62H88V62V36H62H36V62Z' {...pathProps} />
       <path
@@ -80,7 +81,7 @@ const IconLogo = ({
     const MotionSvg = motion.svg;
     return (
       <MotionSvg
-        {...(svgProps as any)}
+        {...(svgProps as MotionSvgProps)}
         {...motionProps}
         initial={motionProps?.initial || { opacity: 0, scale: 0.8 }}
         animate={motionProps?.animate || { opacity: 1, scale: 1 }}
@@ -88,12 +89,18 @@ const IconLogo = ({
         whileTap={motionProps?.whileTap || { scale: 0.95 }}
         transition={motionProps?.transition || { type: 'spring', stiffness: 300, damping: 20 }}
       >
+        <title>WiSiHe Logo</title>
         {paths}
       </MotionSvg>
     );
   }
 
-  return <svg {...svgProps}>{paths}</svg>;
+  return (
+    <svg {...svgProps}>
+      <title>WiSiHe Logo</title>
+      {paths}
+    </svg>
+  );
 };
 
 export { IconLogo };

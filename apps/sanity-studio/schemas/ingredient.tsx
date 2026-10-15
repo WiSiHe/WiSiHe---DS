@@ -1,4 +1,4 @@
-import { BasketIcon } from '@sanity/icons';
+import { BasketIcon } from '@sanity/icons/Basket';
 import { defineField, defineType } from 'sanity';
 import AIImageGenerator from '../components/AIImageGenerator';
 import GenericAIGenerator from '../components/GenericAIGenerator';

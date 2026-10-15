@@ -3,6 +3,21 @@
 import { Mesh, Program, Renderer, Triangle } from 'ogl';
 import { useEffect, useRef } from 'react';
 
+type RippleUniforms = {
+  enableRainbow: { value: boolean };
+  gridColor: { value: [number, number, number] };
+  rippleIntensity: { value: number };
+  gridSize: { value: number };
+  gridThickness: { value: number };
+  fadeDistance: { value: number };
+  vignetteStrength: { value: number };
+  glowIntensity: { value: number };
+  opacity: { value: number };
+  gridRotation: { value: number };
+  mouseInteraction: { value: boolean };
+  mouseInteractionRadius: { value: number };
+};
+
 type Props = {
   enableRainbow?: boolean;
   gridColor?: string;
@@ -36,7 +51,7 @@ const RippleGrid: React.FC<Props> = ({
   const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
   const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
   const mouseInfluenceRef = useRef(0);
-  const uniformsRef = useRef<any>(null);
+  const uniformsRef = useRef<RippleUniforms | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;

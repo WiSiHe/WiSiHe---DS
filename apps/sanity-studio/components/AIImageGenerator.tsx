@@ -1,10 +1,8 @@
-import {
-  ApiIcon,
-  CheckmarkCircleIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  WarningOutlineIcon,
-} from '@sanity/icons';
+import { ApiIcon } from '@sanity/icons/Api';
+import { CheckmarkCircleIcon } from '@sanity/icons/CheckmarkCircle';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import { Badge, Button, Card, Flex, Spinner, Stack, Text, TextArea } from '@sanity/ui';
 import OpenAI from 'openai';
 import type React from 'react';
@@ -21,15 +19,20 @@ function getClient(): OpenAI {
   return _client;
 }
 
-function getValueAtPath(obj: any, path: any[]): any {
-  let current = obj;
+function getValueAtPath(obj: unknown, path: unknown[]): unknown {
+  let current: unknown = obj;
   for (const segment of path) {
     if (current == null) return undefined;
     if (typeof segment === 'string') {
-      current = current[segment];
-    } else if (typeof segment === 'object' && segment._key) {
+      current = (current as Record<string, unknown>)[segment];
+    } else if (
+      typeof segment === 'object' &&
+      segment !== null &&
+      '_key' in segment &&
+      segment._key
+    ) {
       if (Array.isArray(current)) {
-        current = current.find((item: any) => item._key === segment._key);
+        current = current.find((item: { _key?: unknown }) => item?._key === segment._key);
       } else {
         return undefined;
       }

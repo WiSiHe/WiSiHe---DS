@@ -22,19 +22,19 @@ function slugFromHit(rawSlug: unknown): string {
 }
 
 function adaptPaintingData(hit: PaintingAlgoliaHit) {
-  const tags = hit['tags'];
+  const tags = hit.tags;
   return {
     ...hit,
     _id: hit.objectID,
-    slug: slugFromHit(hit['slug']),
-    image: hit['image'],
-    palette: hit['palette'],
-    isNSFW: hit['isNSFW'] === true,
-    isForSale: hit['isForSale'] === true,
-    hasStoreLink: hit['hasStoreLink'] === true,
-    isFanArt: hit['isFanArt'] === true,
-    video: hit['video'] ?? '',
-    imagesCount: hit['imagesCount'] ?? 0,
+    slug: slugFromHit(hit.slug),
+    image: hit.image,
+    palette: hit.palette,
+    isNSFW: hit.isNSFW === true,
+    isForSale: hit.isForSale === true,
+    hasStoreLink: hit.hasStoreLink === true,
+    isFanArt: hit.isFanArt === true,
+    video: hit.video ?? '',
+    imagesCount: hit.imagesCount ?? 0,
     tagsV2: Array.isArray(tags) ? (tags as string[]).map(name => ({ name })) : [],
   };
 }
@@ -60,11 +60,11 @@ const PaintingHit = memo(
           />
         ) : (
           <PaintingSearchCompactCard
-            title={typeof hit['title'] === 'string' ? hit['title'] : ''}
+            title={typeof hit.title === 'string' ? hit.title : ''}
             slug={typeof paintingData.slug === 'string' ? paintingData.slug : ''}
             image={paintingData.image as CompactCardImage}
             index={index}
-            format={typeof hit['format'] === 'string' ? hit['format'] : undefined}
+            format={typeof hit.format === 'string' ? hit.format : undefined}
             isNsfw={paintingData.isNSFW}
             isNsfwFilterActive={isNsfwFilterActive}
             isForSale={paintingData.isForSale}

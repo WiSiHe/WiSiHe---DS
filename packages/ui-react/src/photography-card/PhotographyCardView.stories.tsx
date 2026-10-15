@@ -6,7 +6,7 @@ const LANDSCAPE =
 const PORTRAIT =
   'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80';
 
-const meta = {
+const meta: Meta<typeof PhotographyCardView> = {
   title: 'Cards/Photography/PhotographyCard',
   component: PhotographyCardView,
   parameters: {
@@ -26,11 +26,11 @@ const meta = {
     ),
   ],
   tags: ['autodocs'],
-} satisfies Meta<typeof PhotographyCardView>;
+};
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof PhotographyCardView>;
 
 export const Default: Story = {
   args: {

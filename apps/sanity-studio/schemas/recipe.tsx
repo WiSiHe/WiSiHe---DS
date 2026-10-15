@@ -1,6 +1,5 @@
 import { FaWeibo } from 'react-icons/fa';
 import { defineField, defineType } from 'sanity';
-import AIImageGenerator from '../components/AIImageGenerator';
 import GenericAIGenerator from '../components/GenericAIGenerator';
 import { seoType } from './seoType';
 
