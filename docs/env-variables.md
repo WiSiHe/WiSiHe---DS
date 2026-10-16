@@ -165,3 +165,10 @@ pnpm dev
 ```
 
 See [doppler-setup.md](./doppler-setup.md) for production / Vercel sync.
+
+## TanStack app: edge caching (`ISR_BYPASS_TOKEN`)
+
+| Variable | Where | Purpose |
+|---|---|---|
+| `ISR_BYPASS_TOKEN` | Vercel project `tanstack-portfolio` (Production + Preview, sensitive) | Build- and run-time secret (32+ chars, `openssl rand -base64 32`). When set at build, pages are cached at the edge for 60 s (Vercel ISR). `/api/draft-mode/enable` sets a matching `__prerender_bypass` cookie so Sanity preview sessions skip the cache; `/api/draft-mode/disable` clears it. When unset, nothing is cached (local dev, token-less builds). Rotate by replacing the variable and redeploying; active preview sessions must re-enter preview mode. |
+
