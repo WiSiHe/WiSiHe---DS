@@ -3,7 +3,6 @@
 import { IconX } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapboxMap, { type MapRef, Marker, Popup } from 'react-map-gl/mapbox';
 import { RouterLink } from '@/components/layout/RouterLink';
