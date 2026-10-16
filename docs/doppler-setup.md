@@ -37,7 +37,8 @@ Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/next
 | `NEXT_PUBLIC_SANITY_DATASET` | Usually `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | e.g. `2024-08-22` |
 | `NEXT_PUBLIC_SANITY_STUDIO_URL` | `https://wisihe.sanity.studio/` |
-| `NEXT_PUBLIC_SANITY_API_READ_TOKEN` | Read-only API token |
+| `SANITY_API_READ_TOKEN` | Read-only (Viewer) API token, server-only (masked in Doppler → synced as a Vercel Secret) |
+| `SANITY_API_WRITE_TOKEN` | Write API token, server-only (masked) |
 | `NEXT_PUBLIC_ALGOLIA_APP_ID` | Algolia application ID |
 | `NEXT_PUBLIC_ALGOLIA_SEARCH_KEY` | **Search-only** key (never Admin) |
 | `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | `wisihe-search` |
@@ -168,7 +169,8 @@ Use `pnpm sync-algolia:dev` for the **dev** Doppler config when your Algolia ind
 ## 7. Security notes
 
 - Never put **Algolia Admin** (`ALGOLIA_WRITE_KEY`) in `NEXT_PUBLIC_*`.
-- `NEXT_PUBLIC_SANITY_API_READ_TOKEN` is visible in the browser — use a token with **Viewer** permissions only.
+- Tokens must **not** use a `NEXT_PUBLIC_` prefix: Next inlines those into client bundles, and Vercel only accepts `NEXT_PUBLIC_*` as plain Config variables. Use `SANITY_API_READ_TOKEN` / `SANITY_API_WRITE_TOKEN` and keep them masked.
+- Vercel sync: use the **Dynamic** variable type. Unmasked secrets sync as Config, masked ones as Secret. Set the genuinely public `NEXT_PUBLIC_*` values (project ID, dataset, Algolia search key, PostHog key/host, …) to **Unmasked**, otherwise Vercel rejects them and Doppler disables the sync.
 - Do not commit `.env`, `.env.local`, or downloaded secret files.
 - Rotate keys in Doppler; synced Vercel env updates on the next deploy.
 

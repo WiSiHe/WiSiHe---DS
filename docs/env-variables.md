@@ -21,7 +21,7 @@ Deprecated names still work during migration; update Doppler / Vercel when conve
 |-------|-------------------|---------------|-----------|
 | Project ID | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `SANITY_STUDIO_PROJECT_ID` | `SANITY_APP_PROJECT_ID` |
 | Dataset | `NEXT_PUBLIC_SANITY_DATASET` | `SANITY_STUDIO_DATASET` | `SANITY_APP_DATASET` |
-| Read token | `NEXT_PUBLIC_SANITY_API_READ_TOKEN` | `SANITY_API_READ_TOKEN` | — |
+| Read token | `SANITY_API_READ_TOKEN` (server-only; legacy `NEXT_PUBLIC_SANITY_API_READ_TOKEN`) | `SANITY_API_READ_TOKEN` | — |
 | Algolia app ID | `NEXT_PUBLIC_ALGOLIA_APP_ID` | `ALGOLIA_APP_ID` | — |
 | Algolia index | `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | `ALGOLIA_INDEX_NAME` | — |
 | AI proxy secret | `SANITY_AI_PROXY_SECRET` | — | `SANITY_APP_AI_PROXY_SECRET` |
@@ -38,7 +38,8 @@ Deprecated names still work during migration; update Doppler / Vercel when conve
 | `NEXT_PUBLIC_SANITY_DATASET` | Usually `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | e.g. `2024-08-22` |
 | `NEXT_PUBLIC_SANITY_STUDIO_URL` | `https://wisihe.sanity.studio/` |
-| `NEXT_PUBLIC_SANITY_API_READ_TOKEN` | Viewer token (also used for live preview in browser) |
+| `SANITY_API_READ_TOKEN` | Viewer token. Server-only; shared with the browser only inside a draft-mode session (live preview). Do not use the `NEXT_PUBLIC_` prefix |
+| `SANITY_API_WRITE_TOKEN` | Write token (server-only) |
 | `NEXT_PUBLIC_ALGOLIA_APP_ID` | Algolia application ID |
 | `NEXT_PUBLIC_ALGOLIA_SEARCH_KEY` | Search-only key |
 | `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | Default `wisihe-search` |
