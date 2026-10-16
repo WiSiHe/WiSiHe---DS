@@ -128,7 +128,7 @@ The `Weekly site health` GitHub Action (`.github/workflows/weekly-site-health.ym
 
 | Variable | Default | Notes |
 |----------|---------|--------|
-| `POSTHOG_API_HOST` | `https://us.posthog.com` | PostHog Query API host |
+| `POSTHOG_API_HOST` | `https://eu.posthog.com` | PostHog Query API host |
 | `SITE_HEALTH_BASE_URL` | `https://www.wisihe.no` | Target for Lighthouse + JSON-LD |
 | `SITE_HEALTH_A11Y_MIN` | `0.9` | Accessibility score floor (0–1) |
 | `SITE_HEALTH_SEO_MIN` | `0.9` | SEO score floor (0–1) |
