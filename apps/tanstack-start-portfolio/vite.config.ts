@@ -23,7 +23,7 @@ export default defineConfig({
         ? {
             vercel: { config: { bypassToken: isrBypassToken } },
             routeRules: {
-              '/**': { isr: { expiration: 60 } },
+              '/**': { isr: { expiration: 60, passQuery: true } },
               // dynamic endpoints, cookies and proxies must never be cached
               '/api/**': { isr: false },
               '/ingest/**': { isr: false },
