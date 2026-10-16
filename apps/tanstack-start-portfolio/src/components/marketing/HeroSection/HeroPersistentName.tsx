@@ -1,18 +1,14 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
 import { cn } from '@wisihe/utils';
-import gsap from 'gsap';
 import { motion } from 'motion/react';
-import { useRef } from 'react';
+import { type CSSProperties, useEffect, useRef } from 'react';
 import { HeroSplitChars } from './HeroSplitChars';
 import {
   COUNTER_DELAY,
   COUNTER_DURATION,
-  NAME_EXIT_EASE,
   NAME_REVEAL_DELAY,
   NAME_REVEAL_DURATION,
-  NAME_REVEAL_EASE,
   NAME_REVEAL_STAGGER,
 } from './heroStackConfig';
 
@@ -24,62 +20,27 @@ type HeroPersistentNameProps = {
 
 /** One name from stack intro through hero copy — chars reveal once, then layout morphs. */
 export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPersistentNameProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLParagraphElement>(null);
   const isIntroStyle = !hasExploded && !reducedMotion;
 
-  useGSAP(
-    () => {
-      if (reducedMotion || !rootRef.current) return;
+  // 000 -> 100 count-up; the counter's rise-in itself is CSS (see `.hero-char-reveal`).
+  useEffect(() => {
+    const counter = counterRef.current;
+    if (!isIntroStyle || !counter) return;
 
-      const chars = gsap.utils.toArray<HTMLElement>(
-        '[data-char-slot="hero-name-char"]',
-        rootRef.current,
-      );
-      const counter = counterRef.current;
+    const startAt = performance.now() + (NAME_REVEAL_DELAY + COUNTER_DELAY) * 1000;
+    const durationMs = COUNTER_DURATION * 1000;
+    let frame = 0;
 
-      if (!hasExploded) {
-        gsap.set(chars, { y: '100%' });
-        gsap.to(chars, {
-          y: '0%',
-          duration: NAME_REVEAL_DURATION,
-          ease: NAME_REVEAL_EASE,
-          stagger: { each: NAME_REVEAL_STAGGER, from: 'random' },
-          delay: NAME_REVEAL_DELAY,
-        });
-
-        if (counter) {
-          gsap.set(counter, { y: '100%' });
-          gsap.to(counter, {
-            y: '0%',
-            duration: NAME_REVEAL_DURATION,
-            ease: NAME_REVEAL_EASE,
-            delay: NAME_REVEAL_DELAY,
-            onStart: () => {
-              const counterEl = counterRef.current;
-              if (!counterEl) return;
-              const counterState = { value: 0 };
-              gsap.to(counterState, {
-                value: 100,
-                duration: COUNTER_DURATION,
-                delay: COUNTER_DELAY,
-                ease: 'power2.inOut',
-                onUpdate: () => {
-                  counterEl.textContent = String(Math.round(counterState.value)).padStart(3, '0');
-                },
-              });
-            },
-          });
-        }
-        return;
-      }
-
-      if (counter) {
-        gsap.to(counter, { y: '-120%', duration: 0.45, ease: NAME_EXIT_EASE });
-      }
-    },
-    { scope: rootRef, dependencies: [hasExploded, reducedMotion, text] },
-  );
+    const tick = (now: number) => {
+      const t = Math.min(Math.max((now - startAt) / durationMs, 0), 1);
+      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2; // power2.inOut
+      counter.textContent = String(Math.round(eased * 100)).padStart(3, '0');
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [isIntroStyle]);
 
   if (reducedMotion) {
     return (
@@ -91,7 +52,6 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
 
   return (
     <motion.div
-      ref={rootRef}
       layout='position'
       transition={{ layout: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } }}
       className={cn(
@@ -114,7 +74,11 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
             text={text}
             charDataAttr='hero-name-char'
             className='inline-flex flex-nowrap items-center justify-center whitespace-nowrap'
-            charClassName={isIntroStyle ? 'translate-y-full' : undefined}
+            reveal={{
+              delay: NAME_REVEAL_DELAY,
+              stagger: NAME_REVEAL_STAGGER,
+              duration: NAME_REVEAL_DURATION,
+            }}
           />
         </h1>
 
@@ -122,7 +86,13 @@ export function HeroPersistentName({ text, hasExploded, reducedMotion }: HeroPer
           <div className='absolute top-0 left-[calc(100%+0.75rem)] overflow-hidden whitespace-nowrap sm:left-[calc(100%+1.5rem)]'>
             <p
               ref={counterRef}
-              className='translate-y-full font-mono text-[clamp(0.875rem,1.5vw,1.25rem)] leading-none tabular-nums text-foreground-subtle'
+              style={
+                {
+                  '--hero-char-delay': `${NAME_REVEAL_DELAY}s`,
+                  '--hero-char-duration': `${NAME_REVEAL_DURATION}s`,
+                } as CSSProperties
+              }
+              className='hero-char-reveal font-mono text-[clamp(0.875rem,1.5vw,1.25rem)] leading-none tabular-nums text-foreground-subtle'
             >
               000
             </p>

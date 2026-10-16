@@ -400,3 +400,26 @@ html[data-presentation-mode] #main-content {
   }
 }
 /* biome-ignore-end lint/complexity/noImportantStyles: end of print stylesheet */
+
+/* Hero name entrance — runs from first paint, no JS/GSAP needed (timing mirrors heroStackConfig). */
+@keyframes hero-char-rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hero-char-reveal {
+  transform: translateY(100%);
+  animation: hero-char-rise var(--hero-char-duration, 0.7s) cubic-bezier(0.5, 1, 0.89, 1)
+    var(--hero-char-delay, 0s) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-char-reveal {
+    animation: none;
+    transform: none;
+  }
+}
