@@ -5,7 +5,6 @@
 @import "@wisihe/tokens/css";
 @import "@wisihe/tokens/css/semantic";
 @import "@wisihe/ui-react/style.css";
-@import "mapbox-gl/dist/mapbox-gl.css";
 
 @font-face {
   font-family: "Geist Sans";
