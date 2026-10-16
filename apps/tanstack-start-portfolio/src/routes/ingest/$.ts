@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 function resolvePostHogHosts() {
-  const host = import.meta.env.VITE_POSTHOG_HOST?.trim() || 'https://us.i.posthog.com';
+  const host = import.meta.env.VITE_POSTHOG_HOST?.trim() || 'https://eu.i.posthog.com';
   const assetsHost = host.replace('.i.posthog.com', '-assets.i.posthog.com');
   return { host, assetsHost };
 }

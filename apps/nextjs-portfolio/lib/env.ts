@@ -49,7 +49,7 @@ export const algoliaIndexName = () =>
 // Analytics (client)
 export const posthogKey = () => trim(process.env.NEXT_PUBLIC_POSTHOG_KEY);
 export const posthogHost = () =>
-  trim(process.env.NEXT_PUBLIC_POSTHOG_HOST) ?? 'https://us.i.posthog.com';
+  trim(process.env.NEXT_PUBLIC_POSTHOG_HOST) ?? 'https://eu.i.posthog.com';
 
 // Maps (client)
 export const mapboxAccessToken = () => trim(process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
