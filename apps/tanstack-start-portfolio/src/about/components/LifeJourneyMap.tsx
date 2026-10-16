@@ -3,6 +3,7 @@
 import { cn } from '@wisihe/utils';
 import type { FilterSpecification } from 'mapbox-gl';
 import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { MapRef } from 'react-map-gl/mapbox';
 import MapboxMap, { Layer, Marker, Source } from 'react-map-gl/mapbox';
