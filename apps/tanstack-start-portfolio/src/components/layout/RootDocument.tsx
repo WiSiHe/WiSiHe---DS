@@ -9,8 +9,10 @@ export function RootDocument({ children }: { children: ReactNode }) {
   const theme = useThemeStore(state => state.theme);
   const resolved = getResolvedTheme(theme);
 
+  // The theme class is applied by the inline script below (and the persisted store) before React hydrates, so it
+  // legitimately differs from the server HTML; suppressHydrationWarning silences that on <html>/<body> only.
   return (
-    <html lang='en' className={cn(resolved, 'scroll-smooth')}>
+    <html lang='en' className={cn(resolved, 'scroll-smooth')} suppressHydrationWarning>
       <head>
         <link
           rel='preload'
@@ -44,6 +46,7 @@ export function RootDocument({ children }: { children: ReactNode }) {
         />
       </head>
       <body
+        suppressHydrationWarning
         className={cn(
           'antialiased transition-colors duration-300 bg-background text-foreground',
           'font-[family-name:var(--font-inter)]',
