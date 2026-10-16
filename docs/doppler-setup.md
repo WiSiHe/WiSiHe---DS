@@ -42,7 +42,7 @@ Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/next
 | `NEXT_PUBLIC_ALGOLIA_SEARCH_KEY` | **Search-only** key (never Admin) |
 | `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | `wisihe-search` |
 | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project API key |
-| `NEXT_PUBLIC_POSTHOG_HOST` | e.g. `https://us.i.posthog.com` |
+| `NEXT_PUBLIC_POSTHOG_HOST` | e.g. `https://eu.i.posthog.com` |
 
 ### Optional
 

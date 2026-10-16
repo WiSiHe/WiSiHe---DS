@@ -8,7 +8,7 @@
  *   POSTHOG_PERSONAL_API_KEY  — personal API key with query:read scope
  *   POSTHOG_PROJECT_ID        — PostHog project ID
  * Optional env:
- *   POSTHOG_API_HOST          — default https://us.posthog.com
+ *   POSTHOG_API_HOST          — default https://eu.posthog.com
  */
 
 import { buildFinding, markdownTable, toNumber } from '../lib/site-health-report.mjs';

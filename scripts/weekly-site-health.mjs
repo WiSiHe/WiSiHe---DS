@@ -19,7 +19,7 @@
  *   POSTHOG_PROJECT_ID        — PostHog project ID
  *
  * Optional env:
- *   POSTHOG_API_HOST            — default https://us.posthog.com
+ *   POSTHOG_API_HOST            — default https://eu.posthog.com
  *   SITE_HEALTH_BASE_URL        — default https://www.wisihe.no
  *   SITE_HEALTH_A11Y_MIN        — default 0.9
  *   SITE_HEALTH_SEO_MIN         — default 0.9
@@ -82,7 +82,7 @@ const checks = [];
 if (isEnabled('analytics')) {
   const apiKey = process.env.POSTHOG_PERSONAL_API_KEY?.trim();
   const projectId = process.env.POSTHOG_PROJECT_ID?.trim();
-  const apiHost = (process.env.POSTHOG_API_HOST?.trim() || 'https://us.posthog.com').replace(
+  const apiHost = (process.env.POSTHOG_API_HOST?.trim() || 'https://eu.posthog.com').replace(
     /\/$/,
     '',
   );

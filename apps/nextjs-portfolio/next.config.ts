@@ -3,7 +3,7 @@ import { fetchRedirects } from './sanity/lib/fetchRedirects';
 
 // Reverse-proxy PostHog through our own domain so ad blockers that block
 // *.posthog.com can't drop analytics events. Derived from the region host.
-const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
+const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com';
 const posthogAssetsHost = posthogHost.replace('.i.posthog.com', '-assets.i.posthog.com');
 
 const nextConfig: NextConfig = {
