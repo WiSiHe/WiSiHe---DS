@@ -1,8 +1,14 @@
 import { createClient } from '@sanity/client';
 import { client as readClient } from './sanity';
+import { readServerEnv } from './serverEnv';
 
 function getWriteToken(): string | undefined {
-  return import.meta.env.VITE_SANITY_WRITE_TOKEN?.trim();
+  return readServerEnv(
+    'SANITY_API_WRITE_TOKEN',
+    'SANITY_WRITE_TOKEN',
+    'VITE_SANITY_WRITE_TOKEN',
+    'VITE_SANITY_API_WRITE_TOKEN',
+  );
 }
 
 export function getSanityWriteClient() {

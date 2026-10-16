@@ -1,4 +1,5 @@
 import { createClient, type SanityClient } from '@sanity/client';
+import { readServerEnv } from '../serverEnv';
 import { getPreviewPerspective } from './draftMode';
 
 function readEnv(...keys: string[]): string | undefined {
@@ -21,12 +22,13 @@ export function sanityApiVersion(): string {
   return readEnv('VITE_SANITY_API_VERSION') ?? '2024-10-28';
 }
 
-/** Server-only read token for draft / preview content. */
+/** Server-only read token for draft / preview content (`SANITY_API_READ_TOKEN` on Vercel). */
 export function sanityPreviewToken(): string | undefined {
-  return readEnv(
+  return readServerEnv(
+    'SANITY_API_READ_TOKEN',
+    'SANITY_PREVIEW_TOKEN',
     'VITE_SANITY_API_READ_TOKEN',
     'VITE_SANITY_PREVIEW_TOKEN',
-    'SANITY_API_READ_TOKEN',
   );
 }
 
