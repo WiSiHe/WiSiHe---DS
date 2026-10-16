@@ -187,7 +187,7 @@ if (process.argv.includes('--print-json')) {
 const WRITE_TOKEN =
   process.env.SANITY_API_WRITE_TOKEN ||
   process.env.SANITY_STUDIO_WRITE_TOKEN ||
-  process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN;
+  process.env.SANITY_API_WRITE_TOKEN;
 
 if (!PROJECT_ID || !WRITE_TOKEN) {
   throw new Error('Missing SANITY_STUDIO_PROJECT_ID or SANITY_API_WRITE_TOKEN');
