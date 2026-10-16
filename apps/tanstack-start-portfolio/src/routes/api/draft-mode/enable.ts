@@ -2,6 +2,8 @@ import { validatePreviewUrl } from '@sanity/preview-url-secret';
 import { createFileRoute } from '@tanstack/react-router';
 import { createSanityClient, sanityPreviewToken } from '@/lib/sanity/client';
 import {
+  ISR_BYPASS_COOKIE,
+  isrBypassToken,
   perspectiveCookieName,
   previewCookieAttributes,
   SANITY_PREVIEW_COOKIE,
@@ -43,6 +45,14 @@ export const Route = createFileRoute('/api/draft-mode/enable')({
         const isProduction = import.meta.env.PROD;
         const headers = new Headers();
         headers.append('Set-Cookie', buildSetCookie(SANITY_PREVIEW_COOKIE, '1', isProduction));
+
+        const bypassToken = isrBypassToken();
+        if (bypassToken) {
+          headers.append(
+            'Set-Cookie',
+            buildSetCookie(ISR_BYPASS_COOKIE, bypassToken, isProduction),
+          );
+        }
 
         if (studioPreviewPerspective) {
           headers.append(

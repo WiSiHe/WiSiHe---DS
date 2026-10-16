@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import {
+  ISR_BYPASS_COOKIE,
   perspectiveCookieName,
   previewCookieAttributes,
   SANITY_PREVIEW_COOKIE,
@@ -29,6 +30,7 @@ export const Route = createFileRoute('/api/draft-mode/disable')({
         const headers = new Headers();
         headers.append('Set-Cookie', buildClearCookie(SANITY_PREVIEW_COOKIE, isProduction));
         headers.append('Set-Cookie', buildClearCookie(perspectiveCookieName, isProduction));
+        headers.append('Set-Cookie', buildClearCookie(ISR_BYPASS_COOKIE, isProduction));
         headers.set('Location', redirectTo);
 
         return new Response(null, { status: 307, headers });
