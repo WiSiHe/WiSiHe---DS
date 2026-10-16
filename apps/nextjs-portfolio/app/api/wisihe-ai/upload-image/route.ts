@@ -50,11 +50,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Forbidden origin' }, { status: 403, headers });
   }
 
-  const token =
-    sanityWriteToken() ||
-    process.env['NEXT_PUBLIC_SANITY_API_WRITE_TOKEN'] ||
-    process.env['SANITY_API_WRITE_TOKEN'] ||
-    process.env['SANITY_AUTH_TOKEN'];
+  const token = sanityWriteToken() || process.env['SANITY_AUTH_TOKEN'];
 
   if (!token) {
     return NextResponse.json(
