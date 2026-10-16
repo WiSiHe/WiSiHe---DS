@@ -1,4 +1,5 @@
-import posthog from 'posthog-js';
+import type { PostHog } from 'posthog-js';
+import { getPostHogInitOptions } from '@/lib/posthog/config';
 
 /** Canonical event names — keep snake_case and stable for dashboards. */
 export const AnalyticsEvent = {
@@ -44,10 +45,37 @@ function isPostHogReady(): boolean {
   return true;
 }
 
+function whenIdle(): Promise<void> {
+  return new Promise(resolve => {
+    if ('requestIdleCallback' in window)
+      window.requestIdleCallback(() => resolve(), { timeout: 3000 });
+    else setTimeout(resolve, 1500);
+  });
+}
+
+let posthogPromise: Promise<PostHog | null> | null = null;
+
+/**
+ * Lazily loads and initialises posthog-js once the browser is idle, so its ~100 KB chunk stays
+ * out of the critical path. Every caller shares one promise, so early events queue and none are lost.
+ */
+export function getPostHog(): Promise<PostHog | null> {
+  if (!isPostHogReady()) return Promise.resolve(null);
+  posthogPromise ??= whenIdle()
+    .then(() => import('posthog-js'))
+    .then(({ default: posthog }) => {
+      const key = import.meta.env.VITE_POSTHOG_KEY?.trim() as string;
+      const host = import.meta.env.VITE_POSTHOG_HOST?.trim() as string;
+      posthog.init(key, getPostHogInitOptions(host));
+      return posthog;
+    })
+    .catch(() => null);
+  return posthogPromise;
+}
+
 /** Fire a PostHog event with typed, dashboard-friendly properties. No-op when unset or in dev. */
 export function trackEvent(event: AnalyticsEventName, properties?: AnalyticsProperties): void {
-  if (!isPostHogReady()) return;
-  posthog.capture(event, properties);
+  void getPostHog().then(posthog => posthog?.capture(event, properties));
 }
 
 export function getPageType(pathname: string): string {
