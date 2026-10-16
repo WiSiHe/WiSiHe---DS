@@ -15,7 +15,6 @@ const PROJECT_ID = process.env.SANITY_STUDIO_API_PROJECT_ID || 'cbjsv7wi';
 const DATASET = process.env.SANITY_STUDIO_API_DATASET || 'production';
 const WRITE_TOKEN =
   process.env.SANITY_API_WRITE_TOKEN ||
-  process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN ||
   process.env.SANITY_API_READ_TOKEN ||
   process.env.SANITY_STUDIO_API_TOKEN;
 

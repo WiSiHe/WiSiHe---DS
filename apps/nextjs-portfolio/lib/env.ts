@@ -38,13 +38,9 @@ export const sanityApiVersion = () =>
 export const sanityStudioUrl = () =>
   trim(process.env['NEXT_PUBLIC_SANITY_STUDIO_URL']) ?? 'http://localhost:3333';
 // Tokens use server-only names (no NEXT_PUBLIC_ prefix): Next inlines NEXT_PUBLIC_ values into client bundles and
-// Vercel can't store them as Secrets. The NEXT_PUBLIC_ names are a fallback while Doppler/Vercel are migrated.
-export const sanityReadToken = () =>
-  trim(process.env['SANITY_API_READ_TOKEN']) ??
-  trim(process.env['NEXT_PUBLIC_SANITY_API_READ_TOKEN']);
-export const sanityWriteToken = () =>
-  trim(process.env['SANITY_API_WRITE_TOKEN']) ??
-  trim(process.env['NEXT_PUBLIC_SANITY_API_WRITE_TOKEN']);
+// Vercel can't store them as Secrets.
+export const sanityReadToken = () => trim(process.env['SANITY_API_READ_TOKEN']);
+export const sanityWriteToken = () => trim(process.env['SANITY_API_WRITE_TOKEN']);
 
 // Algolia (client)
 export const algoliaAppId = () => trim(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID) ?? '';
