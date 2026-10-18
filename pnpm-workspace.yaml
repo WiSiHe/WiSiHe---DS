@@ -12,8 +12,8 @@ catalog:
   clsx: ^2.1.1
   motion: ^14.0.0
   posthog-js: ^1.438.3
-  react: 19.3.0
-  react-dom: 19.3.0
+  react: 19.3.1
+  react-dom: 19.3.1
   sanity: ^6.18.0
   tailwindcss: ^4.3.3
   three: 0.186.1
