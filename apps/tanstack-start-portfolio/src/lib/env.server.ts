@@ -36,7 +36,6 @@ export function sanityWriteToken(): string | undefined {
     'VITE_SANITY_WRITE_TOKEN',
     'VITE_SANITY_API_WRITE_TOKEN',
     'SANITY_API_WRITE_TOKEN',
-    'NEXT_PUBLIC_SANITY_API_WRITE_TOKEN',
     'SANITY_AUTH_TOKEN',
   );
 }

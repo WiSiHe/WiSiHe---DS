@@ -33,15 +33,10 @@ export const studioDataset = () =>
 export const studioPreviewUrl = () =>
   readEnv(process.env.SANITY_STUDIO_PREVIEW_URL) ?? 'https://www.wisihe.no';
 
-export const sanityReadToken = () =>
-  readEnv(process.env.SANITY_API_READ_TOKEN, process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN);
+export const sanityReadToken = () => readEnv(process.env.SANITY_API_READ_TOKEN);
 
 export const sanityWriteToken = () =>
-  readEnv(
-    process.env.SANITY_API_WRITE_TOKEN,
-    process.env.SANITY_STUDIO_WRITE_TOKEN,
-    process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN,
-  );
+  readEnv(process.env.SANITY_API_WRITE_TOKEN, process.env.SANITY_STUDIO_WRITE_TOKEN);
 
 export const algoliaAppId = () =>
   readEnv(process.env.ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_APP_ID) ?? '';
