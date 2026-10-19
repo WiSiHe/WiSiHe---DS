@@ -9,7 +9,7 @@ import { getGlobalLenis } from '@/lib/lenis-registry';
 import { JourneyCityCard } from './JourneyCityCard';
 import { JourneyMobileCarousel } from './JourneyMobileCarousel';
 import { JourneyMobileNav } from './JourneyMobileNav';
-import { LifeJourneyMap } from './LifeJourneyMap';
+import { LazyLifeJourneyMap } from './LazyLifeJourneyMap';
 import { getJourneyItemsWithCoordinates, type LifeJourneyItem } from './lifeJourneyTypes';
 import { formatCityLabel } from './PlaceFactsGrid';
 
@@ -250,7 +250,7 @@ export function LifeJourneyScrolly({ items }: LifeJourneyScrollyProps) {
         <div className='grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-8 xl:gap-10'>
           <div ref={mapColRef} className='lg:self-start'>
             <div className='relative h-[min(36svh,280px)] overflow-hidden rounded-2xl border border-border/50 shadow-lg sm:h-[min(40svh,320px)] lg:h-[calc(100svh-4rem)]'>
-              <LifeJourneyMap
+              <LazyLifeJourneyMap
                 items={items}
                 activeIndex={activeMapIndex}
                 onSelectStop={goToIndex}
