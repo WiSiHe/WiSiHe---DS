@@ -48,7 +48,7 @@ export type TravelSelection =
   | { type: 'adventure'; key: string; placeId?: string }
   | null;
 
-type LifeJourneyMapProps = {
+export type LifeJourneyMapProps = {
   items: LifeJourneyItem[];
   visitedCountries?: VisitedCountryItem[];
   adventurePlaces?: AdventurePlaceItem[];
