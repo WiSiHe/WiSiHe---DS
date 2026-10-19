@@ -5,6 +5,7 @@ import { cn } from '@wisihe/utils';
 import { RouterLink } from '@/components/layout/RouterLink';
 import Image from '@/components/ui/Image';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 import type { TravelPhotoItem } from './lifeJourneyTypes';
 
 type CountryPhotoStripProps = {
@@ -42,6 +43,17 @@ export function CountryPhotoStrip({ photos, country, className }: CountryPhotoSt
             ? urlForImage(photo.image)?.width(560).height(380).quality(82).auto('format').url()
             : null;
           if (!imageUrl) return null;
+          const photoImage = photo.image;
+          const imageSrcSet = photoImage
+            ? buildSrcSet([352, 560], width =>
+                urlForImage(photoImage)
+                  ?.width(width)
+                  .height(Math.round((width * 380) / 560))
+                  .quality(82)
+                  .auto('format')
+                  .url(),
+              )
+            : undefined;
 
           const label = photo.title ?? photo.place?.name ?? photo.placeName;
           const href = photo.slug ? `/photography/${photo.slug}` : null;
@@ -50,6 +62,7 @@ export function CountryPhotoStrip({ photos, country, className }: CountryPhotoSt
             <>
               <Image
                 src={imageUrl}
+                srcSet={imageSrcSet}
                 alt={photo.image?.alt ?? photo.title ?? `Photo from ${country}`}
                 fill
                 className='object-cover transition-transform duration-500 group-hover:scale-105'

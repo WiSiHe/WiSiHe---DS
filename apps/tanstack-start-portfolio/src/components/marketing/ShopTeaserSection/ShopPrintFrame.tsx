@@ -5,7 +5,11 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '@wisihe/utils';
 import { useCallback } from 'react';
 import Image from '@/components/ui/Image';
-import { getPaintingImageLqip, urlForPaintingCard } from '@/lib/paintings/paintingCardImage';
+import {
+  getPaintingImageLqip,
+  srcSetForPaintingCard,
+  urlForPaintingCard,
+} from '@/lib/paintings/paintingCardImage';
 import { getPaintingHref, getShopPrintFrameLayout, type ShopPainting } from './shopTeaserShared';
 
 type ShopPrintFrameProps = {
@@ -36,6 +40,11 @@ export default function ShopPrintFrame({
     frameLayout,
     85,
   );
+  const imageSrcSet = srcSetForPaintingCard(
+    painting.image as Parameters<typeof srcSetForPaintingCard>[0],
+    frameLayout,
+    85,
+  );
   const lqip = getPaintingImageLqip(painting.image as Parameters<typeof getPaintingImageLqip>[0]);
   const href = getPaintingHref(painting.slug);
   const title = painting.title?.trim() || 'Untitled';
@@ -62,6 +71,7 @@ export default function ShopPrintFrame({
             {imageSrc ? (
               <Image
                 src={imageSrc}
+                srcSet={imageSrcSet}
                 alt={title}
                 fill
                 priority={priority}

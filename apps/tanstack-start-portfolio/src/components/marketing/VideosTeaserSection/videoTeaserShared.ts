@@ -1,5 +1,6 @@
 import type { HomeExtrasQueryResult } from '@wisihe/sanity-queries';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 
 export type VideoItem = NonNullable<HomeExtrasQueryResult>['videos'][number];
 
@@ -52,6 +53,24 @@ export function getVideoThumbnailSrc(
     return builder.width(320).height(180).fit('crop').quality(75).auto('format').url();
   }
   return builder.width(1280).height(720).fit('crop').quality(85).auto('format').url();
+}
+
+/** Responsive candidates matching `getVideoThumbnailSrc` (same 16:9 crop). */
+export function getVideoThumbnailSrcSet(
+  video: VideoItem,
+  size: 'screen' | 'thumb' = 'screen',
+): string | undefined {
+  const widths = size === 'thumb' ? [128, 192, 320] : [640, 960, 1280];
+  const quality = size === 'thumb' ? 75 : 85;
+  return buildSrcSet(widths, width =>
+    urlForImage(video.thumbnail)
+      ?.width(width)
+      .height(Math.round((width * 9) / 16))
+      .fit('crop')
+      .quality(quality)
+      .auto('format')
+      .url(),
+  );
 }
 
 export function getVideoDescription(video: VideoItem): string | null {

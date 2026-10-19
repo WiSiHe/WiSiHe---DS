@@ -17,6 +17,7 @@ import {
 } from '@/components/projects/projectCardHelpers';
 import { contentImageLayoutId } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 
 type PastProjectCardProps = {
   project: GetAllProjectsResult['pastProjects'][number];
@@ -54,6 +55,15 @@ export default function PastProjectCard({ project, isLcpCandidate = false }: Pas
   );
 
   const imageSrc = image ? urlForImage(image)?.width(960).height(720).quality(82).url() : null;
+  const imageSrcSet = image
+    ? buildSrcSet([480, 720, 960], width =>
+        urlForImage(image)
+          ?.width(width)
+          .height(Math.round(width * 0.75))
+          .quality(82)
+          .url(),
+      )
+    : undefined;
 
   return (
     <li
@@ -74,6 +84,7 @@ export default function PastProjectCard({ project, isLcpCandidate = false }: Pas
           <ProjectCardImageFrame
             layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
+            imageSrcSet={imageSrcSet}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}
             priority={isLcpCandidate}

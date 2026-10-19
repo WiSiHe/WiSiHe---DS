@@ -7,6 +7,7 @@ import type { ContentMorphFrameComponent } from '../painting-card/morphFrame';
 
 export type PhotographyCardImageComponentProps = {
   src: string;
+  srcSet?: string;
   alt: string;
   fill?: boolean;
   className?: string;
@@ -22,6 +23,8 @@ export type PhotographyCardViewProps = {
   title?: string | null;
   href: string;
   imageSrc: string;
+  /** Responsive candidates for `imageSrc` (used with the image's `sizes`). */
+  imageSrcSet?: string | null;
   imageAlt?: string;
   blurDataURL?: string | null;
   /** Width / height ratio of the image; drives the frame aspect. */
@@ -64,11 +67,27 @@ function DefaultLink({
   );
 }
 
-function DefaultImage({ fill, className, alt = '', src }: PhotographyCardImageComponentProps) {
+function DefaultImage({
+  fill,
+  className,
+  alt = '',
+  src,
+  srcSet,
+  sizes,
+}: PhotographyCardImageComponentProps) {
   const fillStyle = fill
     ? ({ position: 'absolute', inset: 0, width: '100%', height: '100%' } as const)
     : undefined;
-  return <img src={src} alt={alt} className={className} style={fillStyle} />;
+  return (
+    <img
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      className={className}
+      style={fillStyle}
+    />
+  );
 }
 
 /** Framework-agnostic photography card — pass plain props and optional Link/Image components. */
@@ -76,6 +95,7 @@ export function PhotographyCardView({
   title,
   href,
   imageSrc,
+  imageSrcSet,
   imageAlt,
   blurDataURL,
   aspectRatio = 4 / 3,
@@ -99,6 +119,7 @@ export function PhotographyCardView({
   const imageEl = (
     <ImageComponent
       src={imageSrc}
+      srcSet={imageSrcSet ?? undefined}
       alt={alt}
       fill
       priority={priority}

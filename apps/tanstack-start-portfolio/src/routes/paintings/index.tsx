@@ -22,7 +22,9 @@ export const Route = createFileRoute('/paintings/')({
   loader: async ({ deps }) => {
     const parsedSearch = parsePaintingsSearchParams(deps);
     const [paintings, initialResults] = await Promise.all([
-      getPaintings(),
+      // The Sanity list only feeds the no-Algolia fallback grid; fetching it otherwise serialises every
+      // painting (~400 KB) into the page for nothing.
+      isAlgoliaConfigured ? Promise.resolve<PaintingListItem[]>([]) : getPaintings(),
       isAlgoliaConfigured ? fetchPaintingsSearch(parsedSearch) : Promise.resolve(null),
     ]);
 

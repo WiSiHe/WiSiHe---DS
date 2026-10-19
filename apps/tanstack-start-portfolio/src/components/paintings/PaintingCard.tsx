@@ -9,6 +9,7 @@ import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/shared
 import {
   getPaintingImageLqip,
   resolvePaintingCardLayout,
+  srcSetForPaintingCard,
   urlForPaintingCard,
 } from '@/lib/paintings/paintingCardImage';
 import { buildPaintingCardBadges, parsePaintingYear } from '@/lib/paintings/paintingCardProps';
@@ -85,6 +86,7 @@ function PaintingCardLoaded({
       title={title}
       href={`/paintings/${slug ?? ''}`}
       imageSrc={urlForPaintingCard(image, cardImageLayout)}
+      imageSrcSet={srcSetForPaintingCard(image, cardImageLayout)}
       imageAlt={title || 'Painting'}
       blurDataURL={getPaintingImageLqip(image)}
       imagePriority={shouldBeLazy}
