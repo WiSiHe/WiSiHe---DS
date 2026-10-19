@@ -20,6 +20,7 @@ import {
   type PaintingCardAspectLayout,
   paintingBrushSeed,
   resolvePaintingCardLayout,
+  srcSetForPaintingCard,
   urlForPaintingCard,
 } from '@/lib/paintings/paintingCardImage';
 
@@ -94,6 +95,10 @@ function PaintingSearchCompactCardInner({
     [format, image?.aspectRatio],
   );
   const imageSrc = getSearchCompactImageUrl(image, layout);
+  const imageSrcSet = srcSetForPaintingCard(
+    image as Parameters<typeof srcSetForPaintingCard>[0],
+    layout,
+  );
   const lqip = getPaintingImageLqip(image as Parameters<typeof getPaintingImageLqip>[0]);
   const brushSeed = paintingBrushSeed(paintingId ?? slug ?? title);
   const strokeColors = getBrushStrokeColors(brushSeed, palette ?? undefined);
@@ -106,6 +111,7 @@ function PaintingSearchCompactCardInner({
       title={displayTitle}
       href={`/paintings/${slug}`}
       imageSrc={imageSrc}
+      imageSrcSet={imageSrcSet}
       blurDataURL={lqip}
       aspectClass={layout.aspectClass}
       priority={index < 4}

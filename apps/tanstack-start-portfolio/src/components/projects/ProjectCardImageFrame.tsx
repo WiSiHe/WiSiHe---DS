@@ -19,6 +19,7 @@ function AppImage({
   className,
   alt = '',
   src,
+  srcSet,
   priority,
   fetchPriority,
   placeholder,
@@ -28,6 +29,7 @@ function AppImage({
   return (
     <Image
       src={src}
+      srcSet={srcSet}
       alt={alt}
       fill={fill}
       className={className}

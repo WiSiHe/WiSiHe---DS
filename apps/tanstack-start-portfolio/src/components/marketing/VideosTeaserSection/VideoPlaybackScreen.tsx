@@ -9,6 +9,7 @@ import {
   getVideoDescription,
   getVideoHref,
   getVideoThumbnailSrc,
+  getVideoThumbnailSrcSet,
   getVideoTitle,
   type VideoItem,
 } from './videoTeaserShared';
@@ -30,6 +31,7 @@ export default function VideoPlaybackScreen({
   const category = getVideoCategory(video);
   const description = getVideoDescription(video);
   const src = getVideoThumbnailSrc(video, 'screen');
+  const srcSet = getVideoThumbnailSrcSet(video, 'screen');
   const href = getVideoHref(video.slug);
 
   return (
@@ -62,6 +64,7 @@ export default function VideoPlaybackScreen({
           {src ? (
             <Image
               src={src}
+              srcSet={srcSet}
               alt={title}
               fill
               priority={priority}

@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 
 type ImageProps = {
   src: string;
+  srcSet?: string;
   alt: string;
   fill?: boolean;
   width?: number;
@@ -21,6 +22,7 @@ type ImageProps = {
 
 export default function Image({
   src,
+  srcSet,
   alt,
   fill,
   width,
@@ -42,6 +44,7 @@ export default function Image({
     return (
       <img
         src={src}
+        srcSet={srcSet}
         alt={alt}
         aria-hidden={ariaHidden}
         sizes={sizes}
@@ -58,6 +61,7 @@ export default function Image({
   return (
     <img
       src={src}
+      srcSet={srcSet}
       alt={alt}
       aria-hidden={ariaHidden}
       width={width}
