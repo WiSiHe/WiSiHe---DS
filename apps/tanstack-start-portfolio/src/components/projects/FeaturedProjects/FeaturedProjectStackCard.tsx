@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { getProjectCardTags } from '@/components/projects/ProjectCardParts';
 import Image from '@/components/ui/Image';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 import type { FeaturedProject } from './featuredProjectHelpers';
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
 
@@ -36,6 +37,16 @@ export default function FeaturedProjectStackCard({
   const heroUrl = project.image
     ? urlForImage(project.image)?.width(1400).height(980).quality(85).url()
     : null;
+  const coverImage = project.image;
+  const heroSrcSet = coverImage
+    ? buildSrcSet([700, 1050, 1400], width =>
+        urlForImage(coverImage)
+          ?.width(width)
+          .height(Math.round(width * 0.7))
+          .quality(85)
+          .url(),
+      )
+    : undefined;
   const backdropAlt = project.seo?.title || headingText || 'Project cover';
 
   return (
@@ -44,6 +55,7 @@ export default function FeaturedProjectStackCard({
         {heroUrl ? (
           <Image
             src={heroUrl}
+            srcSet={heroSrcSet}
             alt={backdropAlt}
             fill
             priority={index === 0}

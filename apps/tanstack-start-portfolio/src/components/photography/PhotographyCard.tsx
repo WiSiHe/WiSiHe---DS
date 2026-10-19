@@ -9,6 +9,7 @@ import { contentSlugLayoutId, sharedLayoutTransition } from '@/lib/motion/shared
 import {
   getPhotographyAspectRatio,
   isValidPhotographyLqip,
+  srcSetForPhotographyCard,
   urlForPhotographyCard,
 } from '@/lib/photography/photographyImage';
 
@@ -40,6 +41,7 @@ function PhotographyImage(props: PhotographyCardImageComponentProps) {
   return (
     <Image
       src={props.src}
+      srcSet={props.srcSet}
       alt={props.alt}
       fill={props.fill}
       className={props.className}
@@ -72,6 +74,7 @@ export function PhotographyCard({
       title={photo.title}
       href={`/photography/${photo.slug}`}
       imageSrc={imageUrl}
+      imageSrcSet={srcSetForPhotographyCard(photo.image, aspectRatio)}
       imageAlt={photo.image?.alt ?? photo.title ?? 'Photograph'}
       blurDataURL={isValidPhotographyLqip(lqip) ? lqip : null}
       aspectRatio={aspectRatio}

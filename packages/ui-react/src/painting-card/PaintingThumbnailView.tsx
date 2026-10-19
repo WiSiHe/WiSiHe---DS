@@ -16,6 +16,7 @@ const IMAGE_RADIUS_CLASS = 'rounded-xl';
 
 export type PaintingThumbnailImageComponentProps = {
   src: string;
+  srcSet?: string;
   alt: string;
   fill?: boolean;
   className?: string;
@@ -32,6 +33,8 @@ export type PaintingThumbnailViewProps = {
   title: string;
   href: string;
   imageSrc?: string | null;
+  /** Responsive candidates for `imageSrc` (used with the image's `sizes`). */
+  imageSrcSet?: string | null;
   blurDataURL?: string;
   aspectClass?: string;
   priority?: boolean;
@@ -80,11 +83,27 @@ function DefaultLink({
   );
 }
 
-function DefaultImage({ fill, className, alt = '', src }: PaintingThumbnailImageComponentProps) {
+function DefaultImage({
+  fill,
+  className,
+  alt = '',
+  src,
+  srcSet,
+  sizes,
+}: PaintingThumbnailImageComponentProps) {
   const fillStyle = fill
     ? ({ position: 'absolute', inset: 0, width: '100%', height: '100%' } as const)
     : undefined;
-  return <img src={src} alt={alt} className={className} style={fillStyle} />;
+  return (
+    <img
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      className={className}
+      style={fillStyle}
+    />
+  );
 }
 
 function CompactPrintBadge() {
@@ -105,6 +124,7 @@ export function PaintingThumbnailView({
   title,
   href,
   imageSrc,
+  imageSrcSet,
   blurDataURL: _blurDataURL,
   aspectClass = 'aspect-[3/4]',
   priority = false,
@@ -134,6 +154,7 @@ export function PaintingThumbnailView({
   const image = imageSrc ? (
     <ImageComponent
       src={imageSrc}
+      srcSet={imageSrcSet ?? undefined}
       alt={displayTitle}
       fill
       sizes='(min-width: 640px) 33vw, 46vw'

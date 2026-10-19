@@ -7,6 +7,7 @@ import Image from '@/components/ui/Image';
 import {
   getVideoCategory,
   getVideoThumbnailSrc,
+  getVideoThumbnailSrcSet,
   getVideoTitle,
   type VideoItem,
 } from './videoTeaserShared';
@@ -41,6 +42,7 @@ export default function VideoPlaylist({
           const title = getVideoTitle(video);
           const category = getVideoCategory(video);
           const thumbSrc = getVideoThumbnailSrc(video, 'thumb');
+          const thumbSrcSet = getVideoThumbnailSrcSet(video, 'thumb');
 
           return (
             <ItemTag key={video._id} variants={itemVariants}>
@@ -85,6 +87,7 @@ export default function VideoPlaylist({
                   {thumbSrc ? (
                     <Image
                       src={thumbSrc}
+                      srcSet={thumbSrcSet}
                       alt=''
                       fill
                       sizes='64px'

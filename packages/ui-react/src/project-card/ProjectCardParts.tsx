@@ -65,6 +65,7 @@ export function getProjectCardTags(
 
 export type ProjectCardImageComponentProps = {
   src: string;
+  srcSet?: string;
   alt: string;
   fill?: boolean;
   className?: string;
@@ -75,15 +76,33 @@ export type ProjectCardImageComponentProps = {
   blurDataURL?: string;
 };
 
-function DefaultImage({ fill, className, alt = '', src }: ProjectCardImageComponentProps) {
+function DefaultImage({
+  fill,
+  className,
+  alt = '',
+  src,
+  srcSet,
+  sizes,
+}: ProjectCardImageComponentProps) {
   const fillStyle = fill
     ? ({ position: 'absolute', inset: 0, width: '100%', height: '100%' } as const)
     : undefined;
-  return <img src={src} alt={alt} className={className} style={fillStyle} />;
+  return (
+    <img
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      className={className}
+      style={fillStyle}
+    />
+  );
 }
 
 export type ProjectCardImageFrameProps = {
   imageSrc: string | null;
+  /** Responsive candidates for `imageSrc` (used with `sizes`). */
+  imageSrcSet?: string | null;
   alt: string;
   lqip?: string | null;
   priority?: boolean;
@@ -105,6 +124,7 @@ export type ProjectCardImageFrameProps = {
 
 export function ProjectCardImageFrame({
   imageSrc,
+  imageSrcSet,
   alt,
   lqip,
   priority,
@@ -132,6 +152,7 @@ export function ProjectCardImageFrame({
       <motion.div layout='position' className='absolute inset-0'>
         <ImageComponent
           src={imageSrc}
+          srcSet={imageSrcSet ?? undefined}
           alt={alt}
           fill
           priority={priority}
@@ -148,6 +169,7 @@ export function ProjectCardImageFrame({
     ) : (
       <ImageComponent
         src={imageSrc}
+        srcSet={imageSrcSet ?? undefined}
         alt={alt}
         fill
         priority={priority}
