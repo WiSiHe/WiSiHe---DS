@@ -1,4 +1,5 @@
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 
 export const PHOTOGRAPHY_IMAGE_QUALITY = 80;
 
@@ -50,6 +51,19 @@ export function urlForPhotographyCard(
   const width = 720;
   const height = Math.min(1200, Math.max(360, Math.round(width / aspectRatio)));
   return buildPhotographyUrl(image, { width, height });
+}
+
+/** Responsive candidates for the same crop as `urlForPhotographyCard`. */
+export function srcSetForPhotographyCard(
+  image: PhotographyImageSource,
+  aspectRatio: number,
+): string | undefined {
+  return buildSrcSet([360, 540, 720], width =>
+    buildPhotographyUrl(image, {
+      width,
+      height: Math.min(1200, Math.max(360, Math.round(width / aspectRatio))),
+    }),
+  );
 }
 
 export function urlForPhotographyFeatured(

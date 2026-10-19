@@ -73,6 +73,8 @@ export function buildPaintingsSearchRequest(options: {
     facets: ['tags', 'dominantColors'],
     maxValuesPerFacet: 50,
     attributesToRetrieve: [...PAINTING_HIT_ATTRIBUTES],
+    // The UI never renders Algolia highlight markup; skipping it trims every hit.
+    attributesToHighlight: [],
   });
 
   return {

@@ -14,6 +14,7 @@ import { PaintingCard, type PaintingCardBadge, type PaintingCardLayout } from '.
 
 export type PaintingCardImageComponentProps = {
   src: string;
+  srcSet?: string;
   alt: string;
   fill?: boolean;
   className?: string;
@@ -29,6 +30,8 @@ export type PaintingCardViewProps = {
   title: string;
   href: string;
   imageSrc?: string | null;
+  /** Responsive candidates for `imageSrc` (used with the image's `sizes`). */
+  imageSrcSet?: string | null;
   imageAlt?: string;
   blurDataURL?: string;
   imagePriority?: boolean;
@@ -70,18 +73,28 @@ function DefaultImage({
   className,
   alt = '',
   src,
+  srcSet,
+  sizes,
   priority: _priority,
   fetchPriority: _fetchPriority,
   placeholder: _placeholder,
   blurDataURL: _blurDataURL,
   quality: _quality,
-  sizes: _sizes,
 }: PaintingCardImageComponentProps) {
   const fillStyle = fill
     ? ({ position: 'absolute', inset: 0, width: '100%', height: '100%' } as const)
     : undefined;
 
-  return <img src={src} alt={alt} className={className} style={fillStyle} />;
+  return (
+    <img
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      className={className}
+      style={fillStyle}
+    />
+  );
 }
 
 /** Framework-agnostic painting card — grid band reveal or carousel caption. */
@@ -89,6 +102,7 @@ export function PaintingCardView({
   title,
   href,
   imageSrc,
+  imageSrcSet,
   imageAlt,
   blurDataURL: _blurDataURL,
   imagePriority = false,
@@ -132,6 +146,7 @@ export function PaintingCardView({
   const imageEl = imageSrc ? (
     <ImageComponent
       src={imageSrc}
+      srcSet={imageSrcSet ?? undefined}
       alt={imageAlt ?? title ?? 'Painting'}
       fill
       sizes='(min-width: 1040px) 20vw, 50vw'

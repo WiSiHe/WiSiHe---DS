@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 import { HeroDotGrid } from './HeroDotGrid';
 import { HeroFloatingCard } from './HeroFloatingCard';
 import { HeroPersistentName } from './HeroPersistentName';
@@ -334,12 +335,25 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
         .auto('format')
         .quality(85)
         .url() ?? '';
+    const sourceImage = item.image;
+    const imageSrcSet = buildSrcSet(
+      [240, 360, 480, 640, 800],
+      width =>
+        urlForImage(sourceImage)
+          ?.width(width)
+          .height(Math.round(width / cardAspectRatio))
+          .fit('crop')
+          .auto('format')
+          .quality(85)
+          .url() ?? null,
+    );
     const href = item._type === 'painting' ? `/paintings/${item.slug}` : `/projects/${item.slug}`;
     const showNsfwBlur = item._type === 'painting' && item.isNSFW === true;
 
     return {
       cardAspectRatio,
       imageUrl,
+      imageSrcSet,
       imageLqip: item.image.lqip ?? null,
       href,
       displayTitle: itemDisplayTitle(item),

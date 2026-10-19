@@ -12,6 +12,7 @@ import {
 } from '@/components/projects/projectCardHelpers';
 import { contentImageLayoutId } from '@/lib/motion/sharedLayout';
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 
 type OngoingProjectCardProps = {
   project: GetAllProjectsResult['ongoingProjects'][number];
@@ -41,6 +42,15 @@ export default function OngoingProjectCard({ project, index }: OngoingProjectCar
     200,
   );
   const imageSrc = image ? urlForImage(image)?.width(1600).height(900).quality(85).url() : null;
+  const imageSrcSet = image
+    ? buildSrcSet([800, 1200, 1600], width =>
+        urlForImage(image)
+          ?.width(width)
+          .height(Math.round((width * 9) / 16))
+          .quality(85)
+          .url(),
+      )
+    : undefined;
   const statusLabel = formatProjectStatusLabel(status ?? 'unknown');
   const typeLabel = getProjectTypeLabel(projectType);
   const isActive = status === 'inProgress';
@@ -60,6 +70,7 @@ export default function OngoingProjectCard({ project, index }: OngoingProjectCar
           <ProjectCardImageFrame
             layoutId={slug ? contentImageLayoutId(slug) : undefined}
             imageSrc={imageSrc ?? null}
+            imageSrcSet={imageSrcSet}
             alt={image?.alt || projectTitle}
             lqip={image?.lqip ?? null}
             priority={index === 0}

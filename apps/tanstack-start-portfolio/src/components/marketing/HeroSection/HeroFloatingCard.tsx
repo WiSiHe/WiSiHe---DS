@@ -50,6 +50,7 @@ type HeroFloatingCardProps = {
   item: ShowcaseItem;
   index: number;
   imageUrl: string;
+  imageSrcSet?: string;
   cardAspectRatio: number;
   href: string;
   displayTitle: string;
@@ -75,6 +76,7 @@ export function HeroFloatingCard({
   item,
   index,
   imageUrl,
+  imageSrcSet,
   cardAspectRatio,
   href,
   displayTitle,
@@ -206,6 +208,7 @@ export function HeroFloatingCard({
         >
           <Image
             src={imageUrl}
+            srcSet={imageSrcSet}
             alt=''
             aria-hidden
             fill
@@ -233,6 +236,7 @@ export function HeroFloatingCard({
           <div className='absolute inset-0 overflow-hidden'>
             <Image
               src={imageUrl}
+              srcSet={imageSrcSet}
               alt=''
               aria-hidden
               fill
