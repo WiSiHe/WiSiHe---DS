@@ -21,7 +21,7 @@ Deprecated names still work during migration; update Doppler / Vercel when conve
 |-------|-------------------|---------------|-----------|
 | Project ID | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `SANITY_STUDIO_PROJECT_ID` | `SANITY_APP_PROJECT_ID` |
 | Dataset | `NEXT_PUBLIC_SANITY_DATASET` | `SANITY_STUDIO_DATASET` | `SANITY_APP_DATASET` |
-| Read token | `SANITY_API_READ_TOKEN` (server-only; legacy `NEXT_PUBLIC_SANITY_API_READ_TOKEN`) | `SANITY_API_READ_TOKEN` | — |
+| Read token | `SANITY_API_READ_TOKEN` (server-only) | `SANITY_API_READ_TOKEN` | — |
 | Algolia app ID | `NEXT_PUBLIC_ALGOLIA_APP_ID` | `ALGOLIA_APP_ID` | — |
 | Algolia index | `NEXT_PUBLIC_ALGOLIA_INDEX_NAME` | `ALGOLIA_INDEX_NAME` | — |
 | AI proxy secret | `SANITY_AI_PROXY_SECRET` | — | `SANITY_APP_AI_PROXY_SECRET` |
