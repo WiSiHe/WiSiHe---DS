@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { LifeJourneyMap, type TravelSelection } from './LifeJourneyMap';
+import { LazyLifeJourneyMap } from './LazyLifeJourneyMap';
+import type { TravelSelection } from './LifeJourneyMap';
 import type { AdventurePlaceItem, TravelPhotoItem, VisitedCountryItem } from './lifeJourneyTypes';
 import { MapPlaceDetailCard } from './MapPlaceDetailCard';
 import { getPhotosForTravelSelection } from './travelPhotos';
@@ -93,7 +94,7 @@ export function TravelOverviewSection({
 
         <div className='grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:items-stretch'>
           <div className='h-[min(48svh,400px)] overflow-hidden rounded-2xl border border-border/50 shadow-xl sm:h-[min(52svh,460px)] lg:h-[min(62svh,600px)]'>
-            <LifeJourneyMap
+            <LazyLifeJourneyMap
               items={[]}
               visitedCountries={visitedCountries}
               adventurePlaces={adventurePlaces}
