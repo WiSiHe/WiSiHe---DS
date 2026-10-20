@@ -30,6 +30,7 @@ import {
 import { z } from 'zod';
 import { getSanityClientForRequest, urlForImage } from '../lib/sanity';
 import { isPreviewEnabled } from '../lib/sanity/draftMode';
+import { buildSrcSet } from '../lib/sanityImageSrcSet';
 
 const slugInput = z.object({ slug: z.string().min(1) });
 
@@ -74,6 +75,7 @@ export type PaintingListItem = GetPaginatedPaintingsResult[number];
 
 export interface PaintingDetailImage {
   url: string;
+  srcSet: string | undefined;
   thumbUrl: string;
   lqip: string | null;
   aspectRatio: number;
@@ -187,6 +189,9 @@ export const getPainting = createServerFn({ method: 'GET' })
       const builder = urlForImage(img as Parameters<typeof urlForImage>[0]);
       return {
         url: builder.width(1600).fit('max').auto('format').quality(90).url(),
+        srcSet: buildSrcSet([640, 960, 1280, 1600], w =>
+          builder.width(w).fit('max').auto('format').quality(85).url(),
+        ),
         thumbUrl: builder.width(128).height(128).fit('crop').format('webp').quality(70).url(),
         lqip: img?.lqip || null,
         aspectRatio: img?.aspectRatio || 1,
