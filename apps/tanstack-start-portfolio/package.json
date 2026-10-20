@@ -9,7 +9,8 @@
     "dev": "vp dev",
     "build": "vp build",
     "preview": "vp preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vp test run"
   },
   "keywords": [],
   "author": "Henrik Sissener",
