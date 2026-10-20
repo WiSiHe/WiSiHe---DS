@@ -241,9 +241,12 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
                       >
                         <Image
                           src={img.url}
+                          srcSet={img.srcSet}
                           alt={`${title} - Image ${index + 1}`}
                           fill
                           priority={index === 0}
+                          loading={index === 0 ? 'eager' : 'lazy'}
+                          fetchPriority={index === 0 ? 'high' : 'auto'}
                           className={cn(
                             'object-contain',
                             showNsfwBlur && getNsfwImageBlurClass('card'),
