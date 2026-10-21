@@ -125,10 +125,21 @@ export function gridBandDrawPathTransitions(
     };
   }
 
-  const draw = { delay: enterDelay, duration, ease } satisfies Transition;
+  // Anticipation: the tip jumps out a little and pulls back before the drive (times match the keyframes).
+  // Follow-through: the stroke swells slightly past its final width, then settles.
   return {
-    pathLength: draw,
-    strokeWidth: draw,
+    pathLength: {
+      delay: enterDelay,
+      duration,
+      times: [0, 0.1, 0.18, 1],
+      ease: ['easeOut', 'easeInOut', ease],
+    } as Transition,
+    strokeWidth: {
+      delay: enterDelay,
+      duration,
+      times: [0, 0.8, 1],
+      ease: [ease, 'easeOut'],
+    } as Transition,
     opacity: { delay: enterDelay + 0.04, duration: duration * 0.35, ease: 'easeOut' },
   };
 }

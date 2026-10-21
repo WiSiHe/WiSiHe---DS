@@ -2,7 +2,7 @@
 
 import { cn } from '@wisihe/utils';
 import { useReducedMotion } from 'motion/react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { prefersFinePointerHover } from '../hooks/useMediaCapabilities';
 import { BrushRevealProvider } from './BrushRevealContext';
 
@@ -24,6 +24,7 @@ export function BrushRevealWrap({
 }: BrushRevealWrapProps) {
   const reduceMotion = useReducedMotion();
   const [pointerActive, setPointerActive] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   const isControlled = hovered !== undefined;
   const isActive = enabled && (isControlled ? Boolean(hovered) : pointerActive);
@@ -37,6 +38,19 @@ export function BrushRevealWrap({
     }),
     [isActive, reduceMotion],
   );
+
+  // Touch has no hover: reveal the card under a thin line through the middle of the screen while scrolling.
+  useEffect(() => {
+    const element = ref.current;
+    if (!enabled || isControlled || reduceMotion || !element) return undefined;
+    if (prefersFinePointerHover()) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => setPointerActive(Boolean(entry?.isIntersecting)),
+      { rootMargin: '-48% 0px -48% 0px' },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [enabled, isControlled, reduceMotion]);
 
   const activate = () => {
     if (!prefersFinePointerHover()) return;
@@ -55,6 +69,7 @@ export function BrushRevealWrap({
   return (
     <BrushRevealProvider value={contextValue}>
       <div
+        ref={ref}
         className={cn('h-full w-full', className)}
         {...(isControlled
           ? {}
