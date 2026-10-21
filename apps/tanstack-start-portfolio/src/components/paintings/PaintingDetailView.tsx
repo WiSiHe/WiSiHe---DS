@@ -27,6 +27,7 @@ import { usePaintingsGalleryReturnUrl } from '@/lib/paintings/usePaintingsGaller
 import { getResolvedTheme, useThemeStore } from '@/lib/store';
 import { incrementPaintingView } from '@/server/engagement';
 import type { PaintingDetailData } from '@/server/fns';
+import { PaintingFrameGlow } from './PaintingFrameGlow';
 import { PaintingViewportWash } from './PaintingViewportWash';
 
 type PaintingDetailViewProps = {
@@ -189,12 +190,6 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
         palette={activePalette}
         dark={isDark}
         slideKey={selectedIndex}
-        layout='mobile'
-      />
-      <PaintingViewportWash
-        palette={activePalette}
-        dark={isDark}
-        slideKey={selectedIndex}
         layout='desktop'
       />
 
@@ -216,6 +211,7 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
               className='relative mx-auto w-full max-w-full overflow-visible'
               style={paintingFrameStyle}
             >
+              <PaintingFrameGlow lqip={activeImage?.lqip} />
               <SharedLayoutFrame
                 slug={typeof slug === 'string' ? slug : ''}
                 className={cn(
