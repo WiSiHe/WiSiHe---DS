@@ -81,7 +81,7 @@ type ViewportWashLayout = 'frame' | 'mobile' | 'desktop';
 function washCenter(layout: ViewportWashLayout): string {
   switch (layout) {
     case 'mobile':
-      return '50% 36%';
+      return '50% 32%';
     case 'desktop':
       return '30% 38%';
     default:
