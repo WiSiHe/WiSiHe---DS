@@ -6,13 +6,31 @@ import {
   type PortableTextComponents,
 } from '@portabletext/react';
 import { cn } from '@wisihe/utils';
-import type { ReactNode } from 'react';
+import { lazy, type ReactNode, Suspense } from 'react';
 import ResolvedLink from '@/components/cms/ResolvedLink';
 import RecipeTipComponent from '@/components/recipes/RecipeTip';
 import Image from '@/components/ui/Image';
 import { urlForImage } from '@/lib/sanity';
-import { PortableTextCodeBlock } from './PortableTextCodeBlock';
 import { PortableTextMermaid } from './PortableTextMermaid';
+
+// Prism + its themes are ~230 KB; only pages that actually render a code block should pay for them.
+const LazyCodeBlock = lazy(() =>
+  import('./PortableTextCodeBlock').then(m => ({ default: m.PortableTextCodeBlock })),
+);
+
+function PortableTextCodeBlock(props: { code: string; language?: string; filename?: string }) {
+  return (
+    <Suspense
+      fallback={
+        <pre className='not-prose my-5 w-full overflow-x-auto rounded-xl border border-border/70 bg-surface-elevated p-4 font-mono text-[0.8125rem] leading-[1.65]'>
+          {props.code}
+        </pre>
+      }
+    >
+      <LazyCodeBlock {...props} />
+    </Suspense>
+  );
+}
 
 export type PortableTextVariant = 'default' | 'article' | 'minimal';
 
