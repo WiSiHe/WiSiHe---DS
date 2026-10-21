@@ -28,7 +28,6 @@ import { getResolvedTheme, useThemeStore } from '@/lib/store';
 import { incrementPaintingView } from '@/server/engagement';
 import type { PaintingDetailData } from '@/server/fns';
 import { PaintingFrameGlow } from './PaintingFrameGlow';
-import { PaintingViewportWash } from './PaintingViewportWash';
 
 type PaintingDetailViewProps = {
   painting: PaintingDetailData;
@@ -185,14 +184,7 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
   }, [_id, title]);
 
   return (
-    <div className='relative min-h-screen'>
-      <PaintingViewportWash
-        palette={activePalette}
-        dark={isDark}
-        slideKey={selectedIndex}
-        layout='desktop'
-      />
-
+    <div className='relative min-h-screen overflow-x-clip'>
       <div className='relative z-10 overflow-visible pb-16 pt-32 md:pb-20 md:pt-36 lg:pt-40'>
         <DetailNav
           backHref={galleryHref}
@@ -211,7 +203,7 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
               className='relative mx-auto w-full max-w-full overflow-visible'
               style={paintingFrameStyle}
             >
-              <PaintingFrameGlow lqip={activeImage?.lqip} />
+              <PaintingFrameGlow glowUrl={activeImage?.glowUrl} lqip={activeImage?.lqip} />
               <SharedLayoutFrame
                 slug={typeof slug === 'string' ? slug : ''}
                 className={cn(
