@@ -28,6 +28,13 @@ export function buildHead(input: PageMetaInput = {}) {
     { property: 'og:url', content: url },
     { property: 'og:site_name', content: SITE_NAME },
     { property: 'og:image', content: image },
+    ...(input.imageUrl
+      ? []
+      : [
+          { property: 'og:image:width', content: '1200' },
+          { property: 'og:image:height', content: '630' },
+        ]),
+    { property: 'og:locale', content: 'en_US' },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
@@ -43,6 +50,7 @@ export function buildHead(input: PageMetaInput = {}) {
 
   return {
     meta,
-    links: [{ rel: 'canonical', href: url }],
+    // Links are not de-duplicated across route matches, so only routes that set a path emit a canonical.
+    links: input.path ? [{ rel: 'canonical', href: url }] : [],
   };
 }
