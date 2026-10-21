@@ -33,7 +33,7 @@ export function PaintingViewportWash({
   const layoutClassName = cn(
     'pointer-events-none z-0',
     layout === 'mobile'
-      ? 'absolute inset-x-0 top-0 h-svh w-full lg:hidden'
+      ? 'absolute inset-0 min-h-full w-full lg:hidden'
       : 'fixed inset-0 hidden lg:block',
   );
 
