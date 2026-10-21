@@ -77,6 +77,8 @@ export interface PaintingDetailImage {
   url: string;
   srcSet: string | undefined;
   thumbUrl: string;
+  /** Small copy used only as the blurred backdrop behind the painting. */
+  glowUrl: string;
   lqip: string | null;
   aspectRatio: number;
   width: number | null;
@@ -193,6 +195,7 @@ export const getPainting = createServerFn({ method: 'GET' })
           builder.width(w).fit('max').auto('format').quality(85).url(),
         ),
         thumbUrl: builder.width(128).height(128).fit('crop').format('webp').quality(70).url(),
+        glowUrl: builder.width(320).fit('max').format('webp').quality(50).url(),
         lqip: img?.lqip || null,
         aspectRatio: img?.aspectRatio || 1,
         width,
