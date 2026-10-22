@@ -142,14 +142,14 @@ cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 
 ---
 
-## 5. PostHog cookieless mode (privacy)
+## 5. PostHog privacy setup
 
-The site uses cookieless PostHog (`lib/posthog/config.ts`). In the PostHog dashboard:
+The TanStack site runs PostHog with in-memory persistence (`apps/tanstack-start-portfolio/src/lib/posthog/config.ts`):
+nothing is written to cookies or browser storage, so no cookie banner is needed. No PostHog project setting is
+required. Unique visitors are counted per page load rather than per day.
 
-1. **Project Settings → Web analytics**
-2. Enable **Cookieless server hash mode**
-
-Without this, unique visitor counts may be under-reported. No extra Doppler variables are needed.
+The Next site still uses `cookieless_mode: 'always'`, which needs **Cookieless server hash mode** enabled in the
+PostHog dashboard (Project Settings → Web analytics); without it PostHog drops the events.
 
 ---
 
@@ -181,7 +181,7 @@ Use `pnpm sync-algolia:dev` for the **dev** Doppler config when your Algolia ind
 | Symptom | Check |
 |---------|--------|
 | `/paintings` search broken in production | `NEXT_PUBLIC_ALGOLIA_*` set in Doppler **prd** and redeployed |
-| PostHog shows zero users | Cookieless hash mode enabled in PostHog UI |
+| PostHog shows zero events (Next) | Cookieless server hash mode enabled in PostHog (not needed for TanStack) |
 | Studio preview wrong site | `SANITY_STUDIO_PREVIEW_URL` matches deployed URL |
 | Local env not loading | Using `.env.local` in the **app folder**, not repo root — see [env-variables.md](./env-variables.md) |
 
