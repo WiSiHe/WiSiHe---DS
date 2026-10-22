@@ -53,6 +53,7 @@ export type BrushStrokeLayer = {
   viewBox: string;
   rotateDeg: number;
   mirror?: boolean;
+  flipY?: boolean;
   widthScale?: number;
   opacityScale?: number;
 };
