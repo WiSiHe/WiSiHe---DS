@@ -1,15 +1,17 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, type Transition } from 'motion/react';
 import type { CSSProperties } from 'react';
 import type { BrushProfileConfig } from '../brush-stroke/brushStrokeConstants';
 import type { BrushStrokeLayer, GridBandVariantTiming } from '../brush-stroke/brushStrokeVariants';
 import type { PaintingFormat } from '../layout';
 import { useBrushReveal } from './BrushRevealContext';
 import {
+  bandClipAnticipation,
   bandClipPath,
   bandEnterFromRight,
   bandLayerTransform,
+  type ComposedBand,
   formatCoverageScale,
   getGridBandConfig,
 } from './bandBrushPaths';
@@ -19,16 +21,18 @@ import {
   gridBandDrawPathTransitions,
   resolveBrushLayerMetrics,
 } from './brushStrokeRender';
+import { BRUSH_TEXTURE_STYLE } from './brushTexture';
 
 type GridBandRevealProps = {
   seed: number;
-  variantIndex: number;
-  accentColor: string;
-  secondaryColor: string;
+  band: ComposedBand;
   brushProfile: BrushProfileConfig;
   liteMode: boolean;
   paintingFormat?: PaintingFormat;
 };
+
+/** pathLength keyframes: out, pull back (anticipation), then the full drive. */
+const STROKE_ANTICIPATION = [0, 0.05, 0.035, 1];
 
 function TransitionDrawStroke({
   layer,
@@ -77,8 +81,12 @@ function TransitionDrawStroke({
       fill='none'
       initial={{ pathLength: 0, strokeWidth: restWidth, opacity: 0 }}
       animate={{
-        pathLength: isActive ? 1 : 0,
-        strokeWidth: isActive ? hoverWidth : restWidth,
+        pathLength: isActive ? (reduceMotion ? 1 : STROKE_ANTICIPATION) : 0,
+        strokeWidth: isActive
+          ? reduceMotion
+            ? hoverWidth
+            : [restWidth, hoverWidth * 1.07, hoverWidth]
+          : restWidth,
         opacity: isActive ? peakOpacity : 0,
       }}
       transition={pathTransitions}
@@ -89,18 +97,14 @@ function TransitionDrawStroke({
 /** Grid card — band wipe with variant-specific axis, timing, and stroke pairs. */
 export function GridBandReveal({
   seed,
-  variantIndex,
-  accentColor,
-  secondaryColor,
+  band,
   brushProfile,
   liteMode,
   paintingFormat = 'portrait',
 }: GridBandRevealProps) {
   const { isActive, reduceMotion } = useBrushReveal();
-  const band = getGridBandConfig(variantIndex);
   const formatScale = formatCoverageScale(paintingFormat);
   const fromRight = bandEnterFromRight(seed);
-  const colors = [accentColor, secondaryColor] as const;
   const clipTransition = gridBandClipTransition(
     isActive,
     reduceMotion,
@@ -114,8 +118,21 @@ export function GridBandReveal({
     <motion.div
       className='absolute inset-0'
       initial={false}
-      animate={{ clipPath: bandClipPath(band.timing.wipe, fromRight, isActive) }}
-      transition={clipTransition}
+      animate={{
+        clipPath:
+          isActive && !reduceMotion
+            ? bandClipAnticipation(band.timing.wipe, fromRight)
+            : bandClipPath(band.timing.wipe, fromRight, isActive),
+      }}
+      transition={
+        isActive && !reduceMotion
+          ? ({
+              ...clipTransition,
+              times: [0, 0.1, 0.18, 1],
+              ease: ['easeOut', 'easeInOut', clipTransition.ease],
+            } as Transition)
+          : clipTransition
+      }
     >
       <svg
         className='pointer-events-none absolute inset-0 h-full w-full'
@@ -125,18 +142,22 @@ export function GridBandReveal({
         xmlns='http://www.w3.org/2000/svg'
         aria-hidden
         style={
-          strokeBlendMode ? ({ mixBlendMode: strokeBlendMode } satisfies CSSProperties) : undefined
+          {
+            ...BRUSH_TEXTURE_STYLE,
+            ...(strokeBlendMode ? { mixBlendMode: strokeBlendMode } : {}),
+          } satisfies CSSProperties
         }
       >
         <title>Decorative brush strokes</title>
-        {band.layers.map((layer, index) => (
+        {band.strokes.map(({ layer, color }, index) => (
           <g
-            key={`${layer.d.slice(0, 20)}-${layer.rotateDeg}`}
+            // biome-ignore lint/suspicious/noArrayIndexKey: stroke order is fixed per card
+            key={index}
             transform={bandLayerTransform(layer, band.viewBox)}
           >
             <TransitionDrawStroke
               layer={layer}
-              color={colors[index] ?? accentColor}
+              color={color}
               brushProfile={brushProfile}
               liteMode={liteMode}
               timing={band.timing}
