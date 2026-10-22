@@ -1,6 +1,5 @@
 import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router';
 import { CustomCursor } from '@wisihe/ui-react';
-import { PostHogProvider } from '../components/analytics/PostHogProvider';
 import { DraftModeBanner } from '../components/cms/DraftModeBanner';
 import { Footer } from '../components/layout/Footer';
 import { Header } from '../components/layout/Header';
@@ -36,28 +35,26 @@ function RootComponent() {
 
   return (
     <RootDocument>
-      <PostHogProvider>
-        <CustomCursor />
-        <PresentationMode />
-        <SmoothScroll />
-        <ListScrollPreserver />
-        <ScrollToTopOnNavigate />
-        <NavigationProgress />
-        <Header />
-        <DraftModeBanner enabled={Boolean(footerData.previewEnabled)} />
-        <MotionLayoutGroup>
-          <main id='main-content' className='min-h-screen'>
-            {immersiveDeck ? (
+      <CustomCursor />
+      <PresentationMode />
+      <SmoothScroll />
+      <ListScrollPreserver />
+      <ScrollToTopOnNavigate />
+      <NavigationProgress />
+      <Header />
+      <DraftModeBanner enabled={Boolean(footerData.previewEnabled)} />
+      <MotionLayoutGroup>
+        <main id='main-content' className='min-h-screen'>
+          {immersiveDeck ? (
+            <Outlet />
+          ) : (
+            <PageTransition>
               <Outlet />
-            ) : (
-              <PageTransition>
-                <Outlet />
-              </PageTransition>
-            )}
-          </main>
-        </MotionLayoutGroup>
-        <Footer data={footerData} />
-      </PostHogProvider>
+            </PageTransition>
+          )}
+        </main>
+      </MotionLayoutGroup>
+      <Footer data={footerData} />
     </RootDocument>
   );
 }

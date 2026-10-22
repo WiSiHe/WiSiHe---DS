@@ -3,7 +3,6 @@ import { getPostHogInitOptions } from '@/lib/posthog/config';
 
 /** Canonical event names — keep snake_case and stable for dashboards. */
 export const AnalyticsEvent = {
-  PAGE_VIEW: '$pageview',
   PROJECT_VIEWED: 'project_viewed',
   PROJECT_LIKED: 'project_liked',
   PROJECT_UNLIKED: 'project_unliked',
@@ -48,8 +47,8 @@ function isPostHogReady(): boolean {
 function whenIdle(): Promise<void> {
   return new Promise(resolve => {
     if ('requestIdleCallback' in window)
-      window.requestIdleCallback(() => resolve(), { timeout: 3000 });
-    else setTimeout(resolve, 1500);
+      window.requestIdleCallback(() => resolve(), { timeout: 1500 });
+    else setTimeout(resolve, 1000);
   });
 }
 
@@ -59,7 +58,7 @@ let posthogPromise: Promise<PostHog | null> | null = null;
  * Lazily loads and initialises posthog-js once the browser is idle, so its ~100 KB chunk stays
  * out of the critical path. Every caller shares one promise, so early events queue and none are lost.
  */
-export function getPostHog(): Promise<PostHog | null> {
+function getPostHog(): Promise<PostHog | null> {
   if (!isPostHogReady()) return Promise.resolve(null);
   posthogPromise ??= whenIdle()
     .then(() => import('posthog-js'))
@@ -76,22 +75,4 @@ export function getPostHog(): Promise<PostHog | null> {
 /** Fire a PostHog event with typed, dashboard-friendly properties. No-op when unset or in dev. */
 export function trackEvent(event: AnalyticsEventName, properties?: AnalyticsProperties): void {
   void getPostHog().then(posthog => posthog?.capture(event, properties));
-}
-
-export function getPageType(pathname: string): string {
-  if (pathname === '/') return 'home';
-  if (pathname === '/projects') return 'projects_listing';
-  if (pathname.startsWith('/projects/')) return 'project_detail';
-  if (pathname === '/paintings') return 'paintings_listing';
-  if (pathname.startsWith('/paintings/')) return 'painting_detail';
-  if (pathname === '/about') return 'about';
-  if (pathname === '/contact') return 'contact';
-  if (pathname === '/privacy') return 'privacy';
-  if (pathname.startsWith('/videos/')) return 'video_detail';
-  if (pathname === '/photography') return 'photography_listing';
-  if (pathname.startsWith('/photography/')) return 'photography_detail';
-  if (pathname === '/recipes') return 'recipes_listing';
-  if (pathname.startsWith('/recipes/')) return 'recipe_detail';
-  if (pathname.startsWith('/three-d')) return 'three_d';
-  return 'other';
 }
