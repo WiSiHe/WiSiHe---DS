@@ -120,9 +120,9 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@types/node': '26.6.4'
-  'js-yaml@<3.15.2': '3.15.2'
+  'js-yaml@<3.15.2': '5.5.0'
   'smol-toml@<1.9.0': '^1.9.0'
-  'uuid@<11.1.1': '^11.1.1'
+  'uuid@<11.1.1': '^14.0.3'
   'katex@<0.18.2': '^0.19.0'
   'vue@<3.5.43': '^3.5.43'
   '@vue/server-renderer@<3.5.43': '^3.5.43'
