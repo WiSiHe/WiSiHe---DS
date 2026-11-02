@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@csstools/css-calc": "^3.4.3",
-    "@types/node": "26.6.4",
+    "@types/node": "26.6.6",
     "@types/react": "catalog:",
     "@wisihe/typescript-config": "workspace:*",
     "dotenv": "18.0.6",
