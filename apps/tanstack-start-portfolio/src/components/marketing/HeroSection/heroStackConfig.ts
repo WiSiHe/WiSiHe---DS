@@ -34,8 +34,8 @@ export const STACK_REVEAL_DELAY = 0.35;
 export const CARD_REVEAL_STAGGER = 0.12;
 export const CARD_REVEAL_DURATION = 0.65;
 
-export const NAME_REVEAL_DELAY = 0.55;
-export const NAME_REVEAL_STAGGER = 0.09;
+export const NAME_REVEAL_DELAY = 0.2;
+export const NAME_REVEAL_STAGGER = 0.05;
 export const NAME_REVEAL_DURATION = 0.7;
 export const NAME_REVEAL_EASE = 'power2.out';
 export const NAME_EXIT_EASE = 'power2.inOut';
