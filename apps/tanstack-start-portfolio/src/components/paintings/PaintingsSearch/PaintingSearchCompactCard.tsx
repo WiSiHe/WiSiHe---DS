@@ -39,6 +39,7 @@ type PaintingSearchCompactCardProps = {
   slug: string;
   image?: PaintingImage | null;
   index: number;
+  isInitialViewport?: boolean;
   format?: string | null;
   isNsfw?: boolean;
   isNsfwFilterActive?: boolean;
@@ -74,6 +75,7 @@ function PaintingSearchCompactCardInner({
   slug,
   image,
   index,
+  isInitialViewport = index < 2,
   format,
   isNsfw = false,
   isNsfwFilterActive = false,
@@ -114,8 +116,8 @@ function PaintingSearchCompactCardInner({
       imageSrcSet={imageSrcSet}
       blurDataURL={lqip}
       aspectClass={layout.aspectClass}
-      priority={index < 4}
-      eager={index < 4}
+      priority={isInitialViewport}
+      eager={isInitialViewport}
       showNsfwCover={showNsfwCover}
       nsfwCompactLabel={nsfwCompactLabel}
       nsfwScreenReaderLabel={nsfwLabel === NSFW_MATURE_LABEL ? NSFW_MATURE_LABEL : nsfwLabel}
@@ -141,6 +143,7 @@ export const PaintingSearchCompactCard = memo(
     prev.slug === next.slug &&
     prev.title === next.title &&
     prev.index === next.index &&
+    prev.isInitialViewport === next.isInitialViewport &&
     prev.format === next.format &&
     prev.isNsfw === next.isNsfw &&
     prev.isNsfwFilterActive === next.isNsfwFilterActive &&

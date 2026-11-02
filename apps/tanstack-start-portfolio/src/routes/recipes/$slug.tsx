@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import { NotFoundMessage } from '../../components/layout/PageHero';
 import { RecipeDetailView } from '../../components/recipes/RecipeDetailView';
 import { portableTextToPlainText } from '../../lib/portableText';
+import { resolveInstructionBlocks } from '../../lib/recipes/recipeScaling';
 import { buildHead } from '../../lib/seo';
 import { buildRecipeStructuredData } from '../../lib/seo/structuredData';
 import { getRecipeBySlug, getRecipes, imageUrl } from '../../server/fns';
@@ -51,7 +52,12 @@ export const Route = createFileRoute('/recipes/$slug')({
           instructions:
             recipe.instructions?.map(instruction => ({
               title: instruction.title,
-              text: portableTextToPlainText(instruction.content),
+              text: portableTextToPlainText(
+                resolveInstructionBlocks(
+                  instruction.content,
+                  recipe.ingredientCategories?.flatMap(c => c.ingredients ?? []) ?? [],
+                ),
+              ),
             })) ?? [],
           tags: recipe.tags?.map(tag => tag.name).filter(Boolean) as string[],
           averageRating: recipe.averageRating,
