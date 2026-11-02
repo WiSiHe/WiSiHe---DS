@@ -8,6 +8,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
 import CustomPortableText from '@/components/cms/PortableText/PortableText';
 import { renderBreadcrumbLink } from '@/components/detail/breadcrumbLink';
+import { ShareButton } from '@/components/detail/ShareButton';
 import { RecipeCookingMode } from '@/components/recipes/RecipeCookingMode';
 import { RecipePrintView } from '@/components/recipes/RecipePrintView';
 import RecipeTipComponent from '@/components/recipes/RecipeTip';
@@ -137,6 +138,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                   variant='hero'
                   className='pt-2'
                 />
+                <ShareButton title={recipe.title ?? 'Recipe'} />
               </div>
 
               {allImages.length > 0 ? (
