@@ -10,6 +10,7 @@ import CustomPortableText from '@/components/cms/PortableText/PortableText';
 import { renderBreadcrumbLink } from '@/components/detail/breadcrumbLink';
 import { ShareButton } from '@/components/detail/ShareButton';
 import { RecipeCookingMode } from '@/components/recipes/RecipeCookingMode';
+import { RecipeEngagement } from '@/components/recipes/RecipeEngagement';
 import { RecipePrintView } from '@/components/recipes/RecipePrintView';
 import RecipeTipComponent from '@/components/recipes/RecipeTip';
 import Image from '@/components/ui/Image';
@@ -137,6 +138,13 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                   caloriesPerServing={resolveCalories(recipe.nutrition)}
                   variant='hero'
                   className='pt-2'
+                />
+                <RecipeEngagement
+                  recipeId={recipe._id}
+                  title={recipe.title ?? 'Recipe'}
+                  viewsCount={recipe.viewsCount ?? 0}
+                  averageRating={recipe.averageRating ?? null}
+                  ratingCount={recipe.ratingCount ?? 0}
                 />
                 <ShareButton title={recipe.title ?? 'Recipe'} />
               </div>
