@@ -43,10 +43,11 @@ type PaintingHitProps = {
   hit: PaintingAlgoliaHit;
   index: number;
   isNsfwFilterActive: boolean;
+  isInitialViewport: boolean;
 };
 
 const PaintingHit = memo(
-  function PaintingHit({ hit, index, isNsfwFilterActive }: PaintingHitProps) {
+  function PaintingHit({ hit, index, isNsfwFilterActive, isInitialViewport }: PaintingHitProps) {
     const paintingData = useMemo(() => adaptPaintingData(hit), [hit]);
     const isDesktopGrid = useIsDesktopPaintingGrid();
 
@@ -64,6 +65,7 @@ const PaintingHit = memo(
             slug={typeof paintingData.slug === 'string' ? paintingData.slug : ''}
             image={paintingData.image as CompactCardImage}
             index={index}
+            isInitialViewport={isInitialViewport}
             format={typeof hit.format === 'string' ? hit.format : undefined}
             isNsfw={paintingData.isNSFW}
             isNsfwFilterActive={isNsfwFilterActive}
@@ -80,6 +82,7 @@ const PaintingHit = memo(
   (prev, next) =>
     prev.hit === next.hit &&
     prev.index === next.index &&
+    prev.isInitialViewport === next.isInitialViewport &&
     prev.isNsfwFilterActive === next.isNsfwFilterActive,
 );
 
@@ -105,6 +108,12 @@ export default function CustomHits() {
     );
   }
 
+  // CSS columns fill top-to-bottom, so the top of the second column is item ceil(n / 2),
+  // not item 2. Both column heads sit in the initial mobile viewport.
+  const secondColumnStart = Math.ceil(hits.length / 2);
+  const isInitialViewport = (index: number) =>
+    index < 2 || (index >= secondColumnStart && index < secondColumnStart + 2);
+
   return (
     <div
       className={cn(
@@ -119,6 +128,7 @@ export default function CustomHits() {
           key={hit.objectID}
           hit={hit}
           index={index}
+          isInitialViewport={isInitialViewport(index)}
           isNsfwFilterActive={nsfwFilterActive}
         />
       ))}
