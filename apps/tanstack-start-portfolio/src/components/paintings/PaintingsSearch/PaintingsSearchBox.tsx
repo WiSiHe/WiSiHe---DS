@@ -35,7 +35,7 @@ export default function PaintingsSearchBox() {
       <button
         type='submit'
         aria-label='Search'
-        className='absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
+        className='absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-foreground-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-accent'
       >
         <IconSearch className='size-4' stroke={2} aria-hidden />
       </button>
@@ -63,7 +63,7 @@ export default function PaintingsSearchBox() {
           type='button'
           onClick={handleClear}
           aria-label='Clear search'
-          className='absolute right-2.5 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground transition-colors'
+          className='absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-foreground-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-accent'
         >
           <IconCircleX className='size-4' stroke={2} aria-hidden />
         </button>
