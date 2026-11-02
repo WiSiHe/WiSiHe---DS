@@ -9,6 +9,9 @@ function isTouchPrimaryDevice(): boolean {
   return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 }
 
+const INTERACTIVE_SELECTOR =
+  'a, button, summary, label, select, input, textarea, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"]), .cursor-pointer';
+
 const CURSOR_ACCENT = 'var(--color-accent-val, var(--color-accent, #e02e00))';
 
 export function CustomCursor() {
@@ -33,13 +36,18 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    if (isTouchDevice || !isVisible) return;
-
-    document.body.classList.add('custom-cursor-active');
-    return () => {
-      document.body.classList.remove('custom-cursor-active');
-    };
+    if (isTouchDevice) return;
+    // The class carries `cursor: none !important` on `*`, so toggling it restyles the whole
+    // document. Add it once on first movement and keep it until unmount.
+    if (isVisible) document.body.classList.add('custom-cursor-active');
   }, [isTouchDevice, isVisible]);
+
+  useEffect(
+    () => () => {
+      document.body.classList.remove('custom-cursor-active');
+    },
+    [],
+  );
 
   useEffect(() => {
     if (isTouchDevice) return;
@@ -52,19 +60,13 @@ export function CustomCursor() {
 
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
+    };
 
-      const target = e.target as HTMLElement | null;
-      if (target) {
-        const isInteractive =
-          target.tagName === 'A' ||
-          target.tagName === 'BUTTON' ||
-          target.closest('a') ||
-          target.closest('button') ||
-          target.closest('.cursor-pointer') ||
-          window.getComputedStyle(target).cursor === 'pointer';
-
-        setIsHovered(Boolean(isInteractive));
-      }
+    // `mouseover` only fires when the hovered element changes, so the DOM lookup does not run on
+    // every pointer move. No getComputedStyle: it forces a synchronous style recalculation.
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      setIsHovered(Boolean(target?.closest?.(INTERACTIVE_SELECTOR)));
     };
 
     const handleMouseLeave = () => {
@@ -78,7 +80,8 @@ export function CustomCursor() {
     const handleMouseDown = () => setIsClicked(true);
     const handleMouseUp = () => setIsClicked(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('mouseover', handleMouseOver, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
     window.addEventListener('mousedown', handleMouseDown);
@@ -86,6 +89,7 @@ export function CustomCursor() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
       window.removeEventListener('mousedown', handleMouseDown);
@@ -106,14 +110,12 @@ export function CustomCursor() {
           height: 8px;
           border-radius: 50%;
           background-color: ${CURSOR_ACCENT};
-          transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
-          will-change: width, height, transform;
+          transition: transform 0.2s ease;
+          will-change: transform;
         }
 
         .painterly-cursor-core.is-hovered {
-          width: 6px;
-          height: 6px;
-          background-color: ${CURSOR_ACCENT};
+          transform: scale(0.75);
         }
 
         .painterly-cursor-core.is-clicked {
@@ -127,27 +129,18 @@ export function CustomCursor() {
           border: 1px solid ${CURSOR_ACCENT};
           background-color: transparent;
           opacity: 0.45;
-          transition: width 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-                      height 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-                      opacity 0.2s ease,
-                      border-color 0.2s ease,
-                      transform 0.15s ease;
-          will-change: width, height, opacity, transform;
+          transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+          will-change: transform, opacity;
         }
 
         .painterly-cursor-halo.is-hovered {
-          width: 52px;
-          height: 52px;
-          border-width: 1.5px;
+          transform: scale(1.625);
           opacity: 0.8;
-          border-color: ${CURSOR_ACCENT};
         }
 
         .painterly-cursor-halo.is-clicked {
-          width: 24px !important;
-          height: 24px !important;
+          transform: scale(0.75);
           opacity: 0.9;
-          border-color: ${CURSOR_ACCENT};
         }
       `,
         }}
