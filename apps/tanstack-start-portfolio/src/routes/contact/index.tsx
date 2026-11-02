@@ -5,8 +5,24 @@ import { motion } from 'motion/react';
 import { FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import { buildHead } from '../../lib/seo';
 import { CONTACT_DISPLAY_EMAIL, CONTACT_LOCATION } from '../../lib/site';
+import { getAbout, getSettings } from '../../server/fns';
+
+type SocialLink = { key: string; label: string; url: string };
 
 export const Route = createFileRoute('/contact/')({
+  loader: async () => {
+    const [settings, about] = await Promise.all([getSettings(), getAbout()]);
+    // Same precedence as the Next.js page: Settings first, then About; static links only as a
+    // last resort so the page is never empty if the CMS has none (or is unreachable).
+    const cmsLinks = settings?.socialLinks?.length ? settings.socialLinks : about?.socialLinks;
+    const fromCms: SocialLink[] = (cmsLinks ?? []).flatMap(link =>
+      link.url && link.platform ? [{ key: link._key, label: link.platform, url: link.url }] : [],
+    );
+    const socialLinks: SocialLink[] = fromCms.length
+      ? fromCms
+      : socialMediaLinks.map(link => ({ key: link.label, label: link.label, url: link.url }));
+    return { socialLinks };
+  },
   head: () =>
     buildHead({
       title: 'Contact | WiSiHe',
@@ -17,6 +33,8 @@ export const Route = createFileRoute('/contact/')({
 });
 
 function ContactPage() {
+  const { socialLinks } = Route.useLoaderData();
+
   return (
     <div className='container mx-auto min-h-screen px-4 pt-32 pb-20'>
       <div className='grid grid-cols-1 items-start gap-16 lg:grid-cols-2'>
@@ -71,9 +89,9 @@ function ContactPage() {
           </div>
 
           <div className='mt-12 flex flex-wrap gap-3'>
-            {socialMediaLinks.map(link => (
+            {socialLinks.map(link => (
               <a
-                key={link.label}
+                key={link.key}
                 href={link.url}
                 target='_blank'
                 rel='noreferrer'
