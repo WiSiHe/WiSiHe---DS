@@ -15,6 +15,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { DetailNav } from '@/components/detail/DetailNav';
+import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
 import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
@@ -67,6 +68,7 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
     tagsV2,
     paintedAt,
     viewsCount,
+    likesCount,
     images,
     video,
     redbubbleUrl,
@@ -349,7 +351,16 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
                       </span>
                     </div>
                   </div>
-                  <ShareButton title={title} fullWidth size='medium' className='w-full max-w-xs' />
+                  <div className='flex w-full max-w-xs flex-col gap-2'>
+                    <LikeButton
+                      kind='painting'
+                      documentId={_id}
+                      title={title}
+                      likesCount={likesCount}
+                      fullWidth
+                    />
+                    <ShareButton title={title} fullWidth size='medium' className='w-full' />
+                  </div>
                 </header>
 
                 <dl className='divide-y divide-border/40 border-y border-border/40'>

@@ -15,6 +15,7 @@ import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import type { ComponentProps } from 'react';
 import CustomPortableText from '@/components/cms/PortableText/PortableText';
+import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
 import {
   getProjectDisplayTitle,
@@ -88,7 +89,15 @@ export function ProjectInformation({ project, summary }: ProjectInformationProps
               {name || 'Untitled Project'}
             </h1>
           </div>
-          <ShareButton title={projectTitle} />
+          <div className='flex shrink-0 items-center gap-2'>
+            <LikeButton
+              kind='project'
+              documentId={project._id}
+              title={projectTitle}
+              likesCount={project.likesCount}
+            />
+            <ShareButton title={projectTitle} />
+          </div>
         </div>
 
         <div className='flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-foreground-subtle'>

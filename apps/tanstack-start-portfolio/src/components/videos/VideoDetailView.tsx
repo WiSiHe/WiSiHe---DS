@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router';
 import type { VideoBySlugQueryResult } from '@wisihe/sanity-queries';
 import { cn } from '@wisihe/utils';
 import { DetailNav } from '@/components/detail/DetailNav';
+import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
 import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
@@ -110,6 +111,12 @@ export function VideoDetailView({ video, prevSlug, nextSlug }: VideoDetailViewPr
                   <IconEye className='size-4' stroke={2} aria-hidden />
                   {video.viewsCount ?? 0} views
                 </span>
+                <LikeButton
+                  kind='video'
+                  documentId={video._id}
+                  title={video.title ?? 'Video'}
+                  likesCount={video.likesCount}
+                />
                 <ShareButton title={video.title ?? 'Video'} />
               </div>
 
