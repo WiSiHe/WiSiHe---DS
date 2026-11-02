@@ -213,6 +213,9 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   // the first client render differs from the SSR HTML and React throws hydration error #418.
   const [viewport, setViewport] = useState<HeroViewport>('desktop');
   const [viewportSize, setViewportSize] = useState<HeroViewportSize>({ width: 0, height: 0 });
+  // Cards are positioned from the real viewport, so keep them hidden until it has been read;
+  // otherwise they paint in the desktop layout first and visibly jump (layout shift) on mobile.
+  const [viewportReady, setViewportReady] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
 
@@ -287,6 +290,7 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
     const handleResize = () => {
       setViewport(resolveHeroViewport(window.innerWidth));
       setViewportSize(readViewportSize());
+      setViewportReady(true);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -422,7 +426,12 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
       <HeroDotGrid />
 
       <div className='relative flex w-full min-h-[calc(100svh-4.5rem)] items-center justify-center md:min-h-[calc(100svh-5rem)]'>
-        <div className='pointer-events-none absolute inset-0 z-[45] overflow-visible'>
+        <div
+          className={cn(
+            'pointer-events-none absolute inset-0 z-[45] overflow-visible',
+            !viewportReady && 'invisible',
+          )}
+        >
           {visibleItems.map((item, index) => renderArcCard(item, index))}
         </div>
 
