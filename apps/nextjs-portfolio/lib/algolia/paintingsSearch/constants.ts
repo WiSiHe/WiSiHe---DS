@@ -1,1 +1,0 @@
-export const PAINTINGS_HITS_PER_PAGE = 18;

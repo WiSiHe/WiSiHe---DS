@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
-    "apps/nextjs-portfolio": {
-      "entry": ["app/**/*.{ts,tsx}", "sanity/**/*.ts", "utils/**/*.ts", "hooks/**/*.ts"]
-    },
     "apps/sanity-studio": {
       "entry": [
         "components/**/*.tsx",

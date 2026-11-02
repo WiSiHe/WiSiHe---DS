@@ -24,8 +24,7 @@ The building blocks of the design system:
 Applications and documentation sites consuming the packages:
 
 - **`ui-docs`**: React Storybook documentation.
-- **`nextjs-portfolio`**: Main Next.js application.
-- **`tanstack-start-portfolio`**: TanStack Start portfolio application.
+- **`tanstack-start-portfolio`**: Main portfolio site (TanStack Start); dev server on `http://localhost:1992`.
 - **`sanity-studio`**: Sanity CMS studio for managing content.
 - **`wisihe-ai`**: Sanity AI plugin and studio extension.
 
@@ -49,13 +48,13 @@ pnpm install
 Secrets are documented per app (`.env.example` files) and in **[`docs/doppler-setup.md`](docs/doppler-setup.md)** for Doppler + Vercel. For local dev without Doppler:
 
 ```sh
-cp apps/nextjs-portfolio/.env.example apps/nextjs-portfolio/.env.local
+cp apps/tanstack-start-portfolio/.env.example apps/tanstack-start-portfolio/.env.local
 cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 ```
 
 ### Useful Commands
 
-- `pnpm dev` - Start all development servers (Next.js and Storybooks) concurrently.
+- `pnpm dev` - Start all development servers (portfolio, Studio, wisihe-ai and Storybook) concurrently.
 - `pnpm run ci` - Run the full CI pipeline locally (`lint`, `typecheck`, `test`, `build:packages`).
 - `pnpm build` - Build all apps and packages (excluding docs and sanity-studio).
 - `pnpm lint` - Run ESLint across the monorepo.
@@ -65,7 +64,7 @@ cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 
 ## 📦 Versioning & Publishing
 
-This repository uses [Changesets](https://github.com/changesets/changesets) for versioning. **All workspace packages and apps share one linked semver** via the `fixed` group in `.changeset/config.json` (the live site footer reads `nextjs-portfolio`'s version).
+This repository uses [Changesets](https://github.com/changesets/changesets) for versioning. **All workspace packages and apps share one linked semver** via the `fixed` group in `.changeset/config.json` (the former Next.js portfolio app has been retired).
 
 We intentionally do **not** also use [release-please](https://github.com/googleapis/release-please): it would duplicate the existing Release workflow on `main`.
 
