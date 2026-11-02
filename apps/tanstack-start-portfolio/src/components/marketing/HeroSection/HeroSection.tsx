@@ -209,10 +209,10 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
   const [entranceComplete, setEntranceComplete] = useState(reducedMotion);
   const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
-  const [viewport, setViewport] = useState<HeroViewport>(() =>
-    typeof window === 'undefined' ? 'desktop' : resolveHeroViewport(window.innerWidth),
-  );
-  const [viewportSize, setViewportSize] = useState<HeroViewportSize>(readViewportSize);
+  // Must match the server render: real window size is applied in the mount effect below, otherwise
+  // the first client render differs from the SSR HTML and React throws hydration error #418.
+  const [viewport, setViewport] = useState<HeroViewport>('desktop');
+  const [viewportSize, setViewportSize] = useState<HeroViewportSize>({ width: 0, height: 0 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [canHover, setCanHover] = useState(false);
 

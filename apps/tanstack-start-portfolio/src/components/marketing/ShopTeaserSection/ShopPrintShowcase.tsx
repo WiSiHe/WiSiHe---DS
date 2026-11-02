@@ -237,7 +237,7 @@ function ShopPrintRack({ paintings }: { paintings: ShopPainting[] }) {
               onClick={scrollPrev}
               isDisabled={!canScrollPrev}
             />
-            <div className='flex gap-1.5' role='tablist' aria-label='Print selection'>
+            <div className='flex' role='tablist' aria-label='Print selection'>
               {paintings.map((painting, index) => (
                 <button
                   key={painting._id}
@@ -245,14 +245,19 @@ function ShopPrintRack({ paintings }: { paintings: ShopPainting[] }) {
                   role='tab'
                   aria-selected={index === selectedIndex}
                   aria-label={`Show print ${index + 1}: ${painting.title ?? 'Untitled'}`}
-                  className={cn(
-                    'h-1.5 rounded-full transition-[width,background-color] duration-200',
-                    index === selectedIndex
-                      ? 'w-8 bg-accent'
-                      : 'w-1.5 bg-border hover:bg-foreground-muted/50',
-                  )}
+                  className='group flex h-6 min-w-6 items-center justify-center rounded-full px-1 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent'
                   onClick={() => scrollTo(index)}
-                />
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'h-1.5 rounded-full transition-[width,background-color] duration-200',
+                      index === selectedIndex
+                        ? 'w-8 bg-accent'
+                        : 'w-1.5 bg-border group-hover:bg-foreground-muted/50',
+                    )}
+                  />
+                </button>
               ))}
             </div>
             <Button
