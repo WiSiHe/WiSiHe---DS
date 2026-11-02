@@ -33,12 +33,23 @@ export default function Image({
   style,
   loading,
   fetchPriority,
-  placeholder: _placeholder,
-  blurDataURL: _blurDataURL,
+  placeholder,
+  blurDataURL,
   draggable,
   'aria-hidden': ariaHidden,
 }: ImageProps) {
   const resolvedLoading = loading ?? (priority ? 'eager' : 'lazy');
+  // LQIP as a CSS background: visible while the image loads and hidden once the opaque image paints.
+  // No JS state, so there is nothing to mismatch on hydration.
+  const resolvedStyle: CSSProperties | undefined =
+    placeholder === 'blur' && blurDataURL
+      ? {
+          backgroundImage: `url("${blurDataURL}")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          ...style,
+        }
+      : style;
 
   if (fill) {
     return (
@@ -53,7 +64,7 @@ export default function Image({
         decoding='async'
         draggable={draggable}
         className={cn('absolute inset-0 h-full w-full', className)}
-        style={style}
+        style={resolvedStyle}
       />
     );
   }
@@ -72,7 +83,7 @@ export default function Image({
       decoding='async'
       draggable={draggable}
       className={className}
-      style={style}
+      style={resolvedStyle}
     />
   );
 }

@@ -128,3 +128,64 @@ export const incrementRecipeView = createServerFn({ method: 'POST' })
       return { success: false as const, error: 'Failed to increment view' };
     }
   });
+
+const rateRecipeInput = z.object({
+  recipeId: z.string().min(1),
+  raterId: z.string().min(1),
+  value: z.number().int().min(1).max(5),
+});
+
+type RecipeRatingEntry = { raterId?: string; value?: number };
+
+function computeRatingStats(ratings: RecipeRatingEntry[]) {
+  const valid = ratings.filter(
+    (entry): entry is { raterId: string; value: number } =>
+      typeof entry.raterId === 'string' &&
+      typeof entry.value === 'number' &&
+      entry.value >= 1 &&
+      entry.value <= 5,
+  );
+  if (valid.length === 0) return { averageRating: null, ratingCount: 0 };
+  const sum = valid.reduce((total, entry) => total + entry.value, 0);
+  return { averageRating: Math.round((sum / valid.length) * 10) / 10, ratingCount: valid.length };
+}
+
+export const rateRecipe = createServerFn({ method: 'POST' })
+  .validator(rateRecipeInput)
+  .handler(async ({ data }) => {
+    const writeClient = getSanityWriteClient();
+    if (!writeClient) {
+      return { success: false as const, error: 'Sanity write token not configured' };
+    }
+
+    try {
+      const existing = await sanityReadClient
+        .withConfig({ useCdn: false })
+        .fetch<{ ratings?: RecipeRatingEntry[] } | null>(
+          `*[_type == "recipe" && _id == $id][0]{ ratings }`,
+          { id: data.recipeId },
+        );
+
+      // One rating per viewer: replace any earlier rating from the same rater.
+      const updated = [
+        ...(existing?.ratings ?? []).filter(entry => entry.raterId !== data.raterId),
+        {
+          _key: crypto.randomUUID(),
+          raterId: data.raterId,
+          value: data.value,
+          timestamp: new Date().toISOString(),
+        },
+      ];
+      const { averageRating, ratingCount } = computeRatingStats(updated);
+
+      await writeClient
+        .patch(data.recipeId)
+        .set({ ratings: updated, averageRating, ratingCount })
+        .commit({ autoGenerateArrayKeys: true });
+
+      return { success: true as const, averageRating, ratingCount };
+    } catch (error) {
+      console.error('Failed to rate recipe:', error);
+      return { success: false as const, error: 'Failed to save rating' };
+    }
+  });
