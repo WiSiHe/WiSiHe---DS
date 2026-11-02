@@ -16,6 +16,7 @@ export const presentationToolOptions = {
   allowOrigins: [
     'https://wisihe.no',
     'https://www.wisihe.no',
+    'http://localhost:1992',
     'http://localhost:3000',
     'http://localhost:3001',
   ],

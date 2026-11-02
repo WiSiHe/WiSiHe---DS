@@ -7,7 +7,7 @@
  *   - Lighthouse (accessibility, SEO, and opt-in performance on key routes)
  *   - Structured-data (JSON-LD validation on key routes)
  *
- * Local dry run (reads apps/nextjs-portfolio/.env.local when present):
+ * Local dry run (reads apps/tanstack-start-portfolio/.env.local when present):
  *   node scripts/weekly-site-health.mjs --dry-run
  *
  * Scope flags (default: run everything):
