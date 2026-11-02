@@ -5,7 +5,6 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig, searchForWorkspaceRoot } from 'vite';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const nextjsPortfolioRoot = join(__dirname, '../../nextjs-portfolio');
 
 const require = createRequire(import.meta.url);
 
@@ -48,7 +47,7 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       server: {
         fs: {
-          allow: [...fsAllow, workspaceRoot, nextjsPortfolioRoot, uiReactRoot],
+          allow: [...fsAllow, workspaceRoot, uiReactRoot],
         },
       },
       optimizeDeps: {
@@ -58,7 +57,6 @@ const config: StorybookConfig = {
         alias: [
           { find: '@/sanity/lib/api', replacement: join(__dirname, 'mocks/sanity-api.ts') },
           { find: '@/sanity/lib/utils', replacement: join(__dirname, 'mocks/sanity-utils.ts') },
-          { find: /^@\/(.*)/, replacement: join(nextjsPortfolioRoot, '$1') },
           {
             find: /^@wisihe\/ui-react$/,
             replacement: join(uiReactRoot, 'src/index.tsx'),

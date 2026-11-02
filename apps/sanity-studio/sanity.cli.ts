@@ -12,7 +12,6 @@ export default defineCliConfig({
   },
   typegen: {
     path: [
-      '../nextjs-portfolio/sanity/**/*.{ts,tsx,js,jsx}',
       '../tanstack-start-portfolio/src/**/*.{ts,tsx,js,jsx}',
       '../../packages/sanity-queries/src/**/*.{ts,tsx,js,jsx}',
     ],

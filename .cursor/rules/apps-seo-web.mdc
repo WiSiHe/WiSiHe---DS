@@ -8,7 +8,7 @@ alwaysApply: false
 
 ## Metadata by stack
 
-- **Next.js App Router**: Use `metadata` or `async generateMetadata` per route: `title`, `description`, `metadataBase`, Open Graph/Twitter, `alternates.canonical` when applicable. Keep titles unique per route; avoid empty or duplicate descriptions. See @apps/nextjs-portfolio/app/layout.tsx for site-wide defaults and Sanity-driven settings.
+- **TanStack Start routes**: Set per-route `head` via `buildHead` (`apps/tanstack-start-portfolio/src/lib/seo.ts`): `title`, `description`, `path` (canonical), Open Graph/Twitter image, and JSON-LD. Keep titles unique per route; avoid empty or duplicate descriptions.
 - **Astro**: Set `<title>` and meta description via layout or frontmatter; use `@astrojs/sitemap` / RSS where the project already configures them.
 - **TanStack Start / others**: Use that framework’s head/meta APIs for title, description, and share images.
 
