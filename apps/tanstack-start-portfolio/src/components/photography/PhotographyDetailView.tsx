@@ -5,6 +5,7 @@ import { Chip } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import { motion } from 'motion/react';
 import { DetailNav } from '@/components/detail/DetailNav';
+import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
 import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
@@ -121,7 +122,16 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                 </blockquote>
               ) : null}
 
-              <ShareButton title={photo.title ?? 'Photograph'} fullWidth size='medium' />
+              <div className='flex flex-col gap-2'>
+                <LikeButton
+                  kind='photography'
+                  documentId={photo._id}
+                  title={photo.title ?? 'Photograph'}
+                  likesCount={photo.likesCount}
+                  fullWidth
+                />
+                <ShareButton title={photo.title ?? 'Photograph'} fullWidth size='medium' />
+              </div>
 
               {paletteSwatches.length > 0 ? (
                 <div className='space-y-2.5'>

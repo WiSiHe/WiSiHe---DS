@@ -5,7 +5,8 @@ import { getSanityWriteClient, sanityReadClient } from '../lib/sanity-write';
 const documentIdInput = z.object({ documentId: z.string().min(1) });
 const likeInput = z.object({
   documentId: z.string().min(1),
-  likerId: z.string().min(1),
+  // Interpolated into a Sanity array filter, so restrict it to a safe id charset.
+  likerId: z.string().regex(/^[A-Za-z0-9_-]{1,64}$/),
 });
 
 async function incrementViewsCount(documentId: string) {
@@ -38,29 +39,44 @@ export const incrementPaintingView = createServerFn({ method: 'POST' })
     }
   });
 
+async function addLike(documentId: string, likerId: string) {
+  const writeClient = getSanityWriteClient();
+  if (!writeClient) {
+    return { success: false as const, error: 'Sanity write token not configured' };
+  }
+
+  // Drop any earlier like from this viewer first so a repeated request cannot double count.
+  await writeClient
+    .patch(documentId)
+    .setIfMissing({ likes: [] })
+    .unset([`likes[likerId=="${likerId}"]`])
+    .insert('after', 'likes[-1]', [
+      { _key: crypto.randomUUID(), likerId, timestamp: new Date().toISOString() },
+    ])
+    .commit({ autoGenerateArrayKeys: true });
+  return { success: true as const };
+}
+
+async function removeLike(documentId: string, likerId: string) {
+  const writeClient = getSanityWriteClient();
+  if (!writeClient) {
+    return { success: false as const, error: 'Sanity write token not configured' };
+  }
+
+  await writeClient
+    .patch(documentId)
+    .unset([`likes[likerId=="${likerId}"]`])
+    .commit({ autoGenerateArrayKeys: true });
+  return { success: true as const };
+}
+
 export const incrementPaintingLike = createServerFn({ method: 'POST' })
   .validator(likeInput)
   .handler(async ({ data }) => {
-    const writeClient = getSanityWriteClient();
-    if (!writeClient) {
-      return { success: false as const, error: 'Sanity write token not configured' };
-    }
-
     try {
-      await writeClient
-        .patch(data.documentId)
-        .setIfMissing({ likes: [] })
-        .insert('after', 'likes[-1]', [
-          {
-            _key: crypto.randomUUID(),
-            likerId: data.likerId,
-            timestamp: new Date().toISOString(),
-          },
-        ])
-        .commit({ autoGenerateArrayKeys: true });
-      return { success: true as const };
+      return await addLike(data.documentId, data.likerId);
     } catch (error) {
-      console.error('Failed to increment painting like:', error);
+      console.error('Failed to like painting:', error);
       return { success: false as const, error: 'Failed to like painting' };
     }
   });
@@ -68,19 +84,76 @@ export const incrementPaintingLike = createServerFn({ method: 'POST' })
 export const removePaintingLike = createServerFn({ method: 'POST' })
   .validator(likeInput)
   .handler(async ({ data }) => {
-    const writeClient = getSanityWriteClient();
-    if (!writeClient) {
-      return { success: false as const, error: 'Sanity write token not configured' };
-    }
-
     try {
-      await writeClient
-        .patch(data.documentId)
-        .unset([`likes[likerId=="${data.likerId}"]`])
-        .commit({ autoGenerateArrayKeys: true });
-      return { success: true as const };
+      return await removeLike(data.documentId, data.likerId);
     } catch (error) {
       console.error('Failed to remove painting like:', error);
+      return { success: false as const, error: 'Failed to remove like' };
+    }
+  });
+
+export const incrementProjectLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await addLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to like project:', error);
+      return { success: false as const, error: 'Failed to like project' };
+    }
+  });
+
+export const removeProjectLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await removeLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to remove project like:', error);
+      return { success: false as const, error: 'Failed to remove like' };
+    }
+  });
+
+export const incrementVideoLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await addLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to like video:', error);
+      return { success: false as const, error: 'Failed to like video' };
+    }
+  });
+
+export const removeVideoLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await removeLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to remove video like:', error);
+      return { success: false as const, error: 'Failed to remove like' };
+    }
+  });
+
+export const incrementPhotographyLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await addLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to like photography:', error);
+      return { success: false as const, error: 'Failed to like photography' };
+    }
+  });
+
+export const removePhotographyLike = createServerFn({ method: 'POST' })
+  .validator(likeInput)
+  .handler(async ({ data }) => {
+    try {
+      return await removeLike(data.documentId, data.likerId);
+    } catch (error) {
+      console.error('Failed to remove photography like:', error);
       return { success: false as const, error: 'Failed to remove like' };
     }
   });
