@@ -14,6 +14,11 @@ import { RecipePrintView } from '@/components/recipes/RecipePrintView';
 import RecipeTipComponent from '@/components/recipes/RecipeTip';
 import Image from '@/components/ui/Image';
 import { portableTextToPlainText } from '@/lib/portableText';
+import {
+  getServingsFactor,
+  resolveInstructionBlocks,
+  scaleAmount,
+} from '@/lib/recipes/recipeScaling';
 import { SITE_URL } from '@/lib/site';
 import { imageUrl } from '@/server/fns';
 
@@ -41,34 +46,29 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
     return list;
   }, [recipe.mainImage, recipe.additionalImages]);
 
-  const printIngredientCategories = useMemo(() => {
-    const multiplier = recipe.servings ? servings / recipe.servings : 1;
-    return (recipe.ingredientCategories ?? []).map(category => ({
-      categoryName: category.categoryName || '',
-      ingredients: (category.ingredients ?? []).map(item => {
-        const amount = item.amount ?? '';
-        const scaled =
-          multiplier !== 1 && amount && !Number.isNaN(Number.parseFloat(amount))
-            ? String(Math.round(Number.parseFloat(amount) * multiplier * 100) / 100)
-            : amount;
-        return {
-          ingredient: item.ingredient || '',
-          amount: scaled,
-          unit: item.unit || '',
-          notes: item.notes || undefined,
-        };
-      }),
-    }));
-  }, [recipe.ingredientCategories, recipe.servings, servings]);
+  const baseServings = recipe.servings ?? 4;
+  const factor = getServingsFactor(recipe.servings, servings);
+  const allIngredients = (recipe.ingredientCategories ?? []).flatMap(c => c.ingredients ?? []);
 
-  const printInstructions = useMemo(
-    () =>
-      (recipe.instructions ?? []).map(step => ({
-        title: step.title,
-        content: portableTextToPlainText(step.content),
-      })),
-    [recipe.instructions],
-  );
+  const scaledIngredientCategories = (recipe.ingredientCategories ?? []).map(category => ({
+    categoryName: category.categoryName || '',
+    ingredients: (category.ingredients ?? []).map(item => ({
+      ingredient: item.ingredient || '',
+      amount: scaleAmount(item.amount, factor),
+      unit: item.unit || '',
+      notes: item.notes || undefined,
+    })),
+  }));
+
+  const resolvedInstructions = (recipe.instructions ?? []).map(step => ({
+    title: step.title,
+    content: resolveInstructionBlocks(step.content, allIngredients, factor),
+  }));
+
+  const printInstructions = resolvedInstructions.map(step => ({
+    title: step.title,
+    content: portableTextToPlainText(step.content),
+  }));
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -96,7 +96,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
         cookingTime={recipe.cookingTime}
         totalTime={recipe.totalTime}
         difficulty={recipe.difficulty}
-        ingredientCategories={printIngredientCategories}
+        ingredientCategories={scaledIngredientCategories}
         instructions={printInstructions}
         tips={recipe.tips?.map(tip => ({ title: tip.title, content: tip.content || '' })) ?? null}
         url={`${SITE_URL}/recipes/${recipe.slug ?? ''}`}
@@ -222,20 +222,20 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                     <input
                       type='number'
                       min={1}
-                      max={24}
+                      max={Math.max(24, baseServings * 2)}
                       value={servings}
                       onChange={e => setServings(Math.max(1, Number(e.target.value) || 1))}
                       className='w-16 rounded-md border border-border bg-background px-2 py-1 text-center text-foreground'
                     />
                   </label>
                 </div>
-                {recipe.ingredientCategories?.map(category => (
+                {scaledIngredientCategories.map(category => (
                   <div key={category.categoryName || 'ingredients'}>
                     {category.categoryName ? (
                       <h3 className='mb-2 font-semibold text-accent'>{category.categoryName}</h3>
                     ) : null}
                     <ul className='space-y-2'>
-                      {category.ingredients?.map(item => (
+                      {category.ingredients.map(item => (
                         <li
                           key={`${item.ingredient}-${item.amount}-${item.unit}`}
                           className='text-foreground/80'
@@ -258,7 +258,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                 <RecipeCookingMode />
               </div>
               <ol className='list-decimal space-y-4 pl-5'>
-                {recipe.instructions?.map((step, i) => (
+                {resolvedInstructions.map((step, i) => (
                   <li // biome-ignore lint/suspicious/noArrayIndexKey: steps have no stable id and titles may be empty or repeated; the list is static
                     key={i}
                     className='pl-2'
