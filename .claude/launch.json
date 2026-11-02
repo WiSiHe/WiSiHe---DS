@@ -2,23 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "nextjs-portfolio",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "nextjs-portfolio", "dev"],
-      "port": 1992
-    },
-    {
       "name": "tanstack-start-portfolio",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": [
-        "--filter",
-        "tanstack-start-portfolio",
-        "dev",
-        "--port",
-        "3010",
-        "--strictPort"
-      ],
-      "port": 3010
+      "runtimeArgs": ["--filter", "tanstack-start-portfolio", "dev"],
+      "port": 1992
     },
     {
       "name": "pinball-lottery",

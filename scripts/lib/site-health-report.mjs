@@ -35,9 +35,9 @@ const CATEGORY_META = /** @type {const} */ ({
   'structured-data': { prefix: 'Structured data', label: 'structured-data' },
 });
 
-/** Load apps/nextjs-portfolio/.env.local when present (local dev only). */
+/** Load apps/tanstack-start-portfolio/.env.local when present (local dev only). */
 export function loadLocalEnvFile() {
-  const envPath = path.join(repoRoot, 'apps/nextjs-portfolio/.env.local');
+  const envPath = path.join(repoRoot, 'apps/tanstack-start-portfolio/.env.local');
 
   try {
     const content = fs.readFileSync(envPath, 'utf8');

@@ -1,12 +1,12 @@
 # Doppler environment setup
 
-This guide covers managing secrets for **nextjs-portfolio** (Vercel), **sanity-studio**, and related scripts using [Doppler](https://www.doppler.com/).
+This guide covers managing secrets for **tanstack-start-portfolio** (Vercel), **sanity-studio**, and related scripts using [Doppler](https://www.doppler.com/).
 
 ## Overview
 
 | App | Deploy target | Example file |
 |-----|---------------|--------------|
-| `apps/nextjs-portfolio` | Vercel (`www.wisihe.no`) | [`apps/nextjs-portfolio/.env.example`](../apps/nextjs-portfolio/.env.example) |
+| `apps/tanstack-start-portfolio` | Vercel (`www.wisihe.no`) | [`apps/tanstack-start-portfolio/.env.example`](../apps/tanstack-start-portfolio/.env.example) |
 | `apps/sanity-studio` | `sanity deploy` / local | [`apps/sanity-studio/.env.example`](../apps/sanity-studio/.env.example) |
 | `apps/wisihe-ai` | Sanity App SDK | [`apps/wisihe-ai/.env.example`](../apps/wisihe-ai/.env.example) |
 
@@ -27,7 +27,7 @@ You can use **one Doppler project** with multiple **configs** (e.g. `dev`, `stg`
 
 ## 2. Add secrets (production checklist)
 
-Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/nextjs-portfolio/.env.example). Full cross-app reference: [env-variables.md](./env-variables.md). Values live only in Doppler.
+Copy variable **names** from [`apps/tanstack-start-portfolio/.env.example`](../apps/tanstack-start-portfolio/.env.example). Full cross-app reference: [env-variables.md](./env-variables.md). Values live only in Doppler.
 
 ### Required for the live site
 
@@ -52,7 +52,7 @@ Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/next
 | `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` | About page map |
 | `YOUTUBE_API_KEY` | YouTube metadata |
 | `OPENAI_API_KEY` | AI tag suggestions API |
-| `SANITY_AI_PROXY_SECRET` | Shared secret Studio ↔ Next.js AI route |
+| `SANITY_AI_PROXY_SECRET` | Shared secret Studio ↔ portfolio AI routes |
 | `STATSIG_*` / `EXPERIMENTATION_*` | Feature flags (optional) |
 
 ### Sanity Studio & Algolia (same Doppler project or a `studio` config)
@@ -68,20 +68,20 @@ Copy variable **names** from [`apps/nextjs-portfolio/.env.example`](../apps/next
 | `ALGOLIA_WRITE_KEY` | **Admin** key — server/scripts only |
 | `ALGOLIA_INDEX_NAME` | `wisihe-search` |
 
-> **Tip:** In Doppler, use **Shared secrets** or duplicate values across configs so Sanity IDs stay in sync between Studio and Next.js.
+> **Tip:** In Doppler, use **Shared secrets** or duplicate values across configs so Sanity IDs stay in sync between Studio and the portfolio.
 
 ---
 
 ## 3. Connect Doppler to Vercel
 
 1. Doppler → **Integrations** → **Vercel**.
-2. Link the Vercel team and the **nextjs-portfolio** project.
+2. Link the Vercel team and the **tanstack-portfolio** project.
 3. Map configs:
    - Doppler `prd` → Vercel **Production**
    - Doppler `stg` (or `dev`) → Vercel **Preview**
 4. After sync, Vercel shows `DOPPLER_PROJECT`, `DOPPLER_ENVIRONMENT`, and `DOPPLER_CONFIG` — leave those managed by the integration.
 
-**Important for Next.js:** `NEXT_PUBLIC_*` variables must exist in the **build** environment. Doppler’s Vercel sync injects them before `next build`. Trigger a redeploy after adding new public vars.
+**Important:** `VITE_*` variables must exist in the **build** environment, because Vite inlines them at build time. Doppler’s Vercel sync injects them before the build. Trigger a redeploy after adding new public vars.
 
 ---
 
@@ -109,7 +109,7 @@ This writes `.doppler.yaml` (safe to commit — it only stores project/config na
 From the monorepo root (scripts wrap `doppler run` automatically):
 
 ```bash
-# Next.js portfolio + Storybook + Studio + wisihe-ai
+# TanStack portfolio + Storybook + Studio + wisihe-ai
 pnpm dev
 
 # Sanity Studio only
@@ -126,7 +126,7 @@ pnpm set-algolia-settings
 Run a single app directly:
 
 ```bash
-pnpm --filter nextjs-portfolio dev
+pnpm --filter tanstack-start-portfolio dev
 pnpm --filter sanity-studio dev
 ```
 
@@ -135,7 +135,7 @@ Use `:local` variants (e.g. `pnpm dev:local`) when using `.env.local` instead of
 ### Without Doppler CLI
 
 ```bash
-cp apps/nextjs-portfolio/.env.example apps/nextjs-portfolio/.env.local
+cp apps/tanstack-start-portfolio/.env.example apps/nextjs-portfolio/.env.local
 cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 # Fill in values manually
 ```

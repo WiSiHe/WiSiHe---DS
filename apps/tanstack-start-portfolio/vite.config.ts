@@ -14,7 +14,7 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   server: {
-    port: 1337,
+    port: 1992,
   },
   plugins: lazyPlugins(() => [
     tanstackStart(),
