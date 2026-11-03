@@ -22,11 +22,11 @@ WiSiHe DS: a design system monorepo. `@wisihe/tokens` (design tokens) feeds `@wi
 
 ## House rules
 
-1. **No manual memoization.** Do not use `useMemo`, `useCallback` or `memo` in `apps/` and `packages/`. The React Compiler handles it; hand-rolled memo adds noise and can fight the compiler. See `AI_RULES.md`.
-2. **Colors and spacing come from tokens.** In Tailwind code, use CSS variables or utilities mapped from `@wisihe/tokens` (e.g. `bg-surface`, `text-foreground`), never hex values or arbitrary values. This keeps themes consistent when tokens change.
+1. **The Single Source Rule.** Colors, type and spacing are defined only in `@wisihe/tokens`. In `packages/ui-react` and `apps/`, use token-mapped utilities (`bg-surface`, `text-foreground`), never hex or arbitrary values, and never edit generated token outputs. Style Dictionary rebuilds them, so hand edits are lost and themes drift.
+2. **No manual memoization.** No `useMemo`, `useCallback` or `memo` in `apps/` and `packages/`. The React Compiler handles it, and hand-rolled memo adds noise and can fight the compiler. See `AI_RULES.md`.
 3. **No glassmorphism.** No `backdrop-blur` or semi-transparent blurred surfaces anywhere. Use solid backgrounds, borders and shadows. This is a deliberate design decision for a clean, solid look.
-4. **Reuse before you build.** Check `@wisihe/ui-react` and `src/components/detail/` before writing new markup. For example, use the shared `ShareButton` on detail pages. Duplicated UI drifts apart across the portfolio apps.
-5. **Accessible by default.** Use `button` for actions, keep focus visible and heading order intact, and respect `prefers-reduced-motion`. See `.cursor/rules/apps-accessibility.mdc`.
+4. **Build it once, document it.** UI used by more than one app lives in `@wisihe/ui-react`, imported via `workspace:*`, and apps never import from each other. Every new ui-react component ships with a colocated story whose `title` is a string literal matching `STORY.*` in `packages/ui-react/src/storybook/titles.ts` (Storybook 10 rejects dynamic titles). Duplicated or undocumented UI drifts across the portfolio apps.
+5. **Turbo, not cd; dist is not source.** Run tasks with `pnpm --filter` or `turbo run`, never from inside a package directory, so the build order (tokens, ui-react, apps) and caching are respected. Never edit `dist/` or generated files; change the source and rebuild.
 
 Releases use Changesets: add a `.changeset/*.md` for user-visible changes.
 
