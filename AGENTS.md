@@ -9,6 +9,27 @@ pnpm + Turbo monorepo (`apps/`, `packages/`), Biome for lint/format, Changesets 
 
 <!-- BEGIN:turborepo-agent-rules -->
 
+## What this is
+
+WiSiHe DS: a design system monorepo. `@wisihe/tokens` (design tokens) feeds `@wisihe/ui-react` (components, documented in Storybook), which powers the portfolio apps (`tanstack-start-portfolio`, `nextjs-portfolio`) backed by a Sanity CMS (`sanity-studio`).
+
+## Setup and verification
+
+- Node version in `.node-version`; install with `pnpm install`.
+- Run locally: `pnpm dev:local` (no Doppler secrets needed) or `pnpm storybook`.
+- Verify before finishing: `pnpm lint && pnpm typecheck && pnpm test`. CI runs `pnpm ci`.
+- For UI changes, also check the page in the dev server (no console errors, mobile width).
+
+## House rules
+
+1. **The Single Source Rule.** Colors, type and spacing are defined only in `@wisihe/tokens`. In `packages/ui-react` and `apps/`, use token-mapped utilities (`bg-surface`, `text-foreground`), never hex or arbitrary values, and never edit generated token outputs. Style Dictionary rebuilds them, so hand edits are lost and themes drift.
+2. **No manual memoization.** No `useMemo`, `useCallback` or `memo` in `apps/` and `packages/`. The React Compiler handles it, and hand-rolled memo adds noise and can fight the compiler. See `AI_RULES.md`.
+3. **No glassmorphism.** No `backdrop-blur` or semi-transparent blurred surfaces anywhere. Use solid backgrounds, borders and shadows. This is a deliberate design decision for a clean, solid look.
+4. **Build it once, document it.** UI used by more than one app lives in `@wisihe/ui-react`, imported via `workspace:*`, and apps never import from each other. Every new ui-react component ships with a colocated story whose `title` is a string literal matching `STORY.*` in `packages/ui-react/src/storybook/titles.ts` (Storybook 10 rejects dynamic titles). Duplicated or undocumented UI drifts across the portfolio apps.
+5. **Turbo, not cd; dist is not source.** Run tasks with `pnpm --filter` or `turbo run`, never from inside a package directory, so the build order (tokens, ui-react, apps) and caching are respected. Never edit `dist/` or generated files; change the source and rebuild.
+
+Releases use Changesets: add a `.changeset/*.md` for user-visible changes.
+
 # This is NOT the Turborepo you know
 
 Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
