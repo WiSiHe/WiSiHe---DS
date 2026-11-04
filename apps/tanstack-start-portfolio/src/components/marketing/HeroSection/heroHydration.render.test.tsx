@@ -14,6 +14,20 @@ vi.mock('@tanstack/react-router', () => ({
 
 // GSAP tweens need real layout (computed transforms), which jsdom doesn't have. They only run in
 // effects, after hydration, so they don't affect what is being checked here.
+// `@/lib/sanity` builds a Sanity client at import time and needs a project ID (absent in CI).
+// The hero only needs a deterministic image URL, so stub the builder.
+vi.mock('@/lib/sanity', () => {
+  const builder = {
+    width: () => builder,
+    height: () => builder,
+    fit: () => builder,
+    auto: () => builder,
+    quality: () => builder,
+    url: () => 'https://cdn.example.test/image.jpg',
+  };
+  return { urlForImage: () => builder };
+});
+
 vi.mock('@gsap/react', () => ({ useGSAP: () => {} }));
 
 const items: ShowcaseItem[] = Array.from({ length: 8 }, (_, i) => ({
