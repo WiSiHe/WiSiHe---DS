@@ -13,6 +13,8 @@ import { HeroPersistentName } from './HeroPersistentName';
 import HeroScrollIndicator from './HeroScrollIndicator';
 import {
   buildArcPositions,
+  HERO_INITIAL_VIEWPORT,
+  HERO_INITIAL_VIEWPORT_SIZE,
   type HeroViewport,
   type HeroViewportSize,
   heroCardOrganicScatter,
@@ -211,8 +213,8 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
   // Must match the server render: real window size is applied in the mount effect below, otherwise
   // the first client render differs from the SSR HTML and React throws hydration error #418.
-  const [viewport, setViewport] = useState<HeroViewport>('desktop');
-  const [viewportSize, setViewportSize] = useState<HeroViewportSize>({ width: 0, height: 0 });
+  const [viewport, setViewport] = useState<HeroViewport>(HERO_INITIAL_VIEWPORT);
+  const [viewportSize, setViewportSize] = useState<HeroViewportSize>(HERO_INITIAL_VIEWPORT_SIZE);
   // Cards are positioned from the real viewport, so keep them hidden until it has been read;
   // otherwise they paint in the desktop layout first and visibly jump (layout shift) on mobile.
   const [viewportReady, setViewportReady] = useState(false);
