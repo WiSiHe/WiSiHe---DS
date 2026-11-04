@@ -1,9 +1,10 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { motion, type Transition, useReducedMotion } from 'motion/react';
+import { motion, type Transition } from 'motion/react';
 import type * as React from 'react';
 import { Badge } from '../badge/Badge';
+import { useHydrationSafeReducedMotion } from '../motion/useHydrationSafeReducedMotion';
 import type { ContentMorphFrameComponent } from '../painting-card/morphFrame';
 import { BrushRevealLayer } from './brush-reveal/BrushRevealLayer';
 import { BrushRevealWrap } from './brush-reveal/BrushRevealWrap';
@@ -146,7 +147,7 @@ export function PaintingThumbnailView({
   ImageMorphFrame,
   className,
 }: PaintingThumbnailViewProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydrationSafeReducedMotion();
   const displayTitle = title.trim() || 'Untitled painting';
   const effectiveLayoutId = imageLayoutId && !reduceMotion ? imageLayoutId : undefined;
   const colors = strokeColors ?? getBrushStrokeColors(strokeVariantIndex);
