@@ -12,6 +12,20 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }));
+// `@/lib/sanity` builds a Sanity client at import time and needs a project ID (absent in CI).
+// The hero only needs a deterministic image URL, so stub the builder.
+vi.mock('@/lib/sanity', () => {
+  const builder = {
+    width: () => builder,
+    height: () => builder,
+    fit: () => builder,
+    auto: () => builder,
+    quality: () => builder,
+    url: () => 'https://cdn.example.test/image.jpg',
+  };
+  return { urlForImage: () => builder };
+});
+
 vi.mock('@gsap/react', () => ({ useGSAP: () => {} }));
 
 const REDUCE = '(prefers-reduced-motion)';
