@@ -139,7 +139,9 @@ export function HeroFloatingCard({
         delay: STACK_REVEAL_DELAY + index * CARD_REVEAL_STAGGER,
       });
     },
-    { dependencies: [index, reducedMotion] },
+    // The preference is only known after mount, so a reveal started for `reducedMotion === false`
+    // must be reverted when it flips to true, or it would still fire on a reduced-motion visitor.
+    { dependencies: [index, reducedMotion], revertOnUpdate: true },
   );
 
   const stackPose = {
