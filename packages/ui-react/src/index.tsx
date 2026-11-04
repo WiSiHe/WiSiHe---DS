@@ -57,6 +57,7 @@ export {
   sectionRevealTransition,
   staggerFadeUpItemVariants,
 } from './motion/motionTokens';
+export { useHydrationSafeReducedMotion } from './motion/useHydrationSafeReducedMotion';
 export {
   buildPaginationItems,
   type PaginationItem,
