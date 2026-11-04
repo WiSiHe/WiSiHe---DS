@@ -17,6 +17,13 @@ export type HeroViewportSize = {
   height: number;
 };
 
+/**
+ * First-render viewport values. Server and client must both start from these (never from `window`)
+ * so hydration matches; the real size is applied in a mount effect.
+ */
+export const HERO_INITIAL_VIEWPORT: HeroViewport = 'desktop';
+export const HERO_INITIAL_VIEWPORT_SIZE: HeroViewportSize = { width: 0, height: 0 };
+
 /** Copy dead zone — cards stay outside this box (viewport %). */
 const CLEAR_ZONE = {
   leftMin: 28,
