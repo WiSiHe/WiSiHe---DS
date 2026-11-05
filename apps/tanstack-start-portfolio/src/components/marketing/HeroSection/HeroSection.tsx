@@ -1,8 +1,9 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
+import { useHydrationSafeReducedMotion } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/lib/sanity';
@@ -204,8 +205,7 @@ function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBod
 }
 
 const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProps) => {
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = Boolean(prefersReducedMotion);
+  const reducedMotion = useHydrationSafeReducedMotion();
   const displayName = heroDisplayName(heroName);
   const [hasExploded, setHasExploded] = useState(reducedMotion);
   const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
