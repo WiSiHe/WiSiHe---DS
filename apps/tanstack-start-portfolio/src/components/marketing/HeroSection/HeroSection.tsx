@@ -1,8 +1,9 @@
 'use client';
 
 import { Link } from '@tanstack/react-router';
+import { useHydrationSafeReducedMotion } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { paintingBrushSeed } from '@/lib/paintings/paintingCardImage';
 import { urlForImage } from '@/lib/sanity';
@@ -13,6 +14,8 @@ import { HeroPersistentName } from './HeroPersistentName';
 import HeroScrollIndicator from './HeroScrollIndicator';
 import {
   buildArcPositions,
+  HERO_INITIAL_VIEWPORT,
+  HERO_INITIAL_VIEWPORT_SIZE,
   type HeroViewport,
   type HeroViewportSize,
   heroCardOrganicScatter,
@@ -202,8 +205,7 @@ function HeroBodyCopy({ heroEyebrow, show, reserveSpace, skipEntrance }: HeroBod
 }
 
 const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProps) => {
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotion = Boolean(prefersReducedMotion);
+  const reducedMotion = useHydrationSafeReducedMotion();
   const displayName = heroDisplayName(heroName);
   const [hasExploded, setHasExploded] = useState(reducedMotion);
   const [showHeroBody, setShowHeroBody] = useState(reducedMotion);
@@ -211,8 +213,8 @@ const HeroImageSection = ({ items, heroEyebrow, heroName }: HeroImageSectionProp
   const [showScrollIndicator, setShowScrollIndicator] = useState(reducedMotion);
   // Must match the server render: real window size is applied in the mount effect below, otherwise
   // the first client render differs from the SSR HTML and React throws hydration error #418.
-  const [viewport, setViewport] = useState<HeroViewport>('desktop');
-  const [viewportSize, setViewportSize] = useState<HeroViewportSize>({ width: 0, height: 0 });
+  const [viewport, setViewport] = useState<HeroViewport>(HERO_INITIAL_VIEWPORT);
+  const [viewportSize, setViewportSize] = useState<HeroViewportSize>(HERO_INITIAL_VIEWPORT_SIZE);
   // Cards are positioned from the real viewport, so keep them hidden until it has been read;
   // otherwise they paint in the desktop layout first and visibly jump (layout shift) on mobile.
   const [viewportReady, setViewportReady] = useState(false);

@@ -1,7 +1,8 @@
 'use client';
 
 import { IconChevronDown } from '@tabler/icons-react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useHydrationSafeReducedMotion } from '@wisihe/ui-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { HERO_SQUASH_RATIOS } from './heroSquashStretch';
 
 type HeroScrollIndicatorProps = {
@@ -13,7 +14,7 @@ type HeroScrollIndicatorProps = {
  * Chevrons squash at the low point of each bounce — subtle squash & stretch.
  */
 export default function HeroScrollIndicator({ show }: HeroScrollIndicatorProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   return (
     <AnimatePresence>
