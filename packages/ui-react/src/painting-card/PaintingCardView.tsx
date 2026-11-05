@@ -1,8 +1,9 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { motion, type Transition, useReducedMotion } from 'motion/react';
+import { motion, type Transition } from 'motion/react';
 import type * as React from 'react';
+import { useHydrationSafeReducedMotion } from '../motion/useHydrationSafeReducedMotion';
 import { BrushRevealLayer } from './brush-reveal/BrushRevealLayer';
 import { BrushRevealWrap } from './brush-reveal/BrushRevealWrap';
 import { type BrushPalette, getBrushStrokeColors } from './brush-stroke/brushStrokeColors';
@@ -128,7 +129,7 @@ export function PaintingCardView({
   ImageMorphFrame,
   className,
 }: PaintingCardViewProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   const cardImageLayout = resolvePaintingCardLayout({
     format,

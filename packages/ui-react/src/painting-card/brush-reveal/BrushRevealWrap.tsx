@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@wisihe/utils';
-import { useReducedMotion } from 'motion/react';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { useHydrationSafeReducedMotion } from '../../motion/useHydrationSafeReducedMotion';
 import { prefersFinePointerHover } from '../hooks/useMediaCapabilities';
 import { BrushRevealProvider } from './BrushRevealContext';
 
@@ -22,7 +22,7 @@ export function BrushRevealWrap({
   enabled = true,
   hovered,
 }: BrushRevealWrapProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydrationSafeReducedMotion();
   const [pointerActive, setPointerActive] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
