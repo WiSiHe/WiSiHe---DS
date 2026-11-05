@@ -4,12 +4,10 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { MAIN_CONTENT_ID, SkipToContentLink } from './SkipToContentLink';
 
-// Mirrors the tab order of the real page (`__root.tsx`): the skip link, then the header's
-// controls, then `<main>` wired up exactly as the route does (`tabIndex={-1}` so it is a valid,
-// non-tab-order focus target).
-const FOCUSABLE_SELECTOR =
-  'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
-
+// `<main>` here is wired up exactly as the route does (`tabIndex={-1}` so it is a valid,
+// non-tab-order focus target). Whether the skip link is actually first on the real page is
+// covered separately by `../../routes/__root.test.tsx`, which renders the real `RootComponent`
+// tree instead of this hand-built harness.
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 let container: HTMLDivElement | null = null;
@@ -43,13 +41,11 @@ afterEach(() => {
 });
 
 describe('SkipToContentLink (#166)', () => {
-  it('is the first focusable element on the page and links to #main-content', () => {
+  it('renders a link labelled "Skip to main content" pointing at #main-content', () => {
     const el = renderHarness();
 
-    const focusable = el.querySelectorAll(FOCUSABLE_SELECTOR);
-    const skipLink = focusable[0] as HTMLAnchorElement;
+    const skipLink = el.querySelector('a') as HTMLAnchorElement;
 
-    expect(skipLink.tagName).toBe('A');
     expect(skipLink.textContent).toBe('Skip to main content');
     expect(skipLink.getAttribute('href')).toBe(`#${MAIN_CONTENT_ID}`);
   });
