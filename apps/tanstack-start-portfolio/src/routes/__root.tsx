@@ -29,7 +29,7 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
-function RootComponent() {
+export function RootComponent() {
   const { pathname } = useLocation();
   const footerData = Route.useLoaderData();
   const immersiveDeck = shouldUsePresentationScrollMode(pathname);
