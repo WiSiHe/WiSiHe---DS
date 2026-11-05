@@ -1,13 +1,14 @@
 'use client';
 
-import { motion, useReducedMotion } from 'motion/react';
+import { useHydrationSafeReducedMotion } from '@wisihe/ui-react';
+import { motion } from 'motion/react';
 
 /**
  * Hero background — radial wash + edge-weighted dot field (masked clear at center).
  * Dot colors live in globals.css (explicit rgba) — not inline gradients.
  */
 export function HeroDotGrid() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   return (
     <div className='hero-dot-grid pointer-events-none absolute inset-0 overflow-hidden' aria-hidden>
