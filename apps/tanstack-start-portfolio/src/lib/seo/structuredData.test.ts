@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 import { SITE_URL } from '../site';
 import { buildRecipeStructuredData, buildVideoStructuredData } from './structuredData';
 
@@ -66,3 +66,4 @@ describe('recipe structured data', () => {
     expect(recipe).not.toHaveProperty('recipeCuisine');
   });
 });
+
