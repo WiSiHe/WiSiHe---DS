@@ -119,14 +119,21 @@ export function buildVideoStructuredData(input: {
   thumbnailUrl?: string | null;
   videoUrl?: string | null;
   youtubeVideoId?: string | null;
+  uploadDate?: string | null;
 }) {
+  // Temporary placeholder until the video's actual publication date is entered in Sanity.
+  const uploadDate = input.uploadDate || '2000-01-01T00:00:00Z';
+  const directVideoUrl = input.videoUrl?.match(/\.(?:mp4|webm|mov|m4v|m3u8)(?:[?#]|$)/i)
+    ? input.videoUrl
+    : undefined;
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
     name: input.title,
     description: input.description?.trim() || '',
     ...(input.thumbnailUrl ? { thumbnailUrl: input.thumbnailUrl } : {}),
-    ...(input.videoUrl ? { contentUrl: input.videoUrl } : {}),
+    ...(directVideoUrl ? { contentUrl: directVideoUrl } : {}),
+    uploadDate,
     ...(input.youtubeVideoId
       ? { embedUrl: `https://www.youtube.com/embed/${input.youtubeVideoId}` }
       : {}),
@@ -181,6 +188,8 @@ export function buildRecipeStructuredData(input: {
   cookTime?: number | null;
   totalTime?: number | null;
   servings?: number | null;
+  recipeCategory?: string | null;
+  recipeCuisine?: string | null;
   ingredients?: string[];
   instructions?: Array<{ title?: string | null; text: string }>;
   tags?: string[];
@@ -224,14 +233,17 @@ export function buildRecipeStructuredData(input: {
         cookTime: formatDuration(input.cookTime),
         totalTime: formatDuration(input.totalTime),
         recipeYield: input.servings ? `${input.servings} servings` : undefined,
+        ...(input.recipeCategory?.trim() ? { recipeCategory: input.recipeCategory.trim() } : {}),
+        ...(input.recipeCuisine?.trim() ? { recipeCuisine: input.recipeCuisine.trim() } : {}),
         keywords: input.tags?.join(', '),
         recipeIngredient: input.ingredients ?? [],
         recipeInstructions:
           input.instructions?.map((step, index) => ({
             '@type': 'HowToStep',
             position: index + 1,
-            name: step.title ?? `Step ${index + 1}`,
+            ...(step.title?.trim() ? { name: step.title.trim() } : {}),
             text: step.text,
+            url: `${url}#step-${index + 1}`,
           })) ?? [],
         ...(input.ratingCount && input.averageRating
           ? {

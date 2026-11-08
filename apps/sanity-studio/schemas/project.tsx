@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 import { PackageIcon } from '@sanity/icons/Package';
 import { FaArrowRight, FaInfoCircle, FaWeibo } from 'react-icons/fa';
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 import ImageAltTextGenerator from '../components/ImageAltGenerator';
 import { redirectType } from './redirectType';
 import { seoType } from './seoType';
@@ -198,6 +198,36 @@ export default defineType({
       type: 'blockContent',
       group: 'main',
       description: 'Full case study — rendered below the project overview on the detail page.',
+    }),
+
+    defineField({
+      name: 'questions',
+      title: 'Project questions and answers',
+      type: 'array',
+      group: 'main',
+      description:
+        'Optional questions visitors may ask about this project, such as your role, decisions, or outcomes. Add only answers specific to this project.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: rule => rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Answer',
+              type: 'text',
+              rows: 4,
+              validation: rule => rule.required(),
+            }),
+          ],
+          preview: { select: { title: 'question', subtitle: 'answer' } },
+        }),
+      ],
     }),
 
     defineField({

@@ -41,6 +41,8 @@ export const Route = createFileRoute('/recipes/$slug')({
           cookTime: recipe.cookingTime,
           totalTime: recipe.totalTime,
           servings: recipe.servings,
+          recipeCategory: recipe.recipeCategory,
+          recipeCuisine: recipe.recipeCuisine,
           ingredients:
             recipe.ingredientCategories?.flatMap(category =>
               (category.ingredients ?? []).map(ingredient => {
