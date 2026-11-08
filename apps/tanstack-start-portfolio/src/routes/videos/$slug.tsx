@@ -53,9 +53,10 @@ export const Route = createFileRoute('/videos/$slug')({
           slug: video.slug,
           title: video.seo?.title || video.title || 'Video',
           description: video.seo?.description || video.description,
-          thumbnailUrl: imageUrl(video.seo?.image ?? video.thumbnail, 640, 360),
+          thumbnailUrl: imageUrl(video.thumbnail, 640, 360),
           videoUrl: video.videoUrl,
           youtubeVideoId: getYouTubeId(video.videoUrl),
+          uploadDate: (video as typeof video & { uploadDate?: string | null }).uploadDate,
         })
       : null;
     const breadcrumbData = buildBreadcrumbJsonLd([
