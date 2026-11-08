@@ -66,4 +66,3 @@ describe('recipe structured data', () => {
     expect(recipe).not.toHaveProperty('recipeCuisine');
   });
 });
-
