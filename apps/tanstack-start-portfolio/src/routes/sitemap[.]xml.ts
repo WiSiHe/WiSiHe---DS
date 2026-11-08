@@ -11,84 +11,66 @@ type SitemapEntry = {
 };
 
 const STATIC_PAGES: SitemapEntry[] = [
-  { loc: SITE_URL, changefreq: 'daily', priority: 1, lastmod: new Date().toISOString() },
+  { loc: SITE_URL, changefreq: 'daily', priority: 1 },
   {
     loc: `${SITE_URL}/paintings`,
     changefreq: 'daily',
     priority: 0.9,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/projects`,
     changefreq: 'weekly',
     priority: 0.9,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/recipes`,
     changefreq: 'weekly',
     priority: 0.8,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/videos`,
     changefreq: 'weekly',
     priority: 0.8,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/photography`,
     changefreq: 'weekly',
     priority: 0.8,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/presentations`,
     changefreq: 'monthly',
     priority: 0.7,
-    lastmod: new Date().toISOString(),
-  },
-  {
-    loc: `${SITE_URL}/design-system`,
-    changefreq: 'monthly',
-    priority: 0.7,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/contact`,
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/privacy`,
     changefreq: 'yearly',
     priority: 0.4,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/three-d`,
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/three-d/shaders`,
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/three-d/webgl`,
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
   },
   {
     loc: `${SITE_URL}/three-d/webgpu`,
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString(),
   },
   ...(ABOUT_PAGE_LINKS_ENABLED
     ? [
@@ -96,7 +78,6 @@ const STATIC_PAGES: SitemapEntry[] = [
           loc: `${SITE_URL}/about`,
           changefreq: 'monthly' as const,
           priority: 0.7,
-          lastmod: new Date().toISOString(),
         },
       ]
     : []),
@@ -142,9 +123,7 @@ export const Route = createFileRoute('/sitemap.xml')({
             if (!path) return null;
             return {
               loc: `${SITE_URL}${path}`,
-              lastmod: entry._updatedAt
-                ? new Date(entry._updatedAt).toISOString()
-                : new Date().toISOString(),
+              lastmod: entry._updatedAt ? new Date(entry._updatedAt).toISOString() : undefined,
               changefreq: 'monthly' as const,
               priority: entry._type === 'painting' || entry._type === 'project' ? 0.7 : 0.6,
             };
