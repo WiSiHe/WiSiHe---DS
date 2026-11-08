@@ -757,6 +757,7 @@ export const videoBySlugQuery = defineQuery(`
       "noIndex": seo.noIndex == true
     },
     videoUrl,
+    uploadDate,
     "featured": featured == true,
     "viewsCount": coalesce(viewsCount, 0),
     "likesCount": count(likes),
@@ -801,6 +802,7 @@ export const indexableContentSlugs = defineQuery(`
     && defined(slug.current)
     && coalesce(seo.noIndex, false) != true
     && !(_type == "painting" && isNSFW == true)
+    && !(_type == "recipe" && defined(language) && language != "en")
   ]{
     _type,
     "slug": slug.current,

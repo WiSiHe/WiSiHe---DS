@@ -269,6 +269,7 @@ export function RecipeDetailView({ recipe, moreRecipes }: RecipeDetailViewProps)
                 {resolvedInstructions.map((step, i) => (
                   <li // biome-ignore lint/suspicious/noArrayIndexKey: steps have no stable id and titles may be empty or repeated; the list is static
                     key={i}
+                    id={`step-${i + 1}`}
                     className='pl-2'
                   >
                     {step.title ? <strong className='mb-1 block'>{step.title}</strong> : null}

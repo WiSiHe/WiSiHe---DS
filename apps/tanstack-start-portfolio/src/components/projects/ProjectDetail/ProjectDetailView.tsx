@@ -18,7 +18,9 @@ import { ProjectLiveSiteCard } from './ProjectLiveSiteCard';
 type PortableTextValue = ComponentProps<typeof CustomPortableText>['value'];
 
 type ProjectDetailViewProps = {
-  project: NonNullable<ProjectQueryResult>;
+  project: NonNullable<ProjectQueryResult> & {
+    questions?: Array<{ _key: string; question?: string | null; answer?: string | null }> | null;
+  };
 };
 
 export function ProjectDetailView({ project }: ProjectDetailViewProps) {
@@ -27,6 +29,9 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
   const connectedPaintings = project.connectedPaintings ?? [];
   const { sidebarSummary, caseStudyBody } = resolveProjectContent(project.summary, project.content);
   const galleryImages = collectProjectGalleryImages(project.image, project.extraImages);
+  const questions = (project.questions ?? []).filter(
+    item => item.question?.trim() && item.answer?.trim(),
+  );
   const hasLiveSite =
     Boolean(project.connectedPage) &&
     !isDuplicateOfEmbeddedVideo(project.connectedPage, connectedVideoUrl);
@@ -104,6 +109,21 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               variant='article'
               value={caseStudyBody as unknown as PortableTextValue}
             />
+          </div>
+        </section>
+      ) : null}
+      {questions.length > 0 ? (
+        <section className='border-t border-border bg-surface py-14 lg:py-20'>
+          <div className='mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <h2 className='font-serif text-3xl font-bold text-foreground'>Project questions</h2>
+            <div className='mt-8 max-w-3xl space-y-8'>
+              {questions.map(item => (
+                <div key={item._key}>
+                  <h3 className='text-xl font-semibold text-foreground'>{item.question}</h3>
+                  <p className='mt-3 whitespace-pre-line text-foreground-muted'>{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}

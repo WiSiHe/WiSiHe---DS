@@ -47,6 +47,13 @@ export default defineType({
       validation: rule => rule.required(),
     }),
     defineField({
+      name: 'uploadDate',
+      title: 'Video publication date',
+      type: 'datetime',
+      description:
+        'When the video was first published on its hosting platform. Search markup uses a temporary placeholder until this is set.',
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured',
       type: 'boolean',
