@@ -10,6 +10,7 @@ import { NotFoundMessage } from '../components/layout/PageHero';
 import { PageTransition } from '../components/layout/PageTransition';
 import { RootDocument } from '../components/layout/RootDocument';
 import { ScrollToTopOnNavigate } from '../components/layout/ScrollToTopOnNavigate';
+import { SkipToContentLink } from '../components/layout/SkipToContentLink';
 import SmoothScroll from '../components/layout/SmoothScroll';
 import { PresentationMode } from '../components/presentations/PresentationMode';
 import { shouldUsePresentationScrollMode } from '../lib/lenis-registry';
@@ -28,13 +29,14 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
-function RootComponent() {
+export function RootComponent() {
   const { pathname } = useLocation();
   const footerData = Route.useLoaderData();
   const immersiveDeck = shouldUsePresentationScrollMode(pathname);
 
   return (
     <RootDocument>
+      <SkipToContentLink />
       <CustomCursor />
       <PresentationMode />
       <SmoothScroll />
@@ -44,7 +46,7 @@ function RootComponent() {
       <Header />
       <DraftModeBanner enabled={Boolean(footerData.previewEnabled)} />
       <MotionLayoutGroup>
-        <main id='main-content' className='min-h-screen'>
+        <main id='main-content' tabIndex={-1} className='min-h-screen focus:outline-none'>
           {immersiveDeck ? (
             <Outlet />
           ) : (

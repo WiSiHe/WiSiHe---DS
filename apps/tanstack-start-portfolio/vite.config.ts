@@ -17,7 +17,11 @@ export default defineConfig({
     port: 1992,
   },
   plugins: lazyPlugins(() => [
-    tanstackStart(),
+    tanstackStart({
+      // Colocated tests (e.g. __root.test.tsx) live inside src/routes/ alongside the route
+      // they cover; without this the file-based route generator treats them as routes.
+      router: { routeFileIgnorePattern: '\\.test\\.tsx?$' },
+    }),
     nitro(
       isrBypassToken
         ? {
