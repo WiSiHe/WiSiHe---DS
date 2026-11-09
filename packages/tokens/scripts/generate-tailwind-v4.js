@@ -74,6 +74,11 @@ function collectThemeVariables(tokenTree) {
         finalValue = `color-mix(in srgb, var(${variableName}-val), transparent 0%)`;
       }
 
+      if (category === 'semantic' && token.$type === 'boxShadow' && tokenPath[0] === 'shadow') {
+        lines.push(`  --shadow-${tokenPath[1]}: var(--${joinedPath}-val);`);
+        continue;
+      }
+
       lines.push(`  ${variableName}: ${finalValue};`);
 
       // Alias semantic radius tokens to standard --radius-* variables

@@ -9,7 +9,7 @@
           "xl": { "$value": "0px", "$type": "borderRadius" },
           "2xl": { "$value": "0px", "$type": "borderRadius" },
           "3xl": { "$value": "0px", "$type": "borderRadius" },
-          "full": { "$value": "0px", "$type": "borderRadius" }
+          "full": { "$value": "{borderRadius.full}", "$type": "borderRadius" }
         }
       }
     }

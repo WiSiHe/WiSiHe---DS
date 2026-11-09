@@ -114,8 +114,8 @@ export function Combobox<T extends string | number = string>({
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0',
               'disabled:cursor-not-allowed disabled:opacity-50',
               hasError
-                ? 'border-error-500 bg-error-50 hover:border-error-600 focus-visible:ring-error-500/30'
-                : 'border-input hover:border-border focus-visible:ring-ring',
+                ? 'border-danger bg-danger-subtle hover:border-danger-hover focus-visible:ring-danger'
+                : 'border-border-strong focus-visible:ring-ring',
             )}
           />
 
@@ -131,7 +131,7 @@ export function Combobox<T extends string | number = string>({
         <ComboboxOptions
           anchor='bottom start'
           className={cn(
-            'z-50 w-(--input-width) rounded-xl border border-border bg-background p-1 shadow-lg',
+            'z-50 w-(--input-width) rounded-xl border border-border bg-surface-elevated p-1 shadow-floating',
             'text-sm text-foreground empty:hidden [--anchor-gap:4px]',
             'transition-all duration-150 ease-out origin-top',
             'data-enter:opacity-100 data-enter:scale-100',
@@ -166,7 +166,7 @@ export function Combobox<T extends string | number = string>({
       </HeadlessCombobox>
 
       {errorMessage && (
-        <p id={errorId} role='alert' className='text-xs font-medium text-error-700'>
+        <p id={errorId} role='alert' className='text-xs font-medium text-danger-text'>
           {errorMessage}
         </p>
       )}

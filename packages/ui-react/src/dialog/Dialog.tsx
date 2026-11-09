@@ -14,7 +14,7 @@ import type * as React from 'react';
 
 const panelVariants = cva(
   [
-    'relative w-full bg-background rounded-xl shadow-2xl border border-border',
+    'relative w-full bg-surface-elevated rounded-xl shadow-floating border border-border',
     'transition-all duration-200 ease-out',
     'data-enter:opacity-100 data-enter:scale-100',
     'data-leave:opacity-0 data-leave:scale-95',

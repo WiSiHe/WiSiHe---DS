@@ -26,7 +26,7 @@ export function PopoverContent({ className, ...props }: PopoverContentProps) {
       transition
       anchor='bottom start'
       className={cn(
-        'z-50 min-w-48 rounded-xl border border-border bg-background p-1 shadow-lg',
+        'z-50 min-w-48 rounded-xl border border-border bg-surface-elevated p-1 shadow-floating',
         'text-sm text-foreground',
         'transition-all duration-150 ease-out origin-top',
         'data-enter:opacity-100 data-enter:scale-100',

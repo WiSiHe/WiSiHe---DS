@@ -1,0 +1,8 @@
+{
+  "semantic": {
+    "shadow": {
+      "floating": { "$value": "0 8px 24px -8px rgb(0 0 0 / 0.2)", "$type": "boxShadow" },
+      "glow": { "$value": "0 0 0 0 transparent", "$type": "boxShadow" }
+    }
+  }
+}

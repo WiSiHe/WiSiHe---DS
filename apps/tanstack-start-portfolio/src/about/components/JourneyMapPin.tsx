@@ -66,7 +66,7 @@ export function JourneyMapPin({
         event.stopPropagation();
         onClick?.();
       }}
-      className='group/marker relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50'
+      className='group/marker relative flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
     >
       <MapMarkerTooltip
         title={label}

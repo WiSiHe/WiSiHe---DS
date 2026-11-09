@@ -116,7 +116,7 @@ export function MapPlaceDetailCard({
                 <button
                   type='button'
                   onClick={onClear}
-                  className='flex size-9 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background/80 text-foreground-muted shadow-sm transition-all hover:border-border hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+                  className='flex size-9 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background/80 text-foreground-muted shadow-sm transition-all hover:border-border hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
                   aria-label='Clear selection'
                 >
                   <IconX className='size-4' stroke={2} aria-hidden />
