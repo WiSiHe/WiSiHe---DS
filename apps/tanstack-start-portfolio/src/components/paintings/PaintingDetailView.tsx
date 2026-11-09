@@ -10,7 +10,7 @@ import {
   IconShoppingBag,
 } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
-import { Button, Chip, getNsfwImageBlurClass } from '@wisihe/ui-react';
+import { Button, Chip, getNsfwImageBlurClass, PaintingCardView } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
@@ -18,6 +18,7 @@ import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'r
 import { DetailNav } from '@/components/detail/DetailNav';
 import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
+import { RouterLink } from '@/components/layout/RouterLink';
 import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
@@ -485,33 +486,19 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
             <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               {relatedPaintings.map(related => (
                 <li key={related._id} className='min-w-0'>
-                  <Link
-                    to='/paintings/$slug'
-                    params={{ slug: related.slug }}
-                    className='group block h-full rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
-                  >
-                    <span className='flex min-h-11 items-center justify-between gap-2'>
-                      <span className='font-serif text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-accent'>
-                        {related.title}
-                      </span>
-                      <IconArrowRight
-                        className='size-4 shrink-0 text-foreground-muted group-hover:text-accent'
-                        aria-hidden
-                      />
-                    </span>
-                    {related.imageUrl ? (
-                      <span className='block aspect-square overflow-hidden rounded-xl bg-surface-subtle'>
-                        <Image
-                          src={related.imageUrl}
-                          alt=''
-                          width={400}
-                          height={400}
-                          sizes='(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'
-                          className='h-full w-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-102'
-                        />
-                      </span>
-                    ) : null}
-                  </Link>
+                  <p className='flex min-h-11 items-center font-serif text-base font-semibold leading-snug text-foreground'>
+                    {related.title}
+                  </p>
+                  <PaintingCardView
+                    title={related.title}
+                    href={`/paintings/${related.slug}`}
+                    imageSrc={related.imageUrl}
+                    format={related.format}
+                    aspectRatio={related.aspectRatio}
+                    brushSeedKey={related._id}
+                    LinkComponent={RouterLink}
+                    ImageComponent={Image}
+                  />
                 </li>
               ))}
             </ul>
