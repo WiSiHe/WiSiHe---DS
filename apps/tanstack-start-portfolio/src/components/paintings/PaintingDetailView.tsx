@@ -488,10 +488,10 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
                   <Link
                     to='/paintings/$slug'
                     params={{ slug: related.slug }}
-                    className='group block h-full rounded-xl border border-border bg-surface p-3 transition-[border-color,box-shadow,transform] duration-200 hover:border-accent hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent motion-safe:hover:-translate-y-0.5'
+                    className='group block h-full rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
                   >
-                    <span className='mb-3 flex min-h-11 items-center justify-between gap-2'>
-                      <span className='font-serif text-base font-bold leading-snug text-foreground group-hover:text-accent'>
+                    <span className='flex min-h-11 items-center justify-between gap-2'>
+                      <span className='font-serif text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-accent'>
                         {related.title}
                       </span>
                       <IconArrowRight
@@ -500,14 +500,14 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
                       />
                     </span>
                     {related.imageUrl ? (
-                      <span className='block aspect-square overflow-hidden rounded-lg bg-surface-subtle'>
+                      <span className='block aspect-square overflow-hidden rounded-xl bg-surface-subtle'>
                         <Image
                           src={related.imageUrl}
                           alt=''
                           width={400}
                           height={400}
                           sizes='(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'
-                          className='h-full w-full object-contain transition-transform duration-300 motion-safe:group-hover:scale-102'
+                          className='h-full w-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-102'
                         />
                       </span>
                     ) : null}
