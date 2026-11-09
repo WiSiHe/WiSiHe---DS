@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  IconArrowRight,
   IconChevronLeft,
   IconChevronRight,
   IconExternalLink,
@@ -463,29 +464,57 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
         </section>
 
         {relatedPaintings.length > 0 ? (
-          <section className='mx-auto mt-16 max-w-screen-2xl px-4 lg:px-8'>
-            <h2 className='mb-6 font-serif text-2xl font-bold'>Related paintings</h2>
-            <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
-              {relatedPaintings.map(related => (
-                <Link
-                  key={related._id}
-                  to='/paintings/$slug'
-                  params={{ slug: related.slug }}
-                  className='group overflow-hidden rounded-2xl border border-border'
-                >
-                  {related.imageUrl ? (
-                    <Image
-                      src={related.imageUrl}
-                      alt={related.title}
-                      width={400}
-                      height={400}
-                      className='aspect-square w-full object-cover transition-transform group-hover:scale-105'
-                    />
-                  ) : null}
-                  <p className='p-3 text-sm font-medium group-hover:text-accent'>{related.title}</p>
-                </Link>
-              ))}
+          <section
+            aria-labelledby='related-paintings-heading'
+            className='mx-auto mt-16 max-w-screen-2xl px-4 lg:px-8'
+          >
+            <div className='mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5'>
+              <h2
+                id='related-paintings-heading'
+                className='font-serif text-2xl font-bold text-foreground sm:text-3xl'
+              >
+                Related paintings
+              </h2>
+              <Link
+                to='/paintings'
+                className='inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
+              >
+                View all paintings <IconArrowRight size={16} aria-hidden />
+              </Link>
             </div>
+            <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {relatedPaintings.map(related => (
+                <li key={related._id} className='min-w-0'>
+                  <Link
+                    to='/paintings/$slug'
+                    params={{ slug: related.slug }}
+                    className='group block h-full rounded-xl border border-border bg-surface p-3 transition-[border-color,box-shadow,transform] duration-200 hover:border-accent hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent motion-safe:hover:-translate-y-0.5'
+                  >
+                    <span className='mb-3 flex min-h-11 items-center justify-between gap-2'>
+                      <span className='font-serif text-base font-bold leading-snug text-foreground group-hover:text-accent'>
+                        {related.title}
+                      </span>
+                      <IconArrowRight
+                        className='size-4 shrink-0 text-foreground-muted group-hover:text-accent'
+                        aria-hidden
+                      />
+                    </span>
+                    {related.imageUrl ? (
+                      <span className='block aspect-square overflow-hidden rounded-lg bg-surface-subtle'>
+                        <Image
+                          src={related.imageUrl}
+                          alt=''
+                          width={400}
+                          height={400}
+                          sizes='(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'
+                          className='h-full w-full object-contain transition-transform duration-300 motion-safe:group-hover:scale-102'
+                        />
+                      </span>
+                    ) : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         ) : null}
       </div>
