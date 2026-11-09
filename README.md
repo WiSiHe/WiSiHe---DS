@@ -52,6 +52,23 @@ cp apps/tanstack-start-portfolio/.env.example apps/tanstack-start-portfolio/.env
 cp apps/sanity-studio/.env.example apps/sanity-studio/.env.local
 ```
 
+### Portfolio preview
+
+Set `VITE_SANITY_PROJECT_ID` and `VITE_SANITY_DATASET` in the portfolio's `.env.local`
+to load published content, then start the server from the repository root:
+
+```sh
+pnpm --filter tanstack-start-portfolio dev
+```
+
+Open the exact Local URL printed by Vite, for example `http://localhost:1992/paintings/sigrid`,
+in the ChatGPT browser or your regular browser. Leave the server running while you review.
+If port 1992 is in use, Vite selects another port; use the Local URL from the current server's
+output, or reuse the existing portfolio server. A previously opened tab may point at an older server.
+If a server was started by an assistant and the connection stops after its reply, start it in
+your own terminal and leave that terminal open. Local browser automation can also be restricted
+by ChatGPT Work settings; this is separate from opening the page yourself.
+
 ### Useful Commands
 
 - `pnpm dev` - Start all development servers (portfolio, Studio, wisihe-ai and Storybook) concurrently.
