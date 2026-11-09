@@ -15,7 +15,7 @@ type DetailNavProps = {
 const backLinkClass = cn(
   'mb-3 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-foreground-muted transition-colors duration-150',
   'hover:text-foreground',
-  'focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
 export function DetailNav({ backHref, backLabel, crumbs, ariaLabel, className }: DetailNavProps) {

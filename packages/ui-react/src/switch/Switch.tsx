@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 const trackVariants = cva(
   [
-    'relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-transparent',
+    'relative inline-flex shrink-0 cursor-pointer rounded-full border-2 border-border-strong data-checked:border-transparent',
     'transition-colors duration-200 ease-in-out',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:cursor-not-allowed disabled:opacity-50',
@@ -25,8 +25,7 @@ const trackVariants = cva(
 
 const thumbVariants = cva(
   [
-    // bg-white works in both modes: the thumb is always white against a coloured track
-    'pointer-events-none inline-block rounded-full bg-white shadow ring-0',
+    'pointer-events-none inline-block rounded-full bg-foreground group-data-checked:bg-accent-contrast shadow ring-0',
     'transition-transform duration-200 ease-in-out',
   ],
   {

@@ -9,8 +9,8 @@ const checkboxVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-border hover:border-accent-border data-checked:border-transparent',
-        error: 'border-error text-error',
+        default: 'border-border-strong hover:border-accent data-checked:border-transparent',
+        error: 'border-danger text-danger data-checked:border-transparent',
       },
       inputSize: {
         default: 'size-5 rounded',
@@ -49,6 +49,7 @@ export function Checkbox({
         className,
       )}
       {...props}
+      aria-invalid={props['aria-invalid'] ?? (variant === 'error' || undefined)}
       aria-label={label ? undefined : props['aria-label']}
     >
       <IconCheck

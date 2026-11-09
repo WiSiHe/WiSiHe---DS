@@ -176,6 +176,15 @@ export function resolveTokenValue(value, root = buildTokenResolutionRoot(), visi
   return resolveTokenValue(tokenNode.$value, root, visited);
 }
 
+// Compatibility for consumers of the legacy comma-separated RGB variables.
+export function resolveRgbChannels(reference, root = buildTokenResolutionRoot()) {
+  const color = resolveTokenValue(reference, root);
+  if (typeof color !== 'string' || !/^#[\da-f]{6}$/i.test(color)) {
+    throw new Error(`Expected a six-digit hex color for ${reference}, received ${color}`);
+  }
+  return [1, 3, 5].map(index => Number.parseInt(color.slice(index, index + 2), 16)).join(', ');
+}
+
 export function loadFlatTokensForExport() {
   return buildTokenResolutionRoot();
 }

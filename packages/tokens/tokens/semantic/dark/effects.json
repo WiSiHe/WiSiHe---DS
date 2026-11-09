@@ -1,0 +1,13 @@
+{
+  "semantic": {
+    "dark": {
+      "shadow": {
+        "floating": { "$value": "0 12px 32px -8px rgb(0 0 0 / 0.5)", "$type": "boxShadow" },
+        "glow": {
+          "$value": "0 0 20px color-mix(in srgb, {semantic.dark.color.accent} 25%, transparent)",
+          "$type": "boxShadow"
+        }
+      }
+    }
+  }
+}
