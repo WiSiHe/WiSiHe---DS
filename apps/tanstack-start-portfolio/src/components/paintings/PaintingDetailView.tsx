@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  IconArrowRight,
   IconChevronLeft,
   IconChevronRight,
   IconExternalLink,
@@ -9,7 +10,7 @@ import {
   IconShoppingBag,
 } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
-import { Button, Chip, getNsfwImageBlurClass } from '@wisihe/ui-react';
+import { Button, Chip, getNsfwImageBlurClass, PaintingCardView } from '@wisihe/ui-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
@@ -17,6 +18,7 @@ import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'r
 import { DetailNav } from '@/components/detail/DetailNav';
 import { LikeButton } from '@/components/detail/LikeButton';
 import { ShareButton } from '@/components/detail/ShareButton';
+import { RouterLink } from '@/components/layout/RouterLink';
 import { SharedLayoutFrame } from '@/components/motion/SharedLayoutFrame';
 import Image from '@/components/ui/Image';
 import { AnalyticsEvent, trackEvent } from '@/lib/analytics/posthog';
@@ -463,29 +465,43 @@ export function PaintingDetailView({ painting }: PaintingDetailViewProps) {
         </section>
 
         {relatedPaintings.length > 0 ? (
-          <section className='mx-auto mt-16 max-w-screen-2xl px-4 lg:px-8'>
-            <h2 className='mb-6 font-serif text-2xl font-bold'>Related paintings</h2>
-            <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
-              {relatedPaintings.map(related => (
-                <Link
-                  key={related._id}
-                  to='/paintings/$slug'
-                  params={{ slug: related.slug }}
-                  className='group overflow-hidden rounded-2xl border border-border'
-                >
-                  {related.imageUrl ? (
-                    <Image
-                      src={related.imageUrl}
-                      alt={related.title}
-                      width={400}
-                      height={400}
-                      className='aspect-square w-full object-cover transition-transform group-hover:scale-105'
-                    />
-                  ) : null}
-                  <p className='p-3 text-sm font-medium group-hover:text-accent'>{related.title}</p>
-                </Link>
-              ))}
+          <section
+            aria-labelledby='related-paintings-heading'
+            className='mx-auto mt-16 max-w-screen-2xl px-4 lg:px-8'
+          >
+            <div className='mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5'>
+              <h2
+                id='related-paintings-heading'
+                className='font-serif text-2xl font-bold text-foreground sm:text-3xl'
+              >
+                Related paintings
+              </h2>
+              <Link
+                to='/paintings'
+                className='inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
+              >
+                View all paintings <IconArrowRight size={16} aria-hidden />
+              </Link>
             </div>
+            <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {relatedPaintings.map(related => (
+                <li key={related._id} className='min-w-0'>
+                  <p className='flex min-h-11 items-center font-serif text-base font-semibold leading-snug text-foreground'>
+                    {related.title}
+                  </p>
+                  <PaintingCardView
+                    title={related.title}
+                    href={`/paintings/${related.slug}`}
+                    imageSrc={related.imageUrl}
+                    format={related.format}
+                    aspectRatio={related.aspectRatio}
+                    brushSeedKey={related._id}
+                    LinkComponent={RouterLink}
+                    ImageComponent={Image}
+                  />
+                </li>
+              ))}
+            </ul>
           </section>
         ) : null}
       </div>
