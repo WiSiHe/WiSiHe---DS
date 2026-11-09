@@ -68,6 +68,7 @@ interface RawRelatedPainting {
   _id: string;
   slug?: string | null;
   title?: string | null;
+  format?: string | null;
   image?: (RawPaintingImage & Parameters<typeof urlForImage>[0]) | null;
 }
 
@@ -109,6 +110,8 @@ export interface PaintingDetailData {
     _id: string;
     slug: string;
     title: string;
+    format: string | null;
+    aspectRatio: number | null;
     imageUrl: string | null;
     lqip: string | null;
   }>;
@@ -217,10 +220,12 @@ export const getPainting = createServerFn({ method: 'GET' })
           | order(paintedAt desc) [0...4] {
             _id,
             title,
+            format,
             "slug": slug.current,
             image {
               ...,
-              "lqip": asset->metadata.lqip
+              "lqip": asset->metadata.lqip,
+              "aspectRatio": asset->metadata.dimensions.aspectRatio
             }
           }`,
           { slug: data.slug, tagNames },
@@ -232,6 +237,8 @@ export const getPainting = createServerFn({ method: 'GET' })
           _id: p._id,
           slug: p.slug as string,
           title: p.title ?? 'Painting',
+          format: p.format ?? null,
+          aspectRatio: p.image?.aspectRatio ?? null,
           imageUrl: p.image ? urlForImage(p.image).width(600).fit('max').url() : null,
           lqip: p.image?.lqip ?? null,
         }));
