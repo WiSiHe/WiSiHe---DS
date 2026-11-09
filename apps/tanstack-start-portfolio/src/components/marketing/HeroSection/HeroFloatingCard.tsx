@@ -197,7 +197,7 @@ export function HeroFloatingCard({
   const cardLink = (
     <Link
       to={href}
-      className='relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-[box-shadow] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle hover:shadow-[0_28px_40px_-10px_rgba(0,0,0,0.35),0_12px_18px_-8px_rgba(0,0,0,0.22)] dark:ring-white/10'
+      className='relative isolate block h-full w-full overflow-hidden rounded-xl ring-1 shadow-[0_18px_28px_-8px_rgba(0,0,0,0.28),0_8px_12px_-6px_rgba(0,0,0,0.18)] ring-black/10 transition-[box-shadow] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background-subtle hover:shadow-[0_28px_40px_-10px_rgba(0,0,0,0.35),0_12px_18px_-8px_rgba(0,0,0,0.22)] dark:ring-white/10'
     >
       <span className='sr-only'>
         {isPainting ? 'View painting' : 'View project'}: {displayTitle}

@@ -90,7 +90,7 @@ export function CountryPhotoStrip({ photos, country, className }: CountryPhotoSt
               {href ? (
                 <RouterLink
                   href={href}
-                  className='group relative block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+                  className='group relative block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
                   aria-label={photo.title ?? `View photo from ${country}`}
                 >
                   {thumb}

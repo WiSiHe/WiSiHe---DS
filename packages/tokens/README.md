@@ -45,6 +45,41 @@ For developer experience in Tailwind, these are exposed through clean aliases su
 
 Use WiSiHe-native names only. Do **not** use shadcn aliases — they are not exported.
 
+The public semantic names describe purpose: `background`, `surface`, `surface-subtle`,
+`surface-elevated`, `foreground`, `foreground-subtle`, `foreground-muted`, `border`,
+`border-subtle`, `border-strong`, `accent`, and the status roles `success`, `warning`,
+`danger`, and `info`. Add `-hover` or `-active` for interactive fills, `-contrast`
+for text on those fills, and `-text` / `-subtle` for text on tinted status surfaces.
+Do not use a `-text` role as a hover background: use the matching `-hover` role.
+Use `ring` for keyboard focus, not a translucent accent; pair it with the adjacent
+surface or a contrasting offset. Use `danger`, `danger-hover`, `danger-subtle`,
+and `danger-text` for error fields and messages so they adapt to both themes.
+`border` and `border-subtle` are decorative; use `border-strong` where a control
+boundary is necessary to identify the control.
+
+`surface-elevated` is neutral; `surface-subtle` is the existing tinted surface.
+The accent intentionally resolves to electric blue in light mode and vivid pink in dark mode.
+Light mode uses a cool pale gray background; dark mode uses purple-tinted charcoal
+for its background, surface, and elevated surface.
+
+Light mode uses the rounded radius scale; dark mode uses square corners for `sm`
+through `3xl`. `full` remains round in both themes for avatars, switches, and pills.
+Keep ordinary surfaces flat. Use `shadow-floating` with `surface-elevated` for
+floating menus and dialogs. `shadow-glow` is a restrained accent glow in dark
+mode and has no visible effect in light mode; reserve it for occasional decorative
+highlights, not focus or state indication.
+Warm and cool accents have their own `accent-warm[-hover|-contrast]` and
+`accent-cool[-hover|-contrast]` pairings; do not combine their primitive scales
+with theme-dependent `foreground` without checking contrast.
+
+The older `background-default`, `surface-default`, `text-default`, `text-subtle`,
+and `base-*` names remain available for compatibility but are deprecated for new
+consumer code. Prefer `background`, `surface`, `foreground`, `foreground-subtle`,
+and the matching `accent*` names. The nested `scale` roles are the internal source
+of semantic decisions, not the preferred consumer API. Legacy `*-rgb` variables
+remain available and are derived from the theme tokens; prefer using the semantic
+color with Tailwind opacity modifiers or CSS `color-mix()` for new code.
+
 | Use | Do not use |
 |-----|------------|
 | `text-foreground-muted` | `text-muted-foreground` |

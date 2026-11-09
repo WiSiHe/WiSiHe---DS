@@ -25,7 +25,7 @@ const navButtonClass = cn(
   'transition-[color,background-color,box-shadow,transform] duration-200',
   'hover:bg-surface-hover hover:text-foreground',
   'active:scale-[0.97]',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
   'disabled:pointer-events-none disabled:opacity-40',
 );
 
@@ -37,7 +37,7 @@ const pageButtonClass = cn(
   'transition-[color,background-color,box-shadow,transform] duration-200',
   'hover:bg-surface-hover hover:text-foreground',
   'active:scale-[0.97]',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
   'disabled:pointer-events-none disabled:opacity-40',
 );
 

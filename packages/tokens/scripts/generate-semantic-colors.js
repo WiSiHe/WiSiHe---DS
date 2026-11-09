@@ -4,6 +4,7 @@ import {
   flattenTokenTree,
   loadLayeredTokens,
   replaceReferencesWithCssVars,
+  resolveRgbChannels,
 } from './lib/token-loader.js';
 
 const { semanticLight, semanticDark } = loadLayeredTokens();
@@ -49,8 +50,10 @@ function generateSemanticColors() {
 `;
 
   output += createColorBlock(':root', lightColors, [
-    ['--color-accent-rgb-val', '219, 0, 109'], // Neon Pink 600
-    ['--color-foreground-rgb-val', '23, 23, 23'], // Neutral 900
+    ['--color-accent-rgb-val', resolveRgbChannels('{semantic.color.accent}')],
+    ['--color-foreground-rgb-val', resolveRgbChannels('{semantic.color.foreground}')],
+    ['--color-accent-rgb', 'var(--color-accent-rgb-val)'],
+    ['--color-foreground-rgb', 'var(--color-foreground-rgb-val)'],
   ]);
 
   output += `
@@ -58,8 +61,8 @@ function generateSemanticColors() {
 `;
 
   output += createColorBlock(':root.dark', darkColors, [
-    ['--color-accent-rgb-val', '244, 114, 182'], // Neon Pink 400
-    ['--color-foreground-rgb-val', '250, 250, 250'], // Neutral 50
+    ['--color-accent-rgb-val', resolveRgbChannels('{semantic.dark.color.accent}')],
+    ['--color-foreground-rgb-val', resolveRgbChannels('{semantic.dark.color.foreground}')],
   ]);
 
   // Output only standard CSS variables for runtime switching

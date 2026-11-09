@@ -16,7 +16,7 @@ function controlButtonClassName() {
   return cn(
     'flex size-9 items-center justify-center rounded-md text-foreground-muted transition-colors',
     'hover:bg-surface hover:text-foreground',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
   );
 }
 

@@ -190,7 +190,7 @@ export function PhotographyMapView({
                     'absolute right-2 top-2 z-20 flex size-10 items-center justify-center rounded-full',
                     'border border-border/60 bg-background text-foreground shadow-md',
                     'transition-colors hover:border-accent/40 hover:bg-surface-hover',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                   )}
                   aria-label='Close photo preview'
                 >

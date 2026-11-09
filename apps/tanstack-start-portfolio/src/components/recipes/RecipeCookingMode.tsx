@@ -20,7 +20,7 @@ export function RecipeCookingMode({ className }: RecipeCookingModeProps) {
       aria-pressed={isActive}
       className={cn(
         'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         isActive
           ? 'border-accent/40 bg-accent/10 text-accent'
           : 'border-border bg-surface text-foreground-subtle hover:border-accent/30 hover:text-foreground',

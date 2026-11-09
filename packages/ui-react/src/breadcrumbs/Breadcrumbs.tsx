@@ -20,7 +20,7 @@ const crumbLinkClass = cn(
   'rounded-sm px-0.5 -mx-0.5 py-0.5 text-foreground-muted transition-colors duration-150',
   'hover:text-foreground hover:underline hover:underline-offset-4 hover:decoration-foreground/35',
   'focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4 focus-visible:decoration-foreground/35',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 );
 
 export function Breadcrumbs({ crumbs, className, renderLink }: BreadcrumbsProps) {

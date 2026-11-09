@@ -12,13 +12,13 @@ export interface SelectOption {
 
 const selectVariants = cva(
   [
-    'relative w-full cursor-pointer rounded-md border border-input bg-background py-2 pl-3 pr-10 text-left text-sm text-foreground',
+    'relative w-full cursor-pointer rounded-md border border-border-strong bg-background py-2 pl-3 pr-10 text-left text-sm text-foreground',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 transition-colors group',
   ],
   {
     variants: {
       variant: {
-        default: 'hover:border-border',
+        default: '',
         filled:
           'bg-surface-subtle border-transparent hover:bg-surface-subtle/80 focus-visible:bg-background focus-visible:border-ring',
       },
@@ -99,7 +99,7 @@ export function Select({
           </ListboxButton>
           <ListboxOptions
             transition
-            className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-surface border border-border py-1 text-base shadow-md focus:outline-none sm:text-sm transition duration-100 ease-in data-leave:data-closed:opacity-0 origin-top'
+            className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-surface-elevated border border-border py-1 text-base shadow-floating focus:outline-none sm:text-sm transition duration-100 ease-in data-leave:data-closed:opacity-0 origin-top'
           >
             {options.map(option => (
               <ListboxOption

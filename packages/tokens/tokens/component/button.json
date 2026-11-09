@@ -32,7 +32,7 @@
         "danger": {
           "background": { "$value": "{semantic.color.danger}", "$type": "color" },
           "foreground": { "$value": "{semantic.color.danger-contrast}", "$type": "color" },
-          "background-hover": { "$value": "{color.danger-primitive.700}", "$type": "color" }
+          "background-hover": { "$value": "{semantic.color.danger-hover}", "$type": "color" }
         }
       }
     }

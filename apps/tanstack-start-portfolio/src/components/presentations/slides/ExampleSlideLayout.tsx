@@ -93,7 +93,7 @@ export function ExampleSlideLayout({
               type='button'
               onClick={() => setSelectedExampleIndex(exampleIndex)}
               className={cn(
-                'w-full rounded-lg border-2 p-3 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none md:p-3.5',
+                'w-full rounded-lg border-2 p-3 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none md:p-3.5',
                 selectedExampleIndex === exampleIndex
                   ? 'border-accent-border bg-accent text-accent-contrast shadow-md'
                   : 'border-border bg-surface hover:border-accent/50 hover:bg-surface-hover',

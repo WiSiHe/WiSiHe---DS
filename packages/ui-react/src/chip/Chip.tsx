@@ -9,24 +9,21 @@ const chipStyles = cva(
     variants: {
       variation: {
         default:
-          'bg-surface-hover text-foreground border border-border hover:bg-surface hover:border-accent hover:shadow-sm active:scale-95',
-        primary:
-          'bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-md active:scale-95 shadow-sm',
+          'bg-surface-hover text-foreground border border-border hover:bg-surface hover:border-accent active:scale-95',
+        primary: 'bg-accent text-accent-contrast hover:bg-accent-hover active:scale-95',
         secondary:
-          'bg-surface-hover text-foreground border border-border hover:bg-surface-active hover:border-accent hover:shadow-md active:scale-95 shadow-sm',
+          'bg-surface-hover text-foreground border border-border hover:bg-surface-active hover:border-accent active:scale-95',
         tertiary:
-          'bg-surface text-foreground border border-border hover:bg-surface-hover hover:border-accent hover:shadow-sm active:scale-95',
-        highlight:
-          'bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-md active:scale-95 shadow-sm',
-        success:
-          'bg-success text-success-contrast hover:bg-success hover:opacity-90 hover:shadow-md active:scale-95 shadow-sm',
+          'bg-surface text-foreground border border-border hover:bg-surface-hover hover:border-accent active:scale-95',
+        highlight: 'bg-accent text-accent-contrast hover:bg-accent-hover active:scale-95',
+        success: 'bg-success text-success-contrast hover:bg-success-hover active:scale-95',
       },
       outlined: {
         true: 'border border-border bg-transparent hover:bg-surface hover:border-accent text-foreground hover:text-foreground active:scale-95',
         false: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-accent bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-lg active:scale-95 shadow-md',
+        true: 'ring-2 ring-offset-2 ring-accent bg-accent text-accent-contrast hover:bg-accent-hover active:scale-95',
         false: '',
       },
       iconPosition: {
