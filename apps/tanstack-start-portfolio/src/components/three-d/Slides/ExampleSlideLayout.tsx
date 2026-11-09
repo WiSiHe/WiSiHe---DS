@@ -85,7 +85,7 @@ export const ExampleSlideLayout = ({ slideData, index, slideDesign }: ExampleSli
               onClick={() => setSelectedExampleIndex(exampleIndex)}
               type='button'
               className={cn(
-                'w-full text-left p-3 md:p-3.5 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                'w-full text-left p-3 md:p-3.5 rounded-lg border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 selectedExampleIndex === exampleIndex
                   ? 'bg-accent text-accent-contrast border-accent-border shadow-md'
                   : 'bg-surface border-border border hover:border-accent/50 hover:bg-surface-hover transition-colors',

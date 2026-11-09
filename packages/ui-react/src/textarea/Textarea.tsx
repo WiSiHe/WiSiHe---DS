@@ -17,9 +17,8 @@ const textareaVariants = cva(
           'bg-surface-subtle border-transparent hover:bg-surface-subtle/80 focus-visible:bg-background focus-visible:border-ring',
       },
       state: {
-        default: 'border-input hover:border-border focus-visible:ring-ring',
-        error:
-          'border-error-500 bg-error-50 hover:border-error-600 focus-visible:ring-error-500/30',
+        default: 'border-border-strong focus-visible:ring-ring',
+        error: 'border-danger bg-danger-subtle hover:border-danger-hover focus-visible:ring-danger',
       },
     },
     defaultVariants: {
@@ -91,7 +90,7 @@ export function Textarea({
       />
 
       {errorMessage && (
-        <p id={errorId} role='alert' className='text-xs font-medium text-error-700'>
+        <p id={errorId} role='alert' className='text-xs font-medium text-danger-text'>
           {errorMessage}
         </p>
       )}

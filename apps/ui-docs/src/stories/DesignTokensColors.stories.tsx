@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import type { CSSProperties } from 'react';
 
 const meta = {
   title: 'Tokens/Color',
@@ -154,4 +155,114 @@ function ColorsPage() {
 
 export const Colors: Story = {
   render: () => <ColorsPage />,
+};
+
+type ColorDirection = {
+  label: string;
+  description: string;
+  background: string;
+  surface: string;
+  foreground: string;
+  muted: string;
+  border: string;
+  accent: string;
+  accentText: string;
+  onAccent: string;
+  accentLabel: string;
+  contrastLabel: string;
+};
+
+const DIRECTIONS: readonly ColorDirection[] = [
+  {
+    label: 'Light · current',
+    description: 'Electric blue on cool pale gray.',
+    background: 'var(--color-cool-neutral-50)',
+    surface: 'var(--color-neutral-white)',
+    foreground: 'var(--color-neutral-900)',
+    muted: 'var(--color-neutral-600)',
+    border: 'var(--color-neutral-300)',
+    accent: 'var(--color-brand-1-700)',
+    accentText: 'var(--color-brand-1-700)',
+    onAccent: 'var(--color-neutral-white)',
+    accentLabel: 'brand-1-700 / neutral-white',
+    contrastLabel: '6.70:1',
+  },
+  {
+    label: 'Dark · current',
+    description: 'Vivid pink on purple-tinted charcoal.',
+    background: 'var(--color-plum-neutral-950)',
+    surface: 'var(--color-plum-neutral-800)',
+    foreground: 'var(--color-neutral-50)',
+    muted: 'var(--color-neutral-300)',
+    border: 'var(--color-plum-neutral-600)',
+    accent: 'var(--color-neon-pink-400)',
+    accentText: 'var(--color-neon-pink-400)',
+    onAccent: 'var(--color-neutral-950)',
+    accentLabel: 'neon-pink-400 / neutral-950',
+    contrastLabel: '6.74:1',
+  },
+];
+
+function DirectionPreview({ direction }: { direction: ColorDirection }) {
+  const panelStyle: CSSProperties = {
+    backgroundColor: direction.background,
+    color: direction.foreground,
+    borderColor: direction.border,
+  };
+  return (
+    <article className='flex flex-col gap-4 rounded-lg border p-6' style={panelStyle}>
+      <div>
+        <h3 className='text-lg font-semibold'>{direction.label}</h3>
+        <p className='mt-1 text-sm' style={{ color: direction.muted }}>
+          {direction.description}
+        </p>
+      </div>
+      <div
+        className='rounded-lg border p-5'
+        style={{ backgroundColor: direction.surface, borderColor: direction.border }}
+      >
+        <p className='text-sm font-semibold' style={{ color: direction.accentText }}>
+          Featured project
+        </p>
+        <h4 className='mt-2 text-2xl font-semibold'>Design with purpose.</h4>
+        <p className='mt-2 text-sm' style={{ color: direction.muted }}>
+          Clear surfaces, readable type, and a distinct accent for each theme.
+        </p>
+        <button
+          type='button'
+          className='mt-5 rounded-md px-4 py-2 text-sm font-semibold'
+          style={{ backgroundColor: direction.accent, color: direction.onAccent }}
+        >
+          View project
+        </button>
+      </div>
+      <p className='text-sm' style={{ color: direction.muted }}>
+        Fill / label: {direction.accentLabel} · {direction.contrastLabel}
+      </p>
+    </article>
+  );
+}
+
+export const AccentDirections: Story = {
+  render: () => (
+    <main className='min-h-screen bg-background p-6 text-foreground md:p-10'>
+      <div className='mx-auto max-w-6xl'>
+        <h1 className='text-2xl font-semibold'>Accent directions</h1>
+        <p className='mt-2 max-w-3xl text-sm text-foreground-subtle'>
+          Compare the light and dark palette directions. These examples use primitive tokens that
+          back the semantic theme. Contrast ratios apply to the button fill and label only;
+          interactive states and other contexts need separate checks.
+        </p>
+        <div className='mt-8 grid gap-4 md:grid-cols-2'>
+          {DIRECTIONS.map(direction => (
+            <DirectionPreview key={direction.label} direction={direction} />
+          ))}
+        </div>
+        <p className='mt-6 text-sm text-foreground-subtle'>
+          Suggested public names: accent, accent-hover, accent-active, accent-contrast, and
+          accent-text. Use accent-text on surfaces; pair accent-contrast with the accent fill.
+        </p>
+      </div>
+    </main>
+  ),
 };

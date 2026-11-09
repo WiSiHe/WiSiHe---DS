@@ -64,7 +64,7 @@ export const States: Story = {
       </div>
       <div className='flex items-center gap-3'>
         <Checkbox checked={false} onChange={() => {}} variant='error' />
-        <span className='text-sm text-error'>Error State</span>
+        <span className='text-sm text-danger-text'>Error State</span>
       </div>
     </div>
   ),

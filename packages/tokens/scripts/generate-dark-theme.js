@@ -5,6 +5,7 @@ import {
   flattenTokenTree,
   loadLayeredTokens,
   replaceReferencesWithCssVars,
+  resolveRgbChannels,
   resolveTokenValue,
 } from './lib/token-loader.js';
 
@@ -12,6 +13,7 @@ const { semanticDark, semanticLight } = loadLayeredTokens();
 const darkColors = semanticDark.semantic?.dark ?? {};
 const lightSemanticColors = semanticLight.semantic?.color ?? {};
 const lightSizeRadius = semanticLight.semantic?.size?.radius ?? {};
+const lightShadows = semanticLight.semantic?.shadow ?? {};
 const _darkSemanticColors = darkColors.color ?? {};
 const _darkSizeTokens = darkColors.size ?? {};
 const tokenRoot = buildTokenResolutionRoot();
@@ -83,6 +85,13 @@ function collectThemeInlineLines() {
     lines.push(`  --radius-${radiusName}: var(--${varName}, ${fallback});`);
   }
 
+  for (const { path: tokenPath, token } of flattenTokenTree(lightShadows)) {
+    if (token.$type === 'boxShadow') {
+      const name = tokenPath.join('-');
+      lines.push(`  --shadow-${name}: var(--shadow-${name}-val);`);
+    }
+  }
+
   return [...new Set(lines)].sort((a, b) => a.localeCompare(b));
 }
 
@@ -95,8 +104,8 @@ function generateDarkModeTheme() {
 `;
 
   output += createColorBlock('.dark', darkColors, [
-    ['--color-accent-rgb', '244, 114, 182'],
-    ['--color-foreground-rgb', '250, 250, 250'],
+    ['--color-accent-rgb', resolveRgbChannels('{semantic.dark.color.accent}', tokenRoot)],
+    ['--color-foreground-rgb', resolveRgbChannels('{semantic.dark.color.foreground}', tokenRoot)],
   ]);
 
   const themeInlineLines = collectThemeInlineLines();
