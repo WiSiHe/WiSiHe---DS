@@ -8,6 +8,7 @@ import Image from '@/components/ui/Image';
 import {
   getPhotographyAspectRatio,
   isValidPhotographyLqip,
+  srcSetForPhotographyFeatured,
   urlForPhotographyFeatured,
 } from '@/lib/photography/photographyImage';
 import { photographySectionLabelClass } from './photographyStyles';
@@ -52,6 +53,7 @@ export function PhotographyFeaturedHero({ photo }: PhotographyFeaturedHeroProps)
           <div className='relative h-full w-full overflow-hidden rounded-xl'>
             <Image
               src={imageUrl}
+              srcSet={srcSetForPhotographyFeatured(photo.image, aspectRatio)}
               alt={photo.image?.alt ?? photo.title ?? 'Featured photograph'}
               fill
               priority
