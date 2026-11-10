@@ -66,13 +66,37 @@ export function srcSetForPhotographyCard(
   );
 }
 
+const FEATURED_WIDTH = 1400;
+
+function featuredHeight(aspectRatio: number): number {
+  return Math.min(900, Math.max(480, Math.round(FEATURED_WIDTH / aspectRatio)));
+}
+
 export function urlForPhotographyFeatured(
   image: PhotographyImageSource,
   aspectRatio: number,
 ): string | null {
-  const width = 1400;
-  const height = Math.min(900, Math.max(480, Math.round(width / aspectRatio)));
-  return buildPhotographyUrl(image, { width, height });
+  return buildPhotographyUrl(image, {
+    width: FEATURED_WIDTH,
+    height: featuredHeight(aspectRatio),
+  });
+}
+
+/**
+ * Responsive candidates for the same crop as `urlForPhotographyFeatured`. Each height scales with the
+ * width so every candidate keeps the largest candidate's aspect ratio and its `w` descriptor is accurate.
+ */
+export function srcSetForPhotographyFeatured(
+  image: PhotographyImageSource,
+  aspectRatio: number,
+): string | undefined {
+  const baseHeight = featuredHeight(aspectRatio);
+  return buildSrcSet([700, 1050, FEATURED_WIDTH], width =>
+    buildPhotographyUrl(image, {
+      width,
+      height: Math.round((baseHeight * width) / FEATURED_WIDTH),
+    }),
+  );
 }
 
 export function isValidPhotographyLqip(lqip: string | null | undefined): lqip is string {
