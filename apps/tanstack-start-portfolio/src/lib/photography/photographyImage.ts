@@ -66,13 +66,34 @@ export function srcSetForPhotographyCard(
   );
 }
 
+const FEATURED_WIDTH = 1400;
+
+function featuredHeight(aspectRatio: number): number {
+  return Math.min(900, Math.max(480, Math.round(FEATURED_WIDTH / aspectRatio)));
+}
+
 export function urlForPhotographyFeatured(
   image: PhotographyImageSource,
   aspectRatio: number,
 ): string | null {
-  const width = 1400;
-  const height = Math.min(900, Math.max(480, Math.round(width / aspectRatio)));
-  return buildPhotographyUrl(image, { width, height });
+  return buildPhotographyUrl(image, {
+    width: FEATURED_WIDTH,
+    height: featuredHeight(aspectRatio),
+  });
+}
+
+/**
+ * Responsive candidates for `urlForPhotographyFeatured`. Each box height is `width / aspectRatio`
+ * (no clamp), so Sanity's `fit('max')` delivers exactly the width each `w` descriptor declares, even
+ * for tall photos where the single-URL crop is height-clamped.
+ */
+export function srcSetForPhotographyFeatured(
+  image: PhotographyImageSource,
+  aspectRatio: number,
+): string | undefined {
+  return buildSrcSet([700, 1050, FEATURED_WIDTH], width =>
+    buildPhotographyUrl(image, { width, height: Math.round(width / aspectRatio) }),
+  );
 }
 
 export function isValidPhotographyLqip(lqip: string | null | undefined): lqip is string {
