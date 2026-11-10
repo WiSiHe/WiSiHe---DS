@@ -60,11 +60,11 @@ describe('PhotographyFeaturedHero srcSet (#112)', () => {
     for (const c of candidates) expect(`${c.w}w`).toBe(c.descriptor);
   });
 
-  it('keeps one aspect ratio across candidates, even when the height clamp applies', () => {
-    // Portrait ratio: the largest candidate's height is clamped to 900.
+  it('delivers the declared width for tall photos, where the single-URL crop is height-clamped', () => {
+    // Ratio 0.5: a clamped box (max 900px tall) would deliver only 450px for a "1400w" candidate.
     const candidates = srcSetCandidates(render(1000, 2000));
-    const [small, , large] = candidates;
-    expect(large?.h).toBe(900);
-    expect((small?.h ?? 0) / (small?.w ?? 1)).toBeCloseTo((large?.h ?? 0) / (large?.w ?? 1), 2);
+    for (const c of candidates) {
+      expect(Math.min(c.w, c.h * 0.5)).toBe(c.w);
+    }
   });
 });

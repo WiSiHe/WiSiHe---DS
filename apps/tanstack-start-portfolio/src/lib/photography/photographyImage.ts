@@ -83,19 +83,16 @@ export function urlForPhotographyFeatured(
 }
 
 /**
- * Responsive candidates for the same crop as `urlForPhotographyFeatured`. Each height scales with the
- * width so every candidate keeps the largest candidate's aspect ratio and its `w` descriptor is accurate.
+ * Responsive candidates for `urlForPhotographyFeatured`. Each box height is `width / aspectRatio`
+ * (no clamp), so Sanity's `fit('max')` delivers exactly the width each `w` descriptor declares, even
+ * for tall photos where the single-URL crop is height-clamped.
  */
 export function srcSetForPhotographyFeatured(
   image: PhotographyImageSource,
   aspectRatio: number,
 ): string | undefined {
-  const baseHeight = featuredHeight(aspectRatio);
   return buildSrcSet([700, 1050, FEATURED_WIDTH], width =>
-    buildPhotographyUrl(image, {
-      width,
-      height: Math.round((baseHeight * width) / FEATURED_WIDTH),
-    }),
+    buildPhotographyUrl(image, { width, height: Math.round(width / aspectRatio) }),
   );
 }
 
