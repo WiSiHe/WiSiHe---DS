@@ -99,7 +99,7 @@ test('elevated surfaces are neutral and distinct from tinted surfaces', () => {
 });
 
 test('legacy RGB channels resolve from the theme accent', () => {
-  assert.equal(resolveRgbChannels('{semantic.color.accent}', root), '29, 78, 216');
+  assert.equal(resolveRgbChannels('{semantic.color.accent}', root), '218, 44, 0');
   assert.equal(resolveRgbChannels('{semantic.dark.color.accent}', root), '255, 84, 176');
 });
 
