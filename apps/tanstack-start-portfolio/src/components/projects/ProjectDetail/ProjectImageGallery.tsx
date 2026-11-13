@@ -12,6 +12,7 @@ import {
   PROJECT_GALLERY_VIEWPORT_HEIGHT,
   type ProjectGalleryImage,
 } from '@/lib/projects/projectGalleryImages';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 import { imageUrl } from '@/server/fns';
 
 type ProjectImageGalleryProps = {
@@ -57,8 +58,10 @@ export function ProjectImageGallery({
       <div className='h-full overflow-hidden' ref={emblaRef}>
         <div className='flex h-full'>
           {images.map((img, index) => {
-            const src = imageUrl(img as Parameters<typeof imageUrl>[0], 1400);
+            const source = img as Parameters<typeof imageUrl>[0];
+            const src = imageUrl(source, 1400);
             if (!src) return null;
+            const srcSet = buildSrcSet([700, 1050, 1400], width => imageUrl(source, width));
             return (
               <div
                 key={getProjectGalleryImageKey(img, index)}
@@ -66,6 +69,7 @@ export function ProjectImageGallery({
               >
                 <Image
                   src={src}
+                  srcSet={srcSet}
                   alt={img.alt || `${projectTitle} — image ${index + 1}`}
                   fill
                   priority={index === 0}
