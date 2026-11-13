@@ -29,6 +29,17 @@ WiSiHe DS: a design system monorepo. `@wisihe/tokens` (design tokens) feeds `@wi
 5. **Turbo, not cd; dist is not source.** Run tasks with `pnpm --filter` or `turbo run`, never from inside a package directory, so the build order (tokens, ui-react, apps) and caching are respected. Never edit `dist/` or generated files; change the source and rebuild.
 6. **Tests exercise the real code path and must be able to fail.** Regression and guard tests render or call the real component, route or function (e.g. `RootComponent`, the real hero), not a hand-built copy or constants the test defines itself; stub only external services (Sanity, GSAP). Before opening the PR, break the code on purpose (move the element, revert the fix), confirm the test fails, and put that command and its failing output in the PR description. A test that cannot fail gives false confidence: Qodo flagged this on #163, #165 and #168.
 
+## Quality gate
+
+Before reporting a coding task as done, review it with Qodo and meet this gate. Qodo Reviewer covers uncommitted changes (staged and unstaged); Review Resolver covers findings on an open PR. Pass the task requirements and the implementation decisions as context.
+
+- **Fix:** every valid High and Medium finding, of any type (Bug, Rule violation, Requirement gap), including Medium Bugs. Investigate each against the code and requirements first. If a finding is wrong, dispute it with evidence (file and line, or test output) instead of fixing it.
+- **Flag, don't block:** all Low findings, including Low Rule violations. Leave them unchanged and list them in the final report.
+- **Loop:** fix, run `pnpm lint && pnpm typecheck && pnpm test`, rerun the review. Stop after 3 rounds or when a round makes no progress. For a PR, confirm the latest completed review covers the current head commit.
+- **Not done:** report the task as not done, and say what you need from me, if a valid High or Medium finding is unresolved, checks or review are incomplete or failed, or the loop stalls.
+- **Final report:** every finding with its type, severity and decision; checks run; the latest review result; and the Low findings.
+- **Severity labels:** where a tool shows only `action_level`, read `action_required` as High, `remediation_recommended` as Medium and `informational` as Low.
+
 Releases use Changesets: add a `.changeset/*.md` for user-visible changes.
 
 # This is NOT the Turborepo you know
