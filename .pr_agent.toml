@@ -1,0 +1,9 @@
+[review_agent]
+enable_review_md = true
+issues_user_guidelines = """
+This is a design-system monorepo (tokens, ui-react, two portfolio apps). Follow REVIEW.md and AGENTS.md.
+- Do not report a missing blur placeholder (LQIP) on object-contain images. It is intentional.
+- Do report a blur placeholder added to an object-contain image.
+- Do report srcSet w descriptors that differ from the width the Sanity URL delivers.
+- Do report tests that never call the real component or function, and performance numbers claimed beyond the routes measured.
+"""
