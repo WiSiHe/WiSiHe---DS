@@ -4,7 +4,7 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { cn } from '@wisihe/utils';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, useReducedMotion } from 'motion/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from '@/components/ui/Image';
 import { contentImageLayoutId, sharedLayoutTransition } from '@/lib/motion/sharedLayout';
 import {
@@ -46,7 +46,9 @@ export function ProjectImageGallery({
     };
   }, [emblaApi, onSelect]);
 
-  if (!images.length) return null;
+  const slideCount = useMemo(() => images.length, [images]);
+
+  if (!slideCount) return null;
 
   const galleryShellClass = cn(
     'relative overflow-hidden rounded-3xl border border-border/20 bg-surface-subtle shadow-lg',
@@ -61,7 +63,7 @@ export function ProjectImageGallery({
             const source = img as Parameters<typeof imageUrl>[0];
             const src = imageUrl(source, 1400);
             if (!src) return null;
-            const srcSet = buildSrcSet([700, 1050, 1400], width => imageUrl(source, width));
+            const srcSet = buildSrcSet([700, 1050, 1400, 2800], () => src);
             return (
               <div
                 key={getProjectGalleryImageKey(img, index)}
@@ -72,6 +74,8 @@ export function ProjectImageGallery({
                   srcSet={srcSet}
                   alt={img.alt || `${projectTitle} — image ${index + 1}`}
                   fill
+                  placeholder='blur'
+                  blurDataURL={img.lqip ?? undefined}
                   priority={index === 0}
                   className='object-contain'
                   sizes='(max-width: 1280px) 100vw, 1200px'
