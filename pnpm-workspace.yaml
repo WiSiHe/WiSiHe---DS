@@ -4,7 +4,7 @@ packages:
   - tools/*
 
 catalog:
-  '@sanity/client': ^8.9.0
+  '@sanity/client': ^8.16.0
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0
   '@types/three': 0.186.0
@@ -15,7 +15,7 @@ catalog:
   posthog-js: ^1.438.3
   react: 19.3.1
   react-dom: 19.3.1
-  sanity: ^6.18.0
+  sanity: ^6.23.0
   tailwindcss: ^4.3.3
   three: 0.186.1
   typescript: ^7.0.2
