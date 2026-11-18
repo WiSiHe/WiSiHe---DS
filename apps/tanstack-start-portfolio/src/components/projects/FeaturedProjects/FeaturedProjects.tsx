@@ -72,25 +72,31 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
         },
       );
 
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
+      mm.add('(prefers-reduced-motion: no-preference)', context => {
         // Opacity only, so waiting items stay in the accessibility tree and tab order.
         const items = gsap.utils.toArray<HTMLElement>('[data-reveal]', scopeRef.current);
         gsap.set(items, { opacity: 0, y: 16 });
+        // Registered on the context so a mid-flight revert (reduced motion switched on) kills the tween.
+        if (!context.add) return;
+        const reveal = context.add('reveal', (batch: Element[]) =>
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            duration: 0.42,
+            stagger: 0.09,
+            ease: 'power3.out',
+            overwrite: 'auto',
+            onComplete: () => {
+              gsap.set(batch, { clearProps: 'transform,opacity' });
+            },
+          }),
+        ) as (batch: Element[]) => void;
+        // Reveal from any direction (reload below the section, then scroll up) and when already past.
         ScrollTrigger.batch(items, {
           start: REVEAL_START,
-          once: true,
-          onEnter: batch =>
-            gsap.to(batch, {
-              opacity: 1,
-              y: 0,
-              duration: 0.42,
-              stagger: 0.09,
-              ease: 'power3.out',
-              overwrite: 'auto',
-              onComplete: () => {
-                gsap.set(batch, { clearProps: 'transform,opacity' });
-              },
-            }),
+          onEnter: reveal,
+          onEnterBack: reveal,
+          onLeave: reveal,
         });
       });
 
@@ -118,7 +124,8 @@ const FeaturedProjects = ({ showcaseProjects, projectsDescription }: FeaturedPro
         <div
           ref={progressRef}
           aria-hidden
-          className='pointer-events-none sticky top-0 z-20 h-0.5 w-full origin-left scale-x-0 bg-accent motion-reduce:scale-x-100'
+          style={{ transform: 'scaleX(0)' }}
+          className='pointer-events-none sticky top-0 z-20 h-0.5 w-full origin-left bg-accent'
         />
         <div className='mx-auto max-w-7xl px-4 pt-16 pb-4 md:px-8 md:pt-24 md:pb-6'>
           <div className='flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10'>
