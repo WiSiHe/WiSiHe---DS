@@ -1,13 +1,22 @@
 'use client';
 
+import { useGSAP } from '@gsap/react';
 import { IconArrowRight } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef } from 'react';
 import { getProjectCardTags } from '@/components/projects/ProjectCardParts';
 import Image from '@/components/ui/Image';
 import { urlForImage } from '@/lib/sanity';
 import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 import type { FeaturedProject } from './featuredProjectHelpers';
 import { formatDateRange, formatProjectStatusLabel } from './featuredProjectHelpers';
+
+gsap.registerPlugin(ScrollTrigger);
+
+/** Px the cover image drifts either side of centre while the card crosses the viewport. */
+const PARALLAX_TRAVEL = 28;
 
 type FeaturedProjectStackCardProps = {
   project: FeaturedProject;
@@ -18,6 +27,34 @@ export default function FeaturedProjectStackCard({
   project,
   index,
 }: FeaturedProjectStackCardProps) {
+  const cardRef = useRef<HTMLElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        if (!cardRef.current || !mediaRef.current) return;
+        gsap.fromTo(
+          mediaRef.current,
+          { y: -PARALLAX_TRAVEL },
+          {
+            y: PARALLAX_TRAVEL,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          },
+        );
+      });
+      return () => mm.revert();
+    },
+    { scope: cardRef },
+  );
+
   const clientLabel = (project.client as string | null | undefined)?.trim() || null;
   const nameTrimmed = (project.name as string | undefined)?.trim();
   const headingText = nameTrimmed || 'Project';
@@ -50,35 +87,40 @@ export default function FeaturedProjectStackCard({
   const backdropAlt = project.seo?.title || headingText || 'Project cover';
 
   return (
-    <article className='relative flex h-[min(28rem,72vh)] w-full flex-col justify-end overflow-hidden rounded-[2rem] border border-border/40 bg-surface shadow-[0_24px_80px_-32px_rgba(0,0,0,0.45)] md:h-[min(32rem,78vh)] md:rounded-[2.5rem]'>
+    <article
+      ref={cardRef}
+      className='relative flex h-[min(28rem,72vh)] w-full flex-col justify-end overflow-hidden rounded-[2rem] border border-border/40 bg-surface shadow-[0_24px_80px_-32px_rgba(0,0,0,0.45)] md:h-[min(32rem,78vh)] md:rounded-[2.5rem]'
+    >
       <div className='pointer-events-none absolute inset-0' aria-hidden>
-        {heroUrl ? (
-          <Image
-            src={heroUrl}
-            srcSet={heroSrcSet}
-            alt={backdropAlt}
-            fill
-            priority={index === 0}
-            sizes='(min-width: 1024px) 960px, 92vw'
-            className='object-cover select-none'
-          />
-        ) : (
-          <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-elevated' />
-        )}
+        <div ref={mediaRef} className='absolute -inset-y-8 inset-x-0'>
+          {heroUrl ? (
+            <Image
+              src={heroUrl}
+              srcSet={heroSrcSet}
+              alt={backdropAlt}
+              fill
+              priority={index === 0}
+              sizes='(min-width: 1024px) 960px, 92vw'
+              className='object-cover select-none'
+            />
+          ) : (
+            <div className='absolute inset-0 bg-linear-to-br from-surface-subtle via-surface to-surface-elevated' />
+          )}
+        </div>
         <div className='absolute inset-0 bg-linear-to-t from-black/88 via-black/45 to-black/20' />
       </div>
 
       <div className='relative z-10 flex h-full flex-col justify-between p-6 md:p-10'>
         <div className='flex items-start justify-between gap-4'>
-          <span className='inline-flex items-center rounded-full border border-white/15 bg-black/30 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-white/80 backdrop-blur-sm'>
+          <span className='inline-flex items-center rounded-full border border-white/15 bg-black/30 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-white/80'>
             {String(index + 1).padStart(2, '0')}
           </span>
           <div className='flex flex-wrap justify-end gap-2'>
-            <span className='rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-sm md:text-[11px]'>
+            <span className='rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 md:text-[11px]'>
               {statusLabel}
             </span>
             {dateRange ? (
-              <span className='rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 backdrop-blur-sm md:text-[11px]'>
+              <span className='rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/88 md:text-[11px]'>
                 {dateRange}
               </span>
             ) : null}
