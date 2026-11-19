@@ -37,6 +37,7 @@ Before reporting a coding task as done, review it with Qodo and meet this gate. 
 - **Flag, don't block:** all Low findings, including Low Rule violations. Leave them unchanged and list them in the final report.
 - **Loop:** fix, run `pnpm lint && pnpm typecheck && pnpm test`, rerun the review. Stop after 3 rounds or when a round makes no progress. For a PR, confirm the latest completed review covers the current head commit.
 - **Not done:** report the task as not done, and say what you need from me, if a valid High or Medium finding is unresolved, checks or review are incomplete or failed, or the loop stalls.
+- **Source expectation:** a PR for a ticket names one expectation from it, where it appears (link or section), and the test or check that fails if it is broken. Put the ticket reference (`Refs #N` or `Closes #N`) in the PR description so Qodo can read the source.
 - **Final report:** every finding with its type, severity and decision; checks run; the latest review result; and the Low findings.
 - **Severity labels:** where a tool shows only `action_level`, read `action_required` as High, `remediation_recommended` as Medium and `informational` as Low.
 
