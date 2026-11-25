@@ -1,9 +1,36 @@
 import { urlForImage } from '@/lib/sanity';
+import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 
-export function urlForPhotographyDetail(image: Parameters<typeof urlForImage>[0]): string | null {
+const DETAIL_WIDTH = 1800;
+const DETAIL_SRCSET_WIDTHS = [900, 1350, DETAIL_WIDTH];
+
+type PhotographyDetailSource = Parameters<typeof urlForImage>[0];
+
+function buildPhotographyDetailUrl(image: PhotographyDetailSource, width: number): string | null {
   if (!image) return null;
 
-  return urlForImage(image)?.width(1800).fit('max').quality(85).auto('format').url() ?? null;
+  return urlForImage(image)?.width(width).fit('max').quality(85).auto('format').url() ?? null;
+}
+
+export function urlForPhotographyDetail(image: PhotographyDetailSource): string | null {
+  return buildPhotographyDetailUrl(image, DETAIL_WIDTH);
+}
+
+/**
+ * Responsive candidates for `urlForPhotographyDetail`. Sanity's `fit('max')` never upscales, so a
+ * candidate wider than the original would deliver less than its `w` descriptor declares; widths are
+ * capped at `originalWidth` (and de-duplicated) to keep descriptor and delivered width equal.
+ */
+export function srcSetForPhotographyDetail(
+  image: PhotographyDetailSource,
+  originalWidth?: number | null,
+): string | undefined {
+  const widths =
+    typeof originalWidth === 'number' && originalWidth > 0
+      ? DETAIL_SRCSET_WIDTHS.map(width => Math.min(width, Math.round(originalWidth)))
+      : DETAIL_SRCSET_WIDTHS;
+
+  return buildSrcSet(widths, width => buildPhotographyDetailUrl(image, width));
 }
 
 export function extractPaletteSwatches(

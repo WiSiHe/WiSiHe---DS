@@ -12,6 +12,7 @@ import Image from '@/components/ui/Image';
 import {
   buildPhotographyMetaRows,
   extractPaletteSwatches,
+  srcSetForPhotographyDetail,
   urlForPhotographyDetail,
 } from '@/lib/photography/photographyDetailMeta';
 import { isValidPhotographyLqip } from '@/lib/photography/photographyImage';
@@ -94,6 +95,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               <motion.div layout='position' className='relative h-full w-full'>
                 <Image
                   src={imageUrl}
+                  srcSet={srcSetForPhotographyDetail(image, image?.width)}
                   alt={image?.alt ?? photo.title ?? 'Photograph'}
                   fill
                   priority
