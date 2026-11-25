@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router';
 import { CustomCursor } from '@wisihe/ui-react';
+import { AskTheArtistChat } from '../components/chat/AskTheArtistChat';
 import { DraftModeBanner } from '../components/cms/DraftModeBanner';
 import { Footer } from '../components/layout/Footer';
 import { Header } from '../components/layout/Header';
@@ -57,6 +58,7 @@ export function RootComponent() {
         </main>
       </MotionLayoutGroup>
       <Footer data={footerData} />
+      <AskTheArtistChat />
     </RootDocument>
   );
 }
