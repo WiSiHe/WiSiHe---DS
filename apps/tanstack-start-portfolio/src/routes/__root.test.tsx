@@ -25,6 +25,8 @@ vi.mock('@tanstack/react-router', () => ({
     }),
   }),
   useLocation: () => ({ pathname: '/' }),
+  // The chat widget only renders on the paintings gallery; `undefined` means "not matched".
+  useMatch: () => undefined,
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ isLoading: false, location: { pathname: '/' } }),
   Outlet: () => null,
