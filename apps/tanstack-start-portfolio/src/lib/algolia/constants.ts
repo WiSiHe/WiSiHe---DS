@@ -30,7 +30,6 @@ export const PAINTING_HIT_ATTRIBUTES = [
   'format',
   'tags',
   'image',
-  'palette',
   'isFeatured',
   'isNSFW',
   'isForSale',
