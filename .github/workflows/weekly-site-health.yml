@@ -10,10 +10,17 @@ permissions:
   contents: read
   issues: write
 
+# A manual run that overlaps the Monday schedule would file the same issues twice. Queue it instead of
+# cancelling: stopping the script mid-run could leave issues half-filed.
+concurrency:
+  group: weekly-site-health
+  cancel-in-progress: false
+
 jobs:
   review:
     name: PostHog + Lighthouse + JSON-LD → GitHub issues
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v7
