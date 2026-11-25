@@ -74,4 +74,11 @@ describe('PhotographyDetailView srcSet (#112)', () => {
     expect(candidates.map(c => c.descriptor)).toEqual(['900w', '1000w']);
     for (const c of candidates) expect(`${c.delivered}w`).toBe(c.descriptor);
   });
+
+  it('emits no srcset when the original width is unknown, so nothing can promise too much', () => {
+    // Sanity may return a null width; an uncapped 900/1350/1800 list could exceed the delivered width.
+    const html = render(null);
+    expect(html).toContain('<img');
+    expect(html).not.toMatch(/srcSet=/i);
+  });
 });

@@ -19,17 +19,17 @@ export function urlForPhotographyDetail(image: PhotographyDetailSource): string 
 /**
  * Responsive candidates for `urlForPhotographyDetail`. Sanity's `fit('max')` never upscales, so a
  * candidate wider than the original would deliver less than its `w` descriptor declares; widths are
- * capped at `originalWidth` (and de-duplicated) to keep descriptor and delivered width equal.
+ * capped at `originalWidth` (and de-duplicated) to keep descriptor and delivered width equal. When
+ * the original width is unknown there is nothing to cap against, so no `srcset` is emitted and the
+ * plain `src` is used.
  */
 export function srcSetForPhotographyDetail(
   image: PhotographyDetailSource,
   originalWidth?: number | null,
 ): string | undefined {
-  const widths =
-    typeof originalWidth === 'number' && originalWidth > 0
-      ? DETAIL_SRCSET_WIDTHS.map(width => Math.min(width, Math.round(originalWidth)))
-      : DETAIL_SRCSET_WIDTHS;
+  if (typeof originalWidth !== 'number' || !(originalWidth > 0)) return undefined;
 
+  const widths = DETAIL_SRCSET_WIDTHS.map(width => Math.min(width, Math.round(originalWidth)));
   return buildSrcSet(widths, width => buildPhotographyDetailUrl(image, width));
 }
 
