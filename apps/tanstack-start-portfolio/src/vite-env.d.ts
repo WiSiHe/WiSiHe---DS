@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_ALGOLIA_APP_ID?: string;
   readonly VITE_ALGOLIA_SEARCH_KEY?: string;
   readonly VITE_ALGOLIA_INDEX_NAME?: string;
+  readonly VITE_ALGOLIA_AGENT_ID?: string;
   readonly VITE_POSTHOG_KEY?: string;
   readonly VITE_POSTHOG_HOST?: string;
   readonly VITE_SANITY_WRITE_TOKEN?: string;

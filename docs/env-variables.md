@@ -44,6 +44,7 @@ See [`apps/tanstack-start-portfolio/.env.example`](../apps/tanstack-start-portfo
 | `VITE_ALGOLIA_APP_ID` | Algolia application ID |
 | `VITE_ALGOLIA_SEARCH_KEY` | Search-only key |
 | `VITE_ALGOLIA_INDEX_NAME` | Default `wisihe-search` |
+| `VITE_ALGOLIA_AGENT_ID` | Agent Studio agent ID; the "Ask about the art" chat is hidden when empty |
 
 ### Server-only
 
