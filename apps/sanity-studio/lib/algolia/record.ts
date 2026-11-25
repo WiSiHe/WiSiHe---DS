@@ -54,6 +54,7 @@ export const ALGOLIA_DOCUMENT_PROJECTION = `{
   isFanArt,
   video,
   "imagesCount": count(coalesce(images, [])),
+  "imageUrl": coalesce(image.asset->url, mainImage.asset->url),
   "palette": image.asset->metadata.palette,
   "image": coalesce(image${IMAGE_PROJECTION}, mainImage${IMAGE_PROJECTION})
 }`;
@@ -144,6 +145,7 @@ export type AlgoliaSourceDocument = {
   imagesCount?: number;
   palette?: Record<string, { background?: string } | undefined> | null;
   image?: unknown;
+  imageUrl?: string;
 };
 
 /** Algolia caps record size; descriptions are only searched, so a long tail adds nothing. */
@@ -183,6 +185,8 @@ export function buildAlgoliaRecord(doc: AlgoliaSourceDocument) {
     // The raw palette is large and never read by the UI; only the colour families are searchable.
     dominantColors: extractColors(doc.palette),
     image: doc.image || null,
+    // Plain CDN URL so tools that can't resolve a Sanity asset reference (Agent Studio cards) can show it.
+    imageUrl: doc.imageUrl || null,
     views: typeof doc.views === 'number' ? doc.views : 0,
     likes: typeof doc.likes === 'number' ? doc.likes : 0,
     createdAt,
