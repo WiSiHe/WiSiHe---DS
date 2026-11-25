@@ -1,23 +1,14 @@
 'use client';
 
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { searchClient } from '@/lib/algolia/searchClient';
 import { writePaintingsGalleryReturnUrl } from '@/lib/paintings/paintingsGalleryReturnUrl';
-import { buildPaintingsSearchRequest } from './buildPaintingsSearchRequest';
+import { buildPaintingsSearchRequests } from './buildPaintingsSearchRequest';
 import { PAINTINGS_HITS_PER_PAGE } from './constants';
 import { buildTagFacetItems, facetMapToItems, isNsfwTagFilterActive } from './facetItems';
 import { parsePaintingsSearchParams } from './parsePaintingsSearchParams';
-import { parsePaintingsSearchResult } from './parsePaintingsSearchResult';
+import { parsePaintingsSearchResults } from './parsePaintingsSearchResult';
 import type { PaintingsRouteSearch } from './searchParamsSchema';
 import type {
   PaintingAlgoliaHit,
@@ -100,7 +91,7 @@ export function PaintingsSearchProvider({
 }) {
   const routeSearch = useSearch({ from: '/paintings/' });
   const navigate = useNavigate({ from: '/paintings/' });
-  const parsed = useMemo(() => parsePaintingsSearchParams(routeSearch), [routeSearch]);
+  const parsed = parsePaintingsSearchParams(routeSearch);
 
   const [query, setQueryState] = useState(parsed.query);
   const [tagFilters, setTagFilters] = useState<string[]>(parsed.tagFilters);
@@ -115,103 +106,86 @@ export function PaintingsSearchProvider({
   const requestIdRef = useRef(0);
   const skipInitialFetchRef = useRef(initialResults != null);
 
-  const updateUrl = useCallback(
-    (newFilters: {
-      q?: string;
-      tag?: string[];
-      color?: string[];
-      sale?: boolean;
-      sort?: PaintingsSortKey;
-      p?: number;
-    }) => {
-      const nextSearch = buildRouteSearch({
-        q: newFilters.q !== undefined ? newFilters.q : query,
-        tag: newFilters.tag !== undefined ? newFilters.tag : tagFilters,
-        color: newFilters.color !== undefined ? newFilters.color : colorFilters,
-        sale: newFilters.sale !== undefined ? newFilters.sale : forSale,
-        sort: newFilters.sort !== undefined ? newFilters.sort : sort,
-        p: newFilters.p !== undefined ? newFilters.p : page,
-      });
+  const updateUrl = (newFilters: {
+    q?: string;
+    tag?: string[];
+    color?: string[];
+    sale?: boolean;
+    sort?: PaintingsSortKey;
+    p?: number;
+  }) => {
+    const nextSearch = buildRouteSearch({
+      q: newFilters.q !== undefined ? newFilters.q : query,
+      tag: newFilters.tag !== undefined ? newFilters.tag : tagFilters,
+      color: newFilters.color !== undefined ? newFilters.color : colorFilters,
+      sale: newFilters.sale !== undefined ? newFilters.sale : forSale,
+      sort: newFilters.sort !== undefined ? newFilters.sort : sort,
+      p: newFilters.p !== undefined ? newFilters.p : page,
+    });
 
-      navigate({
-        search: nextSearch,
-        replace: true,
-        resetScroll: false,
-      });
-    },
-    [query, tagFilters, colorFilters, forSale, sort, page, navigate],
-  );
+    navigate({
+      search: nextSearch,
+      replace: true,
+      resetScroll: false,
+    });
+  };
 
   useEffect(() => {
-    setQueryState(parsed.query);
-    setTagFilters(parsed.tagFilters);
-    setColorFilters(parsed.colorFilters);
-    setForSale(parsed.forSale);
-    setSortState(parsed.sort);
-    setPageState(parsed.page);
-  }, [parsed]);
+    const next = parsePaintingsSearchParams(routeSearch);
+    setQueryState(next.query);
+    setTagFilters(next.tagFilters);
+    setColorFilters(next.colorFilters);
+    setForSale(next.forSale);
+    setSortState(next.sort);
+    setPageState(next.page);
+  }, [routeSearch]);
 
   useEffect(() => {
     const qs = searchParamsToString(routeSearch);
     writePaintingsGalleryReturnUrl(qs ? `/paintings?${qs}` : '/paintings');
   }, [routeSearch]);
 
-  const setQuery = useCallback(
-    (next: string) => {
-      setPageState(0);
-      setQueryState(next);
-      updateUrl({ q: next, p: 0 });
-    },
-    [updateUrl],
-  );
+  const setQuery = (next: string) => {
+    setPageState(0);
+    setQueryState(next);
+    updateUrl({ q: next, p: 0 });
+  };
 
-  const setSort = useCallback(
-    (next: PaintingsSortKey) => {
-      setPageState(0);
-      setSortState(next);
-      updateUrl({ sort: next, p: 0 });
-    },
-    [updateUrl],
-  );
+  const setSort = (next: PaintingsSortKey) => {
+    setPageState(0);
+    setSortState(next);
+    updateUrl({ sort: next, p: 0 });
+  };
 
-  const setPage = useCallback(
-    (next: number) => {
-      setPageState(next);
-      updateUrl({ p: next });
-    },
-    [updateUrl],
-  );
+  const setPage = (next: number) => {
+    setPageState(next);
+    updateUrl({ p: next });
+  };
 
-  const toggleTag = useCallback(
-    (value: string) => {
-      setPageState(0);
-      const nextTags = tagFilters.includes(value)
-        ? tagFilters.filter(item => item !== value)
-        : [...tagFilters, value];
-      setTagFilters(nextTags);
-      updateUrl({ tag: nextTags, p: 0 });
-    },
-    [tagFilters, updateUrl],
-  );
+  const toggleTag = (value: string) => {
+    setPageState(0);
+    const nextTags = tagFilters.includes(value)
+      ? tagFilters.filter(item => item !== value)
+      : [...tagFilters, value];
+    setTagFilters(nextTags);
+    updateUrl({ tag: nextTags, p: 0 });
+  };
 
-  const toggleColor = useCallback(
-    (value: string) => {
-      setPageState(0);
-      const nextColors = colorFilters.includes(value)
-        ? colorFilters.filter(item => item !== value)
-        : [...colorFilters, value];
-      setColorFilters(nextColors);
-      updateUrl({ color: nextColors, p: 0 });
-    },
-    [colorFilters, updateUrl],
-  );
+  const toggleColor = (value: string) => {
+    setPageState(0);
+    const nextColors = colorFilters.includes(value)
+      ? colorFilters.filter(item => item !== value)
+      : [...colorFilters, value];
+    setColorFilters(nextColors);
+    updateUrl({ color: nextColors, p: 0 });
+  };
 
-  const toggleForSale = useCallback(() => {
+  const toggleForSale = () => {
     setPageState(0);
     const nextSale = !forSale;
     setForSale(nextSale);
     updateUrl({ sale: nextSale, p: 0 });
-  }, [forSale, updateUrl]);
+  };
 
   useEffect(() => {
     if (!searchClient) return;
@@ -230,22 +204,20 @@ export function PaintingsSearchProvider({
 
       void client
         .search({
-          requests: [
-            buildPaintingsSearchRequest({
-              query,
-              page,
-              hitsPerPage: PAINTINGS_HITS_PER_PAGE,
-              tagFilters,
-              colorFilters,
-              forSale,
-              sort,
-            }),
-          ],
+          requests: buildPaintingsSearchRequests({
+            query,
+            page,
+            hitsPerPage: PAINTINGS_HITS_PER_PAGE,
+            tagFilters,
+            colorFilters,
+            forSale,
+            sort,
+          }),
         })
         .then(response => {
           if (requestId !== requestIdRef.current) return;
 
-          const parsedResult = parsePaintingsSearchResult(response.results[0]);
+          const parsedResult = parsePaintingsSearchResults(response.results);
           if (parsedResult) {
             settledResultsRef.current = parsedResult;
             setResults(parsedResult);
@@ -268,57 +240,31 @@ export function PaintingsSearchProvider({
 
   const displayResults = status === 'loading' ? settledResultsRef.current : results;
 
-  const tagItems = useMemo(
-    () => buildTagFacetItems(displayResults?.facets.tags, tagFilters),
-    [displayResults?.facets.tags, tagFilters],
-  );
+  const tagItems = buildTagFacetItems(displayResults?.facets.tags, tagFilters);
 
-  const colorItems = useMemo(
-    () => facetMapToItems(displayResults?.facets.dominantColors, colorFilters),
-    [displayResults?.facets.dominantColors, colorFilters],
-  );
+  const colorItems = facetMapToItems(displayResults?.facets.dominantColors, colorFilters);
 
-  const value = useMemo<PaintingsSearchContextValue>(
-    () => ({
-      query,
-      setQuery,
-      tagFilters,
-      colorFilters,
-      forSale,
-      sort,
-      page,
-      status,
-      hits: displayResults?.hits ?? [],
-      nbHits: displayResults?.nbHits ?? 0,
-      nbPages: displayResults?.nbPages ?? 0,
-      tagItems,
-      colorItems,
-      nsfwFilterActive: isNsfwTagFilterActive(tagFilters),
-      toggleTag,
-      toggleColor,
-      toggleForSale,
-      setSort,
-      setPage,
-    }),
-    [
-      query,
-      setQuery,
-      tagFilters,
-      colorFilters,
-      forSale,
-      sort,
-      page,
-      status,
-      displayResults,
-      tagItems,
-      colorItems,
-      toggleTag,
-      toggleColor,
-      toggleForSale,
-      setSort,
-      setPage,
-    ],
-  );
+  const value = {
+    query,
+    setQuery,
+    tagFilters,
+    colorFilters,
+    forSale,
+    sort,
+    page,
+    status,
+    hits: displayResults?.hits ?? [],
+    nbHits: displayResults?.nbHits ?? 0,
+    nbPages: displayResults?.nbPages ?? 0,
+    tagItems,
+    colorItems,
+    nsfwFilterActive: isNsfwTagFilterActive(tagFilters),
+    toggleTag,
+    toggleColor,
+    toggleForSale,
+    setSort,
+    setPage,
+  };
 
   return (
     <PaintingsSearchContext.Provider value={value}>{children}</PaintingsSearchContext.Provider>

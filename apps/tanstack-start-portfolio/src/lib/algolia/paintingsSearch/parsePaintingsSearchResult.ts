@@ -21,3 +21,19 @@ export function parsePaintingsSearchResult(result: unknown): PaintingsSearchResu
     facets,
   };
 }
+
+/**
+ * Parses the responses of `buildPaintingsSearchRequests`: the first is the main result, any
+ * others carry the disjunctive facet counts that replace the main result's counts.
+ */
+export function parsePaintingsSearchResults(results: unknown[]): PaintingsSearchResults | null {
+  const main = parsePaintingsSearchResult(results[0]);
+  if (!main) return null;
+
+  for (const extra of results.slice(1)) {
+    const parsedExtra = parsePaintingsSearchResult(extra);
+    if (parsedExtra) Object.assign(main.facets, parsedExtra.facets);
+  }
+
+  return main;
+}

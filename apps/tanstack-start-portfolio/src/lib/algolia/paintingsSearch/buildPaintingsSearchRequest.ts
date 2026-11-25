@@ -53,7 +53,7 @@ export function serializeAlgoliaSearchParams(
   return parts.join('&');
 }
 
-export function buildPaintingsSearchRequest(options: {
+type PaintingsSearchRequestOptions = {
   query: string;
   page: number;
   hitsPerPage: number;
@@ -61,7 +61,11 @@ export function buildPaintingsSearchRequest(options: {
   colorFilters: string[];
   forSale: boolean;
   sort: PaintingsSortKey;
-}) {
+  /** Set for server-side renders so page loads don't show up as user searches in analytics. */
+  analytics?: boolean;
+};
+
+export function buildPaintingsSearchRequest(options: PaintingsSearchRequestOptions) {
   const facetFilters = buildFacetFilters(options.tagFilters, options.colorFilters);
 
   const params = serializeAlgoliaSearchParams({
@@ -75,10 +79,53 @@ export function buildPaintingsSearchRequest(options: {
     attributesToRetrieve: [...PAINTING_HIT_ATTRIBUTES],
     // The UI never renders Algolia highlight markup; skipping it trims every hit.
     attributesToHighlight: [],
+    ...(options.analytics === false ? { analytics: false } : {}),
   });
 
   return {
     indexName: paintingsSortIndex(options.sort),
     params,
   };
+}
+
+/**
+ * Disjunctive faceting: tags (and colors) are OR-ed within a group, so the counts shown for a
+ * group must ignore that group's own selection. Otherwise picking one tag collapses every other
+ * tag's count to "0 / hidden". Each refined group gets one extra, hit-less request.
+ */
+function buildDisjunctiveFacetRequests(options: PaintingsSearchRequestOptions) {
+  const groups = [
+    { facet: 'tags', active: options.tagFilters.length > 0 },
+    { facet: 'dominantColors', active: options.colorFilters.length > 0 },
+  ] as const;
+
+  return groups
+    .filter(group => group.active)
+    .map(({ facet }) => {
+      const facetFilters = buildFacetFilters(
+        facet === 'tags' ? [] : options.tagFilters,
+        facet === 'dominantColors' ? [] : options.colorFilters,
+      );
+
+      return {
+        indexName: paintingsSortIndex(options.sort),
+        params: serializeAlgoliaSearchParams({
+          query: options.query,
+          page: 0,
+          hitsPerPage: 0,
+          filters: buildFilterString(options.forSale),
+          ...(facetFilters ? { facetFilters } : {}),
+          facets: [facet],
+          maxValuesPerFacet: 50,
+          attributesToRetrieve: [],
+          attributesToHighlight: [],
+          analytics: false,
+        }),
+      };
+    });
+}
+
+/** The main hits request plus one facet-count request per refined facet group. */
+export function buildPaintingsSearchRequests(options: PaintingsSearchRequestOptions) {
+  return [buildPaintingsSearchRequest(options), ...buildDisjunctiveFacetRequests(options)];
 }

@@ -1,8 +1,8 @@
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import { buildPaintingsSearchRequest } from './buildPaintingsSearchRequest';
+import { buildPaintingsSearchRequests } from './buildPaintingsSearchRequest';
 import { PAINTINGS_HITS_PER_PAGE } from './constants';
 import type { ParsedPaintingsSearchParams } from './parsePaintingsSearchParams';
-import { parsePaintingsSearchResult } from './parsePaintingsSearchResult';
+import { parsePaintingsSearchResults } from './parsePaintingsSearchResult';
 import type { PaintingsSearchResults } from './types';
 
 function getServerSearchClient() {
@@ -20,20 +20,19 @@ export async function fetchPaintingsSearch(
 
   try {
     const response = await client.search({
-      requests: [
-        buildPaintingsSearchRequest({
-          query: params.query,
-          page: params.page,
-          hitsPerPage: PAINTINGS_HITS_PER_PAGE,
-          tagFilters: params.tagFilters,
-          colorFilters: params.colorFilters,
-          forSale: params.forSale,
-          sort: params.sort,
-        }),
-      ],
+      requests: buildPaintingsSearchRequests({
+        query: params.query,
+        page: params.page,
+        hitsPerPage: PAINTINGS_HITS_PER_PAGE,
+        tagFilters: params.tagFilters,
+        colorFilters: params.colorFilters,
+        forSale: params.forSale,
+        sort: params.sort,
+        analytics: false,
+      }),
     });
 
-    return parsePaintingsSearchResult(response.results[0]);
+    return parsePaintingsSearchResults(response.results);
   } catch (error) {
     if (import.meta.env.DEV) {
       console.error('[fetchPaintingsSearch] Algolia request failed', error);
