@@ -13,7 +13,11 @@ type ChatItem = {
   title?: string;
   slug?: string;
   medium?: string;
+  imageUrl?: string | null;
 };
+
+/** Fixed crop so every card image has the same aspect ratio, whatever the painting's format. */
+const IMAGE_PARAMS = '?w=480&h=360&fit=crop&auto=format';
 
 /** Rendered for each record the agent returns from the index. */
 function ChatItemCard({ item }: { item: ChatItem }) {
@@ -24,6 +28,14 @@ function ChatItemCard({ item }: { item: ChatItem }) {
 
   const content = (
     <>
+      {item.imageUrl ? (
+        <img
+          src={`${item.imageUrl}${IMAGE_PARAMS}`}
+          alt=''
+          loading='lazy'
+          className='mb-2 aspect-[4/3] w-full rounded-sm object-cover'
+        />
+      ) : null}
       <strong>{title}</strong>
       {item.medium ? <span className='block text-sm opacity-70'>{item.medium}</span> : null}
     </>
