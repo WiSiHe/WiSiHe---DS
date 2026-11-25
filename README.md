@@ -32,7 +32,7 @@ Applications and documentation sites consuming the packages:
 
 ### Prerequisites
 
-- Node.js `22.21.1` (see `.node-version`)
+- Node.js `24.18.0` (see `.node-version`)
 - `pnpm` (latest)
 
 ### Installation
