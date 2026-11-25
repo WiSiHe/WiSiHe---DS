@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useMatch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { Chat, ChatTrigger, InstantSearch } from 'react-instantsearch';
 import 'instantsearch.css/components/chat.css';
@@ -48,16 +48,17 @@ const translations = {
  * Floating chat panel backed by an Algolia Agent Studio agent that searches the
  * `wisihe-search` index. Client-only: the widget keeps its state in sessionStorage and the
  * agent talks to Algolia straight from the browser with the search-only key.
- * Renders nothing until `VITE_ALGOLIA_AGENT_ID` is set.
+ * Renders nothing until `VITE_ALGOLIA_AGENT_ID` is set, and only on the paintings gallery.
  */
 export function AskTheArtistChat() {
   const [mounted, setMounted] = useState(false);
+  const onGallery = useMatch({ from: '/paintings/', shouldThrow: false });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !agentId || !searchClient) return null;
+  if (!mounted || !onGallery || !agentId || !searchClient) return null;
 
   return (
     <InstantSearch searchClient={searchClient} indexName={ALGOLIA_INDEX_NAME}>
