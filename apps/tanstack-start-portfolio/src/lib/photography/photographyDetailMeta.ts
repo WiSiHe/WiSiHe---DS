@@ -4,6 +4,9 @@ import { buildSrcSet } from '@/lib/sanityImageSrcSet';
 const DETAIL_WIDTH = 1800;
 const DETAIL_SRCSET_WIDTHS = [900, 1350, DETAIL_WIDTH];
 
+/** Height cap of the detail frame; the image is `object-contain`, so it also bounds the rendered width. */
+export const PHOTOGRAPHY_DETAIL_MAX_HEIGHT = 'min(88vh, calc(100vh - 9rem))';
+
 type PhotographyDetailSource = Parameters<typeof urlForImage>[0];
 
 function buildPhotographyDetailUrl(image: PhotographyDetailSource, width: number): string | null {
@@ -31,6 +34,17 @@ export function srcSetForPhotographyDetail(
 
   const widths = DETAIL_SRCSET_WIDTHS.map(width => Math.min(width, Math.round(originalWidth)));
   return buildSrcSet(widths, width => buildPhotographyDetailUrl(image, width));
+}
+
+/**
+ * `sizes` for the detail `<img>`: the layout width (100vw below 1024px, 72vw above) bounded by the
+ * width the height-capped frame can reach (`maxHeight * aspectRatio`). Portrait photos render
+ * narrower than the layout width, so without the bound the browser picks a larger candidate than
+ * the box needs.
+ */
+export function sizesForPhotographyDetail(aspectRatio: number): string {
+  const heightBound = `calc(${PHOTOGRAPHY_DETAIL_MAX_HEIGHT} * ${aspectRatio})`;
+  return `(max-width: 1024px) min(100vw, ${heightBound}), min(72vw, ${heightBound})`;
 }
 
 export function extractPaletteSwatches(

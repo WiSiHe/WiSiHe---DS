@@ -81,4 +81,13 @@ describe('PhotographyDetailView srcSet (#112)', () => {
     expect(html).toContain('<img');
     expect(html).not.toMatch(/srcSet=/i);
   });
+
+  it('bounds sizes by the height-capped frame so portrait photos do not fetch oversized candidates', () => {
+    // Fixture is 4000x2000 (aspect ratio 2): the frame can never be wider than maxHeight * 2.
+    const html = render(4000);
+    const sizes = html.match(/sizes="([^"]+)"/i)?.[1];
+    expect(sizes).toBe(
+      '(max-width: 1024px) min(100vw, calc(min(88vh, calc(100vh - 9rem)) * 2)), min(72vw, calc(min(88vh, calc(100vh - 9rem)) * 2))',
+    );
+  });
 });

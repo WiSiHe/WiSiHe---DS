@@ -12,6 +12,8 @@ import Image from '@/components/ui/Image';
 import {
   buildPhotographyMetaRows,
   extractPaletteSwatches,
+  PHOTOGRAPHY_DETAIL_MAX_HEIGHT,
+  sizesForPhotographyDetail,
   srcSetForPhotographyDetail,
   urlForPhotographyDetail,
 } from '@/lib/photography/photographyDetailMeta';
@@ -89,7 +91,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
               className='relative mx-auto w-full overflow-hidden rounded-none bg-surface-subtle sm:rounded-xl'
               style={{
                 aspectRatio,
-                maxHeight: 'min(88vh, calc(100vh - 9rem))',
+                maxHeight: PHOTOGRAPHY_DETAIL_MAX_HEIGHT,
               }}
             >
               <motion.div layout='position' className='relative h-full w-full'>
@@ -100,7 +102,7 @@ export function PhotographyDetailView({ photo }: PhotographyDetailViewProps) {
                   fill
                   priority
                   className='object-contain'
-                  sizes='(max-width: 1024px) 100vw, 72vw'
+                  sizes={sizesForPhotographyDetail(aspectRatio)}
                   blurDataURL={isValidPhotographyLqip(image?.lqip) ? image.lqip : undefined}
                 />
               </motion.div>
